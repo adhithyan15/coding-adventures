@@ -1,0 +1,11 @@
+{
+  "id": "TE-C472-valasapovu",
+  "pathSegment": "TE-PATH-472-VANYAPRANI472",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-472-VANYAPRANI472",
+      "order": 4
+    }
+  ]
+}

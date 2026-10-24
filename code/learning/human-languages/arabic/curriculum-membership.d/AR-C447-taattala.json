@@ -1,0 +1,11 @@
+{
+  "id": "AR-C447-taattala",
+  "pathSegment": "AR-PATH-447-DUSH447",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-447-DUSH447",
+      "order": 3
+    }
+  ]
+}

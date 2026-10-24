@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C556-vancana",
+    "language": "malayalam",
+    "chapter": 556,
+    "sequence": 28010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2b61f66693c6b0f"
+  },
+  "findings": []
+}

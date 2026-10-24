@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C337-pattubadu",
+    "language": "telugu",
+    "chapter": 337,
+    "sequence": 16570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0142be615e7402a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C401-purbo",
+    "language": "bengali",
+    "chapter": 401,
+    "sequence": 24880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc0b33cacd3b17b4"
+  },
+  "findings": []
+}

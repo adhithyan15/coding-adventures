@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C498-asada",
+    "language": "arabic",
+    "chapter": 498,
+    "sequence": 27710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:330212d42dd97a5f"
+  },
+  "findings": []
+}

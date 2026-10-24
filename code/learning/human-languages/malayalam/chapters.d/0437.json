@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Subjects",
+  "label": "ch:ml-subjects",
+  "canDo": "I can say mathematics, economics, philosophy, knowledge and a study.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C437-pathanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can say mathematics, economics, philosophy, knowledge and a study.",
+    "assesses": [
+      "ML-LEX-C437-GANITAM437-03",
+      "ML-LEX-C437-GANITAM437-04",
+      "ML-LEX-C437-GANITAM437-05"
+    ]
+  }
+}

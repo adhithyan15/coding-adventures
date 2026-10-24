@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:f5ebde245583dd47",
+  "lessonIds": [
+    "TE-C459-phalaharam",
+    "TE-C459-bhojanasala",
+    "TE-C459-sadupayam",
+    "TE-C459-antarjalam",
+    "TE-C459-charjaru"
+  ],
+  "tex": "telugu/book/chapters/ch459-meals-and-comforts.tex"
+}

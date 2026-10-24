@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:0c93b53f07206f68",
+  "lessonIds": [
+    "TE-C423-pratiphalam",
+    "TE-C423-vrtha",
+    "TE-C423-anavasaram",
+    "TE-C423-saripovu",
+    "TE-C423-viniyogincu"
+  ],
+  "tex": "telugu/book/chapters/ch423-rewards-and-waste.tex"
+}

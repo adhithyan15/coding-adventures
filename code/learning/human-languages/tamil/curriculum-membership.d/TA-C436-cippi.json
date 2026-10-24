@@ -1,0 +1,11 @@
+{
+  "id": "TA-C436-cippi",
+  "pathSegment": "TA-PATH-436-KATAL436",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-436-KATAL436",
+      "order": 3
+    }
+  ]
+}

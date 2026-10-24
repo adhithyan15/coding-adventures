@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-550-SIYANA550",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-550-SIYANA550"
+  ],
+  "after": []
+}

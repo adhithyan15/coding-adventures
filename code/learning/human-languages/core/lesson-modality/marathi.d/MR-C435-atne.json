@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C435-atne",
+    "language": "marathi",
+    "chapter": 435,
+    "sequence": 25020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ba9e41edfaf4dad"
+  },
+  "findings": []
+}

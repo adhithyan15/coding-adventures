@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Fishing and unwinding",
+  "label": "ch:ar-fishing-and-unwinding",
+  "canDo": "I can talk about fishing and a fishing rod, and say that someone went fishing, unwound or enjoyed something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C536-istamtaa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can talk about fishing and a fishing rod, and say that someone went fishing, unwound or enjoyed something.",
+    "assesses": [
+      "AR-LEX-C536-SAYD536-03",
+      "AR-LEX-C536-SAYD536-04",
+      "AR-LEX-C536-SAYD536-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C492-jhalai-kora",
+    "language": "bengali",
+    "chapter": 492,
+    "sequence": 30020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0804911a7a0c161"
+  },
+  "findings": []
+}

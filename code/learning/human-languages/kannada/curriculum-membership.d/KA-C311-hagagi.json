@@ -1,0 +1,11 @@
+{
+  "id": "KA-C311-hagagi",
+  "pathSegment": "KA-PATH-311-OPINION-SO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-311-OPINION-SO",
+      "order": 1
+    }
+  ]
+}

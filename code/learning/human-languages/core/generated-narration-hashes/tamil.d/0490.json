@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:36ecb5f055503bf2",
+  "lessonIds": [
+    "TA-C490-nimir",
+    "TA-C490-kuni",
+    "TA-C490-cay",
+    "TA-C490-utaru",
+    "TA-C490-no"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch490.txt",
+  "json": "tamil/narration/ch490.json",
+  "textHash": "fnv1a64:245379004a5b9bbe",
+  "jsonHash": "fnv1a64:84fba85bce3f8541",
+  "findings": []
+}

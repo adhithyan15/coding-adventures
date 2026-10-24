@@ -1,0 +1,11 @@
+{
+  "id": "MR-C423-vikat-ghene",
+  "pathSegment": "MR-PATH-423-KHAREDI423",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-423-KHAREDI423",
+      "order": 4
+    }
+  ]
+}

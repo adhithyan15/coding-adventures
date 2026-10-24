@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:a089532a772f0238",
+  "lessonIds": [
+    "TE-C483-aviravu",
+    "TE-C483-inkipovu",
+    "TE-C483-mandu",
+    "TE-C483-aripovu",
+    "TE-C483-cigurincu"
+  ],
+  "tex": "telugu/book/chapters/ch483-water-fire-and-light.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:d5b93ccbc8a52a0b",
+  "lessonIds": [
+    "HI-C319-pitna",
+    "HI-C319-jharap",
+    "HI-C319-ghusa",
+    "HI-C319-thappar",
+    "HI-C319-ainthna",
+    "HI-R319-review-312-319"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch319.txt",
+  "json": "hindi/narration/ch319.json",
+  "textHash": "fnv1a64:9fc29bf9883bcac0",
+  "jsonHash": "fnv1a64:08440a9f573a6aaa",
+  "findings": []
+}

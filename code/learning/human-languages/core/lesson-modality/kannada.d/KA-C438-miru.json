@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C438-miru",
+    "language": "kannada",
+    "chapter": 438,
+    "sequence": 22270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79bd7fc2bccff638"
+  },
+  "findings": []
+}

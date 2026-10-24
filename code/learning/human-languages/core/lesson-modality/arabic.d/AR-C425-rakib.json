@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C425-rakib",
+    "language": "arabic",
+    "chapter": 425,
+    "sequence": 23910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d32aa16a18b80af"
+  },
+  "findings": []
+}

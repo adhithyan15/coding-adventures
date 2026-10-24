@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:3086bb41abe0dcbc",
+  "lessonIds": [
+    "AR-C501-hakim",
+    "AR-C501-mahir",
+    "AR-C501-mubdi",
+    "AR-C501-aqil",
+    "AR-C501-thiqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch501.txt",
+  "json": "arabic/narration/ch501.json",
+  "textHash": "fnv1a64:fa0803347220f6ae",
+  "jsonHash": "fnv1a64:c21a72d47edf7443",
+  "findings": []
+}

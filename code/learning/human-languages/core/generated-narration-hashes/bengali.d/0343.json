@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:0ba4baa7e037e6c2",
+  "lessonIds": [
+    "BN-C343-dosh",
+    "BN-C343-dayi",
+    "BN-C343-khotipuron",
+    "BN-C343-jobabdihi-kora",
+    "BN-C343-rehai-deoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch343.txt",
+  "json": "bengali/narration/ch343.json",
+  "textHash": "fnv1a64:1f8c3573900a879b",
+  "jsonHash": "fnv1a64:4c6a468e97599669",
+  "findings": []
+}

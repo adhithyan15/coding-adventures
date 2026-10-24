@@ -11,3 +11,9 @@ the shared Devanagari script — *namaskār*, three genders, gender on the verb,
 extra letter ळ, and a Dravidian-flavoured everyday grammar. The script is taught
 **inline**, never as a gated reading course.
 
+Coverage note: canonical lessons now continue through Chapter 557 (the B1
+core in chapters 276–287 and the 1,350-word B1 vocabulary in chapters
+288–557; Marathi attains B1 on the level gate), while the sections below
+still describe chapters 30–59 and the planned table the opening chapters
+only.
+

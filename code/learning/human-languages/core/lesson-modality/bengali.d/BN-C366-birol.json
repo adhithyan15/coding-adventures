@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C366-birol",
+    "language": "bengali",
+    "chapter": 366,
+    "sequence": 22870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:288002696cdc88a9"
+  },
+  "findings": []
+}

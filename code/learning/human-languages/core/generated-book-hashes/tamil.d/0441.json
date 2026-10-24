@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:18bc71cb38b93ef1",
+  "lessonIds": [
+    "TA-C441-aluku",
+    "TA-C441-naru",
+    "TA-C441-kuvi",
+    "TA-C441-marucularci-cey",
+    "TA-C441-uyirinam"
+  ],
+  "tex": "tamil/book/chapters/ch441-rot-and-recycling.tex"
+}

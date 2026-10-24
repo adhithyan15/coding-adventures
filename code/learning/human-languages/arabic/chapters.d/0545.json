@@ -1,0 +1,19 @@
+{
+  "chapter": 545,
+  "title": "Poets and directors",
+  "label": "ch:ar-poets-and-directors",
+  "canDo": "I can name a poet and a rhyme, and say that someone recited a song, created something brilliant or directed a film.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C545-akhraja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can name a poet and a rhyme, and say that someone recited a song, created something brilliant or directed a film.",
+    "assesses": [
+      "AR-LEX-C545-SHIR545-03",
+      "AR-LEX-C545-SHIR545-04",
+      "AR-LEX-C545-SHIR545-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C379-virodhisu",
+  "pathSegment": "KA-PATH-379-OMMATA379",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-379-OMMATA379",
+      "order": 3
+    }
+  ]
+}

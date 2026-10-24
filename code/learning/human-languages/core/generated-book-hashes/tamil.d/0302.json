@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:8083ff5e033e622d",
+  "lessonIds": [
+    "TA-C302-peralivu",
+    "TA-C302-uyirilappu",
+    "TA-C302-nivaranam",
+    "TA-C302-mintelu",
+    "TA-C302-curaiyatu"
+  ],
+  "tex": "tamil/book/chapters/ch302-after-the-disaster.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Hard Times",
+  "label": "ch:bn-hard-times",
+  "canDo": "I can talk about a crisis and how people got through it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C364-chorom",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can talk about a crisis and how people got through it.",
+    "assesses": [
+      "BN-LEX-C364-SONGKOT364-03",
+      "BN-LEX-C364-SONGKOT364-04",
+      "BN-LEX-C364-SONGKOT364-05"
+    ]
+  }
+}

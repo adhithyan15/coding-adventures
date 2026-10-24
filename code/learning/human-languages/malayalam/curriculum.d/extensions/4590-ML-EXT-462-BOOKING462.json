@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-462-BOOKING462",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a reservation, a berth, a compartment, to make a booking and to buy a ticket.",
+  "prerequisites": []
+}

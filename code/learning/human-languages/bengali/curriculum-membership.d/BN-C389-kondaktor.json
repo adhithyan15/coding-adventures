@@ -1,0 +1,11 @@
+{
+  "id": "BN-C389-kondaktor",
+  "pathSegment": "BN-PATH-389-CHALOK389",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-389-CHALOK389",
+      "order": 1
+    }
+  ]
+}

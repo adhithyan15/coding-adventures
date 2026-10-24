@@ -1,0 +1,11 @@
+{
+  "id": "BN-C337-shonakto-kora",
+  "pathSegment": "BN-PATH-337-PROMAN337",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-337-PROMAN337",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Hair and Scalp",
+  "label": "ch:bn-hair-and-scalp",
+  "canDo": "I can talk about baldness, dandruff, lice and greying hair.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C470-khopa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can talk about baldness, dandruff, lice and greying hair.",
+    "assesses": [
+      "BN-LEX-C470-TAK470-03",
+      "BN-LEX-C470-TAK470-04",
+      "BN-LEX-C470-TAK470-05"
+    ]
+  }
+}

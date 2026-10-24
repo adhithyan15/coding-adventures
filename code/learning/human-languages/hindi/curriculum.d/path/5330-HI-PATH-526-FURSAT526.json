@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-526-FURSAT526",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-526-FURSAT526"
+  ],
+  "after": []
+}

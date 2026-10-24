@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:3c1d1c1537f9099c",
+  "lessonIds": [
+    "AR-C386-taawana",
+    "AR-C386-tafawada",
+    "AR-C386-sadaqa",
+    "AR-C386-sira",
+    "AR-C386-azma"
+  ],
+  "tex": "arabic/book/chapters/ch386-working-together.tex"
+}

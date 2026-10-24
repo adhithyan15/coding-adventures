@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:bc8260cd2a38dfb8",
+  "lessonIds": [
+    "ML-C447-netuka",
+    "ML-C447-gunanilavaram",
+    "ML-C447-parajayappetuka",
+    "ML-C447-laksyamituka",
+    "ML-C447-karyaksamata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch447.txt",
+  "json": "malayalam/narration/ch447.json",
+  "textHash": "fnv1a64:61466bb4604085f6",
+  "jsonHash": "fnv1a64:7239d419c2b504d6",
+  "findings": []
+}

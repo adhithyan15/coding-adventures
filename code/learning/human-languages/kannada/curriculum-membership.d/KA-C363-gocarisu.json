@@ -1,0 +1,11 @@
+{
+  "id": "KA-C363-gocarisu",
+  "pathSegment": "KA-PATH-363-SANJE363",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-363-SANJE363",
+      "order": 4
+    }
+  ]
+}

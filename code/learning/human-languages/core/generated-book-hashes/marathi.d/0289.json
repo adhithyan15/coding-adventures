@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:34cb2c101564cb75",
+  "lessonIds": [
+    "MR-C289-saksidar",
+    "MR-C289-gunha",
+    "MR-C289-daroda",
+    "MR-C289-pakitmar",
+    "MR-C289-phasavne"
+  ],
+  "tex": "marathi/book/chapters/ch289-crimes-and-witnesses.tex"
+}

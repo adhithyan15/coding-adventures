@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:7790443163f11cd4",
+  "lessonIds": [
+    "ML-C503-paristhiti",
+    "ML-C503-parisaram",
+    "ML-C503-malinikaranam",
+    "ML-C503-malinamakkuka",
+    "ML-C503-malinajalam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch503.txt",
+  "json": "malayalam/narration/ch503.json",
+  "textHash": "fnv1a64:7f829bde6e3c2ed8",
+  "jsonHash": "fnv1a64:eb01629b3ec744c4",
+  "findings": []
+}

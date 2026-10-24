@@ -1,0 +1,21 @@
+{
+  "chapter": 347,
+  "title": "The Press Conference",
+  "label": "ch:ka-the-press-conference",
+  "canDo": "I can say a press conference, to question, to give a reaction, to mention and a summary.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-R347-review-341-347",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can say a press conference, to question, to give a reaction, to mention and a summary.",
+    "assesses": [
+      "KA-LEX-C347-GOSHTHI347-01",
+      "KA-LEX-C347-GOSHTHI347-02",
+      "KA-LEX-C347-GOSHTHI347-03",
+      "KA-LEX-C347-GOSHTHI347-04",
+      "KA-LEX-C347-GOSHTHI347-05"
+    ]
+  }
+}

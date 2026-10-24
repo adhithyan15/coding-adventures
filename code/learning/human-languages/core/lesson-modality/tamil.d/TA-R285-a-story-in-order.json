@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R285-a-story-in-order",
+    "language": "tamil",
+    "chapter": 285,
+    "sequence": 16190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14e385f6eb1c6f8a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C547-atokyat-anne",
+    "language": "marathi",
+    "chapter": 547,
+    "sequence": 31240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57ff16d026cd6ae8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C453-vottu-ceyyuka",
+    "language": "malayalam",
+    "chapter": 453,
+    "sequence": 22460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c371ee9713b67e50"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:5bc22589e995b97b",
+  "lessonIds": [
+    "KA-C436-hamali",
+    "KA-C436-trali",
+    "KA-C436-heru",
+    "KA-C436-kaisamanu",
+    "KA-C436-bhartiyagu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch436.txt",
+  "json": "kannada/narration/ch436.json",
+  "textHash": "fnv1a64:ba0427638d640890",
+  "jsonHash": "fnv1a64:9cffa46703ee888a",
+  "findings": []
+}

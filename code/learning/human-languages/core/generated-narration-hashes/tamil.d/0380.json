@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:f977bbdf9869259c",
+  "lessonIds": [
+    "TA-C380-poruppu",
+    "TA-C380-katappatu",
+    "TA-C380-arppani",
+    "TA-C380-pankali",
+    "TA-C380-ottulai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch380.txt",
+  "json": "tamil/narration/ch380.json",
+  "textHash": "fnv1a64:9bd21ed75c588913",
+  "jsonHash": "fnv1a64:0c7114d107e90c5f",
+  "findings": []
+}

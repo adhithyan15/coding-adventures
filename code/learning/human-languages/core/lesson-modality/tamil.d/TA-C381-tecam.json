@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C381-tecam",
+    "language": "tamil",
+    "chapter": 381,
+    "sequence": 21840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:382851fe9f49f874"
+  },
+  "findings": []
+}

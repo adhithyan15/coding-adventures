@@ -1,0 +1,11 @@
+{
+  "id": "TA-C401-kulunku",
+  "pathSegment": "TA-PATH-401-PERUNTU401",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-401-PERUNTU401",
+      "order": 2
+    }
+  ]
+}

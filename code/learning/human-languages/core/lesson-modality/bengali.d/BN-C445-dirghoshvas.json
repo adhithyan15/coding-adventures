@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C445-dirghoshvas",
+    "language": "bengali",
+    "chapter": 445,
+    "sequence": 27370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e5e5c7acd4f4223"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 548,
+  "title": "Money Sense",
+  "label": "ch:ta-money-sense",
+  "canDo": "I can talk about thrift, bankruptcy and swindles.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C548-uturuvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 548: I can talk about thrift, bankruptcy and swindles.",
+    "assesses": [
+      "TA-LEX-C548-SIKKANAM548-03",
+      "TA-LEX-C548-SIKKANAM548-04",
+      "TA-LEX-C548-SIKKANAM548-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Life in the Sea",
+  "label": "ch:ta-life-in-the-sea",
+  "canDo": "I can talk about whales, sharks, crabs, seashells and coral.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C436-pavalam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can talk about whales, sharks, crabs, seashells and coral.",
+    "assesses": [
+      "TA-LEX-C436-KATAL436-03",
+      "TA-LEX-C436-KATAL436-04",
+      "TA-LEX-C436-KATAL436-05"
+    ]
+  }
+}

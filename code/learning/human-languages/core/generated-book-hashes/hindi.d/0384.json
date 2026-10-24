@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:fe5162278891a95d",
+  "lessonIds": [
+    "HI-C384-tarakna",
+    "HI-C384-jamna",
+    "HI-C384-ubalnaa",
+    "HI-C384-galna",
+    "HI-C384-madhyam"
+  ],
+  "tex": "hindi/book/chapters/ch384-heat-and-cold.tex"
+}

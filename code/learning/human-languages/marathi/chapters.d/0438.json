@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Showers and Drizzle",
+  "label": "ch:mr-showers-and-drizzle",
+  "canDo": "I can talk about drizzle, downpours and the first storms of summer, and getting wet.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C438-bhijne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can talk about drizzle, downpours and the first storms of summer, and getting wet.",
+    "assesses": [
+      "MR-LEX-C438-VALIV438-03",
+      "MR-LEX-C438-VALIV438-04",
+      "MR-LEX-C438-VALIV438-05"
+    ]
+  }
+}

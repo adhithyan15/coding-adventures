@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:281de83126b93392",
+  "lessonIds": [
+    "TE-C400-ennika",
+    "TE-C400-abhyarthi",
+    "TE-C400-ennuko",
+    "TE-C400-pracaram",
+    "TE-C400-mejariti"
+  ],
+  "tex": "telugu/book/chapters/ch400-elections.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C527-manram",
+    "language": "tamil",
+    "chapter": 527,
+    "sequence": 30200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7f6e9bf3052c72c"
+  },
+  "findings": []
+}

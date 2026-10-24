@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:15f4c1063eadd581",
+  "lessonIds": [
+    "AR-C437-busala",
+    "AR-C437-sura",
+    "AR-C437-murshid",
+    "AR-C437-arshada",
+    "AR-C437-khatt-sayr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch437.txt",
+  "json": "arabic/narration/ch437.json",
+  "textHash": "fnv1a64:f4471fb9d65f58df",
+  "jsonHash": "fnv1a64:d434ad6f38d0d394",
+  "findings": []
+}

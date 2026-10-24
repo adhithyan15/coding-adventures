@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-513-CAMP513",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-513-CAMP513"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 397,
+  "title": "Adding a Point",
+  "label": "ch:te-adding-a-point",
+  "canDo": "I can add points, sum up and say what I think.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-R397-review-390-397",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can add points, sum up and say what I think.",
+    "assesses": [
+      "TE-LEX-C397-SANKSIPTAM397-01",
+      "TE-LEX-C397-SANKSIPTAM397-02",
+      "TE-LEX-C397-SANKSIPTAM397-03",
+      "TE-LEX-C397-SANKSIPTAM397-04",
+      "TE-LEX-C397-SANKSIPTAM397-05"
+    ]
+  }
+}

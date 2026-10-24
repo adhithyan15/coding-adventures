@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:5466a09795384aad",
+  "lessonIds": [
+    "HI-C534-maic",
+    "HI-C534-muqabla",
+    "HI-C534-jitana",
+    "HI-C534-vijeta",
+    "HI-C534-puraskar"
+  ],
+  "tex": "hindi/book/chapters/ch534-the-big-match.tex"
+}

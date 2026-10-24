@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "Rumour and Uproar",
+  "label": "ch:bn-rumour-and-uproar",
+  "canDo": "I can talk about rumours, whispers and a stir in town.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C298-chancholyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can talk about rumours, whispers and a stir in town.",
+    "assesses": [
+      "BN-LEX-C298-UTTEJONA298-03",
+      "BN-LEX-C298-UTTEJONA298-04",
+      "BN-LEX-C298-UTTEJONA298-05"
+    ]
+  }
+}

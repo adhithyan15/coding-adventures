@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C273-dhore",
+    "language": "bengali",
+    "chapter": 273,
+    "sequence": 16980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6baec78673e56f0b"
+  },
+  "findings": []
+}

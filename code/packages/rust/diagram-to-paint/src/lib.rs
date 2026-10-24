@@ -28,7 +28,7 @@
 
 pub const VERSION: &str = "0.76.0";
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 use diagram_ir::{
     ChartTextAnchor, ChartTextBaseline, DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
@@ -54,7 +54,7 @@ use layout_ir::{
 use layout_effects::{EffectColor, EffectFilter, EffectStyle};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
-    GlyphPosition, ImageSrc, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
+    GlyphPosition, ImageSrc, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage, PixelContainer,
     PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand, StrokeCap, StrokeJoin,
 };
 use text_interfaces::{
@@ -836,6 +836,20 @@ where
     M: FontMetrics<Handle = S::Handle>,
     R: FontResolver<Handle = S::Handle>,
 {
+    diagram_to_paint_swimlane_with_images(diagram, options, &BTreeMap::new())
+}
+
+/// Lower Swimlanes while substituting integrator-decoded image pixels by source URI.
+pub fn diagram_to_paint_swimlane_with_images<S, M, R>(
+    diagram: &LayoutedSwimlaneDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+    decoded_images: &BTreeMap<String, PixelContainer>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
     let mut instructions = Vec::new();
     let mut text_children = Vec::new();
     let mut rich_text_instructions = Vec::new();
@@ -1505,7 +1519,9 @@ where
             instructions.push(PaintInstruction::Image(PaintImage {
                 base: PaintBase::default(), x: node.x + (node.width - image.width) / 2.0,
                 y: image_y, width: image.width, height: image.height,
-                src: ImageSrc::Uri(image.source.clone()), opacity: None,
+                src: decoded_images.get(&image.source).cloned()
+                    .map_or_else(|| ImageSrc::Uri(image.source.clone()), ImageSrc::Pixels),
+                opacity: None,
             }));
         }
         match node.shape {
@@ -1852,6 +1868,8 @@ where
             SwimlaneLabelPosition::Top => "t",
             SwimlaneLabelPosition::Bottom => "b",
         }.into());
+        metadata.insert(format!("swimlane.node.{node_id}.imageResolved"),
+            decoded_images.contains_key(&image.source).to_string());
     }
     for (index, edge) in diagram.edges.iter().enumerate() {
         if let Some(id) = &edge.id {
@@ -7284,11 +7302,11 @@ where
 
     // ── Relationships (drawn behind nodes) ───────────────────────────────────
     for rel in &diagram.relationships {
-        instructions.push(PaintInstruction::Path(line_path(
-            &rel.points,
-            "#6b7280",
-            1.5,
-        )));
+        let mut relationship_path = line_path(&rel.points, "#6b7280", 1.5);
+        if rel.kind == RelKind::Dependency {
+            relationship_path.stroke_dash = Some(vec![6.0, 4.0]);
+        }
+        instructions.push(PaintInstruction::Path(relationship_path));
         if rel.end_arrow && rel.points.len() >= 2 {
             let tip = &rel.points[rel.points.len() - 1];
             let prev = &rel.points[rel.points.len() - 2];
@@ -7303,7 +7321,7 @@ where
                 &rel.kind,
             )));
         }
-        if let Some((ref pos, ref lbl)) = rel.label {
+        if let Some((pos, lbl)) = rel.label.as_ref().filter(|(_, label)| !label.is_empty()) {
             instructions.push(PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(),
                 x: pos.x - 44.0,
@@ -10231,6 +10249,48 @@ mod tests {
                 .count(),
             2
         );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[6.0, 4.0])
+        )));
+    }
+
+    #[test]
+    fn structural_empty_relationship_label_does_not_emit_label_paint() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedStructuralDiagram {
+            width: 200.0,
+            height: 80.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            architecture_config: None,
+            groups: vec![],
+            nodes: vec![],
+            relationships: vec![diagram_ir::LayoutedStructuralRelationship {
+                from_id: "customer".into(),
+                to_id: "order".into(),
+                kind: RelKind::Association,
+                start_arrow: false,
+                end_arrow: false,
+                from_group: false,
+                to_group: false,
+                from_port: None,
+                to_port: None,
+                routing: diagram_ir::StructuralRouting::Direct,
+                points: vec![Point { x: 20.0, y: 40.0 }, Point { x: 180.0, y: 40.0 }],
+                from_mult: None,
+                to_mult: None,
+                label: Some((Point { x: 100.0, y: 40.0 }, String::new())),
+            }],
+        };
+
+        let scene = diagram_to_paint_structural(&layout, &opts);
+        assert_eq!(scene.instructions.len(), 1);
+        assert!(matches!(scene.instructions[0], PaintInstruction::Path(_)));
     }
 
     #[test]

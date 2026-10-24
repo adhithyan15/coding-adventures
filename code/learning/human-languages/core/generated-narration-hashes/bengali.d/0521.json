@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:0897fd8d02487cfc",
+  "lessonIds": [
+    "BN-C521-bet",
+    "BN-C521-uiket",
+    "BN-C521-ran",
+    "BN-C521-kech",
+    "BN-C521-petano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch521.txt",
+  "json": "bengali/narration/ch521.json",
+  "textHash": "fnv1a64:c1fe69c6b27b9979",
+  "jsonHash": "fnv1a64:ed962a6b43f4906d",
+  "findings": []
+}

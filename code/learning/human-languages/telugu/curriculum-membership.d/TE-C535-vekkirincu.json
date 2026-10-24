@@ -1,0 +1,11 @@
+{
+  "id": "TE-C535-vekkirincu",
+  "pathSegment": "TE-PATH-535-EGATALI535",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-535-EGATALI535",
+      "order": 1
+    }
+  ]
+}

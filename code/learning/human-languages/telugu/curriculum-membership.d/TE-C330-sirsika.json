@@ -1,0 +1,11 @@
+{
+  "id": "TE-C330-sirsika",
+  "pathSegment": "TE-PATH-330-PATRIKA330",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-330-PATRIKA330",
+      "order": 2
+    }
+  ]
+}

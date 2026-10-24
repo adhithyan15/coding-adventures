@@ -1,0 +1,11 @@
+{
+  "id": "AR-R286-advice-and-reasons",
+  "pathSegment": "AR-PATH-286-REASONS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-286-REASONS",
+      "order": 4
+    }
+  ]
+}

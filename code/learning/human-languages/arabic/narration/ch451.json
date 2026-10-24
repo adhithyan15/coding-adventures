@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 451,
+  "title": "Offices and enquiries",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dc54ae5d96fc9d2d",
+  "lessons": [
+    {
+      "id": "AR-C451-makhfar",
+      "sequence": 25230,
+      "title": "مخفر (makhfar) — a police station",
+      "headword": "مخفر",
+      "romanization": "makhfar",
+      "gloss": "a police station",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9178beeb2d2db003",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a line of people, then the Arabic for to apply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مخفر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخفر — makhfar — \"a police station\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ذهب الرجل إلى المخفر بعد الحادث. dhahaba ar-rajul ilā al-makhfar baʿda al-ḥādith. The man went to the police station after the accident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخفر (makhfar) is built on the native Arabic root kh-f-r, \"to guard, to protect\" (Lane). The pattern mafʿal makes it a guard post."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makhfar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makhfar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makhfar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makhfar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhahaba ar-rajul ilā al-makhfar baʿda al-ḥādith. — The man went to the police station after the accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhahaba ar-rajul ilā al-makhfar baʿda al-ḥādith.* — The man went to the police station after the accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a line of people, then the Arabic for to apply, then say makhfar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a line of people, then the Arabic for to apply, then say *makhfar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مخفر (makhfar) mean? (\"A police station\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C451-maktaba",
+      "sequence": 25240,
+      "title": "مكتبة (maktaba) — a library; a bookshop",
+      "headword": "مكتبة",
+      "romanization": "maktaba",
+      "gloss": "a library; a bookshop",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b7ffabcae0f15dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to apply, then the Arabic for a police station."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مكتبة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مكتبة — maktaba — \"a library; a bookshop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قرأت في المكتبة حتى المساء. qaraʾtu fī al-maktaba ḥattā al-masāʾ. I read in the library until the evening."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مكتبة (maktaba) is built on the native Arabic root k-t-b, \"to write\" (Lane). The pattern mafʿala makes it the place of books."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maktaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maktaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maktaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maktaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qaraʾtu fī al-maktaba ḥattā al-masāʾ. — I read in the library until the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qaraʾtu fī al-maktaba ḥattā al-masāʾ.* — I read in the library until the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to apply, then the Arabic for a police station, then say maktaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to apply, then the Arabic for a police station, then say *maktaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مكتبة (maktaba) mean? (\"A library; a bookshop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C451-istafsara",
+      "sequence": 25250,
+      "title": "استفسر (istafsara) — to enquire",
+      "headword": "استفسر",
+      "romanization": "istafsara",
+      "gloss": "to enquire",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8056b031612aac7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a police station, then the Arabic for a library."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استفسر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استفسر — istafsara — \"to enquire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استفسر أبي عن الحافلة الأخيرة. istafsara abī ʿan al-ḥāfila al-akhīra. My father enquired about the last bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستفسر, yastafsir."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes ʿan: istafsara ʿan, \"to ask about\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استفسر (istafsara) is built on the native Arabic root f-s-r, \"to explain\" (Lane). It is Form X, \"to ask for an explanation\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istafsara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istafsara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istafsara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istafsara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istafsara abī ʿan al-ḥāfila al-akhīra. — My father enquired about the last bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istafsara abī ʿan al-ḥāfila al-akhīra.* — My father enquired about the last bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a police station, then the Arabic for a library, then say istafsara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a police station, then the Arabic for a library, then say *istafsara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استفسر (istafsara) mean? (\"To enquire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C451-rajaa-check",
+      "sequence": 25260,
+      "title": "راجع (rājaʿa) — to check over; to go back to (an office)",
+      "headword": "راجع",
+      "romanization": "rājaʿa",
+      "gloss": "to check over; to go back to (an office)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ab48c143a36b358",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a library, then the Arabic for to enquire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: راجع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "راجع — rājaʿa — \"to check over; to go back to (an office)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "راجعت الموظفة الأوراق. rājaʿat al-muwaẓẓafa al-awrāq. The clerk checked over the papers."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يراجع, yurājiʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "راجع (rājaʿa) is built on the native Arabic root r-j-ʿ, \"to return\" (Lane). It is Form III, \"to go back over\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājaʿat al-muwaẓẓafa al-awrāq. — The clerk checked over the papers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājaʿat al-muwaẓẓafa al-awrāq.* — The clerk checked over the papers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a library, then the Arabic for to enquire, then say rājaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a library, then the Arabic for to enquire, then say *rājaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does راجع (rājaʿa) mean? (\"To check over; to go back to (an office)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C451-hazara",
+      "sequence": 25270,
+      "title": "حظر (ḥaẓara) — to ban",
+      "headword": "حظر",
+      "romanization": "ḥaẓara",
+      "gloss": "to ban",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5adcb7c60f137b9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to enquire, then the Arabic for to check over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حظر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حظر — ḥaẓara — \"to ban\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حظرت البلدية السيارات في وسط المدينة. ḥaẓarat al-baladiyya as-sayyārāt fī wasaṭ al-madīna. The town hall banned cars in the city centre."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحظر, yaḥẓur."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حظر (ḥaẓara) is built on the native Arabic root ḥ-ẓ-r, \"to forbid; to fence in\" (Lane). It is the plain verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaẓara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaẓara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaẓara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaẓara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaẓarat al-baladiyya as-sayyārāt fī wasaṭ al-madīna. — The town hall banned cars in the city centre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaẓarat al-baladiyya as-sayyārāt fī wasaṭ al-madīna.* — The town hall banned cars in the city centre.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to enquire, then the Arabic for to check over, then say ḥaẓara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to enquire, then the Arabic for to check over, then say *ḥaẓara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حظر (ḥaẓara) mean? (\"To ban\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

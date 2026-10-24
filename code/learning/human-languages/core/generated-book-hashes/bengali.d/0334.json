@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:71361d43e824934f",
+  "lessonIds": [
+    "BN-C334-apotti",
+    "BN-C334-bitorko",
+    "BN-C334-motamot",
+    "BN-C334-birodhita-kora",
+    "BN-C334-upekkha-kora"
+  ],
+  "tex": "bengali/book/chapters/ch334-disagreeing-politely.tex"
+}

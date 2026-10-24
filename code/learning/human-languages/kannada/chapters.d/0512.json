@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Serious Illness",
+  "label": "ch:ka-serious-illness",
+  "canDo": "I can say blood pressure, a heart attack, bleeding, a stroke and to faint.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C512-prajne-tappu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can say blood pressure, a heart attack, bleeding, a stroke and to faint.",
+    "assesses": [
+      "KA-LEX-C512-ROGA512-03",
+      "KA-LEX-C512-ROGA512-04",
+      "KA-LEX-C512-ROGA512-05"
+    ]
+  }
+}

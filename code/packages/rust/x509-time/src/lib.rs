@@ -1,8 +1,10 @@
-//! # RFC 5280 certificate time values
+//! # RFC 5280 certificate and OCSP time values
 //!
 //! DER's generic time types and the Internet PKI profile are deliberately
 //! separate layers. `der-asn1` proves the element framing; this crate applies
 //! RFC 5280's exact spelling, century, tag-selection, and calendar rules. It
+//! keeps certificate validity's 1950/2050 tag-selection rule separate from the
+//! tag-strict GeneralizedTime syntax that RFC 6960 uses for OCSP timestamps. It
 //! never asks a clock whether the decoded instant is current.
 
 #![deny(unsafe_code)]
@@ -143,9 +145,24 @@ pub fn decode_x509_time(element: Asn1Element<'_>) -> Result<X509Time, X509TimeEr
 
     match tag.number {
         UTC_TIME_TAG => decode_utc_time(element),
-        GENERALIZED_TIME_TAG => decode_generalized_time(element),
+        GENERALIZED_TIME_TAG => decode_certificate_generalized_time(element),
         _ => Err(X509TimeError::new(X509TimeErrorKind::UnexpectedTag, 0)),
     }
+}
+
+/// Decode one exact RFC 5280 GeneralizedTime wire value.
+///
+/// RFC 6960 uses this fixed `YYYYMMDDHHMMSSZ` form for OCSP `producedAt`,
+/// `thisUpdate`, `nextUpdate`, and `revocationTime`, including dates before
+/// 2050. This entry point therefore enforces the exact tag, spelling, and
+/// Gregorian fields without applying the certificate-validity choice that
+/// reserves GeneralizedTime for 2050 and later.
+pub fn decode_x509_generalized_time(element: Asn1Element<'_>) -> Result<X509Time, X509TimeError> {
+    let tag = element.tag();
+    if tag.class != TagClass::Universal || tag.constructed || tag.number != GENERALIZED_TIME_TAG {
+        return Err(X509TimeError::new(X509TimeErrorKind::UnexpectedTag, 0));
+    }
+    decode_generalized_time_contents(element)
 }
 
 fn decode_utc_time(element: Asn1Element<'_>) -> Result<X509Time, X509TimeError> {
@@ -160,16 +177,23 @@ fn decode_utc_time(element: Asn1Element<'_>) -> Result<X509Time, X509TimeError> 
     decode_fields(X509TimeEncoding::UtcTime, year, value, 2, value_offset)
 }
 
-fn decode_generalized_time(element: Asn1Element<'_>) -> Result<X509Time, X509TimeError> {
+fn decode_certificate_generalized_time(
+    element: Asn1Element<'_>,
+) -> Result<X509Time, X509TimeError> {
+    let time = decode_generalized_time_contents(element)?;
+    if time.year < 2050 {
+        return Err(X509TimeError::new(
+            X509TimeErrorKind::GeneralizedTimeBefore2050,
+            element.header().len(),
+        ));
+    }
+    Ok(time)
+}
+
+fn decode_generalized_time_contents(element: Asn1Element<'_>) -> Result<X509Time, X509TimeError> {
     let value = require_shape(element, GENERALIZED_TIME_LENGTH)?;
     let value_offset = element.header().len();
     let year = parse_digits(value, 0, 4, value_offset)?;
-    if year < 2050 {
-        return Err(X509TimeError::new(
-            X509TimeErrorKind::GeneralizedTimeBefore2050,
-            value_offset,
-        ));
-    }
     decode_fields(
         X509TimeEncoding::GeneralizedTime,
         year,

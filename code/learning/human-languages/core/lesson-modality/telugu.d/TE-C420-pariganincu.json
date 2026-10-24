@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C420-pariganincu",
+    "language": "telugu",
+    "chapter": 420,
+    "sequence": 20960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d1a5793b6852f43"
+  },
+  "findings": []
+}

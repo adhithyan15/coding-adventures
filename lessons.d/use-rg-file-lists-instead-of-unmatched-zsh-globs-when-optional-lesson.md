@@ -9,3 +9,8 @@ zsh found no Sanskrit-named lesson and treated the unmatched pattern as an
 error. Build the candidate list with `rg --files lessons.d | rg 'topic|other'`
 and iterate over those concrete paths instead. Optional discovery should yield
 an empty list, not abort the rest of the preflight reading.
+
+This recurred with `git grep` when an unquoted `code/packages/rust/x509-*`
+pathspec was expanded by zsh before Git received it. Quote wildcard pathspecs
+passed after `--`, or enumerate tracked paths first; Git cannot interpret a
+pattern that the shell has already rejected.

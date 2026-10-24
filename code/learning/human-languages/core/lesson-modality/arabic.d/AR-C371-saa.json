@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C371-saa",
+    "language": "arabic",
+    "chapter": 371,
+    "sequence": 21070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2dc30bb58d171b0"
+  },
+  "findings": []
+}

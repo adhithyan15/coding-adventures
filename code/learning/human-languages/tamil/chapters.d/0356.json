@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Talking Things Over",
+  "label": "ch:ta-talking-things-over",
+  "canDo": "I can talk about discussions, interruptions and compromise.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C356-vakkuvatam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can talk about discussions, interruptions and compromise.",
+    "assesses": [
+      "TA-LEX-C356-KALANTURAIYA356-03",
+      "TA-LEX-C356-KALANTURAIYA356-04",
+      "TA-LEX-C356-KALANTURAIYA356-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:1baf71698a957e73",
+  "lessonIds": [
+    "TA-C395-natattu",
+    "TA-C395-uruvakku",
+    "TA-C395-nikku",
+    "TA-C395-oli-abolish",
+    "TA-C395-kaivitu"
+  ],
+  "tex": "tamil/book/chapters/ch395-taking-action.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:086c615f152d0aa0",
+  "lessonIds": [
+    "KA-C379-sammatisu",
+    "KA-C379-bhinnabhipraya",
+    "KA-C379-ommata",
+    "KA-C379-virodhisu",
+    "KA-C379-paraspara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch379.txt",
+  "json": "kannada/narration/ch379.json",
+  "textHash": "fnv1a64:3be9235a00838405",
+  "jsonHash": "fnv1a64:9764db3361aacfac",
+  "findings": []
+}

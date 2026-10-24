@@ -1,0 +1,11 @@
+{
+  "id": "HI-C327-vams",
+  "pathSegment": "HI-PATH-327-VANSH327",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-327-VANSH327",
+      "order": 2
+    }
+  ]
+}

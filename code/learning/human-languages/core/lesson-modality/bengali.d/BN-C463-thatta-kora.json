@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C463-thatta-kora",
+    "language": "bengali",
+    "chapter": 463,
+    "sequence": 28310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a18ee351162cc456"
+  },
+  "findings": []
+}

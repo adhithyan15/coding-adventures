@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C468-parisuddhyam",
+    "language": "telugu",
+    "chapter": 468,
+    "sequence": 23540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7be26e62175256d5"
+  },
+  "findings": []
+}

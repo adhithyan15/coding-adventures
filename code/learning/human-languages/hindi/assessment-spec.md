@@ -92,6 +92,11 @@ changes the threshold or task envelope.
 
 - Listening recordings use Hindi speakers. Words-per-minute bands below are
   form-assembly targets, not a claim that Hindi has one natural speaking rate.
+- B2, C1, and C2 listening each retain at least two distinct documented
+  regional Hindi voices across the four parts. The examiner production record
+  identifies the speakers, their regional variety and the parts they voice;
+  a written mock script is not evidence that a recording or human review exists.
+  Regional pronunciation cannot be the sole cue to a scored answer.
 - Pre-A1 and A1 directions may also be supplied in a declared support language,
   so misunderstanding directions is not confused with Hindi proficiency.
   From A2 onward directions are in Hindi, with one unscored example.
@@ -169,7 +174,7 @@ instructional supports, not pass evidence.
 | paper | minutes | required task envelope |
 |---|---:|---|
 | reading | 75 | 4 parts and 32–40 items across dense public, professional, academic, and literary texts; 2,800–3,500 source words total, including implicit stance |
-| listening | 50 | 4 parts and 26–32 items across unscripted discussion, lecture, interview, and narrative; 160–185 wpm with natural variation, recordings played once |
+| listening | 50 | 4 parts and 26–32 items across unscripted discussion, lecture, interview, and narrative, including at least two documented regional Hindi voices; 160–185 wpm with natural variation, recordings played once |
 | writing | 75 | synthesize two short sources in 180–220 words, then produce a 300–380 word audience-aware argument, report, or critical response |
 | speaking | 22 | 5-minute source-based presentation, collaborative synthesis, and sustained challenge and defence; 15 minutes preparation with paper notes only |
 
@@ -178,7 +183,7 @@ instructional supports, not pass evidence.
 | paper | minutes | required task envelope |
 |---|---:|---|
 | reading | 90 | 4 parts and 34–42 items across stylistically varied specialist, public, and literary texts; 4,000–5,000 source words, including ambiguity and intertextual stance |
-| listening | 60 | 4 parts and 28–34 items across rapid multiparty interaction, extended argument, narrative, and culturally dense media; natural 165–200 wpm variation, recordings played once |
+| listening | 60 | 4 parts and 28–34 items across rapid multiparty interaction, extended argument, narrative, and culturally dense media, including at least two documented regional Hindi voices; natural 165–200 wpm variation, recordings played once |
 | writing | 90 | synthesize and reframe multiple sources for one audience in 220–280 words, then produce a precise 420–520 word extended text in a contrasting genre or register |
 | speaking | 25 | 6-minute synthesis or mediation presentation, multiparty negotiation, and sustained defence requiring reformulation for a second audience; 15 minutes preparation with paper notes only |
 

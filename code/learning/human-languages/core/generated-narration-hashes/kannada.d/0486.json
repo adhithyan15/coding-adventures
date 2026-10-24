@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:f5ea3daf5885514e",
+  "lessonIds": [
+    "KA-C486-hingaru",
+    "KA-C486-alikallu",
+    "KA-C486-mabbu",
+    "KA-C486-musuku",
+    "KA-C486-himapata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch486.txt",
+  "json": "kannada/narration/ch486.json",
+  "textHash": "fnv1a64:57974706010ef2a8",
+  "jsonHash": "fnv1a64:fe62a04113ab8624",
+  "findings": []
+}

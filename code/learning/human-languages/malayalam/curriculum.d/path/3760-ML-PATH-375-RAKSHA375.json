@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-375-RAKSHA375",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-375-RAKSHA375"
+  ],
+  "after": []
+}

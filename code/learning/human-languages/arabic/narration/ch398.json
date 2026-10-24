@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 398,
+  "title": "Schooling",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2f57c99b9c689795",
+  "lessons": [
+    {
+      "id": "AR-C398-talim",
+      "sequence": 22450,
+      "title": "تعليم (taʿlīm) — education",
+      "headword": "تعليم",
+      "romanization": "taʿlīm",
+      "gloss": "education",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f471b092896bb75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a syllabus, then the Arabic for training."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تعليم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعليم — taʿlīm — \"education\"."
+            },
+            {
+              "kind": "speech",
+              "text": "التعليم مجاني في هذا البلد. at-taʿlīm majjānī fī hādhā al-balad. Education is free in this country."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعليم (taʿlīm) is built on the native Arabic root ʿ-l-m, \"to know\" (Lane). Taʿlīm is the Form II verbal noun, making someone know: teaching, education."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿlīm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿlīm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿlīm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿlīm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at-taʿlīm majjānī fī hādhā al-balad. — Education is free in this country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *at-taʿlīm majjānī fī hādhā al-balad.* — Education is free in this country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a syllabus, then the Arabic for training, then say taʿlīm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a syllabus, then the Arabic for training, then say *taʿlīm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تعليم (taʿlīm) mean? (\"Education\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C398-tarbiya",
+      "sequence": 22460,
+      "title": "تربية (tarbiya) — upbringing",
+      "headword": "تربية",
+      "romanization": "tarbiya",
+      "gloss": "upbringing",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c949d01f21ef68b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for training, then the Arabic for education."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تربية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تربية — tarbiya — \"upbringing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تهتم أمي بتربية أطفالها. tahtammu ummī bi-tarbiyat aṭfālihā. My mother takes care over bringing up her children."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تربية (tarbiya) is built on the native Arabic root r-b-w, \"to grow, to increase\" (Lane). Tarbiya is the Form II verbal noun, making a child grow: upbringing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarbiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarbiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarbiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarbiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tahtammu ummī bi-tarbiyat aṭfālihā. — My mother takes care over bringing up her children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tahtammu ummī bi-tarbiyat aṭfālihā.* — My mother takes care over bringing up her children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for training, then the Arabic for education, then say tarbiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for training, then the Arabic for education, then say *tarbiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تربية (tarbiya) mean? (\"Upbringing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C398-rawda",
+      "sequence": 22470,
+      "title": "روضة (rawḍa) — a kindergarten",
+      "headword": "روضة",
+      "romanization": "rawḍa",
+      "gloss": "a kindergarten",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4d3c960d5dabd85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for education, then the Arabic for upbringing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: روضة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "روضة — rawḍa — \"a kindergarten\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يذهب ابني إلى الروضة كل صباح. yadhhabu ibnī ilā ar-rawḍa kulla ṣabāḥ. My son goes to kindergarten every morning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "روضة (rawḍa) is built on the native Arabic root r-w-ḍ (Lane), where it names a green meadow or garden. Modern Arabic made it the kindergarten, a garden of children."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rawḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rawḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rawḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rawḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadhhabu ibnī ilā ar-rawḍa kulla ṣabāḥ. — My son goes to kindergarten every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadhhabu ibnī ilā ar-rawḍa kulla ṣabāḥ.* — My son goes to kindergarten every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for education, then the Arabic for upbringing, then say rawḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for education, then the Arabic for upbringing, then say *rawḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does روضة (rawḍa) mean? (\"A kindergarten\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C398-mahw-al-ummiyya",
+      "sequence": 22480,
+      "title": "محو الأمية (maḥw al-ummiyya) — literacy",
+      "headword": "محو الأمية",
+      "romanization": "maḥw al-ummiyya",
+      "gloss": "literacy",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8536e319274e822a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for upbringing, then the Arabic for a kindergarten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: محو الأمية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "محو الأمية — maḥw al-ummiyya — \"literacy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعمل الجمعية على محو الأمية في القرى. taʿmalu al-jamʿiyya ʿalā maḥw al-ummiyya fī al-qurā. The association works for literacy in the villages."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally the wiping out of illiteracy; أمي, ummī, is one who cannot read."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "محو الأمية (maḥw al-ummiyya) joins maḥw, \"wiping out\", built on the native Arabic root m-ḥ-w, and ummiyya, \"illiteracy\", from ummī, built on ʾ-m-m (Lane): one still as his mother bore him, unable to read."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḥw al-ummiyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḥw al-ummiyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḥw al-ummiyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḥw al-ummiyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿmalu al-jamʿiyya ʿalā maḥw al-ummiyya fī al-qurā. — The association works for literacy in the villages.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿmalu al-jamʿiyya ʿalā maḥw al-ummiyya fī al-qurā.* — The association works for literacy in the villages.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for upbringing, then the Arabic for a kindergarten, then say maḥw al-ummiyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for upbringing, then the Arabic for a kindergarten, then say *maḥw al-ummiyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does محو الأمية (maḥw al-ummiyya) mean? (\"Literacy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C398-hudur",
+      "sequence": 22490,
+      "title": "حضور (ḥuḍūr) — attendance",
+      "headword": "حضور",
+      "romanization": "ḥuḍūr",
+      "gloss": "attendance",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:734a7d995169f4b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a kindergarten, then the Arabic for literacy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حضور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حضور — ḥuḍūr — \"attendance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الحضور إلزامي في هذا الصف. al-ḥuḍūr ilzāmī fī hādhā aṣ-ṣaff. Attendance is compulsory in this class."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حضور (ḥuḍūr) is built on the native Arabic root ḥ-ḍ-r, \"to be present\" (Lane). Ḥuḍūr is a verbal noun of ḥaḍara, to be present: attendance."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥuḍūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥuḍūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥuḍūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥuḍūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-ḥuḍūr ilzāmī fī hādhā aṣ-ṣaff. — Attendance is compulsory in this class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-ḥuḍūr ilzāmī fī hādhā aṣ-ṣaff.* — Attendance is compulsory in this class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a kindergarten, then the Arabic for literacy, then say ḥuḍūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a kindergarten, then the Arabic for literacy, then say *ḥuḍūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حضور (ḥuḍūr) mean? (\"Attendance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

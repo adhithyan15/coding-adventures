@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 555,
+  "title": "Prizes and Reviews",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2af8d45fef548952",
+  "lessons": [
+    {
+      "id": "TA-C555-kaittattal",
+      "sequence": 31610,
+      "title": "கைத்தட்டல் (kaittaṭṭal) — applause",
+      "headword": "கைத்தட்டல்",
+      "romanization": "kaittaṭṭal",
+      "gloss": "applause",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9f862e4c2222177",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to go fishing, then the Tamil for a puppet show."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கைத்தட்டல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கைத்தட்டல் — kaittaṭṭal — \"applause\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பாடல் முடிந்தவுடன் பெரிய கைத்தட்டல் கேட்டது. pāṭal muṭintavuṭaṉ periya kaittaṭṭal kēṭṭatu. As soon as the song ended, there was loud applause."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"hand-clapping\": கை (kai) + தட்டல்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கைத்தட்டல் (kaittaṭṭal) is a native compound: கை (kai), \"a hand\", and தட்டல் (taṭṭal), \"a tapping, a clapping\", from தட்டு, \"to tap, to pat\" (DEDR 3039)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaittaṭṭal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaittaṭṭal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaittaṭṭal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaittaṭṭal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭal muṭintavuṭaṉ periya kaittaṭṭal kēṭṭatu. — As soon as the song ended, there was loud applause.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭal muṭintavuṭaṉ periya kaittaṭṭal kēṭṭatu.* — As soon as the song ended, there was loud applause.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to go fishing, then the Tamil for a puppet show, then say kaittaṭṭal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to go fishing, then the Tamil for a puppet show, then say *kaittaṭṭal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கைத்தட்டல் (kaittaṭṭal) mean? (\"Applause\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C555-arankam",
+      "sequence": 31620,
+      "title": "அரங்கம் (araṅkam) — an auditorium; a stadium",
+      "headword": "அரங்கம்",
+      "romanization": "araṅkam",
+      "gloss": "an auditorium; a stadium",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac29781af470be69",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a puppet show, then the Tamil for applause."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அரங்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அரங்கம் — araṅkam — \"an auditorium; a stadium\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அரங்கம் நிரம்பினால் வெளியே திரை வைப்பார்கள். araṅkam nirampiṉāl veḷiyē tirai vaippārkaḷ. If the auditorium fills up, they will put a screen outside."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the second half of திரையரங்கம் (tiraiyaraṅkam), a cinema."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அரங்கம் (araṅkam) is borrowed from Sanskrit raṅga, \"a place of public amusement, an arena, a stage\" (CDIAL 10561); Tamil puts அ before the initial ர."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "araṅkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *araṅkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "araṅkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *araṅkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "araṅkam nirampiṉāl veḷiyē tirai vaippārkaḷ. — If the auditorium fills up, they will put a screen outside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *araṅkam nirampiṉāl veḷiyē tirai vaippārkaḷ.* — If the auditorium fills up, they will put a screen outside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a puppet show, then the Tamil for applause, then say araṅkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a puppet show, then the Tamil for applause, then say *araṅkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அரங்கம் (araṅkam) mean? (\"An auditorium; a stadium\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C555-virutu",
+      "sequence": 31630,
+      "title": "விருது (virutu) — an award",
+      "headword": "விருது",
+      "romanization": "virutu",
+      "gloss": "an award",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc593ed9b4a084a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for applause, then the Tamil for an auditorium."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விருது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விருது — virutu — \"an award\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த நாவல் தேர்வானால் எழுத்தாளருக்குத் தேசிய விருது கிடைக்கும். inta nāval tērvāṉāl eḻuttāḷarukkut tēciya virutu kiṭaikkum. If this novel is chosen, the writer will get a national award."
+            },
+            {
+              "kind": "speech",
+              "text": "One receives it with பெறு: விருது (virutu) பெறு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விருது (virutu) is borrowed from Sanskrit biruda, \"a title, a mark of honour\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virutu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virutu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virutu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virutu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta nāval tērvāṉāl eḻuttāḷarukkut tēciya virutu kiṭaikkum. — If this novel is chosen, the writer will get a national award.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta nāval tērvāṉāl eḻuttāḷarukkut tēciya virutu kiṭaikkum.* — If this novel is chosen, the writer will get a national award.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for applause, then the Tamil for an auditorium, then say virutu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for applause, then the Tamil for an auditorium, then say *virutu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விருது (virutu) mean? (\"An award\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C555-vimarcanam",
+      "sequence": 31640,
+      "title": "விமர்சனம் (vimarcaṉam) — a review; criticism",
+      "headword": "விமர்சனம்",
+      "romanization": "vimarcaṉam",
+      "gloss": "a review; criticism",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42fa06e545f33133",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an auditorium, then the Tamil for an award."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விமர்சனம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விமர்சனம் — vimarcaṉam — \"a review; criticism\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நல்ல விமர்சனம் வந்தால் படம் வெற்றி பெறும். nalla vimarcaṉam vantāl paṭam veṟṟi peṟum. If good reviews come, the film will be a success."
+            },
+            {
+              "kind": "speech",
+              "text": "A critic is a விமர்சகர். A -அம் noun: விமர்சனத்தை."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விமர்சனம் (vimarcaṉam) is borrowed from Sanskrit vimarśana, \"discussion, investigation\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimarcaṉam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimarcaṉam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimarcaṉam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimarcaṉam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nalla vimarcaṉam vantāl paṭam veṟṟi peṟum. — If good reviews come, the film will be a success.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nalla vimarcaṉam vantāl paṭam veṟṟi peṟum.* — If good reviews come, the film will be a success.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an auditorium, then the Tamil for an award, then say vimarcaṉam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an auditorium, then the Tamil for an award, then say *vimarcaṉam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விமர்சனம் (vimarcaṉam) mean? (\"A review; criticism\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C555-katapattiram",
+      "sequence": 31650,
+      "title": "கதாபாத்திரம் (katāpāttiram) — a story character",
+      "headword": "கதாபாத்திரம்",
+      "romanization": "katāpāttiram",
+      "gloss": "a story character",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c20d27db09c32a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an award, then the Tamil for a review."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கதாபாத்திரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கதாபாத்திரம் — katāpāttiram — \"a story character\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தக் கதையில் எனக்குப் பிடித்த கதாபாத்திரம் பாட்டிதான். intak kataiyil eṉakkup piṭitta katāpāttiram pāṭṭitāṉ. My favourite character in this story is the grandmother."
+            },
+            {
+              "kind": "speech",
+              "text": "கதா \"story\" + பாத்திரம் \"a vessel, a role\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கதாபாத்திரம் (katāpāttiram) is built from Sanskrit kathā, \"a story\" (CDIAL 2704), and pātra, \"a vessel\", later \"a role\" (CDIAL 8055)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katāpāttiram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katāpāttiram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katāpāttiram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katāpāttiram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intak kataiyil eṉakkup piṭitta katāpāttiram pāṭṭitāṉ. — My favourite character in this story is the grandmother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intak kataiyil eṉakkup piṭitta katāpāttiram pāṭṭitāṉ.* — My favourite character in this story is the grandmother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an award, then the Tamil for a review, then say katāpāttiram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an award, then the Tamil for a review, then say *katāpāttiram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கதாபாத்திரம் (katāpāttiram) mean? (\"A story character\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

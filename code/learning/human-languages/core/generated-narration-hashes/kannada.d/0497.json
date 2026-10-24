@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:a86dde1c3643ca99",
+  "lessonIds": [
+    "KA-C497-hogalu",
+    "KA-C497-abhimana",
+    "KA-C497-ahankara",
+    "KA-C497-vinaya",
+    "KA-C497-svabhimana",
+    "KA-R497-review-490-497"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch497.txt",
+  "json": "kannada/narration/ch497.json",
+  "textHash": "fnv1a64:f49b6ba5eb4d7090",
+  "jsonHash": "fnv1a64:2a6c54d804d96910",
+  "findings": []
+}

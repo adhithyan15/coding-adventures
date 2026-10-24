@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:9b2af7d98b293dbc",
+  "lessonIds": [
+    "TA-C433-cikaram",
+    "TA-C433-malaiyeru",
+    "TA-C433-erimalai",
+    "TA-C433-panipparai",
+    "TA-C433-camaveli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch433.txt",
+  "json": "tamil/narration/ch433.json",
+  "textHash": "fnv1a64:bcf2d777163befb2",
+  "jsonHash": "fnv1a64:daf62b7202aa7203",
+  "findings": []
+}

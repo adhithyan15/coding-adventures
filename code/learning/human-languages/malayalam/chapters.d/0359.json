@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Before Long",
+  "label": "ch:ml-before-long",
+  "canDo": "I can say before long, in the end, nearly, now and then and right after.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C359-tottupinnale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can say before long, in the end, nearly, now and then and right after.",
+    "assesses": [
+      "ML-LEX-C359-VAIKATHE359-03",
+      "ML-LEX-C359-VAIKATHE359-04",
+      "ML-LEX-C359-VAIKATHE359-05"
+    ]
+  }
+}

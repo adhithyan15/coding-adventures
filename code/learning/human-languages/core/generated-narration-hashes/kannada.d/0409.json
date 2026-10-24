@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:00cb934133144abe",
+  "lessonIds": [
+    "KA-C409-prabandha",
+    "KA-C409-sanksepisu",
+    "KA-C409-grantha",
+    "KA-C409-mandisu",
+    "KA-C409-tippani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch409.txt",
+  "json": "kannada/narration/ch409.json",
+  "textHash": "fnv1a64:657d2db8bc897d53",
+  "jsonHash": "fnv1a64:0f73cb8f9146801f",
+  "findings": []
+}

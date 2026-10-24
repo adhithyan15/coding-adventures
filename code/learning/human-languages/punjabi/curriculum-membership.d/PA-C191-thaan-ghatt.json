@@ -1,0 +1,11 @@
+{
+  "id": "PA-C191-thaan-ghatt",
+  "pathSegment": "PA-PATH-191-A2-GHATT-QUANTITY",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-191-A2-GHATT-QUANTITY",
+      "order": 5
+    }
+  ]
+}

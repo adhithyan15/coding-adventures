@@ -1,0 +1,11 @@
+{
+  "id": "AR-C484-khaniq",
+  "pathSegment": "AR-PATH-484-HARR484",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-484-HARR484",
+      "order": 1
+    }
+  ]
+}

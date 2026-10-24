@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 352,
+  "title": "Fines and quarrels",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:552bfbc58c2f291b",
+  "lessons": [
+    {
+      "id": "AR-C352-mukhalafa",
+      "sequence": 20020,
+      "title": "مخالفة (mukhālafa) — an offence; a traffic ticket",
+      "headword": "مخالفة",
+      "romanization": "mukhālafa",
+      "gloss": "an offence; a traffic ticket",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88c8fc0e5d2a5ccf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to forge, then the Arabic for to conceal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مخالفة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخالفة — mukhālafa — \"an offence; a traffic ticket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حصل أبي على مخالفة أمس. ḥaṣala abī ʿalā mukhālafa ams. My father got a traffic ticket yesterday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخالفة (mukhālafa) is built on the native Arabic root kh-l-f (Lane), the root of the taught khalfa, behind. Mukhālafa is the verbal noun of Form III, \"going against\" a rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhālafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhālafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhālafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhālafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaṣala abī ʿalā mukhālafa ams. — My father got a traffic ticket yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaṣala abī ʿalā mukhālafa ams.* — My father got a traffic ticket yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to forge, then the Arabic for to conceal, then say mukhālafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to forge, then the Arabic for to conceal, then say *mukhālafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مخالفة (mukhālafa) mean? (\"An offence; a traffic ticket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C352-gharama",
+      "sequence": 20030,
+      "title": "غرامة (gharāma) — a fine, a penalty fee",
+      "headword": "غرامة",
+      "romanization": "gharāma",
+      "gloss": "a fine, a penalty fee",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c72521ea23334dec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to conceal, then the Arabic for an offence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غرامة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غرامة — gharāma — \"a fine, a penalty fee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كانت الغرامة خمسين دينارا. kānat al-gharāma khamsīn dīnāran. The fine was fifty dinars."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غرامة (gharāma) is built on the native Arabic root gh-r-m (Lane), \"to pay a debt or a fine\"; gharām, passion, is the same root, a love that will not let go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānat al-gharāma khamsīn dīnāran. — The fine was fifty dinars.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānat al-gharāma khamsīn dīnāran.* — The fine was fifty dinars.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to conceal, then the Arabic for an offence, then say gharāma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to conceal, then the Arabic for an offence, then say *gharāma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غرامة (gharāma) mean? (\"A fine, a penalty fee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C352-shijar",
+      "sequence": 20040,
+      "title": "شجار (shijār) — a brawl, a quarrel",
+      "headword": "شجار",
+      "romanization": "shijār",
+      "gloss": "a brawl, a quarrel",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de6b29331423347c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an offence, then the Arabic for a fine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شجار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شجار — shijār — \"a brawl, a quarrel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وقع شجار بين رجلين في المقهى. waqaʿa shijār bayna rajulayn fī al-maqhā. A fight broke out between two men in the café."
+            },
+            {
+              "kind": "speech",
+              "text": "The taught تشاجر, to quarrel, is the same root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شجار (shijār) is built on the native Arabic root sh-j-r (Lane), the root of shajara, a tree, where branches tangle; tashājara is \"to get tangled with one another\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shijār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shijār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shijār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shijār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waqaʿa shijār bayna rajulayn fī al-maqhā. — A fight broke out between two men in the café.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waqaʿa shijār bayna rajulayn fī al-maqhā.* — A fight broke out between two men in the café.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an offence, then the Arabic for a fine, then say shijār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an offence, then the Arabic for a fine, then say *shijār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شجار (shijār) mean? (\"A brawl, a quarrel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C352-dajja",
+      "sequence": 20050,
+      "title": "ضجة (ḍajja) — a commotion, an uproar",
+      "headword": "ضجة",
+      "romanization": "ḍajja",
+      "gloss": "a commotion, an uproar",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae9e0834e82cd7fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a fine, then the Arabic for a brawl."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ضجة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضجة — ḍajja — \"a commotion, an uproar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أحدث الخبر ضجة كبيرة. aḥdatha al-khabar ḍajja kabīra. The news caused a big stir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضجة (ḍajja) is built on the native Arabic root ḍ-j-j (Lane), \"to cry out, to clamour\"; ḍajīj is noise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍajja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍajja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍajja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍajja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḥdatha al-khabar ḍajja kabīra. — The news caused a big stir.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḥdatha al-khabar ḍajja kabīra.* — The news caused a big stir.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a fine, then the Arabic for a brawl, then say ḍajja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a fine, then the Arabic for a brawl, then say *ḍajja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ضجة (ḍajja) mean? (\"A commotion, an uproar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C352-hashd",
+      "sequence": 20060,
+      "title": "حشد (ḥashd) — a crowd, a gathering",
+      "headword": "حشد",
+      "romanization": "ḥashd",
+      "gloss": "a crowd, a gathering",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60bbfbf7b010d15f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a brawl, then the Arabic for a commotion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حشد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حشد — ḥashd — \"a crowd, a gathering\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انتظر حشد كبير أمام الملعب. intaẓara ḥashd kabīr amāma al-malʿab. A big crowd waited in front of the stadium."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: حشود, ḥushūd."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حشد (ḥashd) is built on the native Arabic root ḥ-sh-d (Lane), \"to gather people together\"; ḥashd is the gathering."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥashd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥashd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥashd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥashd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intaẓara ḥashd kabīr amāma al-malʿab. — A big crowd waited in front of the stadium.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intaẓara ḥashd kabīr amāma al-malʿab.* — A big crowd waited in front of the stadium.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a brawl, then the Arabic for a commotion, then say ḥashd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a brawl, then the Arabic for a commotion, then say *ḥashd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حشد (ḥashd) mean? (\"A crowd, a gathering\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

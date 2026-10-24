@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Around the station",
+  "label": "ch:ar-around-the-station",
+  "canDo": "I can say a garage, a kiosk, a ticket window, a porter and to travel about.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C436-tanaqqala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can say a garage, a kiosk, a ticket window, a porter and to travel about.",
+    "assesses": [
+      "AR-LEX-C436-KUSHK436-03",
+      "AR-LEX-C436-KUSHK436-04",
+      "AR-LEX-C436-KUSHK436-05"
+    ]
+  }
+}

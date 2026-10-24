@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C414-nulaivayil",
+    "language": "tamil",
+    "chapter": 414,
+    "sequence": 23840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19c9f2a3dcb6bb2e"
+  },
+  "findings": []
+}

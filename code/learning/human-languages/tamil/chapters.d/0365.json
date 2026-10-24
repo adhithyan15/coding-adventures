@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "Writing an Essay",
+  "label": "ch:ta-writing-an-essay",
+  "canDo": "I can talk about the parts of an essay.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C365-merkol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can talk about the parts of an essay.",
+    "assesses": [
+      "TA-LEX-C365-KATTURAI365-03",
+      "TA-LEX-C365-KATTURAI365-04",
+      "TA-LEX-C365-KATTURAI365-05"
+    ]
+  }
+}

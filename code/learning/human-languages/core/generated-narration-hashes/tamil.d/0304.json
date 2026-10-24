@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:950d272b2da7e3be",
+  "lessonIds": [
+    "TA-C304-pataru",
+    "TA-C304-pitunku",
+    "TA-C304-takar",
+    "TA-C304-ulukku",
+    "TA-C304-citai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch304.txt",
+  "json": "tamil/narration/ch304.json",
+  "textHash": "fnv1a64:7776a03699fcc972",
+  "jsonHash": "fnv1a64:a4e08a9e3aea26b8",
+  "findings": []
+}

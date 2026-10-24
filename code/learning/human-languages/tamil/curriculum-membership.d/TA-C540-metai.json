@@ -1,0 +1,11 @@
+{
+  "id": "TA-C540-metai",
+  "pathSegment": "TA-PATH-540-MEDAI540",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-540-MEDAI540",
+      "order": 2
+    }
+  ]
+}

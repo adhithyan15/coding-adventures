@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "In court",
+  "label": "ch:ar-in-court",
+  "canDo": "I can say a court, an eyewitness, to accuse, a defendant and to pass judgment.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C305-hakama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can say a court, an eyewitness, to accuse, a defendant and to pass judgment.",
+    "assesses": [
+      "AR-LEX-C305-MAHKAMA305-03",
+      "AR-LEX-C305-MAHKAMA305-04",
+      "AR-LEX-C305-MAHKAMA305-05"
+    ]
+  }
+}

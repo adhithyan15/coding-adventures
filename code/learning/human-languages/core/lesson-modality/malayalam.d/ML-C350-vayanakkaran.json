@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C350-vayanakkaran",
+    "language": "malayalam",
+    "chapter": 350,
+    "sequence": 17080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:310760581af84a88"
+  },
+  "findings": []
+}

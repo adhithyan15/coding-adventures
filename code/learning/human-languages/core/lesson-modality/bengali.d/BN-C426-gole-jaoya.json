@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C426-gole-jaoya",
+    "language": "bengali",
+    "chapter": 426,
+    "sequence": 26190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a3944cc2c768a04"
+  },
+  "findings": []
+}

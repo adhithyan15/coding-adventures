@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:ae38a0b48a39e7ee",
+  "lessonIds": [
+    "BN-C408-basa",
+    "BN-C408-bharate",
+    "BN-C408-ogrim",
+    "BN-C408-jamanot",
+    "BN-C408-bosbas-kora"
+  ],
+  "tex": "bengali/book/chapters/ch408-rented-rooms.tex"
+}

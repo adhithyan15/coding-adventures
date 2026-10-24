@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-500-GHURUR500",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-500-GHURUR500"
+  ],
+  "after": []
+}

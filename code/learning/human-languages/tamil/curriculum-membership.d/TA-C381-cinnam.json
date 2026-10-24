@@ -1,0 +1,11 @@
+{
+  "id": "TA-C381-cinnam",
+  "pathSegment": "TA-PATH-381-TECAM381",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-381-TECAM381",
+      "order": 2
+    }
+  ]
+}

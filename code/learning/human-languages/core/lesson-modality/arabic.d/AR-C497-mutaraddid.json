@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C497-mutaraddid",
+    "language": "arabic",
+    "chapter": 497,
+    "sequence": 27690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3d2327572fcb10a"
+  },
+  "findings": []
+}

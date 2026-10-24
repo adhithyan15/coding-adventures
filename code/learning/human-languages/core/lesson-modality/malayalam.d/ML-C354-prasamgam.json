@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C354-prasamgam",
+    "language": "malayalam",
+    "chapter": 354,
+    "sequence": 17250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec493f07cd43288f"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:d38dd06a9794a527",
+  "lessonIds": [
+    "KA-C416-muccalike",
+    "KA-C416-pratijne",
+    "KA-C416-pratiphala",
+    "KA-C416-koru",
+    "KA-C416-pramanavacana"
+  ],
+  "tex": "kannada/book/chapters/ch416-promises-and-rewards.tex"
+}

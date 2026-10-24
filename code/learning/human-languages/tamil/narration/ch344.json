@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 344,
+  "title": "Magic and Monsters",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2f4b8f0dec7f7a85",
+  "lessons": [
+    {
+      "id": "TA-C344-arakkan",
+      "sequence": 19660,
+      "title": "அரக்கன் (arakkaṉ) — a monster; a demon",
+      "headword": "அரக்கன்",
+      "romanization": "arakkaṉ",
+      "gloss": "a monster; a demon",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4dd2c4b7d8011dce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to make up, then the Tamil for a proverb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அரக்கன்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அரக்கன் — arakkaṉ — \"a monster; a demon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கதையில் ஒரு அரக்கன் காட்டில் வாழ்ந்தான். kataiyil oru arakkaṉ kāṭṭil vāḻntāṉ. In the story a monster lived in the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "The female is அரக்கி."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அரக்கன் (arakkaṉ) is usually traced to Sanskrit rākṣasa, \"demon\" (CDIAL 10672), with the Tamil அ- before a loan in r-."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arakkaṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arakkaṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arakkaṉ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arakkaṉ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kataiyil oru arakkaṉ kāṭṭil vāḻntāṉ. — In the story a monster lived in the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kataiyil oru arakkaṉ kāṭṭil vāḻntāṉ.* — In the story a monster lived in the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to make up, then the Tamil for a proverb, then say arakkaṉ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to make up, then the Tamil for a proverb, then say *arakkaṉ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அரக்கன் (arakkaṉ) mean? (\"A monster; a demon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C344-tevatai",
+      "sequence": 19670,
+      "title": "தேவதை (tēvatai) — a fairy; an angel",
+      "headword": "தேவதை",
+      "romanization": "tēvatai",
+      "gloss": "a fairy; an angel",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35522c6c943b240a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a proverb, then the Tamil for a monster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தேவதை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேவதை — tēvatai — \"a fairy; an angel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒரு தேவதை ஏழைச் சிறுமிக்கு உதவினாள். oru tēvatai ēḻaic ciṟumikku utaviṉāḷ. A fairy helped the poor girl."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of a very kind person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேவதை (tēvatai) is borrowed from Sanskrit dēvatā, \"divinity\" (CDIAL 6530)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēvatai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēvatai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēvatai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēvatai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru tēvatai ēḻaic ciṟumikku utaviṉāḷ. — A fairy helped the poor girl.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru tēvatai ēḻaic ciṟumikku utaviṉāḷ.* — A fairy helped the poor girl.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a proverb, then the Tamil for a monster, then say tēvatai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a proverb, then the Tamil for a monster, then say *tēvatai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தேவதை (tēvatai) mean? (\"A fairy; an angel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C344-mantiravati",
+      "sequence": 19680,
+      "title": "மந்திரவாதி (mantiravāti) — a sorcerer; a magician",
+      "headword": "மந்திரவாதி",
+      "romanization": "mantiravāti",
+      "gloss": "a sorcerer; a magician",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:552a3dd7beb97232",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a monster, then the Tamil for a fairy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மந்திரவாதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மந்திரவாதி — mantiravāti — \"a sorcerer; a magician\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மந்திரவாதி இளவரசனை ஒரு தவளையாக மாற்றினான். mantiravāti iḷavaracaṉai oru tavaḷaiyāka māṟṟiṉāṉ. The sorcerer turned the prince into a frog."
+            },
+            {
+              "kind": "speech",
+              "text": "From மந்திரம், a spell."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மந்திரவாதி (mantiravāti) is borrowed from Sanskrit mantravādin, \"a reciter of spells, an enchanter\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantiravāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantiravāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantiravāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantiravāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantiravāti iḷavaracaṉai oru tavaḷaiyāka māṟṟiṉāṉ. — The sorcerer turned the prince into a frog.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantiravāti iḷavaracaṉai oru tavaḷaiyāka māṟṟiṉāṉ.* — The sorcerer turned the prince into a frog.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a monster, then the Tamil for a fairy, then say mantiravāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a monster, then the Tamil for a fairy, then say *mantiravāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மந்திரவாதி (mantiravāti) mean? (\"A sorcerer; a magician\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C344-capi",
+      "sequence": 19690,
+      "title": "சபி (capi) — to curse",
+      "headword": "சபி",
+      "romanization": "capi",
+      "gloss": "to curse",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db1a36e82965ed61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a fairy, then the Tamil for a sorcerer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சபி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சபி — capi — \"to curse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கோபமான முனிவர் மன்னரைச் சபித்தார். kōpamāṉa muṉivar maṉṉaraic capittār. The angry sage cursed the king."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): சபித்தேன், capittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is சாபம், a curse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சபி (capi) is a Tamil verb built on Sanskrit śapati, \"curses, swears\" (CDIAL 12289)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "capi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *capi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "capi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *capi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōpamāṉa muṉivar maṉṉaraic capittār. — The angry sage cursed the king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōpamāṉa muṉivar maṉṉaraic capittār.* — The angry sage cursed the king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a fairy, then the Tamil for a sorcerer, then say capi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a fairy, then the Tamil for a sorcerer, then say *capi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சபி (capi) mean? (\"To curse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C344-urumaru",
+      "sequence": 19700,
+      "title": "உருமாறு (urumāṟu) — to change shape; to transform",
+      "headword": "உருமாறு",
+      "romanization": "urumāṟu",
+      "gloss": "to change shape; to transform",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18ca3edb36c5532e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a sorcerer, then the Tamil for to curse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உருமாறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உருமாறு — urumāṟu — \"to change shape; to transform\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தத் தவளை ஒரு இளவரசனாக உருமாறியது. antat tavaḷai oru iḷavaracaṉāka urumāṟiyatu. That frog changed into a prince."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): உருமாறினேன், urumāṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What it becomes takes -ஆக."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உருமாறு (urumāṟu) is a Tamil compound built from உரு, \"form, shape\" (DEDR 657, which asks whether it comes from Sanskrit rūpa), and மாறு, \"to become changed\" (DEDR 4834)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "urumāṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *urumāṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "urumāṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *urumāṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antat tavaḷai oru iḷavaracaṉāka urumāṟiyatu. — That frog changed into a prince.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antat tavaḷai oru iḷavaracaṉāka urumāṟiyatu.* — That frog changed into a prince.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a sorcerer, then the Tamil for to curse, then say urumāṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a sorcerer, then the Tamil for to curse, then say *urumāṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உருமாறு (urumāṟu) mean? (\"To change shape; to transform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

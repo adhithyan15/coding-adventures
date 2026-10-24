@@ -1,0 +1,11 @@
+{
+  "id": "TE-C442-kikkirisipovu",
+  "pathSegment": "TE-PATH-442-PATTA442",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-442-PATTA442",
+      "order": 3
+    }
+  ]
+}

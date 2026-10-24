@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Armies and wars",
+  "label": "ch:ar-armies-and-wars",
+  "canDo": "I can say an army, a soldier, a war, a battle and to wage war.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C307-haraba-war",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can say an army, a soldier, a war, a battle and to wage war.",
+    "assesses": [
+      "AR-LEX-C307-JAYSH307-03",
+      "AR-LEX-C307-JAYSH307-04",
+      "AR-LEX-C307-JAYSH307-05"
+    ]
+  }
+}

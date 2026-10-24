@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:c55a9d621ef777c6",
+  "lessonIds": [
+    "AR-C527-fallah",
+    "AR-C527-bustani",
+    "AR-C527-rabiha",
+    "AR-C527-aflasa",
+    "AR-C527-iddakhara",
+    "AR-R527-review-520-527"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch527.txt",
+  "json": "arabic/narration/ch527.json",
+  "textHash": "fnv1a64:34fe241f0191593a",
+  "jsonHash": "fnv1a64:526bc4878e2671aa",
+  "findings": []
+}

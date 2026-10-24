@@ -1,0 +1,11 @@
+{
+  "id": "KA-C462-hitar",
+  "pathSegment": "KA-PATH-462-KOTHADI462",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-462-KOTHADI462",
+      "order": 3
+    }
+  ]
+}

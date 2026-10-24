@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Free Time",
+  "label": "ch:bn-free-time",
+  "canDo": "I can talk about free time, pastimes and chatting with friends.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C516-shoukhin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about free time, pastimes and chatting with friends.",
+    "assesses": [
+      "BN-LEX-C516-BINODON516-03",
+      "BN-LEX-C516-BINODON516-04",
+      "BN-LEX-C516-BINODON516-05"
+    ]
+  }
+}

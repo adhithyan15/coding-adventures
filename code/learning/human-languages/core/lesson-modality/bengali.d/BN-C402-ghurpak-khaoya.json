@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C402-ghurpak-khaoya",
+    "language": "bengali",
+    "chapter": 402,
+    "sequence": 24960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c47bc75c86c8d993"
+  },
+  "findings": []
+}

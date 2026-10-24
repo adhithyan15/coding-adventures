@@ -1,0 +1,11 @@
+{
+  "id": "AR-C552-farasha",
+  "pathSegment": "AR-PATH-552-TARMIM552",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-552-TARMIM552",
+      "order": 4
+    }
+  ]
+}

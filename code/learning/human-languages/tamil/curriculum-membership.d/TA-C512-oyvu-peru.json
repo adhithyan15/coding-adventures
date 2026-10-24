@@ -1,0 +1,11 @@
+{
+  "id": "TA-C512-oyvu-peru",
+  "pathSegment": "TA-PATH-512-VILAKAL512",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-512-VILAKAL512",
+      "order": 2
+    }
+  ]
+}

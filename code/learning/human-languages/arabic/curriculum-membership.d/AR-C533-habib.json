@@ -1,0 +1,11 @@
+{
+  "id": "AR-C533-habib",
+  "pathSegment": "AR-PATH-533-RIAYA533",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-533-RIAYA533",
+      "order": 4
+    }
+  ]
+}

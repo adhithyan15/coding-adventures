@@ -1,0 +1,11 @@
+{
+  "id": "BN-C499-kachamal",
+  "pathSegment": "BN-PATH-499-UTPADON499",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-499-UTPADON499",
+      "order": 1
+    }
+  ]
+}

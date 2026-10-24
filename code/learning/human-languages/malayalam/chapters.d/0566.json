@@ -1,0 +1,19 @@
+{
+  "chapter": 566,
+  "title": "Clay, Cards and Gardening",
+  "label": "ch:ml-clay-cards-and-gardening",
+  "canDo": "I can say clay, chess, a card game, gardening and to meditate.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C566-dhyanikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 566: I can say clay, chess, a card game, gardening and to meditate.",
+    "assesses": [
+      "ML-LEX-C566-VINODAM566-03",
+      "ML-LEX-C566-VINODAM566-04",
+      "ML-LEX-C566-VINODAM566-05"
+    ]
+  }
+}

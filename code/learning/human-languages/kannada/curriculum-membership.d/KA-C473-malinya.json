@@ -1,0 +1,11 @@
+{
+  "id": "KA-C473-malinya",
+  "pathSegment": "KA-PATH-473-PARISARA473",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-473-PARISARA473",
+      "order": 1
+    }
+  ]
+}

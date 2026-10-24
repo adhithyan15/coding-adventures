@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Online Life",
+  "label": "ch:mr-online-life",
+  "canDo": "I can talk about passwords, messages and links.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C517-sathavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about passwords, messages and links.",
+    "assesses": [
+      "MR-LEX-C517-JAL517-03",
+      "MR-LEX-C517-JAL517-04",
+      "MR-LEX-C517-JAL517-05"
+    ]
+  }
+}

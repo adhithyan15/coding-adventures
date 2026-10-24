@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Putting the Fire Out",
+  "label": "ch:hi-putting-the-fire-out",
+  "canDo": "I can say how a fire was put out.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C301-phaphola",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can say how a fire was put out.",
+    "assesses": [
+      "HI-LEX-C301-BUJHI301-03",
+      "HI-LEX-C301-BUJHI301-04",
+      "HI-LEX-C301-BUJHI301-05"
+    ]
+  }
+}

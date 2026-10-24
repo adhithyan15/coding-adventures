@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "Talks and Essays",
+  "label": "ch:mr-talks-and-essays",
+  "canDo": "I can talk about lectures, speeches, essays and speakers.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C370-vakta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can talk about lectures, speeches, essays and speakers.",
+    "assesses": [
+      "MR-LEX-C370-VYAKHYAN370-03",
+      "MR-LEX-C370-VYAKHYAN370-04",
+      "MR-LEX-C370-VYAKHYAN370-05"
+    ]
+  }
+}

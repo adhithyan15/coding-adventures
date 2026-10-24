@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:7f1b9db033c7400a",
+  "lessonIds": [
+    "AR-C304-zaman",
+    "AR-C304-mundhu-zaman-tawil",
+    "AR-C304-hiqba",
+    "AR-C304-anadhak",
+    "AR-C304-ahd"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch304.txt",
+  "json": "arabic/narration/ch304.json",
+  "textHash": "fnv1a64:f5e54b37b1f5d88d",
+  "jsonHash": "fnv1a64:63adcb1f7ee28a03",
+  "findings": []
+}

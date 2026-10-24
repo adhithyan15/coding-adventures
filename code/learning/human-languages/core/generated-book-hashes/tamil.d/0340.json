@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:881f0f3ee5916045",
+  "lessonIds": [
+    "TA-C340-vilcciyatai",
+    "TA-C340-tura",
+    "TA-C340-natukatattu",
+    "TA-C340-porkalam",
+    "TA-C340-nakarikam"
+  ],
+  "tex": "tamil/book/chapters/ch340-rise-and-fall.tex"
+}

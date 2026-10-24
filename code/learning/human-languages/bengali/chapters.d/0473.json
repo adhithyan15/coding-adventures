@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Germs and Infection",
+  "label": "ch:bn-germs-and-infection",
+  "canDo": "I can talk about germs, infection and a disease spreading.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C473-akranto-hooya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can talk about germs, infection and a disease spreading.",
+    "assesses": [
+      "BN-LEX-C473-SONGKROMON473-03",
+      "BN-LEX-C473-SONGKROMON473-04",
+      "BN-LEX-C473-SONGKROMON473-05"
+    ]
+  }
+}

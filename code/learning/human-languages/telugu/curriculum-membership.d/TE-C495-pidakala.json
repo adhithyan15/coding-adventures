@@ -1,0 +1,11 @@
+{
+  "id": "TE-C495-pidakala",
+  "pathSegment": "TE-PATH-495-BHAYAM495",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-495-BHAYAM495",
+      "order": 3
+    }
+  ]
+}

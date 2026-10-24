@@ -1,0 +1,11 @@
+{
+  "id": "TA-C296-kaitu-cey",
+  "pathSegment": "TA-PATH-296-KAVAL296",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-296-KAVAL296",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-505-MARANAM505",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-505-MARANAM505"
+  ],
+  "after": []
+}

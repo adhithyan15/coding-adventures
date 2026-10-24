@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C471-pakkuvam",
+    "language": "tamil",
+    "chapter": 471,
+    "sequence": 27050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91516e65cab31b2b"
+  },
+  "findings": []
+}

@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 301,
+  "title": "Eyewitness Accounts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5e0f4843835c5924",
+  "lessons": [
+    {
+      "id": "BN-C301-protyokkhodorshi",
+      "sequence": 19280,
+      "title": "প্রত্যক্ষদর্শী (prôtyôkkhôdôrshī) — an eyewitness",
+      "headword": "প্রত্যক্ষদর্শী",
+      "romanization": "prôtyôkkhôdôrshī",
+      "gloss": "an eyewitness",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01ed56bb69cb8200",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to publicize, then the Bengali for an issue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রত্যক্ষদর্শী",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রত্যক্ষদর্শী — prôtyôkkhôdôrshī — \"an eyewitness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "প্রত্যক্ষদর্শীরা বলল যে বাসটা লাল ছিল। prôtyôkkhôdôrshīrā bôllô je bāsṭā lāl chhilô. Eyewitnesses said that the bus was red."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রত্যক্ষদর্শী (prôtyôkkhôdôrshī) is Sanskrit pratyakṣadarśin, 'one who has seen with his own eyes' (Monier-Williams): pratyakṣa, 'before the eyes', and darśin, 'seeing'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtyôkkhôdôrshī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtyôkkhôdôrshī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtyôkkhôdôrshī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtyôkkhôdôrshī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtyôkkhôdôrshīrā bôllô je bāsṭā lāl chhilô. — Eyewitnesses said that the bus was red.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtyôkkhôdôrshīrā bôllô je bāsṭā lāl chhilô.* — Eyewitnesses said that the bus was red.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to publicize, then the Bengali for an issue, then say prôtyôkkhôdôrshī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to publicize, then the Bengali for an issue, then say *prôtyôkkhôdôrshī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রত্যক্ষদর্শী (prôtyôkkhôdôrshī) mean? (\"An eyewitness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C301-biboron",
+      "sequence": 19290,
+      "title": "বিবরণ (bibôrôn) — an account; a description",
+      "headword": "বিবরণ",
+      "romanization": "bibôrôn",
+      "gloss": "an account; a description",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30d047665990bc1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an issue, then the Bengali for an eyewitness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিবরণ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিবরণ — bibôrôn — \"an account; a description\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সাক্ষী পুলিশকে ঘটনার পুরো বিবরণ দিল। sākkhī pulishke ghôṭônār puro bibôrôn dilô. The witness gave the police a full account of what happened."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিবরণ (bibôrôn) is Sanskrit vivaraṇa, 'an uncovering, a laying open; an explanation' (Monier-Williams): an account lays the events open."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bibôrôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bibôrôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bibôrôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bibôrôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākkhī pulishke ghôṭônār puro bibôrôn dilô. — The witness gave the police a full account of what happened.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākkhī pulishke ghôṭônār puro bibôrôn dilô.* — The witness gave the police a full account of what happened.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an issue, then the Bengali for an eyewitness, then say bibôrôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an issue, then the Bengali for an eyewitness, then say *bibôrôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিবরণ (bibôrôn) mean? (\"An account; a description\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C301-bhidio",
+      "sequence": 19300,
+      "title": "ভিডিও (bhiḍio) — a video",
+      "headword": "ভিডিও",
+      "romanization": "bhiḍio",
+      "gloss": "a video",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13c4c49ef6c03670",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an eyewitness, then the Bengali for an account."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভিডিও",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভিডিও — bhiḍio — \"a video\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এক প্রত্যক্ষদর্শী ফোনে ঘটনার একটা ভিডিও তুলল। ek prôtyôkkhôdôrshī phone ghôṭônār ekṭā bhiḍio tullô. An eyewitness filmed the incident on a phone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভিডিও (bhiḍio) is English video, from the Latin for 'I see'. ভিডিও তোলা, to film, as ছবি তোলা is to take a photo."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhiḍio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhiḍio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhiḍio, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhiḍio*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek prôtyôkkhôdôrshī phone ghôṭônār ekṭā bhiḍio tullô. — An eyewitness filmed the incident on a phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek prôtyôkkhôdôrshī phone ghôṭônār ekṭā bhiḍio tullô.* — An eyewitness filmed the incident on a phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an eyewitness, then the Bengali for an account, then say bhiḍio again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an eyewitness, then the Bengali for an account, then say *bhiḍio* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভিডিও (bhiḍio) mean? (\"A video\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C301-bistarit",
+      "sequence": 19310,
+      "title": "বিস্তারিত (bistārit) — detailed; in full",
+      "headword": "বিস্তারিত",
+      "romanization": "bistārit",
+      "gloss": "detailed; in full",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9942af0abd929ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an account, then the Bengali for a video."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিস্তারিত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিস্তারিত — bistārit — \"detailed; in full\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সাংবাদিক পরের দিন বিস্তারিত খবর দিলেন। sāngbādik pôrer din bistārit khôbôr dilen. The next day the journalist gave the full story."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিস্তারিত (bistārit) is Sanskrit vistārita, 'spread out, fully stated' (Monier-Williams). বিস্তারিত বলা, to tell in detail."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bistārit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bistārit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bistārit, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bistārit*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāngbādik pôrer din bistārit khôbôr dilen. — The next day the journalist gave the full story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāngbādik pôrer din bistārit khôbôr dilen.* — The next day the journalist gave the full story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an account, then the Bengali for a video, then say bistārit again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an account, then the Bengali for a video, then say *bistārit* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিস্তারিত (bistārit) mean? (\"Detailed; in full\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C301-jachai-kora",
+      "sequence": 19320,
+      "title": "যাচাই করা (jāchāi kôrā) — to verify; to check",
+      "headword": "যাচাই করা",
+      "romanization": "jāchāi kôrā",
+      "gloss": "to verify; to check",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9117495c160933ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a video, then the Bengali for detailed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: যাচাই করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যাচাই করা — jāchāi kôrā — \"to verify; to check\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সাংবাদিক খবরটা প্রকাশ করার আগে যাচাই করলেন। sāngbādik khôbôrṭā prôkāsh kôrār āge jāchāi kôrlen. The journalist checked the story before publishing it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি নামটা যাচাই করলেন, tini nāmṭā jāchāi kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যাচাই করা (jāchāi kôrā) is built on যাচা, 'to test' — CDIAL 10449, Sanskrit yācyatē, 'is asked', which lists Bengali jācā, 'to beg, test' — with করা: to put a claim to the question."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāchāi kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāchāi kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāchāi kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāchāi kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāngbādik khôbôrṭā prôkāsh kôrār āge jāchāi kôrlen. — The journalist checked the story before publishing it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāngbādik khôbôrṭā prôkāsh kôrār āge jāchāi kôrlen.* — The journalist checked the story before publishing it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a video, then the Bengali for detailed, then say jāchāi kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a video, then the Bengali for detailed, then say *jāchāi kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does যাচাই করা (jāchāi kôrā) mean? (\"To verify; to check\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

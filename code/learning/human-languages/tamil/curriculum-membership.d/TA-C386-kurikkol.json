@@ -1,0 +1,11 @@
+{
+  "id": "TA-C386-kurikkol",
+  "pathSegment": "TA-PATH-386-UTTI386",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-386-UTTI386",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:00d5685560447a5c",
+  "lessonIds": [
+    "PA-C190-karna-return",
+    "PA-C190-kita",
+    "PA-C190-kita-review",
+    "PA-C190-kamm-kita",
+    "PA-C190-frame-review",
+    "PA-C190-infinitive-perfective-contrast",
+    "PA-C190-payoff"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch190.txt",
+  "json": "punjabi/narration/ch190.json",
+  "textHash": "fnv1a64:184fda608c43425d",
+  "jsonHash": "fnv1a64:e588687a87935598",
+  "findings": []
+}

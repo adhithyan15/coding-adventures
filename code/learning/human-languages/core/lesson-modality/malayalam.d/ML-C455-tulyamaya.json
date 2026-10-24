@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C455-tulyamaya",
+    "language": "malayalam",
+    "chapter": 455,
+    "sequence": 22580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:009d6b72e1dc722d"
+  },
+  "findings": []
+}

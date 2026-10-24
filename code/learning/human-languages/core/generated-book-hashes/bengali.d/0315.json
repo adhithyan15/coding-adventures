@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:4282c2a6f0049b9f",
+  "lessonIds": [
+    "BN-C315-ostro",
+    "BN-C315-toloyar",
+    "BN-C315-dhal",
+    "BN-C315-bonduk",
+    "BN-C315-kaman",
+    "BN-R315-review-308-315"
+  ],
+  "tex": "bengali/book/chapters/ch315-swords-and-cannons.tex"
+}

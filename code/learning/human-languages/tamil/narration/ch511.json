@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 511,
+  "title": "Imports and Exports",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ee531502080ddabc",
+  "lessons": [
+    {
+      "id": "TA-C511-errumati",
+      "sequence": 29350,
+      "title": "ஏற்றுமதி (ēṟṟumati) — exports",
+      "headword": "ஏற்றுமதி",
+      "romanization": "ēṟṟumati",
+      "gloss": "exports",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c5a93b9c7e4f190",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to stack, then the Tamil for to take measurements."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஏற்றுமதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏற்றுமதி — ēṟṟumati — \"exports\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தேயிலை இந்த மாவட்டத்தின் முக்கியமான ஏற்றுமதி. tēyilai inta māvaṭṭattiṉ mukkiyamāṉa ēṟṟumati. Tea is the main export of this district."
+            },
+            {
+              "kind": "speech",
+              "text": "With செய் (cey) it becomes a verb: ஏற்றுமதி (ēṟṟumati) செய், to export."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏற்றுமதி (ēṟṟumati) is built on the native ஏற்று (ēṟṟu), \"to load, to put on board\"; the origin of the second part, -மதி, is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṟṟumati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṟṟumati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṟṟumati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṟṟumati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēyilai inta māvaṭṭattiṉ mukkiyamāṉa ēṟṟumati. — Tea is the main export of this district.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēyilai inta māvaṭṭattiṉ mukkiyamāṉa ēṟṟumati.* — Tea is the main export of this district.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to stack, then the Tamil for to take measurements, then say ēṟṟumati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to stack, then the Tamil for to take measurements, then say *ēṟṟumati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஏற்றுமதி (ēṟṟumati) mean? (\"Exports\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C511-irakkumati",
+      "sequence": 29360,
+      "title": "இறக்குமதி (iṟakkumati) — imports",
+      "headword": "இறக்குமதி",
+      "romanization": "iṟakkumati",
+      "gloss": "imports",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51687d092f0547d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to take measurements, then the Tamil for exports."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இறக்குமதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இறக்குமதி — iṟakkumati — \"imports\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நம் நாடு எண்ணெயை இறக்குமதி செய்கிறது. nam nāṭu eṇṇeyai iṟakkumati ceykiṟatu. Our country imports oil."
+            },
+            {
+              "kind": "speech",
+              "text": "The pair of ஏற்றுமதி (ēṟṟumati): goods unloaded, brought in. With செய் it is a verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இறக்குமதி (iṟakkumati) is built on the native இறக்கு (iṟakku), \"to unload, to bring down\"; as with ஏற்றுமதி (ēṟṟumati), the origin of -மதி is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṟakkumati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṟakkumati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṟakkumati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṟakkumati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nam nāṭu eṇṇeyai iṟakkumati ceykiṟatu. — Our country imports oil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nam nāṭu eṇṇeyai iṟakkumati ceykiṟatu.* — Our country imports oil.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to take measurements, then the Tamil for exports, then say iṟakkumati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to take measurements, then the Tamil for exports, then say *iṟakkumati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இறக்குமதி (iṟakkumati) mean? (\"Imports\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C511-vanikam",
+      "sequence": 29370,
+      "title": "வணிகம் (vaṇikam) — business; commerce",
+      "headword": "வணிகம்",
+      "romanization": "vaṇikam",
+      "gloss": "business; commerce",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40906d9198a991fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for exports, then the Tamil for imports."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வணிகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வணிகம் — vaṇikam — \"business; commerce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் மாமா துணி வணிகம் செய்கிறார். eṉ māmā tuṇi vaṇikam ceykiṟār. My uncle is in the cloth business."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word; in speech people often say வியாபாரம் (viyāpāram)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வணிகம் (vaṇikam) is borrowed from Sanskrit vaṇij, \"a trader\", also \"trade\" (CDIAL 11230), with the Tamil noun ending -அம்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṇikam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṇikam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṇikam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṇikam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ māmā tuṇi vaṇikam ceykiṟār. — My uncle is in the cloth business.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ māmā tuṇi vaṇikam ceykiṟār.* — My uncle is in the cloth business.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for exports, then the Tamil for imports, then say vaṇikam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for exports, then the Tamil for imports, then say *vaṇikam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வணிகம் (vaṇikam) mean? (\"Business; commerce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C511-tolilatipar",
+      "sequence": 29380,
+      "title": "தொழிலதிபர் (toḻilatipar) — a businessman; an industrialist",
+      "headword": "தொழிலதிபர்",
+      "romanization": "toḻilatipar",
+      "gloss": "a businessman; an industrialist",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e37e9b074ba8c818",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for imports, then the Tamil for business."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தொழிலதிபர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொழிலதிபர் — toḻilatipar — \"a businessman; an industrialist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தத் தொழிலதிபர் ஒரு புதிய தொழிற்சாலையைத் தொடங்கினார். antat toḻilatipar oru putiya toḻiṟcālaiyait toṭaṅkiṉār. That businessman started a new factory."
+            },
+            {
+              "kind": "speech",
+              "text": "தொழில் \"a trade\" + அதிபர் \"a head, a chief\": the head of a trade."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொழிலதிபர் (toḻilatipar) joins the native தொழில் (toḻil), \"work, a trade\" (DEDR 3524), and அதிபர் (atipar), \"a chief\", from Sanskrit adhipa, \"a ruler\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilatipar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilatipar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilatipar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilatipar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antat toḻilatipar oru putiya toḻiṟcālaiyait toṭaṅkiṉār. — That businessman started a new factory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antat toḻilatipar oru putiya toḻiṟcālaiyait toṭaṅkiṉār.* — That businessman started a new factory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for imports, then the Tamil for business, then say toḻilatipar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for imports, then the Tamil for business, then say *toḻilatipar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தொழிலதிபர் (toḻilatipar) mean? (\"A businessman; an industrialist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C511-kuttali",
+      "sequence": 29390,
+      "title": "கூட்டாளி (kūṭṭāḷi) — a partner; an associate",
+      "headword": "கூட்டாளி",
+      "romanization": "kūṭṭāḷi",
+      "gloss": "a partner; an associate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3100ea66e9f63023",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for business, then the Tamil for a businessman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கூட்டாளி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூட்டாளி — kūṭṭāḷi — \"a partner; an associate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நானும் என் கூட்டாளியும் சேர்ந்து ஒரு கடை நடத்துகிறோம். nāṉum eṉ kūṭṭāḷiyum cērntu oru kaṭai naṭattukiṟōm. My partner and I run a shop together."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: கூட்டாளிகள், kūṭṭāḷikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "கூட்டு \"joining\" + -ஆளி \"one who …\". The plural is கூட்டாளிகள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூட்டாளி (kūṭṭāḷi) is native Dravidian: கூட்டு (kūṭṭu), \"joining, partnership\", from கூடு (kūṭu), \"to come together\" (DEDR 1882), with -ஆளி, \"one who …\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭṭāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭṭāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭṭāḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭṭāḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṉum eṉ kūṭṭāḷiyum cērntu oru kaṭai naṭattukiṟōm. — My partner and I run a shop together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṉum eṉ kūṭṭāḷiyum cērntu oru kaṭai naṭattukiṟōm.* — My partner and I run a shop together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for business, then the Tamil for a businessman, then say kūṭṭāḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for business, then the Tamil for a businessman, then say *kūṭṭāḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கூட்டாளி (kūṭṭāḷi) mean? (\"A partner; an associate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

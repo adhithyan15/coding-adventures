@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:adacac9cc9c0e133",
+  "lessonIds": [
+    "TA-C435-kataloram",
+    "TA-C435-valaikuta",
+    "TA-C435-munai",
+    "TA-C435-uppalam",
+    "TA-C435-kulankal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch435.txt",
+  "json": "tamil/narration/ch435.json",
+  "textHash": "fnv1a64:63cfb8891dcf14fd",
+  "jsonHash": "fnv1a64:a97d49d0681d96da",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:ef99cb94ad5cdc9f",
+  "lessonIds": [
+    "MR-C413-nivas",
+    "MR-C413-dharmasala",
+    "MR-C413-visramgrh",
+    "MR-C413-mukkam",
+    "MR-C413-khanaval"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch413.txt",
+  "json": "marathi/narration/ch413.json",
+  "textHash": "fnv1a64:d168e9f7a29fbbf6",
+  "jsonHash": "fnv1a64:6b98cfc865ffe553",
+  "findings": []
+}

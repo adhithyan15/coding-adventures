@@ -1,0 +1,11 @@
+{
+  "id": "TA-C421-currikkattu",
+  "pathSegment": "TA-PATH-421-VAZHIKATTI421",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-421-VAZHIKATTI421",
+      "order": 2
+    }
+  ]
+}

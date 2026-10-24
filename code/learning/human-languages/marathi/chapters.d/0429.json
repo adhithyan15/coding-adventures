@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Auctions and Pledges",
+  "label": "ch:mr-auctions-and-pledges",
+  "canDo": "I can talk about auctions, collateral, pawning, leases and getting money back.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C429-bhadepatta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can talk about auctions, collateral, pawning, leases and getting money back.",
+    "assesses": [
+      "MR-LEX-C429-LILAV429-03",
+      "MR-LEX-C429-LILAV429-04",
+      "MR-LEX-C429-LILAV429-05"
+    ]
+  }
+}

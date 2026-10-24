@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C362-araycci",
+    "language": "tamil",
+    "chapter": 362,
+    "sequence": 20860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:092bb3a6dee54059"
+  },
+  "findings": []
+}

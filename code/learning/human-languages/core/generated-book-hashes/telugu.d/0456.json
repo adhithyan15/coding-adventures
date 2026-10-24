@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:9801199edd723f6e",
+  "lessonIds": [
+    "TE-C456-sikaru",
+    "TE-C456-viharincu",
+    "TE-C456-drsyam",
+    "TE-C456-sandhya",
+    "TE-C456-majili"
+  ],
+  "tex": "telugu/book/chapters/ch456-strolling-around.tex"
+}

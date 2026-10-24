@@ -1,0 +1,11 @@
+{
+  "id": "TA-C452-pakuti",
+  "pathSegment": "TA-PATH-452-VEEDU452",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-452-VEEDU452",
+      "order": 3
+    }
+  ]
+}

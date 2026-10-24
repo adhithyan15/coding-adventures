@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:26cf61e08e4f9b8d",
+  "lessonIds": [
+    "TA-C348-etir",
+    "TA-C348-atcepi",
+    "TA-C348-vatitu",
+    "TA-C348-utanpatu",
+    "TA-C348-cilar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch348.txt",
+  "json": "tamil/narration/ch348.json",
+  "textHash": "fnv1a64:53decee902d1eb59",
+  "jsonHash": "fnv1a64:147a47635369bd54",
+  "findings": []
+}

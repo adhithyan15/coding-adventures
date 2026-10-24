@@ -1,0 +1,21 @@
+{
+  "chapter": 437,
+  "title": "Hard or Plain",
+  "label": "ch:te-hard-or-plain",
+  "canDo": "I can say what is complicated, plain, vague or serious.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-R437-review-final-437",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can say what is complicated, plain, vague or serious.",
+    "assesses": [
+      "TE-LEX-C437-SANKLISTAM437-01",
+      "TE-LEX-C437-SANKLISTAM437-02",
+      "TE-LEX-C437-SANKLISTAM437-03",
+      "TE-LEX-C437-SANKLISTAM437-04",
+      "TE-LEX-C437-SANKLISTAM437-05"
+    ]
+  }
+}

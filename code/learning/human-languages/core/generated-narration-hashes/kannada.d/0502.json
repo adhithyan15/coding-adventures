@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:d6c893727844bb26",
+  "lessonIds": [
+    "KA-C502-sabhya",
+    "KA-C502-vidheya",
+    "KA-C502-sistu",
+    "KA-C502-gamanisu",
+    "KA-C502-spandisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch502.txt",
+  "json": "kannada/narration/ch502.json",
+  "textHash": "fnv1a64:fbfea42202b12e5b",
+  "jsonHash": "fnv1a64:3d9be5a83a297af9",
+  "findings": []
+}

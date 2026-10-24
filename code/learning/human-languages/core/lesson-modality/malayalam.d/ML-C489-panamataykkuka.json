@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C489-panamataykkuka",
+    "language": "malayalam",
+    "chapter": 489,
+    "sequence": 24460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cee5f31caa73c3e9"
+  },
+  "findings": []
+}

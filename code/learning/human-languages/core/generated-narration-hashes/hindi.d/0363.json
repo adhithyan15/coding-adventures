@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:6b3ab7dc57cbe5a5",
+  "lessonIds": [
+    "HI-C363-adhyayan",
+    "HI-C363-anusar",
+    "HI-C363-namuna",
+    "HI-C363-tulnakarna",
+    "HI-C363-akna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch363.txt",
+  "json": "hindi/narration/ch363.json",
+  "textHash": "fnv1a64:89e5139ef8e0ac56",
+  "jsonHash": "fnv1a64:63677f24ee67acb8",
+  "findings": []
+}

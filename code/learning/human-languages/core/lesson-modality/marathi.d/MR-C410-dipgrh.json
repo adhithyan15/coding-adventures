@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C410-dipgrh",
+    "language": "marathi",
+    "chapter": 410,
+    "sequence": 23730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3f78580cca32197"
+  },
+  "findings": []
+}

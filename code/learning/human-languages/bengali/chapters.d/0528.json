@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Ways and Means",
+  "label": "ch:bn-ways-and-means",
+  "canDo": "I can say whether we can afford something and find a way.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C528-jotano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can say whether we can afford something and find a way.",
+    "assesses": [
+      "BN-LEX-C528-UPAY528-03",
+      "BN-LEX-C528-UPAY528-04",
+      "BN-LEX-C528-UPAY528-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C501-pravesanaphisu",
+  "pathSegment": "ML-PATH-501-MRGASALA501",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-501-MRGASALA501",
+      "order": 3
+    }
+  ]
+}

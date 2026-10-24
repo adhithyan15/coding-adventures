@@ -1,0 +1,11 @@
+{
+  "id": "BN-C513-khosa",
+  "pathSegment": "BN-PATH-513-KOTA513",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-513-KOTA513",
+      "order": 1
+    }
+  ]
+}

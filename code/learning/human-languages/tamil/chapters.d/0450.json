@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "Real or Fake",
+  "label": "ch:ta-real-or-fake",
+  "canDo": "I can talk about originals and fakes, luxury, the cost of living and banknotes.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C450-nottu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can talk about originals and fakes, luxury, the cost of living and banknotes.",
+    "assesses": [
+      "TA-LEX-C450-ASAL450-03",
+      "TA-LEX-C450-ASAL450-04",
+      "TA-LEX-C450-ASAL450-05"
+    ]
+  }
+}

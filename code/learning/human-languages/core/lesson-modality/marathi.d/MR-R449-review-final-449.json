@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R449-review-final-449",
+    "language": "marathi",
+    "chapter": 449,
+    "sequence": 25770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d072850a349aff0"
+  },
+  "findings": []
+}

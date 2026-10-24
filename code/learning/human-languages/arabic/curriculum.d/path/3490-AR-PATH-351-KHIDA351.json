@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-351-KHIDA351",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-351-KHIDA351"
+  ],
+  "after": []
+}

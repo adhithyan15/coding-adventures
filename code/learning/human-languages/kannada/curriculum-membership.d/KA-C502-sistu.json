@@ -1,0 +1,11 @@
+{
+  "id": "KA-C502-sistu",
+  "pathSegment": "KA-PATH-502-SABHYA502",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-502-SABHYA502",
+      "order": 2
+    }
+  ]
+}

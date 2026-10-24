@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C409-ohoti",
+    "language": "marathi",
+    "chapter": 409,
+    "sequence": 23670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:456b298b4418460a"
+  },
+  "findings": []
+}

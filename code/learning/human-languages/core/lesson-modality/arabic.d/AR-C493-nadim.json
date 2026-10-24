@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C493-nadim",
+    "language": "arabic",
+    "chapter": 493,
+    "sequence": 27460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f848beb22bf92c31"
+  },
+  "findings": []
+}

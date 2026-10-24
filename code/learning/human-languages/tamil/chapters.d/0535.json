@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "On the Field",
+  "label": "ch:ta-on-the-field",
+  "canDo": "I can talk about taking part and aiming at a goal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C535-mattai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can talk about taking part and aiming at a goal.",
+    "assesses": [
+      "TA-LEX-C535-AADUKALAM535-03",
+      "TA-LEX-C535-AADUKALAM535-04",
+      "TA-LEX-C535-AADUKALAM535-05"
+    ]
+  }
+}

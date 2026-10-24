@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C364-miyar",
+    "language": "arabic",
+    "chapter": 364,
+    "sequence": 20720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:474fcc67017ec49d"
+  },
+  "findings": []
+}

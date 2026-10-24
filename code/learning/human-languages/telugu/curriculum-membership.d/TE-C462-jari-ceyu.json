@@ -1,0 +1,11 @@
+{
+  "id": "TE-C462-jari-ceyu",
+  "pathSegment": "TE-PATH-462-KAUNTARU462",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-462-KAUNTARU462",
+      "order": 3
+    }
+  ]
+}

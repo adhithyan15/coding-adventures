@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 475,
+  "title": "Small Injuries",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1c4e2a65aa099860",
+  "lessons": [
+    {
+      "id": "BN-C475-khoto",
+      "sequence": 28890,
+      "title": "ক্ষত (khôtô) — a wound",
+      "headword": "ক্ষত",
+      "romanization": "khôtô",
+      "gloss": "a wound",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:689d0cde7abd6401",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for cancer, then the Bengali for jaundice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ক্ষত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক্ষত — khôtô — \"a wound\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নার্স ক্ষতটায় মলম লাগালেন। nārs khôtôṭāy môlôm lāgālen. The nurse put ointment on the wound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক্ষত (khôtô) is a tatsama, Sanskrit kṣata, \"wounded\", and as a noun \"a wound\" (CDIAL 3645)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khôtô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khôtô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khôtô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khôtô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nārs khôtôṭāy môlôm lāgālen. — The nurse put ointment on the wound.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nārs khôtôṭāy môlôm lāgālen.* — The nurse put ointment on the wound.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for cancer, then the Bengali for jaundice, then say khôtô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for cancer, then the Bengali for jaundice, then say *khôtô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ক্ষত (khôtô) mean? (\"A wound\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C475-gha",
+      "sequence": 28900,
+      "title": "ঘা (ghā) — a sore; an ulcer",
+      "headword": "ঘা",
+      "romanization": "ghā",
+      "gloss": "a sore; an ulcer",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db84f7b4245fa53e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for jaundice, then the Bengali for a wound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘা — ghā — \"a sore; an ulcer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অরুণের হাতে একটা ঘা হল। ôruner hāte ekṭā ghā hôlô. Arun got a sore on his hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘা (ghā) is listed by CDIAL for Bengali, as a wound or sore, under Sanskrit ghāta, \"a blow\" (CDIAL 4460)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôruner hāte ekṭā ghā hôlô. — Arun got a sore on his hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôruner hāte ekṭā ghā hôlô.* — Arun got a sore on his hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for jaundice, then the Bengali for a wound, then say ghā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for jaundice, then the Bengali for a wound, then say *ghā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘা (ghā) mean? (\"A sore; an ulcer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C475-mochkano",
+      "sequence": 28910,
+      "title": "মচকানো (môchkāno) — to sprain; to twist (a joint)",
+      "headword": "মচকানো",
+      "romanization": "môchkāno",
+      "gloss": "to sprain; to twist (a joint)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aba8cfe783112de8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a wound, then the Bengali for a sore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মচকানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মচকানো — môchkāno — \"to sprain; to twist (a joint)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সিঁড়িতে মীরার গোড়ালি মচকাল। sĩṛite mīrār goṛāli môchkālô. Mira twisted her ankle on the stairs."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই খেলোয়াড়ের হাঁটু মচকাল, sei kheloyāṛer hā̃ṭu môchkālô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মচকানো (môchkāno) is a Bengali verb for twisting a joint whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môchkāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môchkāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môchkāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môchkāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sĩṛite mīrār goṛāli môchkālô. — Mira twisted her ankle on the stairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sĩṛite mīrār goṛāli môchkālô.* — Mira twisted her ankle on the stairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a wound, then the Bengali for a sore, then say môchkāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a wound, then the Bengali for a sore, then say *môchkāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মচকানো (môchkāno) mean? (\"To sprain; to twist (a joint)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C475-phola",
+      "sequence": 28920,
+      "title": "ফোলা (pholā) — to swell",
+      "headword": "ফোলা",
+      "romanization": "pholā",
+      "gloss": "to swell",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:566bf844d8c0b507",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a sore, then the Bengali for to sprain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফোলা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফোলা — pholā — \"to swell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মচকানোর পরে গোড়ালিটা ফুলে গেল। môchkānor pôre goṛāliṭā phule gelô. After the sprain the ankle swelled up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই রোগীর গাল ফুলল, sei rogīr gāl phullô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফোলা (pholā) is listed by CDIAL for Bengali, as swelling and blossoming, under Sanskrit phullati, \"opens out like a flower\" (CDIAL 9093)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pholā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pholā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pholā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pholā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môchkānor pôre goṛāliṭā phule gelô. — After the sprain the ankle swelled up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môchkānor pôre goṛāliṭā phule gelô.* — After the sprain the ankle swelled up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a sore, then the Bengali for to sprain, then say pholā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a sore, then the Bengali for to sprain, then say *pholā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফোলা (pholā) mean? (\"To swell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C475-hochot-khaoya",
+      "sequence": 28930,
+      "title": "হোঁচট খাওয়া (hõchôṭ khāoyā) — to stumble; to trip",
+      "headword": "হোঁচট খাওয়া",
+      "romanization": "hõchôṭ khāoyā",
+      "gloss": "to stumble; to trip",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:998c4417389eaf4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to sprain, then the Bengali for to swell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হোঁচট খাওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হোঁচট খাওয়া — hõchôṭ khāoyā — \"to stumble; to trip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাতে রাস্তায় পাথরে হোঁচট খেয়ে অরুণ পড়ে গেল। rāte rāstāy pāthôre hõchôṭ kheye ôrun pôṛe gelô. At night Arun tripped on a stone in the road and fell."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি সিঁড়িতে হোঁচট খেলেন, tini sĩṛite hõchôṭ khelen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হোঁচট খাওয়া (hõchôṭ khāoyā) is hõchôṭ, \"a stumble\", whose origin is not settled, with khāoyā, \"to eat\" (CDIAL 3865): Bengali \"eats\" a stumble as it eats a scolding."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hõchôṭ khāoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hõchôṭ khāoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hõchôṭ khāoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hõchôṭ khāoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāte rāstāy pāthôre hõchôṭ kheye ôrun pôṛe gelô. — At night Arun tripped on a stone in the road and fell.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāte rāstāy pāthôre hõchôṭ kheye ôrun pôṛe gelô.* — At night Arun tripped on a stone in the road and fell.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to sprain, then the Bengali for to swell, then say hõchôṭ khāoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to sprain, then the Bengali for to swell, then say *hõchôṭ khāoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হোঁচট খাওয়া (hõchôṭ khāoyā) mean? (\"To stumble; to trip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

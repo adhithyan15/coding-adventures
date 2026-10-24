@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:c6ebf9a7d7af98bf",
+  "lessonIds": [
+    "BN-C362-monojog",
+    "BN-C362-bibhranto",
+    "BN-C362-upolobdhi-kora",
+    "BN-C362-bodh-kora",
+    "BN-C362-sposhto"
+  ],
+  "tex": "bengali/book/chapters/ch362-making-sense-of-it.tex"
+}

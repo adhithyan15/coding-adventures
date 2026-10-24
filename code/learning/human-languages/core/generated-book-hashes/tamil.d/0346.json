@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:fccc089d0692bf6b",
+  "lessonIds": [
+    "TA-C346-uccakattam",
+    "TA-C346-pirkalattil",
+    "TA-C346-enrenrum",
+    "TA-C346-ivvaru",
+    "TA-C346-viti-dawn",
+    "TA-R346-review-340-346",
+    "TA-R346-review-final-346"
+  ],
+  "tex": "tamil/book/chapters/ch346-how-it-ended.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:cb82268f4d77f12a",
+  "lessonIds": [
+    "TE-C510-svartham",
+    "TE-C510-nirlaksyam",
+    "TE-C510-kramasiksana",
+    "TE-C510-atmavisvasam",
+    "TE-C510-kutuhalam"
+  ],
+  "tex": "telugu/book/chapters/ch510-habits-of-mind.tex"
+}

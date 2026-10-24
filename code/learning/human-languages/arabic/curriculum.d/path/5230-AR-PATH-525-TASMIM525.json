@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-525-TASMIM525",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-525-TASMIM525"
+  ],
+  "after": []
+}

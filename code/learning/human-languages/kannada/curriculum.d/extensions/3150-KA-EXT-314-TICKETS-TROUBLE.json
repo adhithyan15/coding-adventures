@@ -1,0 +1,10 @@
+{
+  "id": "KA-EXT-314-TICKETS-TROUBLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can buy a ticket and a seat, ask when the bus or train leaves, say I have missed the bus or lost my bag and report it, ask for medicine, and read the letter ಔ in auṣadha.",
+  "prerequisites": [
+    "KA-EXT-313-ASK-THE-WAY"
+  ]
+}

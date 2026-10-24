@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:b943372652c95fa8",
+  "lessonIds": [
+    "TE-C471-paryavaranam",
+    "TE-C471-paccadanam",
+    "TE-C471-naruku",
+    "TE-C471-nastaparacu",
+    "TE-C471-samraksincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch471.txt",
+  "json": "telugu/narration/ch471.json",
+  "textHash": "fnv1a64:609bde6a413f0645",
+  "jsonHash": "fnv1a64:463f8f1b80b65f9f",
+  "findings": []
+}

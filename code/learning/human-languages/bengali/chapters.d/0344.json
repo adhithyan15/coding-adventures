@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Who Governs",
+  "label": "ch:bn-who-governs",
+  "canDo": "I can say who holds power and who runs things.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C344-jonogon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can say who holds power and who runs things.",
+    "assesses": [
+      "BN-LEX-C344-RASHTRO344-03",
+      "BN-LEX-C344-RASHTRO344-04",
+      "BN-LEX-C344-RASHTRO344-05"
+    ]
+  }
+}

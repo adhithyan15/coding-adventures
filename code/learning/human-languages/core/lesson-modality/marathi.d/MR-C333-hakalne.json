@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C333-hakalne",
+    "language": "marathi",
+    "chapter": 333,
+    "sequence": 19340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:207318cb4e721491"
+  },
+  "findings": []
+}

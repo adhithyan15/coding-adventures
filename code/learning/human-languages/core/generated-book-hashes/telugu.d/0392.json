@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:c9733a1b7e974364",
+  "lessonIds": [
+    "TE-C392-mulam",
+    "TE-C392-udbhavincu",
+    "TE-C392-daritiyu",
+    "TE-C392-kalugu",
+    "TE-C392-talettu"
+  ],
+  "tex": "telugu/book/chapters/ch392-where-things-come-from.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:7b6180d603af49f7",
+  "lessonIds": [
+    "MR-C455-dhasti",
+    "MR-C455-becain",
+    "MR-C455-dagdag",
+    "MR-C455-talmalne",
+    "MR-C455-ghusmatne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch455.txt",
+  "json": "marathi/narration/ch455.json",
+  "textHash": "fnv1a64:1f775f7d9a2a926c",
+  "jsonHash": "fnv1a64:4d7c90acf86458e9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:1d402ffbe71d4d54",
+  "lessonIds": [
+    "ML-C407-teliyikkuka",
+    "ML-C407-samsayam",
+    "ML-C407-anumanikkuka",
+    "ML-C407-yathartthyam",
+    "ML-C407-artthamakkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch407.txt",
+  "json": "malayalam/narration/ch407.json",
+  "textHash": "fnv1a64:872a17c5ad1137da",
+  "jsonHash": "fnv1a64:26a9ac038493428e",
+  "findings": []
+}

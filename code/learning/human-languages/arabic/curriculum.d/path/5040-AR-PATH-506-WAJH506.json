@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-506-WAJH506",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-506-WAJH506"
+  ],
+  "after": []
+}

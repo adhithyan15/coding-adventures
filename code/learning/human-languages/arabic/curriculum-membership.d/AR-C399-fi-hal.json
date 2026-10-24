@@ -1,0 +1,11 @@
+{
+  "id": "AR-C399-fi-hal",
+  "pathSegment": "AR-PATH-399-SHART399",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-399-SHART399",
+      "order": 1
+    }
+  ]
+}

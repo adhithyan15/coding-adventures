@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 487,
+  "title": "Food and Digestion",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ed7b3d066f589991",
+  "lessons": [
+    {
+      "id": "TA-C487-koluppu",
+      "sequence": 27840,
+      "title": "கொழுப்பு (koḻuppu) — body fat; cholesterol",
+      "headword": "கொழுப்பு",
+      "romanization": "koḻuppu",
+      "gloss": "body fat; cholesterol",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:014f74fd50df7925",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a walking stick, then the Tamil for to pull through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கொழுப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொழுப்பு — koḻuppu — \"body fat; cholesterol\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எண்ணெயில் பொரித்த உணவில் கொழுப்பு அதிகம். eṇṇeyil poritta uṇavil koḻuppu atikam. Deep-fried food is high in fat."
+            },
+            {
+              "kind": "speech",
+              "text": "In speech also cheek: அவனுக்குக் கொழுப்பு (koḻuppu), he is cocky."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொழுப்பு (koḻuppu) is native Dravidian, from கொழு koḻu, \"fat; to flourish\" (DEDR 2146)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḻuppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḻuppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḻuppu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḻuppu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṇṇeyil poritta uṇavil koḻuppu atikam. — Deep-fried food is high in fat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṇṇeyil poritta uṇavil koḻuppu atikam.* — Deep-fried food is high in fat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a walking stick, then the Tamil for to pull through, then say koḻuppu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a walking stick, then the Tamil for to pull through, then say *koḻuppu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கொழுப்பு (koḻuppu) mean? (\"Body fat; cholesterol\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C487-puratam",
+      "sequence": 27850,
+      "title": "புரதம் (puratam) — protein",
+      "headword": "புரதம்",
+      "romanization": "puratam",
+      "gloss": "protein",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ff055e6c4e86d7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to pull through, then the Tamil for body fat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புரதம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புரதம் — puratam — \"protein\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பருப்பில் நிறைய புரதம் இருக்கிறது. paruppil niṟaiya puratam irukkiṟatu. Lentils contain plenty of protein."
+            },
+            {
+              "kind": "speech",
+              "text": "A mass noun in science and nutrition."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of புரதம் (puratam), a modern scientific term, is not settled in our sources."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puratam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puratam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puratam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puratam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paruppil niṟaiya puratam irukkiṟatu. — Lentils contain plenty of protein.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paruppil niṟaiya puratam irukkiṟatu.* — Lentils contain plenty of protein.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to pull through, then the Tamil for body fat, then say puratam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to pull through, then the Tamil for body fat, then say *puratam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புரதம் (puratam) mean? (\"Protein\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C487-vaittamin",
+      "sequence": 27860,
+      "title": "வைட்டமின் (vaiṭṭamiṉ) — a vitamin",
+      "headword": "வைட்டமின்",
+      "romanization": "vaiṭṭamiṉ",
+      "gloss": "a vitamin",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d97dbf387a79db35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for body fat, then the Tamil for protein."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வைட்டமின்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வைட்டமின் — vaiṭṭamiṉ — \"a vitamin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பழங்களில் நிறைய வைட்டமின்கள் உள்ளன. paḻaṅkaḷil niṟaiya vaiṭṭamiṉkaḷ uḷḷaṉa. Fruits contain plenty of vitamins."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: வைட்டமின்கள், vaiṭṭamiṉkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "A loan ending in -ன், with the plural -கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வைட்டமின் (vaiṭṭamiṉ) is a loan from English vitamin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaiṭṭamiṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaiṭṭamiṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaiṭṭamiṉ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaiṭṭamiṉ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻaṅkaḷil niṟaiya vaiṭṭamiṉkaḷ uḷḷaṉa. — Fruits contain plenty of vitamins.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻaṅkaḷil niṟaiya vaiṭṭamiṉkaḷ uḷḷaṉa.* — Fruits contain plenty of vitamins.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for body fat, then the Tamil for protein, then say vaiṭṭamiṉ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for body fat, then the Tamil for protein, then say *vaiṭṭamiṉ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வைட்டமின் (vaiṭṭamiṉ) mean? (\"A vitamin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C487-ceri",
+      "sequence": 27870,
+      "title": "செரி (ceri) — to digest",
+      "headword": "செரி",
+      "romanization": "ceri",
+      "gloss": "to digest",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eba4c8d120d08745",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for protein, then the Tamil for a vitamin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: செரி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செரி — ceri — \"to digest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இரவு உணவு இன்னும் செரிக்கவில்லை. iravu uṇavu iṉṉum cerikkavillai. Dinner has not been digested yet."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): செரித்தது, cerittatu."
+            },
+            {
+              "kind": "speech",
+              "text": "The food is the subject, so the past is செரித்தது. செரிமானம், digestion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செரி (ceri) is a Tamil verb whose origin is not settled; DEDR has no entry for it that we can point to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iravu uṇavu iṉṉum cerikkavillai. — Dinner has not been digested yet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iravu uṇavu iṉṉum cerikkavillai.* — Dinner has not been digested yet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for protein, then the Tamil for a vitamin, then say ceri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for protein, then the Tamil for a vitamin, then say *ceri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does செரி (ceri) mean? (\"To digest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C487-eppam-vitu",
+      "sequence": 27880,
+      "title": "ஏப்பம் விடு (ēppam viṭu) — to burp; to belch",
+      "headword": "ஏப்பம் விடு",
+      "romanization": "ēppam viṭu",
+      "gloss": "to burp; to belch",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8d857988dc1f184",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a vitamin, then the Tamil for to digest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஏப்பம் விடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏப்பம் விடு — ēppam viṭu — \"to burp; to belch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நன்றாகச் சாப்பிட்ட பிறகு தாத்தா ஏப்பம் விட்டார். naṉṟākac cāppiṭṭa piṟaku tāttā ēppam viṭṭār. After a good meal grandfather burped."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஏப்பம் விட்டேன், ēppam viṭṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "ஏப்பம் \"a belch\" + விடு \"to let out\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏப்பம் விடு (ēppam viṭu) is native: ஏப்பம் ēppam, \"a belch\" (DEDR 897), with விடு \"to let out\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēppam viṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēppam viṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēppam viṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēppam viṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṉṟākac cāppiṭṭa piṟaku tāttā ēppam viṭṭār. — After a good meal grandfather burped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṉṟākac cāppiṭṭa piṟaku tāttā ēppam viṭṭār.* — After a good meal grandfather burped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a vitamin, then the Tamil for to digest, then say ēppam viṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a vitamin, then the Tamil for to digest, then say *ēppam viṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஏப்பம் விடு (ēppam viṭu) mean? (\"To burp; to belch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

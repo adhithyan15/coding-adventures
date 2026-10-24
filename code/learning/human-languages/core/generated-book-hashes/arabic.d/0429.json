@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:bffd03e862e69624",
+  "lessonIds": [
+    "AR-C429-qubtan",
+    "AR-C429-qarib",
+    "AR-C429-abbara",
+    "AR-C429-abhara",
+    "AR-C429-rasa"
+  ],
+  "tex": "arabic/book/chapters/ch429-by-boat.tex"
+}

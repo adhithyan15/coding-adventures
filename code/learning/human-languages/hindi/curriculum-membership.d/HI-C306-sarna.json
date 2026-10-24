@@ -1,0 +1,11 @@
+{
+  "id": "HI-C306-sarna",
+  "pathSegment": "HI-PATH-306-AKAL306",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-306-AKAL306",
+      "order": 2
+    }
+  ]
+}

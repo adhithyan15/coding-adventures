@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-408-PATHYAKRAMA408",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-408-PATHYAKRAMA408"
+  ],
+  "after": []
+}

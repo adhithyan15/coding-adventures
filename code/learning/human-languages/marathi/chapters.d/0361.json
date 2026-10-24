@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Money and the State",
+  "label": "ch:mr-money-and-the-state",
+  "canDo": "I can talk about revenue, budgets, funds and grants.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C361-arthik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can talk about revenue, budgets, funds and grants.",
+    "assesses": [
+      "MR-LEX-C361-ARTHIK361-03",
+      "MR-LEX-C361-ARTHIK361-04",
+      "MR-LEX-C361-ARTHIK361-05"
+    ]
+  }
+}

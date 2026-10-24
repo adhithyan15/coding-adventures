@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-448-DAJIJ448",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-448-DAJIJ448"
+  ],
+  "after": []
+}

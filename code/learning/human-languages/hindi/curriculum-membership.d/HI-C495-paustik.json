@@ -1,0 +1,11 @@
+{
+  "id": "HI-C495-paustik",
+  "pathSegment": "HI-PATH-495-KASRAT495",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-495-KASRAT495",
+      "order": 3
+    }
+  ]
+}

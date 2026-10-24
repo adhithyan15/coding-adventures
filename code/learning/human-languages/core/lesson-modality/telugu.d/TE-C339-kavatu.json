@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C339-kavatu",
+    "language": "telugu",
+    "chapter": 339,
+    "sequence": 16690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df39099628e27c80"
+  },
+  "findings": []
+}

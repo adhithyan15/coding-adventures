@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 360,
+  "title": "Speeches and Talks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:538d9c6a2bf25959",
+  "lessons": [
+    {
+      "id": "BN-C360-boktrita",
+      "sequence": 22530,
+      "title": "বক্তৃতা (bôktritā) — a speech; a lecture",
+      "headword": "বক্তৃতা",
+      "romanization": "bôktritā",
+      "gloss": "a speech; a lecture",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a798ac8619c78cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to sidestep, then the Bengali for acceptable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বক্তৃতা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বক্তৃতা — bôktritā — \"a speech; a lecture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কাল কলেজে একটা বক্তৃতা আছে। kāl kôleje ekṭā bôktritā āchhe. There is a lecture at the college tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বক্তৃতা (bôktritā) is Sanskrit vaktṛtā, the gift of speech, eloquence (Monier-Williams). Bengali uses it for the speech itself: a lecture or an address."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôktritā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôktritā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôktritā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôktritā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāl kôleje ekṭā bôktritā āchhe. — There is a lecture at the college tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāl kôleje ekṭā bôktritā āchhe.* — There is a lecture at the college tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to sidestep, then the Bengali for acceptable, then say bôktritā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to sidestep, then the Bengali for acceptable, then say *bôktritā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বক্তৃতা (bôktritā) mean? (\"A speech; a lecture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C360-bokta",
+      "sequence": 22540,
+      "title": "বক্তা (bôktā) — a speaker",
+      "headword": "বক্তা",
+      "romanization": "bôktā",
+      "gloss": "a speaker",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:837fc61732743b35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for acceptable, then the Bengali for a lecture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বক্তা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বক্তা — bôktā — \"a speaker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সভার প্রধান বক্তা একজন বিজ্ঞানী। sôbhār prôdhān bôktā ekjôn bigyānī. The main speaker at the meeting is a scientist."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বক্তা (bôktā) is Sanskrit vaktṛ, a speaker (Monier-Williams), in its nominative form vaktā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôktā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôktā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôktā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôktā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôbhār prôdhān bôktā ekjôn bigyānī. — The main speaker at the meeting is a scientist.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôbhār prôdhān bôktā ekjôn bigyānī.* — The main speaker at the meeting is a scientist.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for acceptable, then the Bengali for a lecture, then say bôktā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for acceptable, then the Bengali for a lecture, then say *bôktā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বক্তা (bôktā) mean? (\"A speaker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C360-sobhapoti",
+      "sequence": 22550,
+      "title": "সভাপতি (sôbhāpôti) — a chairperson; the chair (of a meeting)",
+      "headword": "সভাপতি",
+      "romanization": "sôbhāpôti",
+      "gloss": "a chairperson; the chair (of a meeting)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fea805ad5e2c06a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a lecture, then the Bengali for a speaker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সভাপতি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সভাপতি — sôbhāpôti — \"a chairperson; the chair (of a meeting)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সভাপতি সভা শুরু করলেন। sôbhāpôti sôbhā shuru kôrlen. The chair opened the meeting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সভাপতি (sôbhāpôti) is Sanskrit sabhāpati, the head of an assembly (Monier-Williams), from সভা with pati 'master'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôbhāpôti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôbhāpôti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôbhāpôti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôbhāpôti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôbhāpôti sôbhā shuru kôrlen. — The chair opened the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôbhāpôti sôbhā shuru kôrlen.* — The chair opened the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a lecture, then the Bengali for a speaker, then say sôbhāpôti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a lecture, then the Bengali for a speaker, then say *sôbhāpôti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সভাপতি (sôbhāpôti) mean? (\"A chairperson; the chair (of a meeting)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C360-uposthito",
+      "sequence": 22560,
+      "title": "উপস্থিত (upôsthitô) — present; in attendance",
+      "headword": "উপস্থিত",
+      "romanization": "upôsthitô",
+      "gloss": "present; in attendance",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2314bf0d070b8ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a speaker, then the Bengali for a chairperson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপস্থিত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপস্থিত — upôsthitô — \"present; in attendance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সভায় একশো লোক উপস্থিত ছিল। sôbhāy eksho lok upôsthitô chhilô. A hundred people were at the meeting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপস্থিত (upôsthitô) is Sanskrit upasthita, standing near, present (Monier-Williams). It is the word for being present at a meeting or in class."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôsthitô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôsthitô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôsthitô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôsthitô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôbhāy eksho lok upôsthitô chhilô. — A hundred people were at the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôbhāy eksho lok upôsthitô chhilô.* — A hundred people were at the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a speaker, then the Bengali for a chairperson, then say upôsthitô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a speaker, then the Bengali for a chairperson, then say *upôsthitô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপস্থিত (upôsthitô) mean? (\"Present; in attendance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C360-sombodhon-kora",
+      "sequence": 22570,
+      "title": "সম্বোধন করা (sômbodhôn kôrā) — to address a crowd; to address (someone)",
+      "headword": "সম্বোধন করা",
+      "romanization": "sômbodhôn kôrā",
+      "gloss": "to address a crowd; to address (someone)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61c1e89ddccc0c6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a chairperson, then the Bengali for in attendance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সম্বোধন করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সম্বোধন করা — sômbodhôn kôrā — \"to address a crowd; to address (someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নেতা মিছিলের লোকদের সম্বোধন করলেন। netā michhiler lokder sômbodhôn kôrlen. The leader addressed the people in the procession."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি সভাকে সম্বোধন করলেন, tini sôbhāke sômbodhôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সম্বোধন করা (sômbodhôn kôrā) is Sanskrit sambodhana, calling to someone (Monier-Williams), with করা: to speak to a person or a crowd directly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sômbodhôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sômbodhôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sômbodhôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sômbodhôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "netā michhiler lokder sômbodhôn kôrlen. — The leader addressed the people in the procession.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *netā michhiler lokder sômbodhôn kôrlen.* — The leader addressed the people in the procession.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a chairperson, then the Bengali for in attendance, then say sômbodhôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a chairperson, then the Bengali for in attendance, then say *sômbodhôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সম্বোধন করা (sômbodhôn kôrā) mean? (\"To address a crowd; to address (someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

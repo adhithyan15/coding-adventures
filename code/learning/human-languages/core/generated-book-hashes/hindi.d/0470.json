@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:91ac7265fceb6f3d",
+  "lessonIds": [
+    "HI-C470-sahas",
+    "HI-C470-vir",
+    "HI-C470-diler",
+    "HI-C470-nirbhik",
+    "HI-C470-jokhim"
+  ],
+  "tex": "hindi/book/chapters/ch470-courage.tex"
+}

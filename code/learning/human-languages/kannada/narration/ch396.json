@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 396,
+  "title": "Making Laws",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0ddb57ff38c11475",
+  "lessons": [
+    {
+      "id": "KA-C396-masude",
+      "sequence": 20020,
+      "title": "ಮಸೂದೆ (masūde) — a draft law; a bill",
+      "headword": "ಮಸೂದೆ",
+      "romanization": "masūde",
+      "gloss": "a draft law; a bill",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd3d3b86226878f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to implement, then the Kannada for a committee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಸೂದೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಸೂದೆ — masūde — \"a draft law; a bill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಂತ್ರಿ ಹೊಸ ಮಸೂದೆಯ ಬಗ್ಗೆ ಮಾತಾಡಿದರು. mantri hosa masūdeya bagge mātāḍidaru. The minister spoke about the new bill."
+            },
+            {
+              "kind": "speech",
+              "text": "A ಮಸೂದೆ (masūde) becomes a ಕಾಯ್ದೆ once it is passed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಸೂದೆ (masūde) is usually traced to Arabic musawwada, \"a draft\", through Hindustani masauda."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masūde",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masūde*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masūde, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masūde*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantri hosa masūdeya bagge mātāḍidaru. — The minister spoke about the new bill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantri hosa masūdeya bagge mātāḍidaru.* — The minister spoke about the new bill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to implement, then the Kannada for a committee, then say masūde again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to implement, then the Kannada for a committee, then say *masūde* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಸೂದೆ (masūde) mean? (\"A draft law; a bill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C396-angikarisu",
+      "sequence": 20030,
+      "title": "ಅಂಗೀಕರಿಸು (aṅgīkarisu) — to approve; to pass",
+      "headword": "ಅಂಗೀಕರಿಸು",
+      "romanization": "aṅgīkarisu",
+      "gloss": "to approve; to pass",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:485e408d5e7739ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a committee, then the Kannada for a draft law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಂಗೀಕರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಂಗೀಕರಿಸು — aṅgīkarisu — \"to approve; to pass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂಸತ್ತು ಮಸೂದೆಯನ್ನು ಅಂಗೀಕರಿಸಿತು. saṃsattu masūdeyannu aṅgīkarisitu. Parliament passed the bill."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಅಂಗೀಕರಿಸಿದೆ, aṅgīkariside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಂಗೀಕಾರ, approval."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಂಗೀಕರಿಸು (aṅgīkarisu) is built on Sanskrit aṅgīkāra, \"agreement, promise\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgīkarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgīkarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgīkarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgīkarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃsattu masūdeyannu aṅgīkarisitu. — Parliament passed the bill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃsattu masūdeyannu aṅgīkarisitu.* — Parliament passed the bill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a committee, then the Kannada for a draft law, then say aṅgīkarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a committee, then the Kannada for a draft law, then say *aṅgīkarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಂಗೀಕರಿಸು (aṅgīkarisu) mean? (\"To approve; to pass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C396-tiddupadi",
+      "sequence": 20040,
+      "title": "ತಿದ್ದುಪಡಿ (tiddupaḍi) — an amendment",
+      "headword": "ತಿದ್ದುಪಡಿ",
+      "romanization": "tiddupaḍi",
+      "gloss": "an amendment",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc3554aa06c1bc17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a draft law, then the Kannada for to approve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಿದ್ದುಪಡಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಿದ್ದುಪಡಿ — tiddupaḍi — \"an amendment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಾನೂನಿಗೆ ಒಂದು ತಿದ್ದುಪಡಿ ಬೇಕು. kānūnige ondu tiddupaḍi bēku. The law needs an amendment."
+            },
+            {
+              "kind": "speech",
+              "text": "From ತಿದ್ದು, to correct. ತಿದ್ದುಪಡಿ (tiddupaḍi) ತರು, to bring an amendment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಿದ್ದುಪಡಿ (tiddupaḍi) is native Dravidian, built on tiddu, \"to make straight, to correct\" (DEDR 3251)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiddupaḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiddupaḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiddupaḍi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiddupaḍi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānūnige ondu tiddupaḍi bēku. — The law needs an amendment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānūnige ondu tiddupaḍi bēku.* — The law needs an amendment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a draft law, then the Kannada for to approve, then say tiddupaḍi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a draft law, then the Kannada for to approve, then say *tiddupaḍi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಿದ್ದುಪಡಿ (tiddupaḍi) mean? (\"An amendment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C396-sasaka",
+      "sequence": 20050,
+      "title": "ಶಾಸಕ (śāsaka) — a legislator",
+      "headword": "ಶಾಸಕ",
+      "romanization": "śāsaka",
+      "gloss": "a legislator",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ad8b6a95649fc26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to approve, then the Kannada for an amendment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಶಾಸಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶಾಸಕ — śāsaka — \"a legislator\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಮ್ಮ ಶಾಸಕರು ಊರಿನ ರಸ್ತೆ ಸರಿಪಡಿಸಿದರು. namma śāsakaru ūrina raste saripaḍisidaru. Our legislator got the town road repaired."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಶಾಸಕರು, śāsakaru."
+            },
+            {
+              "kind": "speech",
+              "text": "A member of a state assembly. ಶಾಸನ, a law or an inscription."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶಾಸಕ (śāsaka) is borrowed from Sanskrit śāsaka, \"a ruler, a governor, an instructor\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāsaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāsaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāsaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāsaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namma śāsakaru ūrina raste saripaḍisidaru. — Our legislator got the town road repaired.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namma śāsakaru ūrina raste saripaḍisidaru.* — Our legislator got the town road repaired.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to approve, then the Kannada for an amendment, then say śāsaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to approve, then the Kannada for an amendment, then say *śāsaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಶಾಸಕ (śāsaka) mean? (\"A legislator\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C396-anumodisu",
+      "sequence": 20060,
+      "title": "ಅನುಮೋದಿಸು (anumōdisu) — to endorse",
+      "headword": "ಅನುಮೋದಿಸು",
+      "romanization": "anumōdisu",
+      "gloss": "to endorse",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eee31c4cc3a40fd6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an amendment, then the Kannada for a legislator."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅನುಮೋದಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನುಮೋದಿಸು — anumōdisu — \"to endorse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಭೆಯಲ್ಲಿ ಎಲ್ಲರೂ ಅವಳ ಸಲಹೆಯನ್ನು ಅನುಮೋದಿಸಿದರು. sabheyalli ellarū avaḷa salaheyannu anumōdisidaru. At the meeting everyone endorsed her suggestion."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಅನುಮೋದಿಸಿದೆ, anumōdiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅನುಮೋದನೆ, approval."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನುಮೋದಿಸು (anumōdisu) is built on Sanskrit anumodana, \"applauding, assent\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumōdisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumōdisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumōdisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumōdisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabheyalli ellarū avaḷa salaheyannu anumōdisidaru. — At the meeting everyone endorsed her suggestion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabheyalli ellarū avaḷa salaheyannu anumōdisidaru.* — At the meeting everyone endorsed her suggestion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an amendment, then the Kannada for a legislator, then say anumōdisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an amendment, then the Kannada for a legislator, then say *anumōdisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅನುಮೋದಿಸು (anumōdisu) mean? (\"To endorse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

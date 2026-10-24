@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C401-tayar",
+    "language": "marathi",
+    "chapter": 401,
+    "sequence": 23270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5f59eba8e69c8e3"
+  },
+  "findings": []
+}

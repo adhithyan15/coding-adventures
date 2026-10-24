@@ -62,6 +62,25 @@ Keywords (if, else, while, def, return) are lexed as NAME tokens first, then che
 
 Whitespace (spaces, tabs) is consumed but not emitted as tokens (except NEWLINE which has syntactic meaning in Python-like languages). Comments (# ...) are consumed and discarded.
 
+### Token flags: what came before a token
+
+Grammar-driven tokens carry an optional `flags` bitmask describing the gap
+between the previous emitted token and this one. It never changes a token's
+type or value:
+
+| Flag | Bit | Set when |
+| --- | --- | --- |
+| `TOKEN_PRECEDED_BY_NEWLINE` | 1 | the gap contains a line terminator: a skipped `\n`/`\r`/U+2028/U+2029 (also inside a skipped multi-line comment), or a built-in `NEWLINE` token |
+| `TOKEN_CONTEXT_KEYWORD` | 2 | a `NAME` listed under `context_keywords:` |
+| `TOKEN_PRECEDED_BY_SPACE` | 4 | anything was skipped: whitespace, a comment, a built-in `NEWLINE` token, a suppressed token |
+
+`f-1` gives `-` no flags, `f -1` gives it `SPACE`, and `return` ⏎ `x` gives
+`x` `SPACE | NEWLINE`. Parsers read these through the `.grammar` adjacency
+predicates (`@space_before`, `@no_newline_before`, …) of
+[F11](F11-grammar-token-adjacency-predicates.md), which is the full
+definition, including indentation mode and the tokens that carry no flags
+(`NEWLINE`, `INDENT`, `DEDENT`, `EOF`, layout virtual tokens).
+
 ### Error recovery
 
 When the lexer encounters an unexpected character, it should:

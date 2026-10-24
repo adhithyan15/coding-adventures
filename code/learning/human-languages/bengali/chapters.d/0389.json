@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "Drivers and Conductors",
+  "label": "ch:bn-drivers-and-conductors",
+  "canDo": "I can talk with a driver and a conductor, signal a stop and wear a helmet.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C389-haka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can talk with a driver and a conductor, signal a stop and wear a helmet.",
+    "assesses": [
+      "BN-LEX-C389-CHALOK389-03",
+      "BN-LEX-C389-CHALOK389-04",
+      "BN-LEX-C389-CHALOK389-05"
+    ]
+  }
+}

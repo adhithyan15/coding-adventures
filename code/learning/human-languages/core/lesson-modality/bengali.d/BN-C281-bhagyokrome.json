@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C281-bhagyokrome",
+    "language": "bengali",
+    "chapter": 281,
+    "sequence": 18250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8701de443ff55b63"
+  },
+  "findings": []
+}

@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 337,
+  "title": "Plots and Betrayal",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ced5740917866f39",
+  "lessons": [
+    {
+      "id": "TA-C337-cati",
+      "sequence": 19300,
+      "title": "சதி (cati) — a conspiracy; a plot",
+      "headword": "சதி",
+      "romanization": "cati",
+      "gloss": "a conspiracy; a plot",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:465c121dbe5754c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to submit, then the Tamil for to occupy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சதி — cati — \"a conspiracy; a plot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மன்னரைக் கொல்ல ஒரு சதி நடந்தது. maṉṉaraik kolla oru cati naṭantatu. There was a plot to kill the king."
+            },
+            {
+              "kind": "speech",
+              "text": "சதி (cati) செய், to conspire."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சதி (cati) is native Dravidian (DEDR 2323): to deceive, and as a noun treachery, wiles."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṉṉaraik kolla oru cati naṭantatu. — There was a plot to kill the king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṉṉaraik kolla oru cati naṭantatu.* — There was a plot to kill the king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to submit, then the Tamil for to occupy, then say cati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to submit, then the Tamil for to occupy, then say *cati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சதி (cati) mean? (\"A conspiracy; a plot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C337-culcci",
+      "sequence": 19310,
+      "title": "சூழ்ச்சி (cūḻcci) — a scheme; a ploy",
+      "headword": "சூழ்ச்சி",
+      "romanization": "cūḻcci",
+      "gloss": "a scheme; a ploy",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d86ef1fa4ca7ea1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to occupy, then the Tamil for a conspiracy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சூழ்ச்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சூழ்ச்சி — cūḻcci — \"a scheme; a ploy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தளபதியின் சூழ்ச்சி கடைசியில் வெளிப்பட்டது. taḷapatiyiṉ cūḻcci kaṭaiciyil veḷippaṭṭatu. The commander's scheme came out in the end."
+            },
+            {
+              "kind": "speech",
+              "text": "சூழ்ச்சி (cūḻcci) செய், to scheme."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சூழ்ச்சி (cūḻcci) is native Dravidian: DEDR 2735 gives it under சூழ், \"to deliberate, conspire\", as \"deliberation, counsel\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūḻcci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūḻcci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūḻcci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūḻcci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḷapatiyiṉ cūḻcci kaṭaiciyil veḷippaṭṭatu. — The commander's scheme came out in the end.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḷapatiyiṉ cūḻcci kaṭaiciyil veḷippaṭṭatu.* — The commander's scheme came out in the end.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to occupy, then the Tamil for a conspiracy, then say cūḻcci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to occupy, then the Tamil for a conspiracy, then say *cūḻcci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சூழ்ச்சி (cūḻcci) mean? (\"A scheme; a ploy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C337-kattikkotu",
+      "sequence": 19320,
+      "title": "காட்டிக்கொடு (kāṭṭikkoṭu) — to betray",
+      "headword": "காட்டிக்கொடு",
+      "romanization": "kāṭṭikkoṭu",
+      "gloss": "to betray",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3d2c38f6c05e925",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a conspiracy, then the Tamil for a scheme."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: காட்டிக்கொடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காட்டிக்கொடு — kāṭṭikkoṭu — \"to betray\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒரு நண்பனே அவரைக் காட்டிக்கொடுத்தான். oru naṇpaṉē avaraik kāṭṭikkoṭuttāṉ. It was a friend who betrayed him."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): காட்டிக்கொடுத்தேன், kāṭṭikkoṭuttēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally to show and give: to give someone away."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காட்டிக்கொடு (kāṭṭikkoṭu) is a Tamil compound built from காட்டு, \"to show\" (DEDR 1443), and கொடு, \"to give\" (DEDR 2053)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭṭikkoṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭṭikkoṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭṭikkoṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭṭikkoṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru naṇpaṉē avaraik kāṭṭikkoṭuttāṉ. — It was a friend who betrayed him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru naṇpaṉē avaraik kāṭṭikkoṭuttāṉ.* — It was a friend who betrayed him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a conspiracy, then the Tamil for a scheme, then say kāṭṭikkoṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a conspiracy, then the Tamil for a scheme, then say *kāṭṭikkoṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does காட்டிக்கொடு (kāṭṭikkoṭu) mean? (\"To betray\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C337-vanci",
+      "sequence": 19330,
+      "title": "வஞ்சி (vañci) — to deceive",
+      "headword": "வஞ்சி",
+      "romanization": "vañci",
+      "gloss": "to deceive",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:568f9ca9cfa37275",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a scheme, then the Tamil for to betray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வஞ்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வஞ்சி — vañci — \"to deceive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்த மந்திரி மன்னரை வஞ்சித்தார். anta mantiri maṉṉarai vañcittār. That minister deceived the king."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): வஞ்சித்தேன், vañcittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "A written word; the noun is வஞ்சனை, deceit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வஞ்சி (vañci) is a Tamil verb built on Sanskrit vañc, \"to cheat, deceive\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anta mantiri maṉṉarai vañcittār. — That minister deceived the king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anta mantiri maṉṉarai vañcittār.* — That minister deceived the king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a scheme, then the Tamil for to betray, then say vañci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a scheme, then the Tamil for to betray, then say *vañci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வஞ்சி (vañci) mean? (\"To deceive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C337-maruvetam",
+      "sequence": 19340,
+      "title": "மாறுவேடம் (māṟuvēṭam) — a disguise",
+      "headword": "மாறுவேடம்",
+      "romanization": "māṟuvēṭam",
+      "gloss": "a disguise",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b881ee96fa9bcc0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to betray, then the Tamil for to deceive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மாறுவேடம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாறுவேடம் — māṟuvēṭam — \"a disguise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மன்னர் மாறுவேடத்தில் நகரத்தைச் சுற்றினார். maṉṉar māṟuvēṭattil nakarattaic cuṟṟiṉār. The king went round the city in disguise."
+            },
+            {
+              "kind": "speech",
+              "text": "மாறுவேடம் (māṟuvēṭam) போடு, to put on a disguise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாறுவேடம் (māṟuvēṭam) joins native மாறு, \"to be changed\" (DEDR 4834), with வேடம், \"costume\", borrowed from Sanskrit vēṣa, \"dress, assumed appearance\" (CDIAL 12129)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṟuvēṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṟuvēṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṟuvēṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṟuvēṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṉṉar māṟuvēṭattil nakarattaic cuṟṟiṉār. — The king went round the city in disguise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṉṉar māṟuvēṭattil nakarattaic cuṟṟiṉār.* — The king went round the city in disguise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to betray, then the Tamil for to deceive, then say māṟuvēṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to betray, then the Tamil for to deceive, then say *māṟuvēṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மாறுவேடம் (māṟuvēṭam) mean? (\"A disguise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

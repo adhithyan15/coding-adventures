@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:6d8595d9663931e4",
+  "lessonIds": [
+    "TE-C475-sangamam",
+    "TE-C475-anakatta",
+    "TE-C475-jalasayam",
+    "TE-C475-nitiparudala",
+    "TE-C475-cittadi"
+  ],
+  "tex": "telugu/book/chapters/ch475-rivers-and-dams.tex"
+}

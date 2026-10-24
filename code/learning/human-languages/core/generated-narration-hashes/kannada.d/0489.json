@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:4dddcf2afaa8fe78",
+  "lessonIds": [
+    "KA-C489-ibbani",
+    "KA-C489-kulirgali",
+    "KA-C489-manjugadde",
+    "KA-C489-heppugattu",
+    "KA-C489-minugu",
+    "KA-R489-review-483-489",
+    "KA-R489-review-final-489"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch489.txt",
+  "json": "kannada/narration/ch489.json",
+  "textHash": "fnv1a64:89153fb0c8a9a204",
+  "jsonHash": "fnv1a64:019e02975936c4d3",
+  "findings": []
+}

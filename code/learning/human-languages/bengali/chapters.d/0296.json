@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "The Morning News",
+  "label": "ch:bn-the-morning-news",
+  "canDo": "I can talk about newspapers, headlines and reports.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C296-sompadok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can talk about newspapers, headlines and reports.",
+    "assesses": [
+      "BN-LEX-C296-SONGBAD296-03",
+      "BN-LEX-C296-SONGBAD296-04",
+      "BN-LEX-C296-SONGBAD296-05"
+    ]
+  }
+}

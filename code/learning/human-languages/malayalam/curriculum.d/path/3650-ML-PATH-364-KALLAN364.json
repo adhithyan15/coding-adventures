@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-364-KALLAN364",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-364-KALLAN364"
+  ],
+  "after": []
+}

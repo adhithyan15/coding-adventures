@@ -1,0 +1,11 @@
+{
+  "id": "AR-C491-iftakhara",
+  "pathSegment": "AR-PATH-491-FAKHR491",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-491-FAKHR491",
+      "order": 1
+    }
+  ]
+}

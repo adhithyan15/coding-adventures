@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C300-siksa",
+    "language": "marathi",
+    "chapter": 300,
+    "sequence": 17630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55ce1dc22b64ff15"
+  },
+  "findings": []
+}

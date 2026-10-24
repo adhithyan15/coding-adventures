@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C413-khanaval",
+    "language": "marathi",
+    "chapter": 413,
+    "sequence": 23910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec416e73fa7d5e5c"
+  },
+  "findings": []
+}

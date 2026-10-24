@@ -1,0 +1,11 @@
+{
+  "id": "BN-C476-dhekur",
+  "pathSegment": "BN-PATH-476-DOM476",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-476-DOM476",
+      "order": 2
+    }
+  ]
+}

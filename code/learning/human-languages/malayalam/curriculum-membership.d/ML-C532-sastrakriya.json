@@ -1,0 +1,11 @@
+{
+  "id": "ML-C532-sastrakriya",
+  "pathSegment": "ML-PATH-532-ROGAM532",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-532-ROGAM532",
+      "order": 2
+    }
+  ]
+}

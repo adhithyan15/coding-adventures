@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:a57cea265b3b0599",
+  "lessonIds": [
+    "TE-C440-alasyam",
+    "TE-C440-veci-undu",
+    "TE-C440-samayapalana",
+    "TE-C440-viramam",
+    "TE-C440-tvarapadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch440.txt",
+  "json": "telugu/narration/ch440.json",
+  "textHash": "fnv1a64:dca84dea2ca4e208",
+  "jsonHash": "fnv1a64:59d3f23e42b6ee36",
+  "findings": []
+}

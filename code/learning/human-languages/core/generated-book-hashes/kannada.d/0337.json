@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:48df6d0c7ccfd8ee",
+  "lessonIds": [
+    "KA-C337-nidhana",
+    "KA-C337-antyakriye",
+    "KA-C337-smasana",
+    "KA-C337-sraddhanjali",
+    "KA-C337-santaisu"
+  ],
+  "tex": "kannada/book/chapters/ch337-saying-goodbye.tex"
+}

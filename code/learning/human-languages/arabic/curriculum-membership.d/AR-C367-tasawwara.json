@@ -1,0 +1,11 @@
+{
+  "id": "AR-C367-tasawwara",
+  "pathSegment": "AR-PATH-367-IDRAK367",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-367-IDRAK367",
+      "order": 1
+    }
+  ]
+}

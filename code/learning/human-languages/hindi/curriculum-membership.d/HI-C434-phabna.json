@@ -1,0 +1,11 @@
+{
+  "id": "HI-C434-phabna",
+  "pathSegment": "HI-PATH-434-SHUDDH434",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-434-SHUDDH434",
+      "order": 3
+    }
+  ]
+}

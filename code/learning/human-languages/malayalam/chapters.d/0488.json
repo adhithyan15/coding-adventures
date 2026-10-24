@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Papers and Signatures",
+  "label": "ch:ml-papers-and-signatures",
+  "canDo": "I can say a signature, a duplicate copy, an identity document, a validity period and to expire.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C488-kalaharanappetuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can say a signature, a duplicate copy, an identity document, a validity period and to expire.",
+    "assesses": [
+      "ML-LEX-C488-REKHA488-03",
+      "ML-LEX-C488-REKHA488-04",
+      "ML-LEX-C488-REKHA488-05"
+    ]
+  }
+}

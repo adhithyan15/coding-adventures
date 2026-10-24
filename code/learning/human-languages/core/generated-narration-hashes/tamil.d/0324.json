@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:ffd0cbfaa38703c8",
+  "lessonIds": [
+    "TA-C324-ancali",
+    "TA-C324-irutimariyatai",
+    "TA-C324-ninaivunal",
+    "TA-C324-eriyuttu",
+    "TA-C324-ninaivental"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch324.txt",
+  "json": "tamil/narration/ch324.json",
+  "textHash": "fnv1a64:6750c7518e8c3d50",
+  "jsonHash": "fnv1a64:6f736e460bc45d74",
+  "findings": []
+}

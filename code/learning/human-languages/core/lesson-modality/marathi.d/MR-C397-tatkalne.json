@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C397-tatkalne",
+    "language": "marathi",
+    "chapter": 397,
+    "sequence": 23070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:859a915708e26c5d"
+  },
+  "findings": []
+}

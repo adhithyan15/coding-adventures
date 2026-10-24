@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 330,
+  "title": "Prison",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c9b67a2c7780363b",
+  "lessons": [
+    {
+      "id": "AR-C330-sajana",
+      "sequence": 18890,
+      "title": "سجن (sajana) — to imprison, to jail",
+      "headword": "سجن",
+      "romanization": "sajana",
+      "gloss": "to imprison, to jail",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c93262994447c4ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for independence, then the Arabic for a country’s people."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سجن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سجن — sajana — \"to imprison, to jail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سجن (sajana) اللص سنتين. sujina al-liṣṣ sanatayn. The thief was jailed for two years."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يسجن, yasjun."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun سجن (sajana), sijn, a prison, is spelled the same."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سجن (sajana) is built on the native Arabic root s-j-n (Lane), \"to shut up, to confine\"; sijn is the place of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sajana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sajana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sajana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sajana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sujina al-liṣṣ sanatayn. — The thief was jailed for two years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sujina al-liṣṣ sanatayn.* — The thief was jailed for two years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for independence, then the Arabic for a country’s people, then say sajana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for independence, then the Arabic for a country’s people, then say *sajana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سجن (sajana) mean? (\"To imprison, to jail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C330-sajin",
+      "sequence": 18900,
+      "title": "سجين (sajīn) — a prisoner",
+      "headword": "سجين",
+      "romanization": "sajīn",
+      "gloss": "a prisoner",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49143b10c52b66bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a country’s people, then the Arabic for to imprison."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سجين",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سجين — sajīn — \"a prisoner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هرب سجين من السجن ليلا. haraba sajīn min as-sijn laylan. A prisoner escaped from the prison at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: سجناء, sujanāʾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سجين (sajīn) is built on the native Arabic root s-j-n (Lane), \"to confine\". The faʿīl pattern gives the one confined."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sajīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sajīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sajīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sajīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haraba sajīn min as-sijn laylan. — A prisoner escaped from the prison at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haraba sajīn min as-sijn laylan.* — A prisoner escaped from the prison at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a country’s people, then the Arabic for to imprison, then say sajīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a country’s people, then the Arabic for to imprison, then say *sajīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سجين (sajīn) mean? (\"A prisoner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C330-zinzana",
+      "sequence": 18910,
+      "title": "زنزانة (zinzāna) — a prison cell",
+      "headword": "زنزانة",
+      "romanization": "zinzāna",
+      "gloss": "a prison cell",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69a00bf69e5effc2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to imprison, then the Arabic for a prisoner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: زنزانة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زنزانة — zinzāna — \"a prison cell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كانت الزنزانة صغيرة ومظلمة. kānat az-zinzāna ṣaghīra wa-muẓlima. The cell was small and dark."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: زنازين, zanāzīn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زنزانة (zinzāna) is not in the old dictionaries Lane drew on; it belongs to later Arabic, and the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zinzāna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zinzāna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zinzāna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zinzāna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānat az-zinzāna ṣaghīra wa-muẓlima. — The cell was small and dark.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānat az-zinzāna ṣaghīra wa-muẓlima.* — The cell was small and dark.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to imprison, then the Arabic for a prisoner, then say zinzāna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to imprison, then the Arabic for a prisoner, then say *zinzāna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does زنزانة (zinzāna) mean? (\"A prison cell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C330-qayd",
+      "sequence": 18920,
+      "title": "قيد (qayd) — a shackle; a restriction",
+      "headword": "قيد",
+      "romanization": "qayd",
+      "gloss": "a shackle; a restriction",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47651ac3e235b74d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a prisoner, then the Arabic for a prison cell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قيد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قيد — qayd — \"a shackle; a restriction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وضعت الشرطة القيد في يدي اللص. waḍaʿat ash-shurṭa al-qayd fī yaday al-liṣṣ. The police put the handcuffs on the thief’s hands."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: قيود, quyūd."
+            },
+            {
+              "kind": "speech",
+              "text": "على قيد (qayd) الحياة: alive, \"in the bond of life\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قيد (qayd) is built on the native Arabic root q-y-d (Lane), where qayd is the hobble put on a horse or camel, and qayyada, \"to tie; to note down\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qayd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qayd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qayd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qayd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waḍaʿat ash-shurṭa al-qayd fī yaday al-liṣṣ. — The police put the handcuffs on the thief’s hands.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waḍaʿat ash-shurṭa al-qayd fī yaday al-liṣṣ.* — The police put the handcuffs on the thief’s hands.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a prisoner, then the Arabic for a prison cell, then say qayd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a prisoner, then the Arabic for a prison cell, then say *qayd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قيد (qayd) mean? (\"A shackle; a restriction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C330-afraja",
+      "sequence": 18930,
+      "title": "أفرج (afraja) — to release, to set free",
+      "headword": "أفرج",
+      "romanization": "afraja",
+      "gloss": "to release, to set free",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f33a6c9654bf6bd7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a prison cell, then the Arabic for a shackle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أفرج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أفرج — afraja — \"to release, to set free\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أفرجت الشرطة عن الرجل في المساء. afrajat ash-shurṭa ʿan ar-rajul fī al-masāʾ. The police released the man in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يفرج, yufrij."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes عن: أفرج (afraja) عن السجين."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أفرج (afraja) is built on the native Arabic root f-r-j (Lane), \"to open a gap; to relieve\"; faraj is relief from trouble. It is Form IV, \"to open the way out\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afraja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afraja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afraja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afraja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afrajat ash-shurṭa ʿan ar-rajul fī al-masāʾ. — The police released the man in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afrajat ash-shurṭa ʿan ar-rajul fī al-masāʾ.* — The police released the man in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a prison cell, then the Arabic for a shackle, then say afraja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a prison cell, then the Arabic for a shackle, then say *afraja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أفرج (afraja) mean? (\"To release, to set free\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

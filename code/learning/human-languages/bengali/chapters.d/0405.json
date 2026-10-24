@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Rooms and Facilities",
+  "label": "ch:bn-rooms-and-facilities",
+  "canDo": "I can ask about the bathroom, hot water and the air conditioner, and get a room cleaned.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C405-porishkar-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can ask about the bathroom, hot water and the air conditioner, and get a room cleaned.",
+    "assesses": [
+      "BN-LEX-C405-BATHRUM405-03",
+      "BN-LEX-C405-BATHRUM405-04",
+      "BN-LEX-C405-BATHRUM405-05"
+    ]
+  }
+}

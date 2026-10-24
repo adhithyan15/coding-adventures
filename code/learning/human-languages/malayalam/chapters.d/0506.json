@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "The Sky",
+  "label": "ch:ml-the-sky",
+  "canDo": "I can say sunrise, sunset, the horizon, the atmosphere and rain clouds.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C506-malakkar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can say sunrise, sunset, the horizon, the atmosphere and rain clouds.",
+    "assesses": [
+      "ML-LEX-C506-AKASAM506-03",
+      "ML-LEX-C506-AKASAM506-04",
+      "ML-LEX-C506-AKASAM506-05"
+    ]
+  }
+}

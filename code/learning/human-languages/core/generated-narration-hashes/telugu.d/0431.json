@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:e4fe74fa03be958e",
+  "lessonIds": [
+    "TE-C431-pramanam",
+    "TE-C431-sthayi",
+    "TE-C431-dhorani",
+    "TE-C431-samarthavantamaina",
+    "TE-C431-pariksincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch431.txt",
+  "json": "telugu/narration/ch431.json",
+  "textHash": "fnv1a64:e063f45404afc463",
+  "jsonHash": "fnv1a64:292e0f857984120c",
+  "findings": []
+}

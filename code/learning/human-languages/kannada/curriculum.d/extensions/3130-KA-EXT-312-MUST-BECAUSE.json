@@ -1,0 +1,10 @@
+{
+  "id": "KA-EXT-312-MUST-BECAUSE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I or someone else must or should do with -bēku, what must not be done with -bāradu, and give the reason with … kāraṇa or yākendare.",
+  "prerequisites": [
+    "KA-EXT-311-OPINION-SO"
+  ]
+}

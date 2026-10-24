@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C548-todga",
+    "language": "marathi",
+    "chapter": 548,
+    "sequence": 31260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:156fbb6703a9c0e9"
+  },
+  "findings": []
+}

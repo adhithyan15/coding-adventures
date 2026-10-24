@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-347-ATARAM347",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-347-ATARAM347"
+  ],
+  "after": []
+}

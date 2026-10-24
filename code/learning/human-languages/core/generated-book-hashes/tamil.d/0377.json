@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:c7acbf88f855d9e7",
+  "lessonIds": [
+    "TA-C377-vanmurai",
+    "TA-C377-akimcai",
+    "TA-C377-orrumai",
+    "TA-C377-verrumai",
+    "TA-C377-pilavupatu"
+  ],
+  "tex": "tamil/book/chapters/ch377-unity-and-division.tex"
+}

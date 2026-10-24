@@ -643,8 +643,19 @@ export const scriptInventoryEvidence = {
       "ొ": { cls: 60, penLifts: 0 },
       "ో": { cls: 61, penLifts: 0 },
     };
-    const teluguMarks = scripts.telugu!.marks ?? [];
-    expect(teluguMarks.map((mark) => mark.mark)).toEqual(Object.keys(CITED_MARKS));
+    // The B1 core (chapters 316-325) appends a twelfth row, the visarga ః, read
+    // in దుఃఖం and taught by TE-S178-sign-visarga. It is recognition-only: no
+    // stroke order, lift count or source, so no lesson promises a strip for it,
+    // and the cited loop below covers the eleven signs that have one.
+    const allTeluguMarks = scripts.telugu!.marks ?? [];
+    expect(allTeluguMarks.map((mark) => mark.mark)).toEqual([...Object.keys(CITED_MARKS), "ః"]);
+    const visarga = allTeluguMarks.at(-1)!;
+    expect(visarga).toMatchObject({ mark: "ః", sound: "ḥ", role: "other" });
+    expect(visarga.strokeOrder, "ః").toBeUndefined();
+    expect(visarga.penLifts, "ః").toBeUndefined();
+    expect(visarga.strokeOrderSource, "ః").toBeUndefined();
+    expect(missingByScript.get("telugu.json")?.has("ః") ?? false).toBe(false);
+    const teluguMarks = allTeluguMarks.filter((mark) => mark.mark !== "ః");
     for (const mark of teluguMarks) {
       const cited = CITED_MARKS[mark.mark]!;
       expect(mark.penLifts, mark.mark).toBe(cited.penLifts);

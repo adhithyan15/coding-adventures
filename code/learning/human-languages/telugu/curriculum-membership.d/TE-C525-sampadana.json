@@ -1,0 +1,11 @@
+{
+  "id": "TE-C525-sampadana",
+  "pathSegment": "TE-PATH-525-SAMPADANA525",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-525-SAMPADANA525",
+      "order": 1
+    }
+  ]
+}

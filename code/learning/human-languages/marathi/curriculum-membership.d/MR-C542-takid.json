@@ -1,0 +1,11 @@
+{
+  "id": "MR-C542-takid",
+  "pathSegment": "MR-PATH-542-NIYAM542",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-542-NIYAM542",
+      "order": 2
+    }
+  ]
+}

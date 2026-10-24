@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:9404559bccf37955",
+  "lessonIds": [
+    "TE-C471-paryavaranam",
+    "TE-C471-paccadanam",
+    "TE-C471-naruku",
+    "TE-C471-nastaparacu",
+    "TE-C471-samraksincu"
+  ],
+  "tex": "telugu/book/chapters/ch471-caring-for-the-environment.tex"
+}

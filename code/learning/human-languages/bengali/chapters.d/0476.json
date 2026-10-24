@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Out of Breath",
+  "label": "ch:bn-out-of-breath",
+  "canDo": "I can say that I am out of breath, have hiccups or am groaning.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C476-katrano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can say that I am out of breath, have hiccups or am groaning.",
+    "assesses": [
+      "BN-LEX-C476-DOM476-03",
+      "BN-LEX-C476-DOM476-04",
+      "BN-LEX-C476-DOM476-05"
+    ]
+  }
+}

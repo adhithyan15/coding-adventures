@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:da9de04b930fcb58",
+  "lessonIds": [
+    "KA-C542-malige",
+    "KA-C542-hostilu",
+    "KA-C542-hajara",
+    "KA-C542-nelamalige",
+    "KA-C542-kapatu"
+  ],
+  "tex": "kannada/book/chapters/ch542-rooms-of-a-house.tex"
+}

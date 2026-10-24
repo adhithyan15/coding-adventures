@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:a2358c5885063c0e",
+  "lessonIds": [
+    "TE-C393-prayojanam",
+    "TE-C393-labhapadu",
+    "TE-C393-nastapovu",
+    "TE-C393-hanikaramaina",
+    "TE-C393-upayogapadu"
+  ],
+  "tex": "telugu/book/chapters/ch393-gains-and-losses.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 440,
+  "title": "Permits and Papers",
+  "label": "ch:ka-permits-and-papers",
+  "canDo": "I can say a permit, to renew, to confirm, an embassy and international.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-R440-review-433-440",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can say a permit, to renew, to confirm, an embassy and international.",
+    "assesses": [
+      "KA-LEX-C440-PARAVANAGI440-01",
+      "KA-LEX-C440-PARAVANAGI440-02",
+      "KA-LEX-C440-PARAVANAGI440-03",
+      "KA-LEX-C440-PARAVANAGI440-04",
+      "KA-LEX-C440-PARAVANAGI440-05"
+    ]
+  }
+}

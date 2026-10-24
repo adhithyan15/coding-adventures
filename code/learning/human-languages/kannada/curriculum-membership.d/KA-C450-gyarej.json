@@ -1,0 +1,11 @@
+{
+  "id": "KA-C450-gyarej",
+  "pathSegment": "KA-PATH-450-GARAGE450",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-450-GARAGE450",
+      "order": 1
+    }
+  ]
+}

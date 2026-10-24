@@ -1,0 +1,11 @@
+{
+  "id": "MR-C376-mulyamapan-karne",
+  "pathSegment": "MR-PATH-376-MULYAMAPAN376",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-376-MULYAMAPAN376",
+      "order": 2
+    }
+  ]
+}

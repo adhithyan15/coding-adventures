@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:5affd025fd8c4722",
+  "lessonIds": [
+    "KA-C422-paramarsisu",
+    "KA-C422-manadanda",
+    "KA-C422-krama",
+    "KA-C422-vidhana",
+    "KA-C422-prakriye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch422.txt",
+  "json": "kannada/narration/ch422.json",
+  "textHash": "fnv1a64:4a46d5c66f500ec6",
+  "jsonHash": "fnv1a64:f31dffdeb137bf6f",
+  "findings": []
+}

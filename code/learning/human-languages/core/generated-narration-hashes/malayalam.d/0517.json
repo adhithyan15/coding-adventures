@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:0305600722ba31b7",
+  "lessonIds": [
+    "ML-C517-vikaram",
+    "ML-C517-ahladam",
+    "ML-C517-alaruka",
+    "ML-C517-kopam",
+    "ML-C517-visamikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch517.txt",
+  "json": "malayalam/narration/ch517.json",
+  "textHash": "fnv1a64:65e54be9a93986b7",
+  "jsonHash": "fnv1a64:fce48c9fb9000f29",
+  "findings": []
+}

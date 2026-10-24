@@ -1,0 +1,21 @@
+{
+  "chapter": 445,
+  "title": "On the Highway",
+  "label": "ch:te-on-the-highway",
+  "canDo": "I can say a highway, a lorry, to shoot ahead, to slow down and to lose control.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-R445-review-438-445",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can say a highway, a lorry, to shoot ahead, to slow down and to lose control.",
+    "assesses": [
+      "TE-LEX-C445-RAHADARI445-01",
+      "TE-LEX-C445-RAHADARI445-02",
+      "TE-LEX-C445-RAHADARI445-03",
+      "TE-LEX-C445-RAHADARI445-04",
+      "TE-LEX-C445-RAHADARI445-05"
+    ]
+  }
+}

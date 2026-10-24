@@ -1,0 +1,11 @@
+{
+  "id": "HI-C366-bhram",
+  "pathSegment": "HI-PATH-366-VAJIB366",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-366-VAJIB366",
+      "order": 2
+    }
+  ]
+}

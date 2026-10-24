@@ -1,0 +1,11 @@
+{
+  "id": "KA-C486-himapata",
+  "pathSegment": "KA-PATH-486-HINGARU486",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-486-HINGARU486",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C372-kathamsam",
+  "pathSegment": "TE-PATH-372-KATHAKUDU372",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-372-KATHAKUDU372",
+      "order": 1
+    }
+  ]
+}

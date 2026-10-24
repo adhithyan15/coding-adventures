@@ -1,0 +1,11 @@
+{
+  "id": "TE-C526-siksana",
+  "pathSegment": "TE-PATH-526-NIRVAHANA526",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-526-NIRVAHANA526",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Rumours",
+  "label": "ch:ml-rumours",
+  "canDo": "I can say a rumour, speculation, fake, to circulate and to spread around.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C353-pracarippikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say a rumour, speculation, fake, to circulate and to spread around.",
+    "assesses": [
+      "ML-LEX-C353-KIMVADANTI353-03",
+      "ML-LEX-C353-KIMVADANTI353-04",
+      "ML-LEX-C353-KIMVADANTI353-05"
+    ]
+  }
+}

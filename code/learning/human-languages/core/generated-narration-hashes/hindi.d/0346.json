@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:288b735bc3e22fba",
+  "lessonIds": [
+    "HI-C346-bahas",
+    "HI-C346-tark",
+    "HI-C346-jhagarna",
+    "HI-C346-tokna",
+    "HI-C346-balki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch346.txt",
+  "json": "hindi/narration/ch346.json",
+  "textHash": "fnv1a64:12bf353d7fc4209b",
+  "jsonHash": "fnv1a64:89e6f22f5a07d4e7",
+  "findings": []
+}

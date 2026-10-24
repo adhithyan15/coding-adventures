@@ -1,0 +1,11 @@
+{
+  "id": "TA-C464-capalam",
+  "pathSegment": "TA-PATH-464-CAPALAM464",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-464-CAPALAM464",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C330-jhulna",
+    "language": "hindi",
+    "chapter": 330,
+    "sequence": 18170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8d4abe000756d3a"
+  },
+  "findings": []
+}

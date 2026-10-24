@@ -1,0 +1,11 @@
+{
+  "id": "TA-C303-tancam",
+  "pathSegment": "TA-PATH-303-KOOCHAL303",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-303-KOOCHAL303",
+      "order": 3
+    }
+  ]
+}

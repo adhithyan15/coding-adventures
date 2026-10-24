@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Danger and warnings",
+  "label": "ch:ar-danger-and-warnings",
+  "canDo": "I can say to warn, to threaten, an alarm, a whistle and chaos.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R324-review-317-324",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can say to warn, to threaten, an alarm, a whistle and chaos.",
+    "assesses": [
+      "AR-LEX-C324-KHATAR324-03",
+      "AR-LEX-C324-KHATAR324-04",
+      "AR-LEX-C324-KHATAR324-05"
+    ]
+  }
+}

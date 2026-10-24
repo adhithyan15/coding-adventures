@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C196-work-command-return",
+    "language": "punjabi",
+    "chapter": 196,
+    "sequence": 10670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f4d753c38ceb994"
+  },
+  "findings": []
+}

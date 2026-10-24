@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Theories and Principles",
+  "label": "ch:ta-theories-and-principles",
+  "canDo": "I can talk about a theory, a philosophy and a policy.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C358-niruvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about a theory, a philosophy and a policy.",
+    "assesses": [
+      "TA-LEX-C358-KOTPATU358-03",
+      "TA-LEX-C358-KOTPATU358-04",
+      "TA-LEX-C358-KOTPATU358-05"
+    ]
+  }
+}

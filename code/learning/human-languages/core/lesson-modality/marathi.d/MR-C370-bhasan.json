@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C370-bhasan",
+    "language": "marathi",
+    "chapter": 370,
+    "sequence": 21450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10e4f026d31043d9"
+  },
+  "findings": []
+}

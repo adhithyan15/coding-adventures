@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 458,
+  "title": "Honest and Deceitful",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:aec94b3dfdb2474e",
+  "lessons": [
+    {
+      "id": "BN-C458-sot",
+      "sequence": 28020,
+      "title": "সৎ (sôt) — honest; upright",
+      "headword": "সৎ",
+      "romanization": "sôt",
+      "gloss": "honest; upright",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:342a81996de0b33a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for helpful to others, then the Bengali for noble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সৎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সৎ — sôt — \"honest; upright\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সৎ লোকটা মানিব্যাগটা পুলিশকে দিল। sôt lokṭā mānibyāgṭā pulishke dilô. The honest man handed the wallet to the police."
+            },
+            {
+              "kind": "speech",
+              "text": "সৎ (sôt) also marks a step-relation: সৎ (sôt) ভাই, a half-brother."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সৎ (sôt) is a tatsama, Sanskrit sat, \"being, existing\" and \"true, good, honest\" (Monier-Williams); it ends in the new letter ৎ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôt lokṭā mānibyāgṭā pulishke dilô. — The honest man handed the wallet to the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôt lokṭā mānibyāgṭā pulishke dilô.* — The honest man handed the wallet to the police.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for helpful to others, then the Bengali for noble, then say sôt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for helpful to others, then the Bengali for noble, then say *sôt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সৎ (sôt) mean? (\"Honest; upright\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C458-kopot",
+      "sequence": 28030,
+      "title": "কপট (kôpôṭ) — insincere; two-faced; feigned",
+      "headword": "কপট",
+      "romanization": "kôpôṭ",
+      "gloss": "insincere; two-faced; feigned",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54ad1fbb74665c98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for noble, then the Bengali for honest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কপট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কপট — kôpôṭ — \"insincere; two-faced; feigned\"."
+            },
+            {
+              "kind": "speech",
+              "text": "লোকটার কপট হাসি দেখে মীরা তাকে বিশ্বাস করল না। lokṭār kôpôṭ hāsi dekhe mīrā tāke bishvās kôrlô nā. Seeing the man's false smile, Mira did not trust him."
+            },
+            {
+              "kind": "speech",
+              "text": "কপট (kôpôṭ) রাগ, pretended anger: the kind a grandmother puts on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কপট (kôpôṭ) is a tatsama, Sanskrit kapaṭa, a noun for fraud and deceit (Monier-Williams); Bengali uses it as an adjective, for a smile or a feeling put on to mislead. It is a different word from Sanskrit kapāṭa, a door leaf."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôpôṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôpôṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôpôṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôpôṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokṭār kôpôṭ hāsi dekhe mīrā tāke bishvās kôrlô nā. — Seeing the man's false smile, Mira did not trust him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokṭār kôpôṭ hāsi dekhe mīrā tāke bishvās kôrlô nā.* — Seeing the man's false smile, Mira did not trust him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for noble, then the Bengali for honest, then say kôpôṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for noble, then the Bengali for honest, then say *kôpôṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কপট (kôpôṭ) mean? (\"Insincere; two-faced; feigned\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C458-bishvosto",
+      "sequence": 28040,
+      "title": "বিশ্বস্ত (bishvôstô) — trustworthy; loyal",
+      "headword": "বিশ্বস্ত",
+      "romanization": "bishvôstô",
+      "gloss": "trustworthy; loyal",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:694becc8014cf5f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for honest, then the Bengali for two-faced."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিশ্বস্ত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিশ্বস্ত — bishvôstô — \"trustworthy; loyal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের পুরনো দারোয়ান বিশ্বস্ত লোক। āmāder purôno dāroyān bishvôstô lok. Our old gatekeeper is a trustworthy man."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিশ্বস্ত (bishvôstô) is a tatsama, Sanskrit viśvasta, \"trusted, faithful\" (Monier-Williams), from the same root as বিশ্বাস করা (taught), to trust."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bishvôstô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bishvôstô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bishvôstô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bishvôstô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmāder purôno dāroyān bishvôstô lok. — Our old gatekeeper is a trustworthy man.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmāder purôno dāroyān bishvôstô lok.* — Our old gatekeeper is a trustworthy man.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for honest, then the Bengali for two-faced, then say bishvôstô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for honest, then the Bengali for two-faced, then say *bishvôstô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিশ্বস্ত (bishvôstô) mean? (\"Trustworthy; loyal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C458-dhurto",
+      "sequence": 28050,
+      "title": "ধূর্ত (dhūrtô) — cunning; crafty",
+      "headword": "ধূর্ত",
+      "romanization": "dhūrtô",
+      "gloss": "cunning; crafty",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25ef7030f059d997",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for two-faced, then the Bengali for trustworthy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ধূর্ত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধূর্ত — dhūrtô — \"cunning; crafty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ধূর্ত শিয়ালটা কাকের রুটি নিয়ে পালাল। dhūrtô shiyālṭā kāker ruṭi niye pālālô. The crafty jackal ran off with the crow's bread."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধূর্ত (dhūrtô) is a tatsama, Sanskrit dhūrta, \"cunning, crafty\", and as a noun \"a rogue, a cheat\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūrtô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūrtô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūrtô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūrtô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūrtô shiyālṭā kāker ruṭi niye pālālô. — The crafty jackal ran off with the crow's bread.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūrtô shiyālṭā kāker ruṭi niye pālālô.* — The crafty jackal ran off with the crow's bread.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for two-faced, then the Bengali for trustworthy, then say dhūrtô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for two-faced, then the Bengali for trustworthy, then say *dhūrtô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ধূর্ত (dhūrtô) mean? (\"Cunning; crafty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C458-thokano",
+      "sequence": 28060,
+      "title": "ঠকানো (ṭhôkāno) — to cheat; to swindle",
+      "headword": "ঠকানো",
+      "romanization": "ṭhôkāno",
+      "gloss": "to cheat; to swindle",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:001422772b25215d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for trustworthy, then the Bengali for cunning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঠকানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠকানো — ṭhôkāno — \"to cheat; to swindle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দোকানদার আমাকে দশ টাকা ঠকাল। dokāndār āmāke dôsh ṭākā ṭhôkālô. The shopkeeper cheated me out of ten taka."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি খদ্দেরকে ঠকালেন, tini khôdderke ṭhôkālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠকানো (ṭhôkāno) is listed by CDIAL for Bengali, as deceiving, under a reconstructed ṭhagg, \"cheat\" (CDIAL 5489); ṭhôkā, to be cheated, is its plain partner."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhôkāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhôkāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhôkāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhôkāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dokāndār āmāke dôsh ṭākā ṭhôkālô. — The shopkeeper cheated me out of ten taka.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dokāndār āmāke dôsh ṭākā ṭhôkālô.* — The shopkeeper cheated me out of ten taka.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for trustworthy, then the Bengali for cunning, then say ṭhôkāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for trustworthy, then the Bengali for cunning, then say *ṭhôkāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঠকানো (ṭhôkāno) mean? (\"To cheat; to swindle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 425,
+  "title": "Accepting and Rejecting",
+  "label": "ch:ka-accepting-and-rejecting",
+  "canDo": "I can say to accept, to reject, to certify, valid and recognition.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-R425-review-419-425",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can say to accept, to reject, to certify, valid and recognition.",
+    "assesses": [
+      "KA-LEX-C425-SVIKARISU425-01",
+      "KA-LEX-C425-SVIKARISU425-02",
+      "KA-LEX-C425-SVIKARISU425-03",
+      "KA-LEX-C425-SVIKARISU425-04",
+      "KA-LEX-C425-SVIKARISU425-05"
+    ]
+  }
+}

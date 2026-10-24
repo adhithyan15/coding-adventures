@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 538,
+  "title": "Music",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:843ec11044173c75",
+  "lessons": [
+    {
+      "id": "TE-C538-svaram",
+      "sequence": 27250,
+      "title": "స్వరం (svaraṁ) — a musical note; a voice",
+      "headword": "స్వరం",
+      "romanization": "svaraṁ",
+      "gloss": "a musical note; a voice",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e8881e905fa7f97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for kabaddi, then the Telugu for to hop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్వరం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వరం — svaraṁ — \"a musical note; a voice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె స్వరం చాలా మధురంగా ఉంటుంది. āme svaraṁ cālā madhuraṅgā uṇṭundi. Her voice is very sweet."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: స్వరాలు, svarālu."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural స్వరాలు: the seven notes of Indian music."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వరం (svaraṁ) is borrowed from Sanskrit svara, \"sound; a musical note\" (CDIAL 13908)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svaraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svaraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svaraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svaraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme svaraṁ cālā madhuraṅgā uṇṭundi. — Her voice is very sweet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme svaraṁ cālā madhuraṅgā uṇṭundi.* — Her voice is very sweet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for kabaddi, then the Telugu for to hop, then say svaraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for kabaddi, then the Telugu for to hop, then say *svaraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్వరం (svaraṁ) mean? (\"A musical note; a voice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C538-gatram",
+      "sequence": 27260,
+      "title": "గాత్రం (gātraṁ) — a singing voice",
+      "headword": "గాత్రం",
+      "romanization": "gātraṁ",
+      "gloss": "a singing voice",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:719aee5f325000f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to hop, then the Telugu for a musical note."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గాత్రం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గాత్రం — gātraṁ — \"a singing voice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె గాత్రం విని అందరూ ఆశ్చర్యపోయారు. āme gātraṁ vini andarū āścaryapōyāru. Everyone was amazed to hear her singing voice."
+            },
+            {
+              "kind": "speech",
+              "text": "In music, singing as against instruments."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గాత్రం (gātraṁ) is borrowed from Sanskrit gātra, \"a limb; the body\" (CDIAL 4124); in Telugu music it is the voice, the body's own instrument."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gātraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gātraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gātraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gātraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme gātraṁ vini andarū āścaryapōyāru. — Everyone was amazed to hear her singing voice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme gātraṁ vini andarū āścaryapōyāru.* — Everyone was amazed to hear her singing voice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to hop, then the Telugu for a musical note, then say gātraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to hop, then the Telugu for a musical note, then say *gātraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గాత్రం (gātraṁ) mean? (\"A singing voice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C538-vayincu",
+      "sequence": 27270,
+      "title": "వాయించు (vāyiñcu) — to play an instrument",
+      "headword": "వాయించు",
+      "romanization": "vāyiñcu",
+      "gloss": "to play an instrument",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:588e49b512b1e420",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a musical note, then the Telugu for a singing voice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వాయించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాయించు — vāyiñcu — \"to play an instrument\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా అన్నయ్య గిటారు బాగా వాయిస్తాడు. mā annayya giṭāru bāgā vāyistāḍu. My elder brother plays the guitar well."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వాయించాను, vāyiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "For instruments; ఆడు is for games."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాయించు (vāyiñcu) is usually traced to Sanskrit vādayati, \"causes to sound\" (CDIAL 11510), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāyiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāyiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāyiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāyiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā annayya giṭāru bāgā vāyistāḍu. — My elder brother plays the guitar well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā annayya giṭāru bāgā vāyistāḍu.* — My elder brother plays the guitar well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a musical note, then the Telugu for a singing voice, then say vāyiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a musical note, then the Telugu for a singing voice, then say *vāyiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వాయించు (vāyiñcu) mean? (\"To play an instrument\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C538-mrdangam",
+      "sequence": 27280,
+      "title": "మృదంగం (mṛdaṅgaṁ) — a mridangam drum",
+      "headword": "మృదంగం",
+      "romanization": "mṛdaṅgaṁ",
+      "gloss": "a mridangam drum",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db730079aec5b797",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a singing voice, then the Telugu for to play an instrument."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మృదంగం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మృదంగం — mṛdaṅgaṁ — \"a mridangam drum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పాటకు తోడుగా ఆయన మృదంగం వాయించారు. pāṭaku tōḍugā āyana mṛdaṅgaṁ vāyiñcāru. He played the mridangam to accompany the song."
+            },
+            {
+              "kind": "speech",
+              "text": "A two-headed barrel drum of South Indian music."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మృదంగం (mṛdaṅgaṁ) is borrowed from Sanskrit mṛdaṁga, \"a kind of drum\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mṛdaṅgaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mṛdaṅgaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mṛdaṅgaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mṛdaṅgaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭaku tōḍugā āyana mṛdaṅgaṁ vāyiñcāru. — He played the mridangam to accompany the song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭaku tōḍugā āyana mṛdaṅgaṁ vāyiñcāru.* — He played the mridangam to accompany the song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a singing voice, then the Telugu for to play an instrument, then say mṛdaṅgaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a singing voice, then the Telugu for to play an instrument, then say *mṛdaṅgaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మృదంగం (mṛdaṅgaṁ) mean? (\"A mridangam drum\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C538-sannayi",
+      "sequence": 27290,
+      "title": "సన్నాయి (sannāyi) — a reed pipe; a shehnai",
+      "headword": "సన్నాయి",
+      "romanization": "sannāyi",
+      "gloss": "a reed pipe; a shehnai",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:491c0c42dc29a98e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to play an instrument, then the Telugu for a mridangam drum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సన్నాయి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సన్నాయి — sannāyi — \"a reed pipe; a shehnai\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పెళ్ళిలో సన్నాయి మోగింది. peḷḷilō sannāyi mōgindi. The reed pipe played at the wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "The festive reed instrument of weddings."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సన్నాయి (sannāyi) is the Telugu name of the festive reed pipe; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sannāyi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sannāyi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sannāyi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sannāyi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peḷḷilō sannāyi mōgindi. — The reed pipe played at the wedding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peḷḷilō sannāyi mōgindi.* — The reed pipe played at the wedding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to play an instrument, then the Telugu for a mridangam drum, then say sannāyi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to play an instrument, then the Telugu for a mridangam drum, then say *sannāyi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సన్నాయి (sannāyi) mean? (\"A reed pipe; a shehnai\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

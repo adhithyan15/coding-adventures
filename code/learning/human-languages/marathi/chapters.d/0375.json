@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "The Mind at Work",
+  "label": "ch:mr-the-mind-at-work",
+  "canDo": "I can talk about intellect, memory, concentration and practice.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C375-sarav-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can talk about intellect, memory, concentration and practice.",
+    "assesses": [
+      "MR-LEX-C375-BUDDHI375-03",
+      "MR-LEX-C375-BUDDHI375-04",
+      "MR-LEX-C375-BUDDHI375-05"
+    ]
+  }
+}

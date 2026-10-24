@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:eeaffbc0d021f0cd",
+  "lessonIds": [
+    "AR-C472-sakhra",
+    "AR-C472-hadba",
+    "AR-C472-qimma",
+    "AR-C472-munhadar",
+    "AR-C472-haffa"
+  ],
+  "tex": "arabic/book/chapters/ch472-rocks-and-peaks.tex"
+}

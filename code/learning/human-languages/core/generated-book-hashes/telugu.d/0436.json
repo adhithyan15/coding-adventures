@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:b17ca2bc5b08c282",
+  "lessonIds": [
+    "TE-C436-palgonu",
+    "TE-C436-todpadu",
+    "TE-C436-kudagattu",
+    "TE-C436-akarsincu",
+    "TE-C436-vibhajincu"
+  ],
+  "tex": "telugu/book/chapters/ch436-taking-part.tex"
+}

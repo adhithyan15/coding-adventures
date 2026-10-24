@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:04a95b68cce4901b",
+  "lessonIds": [
+    "TA-C320-kotiyerru",
+    "TA-C320-anivakuppu",
+    "TA-C320-toranam",
+    "TA-C320-patakai",
+    "TA-C320-paraicarru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch320.txt",
+  "json": "tamil/narration/ch320.json",
+  "textHash": "fnv1a64:eb0893c0e293e8b0",
+  "jsonHash": "fnv1a64:6c31f2c7d63905af",
+  "findings": []
+}

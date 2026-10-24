@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Eyewitness Accounts",
+  "label": "ch:bn-eyewitness-accounts",
+  "canDo": "I can give an account of what I saw and check the details.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C301-jachai-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can give an account of what I saw and check the details.",
+    "assesses": [
+      "BN-LEX-C301-BIBORON301-03",
+      "BN-LEX-C301-BIBORON301-04",
+      "BN-LEX-C301-BIBORON301-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C487-vaittamin",
+  "pathSegment": "TA-PATH-487-UNAVU487",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-487-UNAVU487",
+      "order": 2
+    }
+  ]
+}

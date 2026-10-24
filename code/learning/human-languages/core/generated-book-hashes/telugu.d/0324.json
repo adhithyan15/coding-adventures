@@ -1,0 +1,11 @@
+{
+  "language": "telugu",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:f3e900970c4bdb80",
+  "lessonIds": [
+    "TE-C324-vaste",
+    "TE-C324-varsham-padite",
+    "TE-R324-if-and-otherwise"
+  ],
+  "tex": "telugu/book/chapters/ch324-if-it-rains.tex"
+}

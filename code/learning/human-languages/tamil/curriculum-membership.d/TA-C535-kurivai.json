@@ -1,0 +1,11 @@
+{
+  "id": "TA-C535-kurivai",
+  "pathSegment": "TA-PATH-535-AADUKALAM535",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-535-AADUKALAM535",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:4cfe79ff2fd986ac",
+  "lessonIds": [
+    "ML-C435-ranku",
+    "ML-C435-birudadhari",
+    "ML-C435-birudadanam",
+    "ML-C435-unnatavidyabhyasam",
+    "ML-C435-mulyanirnnayam"
+  ],
+  "tex": "malayalam/book/chapters/ch435-graduation.tex"
+}

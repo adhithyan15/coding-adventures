@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 463,
+  "title": "Pride and Shame",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f933486d975b9706",
+  "lessons": [
+    {
+      "id": "MR-C463-garva",
+      "sequence": 26660,
+      "title": "गर्व (garva) — pride; conceit",
+      "headword": "गर्व",
+      "romanization": "garva",
+      "gloss": "pride; conceit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:818be728622c9ca0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for temptation, then the Marathi for greed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गर्व",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गर्व — garva — \"pride; conceit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बक्षीस मिळाल्याचा त्याला गर्व झाला. bakṣīs miḷālyācā tyālā garva jhālā. Winning the prize made him conceited."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Often a fault: गर्व (garva) होणे, to grow conceited; गर्विष्ठ, arrogant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गर्व (garva) is a tatsama, taken from Sanskrit garva, \"pride, arrogance\" (CDIAL 4064)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garva, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garva*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bakṣīs miḷālyācā tyālā garva jhālā. — Winning the prize made him conceited.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bakṣīs miḷālyācā tyālā garva jhālā.* — Winning the prize made him conceited.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for temptation, then the Marathi for greed, then say garva again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for temptation, then the Marathi for greed, then say *garva* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गर्व (garva) mean? (\"Pride; conceit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C463-ahankar",
+      "sequence": 26670,
+      "title": "अहंकार (ahaṅkār) — ego; arrogance",
+      "headword": "अहंकार",
+      "romanization": "ahaṅkār",
+      "gloss": "ego; arrogance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b98298ca417fd61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for greed, then the Marathi for pride."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अहंकार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अहंकार — ahaṅkār — \"ego; arrogance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याच्या अहंकारामुळे मित्र दूर गेले. tyācyā ahaṅkārāmuḷe mitra dūr gele. His friends drifted away because of his ego."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "अहं, I, + कार, making: the sense of I."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अहंकार (ahaṅkār) is a tatsama, taken from Sanskrit ahaṃkāra, \"conception of one's individuality\" (Monier-Williams), built on aham, \"I\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahaṅkār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahaṅkār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahaṅkār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahaṅkār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyācyā ahaṅkārāmuḷe mitra dūr gele. — His friends drifted away because of his ego.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyācyā ahaṅkārāmuḷe mitra dūr gele.* — His friends drifted away because of his ego.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for greed, then the Marathi for pride, then say ahaṅkār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for greed, then the Marathi for pride, then say *ahaṅkār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अहंकार (ahaṅkār) mean? (\"Ego; arrogance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C463-svabhiman",
+      "sequence": 26680,
+      "title": "स्वाभिमान (svābhimān) — self-respect",
+      "headword": "स्वाभिमान",
+      "romanization": "svābhimān",
+      "gloss": "self-respect",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c494fc43456b4bca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for pride, then the Marathi for ego."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्वाभिमान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वाभिमान — svābhimān — \"self-respect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गरीब असला तरी त्याने स्वाभिमान सोडला नाही. garīb aslā tarī tyāne svābhimān soḍlā nāhī. Though he was poor, he never gave up his self-respect."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "स्व, own, + अभिमान, pride; स्वाभिमानी, self-respecting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वाभिमान (svābhimān) is a learned compound built from two Sanskrit words, sva, \"own\", and abhimāna, \"pride\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svābhimān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svābhimān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svābhimān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svābhimān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garīb aslā tarī tyāne svābhimān soḍlā nāhī. — Though he was poor, he never gave up his self-respect.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garīb aslā tarī tyāne svābhimān soḍlā nāhī.* — Though he was poor, he never gave up his self-respect.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for pride, then the Marathi for ego, then say svābhimān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for pride, then the Marathi for ego, then say *svābhimān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्वाभिमान (svābhimān) mean? (\"Self-respect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C463-saramne",
+      "sequence": 26690,
+      "title": "शरमणे (śaramṇe) — to feel ashamed",
+      "headword": "शरमणे",
+      "romanization": "śaramṇe",
+      "gloss": "to feel ashamed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de833dc03ad1761f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for ego, then the Marathi for self-respect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शरमणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शरमणे — śaramṇe — \"to feel ashamed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आपली चूक लक्षात आल्यावर तो शरमला. āplī cūk lakṣāt ālyāvar to śaramlā. He felt ashamed when he realised his mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो शरमला, to śaramlā."
+            },
+            {
+              "kind": "speech",
+              "text": "From शरम, shame, a Persian word beside the Marathi लाज."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शरमणे (śaramṇe) is a Marathi verb built on शरम, \"shame\", a loan from Persian sharm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaramṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaramṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaramṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaramṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āplī cūk lakṣāt ālyāvar to śaramlā. — He felt ashamed when he realised his mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āplī cūk lakṣāt ālyāvar to śaramlā.* — He felt ashamed when he realised his mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for ego, then the Marathi for self-respect, then say śaramṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for ego, then the Marathi for self-respect, then say *śaramṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शरमणे (śaramṇe) mean? (\"To feel ashamed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C463-osalne",
+      "sequence": 26700,
+      "title": "ओशाळणे (ośāḷṇe) — to feel sheepish",
+      "headword": "ओशाळणे",
+      "romanization": "ośāḷṇe",
+      "gloss": "to feel sheepish",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5cce44f2194b8d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for self-respect, then the Marathi for to feel ashamed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओशाळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओशाळणे — ośāḷṇe — \"to feel sheepish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खोटं पकडलं गेलं तेव्हा तो ओशाळला. khoṭaṁ pakaḍlaṁ gelaṁ tevhā to ośāḷlā. He felt sheepish when his lie was caught out."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो ओशाळला, to ośāḷlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Embarrassment after being caught out: ओशाळलेला चेहरा."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओशाळणे (ośāḷṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ośāḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ośāḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ośāḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ośāḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoṭaṁ pakaḍlaṁ gelaṁ tevhā to ośāḷlā. — He felt sheepish when his lie was caught out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoṭaṁ pakaḍlaṁ gelaṁ tevhā to ośāḷlā.* — He felt sheepish when his lie was caught out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for self-respect, then the Marathi for to feel ashamed, then say ośāḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for self-respect, then the Marathi for to feel ashamed, then say *ośāḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ओशाळणे (ośāḷṇe) mean? (\"To feel sheepish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C344-ranaranga",
+    "language": "kannada",
+    "chapter": 344,
+    "sequence": 17300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0fda8d3f6eaeb9d"
+  },
+  "findings": []
+}

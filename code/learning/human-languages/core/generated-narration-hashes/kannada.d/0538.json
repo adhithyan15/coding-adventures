@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:e294a2ad9b498d2f",
+  "lessonIds": [
+    "KA-C538-padaka",
+    "KA-C538-kridapatu",
+    "KA-C538-vijeta",
+    "KA-C538-pandyavali",
+    "KA-C538-solisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch538.txt",
+  "json": "kannada/narration/ch538.json",
+  "textHash": "fnv1a64:3e777487ffcac049",
+  "jsonHash": "fnv1a64:40ae721a2f40d919",
+  "findings": []
+}

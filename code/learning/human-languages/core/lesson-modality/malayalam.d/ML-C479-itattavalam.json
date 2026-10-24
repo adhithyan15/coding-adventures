@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C479-itattavalam",
+    "language": "malayalam",
+    "chapter": 479,
+    "sequence": 23950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:428acc75ac368834"
+  },
+  "findings": []
+}

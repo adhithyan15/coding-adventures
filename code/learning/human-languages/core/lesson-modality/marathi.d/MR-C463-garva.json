@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C463-garva",
+    "language": "marathi",
+    "chapter": 463,
+    "sequence": 26660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:818be728622c9ca0"
+  },
+  "findings": []
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 528,
+  "title": "Friendship",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:683d58d0c83f4db8",
+  "lessons": [
+    {
+      "id": "KA-C528-sneha",
+      "sequence": 26950,
+      "title": "ಸ್ನೇಹ (snēha) — friendship",
+      "headword": "ಸ್ನೇಹ",
+      "romanization": "snēha",
+      "gloss": "friendship",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1958ed7b783de98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for crawling on all fours, then the Kannada for a stepmother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ನೇಹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ನೇಹ — snēha — \"friendship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಮ್ಮ ಸ್ನೇಹ ಶಾಲೆಯಲ್ಲಿ ಶುರುವಾಯಿತು. namma snēha śāleyalli śuruvāyitu. Our friendship began at school."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ನೇಹಿತ, a friend, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ನೇಹ (snēha) is borrowed from Sanskrit sneha, \"oiliness, smoothness\", and from there \"tenderness, friendship\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "snēha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *snēha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "snēha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *snēha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namma snēha śāleyalli śuruvāyitu. — Our friendship began at school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namma snēha śāleyalli śuruvāyitu.* — Our friendship began at school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for crawling on all fours, then the Kannada for a stepmother, then say snēha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for crawling on all fours, then the Kannada for a stepmother, then say *snēha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ನೇಹ (snēha) mean? (\"Friendship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C528-bandhavya",
+      "sequence": 26960,
+      "title": "ಬಾಂಧವ್ಯ (bāndhavya) — a bond; close ties",
+      "headword": "ಬಾಂಧವ್ಯ",
+      "romanization": "bāndhavya",
+      "gloss": "a bond; close ties",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30f06e7ceee6c58b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a stepmother, then the Kannada for friendship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಾಂಧವ್ಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಂಧವ್ಯ — bāndhavya — \"a bond; close ties\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎರಡು ಕುಟುಂಬಗಳ ನಡುವೆ ಒಳ್ಳೆಯ ಬಾಂಧವ್ಯ ಇದೆ. eraḍu kuṭumbagaḷa naḍuve oḷḷeya bāndhavya ide. There is a good bond between the two families."
+            },
+            {
+              "kind": "speech",
+              "text": "Related to ಬಂಧು, kin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಂಧವ್ಯ (bāndhavya) is a learned abstract noun built on Sanskrit bāndhava, \"kinsman\" (CDIAL 9208): the state of being bound as kin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāndhavya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāndhavya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāndhavya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāndhavya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraḍu kuṭumbagaḷa naḍuve oḷḷeya bāndhavya ide. — There is a good bond between the two families.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraḍu kuṭumbagaḷa naḍuve oḷḷeya bāndhavya ide.* — There is a good bond between the two families.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a stepmother, then the Kannada for friendship, then say bāndhavya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a stepmother, then the Kannada for friendship, then say *bāndhavya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಾಂಧವ್ಯ (bāndhavya) mean? (\"A bond; close ties\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C528-odanata",
+      "sequence": 26970,
+      "title": "ಒಡನಾಟ (oḍanāṭa) — companionship",
+      "headword": "ಒಡನಾಟ",
+      "romanization": "oḍanāṭa",
+      "gloss": "companionship",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22bf9351d67bec83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for friendship, then the Kannada for a bond."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒಡನಾಟ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಡನಾಟ — oḍanāṭa — \"companionship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಜ್ಜನ ಒಡನಾಟದಲ್ಲಿ ನಾನು ತುಂಬಾ ಕಲಿತೆ. ajjana oḍanāṭadalli nānu tumbā kalite. In grandfather's company I learned a great deal."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ಒಡನೆ, together with."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಡನಾಟ (oḍanāṭa) is native Dravidian, built on Kannada oḍan, \"union, together, with\" (DEDR 945)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḍanāṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḍanāṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḍanāṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḍanāṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajjana oḍanāṭadalli nānu tumbā kalite. — In grandfather's company I learned a great deal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajjana oḍanāṭadalli nānu tumbā kalite.* — In grandfather's company I learned a great deal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for friendship, then the Kannada for a bond, then say oḍanāṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for friendship, then the Kannada for a bond, then say *oḍanāṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒಡನಾಟ (oḍanāṭa) mean? (\"Companionship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C528-atmiya",
+      "sequence": 26980,
+      "title": "ಆತ್ಮೀಯ (ātmīya) — dear; close",
+      "headword": "ಆತ್ಮೀಯ",
+      "romanization": "ātmīya",
+      "gloss": "dear; close",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86deeed023d6ed34",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a bond, then the Kannada for companionship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆತ್ಮೀಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆತ್ಮೀಯ — ātmīya — \"dear; close\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನು ನನ್ನ ಆತ್ಮೀಯ ಸ್ನೇಹಿತ. avanu nanna ātmīya snēhita. He is my close friend."
+            },
+            {
+              "kind": "speech",
+              "text": "Letters to friends begin ಆತ್ಮೀಯ (ātmīya) …, dear …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆತ್ಮೀಯ (ātmīya) is borrowed from Sanskrit ātmīya, \"one's own\" (Monier-Williams), built on ātman, \"self\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmīya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmīya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmīya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmīya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanu nanna ātmīya snēhita. — He is my close friend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanu nanna ātmīya snēhita.* — He is my close friend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a bond, then the Kannada for companionship, then say ātmīya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a bond, then the Kannada for companionship, then say *ātmīya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆತ್ಮೀಯ (ātmīya) mean? (\"Dear; close\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C528-raji-madiko",
+      "sequence": 26990,
+      "title": "ರಾಜಿ ಮಾಡಿಕೊ (rāji māḍiko) — to make up; to reconcile",
+      "headword": "ರಾಜಿ ಮಾಡಿಕೊ",
+      "romanization": "rāji māḍiko",
+      "gloss": "to make up; to reconcile",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6289a6e963b98f71",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for companionship, then the Kannada for dear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ರಾಜಿ ಮಾಡಿಕೊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಾಜಿ ಮಾಡಿಕೊ — rāji māḍiko — \"to make up; to reconcile\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜಗಳದ ನಂತರ ಇಬ್ಬರು ಸ್ನೇಹಿತರು ರಾಜಿ ಮಾಡಿಕೊಂಡರು. jagaḷada nantara ibbaru snēhitaru rāji māḍikoṇḍaru. After the quarrel the two friends made up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ರಾಜಿ ಮಾಡಿಕೊಂಡೆ, rāji māḍikoṇḍe."
+            },
+            {
+              "kind": "speech",
+              "text": "With whom: -ಜೊತೆ. ರಾಜಿ is a settlement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಾಜಿ ಮಾಡಿಕೊ (rāji māḍiko) joins rāji, usually traced to Hindustani rāzī, \"content, agreeing\", and ಮಾಡಿಕೊ, \"to do for oneself\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāji māḍiko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāji māḍiko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāji māḍiko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāji māḍiko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jagaḷada nantara ibbaru snēhitaru rāji māḍikoṇḍaru. — After the quarrel the two friends made up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jagaḷada nantara ibbaru snēhitaru rāji māḍikoṇḍaru.* — After the quarrel the two friends made up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for companionship, then the Kannada for dear, then say rāji māḍiko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for companionship, then the Kannada for dear, then say *rāji māḍiko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ರಾಜಿ ಮಾಡಿಕೊ (rāji māḍiko) mean? (\"To make up; to reconcile\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

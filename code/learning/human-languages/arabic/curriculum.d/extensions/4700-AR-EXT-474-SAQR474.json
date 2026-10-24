@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-474-SAQR474",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a falcon, an ostrich, a seagull, a feather and to float.",
+  "prerequisites": []
+}

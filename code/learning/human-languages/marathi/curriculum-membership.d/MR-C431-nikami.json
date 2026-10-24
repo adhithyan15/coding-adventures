@@ -1,0 +1,11 @@
+{
+  "id": "MR-C431-nikami",
+  "pathSegment": "MR-PATH-431-BIGHAD431",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-431-BIGHAD431",
+      "order": 1
+    }
+  ]
+}

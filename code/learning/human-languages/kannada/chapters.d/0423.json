@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Step by Step",
+  "label": "ch:ka-step-by-step",
+  "canDo": "I can say a stage, a task, a strategy, a trick and to divide.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C423-vibhajisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can say a stage, a task, a strategy, a trick and to divide.",
+    "assesses": [
+      "KA-LEX-C423-HANTA423-03",
+      "KA-LEX-C423-HANTA423-04",
+      "KA-LEX-C423-HANTA423-05"
+    ]
+  }
+}

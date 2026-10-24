@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:79a9b645e68591f9",
+  "lessonIds": [
+    "AR-C452-far",
+    "AR-C452-rasid",
+    "AR-C452-hawala",
+    "AR-C452-sarafa",
+    "AR-C452-awdaa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch452.txt",
+  "json": "arabic/narration/ch452.json",
+  "textHash": "fnv1a64:cb99fed03b4b74da",
+  "jsonHash": "fnv1a64:2a6cd8c1370e34da",
+  "findings": []
+}

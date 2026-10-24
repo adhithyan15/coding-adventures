@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:99eb06e59a9f14d2",
+  "lessonIds": [
+    "BN-C356-shotangsho",
+    "BN-C356-onupat",
+    "BN-C356-hiseb-kora",
+    "BN-C356-mapkathi",
+    "BN-C356-mulyayon-kora"
+  ],
+  "tex": "bengali/book/chapters/ch356-counting-and-measuring.tex"
+}

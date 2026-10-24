@@ -1,0 +1,11 @@
+{
+  "id": "TE-C353-kanumarugavu",
+  "pathSegment": "TE-PATH-353-ADRSYAM353",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-353-ADRSYAM353",
+      "order": 2
+    }
+  ]
+}

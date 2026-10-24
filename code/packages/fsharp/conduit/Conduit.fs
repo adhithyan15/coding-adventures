@@ -433,6 +433,20 @@ module internal Trampolines =
             conduit_capi_report_error (sanitizeForLog raw)
         with _ -> ()  // best-effort
 
+    // ── Halt responses ────────────────────────────────────────────────────────
+    //
+    // A halt carries a caller-built Response and marshalling it can throw (an
+    // out-of-range status, say). An exception escaping a native callback
+    // terminates the process, so a halt that cannot be marshalled becomes a
+    // safe 500 instead, then `fallback`.
+
+    let private haltToNative (r: Response) (fallback: nativeint) : nativeint =
+        try Response.toNative r
+        with ex ->
+            reportError ex
+            try  Response.json "{\"error\":\"internal server error\"}" |> Response.withStatus 500 |> Response.toNative
+            with _ -> fallback
+
     // ── Route / not-found / error handler trampoline ─────────────────────────
     //
     // ctx  = GCHandle to a (Request -> Response) function
@@ -452,7 +466,7 @@ module internal Trampolines =
                 let fn  = GCHandle.FromIntPtr(ctx).Target :?> (Request -> Response)
                 fn (Request req) |> Response.toNative
             with
-            | HaltException r -> Response.toNative r
+            | HaltException r -> haltToNative r 0n
             | ex ->
                 reportError ex
                 try  Response.json "{\"error\":\"internal server error\"}" |> Response.withStatus 500 |> Response.toNative
@@ -474,7 +488,7 @@ module internal Trampolines =
                 | None   -> 0n
                 | Some r -> Response.toNative r
             with
-            | HaltException r -> Response.toNative r
+            | HaltException r -> haltToNative r 0n
             | ex ->
                 // On exception, log and continue — a filter failure is not fatal.
                 reportError ex
@@ -490,18 +504,25 @@ module internal Trampolines =
         // Null ctx = no hook registered; pass current through unchanged.
         if ctx = 0n then current
         else
+            // `owned` is `current` while we still own it; it is cleared once
+            // freed so a hook that throws does not free it a second time.
+            let mutable owned = current
             try
                 let currentResp = Response.fromNative current
                 conduit_response_free current
+                owned <- 0n
 
                 let fn = GCHandle.FromIntPtr(ctx).Target :?> (Request -> Response -> Response)
                 fn (Request req) currentResp |> Response.toNative
             with
             | HaltException r ->
-                conduit_response_free current
-                Response.toNative r
+                if owned <> 0n then conduit_response_free owned
+                // After-hooks must return a valid non-null pointer.
+                match haltToNative r 0n with
+                | 0n -> Response.text "Internal Server Error" |> Response.withStatus 500 |> Response.toNative
+                | p -> p
             | ex ->
-                conduit_response_free current
+                if owned <> 0n then conduit_response_free owned
                 reportError ex
                 // After-hooks must return a valid non-null pointer.
                 try  Response.json "{\"error\":\"internal server error\"}" |> Response.withStatus 500 |> Response.toNative
@@ -547,7 +568,6 @@ module internal Trampolines =
 type Application internal (ptr: nativeint) =
     let mutable _ptr  = ptr
     let mutable _used = false
-    let _handles      = System.Collections.Generic.List<GCHandle>()
 
     member internal _.Ptr
         with get() =
@@ -556,9 +576,9 @@ type Application internal (ptr: nativeint) =
             _ptr
 
     member internal _.Alloc<'T when 'T : not struct>(fn: 'T) : nativeint =
-        let h = GCHandle.Alloc(fn)
-        _handles.Add h
-        GCHandle.ToIntPtr h
+        // Not tracked: the handle goes to Rust with CtxFree, which frees it
+        // exactly once (see Dispose).
+        GCHandle.ToIntPtr(GCHandle.Alloc(fn))
 
     member internal _.MarkConsumed() = _used <- true; _ptr <- 0n
 
@@ -567,10 +587,17 @@ type Application internal (ptr: nativeint) =
             if not _used && _ptr <> 0n then
                 conduit_app_free _ptr
                 _ptr <- 0n
-            // Free any handles that didn't transfer to Rust (i.e. if Bind failed).
-            for h in _handles do
-                try h.Free() with _ -> ()
-            _handles.Clear()
+            // Never Free() the registered GCHandles here: Rust owns them. Each
+            // conduit_app_add_* call passes the handle with CtxFree, and Rust
+            // calls CtxFree exactly once per handle when the callback drops —
+            // in conduit_app_free above, or in conduit_server_bind, which
+            // consumes the app whether the bind succeeds or fails. Freeing our
+            // struct copies again (the old loop here) was a double free that
+            // .NET does not detect: the slot returned to the handle table
+            // twice, two later GCHandle.Alloc calls shared it, and trampolines
+            // dispatched to the wrong delegate (wrong statuses, a bad cast in
+            // afterImpl, or a crashed test host).
+            ()
 
 // ── Server ────────────────────────────────────────────────────────────────────
 //
@@ -658,8 +685,9 @@ module Application =
     // ── Route registration ────────────────────────────────────────────────────
 
     let private addRoute (meth: string) (pattern: string) (handler: Request -> Response) (app: Application) =
+        let ptr = app.Ptr  // throws once bound, before a handle is allocated
         let ctx = app.Alloc handler
-        conduit_app_add_route(app.Ptr, meth, pattern, Trampolines.Handler, ctx, Trampolines.CtxFree)
+        conduit_app_add_route(ptr, meth, pattern, Trampolines.Handler, ctx, Trampolines.CtxFree)
         app
 
     /// Register a GET route.
@@ -681,30 +709,34 @@ module Application =
     /// Add a before-filter. Return None to continue; return Some response to
     /// short-circuit immediately and send that response.
     let before (filter: Request -> Response option) (app: Application) =
+        let ptr = app.Ptr  // throws once bound, before a handle is allocated
         let ctx = app.Alloc filter
-        conduit_app_add_before(app.Ptr, Trampolines.Before, ctx, Trampolines.CtxFree)
+        conduit_app_add_before(ptr, Trampolines.Before, ctx, Trampolines.CtxFree)
         app
 
     /// Add an after-hook. Receives the current response and returns the (possibly
     /// modified) replacement.
     let after (hook: Request -> Response -> Response) (app: Application) =
+        let ptr = app.Ptr  // throws once bound, before a handle is allocated
         let ctx = app.Alloc hook
-        conduit_app_add_after(app.Ptr, Trampolines.After, ctx, Trampolines.CtxFree)
+        conduit_app_add_after(ptr, Trampolines.After, ctx, Trampolines.CtxFree)
         app
 
     // ── Special handlers ──────────────────────────────────────────────────────
 
     /// Register a custom 404 handler. Runs when no route matches.
     let notFound (handler: Request -> Response) (app: Application) =
+        let ptr = app.Ptr  // throws once bound, before a handle is allocated
         let ctx = app.Alloc handler
-        conduit_app_set_not_found(app.Ptr, Trampolines.Handler, ctx, Trampolines.CtxFree)
+        conduit_app_set_not_found(ptr, Trampolines.Handler, ctx, Trampolines.CtxFree)
         app
 
     /// Register a custom error handler. Runs when a route handler throws an
     /// unhandled exception. Use req.Error to read the sanitised error message.
     let onError (handler: Request -> Response) (app: Application) =
+        let ptr = app.Ptr  // throws once bound, before a handle is allocated
         let ctx = app.Alloc handler
-        conduit_app_set_error_handler(app.Ptr, Trampolines.Handler, ctx, Trampolines.CtxFree)
+        conduit_app_set_error_handler(ptr, Trampolines.Handler, ctx, Trampolines.CtxFree)
         app
 
     // ── Bind ──────────────────────────────────────────────────────────────────

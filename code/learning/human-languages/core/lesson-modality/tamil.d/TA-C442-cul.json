@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C442-cul",
+    "language": "tamil",
+    "chapter": 442,
+    "sequence": 25280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aace661d06d0444a"
+  },
+  "findings": []
+}

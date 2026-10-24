@@ -1,0 +1,11 @@
+{
+  "id": "TA-C372-inanku",
+  "pathSegment": "TA-PATH-372-CATTAM372",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-372-CATTAM372",
+      "order": 4
+    }
+  ]
+}

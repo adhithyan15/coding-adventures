@@ -1,0 +1,11 @@
+{
+  "id": "AR-C443-khazna",
+  "pathSegment": "AR-PATH-443-MULAA443",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-443-MULAA443",
+      "order": 4
+    }
+  ]
+}

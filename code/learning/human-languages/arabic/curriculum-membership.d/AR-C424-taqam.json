@@ -1,0 +1,11 @@
+{
+  "id": "AR-C424-taqam",
+  "pathSegment": "AR-PATH-424-IQLA424",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-424-IQLA424",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C538-vedanikkuka",
+    "language": "malayalam",
+    "chapter": 538,
+    "sequence": 27100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00dd39dc2e392f5e"
+  },
+  "findings": []
+}

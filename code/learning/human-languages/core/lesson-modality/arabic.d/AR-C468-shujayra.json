@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C468-shujayra",
+    "language": "arabic",
+    "chapter": 468,
+    "sequence": 26110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82973b7f5bfb1a52"
+  },
+  "findings": []
+}

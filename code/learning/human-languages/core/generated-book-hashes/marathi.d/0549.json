@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:8ddd630797e37645",
+  "lessonIds": [
+    "MR-C549-bharpai-dene",
+    "MR-C549-mukne",
+    "MR-C549-kavac",
+    "MR-C549-samraksan",
+    "MR-C549-bharavsa"
+  ],
+  "tex": "marathi/book/chapters/ch549-losses-and-protection.tex"
+}

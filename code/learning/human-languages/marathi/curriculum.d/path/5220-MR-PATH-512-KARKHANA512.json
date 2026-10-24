@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-512-KARKHANA512",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-512-KARKHANA512"
+  ],
+  "after": []
+}

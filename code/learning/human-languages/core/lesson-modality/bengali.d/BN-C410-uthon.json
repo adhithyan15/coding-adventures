@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C410-uthon",
+    "language": "bengali",
+    "chapter": 410,
+    "sequence": 25350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f19f545c6f2d1be"
+  },
+  "findings": []
+}

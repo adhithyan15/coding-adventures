@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:89e3b4d9e51b240e",
+  "lessonIds": [
+    "TA-C546-pinnataivu",
+    "TA-C546-itaiyuru",
+    "TA-C546-kurukkitu",
+    "TA-C546-muttukkattai",
+    "TA-C546-takkuppiti"
+  ],
+  "tex": "tamil/book/chapters/ch546-when-plans-go-wrong.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-384-JANANAM384",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say birth, death, an obituary, an autobiography and a biography.",
+  "prerequisites": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:4d1a287c4046997f",
+  "lessonIds": [
+    "BN-C515-poribeshon",
+    "BN-C515-gras",
+    "BN-C515-svad",
+    "BN-C515-eto",
+    "BN-C515-achano",
+    "BN-R515-review-508-515"
+  ],
+  "tex": "bengali/book/chapters/ch515-at-the-table.tex"
+}

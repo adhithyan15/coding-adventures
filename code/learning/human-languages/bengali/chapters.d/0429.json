@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Storms and Hail",
+  "label": "ch:bn-storms-and-hail",
+  "canDo": "I can describe a spring storm, hail, thunder and trees bent by the wind.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C429-nuye-pora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can describe a spring storm, hail, thunder and trees bent by the wind.",
+    "assesses": [
+      "BN-LEX-C429-KALBOISHAKHI429-03",
+      "BN-LEX-C429-KALBOISHAKHI429-04",
+      "BN-LEX-C429-KALBOISHAKHI429-05"
+    ]
+  }
+}

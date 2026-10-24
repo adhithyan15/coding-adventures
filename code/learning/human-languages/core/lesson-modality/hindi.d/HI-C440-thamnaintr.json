@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C440-thamnaintr",
+    "language": "hindi",
+    "chapter": 440,
+    "sequence": 24170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c27c8b8c19dced9b"
+  },
+  "findings": []
+}

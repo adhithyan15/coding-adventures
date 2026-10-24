@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-369-CAMUKAM369",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-369-CAMUKAM369"
+  ],
+  "after": []
+}

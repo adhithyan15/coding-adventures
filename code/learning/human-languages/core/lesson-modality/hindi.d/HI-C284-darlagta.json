@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C284-darlagta",
+    "language": "hindi",
+    "chapter": 284,
+    "sequence": 15640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27b53f1697b40c87"
+  },
+  "findings": []
+}

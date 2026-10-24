@@ -1,0 +1,11 @@
+{
+  "id": "AR-C510-ashia",
+  "pathSegment": "AR-PATH-510-TASHKHIS510",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-510-TASHKHIS510",
+      "order": 2
+    }
+  ]
+}

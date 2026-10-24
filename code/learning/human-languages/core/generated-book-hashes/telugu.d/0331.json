@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:3d9ac44bbbcdffc6",
+  "lessonIds": [
+    "TE-C331-manta",
+    "TE-C331-peludu",
+    "TE-C331-pranam",
+    "TE-C331-raksincu",
+    "TE-C331-parugulu-tiyu"
+  ],
+  "tex": "telugu/book/chapters/ch331-fire.tex"
+}

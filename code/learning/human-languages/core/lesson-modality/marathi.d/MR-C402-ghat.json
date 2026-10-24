@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C402-ghat",
+    "language": "marathi",
+    "chapter": 402,
+    "sequence": 23300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6891889c9af9440d"
+  },
+  "findings": []
+}

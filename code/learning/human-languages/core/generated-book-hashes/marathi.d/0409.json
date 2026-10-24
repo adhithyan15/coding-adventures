@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:446be2233a890dae",
+  "lessonIds": [
+    "MR-C409-khalasi",
+    "MR-C409-ohoti",
+    "MR-C409-udhan",
+    "MR-C409-khavalne",
+    "MR-C409-hindkalne"
+  ],
+  "tex": "marathi/book/chapters/ch409-sailors-and-tides.tex"
+}

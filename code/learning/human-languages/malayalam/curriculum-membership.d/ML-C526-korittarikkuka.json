@@ -1,0 +1,11 @@
+{
+  "id": "ML-C526-korittarikkuka",
+  "pathSegment": "ML-PATH-526-RASAM526",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-526-RASAM526",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:2a0d44558265ef82",
+  "lessonIds": [
+    "KA-C414-kattunittu",
+    "KA-C414-garistha",
+    "KA-C414-kanistha",
+    "KA-C414-nigadipadisu",
+    "KA-C414-nirbandhisu"
+  ],
+  "tex": "kannada/book/chapters/ch414-limits.tex"
+}

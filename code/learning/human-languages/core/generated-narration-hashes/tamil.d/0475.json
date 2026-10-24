@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:39907c3e906a7278",
+  "lessonIds": [
+    "TA-C475-cikiccai",
+    "TA-C475-paricoti",
+    "TA-C475-nati",
+    "TA-C475-sken",
+    "TA-C475-pattiyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch475.txt",
+  "json": "tamil/narration/ch475.json",
+  "textHash": "fnv1a64:ee5a2d9b1466a176",
+  "jsonHash": "fnv1a64:4a7e837eef1f65bd",
+  "findings": []
+}

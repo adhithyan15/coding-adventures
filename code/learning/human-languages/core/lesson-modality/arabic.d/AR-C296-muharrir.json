@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C296-muharrir",
+    "language": "arabic",
+    "chapter": 296,
+    "sequence": 17160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0fe4a5ba2a0953da"
+  },
+  "findings": []
+}

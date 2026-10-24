@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:ebf65cdefdf82b6e",
+  "lessonIds": [
+    "MR-C305-gatvarsi",
+    "MR-C305-magil",
+    "MR-C305-tatpurvi",
+    "MR-C305-kalantarane",
+    "MR-C305-lotne"
+  ],
+  "tex": "marathi/book/chapters/ch305-last-year-and-before.tex"
+}

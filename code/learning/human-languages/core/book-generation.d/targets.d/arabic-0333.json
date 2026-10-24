@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 333,
+  "output": "arabic/book/chapters/ch333-sailors-and-pirates.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

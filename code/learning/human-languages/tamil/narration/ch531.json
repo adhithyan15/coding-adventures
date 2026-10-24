@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 531,
+  "title": "Ball Games",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ff568939f5269734",
+  "lessons": [
+    {
+      "id": "TA-C531-kutaippantu",
+      "sequence": 30380,
+      "title": "கூடைப்பந்து (kūṭaippantu) — basketball",
+      "headword": "கூடைப்பந்து",
+      "romanization": "kūṭaippantu",
+      "gloss": "basketball",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1feef77070fb9a15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for carrom, then the Tamil for a pinwheel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கூடைப்பந்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூடைப்பந்து — kūṭaippantu — \"basketball\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எங்கள் பள்ளியில் கூடைப்பந்து மைதானம் இருக்கிறது. eṅkaḷ paḷḷiyil kūṭaippantu maitāṉam irukkiṟatu. Our school has a basketball court."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"basket-ball\": கூடை (kūṭai) + பந்து (pantu), with the ப் doubled."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூடைப்பந்து (kūṭaippantu) is a native compound made to match English basketball: கூடை (kūṭai), \"a basket\" (DEDR 1884), and பந்து (pantu), \"a ball\" (DEDR 3925)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭaippantu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭaippantu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭaippantu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭaippantu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṅkaḷ paḷḷiyil kūṭaippantu maitāṉam irukkiṟatu. — Our school has a basketball court.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṅkaḷ paḷḷiyil kūṭaippantu maitāṉam irukkiṟatu.* — Our school has a basketball court.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for carrom, then the Tamil for a pinwheel, then say kūṭaippantu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for carrom, then the Tamil for a pinwheel, then say *kūṭaippantu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கூடைப்பந்து (kūṭaippantu) mean? (\"Basketball\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C531-irakuppantu",
+      "sequence": 30390,
+      "title": "இறகுப்பந்து (iṟakuppantu) — badminton",
+      "headword": "இறகுப்பந்து",
+      "romanization": "iṟakuppantu",
+      "gloss": "badminton",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46c3a5d64a598f5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a pinwheel, then the Tamil for basketball."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இறகுப்பந்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இறகுப்பந்து — iṟakuppantu — \"badminton\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அக்காவும் நானும் மாலையில் இறகுப்பந்து விளையாடுகிறோம். akkāvum nāṉum mālaiyil iṟakuppantu viḷaiyāṭukiṟōm. My elder sister and I play badminton in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"feather-ball\": இறகு (iṟaku) + பந்து, after the shuttlecock."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இறகுப்பந்து (iṟakuppantu) is a native compound: இறகு (iṟaku), \"a wing, a feather\" (DEDR 2591), and பந்து (pantu), \"a ball\" (DEDR 3925)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṟakuppantu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṟakuppantu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṟakuppantu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṟakuppantu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akkāvum nāṉum mālaiyil iṟakuppantu viḷaiyāṭukiṟōm. — My elder sister and I play badminton in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akkāvum nāṉum mālaiyil iṟakuppantu viḷaiyāṭukiṟōm.* — My elder sister and I play badminton in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a pinwheel, then the Tamil for basketball, then say iṟakuppantu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a pinwheel, then the Tamil for basketball, then say *iṟakuppantu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இறகுப்பந்து (iṟakuppantu) mean? (\"Badminton\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C531-kaippantu",
+      "sequence": 30400,
+      "title": "கைப்பந்து (kaippantu) — volleyball",
+      "headword": "கைப்பந்து",
+      "romanization": "kaippantu",
+      "gloss": "volleyball",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69bd0c5d755dd0e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for basketball, then the Tamil for badminton."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கைப்பந்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கைப்பந்து — kaippantu — \"volleyball\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கடற்கரையில் இளைஞர்கள் கைப்பந்து விளையாடினார்கள். kaṭaṟkaraiyil iḷaiñarkaḷ kaippantu viḷaiyāṭiṉārkaḷ. Young people played volleyball on the beach."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"hand-ball\": கை (kai) + பந்து."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கைப்பந்து (kaippantu) is a native compound: கை (kai), \"a hand\", and பந்து (pantu), \"a ball\" (DEDR 3925)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaippantu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaippantu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaippantu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaippantu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaṟkaraiyil iḷaiñarkaḷ kaippantu viḷaiyāṭiṉārkaḷ. — Young people played volleyball on the beach.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaṟkaraiyil iḷaiñarkaḷ kaippantu viḷaiyāṭiṉārkaḷ.* — Young people played volleyball on the beach.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for basketball, then the Tamil for badminton, then say kaippantu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for basketball, then the Tamil for badminton, then say *kaippantu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கைப்பந்து (kaippantu) mean? (\"Volleyball\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C531-tennis",
+      "sequence": 30410,
+      "title": "டென்னிஸ் (ṭeṉṉis) — tennis",
+      "headword": "டென்னிஸ்",
+      "romanization": "ṭeṉṉis",
+      "gloss": "tennis",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77239c94400b2643",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for badminton, then the Tamil for volleyball."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: டென்னிஸ்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "டென்னிஸ் — ṭeṉṉis — \"tennis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவள் வாரம் மூன்று முறை டென்னிஸ் விளையாடுகிறாள். avaḷ vāram mūṉṟu muṟai ṭeṉṉis viḷaiyāṭukiṟāḷ. She plays tennis three times a week."
+            },
+            {
+              "kind": "speech",
+              "text": "Written with the final ஸ் of the English word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "டென்னிஸ் (ṭeṉṉis) is a loan from English tennis."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭeṉṉis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭeṉṉis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭeṉṉis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭeṉṉis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ vāram mūṉṟu muṟai ṭeṉṉis viḷaiyāṭukiṟāḷ. — She plays tennis three times a week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ vāram mūṉṟu muṟai ṭeṉṉis viḷaiyāṭukiṟāḷ.* — She plays tennis three times a week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for badminton, then the Tamil for volleyball, then say ṭeṉṉis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for badminton, then the Tamil for volleyball, then say *ṭeṉṉis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does டென்னிஸ் (ṭeṉṉis) mean? (\"Tennis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C531-kapati",
+      "sequence": 30420,
+      "title": "கபடி (kapaṭi) — kabaddi",
+      "headword": "கபடி",
+      "romanization": "kapaṭi",
+      "gloss": "kabaddi",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79edd90062a01136",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for volleyball, then the Tamil for tennis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கபடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கபடி — kapaṭi — \"kabaddi\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கிராமத்துத் திருவிழாவில் கபடிப் போட்டி நடந்தது. kirāmattut tiruviḻāvil kapaṭip pōṭṭi naṭantatu. There was a kabaddi match at the village festival."
+            },
+            {
+              "kind": "speech",
+              "text": "A team game: a raider crosses into the other side, touches players and must get back on one breath."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of கபடி (kapaṭi) is not settled: no dictionary we can check gives its source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapaṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapaṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapaṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapaṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirāmattut tiruviḻāvil kapaṭip pōṭṭi naṭantatu. — There was a kabaddi match at the village festival.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirāmattut tiruviḻāvil kapaṭip pōṭṭi naṭantatu.* — There was a kabaddi match at the village festival.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for volleyball, then the Tamil for tennis, then say kapaṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for volleyball, then the Tamil for tennis, then say *kapaṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கபடி (kapaṭi) mean? (\"Kabaddi\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:428222c83081dc2c",
+  "lessonIds": [
+    "TE-C497-koppadu",
+    "TE-C497-mandipadu",
+    "TE-C497-kasuruko",
+    "TE-C497-avesam",
+    "TE-C497-ciraku"
+  ],
+  "tex": "telugu/book/chapters/ch497-losing-your-temper.tex"
+}

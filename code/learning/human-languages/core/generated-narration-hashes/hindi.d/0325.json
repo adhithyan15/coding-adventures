@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:564963f13ed32ab1",
+  "lessonIds": [
+    "HI-C325-angrez",
+    "HI-C325-andolan",
+    "HI-C325-sanghars",
+    "HI-C325-balidan",
+    "HI-C325-saumpna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch325.txt",
+  "json": "hindi/narration/ch325.json",
+  "textHash": "fnv1a64:8d275d89f42830e5",
+  "jsonHash": "fnv1a64:8c48c5c4e5caa331",
+  "findings": []
+}

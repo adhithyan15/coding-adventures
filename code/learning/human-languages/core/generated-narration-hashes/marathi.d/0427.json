@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:b9e2e1b2e3de1165",
+  "lessonIds": [
+    "MR-C427-vyaj",
+    "MR-C427-thakbaki",
+    "MR-C427-udhar",
+    "MR-C427-baki",
+    "MR-C427-phedne",
+    "MR-R427-review-420-427"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch427.txt",
+  "json": "marathi/narration/ch427.json",
+  "textHash": "fnv1a64:67e2857fa20f6426",
+  "jsonHash": "fnv1a64:0f6d10e65adfc19e",
+  "findings": []
+}

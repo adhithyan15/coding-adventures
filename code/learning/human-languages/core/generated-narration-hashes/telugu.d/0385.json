@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:9e535c185eb9d074",
+  "lessonIds": [
+    "TE-C385-angikarincu",
+    "TE-C385-angikaram",
+    "TE-C385-ekibhavincu",
+    "TE-C385-sammatincu",
+    "TE-C385-maddatu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch385.txt",
+  "json": "telugu/narration/ch385.json",
+  "textHash": "fnv1a64:587a7967c08a4090",
+  "jsonHash": "fnv1a64:860b3c9faf8a8890",
+  "findings": []
+}

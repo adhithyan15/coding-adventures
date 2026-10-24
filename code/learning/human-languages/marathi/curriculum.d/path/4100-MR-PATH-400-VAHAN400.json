@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-400-VAHAN400",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "MR-EXT-400-VAHAN400"
+  ],
+  "after": []
+}

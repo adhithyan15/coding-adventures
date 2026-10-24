@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 401,
+  "title": "Growth and Finance",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b3e395a102c578be",
+  "lessons": [
+    {
+      "id": "KA-C401-abhivrddhi",
+      "sequence": 20280,
+      "title": "ಅಭಿವೃದ್ಧಿ (abhivṛddhi) — development",
+      "headword": "ಅಭಿವೃದ್ಧಿ",
+      "romanization": "abhivṛddhi",
+      "gloss": "development",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6a8bb3c8b9c74f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to utilise, then the Kannada for to waste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಭಿವೃದ್ಧಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಭಿವೃದ್ಧಿ — abhivṛddhi — \"development\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಸ ರಸ್ತೆಯಿಂದ ಊರಿನ ಅಭಿವೃದ್ಧಿ ಆಯಿತು. hosa rasteyinda ūrina abhivṛddhi āyitu. The new road brought development to the town."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಭಿವೃದ್ಧಿ (abhivṛddhi) ಹೊಂದು, to develop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಭಿವೃದ್ಧಿ (abhivṛddhi) is borrowed from Sanskrit abhivṛddhi, \"growth, increase, prosperity\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhivṛddhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhivṛddhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhivṛddhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhivṛddhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hosa rasteyinda ūrina abhivṛddhi āyitu. — The new road brought development to the town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hosa rasteyinda ūrina abhivṛddhi āyitu.* — The new road brought development to the town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to utilise, then the Kannada for to waste, then say abhivṛddhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to utilise, then the Kannada for to waste, then say *abhivṛddhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಭಿವೃದ್ಧಿ (abhivṛddhi) mean? (\"Development\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C401-arthika",
+      "sequence": 20290,
+      "title": "ಆರ್ಥಿಕ (ārthika) — economic; financial",
+      "headword": "ಆರ್ಥಿಕ",
+      "romanization": "ārthika",
+      "gloss": "economic; financial",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7c05677db57f0e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to waste, then the Kannada for development."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆರ್ಥಿಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆರ್ಥಿಕ — ārthika — \"economic; financial\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಕುಟುಂಬಕ್ಕೆ ಆರ್ಥಿಕ ತೊಂದರೆ ಇದೆ. ā kuṭumbakke ārthika tondare ide. That family has money troubles."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆರ್ಥಿಕತೆ, the economy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆರ್ಥಿಕ (ārthika) is borrowed from Sanskrit ārthika (Monier-Williams), an adjective from artha, \"aim, wealth\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārthika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārthika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārthika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārthika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kuṭumbakke ārthika tondare ide. — That family has money troubles.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kuṭumbakke ārthika tondare ide.* — That family has money troubles.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to waste, then the Kannada for development, then say ārthika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to waste, then the Kannada for development, then say *ārthika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆರ್ಥಿಕ (ārthika) mean? (\"Economic; financial\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C401-hanakasu",
+      "sequence": 20300,
+      "title": "ಹಣಕಾಸು (haṇakāsu) — finance",
+      "headword": "ಹಣಕಾಸು",
+      "romanization": "haṇakāsu",
+      "gloss": "finance",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07022d4eca32b464",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for development, then the Kannada for economic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಣಕಾಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಣಕಾಸು — haṇakāsu — \"finance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮನೆಯ ಹಣಕಾಸು ಅಮ್ಮನೇ ನೋಡಿಕೊಳ್ಳುತ್ತಾಳೆ. maneya haṇakāsu ammanē nōḍikoḷḷuttāḷe. Mother herself looks after the household finances."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಣ (money) + ಕಾಸು (coin)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಣಕಾಸು (haṇakāsu) is built from haṇa, \"money\", paired with native kāsu, \"a small coin, money\" (DEDR 1431)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṇakāsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṇakāsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṇakāsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṇakāsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maneya haṇakāsu ammanē nōḍikoḷḷuttāḷe. — Mother herself looks after the household finances.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maneya haṇakāsu ammanē nōḍikoḷḷuttāḷe.* — Mother herself looks after the household finances.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for development, then the Kannada for economic, then say haṇakāsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for development, then the Kannada for economic, then say *haṇakāsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಣಕಾಸು (haṇakāsu) mean? (\"Finance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C401-uttejisu",
+      "sequence": 20310,
+      "title": "ಉತ್ತೇಜಿಸು (uttējisu) — to promote; to boost",
+      "headword": "ಉತ್ತೇಜಿಸು",
+      "romanization": "uttējisu",
+      "gloss": "to promote; to boost",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6481a5a4f8f45060",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for economic, then the Kannada for finance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉತ್ತೇಜಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉತ್ತೇಜಿಸು — uttējisu — \"to promote; to boost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸರ್ಕಾರ ಸಣ್ಣ ಉದ್ಯಮಗಳನ್ನು ಉತ್ತೇಜಿಸಿತು. sarkāra saṇṇa udyamagaḷannu uttējisitu. The government boosted small businesses."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಉತ್ತೇಜಿಸಿದೆ, uttējiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಉತ್ತೇಜನ, encouragement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉತ್ತೇಜಿಸು (uttējisu) is built on Sanskrit uttejana, \"incitement, encouragement, stimulation\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttējisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttējisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttējisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttējisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkāra saṇṇa udyamagaḷannu uttējisitu. — The government boosted small businesses.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkāra saṇṇa udyamagaḷannu uttējisitu.* — The government boosted small businesses.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for economic, then the Kannada for finance, then say uttējisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for economic, then the Kannada for finance, then say *uttējisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉತ್ತೇಜಿಸು (uttējisu) mean? (\"To promote; to boost\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C401-hudu",
+      "sequence": 20320,
+      "title": "ಹೂಡು (hūḍu) — to invest",
+      "headword": "ಹೂಡು",
+      "romanization": "hūḍu",
+      "gloss": "to invest",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ffced5029fcb770",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for finance, then the Kannada for to promote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೂಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೂಡು — hūḍu — \"to invest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಉಳಿಸಿದ ಹಣವನ್ನು ಒಂದು ಅಂಗಡಿಯಲ್ಲಿ ಹೂಡಿದೆ. nānu uḷisida haṇavannu ondu aṅgaḍiyalli hūḍide. I invested the money I had saved in a shop."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಹೂಡಿದೆ, hūḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೂಡಿಕೆ, an investment. Also to yoke: ಎತ್ತು ಹೂಡು (hūḍu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೂಡು (hūḍu) is native Dravidian: DEDR 4361 lists Kannada pūḍu, \"to join, to tie to, to yoke, to fix, to arrange\"; old p- became h-, and \"to put money to work\" is the modern sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hūḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hūḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hūḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hūḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu uḷisida haṇavannu ondu aṅgaḍiyalli hūḍide. — I invested the money I had saved in a shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu uḷisida haṇavannu ondu aṅgaḍiyalli hūḍide.* — I invested the money I had saved in a shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for finance, then the Kannada for to promote, then say hūḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for finance, then the Kannada for to promote, then say *hūḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೂಡು (hūḍu) mean? (\"To invest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

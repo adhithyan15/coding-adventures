@@ -1,0 +1,11 @@
+{
+  "id": "AR-C352-shijar",
+  "pathSegment": "AR-PATH-352-MUKHALAFA352",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-352-MUKHALAFA352",
+      "order": 2
+    }
+  ]
+}

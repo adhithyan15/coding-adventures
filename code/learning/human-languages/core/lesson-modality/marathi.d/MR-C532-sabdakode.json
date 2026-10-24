@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C532-sabdakode",
+    "language": "marathi",
+    "chapter": 532,
+    "sequence": 30460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9dc7ef01a2d372b"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:e93e006ca5feef73",
+  "lessonIds": [
+    "TA-C429-munnarivippu",
+    "TA-C429-curavali",
+    "TA-C429-alankatti",
+    "TA-C429-ataimalai",
+    "TA-C429-mekamuttam"
+  ],
+  "tex": "tamil/book/chapters/ch429-storm-warnings.tex"
+}

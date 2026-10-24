@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:75f5532fbc55c0a2",
+  "lessonIds": [
+    "BN-C460-nishthur",
+    "BN-C460-kothor",
+    "BN-C460-ugro",
+    "BN-C460-svarthopor",
+    "BN-C460-otyachar-kora"
+  ],
+  "tex": "bengali/book/chapters/ch460-harsh-natures.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C485-jadimale",
+  "pathSegment": "KA-PATH-485-MUNGARU485",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-485-MUNGARU485",
+      "order": 3
+    }
+  ]
+}

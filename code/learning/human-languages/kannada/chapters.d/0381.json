@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "Thinking It Through",
+  "label": "ch:ka-thinking-it-through",
+  "canDo": "I can say to consider, to suppose, good sense, to reflect on and intellect.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C381-buddhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can say to consider, to suppose, good sense, to reflect on and intellect.",
+    "assesses": [
+      "KA-LEX-C381-PARIGANISU381-03",
+      "KA-LEX-C381-PARIGANISU381-04",
+      "KA-LEX-C381-PARIGANISU381-05"
+    ]
+  }
+}

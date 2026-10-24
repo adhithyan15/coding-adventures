@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:32e3ddf8abeb1886",
+  "lessonIds": [
+    "ML-C512-karakaviyuka",
+    "ML-C512-vellakkettu",
+    "ML-C512-ponnuka",
+    "ML-C512-munnippokuka",
+    "ML-C512-valitiriccuvituka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch512.txt",
+  "json": "malayalam/narration/ch512.json",
+  "textHash": "fnv1a64:25e8eee1007c696b",
+  "jsonHash": "fnv1a64:7cc933f25b3ca1f7",
+  "findings": []
+}

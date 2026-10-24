@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Clearing the Clutter",
+  "label": "ch:hi-clearing-the-clutter",
+  "canDo": "I can talk about dust, old papers and scrubbing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C519-majna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about dust, old papers and scrubbing.",
+    "assesses": [
+      "HI-LEX-C519-DHOOL519-03",
+      "HI-LEX-C519-DHOOL519-04",
+      "HI-LEX-C519-DHOOL519-05"
+    ]
+  }
+}

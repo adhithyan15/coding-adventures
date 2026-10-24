@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "An Attack",
+  "label": "ch:ml-an-attack",
+  "canDo": "I can say an attack, a threat, to attack, to loot and to smash.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C373-takarkkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can say an attack, a threat, to attack, to loot and to smash.",
+    "assesses": [
+      "ML-LEX-C373-AKRAMANAM373-03",
+      "ML-LEX-C373-AKRAMANAM373-04",
+      "ML-LEX-C373-AKRAMANAM373-05"
+    ]
+  }
+}

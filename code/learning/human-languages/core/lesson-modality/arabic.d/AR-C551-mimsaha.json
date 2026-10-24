@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C551-mimsaha",
+    "language": "arabic",
+    "chapter": 551,
+    "sequence": 30450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d2172e61f28d04b"
+  },
+  "findings": []
+}

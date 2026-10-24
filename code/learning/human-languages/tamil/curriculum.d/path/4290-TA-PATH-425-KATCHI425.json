@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-425-KATCHI425",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-425-KATCHI425"
+  ],
+  "after": []
+}

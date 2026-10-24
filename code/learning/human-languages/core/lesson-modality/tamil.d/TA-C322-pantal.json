@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C322-pantal",
+    "language": "tamil",
+    "chapter": 322,
+    "sequence": 18570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ef743a842b6ffef"
+  },
+  "findings": []
+}

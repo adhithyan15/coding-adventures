@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-473-DVIPAM473",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an isle, a whale, coral, a tidal surge and to roar.",
+  "prerequisites": []
+}

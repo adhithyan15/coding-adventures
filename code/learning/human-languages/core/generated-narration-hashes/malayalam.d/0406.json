@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:7a817565550cc85f",
+  "lessonIds": [
+    "ML-C406-viyojikkuka",
+    "ML-C406-tarkkam",
+    "ML-C406-samvadam",
+    "ML-C406-bodhyappetuttuka",
+    "ML-C406-viksanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch406.txt",
+  "json": "malayalam/narration/ch406.json",
+  "textHash": "fnv1a64:53a086227b0b6357",
+  "jsonHash": "fnv1a64:32ce512c13a276bd",
+  "findings": []
+}

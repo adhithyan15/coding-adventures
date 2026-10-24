@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-312-VIRIVAKA312",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-312-VIRIVAKA312"
+  ],
+  "after": []
+}

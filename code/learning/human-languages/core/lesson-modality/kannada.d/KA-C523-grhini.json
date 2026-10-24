@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C523-grhini",
+    "language": "kannada",
+    "chapter": 523,
+    "sequence": 26700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9601f77af7887432"
+  },
+  "findings": []
+}

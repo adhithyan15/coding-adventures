@@ -1,0 +1,874 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 295,
+  "title": "After the Disaster",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:619bc22be6413e62",
+  "lessons": [
+    {
+      "id": "MR-C295-nuksan",
+      "sequence": 17350,
+      "title": "नुकसान (nuksān) — damage; a loss",
+      "headword": "नुकसान",
+      "romanization": "nuksān",
+      "gloss": "damage; a loss",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6021d360bc3b2230",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a volunteer, then the Marathi for to get stuck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नुकसान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नुकसान — nuksān — \"damage; a loss\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जर नुकसान मोठं असेल, तर गावाला मदत मिळेल. jar nuksān moṭhaṁ asel, tar gāvālā madat miḷel. If the damage is great, the village will get help."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "नुकसान (nuksān) होणे, a loss is suffered; जर … असेल तर, if it is, for a state."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नुकसान (nuksān) is a loan from Persian nuqsān, usually traced to Arabic nuqṣān, 'a shortfall, a deficit'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuksān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuksān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuksān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuksān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jar nuksān moṭhaṁ asel, tar gāvālā madat miḷel. — If the damage is great, the village will get help.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jar nuksān moṭhaṁ asel, tar gāvālā madat miḷel.* — If the damage is great, the village will get help.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a volunteer, then the Marathi for to get stuck, then say nuksān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a volunteer, then the Marathi for to get stuck, then say *nuksān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नुकसान (nuksān) mean? (\"Damage; a loss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C295-durghatna",
+      "sequence": 17360,
+      "title": "दुर्घटना (durghaṭnā) — a disaster; a terrible accident",
+      "headword": "दुर्घटना",
+      "romanization": "durghaṭnā",
+      "gloss": "a disaster; a terrible accident",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:799c1f396874472f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to get stuck, then the Marathi for damage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुर्घटना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुर्घटना — durghaṭnā — \"a disaster; a terrible accident\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्या दुर्घटनेत अनेक घरं वाहून गेली. tyā durghaṭnet anek gharaṁ vāhūn gelī. Many houses were swept away in that disaster."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Built from दुर्-, ill, and घटना, an event."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुर्घटना (durghaṭnā) is a learned compound built from the Sanskrit prefix dur-, 'bad, ill', and ghaṭanā, 'a happening' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durghaṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durghaṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durghaṭnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durghaṭnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyā durghaṭnet anek gharaṁ vāhūn gelī. — Many houses were swept away in that disaster.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyā durghaṭnet anek gharaṁ vāhūn gelī.* — Many houses were swept away in that disaster.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to get stuck, then the Marathi for damage, then say durghaṭnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to get stuck, then the Marathi for damage, then say *durghaṭnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुर्घटना (durghaṭnā) mean? (\"A disaster; a terrible accident\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C295-apatti",
+      "sequence": 17370,
+      "title": "आपत्ती (āpattī) — a calamity",
+      "headword": "आपत्ती",
+      "romanization": "āpattī",
+      "gloss": "a calamity",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9eca245095b25f00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for damage, then the Marathi for a disaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आपत्ती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आपत्ती — āpattī — \"a calamity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अशा आपत्तीत सगळे एकमेकांना मदत करतात. aśā āpattīt sagḷe ekmekānnā madat kartāt. In such a calamity everyone helps one another."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "नैसर्गिक आपत्ती (āpattī), a natural calamity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आपत्ती (āpattī) is a tatsama, taken from Sanskrit āpatti, 'a happening, an occurrence' (Monier-Williams); Marathi keeps it for the happenings that bring ruin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpattī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpattī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpattī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpattī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aśā āpattīt sagḷe ekmekānnā madat kartāt. — In such a calamity everyone helps one another.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aśā āpattīt sagḷe ekmekānnā madat kartāt.* — In such a calamity everyone helps one another.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for damage, then the Marathi for a disaster, then say āpattī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for damage, then the Marathi for a disaster, then say *āpattī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आपत्ती (āpattī) mean? (\"A calamity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C295-sankat",
+      "sequence": 17380,
+      "title": "संकट (saṅkaṭ) — a crisis; a danger",
+      "headword": "संकट",
+      "romanization": "saṅkaṭ",
+      "gloss": "a crisis; a danger",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d8bf293a2496663",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a disaster, then the Marathi for a calamity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संकट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संकट — saṅkaṭ — \"a crisis; a danger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गावावर पाण्याचं मोठं संकट आलं. gāvāvar pāṇyācaṁ moṭhaṁ saṅkaṭ ālaṁ. A great water crisis struck the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "संकट (saṅkaṭ) येणे, a crisis comes; संकटात, in trouble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संकट (saṅkaṭ) is a tatsama, taken from Sanskrit saṅkaṭa, 'narrow; a strait, a difficulty' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkaṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkaṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāvāvar pāṇyācaṁ moṭhaṁ saṅkaṭ ālaṁ. — A great water crisis struck the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāvāvar pāṇyācaṁ moṭhaṁ saṅkaṭ ālaṁ.* — A great water crisis struck the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a disaster, then the Marathi for a calamity, then say saṅkaṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a disaster, then the Marathi for a calamity, then say *saṅkaṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संकट (saṅkaṭ) mean? (\"A crisis; a danger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C295-bhisan",
+      "sequence": 17390,
+      "title": "भीषण (bhīṣaṇ) — dreadful; terrible",
+      "headword": "भीषण",
+      "romanization": "bhīṣaṇ",
+      "gloss": "dreadful; terrible",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c40aa576a13a6e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a calamity, then the Marathi for a crisis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भीषण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीषण — bhīṣaṇ — \"dreadful; terrible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "महामार्गावर काल भीषण अपघात झाला. mahāmārgāvar kāl bhīṣaṇ apghāt jhālā. There was a terrible accident on the highway yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "भीषण (bhīṣaṇ) keeps one form: भीषण (bhīṣaṇ) आग, भीषण (bhīṣaṇ) अपघात."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीषण (bhīṣaṇ) is a tatsama, taken from Sanskrit bhīṣaṇa, 'terrifying' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīṣaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīṣaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīṣaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīṣaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahāmārgāvar kāl bhīṣaṇ apghāt jhālā. — There was a terrible accident on the highway yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahāmārgāvar kāl bhīṣaṇ apghāt jhālā.* — There was a terrible accident on the highway yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a calamity, then the Marathi for a crisis, then say bhīṣaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a calamity, then the Marathi for a crisis, then say *bhīṣaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भीषण (bhīṣaṇ) mean? (\"Dreadful; terrible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R295-review-288-295",
+      "sequence": 17400,
+      "title": "Looking back: incidents, witnesses and the police",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Something Happened to After the Disaster",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdf81b77cde69c77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for an event and an accident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an event, an accident, a theft, to sink, minor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an event, an accident, a theft, to sink, minor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a witness, a crime, a robbery, a pickpocket, to cheat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a witness, a crime, a robbery, a pickpocket, to cheat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a constable, to arrest, to inquire, a prison, a prisoner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a constable, to arrest, to inquire, a prison, a prisoner]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to slip away, a rescue, safe and sound, missing, to comb through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to slip away, a rescue, safe and sound, missing, to comb through]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a spark, to flare up, a tongue of flame, ash, a fire brigade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a spark, to flare up, a tongue of flame, ash, a fire brigade]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an earthquake, to shake, to collapse, to cave in, a landslide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an earthquake, to shake, to collapse, to cave in, a landslide]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flood, to collect, relief work, a volunteer, to get stuck",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flood, to collect, relief work, a volunteer, to get stuck]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "damage, a disaster, a calamity, a crisis, dreadful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: damage, a disaster, a calamity, a crisis, dreadful]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An event? (घटना, ghaṭnā.) An accident? (अपघात, apghāt.) A theft? (चोरी, corī.) To sink? (बुडणे, buḍṇe.) Minor? (किरकोळ, kirkoḷ.) A witness? (साक्षीदार, sākṣīdār.) A crime? (गुन्हा, gunhā.) A robbery? (दरोडा, daroḍā.) A pickpocket? (पाकीटमार, pākīṭmār.) To cheat? (फसवणे, phasavṇe.) A constable? (हवालदार, havāldār.) To arrest? (अटक करणे, aṭak karṇe.) To inquire? (चौकशी करणे, caukśī karṇe.) A prison? (तुरुंग, turuṅg.) A prisoner? (कैदी, kaidī.) To slip away? (निसटणे, nisaṭṇe.) A rescue? (सुटका, suṭkā.) Safe and sound? (सुखरूप, sukhrūp.) Missing? (बेपत्ता, bepattā.) To comb through? (धुंडाळणे, dhuṇḍāḷṇe.) A spark? (ठिणगी, ṭhiṇgī.) To flare up? (भडकणे, bhaḍakṇe.) A tongue of flame? (ज्वाळा, jvāḷā.) Ash? (राख, rākh.) A fire brigade? (अग्निशमन दल, agniśaman dal.) An earthquake? (भूकंप, bhūkamp.) To shake? (हादरणे, hādarṇe.) To collapse? (कोसळणे, kosaḷṇe.) To cave in? (खचणे, khacṇe.) A landslide? (दरड, daraḍ.) A flood? (पूर, pūr.) To collect? (साचणे, sācṇe.) Relief work? (मदतकार्य, madatkārya.) A volunteer? (स्वयंसेवक, svayaṁsevak.) To get stuck? (अडकणे, aḍakṇe.) Damage? (नुकसान, nuksān.) A disaster? (दुर्घटना, durghaṭnā.) A calamity? (आपत्ती, āpattī.) A crisis? (संकट, saṅkaṭ.) Dreadful? (भीषण, bhīṣaṇ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

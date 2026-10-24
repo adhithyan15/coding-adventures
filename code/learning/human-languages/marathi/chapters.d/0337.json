@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Legends and Ballads",
+  "label": "ch:mr-legends-and-ballads",
+  "canDo": "I can talk about legends, ballads and famous poets.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C337-kavi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can talk about legends, ballads and famous poets.",
+    "assesses": [
+      "MR-LEX-C337-DANTKATHA337-03",
+      "MR-LEX-C337-DANTKATHA337-04",
+      "MR-LEX-C337-DANTKATHA337-05"
+    ]
+  }
+}

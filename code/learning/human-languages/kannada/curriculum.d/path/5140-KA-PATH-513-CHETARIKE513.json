@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-513-CHETARIKE513",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-513-CHETARIKE513"
+  ],
+  "after": []
+}

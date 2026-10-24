@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:a13f65bc6c2799b5",
+  "lessonIds": [
+    "HI-C431-bhav",
+    "HI-C431-mol",
+    "HI-C431-sauda",
+    "HI-C431-sel",
+    "HI-C431-kifayati"
+  ],
+  "tex": "hindi/book/chapters/ch431-rates-and-deals.tex"
+}

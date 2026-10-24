@@ -1,0 +1,11 @@
+{
+  "id": "BN-C520-rekord",
+  "pathSegment": "BN-PATH-520-PODOK520",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-520-PODOK520",
+      "order": 2
+    }
+  ]
+}

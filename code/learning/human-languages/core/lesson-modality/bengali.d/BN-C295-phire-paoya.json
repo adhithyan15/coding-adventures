@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C295-phire-paoya",
+    "language": "bengali",
+    "chapter": 295,
+    "sequence": 19010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efc328abcbd4304d"
+  },
+  "findings": []
+}

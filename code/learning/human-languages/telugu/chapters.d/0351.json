@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "Captives",
+  "label": "ch:te-captives",
+  "canDo": "I can say a captive, to detain, to lock up, to release and to free from captivity.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C351-vidipincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can say a captive, to detain, to lock up, to release and to free from captivity.",
+    "assesses": [
+      "TE-LEX-C351-BANDI351-03",
+      "TE-LEX-C351-BANDI351-04",
+      "TE-LEX-C351-BANDI351-05"
+    ]
+  }
+}

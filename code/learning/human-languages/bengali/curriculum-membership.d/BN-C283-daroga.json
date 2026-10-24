@@ -1,0 +1,11 @@
+{
+  "id": "BN-C283-daroga",
+  "pathSegment": "BN-PATH-283-OPORADH283",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-283-OPORADH283",
+      "order": 4
+    }
+  ]
+}

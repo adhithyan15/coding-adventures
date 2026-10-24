@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 478,
+  "title": "Storms",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8394a3ab20919eba",
+  "lessons": [
+    {
+      "id": "TE-C478-alpapidanam",
+      "sequence": 24050,
+      "title": "అల్పపీడనం (alpapīḍanaṁ) — a low-pressure area",
+      "headword": "అల్పపీడనం",
+      "romanization": "alpapīḍanaṁ",
+      "gloss": "a low-pressure area",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff7fe951bf9c7cd5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a shower of rain, then the Telugu for to get soaked."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అల్పపీడనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అల్పపీడనం — alpapīḍanaṁ — \"a low-pressure area\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సముద్రంలో అల్పపీడనం ఏర్పడింది. samudraṁlō alpapīḍanaṁ ērpaḍindi. A low-pressure area has formed over the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "The weather news says it every monsoon: అల్ప, low, + పీడనం, pressure. A storm often follows."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అల్పపీడనం (alpapīḍanaṁ) is a modern weather word built from two Sanskrit words: alpa, \"small, little\", and pīḍana, \"pressing, squeezing\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alpapīḍanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alpapīḍanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alpapīḍanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alpapīḍanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samudraṁlō alpapīḍanaṁ ērpaḍindi. — A low-pressure area has formed over the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samudraṁlō alpapīḍanaṁ ērpaḍindi.* — A low-pressure area has formed over the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a shower of rain, then the Telugu for to get soaked, then say alpapīḍanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a shower of rain, then the Telugu for to get soaked, then say *alpapīḍanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అల్పపీడనం (alpapīḍanaṁ) mean? (\"A low-pressure area\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C478-penugali",
+      "sequence": 24060,
+      "title": "పెనుగాలి (penugāli) — a gale; a strong wind",
+      "headword": "పెనుగాలి",
+      "romanization": "penugāli",
+      "gloss": "a gale; a strong wind",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acc60166aa3a5292",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to get soaked, then the Telugu for a low-pressure area."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పెనుగాలి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పెనుగాలి — penugāli — \"a gale; a strong wind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పెనుగాలికి చాలా చెట్లు కూలాయి. penugāliki cālā ceṭlu kūlāyi. Many trees came down in the gale."
+            },
+            {
+              "kind": "speech",
+              "text": "పెను, great, + గాలి, wind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పెనుగాలి (penugāli) is native Dravidian: పెను, \"great, big\", which DEDR 4411 lists beside Tamil peru, \"great\", and గాలి, \"wind\" (DEDR 1499)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "penugāli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *penugāli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "penugāli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *penugāli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "penugāliki cālā ceṭlu kūlāyi. — Many trees came down in the gale.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *penugāliki cālā ceṭlu kūlāyi.* — Many trees came down in the gale.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to get soaked, then the Telugu for a low-pressure area, then say penugāli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to get soaked, then the Telugu for a low-pressure area, then say *penugāli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పెనుగాలి (penugāli) mean? (\"A gale; a strong wind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C478-sudigali",
+      "sequence": 24070,
+      "title": "సుడిగాలి (suḍigāli) — a whirlwind",
+      "headword": "సుడిగాలి",
+      "romanization": "suḍigāli",
+      "gloss": "a whirlwind",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e18c192234f1c196",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a low-pressure area, then the Telugu for a gale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సుడిగాలి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సుడిగాలి — suḍigāli — \"a whirlwind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సుడిగాలికి ఇంటి పైకప్పు ఎగిరిపోయింది. suḍigāliki iṇṭi paikappu egiripōyindi. In the whirlwind the roof of the house blew off."
+            },
+            {
+              "kind": "speech",
+              "text": "సుడి, a whirl, + గాలి, wind. A whirlpool in water is a సుడిగుండం."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సుడిగాలి (suḍigāli) is native Dravidian: DEDR 2698 lists Telugu suḍi, \"a whirl, a whirlpool, a whirlwind\", here joined to గాలి, \"wind\" (DEDR 1499)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suḍigāli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suḍigāli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suḍigāli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suḍigāli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suḍigāliki iṇṭi paikappu egiripōyindi. — In the whirlwind the roof of the house blew off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suḍigāliki iṇṭi paikappu egiripōyindi.* — In the whirlwind the roof of the house blew off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a low-pressure area, then the Telugu for a gale, then say suḍigāli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a low-pressure area, then the Telugu for a gale, then say *suḍigāli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సుడిగాలి (suḍigāli) mean? (\"A whirlwind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C478-galivana",
+      "sequence": 24080,
+      "title": "గాలివాన (gālivāna) — a rainstorm",
+      "headword": "గాలివాన",
+      "romanization": "gālivāna",
+      "gloss": "a rainstorm",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b959f3ee2d49af65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a gale, then the Telugu for a whirlwind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గాలివాన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గాలివాన — gālivāna — \"a rainstorm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నిన్న రాత్రి పెద్ద గాలివాన వచ్చింది. ninna rātri pedda gālivāna vaccindi. There was a big rainstorm last night."
+            },
+            {
+              "kind": "speech",
+              "text": "గాలి, wind, + వాన, rain: wind and rain together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గాలివాన (gālivāna) is native Dravidian: గాలి, \"wind\" (DEDR 1499), and వాన, \"rain\" (DEDR 5381)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gālivāna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gālivāna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gālivāna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gālivāna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ninna rātri pedda gālivāna vaccindi. — There was a big rainstorm last night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ninna rātri pedda gālivāna vaccindi.* — There was a big rainstorm last night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a gale, then the Telugu for a whirlwind, then say gālivāna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a gale, then the Telugu for a whirlwind, then say *gālivāna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గాలివాన (gālivāna) mean? (\"A rainstorm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C478-balahinapadu",
+      "sequence": 24090,
+      "title": "బలహీనపడు (balahīnapaḍu) — to lose strength; to weaken",
+      "headword": "బలహీనపడు",
+      "romanization": "balahīnapaḍu",
+      "gloss": "to lose strength; to weaken",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e889f278d66b18e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a whirlwind, then the Telugu for a rainstorm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బలహీనపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బలహీనపడు — balahīnapaḍu — \"to lose strength; to weaken\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తీరం దాటిన తరువాత తుపాను బలహీనపడింది. tīraṁ dāṭina taruvāta tupānu balahīnapaḍindi. After crossing the coast the storm weakened."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): బలహీనపడ్డాను, balahīnapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "బలం, strength, + హీన, lacking, + పడు. Said of storms, of the body and of a currency."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బలహీనపడు (balahīnapaḍu) is a Telugu verb built from Sanskrit bala, \"strength\", and hīna, \"lacking, deprived of\" (Monier-Williams), with the native పడు, \"to undergo\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "balahīnapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *balahīnapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "balahīnapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *balahīnapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīraṁ dāṭina taruvāta tupānu balahīnapaḍindi. — After crossing the coast the storm weakened.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīraṁ dāṭina taruvāta tupānu balahīnapaḍindi.* — After crossing the coast the storm weakened.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a whirlwind, then the Telugu for a rainstorm, then say balahīnapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a whirlwind, then the Telugu for a rainstorm, then say *balahīnapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బలహీనపడు (balahīnapaḍu) mean? (\"To lose strength; to weaken\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

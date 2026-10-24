@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Rocks and peaks",
+  "label": "ch:ar-rocks-and-peaks",
+  "canDo": "I can say a rock, a plateau, a summit, a slope and an edge.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C472-haffa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can say a rock, a plateau, a summit, a slope and an edge.",
+    "assesses": [
+      "AR-LEX-C472-QIMMA472-03",
+      "AR-LEX-C472-QIMMA472-04",
+      "AR-LEX-C472-QIMMA472-05"
+    ]
+  }
+}

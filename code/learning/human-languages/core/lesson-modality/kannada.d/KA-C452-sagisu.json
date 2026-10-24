@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C452-sagisu",
+    "language": "kannada",
+    "chapter": 452,
+    "sequence": 23000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8287692354b6357"
+  },
+  "findings": []
+}

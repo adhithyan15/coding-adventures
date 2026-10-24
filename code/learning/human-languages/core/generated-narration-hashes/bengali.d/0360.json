@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:538d9c6a2bf25959",
+  "lessonIds": [
+    "BN-C360-boktrita",
+    "BN-C360-bokta",
+    "BN-C360-sobhapoti",
+    "BN-C360-uposthito",
+    "BN-C360-sombodhon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch360.txt",
+  "json": "bengali/narration/ch360.json",
+  "textHash": "fnv1a64:6c8d213f49b67d5a",
+  "jsonHash": "fnv1a64:ac5dc2ef3fdc86af",
+  "findings": []
+}

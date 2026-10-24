@@ -95,6 +95,14 @@ exits 1. `lang-aot` compiles the same modules for every other backend
   `code/grammars/ruby/corpus/rb-int-puts` corpus on every release whose
   `iir_status` claims it, IIR identity across them, the CSV/profile
   agreement, and the host-`ruby` oracle (skips unless ruby 3.3.x).
+- `tests/release_sweep.rs` — LANG84 "CI bounding": compiles every positive
+  case under every claiming release, groups the releases into IIR-identity
+  classes (one today: 3.3.5, 3.3.6 and 3.3.7, represented by 3.3.5) and
+  checks `code/grammars/ruby/release_classes.csv`. After a deliberate
+  change, `RUBY_RELEASE_SWEEP_WRITE=1 cargo test -p ruby-iir-compiler --test
+  release_sweep` rewrites the file (and fails, so review the diff and re-run).
+  `lang-aot`'s matrix runs the corpus on each class representative.
+- `tests/common/mod.rs` — the inventory and corpus readers both share.
 - `tests/cst_contract.rs` — LANG84 C8 rule and token names per release.
 - `tests/hostile.rs` — C5 hostile probes in a child process.
 - `tests/iir_path.rs` — no hand-written lexer on the IIR path.

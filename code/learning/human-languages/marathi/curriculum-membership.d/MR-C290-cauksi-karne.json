@@ -1,0 +1,11 @@
+{
+  "id": "MR-C290-cauksi-karne",
+  "pathSegment": "MR-PATH-290-POLICE290",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-290-POLICE290",
+      "order": 2
+    }
+  ]
+}

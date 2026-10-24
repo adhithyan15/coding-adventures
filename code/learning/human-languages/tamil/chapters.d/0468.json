@@ -1,0 +1,21 @@
+{
+  "chapter": 468,
+  "title": "Energy and Weariness",
+  "label": "ch:ta-energy-and-weariness",
+  "canDo": "I can talk about vigour, weariness and nodding off.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R468-review-461-468",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can talk about vigour, weariness and nodding off.",
+    "assesses": [
+      "TA-LEX-C468-CORVU468-01",
+      "TA-LEX-C468-CORVU468-02",
+      "TA-LEX-C468-CORVU468-03",
+      "TA-LEX-C468-CORVU468-04",
+      "TA-LEX-C468-CORVU468-05"
+    ]
+  }
+}

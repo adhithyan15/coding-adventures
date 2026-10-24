@@ -1,0 +1,21 @@
+{
+  "chapter": 311,
+  "title": "Who Makes the News",
+  "label": "ch:mr-who-makes-the-news",
+  "canDo": "I can say who reports and edits the news.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-R311-review-304-311",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can say who reports and edits the news.",
+    "assesses": [
+      "MR-LEX-C311-LEKH311-01",
+      "MR-LEX-C311-LEKH311-02",
+      "MR-LEX-C311-LEKH311-03",
+      "MR-LEX-C311-LEKH311-04",
+      "MR-LEX-C311-LEKH311-05"
+    ]
+  }
+}

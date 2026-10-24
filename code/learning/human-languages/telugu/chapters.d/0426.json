@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Before You Act",
+  "label": "ch:te-before-you-act",
+  "canDo": "I can talk about hesitating, getting ready and acting on purpose.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C426-arambham",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can talk about hesitating, getting ready and acting on purpose.",
+    "assesses": [
+      "TE-LEX-C426-ARAMBHAM426-03",
+      "TE-LEX-C426-ARAMBHAM426-04",
+      "TE-LEX-C426-ARAMBHAM426-05"
+    ]
+  }
+}

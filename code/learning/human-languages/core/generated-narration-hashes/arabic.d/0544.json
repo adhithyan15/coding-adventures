@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:eaa73dc270ed5eec",
+  "lessonIds": [
+    "AR-C544-ud",
+    "AR-C544-kaman",
+    "AR-C544-tabl",
+    "AR-C544-nay",
+    "AR-C544-firqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch544.txt",
+  "json": "arabic/narration/ch544.json",
+  "textHash": "fnv1a64:667093dbbb3fd365",
+  "jsonHash": "fnv1a64:6d05302e831faed4",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:65e698a9ac7f6ac2",
+  "lessonIds": [
+    "MR-C478-kavti",
+    "MR-C478-kana",
+    "MR-C478-bargadi",
+    "MR-C478-atde",
+    "MR-C478-sandha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch478.txt",
+  "json": "marathi/narration/ch478.json",
+  "textHash": "fnv1a64:7eb0d2edbafaf986",
+  "jsonHash": "fnv1a64:668a79f7f2aa7746",
+  "findings": []
+}

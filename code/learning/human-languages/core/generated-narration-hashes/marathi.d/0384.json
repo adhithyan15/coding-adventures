@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:b7bfd9066e876445",
+  "lessonIds": [
+    "MR-C384-paristhiti",
+    "MR-C384-sthiti",
+    "MR-C384-avastha",
+    "MR-C384-pec",
+    "MR-C384-kasoti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch384.txt",
+  "json": "marathi/narration/ch384.json",
+  "textHash": "fnv1a64:ca27dd2c141c52a6",
+  "jsonHash": "fnv1a64:256cbafa3858b843",
+  "findings": []
+}

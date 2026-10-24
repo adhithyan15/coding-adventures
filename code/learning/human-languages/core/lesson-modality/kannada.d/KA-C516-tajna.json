@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C516-tajna",
+    "language": "kannada",
+    "chapter": 516,
+    "sequence": 26360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff990c198ae6cc2f"
+  },
+  "findings": []
+}

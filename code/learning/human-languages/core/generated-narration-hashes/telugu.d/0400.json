@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:7a0913ab722d0479",
+  "lessonIds": [
+    "TE-C400-ennika",
+    "TE-C400-abhyarthi",
+    "TE-C400-ennuko",
+    "TE-C400-pracaram",
+    "TE-C400-mejariti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch400.txt",
+  "json": "telugu/narration/ch400.json",
+  "textHash": "fnv1a64:98b80be9eefdb803",
+  "jsonHash": "fnv1a64:04c7a39debda3a15",
+  "findings": []
+}

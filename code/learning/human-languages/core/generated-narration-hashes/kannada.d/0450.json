@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:34eda8c5329513a4",
+  "lessonIds": [
+    "KA-C450-mekyanik",
+    "KA-C450-gyarej",
+    "KA-C450-bidibhaga",
+    "KA-C450-kettuhogu",
+    "KA-C450-riperi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch450.txt",
+  "json": "kannada/narration/ch450.json",
+  "textHash": "fnv1a64:87f528ca5216c3c2",
+  "jsonHash": "fnv1a64:7f8aeb934c696f73",
+  "findings": []
+}

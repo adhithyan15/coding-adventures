@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:7adbf4e8aedabb1f",
+  "lessonIds": [
+    "TE-C352-vembadincu",
+    "TE-C352-dakko",
+    "TE-C352-longipovu",
+    "TE-C352-pattincu",
+    "TE-C352-tappuko"
+  ],
+  "tex": "telugu/book/chapters/ch352-the-chase.tex"
+}

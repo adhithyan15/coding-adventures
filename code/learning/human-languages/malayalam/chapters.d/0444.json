@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Duties and Exemptions",
+  "label": "ch:ml-duties-and-exemptions",
+  "canDo": "I can say a concession, permission, an obligation, as per and a role.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-R444-review-437-444",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can say a concession, permission, an obligation, as per and a role.",
+    "assesses": [
+      "ML-LEX-C444-KATAMA444-03",
+      "ML-LEX-C444-KATAMA444-04",
+      "ML-LEX-C444-KATAMA444-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C535-ogninirbapok",
+  "pathSegment": "BN-PATH-535-SURAKSHA535",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-535-SURAKSHA535",
+      "order": 4
+    }
+  ]
+}

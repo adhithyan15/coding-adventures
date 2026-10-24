@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C465-purappetal",
+    "language": "malayalam",
+    "chapter": 465,
+    "sequence": 23200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6427230d05d27b78"
+  },
+  "findings": []
+}

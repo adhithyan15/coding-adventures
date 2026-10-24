@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Filling the Tank",
+  "label": "ch:ka-filling-the-tank",
+  "canDo": "I can say fuel, diesel, a fuel station, a battery and to ride.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C448-savari-madu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can say fuel, diesel, a fuel station, a battery and to ride.",
+    "assesses": [
+      "KA-LEX-C448-INDHANA448-03",
+      "KA-LEX-C448-INDHANA448-04",
+      "KA-LEX-C448-INDHANA448-05"
+    ]
+  }
+}

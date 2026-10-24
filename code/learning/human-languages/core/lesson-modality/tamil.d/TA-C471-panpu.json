@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C471-panpu",
+    "language": "tamil",
+    "chapter": 471,
+    "sequence": 27020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:386d41b8dc66efc3"
+  },
+  "findings": []
+}

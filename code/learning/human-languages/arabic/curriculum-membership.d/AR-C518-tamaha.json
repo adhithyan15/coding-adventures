@@ -1,0 +1,11 @@
+{
+  "id": "AR-C518-tamaha",
+  "pathSegment": "AR-PATH-518-MIHNA518",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-518-MIHNA518",
+      "order": 4
+    }
+  ]
+}

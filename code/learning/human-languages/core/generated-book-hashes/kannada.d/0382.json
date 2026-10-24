@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:8b3547037216b7a5",
+  "lessonIds": [
+    "KA-C382-sangati",
+    "KA-C382-vastava",
+    "KA-C382-bhrame",
+    "KA-C382-astitva",
+    "KA-C382-managanu"
+  ],
+  "tex": "kannada/book/chapters/ch382-facts-and-illusions.tex"
+}

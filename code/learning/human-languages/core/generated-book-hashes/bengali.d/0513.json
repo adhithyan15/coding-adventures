@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:c688fb18f5ad3923",
+  "lessonIds": [
+    "BN-C513-kota",
+    "BN-C513-khosa",
+    "BN-C513-kora-grate",
+    "BN-C513-makha",
+    "BN-C513-kuchono"
+  ],
+  "tex": "bengali/book/chapters/ch513-chopping-and-kneading.tex"
+}

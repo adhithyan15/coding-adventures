@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 489,
+  "title": "Money Matters",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b2e9fd14af74d6b6",
+  "lessons": [
+    {
+      "id": "ML-C489-karansi",
+      "sequence": 24430,
+      "title": "കറൻസി (kaṟansi) — currency",
+      "headword": "കറൻസി",
+      "romanization": "kaṟansi",
+      "gloss": "currency",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a316314fcf9fabb3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a validity period, then the Malayalam for to expire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കറൻസി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കറൻസി — kaṟansi — \"currency\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വിമാനത്താവളത്തിൽ വിദേശ കറൻസി കിട്ടും. vimānattāvaḷattil vidēśa kaṟansi kiṭṭuṁ. You can get foreign currency at the airport."
+            },
+            {
+              "kind": "speech",
+              "text": "വിദേശ കറൻസി (kaṟansi), foreign currency; Indian money is the രൂപ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കറൻസി (kaṟansi) was borrowed from English currency, the money of a country."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṟansi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṟansi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṟansi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṟansi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimānattāvaḷattil vidēśa kaṟansi kiṭṭuṁ. — You can get foreign currency at the airport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimānattāvaḷattil vidēśa kaṟansi kiṭṭuṁ.* — You can get foreign currency at the airport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a validity period, then the Malayalam for to expire, then say kaṟansi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a validity period, then the Malayalam for to expire, then say *kaṟansi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കറൻസി (kaṟansi) mean? (\"Currency\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C489-vinimayam",
+      "sequence": 24440,
+      "title": "വിനിമയം (vinimayaṁ) — exchange",
+      "headword": "വിനിമയം",
+      "romanization": "vinimayaṁ",
+      "gloss": "exchange",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:756399052704fb23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to expire, then the Malayalam for currency."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിനിമയം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിനിമയം — vinimayaṁ — \"exchange\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കറൻസി വിനിമയം ബാങ്കിൽ ചെയ്യാം. kaṟansi vinimayaṁ bāṅkil ceyyāṁ. Currency exchange can be done at the bank."
+            },
+            {
+              "kind": "speech",
+              "text": "The exchange rate is the വിനിമയ നിരക്ക്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിനിമയം (vinimayaṁ) is borrowed from Sanskrit vinimaya, \"exchange, barter\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinimayaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinimayaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinimayaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinimayaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṟansi vinimayaṁ bāṅkil ceyyāṁ. — Currency exchange can be done at the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṟansi vinimayaṁ bāṅkil ceyyāṁ.* — Currency exchange can be done at the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to expire, then the Malayalam for currency, then say vinimayaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to expire, then the Malayalam for currency, then say *vinimayaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിനിമയം (vinimayaṁ) mean? (\"Exchange\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C489-cillarayakkuka",
+      "sequence": 24450,
+      "title": "ചില്ലറയാക്കുക (cillaṟayākkuka) — to break a note",
+      "headword": "ചില്ലറയാക്കുക",
+      "romanization": "cillaṟayākkuka",
+      "gloss": "to break a note",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28900afe529819c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for currency, then the Malayalam for exchange."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചില്ലറയാക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചില്ലറയാക്കുക — cillaṟayākkuka — \"to break a note\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കടക്കാരൻ എന്റെ അഞ്ഞൂറിന്റെ നോട്ട് ചില്ലറയാക്കി. kaṭakkāran enṟe aññūṟinṟe nōṭṭŭ cillaṟayākki. The shopkeeper broke my five-hundred note."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചില്ലറയാക്കി, cillaṟayākki."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally to make into small change: ചില്ലറ plus ആക്കുക, to make."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചില്ലറയാക്കുക (cillaṟayākkuka) is a Malayalam verb built from the native word ചില്ലറ, small change (DEDR 2574), and ആക്കുക, to make."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cillaṟayākkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cillaṟayākkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cillaṟayākkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cillaṟayākkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭakkāran enṟe aññūṟinṟe nōṭṭŭ cillaṟayākki. — The shopkeeper broke my five-hundred note.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭakkāran enṟe aññūṟinṟe nōṭṭŭ cillaṟayākki.* — The shopkeeper broke my five-hundred note.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for currency, then the Malayalam for exchange, then say cillaṟayākkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for currency, then the Malayalam for exchange, then say *cillaṟayākkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചില്ലറയാക്കുക (cillaṟayākkuka) mean? (\"To break a note\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C489-panamataykkuka",
+      "sequence": 24460,
+      "title": "പണമടയ്ക്കുക (paṇamaṭaykkuka) — to make a payment; to pay",
+      "headword": "പണമടയ്ക്കുക",
+      "romanization": "paṇamaṭaykkuka",
+      "gloss": "to make a payment; to pay",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cee5f31caa73c3e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for exchange, then the Malayalam for to break a note."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പണമടയ്ക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പണമടയ്ക്കുക — paṇamaṭaykkuka — \"to make a payment; to pay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മുറി ഒഴിയുന്നതിന് മുൻപ് ഞങ്ങൾ പണമടച്ചു. muṟi oḻiyunnatinŭ munpŭ ñaṅṅaḷ paṇamaṭaccu. We paid before we vacated the room."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പണമടച്ചു, paṇamaṭaccu."
+            },
+            {
+              "kind": "speech",
+              "text": "പണം, money, plus അടയ്ക്കുക, which means both to shut and to pay in: a bill, a fee, a tax."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പണമടയ്ക്കുക (paṇamaṭaykkuka) is a Malayalam compound built from പണം, money, from Sanskrit paṇa, a coin (CDIAL 7715), and the native verb അടയ്ക്കുക, to shut (DEDR 83), which in Malayalam also means to pay in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇamaṭaykkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇamaṭaykkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇamaṭaykkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇamaṭaykkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṟi oḻiyunnatinŭ munpŭ ñaṅṅaḷ paṇamaṭaccu. — We paid before we vacated the room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṟi oḻiyunnatinŭ munpŭ ñaṅṅaḷ paṇamaṭaccu.* — We paid before we vacated the room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for exchange, then the Malayalam for to break a note, then say paṇamaṭaykkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for exchange, then the Malayalam for to break a note, then say *paṇamaṭaykkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പണമടയ്ക്കുക (paṇamaṭaykkuka) mean? (\"To make a payment; to pay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C489-varinilkkuka",
+      "sequence": 24470,
+      "title": "വരിനിൽക്കുക (varinilkkuka) — to stand in line; to queue",
+      "headword": "വരിനിൽക്കുക",
+      "romanization": "varinilkkuka",
+      "gloss": "to stand in line; to queue",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:083eac95554d1bf7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to break a note, then the Malayalam for to make a payment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വരിനിൽക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വരിനിൽക്കുക — varinilkkuka — \"to stand in line; to queue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ടിക്കറ്റിനായി ഞങ്ങൾ ഒരു മണിക്കൂർ വരിനിന്നു. ṭikkaṟṟināyi ñaṅṅaḷ oru maṇikkūr varininnu. We queued for an hour for tickets."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വരിനിന്നു, varininnu."
+            },
+            {
+              "kind": "speech",
+              "text": "വരി, a line or row, plus നിൽക്കുക, to stand. A queue is also a ക്യൂ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വരിനിൽക്കുക (varinilkkuka) is a native Dravidian compound of വരി, a row or line (DEDR 5263), and നിൽക്കുക, to stand (DEDR 3675)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varinilkkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varinilkkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varinilkkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varinilkkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭikkaṟṟināyi ñaṅṅaḷ oru maṇikkūr varininnu. — We queued for an hour for tickets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭikkaṟṟināyi ñaṅṅaḷ oru maṇikkūr varininnu.* — We queued for an hour for tickets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to break a note, then the Malayalam for to make a payment, then say varinilkkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to break a note, then the Malayalam for to make a payment, then say *varinilkkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വരിനിൽക്കുക (varinilkkuka) mean? (\"To stand in line; to queue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

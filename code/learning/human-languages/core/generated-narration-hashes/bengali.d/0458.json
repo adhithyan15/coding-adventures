@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:aec94b3dfdb2474e",
+  "lessonIds": [
+    "BN-C458-sot",
+    "BN-C458-kopot",
+    "BN-C458-bishvosto",
+    "BN-C458-dhurto",
+    "BN-C458-thokano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch458.txt",
+  "json": "bengali/narration/ch458.json",
+  "textHash": "fnv1a64:577cc7b673ebe333",
+  "jsonHash": "fnv1a64:9b9354b354babdc7",
+  "findings": []
+}

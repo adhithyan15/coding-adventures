@@ -1,0 +1,11 @@
+{
+  "id": "TA-C421-kaiyetu",
+  "pathSegment": "TA-PATH-421-VAZHIKATTI421",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-421-VAZHIKATTI421",
+      "order": 1
+    }
+  ]
+}

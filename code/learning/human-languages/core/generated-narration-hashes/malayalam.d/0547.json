@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:518c9e6adcef4d6c",
+  "lessonIds": [
+    "ML-C547-pailarru",
+    "ML-C547-dantavaidyan",
+    "ML-C547-vastusilpi",
+    "ML-C547-ilaktrisyan",
+    "ML-C547-plambar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch547.txt",
+  "json": "malayalam/narration/ch547.json",
+  "textHash": "fnv1a64:9aebf1fe98cbc067",
+  "jsonHash": "fnv1a64:0c6f04b74a032773",
+  "findings": []
+}

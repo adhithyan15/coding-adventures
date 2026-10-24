@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:7b725c6356fee50e",
+  "lessonIds": [
+    "BN-C389-chalok",
+    "BN-C389-kondaktor",
+    "BN-C389-helmet",
+    "BN-C389-ishara-kora",
+    "BN-C389-haka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch389.txt",
+  "json": "bengali/narration/ch389.json",
+  "textHash": "fnv1a64:309caf45cbabaeff",
+  "jsonHash": "fnv1a64:87fed71b27cd334a",
+  "findings": []
+}

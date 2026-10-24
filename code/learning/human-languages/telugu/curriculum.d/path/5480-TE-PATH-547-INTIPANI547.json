@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-547-INTIPANI547",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-547-INTIPANI547"
+  ],
+  "after": []
+}

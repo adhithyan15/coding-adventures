@@ -1,0 +1,11 @@
+{
+  "id": "MR-C346-khatri",
+  "pathSegment": "MR-PATH-346-KHATRI346",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-346-KHATRI346",
+      "order": 2
+    }
+  ]
+}

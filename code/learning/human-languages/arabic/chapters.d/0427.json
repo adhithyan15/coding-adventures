@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Planning a trip",
+  "label": "ch:ar-planning-a-trip",
+  "canDo": "I can say a distance, to make sure, to adjust, to hire and a backpack.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C427-haqibat-zahr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can say a distance, to make sure, to adjust, to hire and a backpack.",
+    "assesses": [
+      "AR-LEX-C427-TAKHTIT427-03",
+      "AR-LEX-C427-TAKHTIT427-04",
+      "AR-LEX-C427-TAKHTIT427-05"
+    ]
+  }
+}

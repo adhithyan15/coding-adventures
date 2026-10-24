@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C369-kurrakkaran",
+    "language": "malayalam",
+    "chapter": 369,
+    "sequence": 18030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf42e9e5ccd84463"
+  },
+  "findings": []
+}

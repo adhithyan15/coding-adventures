@@ -1,0 +1,4 @@
+oracle: host perl v5.38.2 (x86_64-linux-gnu-thread-multi)
+command: perl reject_missing_semicolon.pl
+perl: exit 0, stdout '1'
+pl-int-print: rejected with Parse under every checked release: Perl lets the last statement drop its `;`; the subset requires it.

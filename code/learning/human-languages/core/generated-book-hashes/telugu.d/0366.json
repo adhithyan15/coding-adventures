@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:308fd89009ec7eab",
+  "lessonIds": [
+    "TE-C366-khajana",
+    "TE-C366-nidhi",
+    "TE-C366-anvesana",
+    "TE-C366-dora",
+    "TE-C366-akramincu"
+  ],
+  "tex": "telugu/book/chapters/ch366-treasure.tex"
+}

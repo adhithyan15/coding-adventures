@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:9ff321f812992f95",
+  "lessonIds": [
+    "KA-C381-pariganisu",
+    "KA-C381-bhavisu",
+    "KA-C381-viveka",
+    "KA-C381-manana-madu",
+    "KA-C381-buddhi"
+  ],
+  "tex": "kannada/book/chapters/ch381-thinking-it-through.tex"
+}

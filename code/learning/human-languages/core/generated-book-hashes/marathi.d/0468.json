@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:2194b769f182bb30",
+  "lessonIds": [
+    "MR-C468-mrdu",
+    "MR-C468-saumya",
+    "MR-C468-halva",
+    "MR-C468-samvedansil",
+    "MR-C468-paropkari"
+  ],
+  "tex": "marathi/book/chapters/ch468-gentle-natures.tex"
+}

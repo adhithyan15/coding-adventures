@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:f5cc373aff07e2e3",
+  "lessonIds": [
+    "TE-C355-varsikotsavam",
+    "TE-C355-pelliroju",
+    "TE-C355-sastipurti",
+    "TE-C355-jayanti",
+    "TE-C355-sanmanam"
+  ],
+  "tex": "telugu/book/chapters/ch355-anniversaries.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C437-shikar-kora",
+  "pathSegment": "BN-PATH-437-BAGH437",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-437-BAGH437",
+      "order": 2
+    }
+  ]
+}

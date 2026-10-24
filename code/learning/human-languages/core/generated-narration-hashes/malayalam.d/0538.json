@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:8a9ab814aa5df761",
+  "lessonIds": [
+    "ML-C538-sukham-prapikkuka",
+    "ML-C538-paricarikkuka",
+    "ML-C538-vilceyar",
+    "ML-C538-vedanikkuka",
+    "ML-C538-bodham-ketuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch538.txt",
+  "json": "malayalam/narration/ch538.json",
+  "textHash": "fnv1a64:bfbf8de98577222f",
+  "jsonHash": "fnv1a64:b2995694e0260234",
+  "findings": []
+}

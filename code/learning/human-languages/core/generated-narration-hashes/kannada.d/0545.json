@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:7cab42546a476758",
+  "lessonIds": [
+    "KA-C545-jamakhana",
+    "KA-C545-raggu",
+    "KA-C545-jhadisu",
+    "KA-C545-oge",
+    "KA-C545-ganji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch545.txt",
+  "json": "kannada/narration/ch545.json",
+  "textHash": "fnv1a64:dca768061e148248",
+  "jsonHash": "fnv1a64:3bbe0a8f3c3491cb",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C458-bishvosto",
+  "pathSegment": "BN-PATH-458-SOT458",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-458-SOT458",
+      "order": 2
+    }
+  ]
+}

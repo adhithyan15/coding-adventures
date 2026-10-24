@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:a809ff206b653aed",
+  "lessonIds": [
+    "KA-C422-paramarsisu",
+    "KA-C422-manadanda",
+    "KA-C422-krama",
+    "KA-C422-vidhana",
+    "KA-C422-prakriye"
+  ],
+  "tex": "kannada/book/chapters/ch422-rules-and-methods.tex"
+}

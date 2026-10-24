@@ -1,0 +1,24 @@
+{
+  "chapter": 348,
+  "title": "It Depends, and What Would Have Been",
+  "label": "ch:ml-it-depends-and-what-would-have-been",
+  "canDo": "I can say that something depends on something else, say what would happen or would have happened if things were different, and write six connected lines about a trip.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-R348-depends-and-would",
+    "kind": "production",
+    "summary": "Complete ML-R348-depends-and-would: it depends with āśrayiccirikkunnu, the unreal condition -irunneṅkil … -umāyirunnu, a celebration, and the new letter ഘ.",
+    "assesses": [
+      "ML-LEX-C348-AGHOSHAM-01",
+      "ML-SCRIPT-C348-GHA-01",
+      "ML-GRAMMAR-C348-DEPENDS-01",
+      "ML-GRAMMAR-C348-UNREAL-IF-01",
+      "ML-GRAMMAR-C348-WOULD-01",
+      "ML-GRAMMAR-C347-REAL-CONDITION-01",
+      "ML-GRAMMAR-C347-ENKIL-VERB-01",
+      "ML-GRAMMAR-C346-EKKAL-01"
+    ]
+  }
+}

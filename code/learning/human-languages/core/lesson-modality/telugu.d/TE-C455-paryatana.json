@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C455-paryatana",
+    "language": "telugu",
+    "chapter": 455,
+    "sequence": 22880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a835ab4286585a0b"
+  },
+  "findings": []
+}

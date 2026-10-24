@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:0af8b534511f7ca8",
+  "lessonIds": [
+    "KA-C446-kaludari",
+    "KA-C446-oladari",
+    "KA-C446-suttudari",
+    "KA-C446-dari-tappu",
+    "KA-C446-hejje"
+  ],
+  "tex": "kannada/book/chapters/ch446-shortcuts-and-detours.tex"
+}

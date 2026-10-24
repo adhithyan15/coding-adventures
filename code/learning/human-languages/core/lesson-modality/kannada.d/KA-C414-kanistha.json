@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C414-kanistha",
+    "language": "kannada",
+    "chapter": 414,
+    "sequence": 20970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fca2940443144c8"
+  },
+  "findings": []
+}

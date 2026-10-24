@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:0d51b5fc83af1d81",
+  "lessonIds": [
+    "ML-C460-antarastra",
+    "ML-C460-agola",
+    "ML-C460-prayogikamaya",
+    "ML-C460-uddesikkuka",
+    "ML-C460-vyatyasappetuka",
+    "ML-R460-review-453-460",
+    "ML-R460-review-final-460"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch460.txt",
+  "json": "malayalam/narration/ch460.json",
+  "textHash": "fnv1a64:850faf9c0633e01d",
+  "jsonHash": "fnv1a64:b0c370221d441036",
+  "findings": []
+}

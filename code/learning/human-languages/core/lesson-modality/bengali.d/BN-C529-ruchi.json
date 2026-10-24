@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C529-ruchi",
+    "language": "bengali",
+    "chapter": 529,
+    "sequence": 31910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:080f63e001efe56f"
+  },
+  "findings": []
+}

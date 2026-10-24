@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "The Embassy",
+  "label": "ch:te-the-embassy",
+  "canDo": "I can say an embassy, an ambassador, to allot, to extend and to renew.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C463-punaruddharincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can say an embassy, an ambassador, to allot, to extend and to renew.",
+    "assesses": [
+      "TE-LEX-C463-RAYABARI463-03",
+      "TE-LEX-C463-RAYABARI463-04",
+      "TE-LEX-C463-RAYABARI463-05"
+    ]
+  }
+}

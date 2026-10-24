@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:cb892264b38111f4",
+  "lessonIds": [
+    "KA-C328-darode",
+    "KA-C328-docu",
+    "KA-C328-esagu",
+    "KA-C328-parariyagu",
+    "KA-C328-jadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch328.txt",
+  "json": "kannada/narration/ch328.json",
+  "textHash": "fnv1a64:bc16acb87f1d1816",
+  "jsonHash": "fnv1a64:14beb16a6033ce92",
+  "findings": []
+}

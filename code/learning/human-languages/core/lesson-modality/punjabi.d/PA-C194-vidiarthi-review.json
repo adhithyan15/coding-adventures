@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C194-vidiarthi-review",
+    "language": "punjabi",
+    "chapter": 194,
+    "sequence": 10570,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4affee1126c4d428"
+  },
+  "findings": []
+}

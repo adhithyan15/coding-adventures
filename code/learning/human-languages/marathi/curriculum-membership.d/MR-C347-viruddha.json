@@ -1,0 +1,11 @@
+{
+  "id": "MR-C347-viruddha",
+  "pathSegment": "MR-PATH-347-VIRODH347",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-347-VIRODH347",
+      "order": 4
+    }
+  ]
+}

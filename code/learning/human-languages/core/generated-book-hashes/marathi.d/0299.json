@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:c30e02df25713440",
+  "lessonIds": [
+    "MR-C299-jhadti-ghene",
+    "MR-C299-pancnama",
+    "MR-C299-japta-karne",
+    "MR-C299-kabul-karne",
+    "MR-C299-dakhal-karne"
+  ],
+  "tex": "marathi/book/chapters/ch299-the-investigation.tex"
+}

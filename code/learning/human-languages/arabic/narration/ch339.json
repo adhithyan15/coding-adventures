@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 339,
+  "title": "Invasions",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8237121d7a9ff14c",
+  "lessons": [
+    {
+      "id": "AR-C339-ghaza",
+      "sequence": 19350,
+      "title": "غزا (ghazā) — to invade, to raid",
+      "headword": "غزا",
+      "romanization": "ghazā",
+      "gloss": "to invade, to raid",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7eacefe1a85d7435",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a cemetery, then the Arabic for a coffin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غزا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غزا — ghazā — \"to invade, to raid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غزا الجيش البلاد المجاورة. ghazā al-jaysh al-bilād al-mujāwira. The army invaded the neighbouring lands."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يغزو, yaghzū."
+            },
+            {
+              "kind": "speech",
+              "text": "Of space: غزو الفضاء, the conquest of space."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غزا (ghazā) is built on the native Arabic root gh-z-w (Lane), \"to aim at, to seek\", and \"to go out to fight\"; ghazw is a raid."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghazā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghazā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghazā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghazā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghazā al-jaysh al-bilād al-mujāwira. — The army invaded the neighbouring lands.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghazā al-jaysh al-bilād al-mujāwira.* — The army invaded the neighbouring lands.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a cemetery, then the Arabic for a coffin, then say ghazā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a cemetery, then the Arabic for a coffin, then say *ghazā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غزا (ghazā) mean? (\"To invade, to raid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C339-hajama",
+      "sequence": 19360,
+      "title": "هاجم (hājama) — to attack",
+      "headword": "هاجم",
+      "romanization": "hājama",
+      "gloss": "to attack",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8621ac27c13dce0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a coffin, then the Arabic for to invade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: هاجم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هاجم — hājama — \"to attack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هاجم الكلب الرجل في الحديقة. hājama al-kalb ar-rajul fī al-ḥadīqa. The dog attacked the man in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يهاجم, yuhājim."
+            },
+            {
+              "kind": "speech",
+              "text": "In sport an attacker is مهاجم."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هاجم (hājama) is built on the native Arabic root h-j-m (Lane), \"to come upon someone suddenly\". It is Form III, \"to rush upon an enemy\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hājama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hājama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hājama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hājama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hājama al-kalb ar-rajul fī al-ḥadīqa. — The dog attacked the man in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hājama al-kalb ar-rajul fī al-ḥadīqa.* — The dog attacked the man in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a coffin, then the Arabic for to invade, then say hājama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a coffin, then the Arabic for to invade, then say *hājama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does هاجم (hājama) mean? (\"To attack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C339-ihtalla",
+      "sequence": 19370,
+      "title": "احتل (iḥtalla) — to occupy, to take up",
+      "headword": "احتل",
+      "romanization": "iḥtalla",
+      "gloss": "to occupy, to take up",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14592c7c49f55612",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to invade, then the Arabic for to attack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: احتل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احتل — iḥtalla — \"to occupy, to take up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "احتل فريقنا المركز الأول. iḥtalla farīqunā al-markaz al-awwal. Our team took first place."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحتل, yaḥtall."
+            },
+            {
+              "kind": "speech",
+              "text": "Of armies: to occupy a land."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احتل (iḥtalla) is built on the native Arabic root ḥ-l-l (Lane), \"to untie; to alight in a place\". It is Form VIII, \"to take up a place\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtalla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtalla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtalla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtalla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtalla farīqunā al-markaz al-awwal. — Our team took first place.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtalla farīqunā al-markaz al-awwal.* — Our team took first place.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to invade, then the Arabic for to attack, then say iḥtalla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to invade, then the Arabic for to attack, then say *iḥtalla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does احتل (iḥtalla) mean? (\"To occupy, to take up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C339-qada-lead",
+      "sequence": 19380,
+      "title": "قاد (qāda) — to lead; to drive",
+      "headword": "قاد",
+      "romanization": "qāda",
+      "gloss": "to lead; to drive",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a3e33560018b01e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to attack, then the Arabic for to occupy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قاد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قاد — qāda — \"to lead; to drive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قاد أبي السيارة طوال الليل. qāda abī as-sayyāra ṭuwāla al-layl. My father drove the car all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يقود, yaqūd."
+            },
+            {
+              "kind": "speech",
+              "text": "Of an army: قاد (qāda) الجيش, he led the army."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قاد (qāda) is built on the native Arabic root q-w-d (Lane), \"to lead a horse or camel by its rope\"; a car is led the same way, so qāda is also to drive."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qāda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qāda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qāda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qāda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qāda abī as-sayyāra ṭuwāla al-layl. — My father drove the car all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qāda abī as-sayyāra ṭuwāla al-layl.* — My father drove the car all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to attack, then the Arabic for to occupy, then say qāda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to attack, then the Arabic for to occupy, then say *qāda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قاد (qāda) mean? (\"To lead; to drive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C339-insahaba",
+      "sequence": 19390,
+      "title": "انسحب (insaḥaba) — to withdraw, to pull out",
+      "headword": "انسحب",
+      "romanization": "insaḥaba",
+      "gloss": "to withdraw, to pull out",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e12201325dd5f595",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to occupy, then the Arabic for to lead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انسحب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انسحب — insaḥaba — \"to withdraw, to pull out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انسحب اللاعب من المباراة. insaḥaba al-lāʿib min al-mubārāh. The player pulled out of the match."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينسحب, yansaḥib."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انسحب (insaḥaba) is built on the native Arabic root s-ḥ-b (Lane), \"to drag along\", the root of the taught saḥaba. It is Form VII, \"to be drawn back\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "insaḥaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *insaḥaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "insaḥaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *insaḥaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "insaḥaba al-lāʿib min al-mubārāh. — The player pulled out of the match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *insaḥaba al-lāʿib min al-mubārāh.* — The player pulled out of the match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to occupy, then the Arabic for to lead, then say insaḥaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to occupy, then the Arabic for to lead, then say *insaḥaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انسحب (insaḥaba) mean? (\"To withdraw, to pull out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

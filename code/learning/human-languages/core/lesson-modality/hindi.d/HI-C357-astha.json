@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C357-astha",
+    "language": "hindi",
+    "chapter": 357,
+    "sequence": 19740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7fca5f27e9abb8ba"
+  },
+  "findings": []
+}

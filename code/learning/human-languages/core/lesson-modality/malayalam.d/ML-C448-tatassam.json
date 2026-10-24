@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C448-tatassam",
+    "language": "malayalam",
+    "chapter": 448,
+    "sequence": 22220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8af69bb5c1d836e5"
+  },
+  "findings": []
+}

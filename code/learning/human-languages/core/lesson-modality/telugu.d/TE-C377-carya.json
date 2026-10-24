@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C377-carya",
+    "language": "telugu",
+    "chapter": 377,
+    "sequence": 18650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bb1681dfe089227"
+  },
+  "findings": []
+}

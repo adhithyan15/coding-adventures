@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "The Generations",
+  "label": "ch:hi-the-generations",
+  "canDo": "I can talk about the generations of a family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C503-posna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about the generations of a family.",
+    "assesses": [
+      "HI-LEX-C503-PIDHI503-03",
+      "HI-LEX-C503-PIDHI503-04",
+      "HI-LEX-C503-PIDHI503-05"
+    ]
+  }
+}

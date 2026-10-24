@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C542-muttirai",
+    "language": "tamil",
+    "chapter": 542,
+    "sequence": 30960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb2046e1f565e072"
+  },
+  "findings": []
+}

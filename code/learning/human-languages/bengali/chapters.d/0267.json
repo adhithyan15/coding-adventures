@@ -1,0 +1,23 @@
+{
+  "chapter": 267,
+  "title": "First, Then, Suddenly",
+  "label": "ch:bn-first-then-suddenly",
+  "canDo": "I can tell what happened in order with prôthôme, tārpôr and sheshe, join actions with the -e form (giye, kore), read a short story, and read and write ৎ in হঠাৎ.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-R267-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete BN-R267-a-story-in-order: tell a short story in order, after reading Mira's Saturday.",
+    "assesses": [
+      "BN-GRAMMAR-C267-CONJUNCTIVE-01",
+      "BN-GRAMMAR-C267-FIRST-THEN-01",
+      "BN-GRAMMAR-C267-SAME-DOER-01",
+      "BN-GRAMMAR-C267-FINALLY-01",
+      "BN-LEX-C267-HOTHAT-01",
+      "BN-SCRIPT-C267-KHANDA-TA-01",
+      "BN-SKILL-C267-READ-STORY-01"
+    ]
+  }
+}

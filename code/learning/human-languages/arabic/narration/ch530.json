@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 530,
+  "title": "Babies",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:636dec3f942bb4a5",
+  "lessons": [
+    {
+      "id": "AR-C530-hamil",
+      "sequence": 29350,
+      "title": "حامل (ḥāmil) — pregnant",
+      "headword": "حامل",
+      "romanization": "ḥāmil",
+      "gloss": "pregnant",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08a2f2c46b9dff14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a brother-in-law, then the Arabic for a marriage break-up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حامل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حامل — ḥāmil — \"pregnant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "زوجة أخي حامل بطفلها الأول. zawjat akhī ḥāmil bi-ṭiflihā al-awwal. My brother's wife is pregnant with her first child."
+            },
+            {
+              "kind": "speech",
+              "text": "It has no feminine ending, since only a woman is حامل (ḥāmil)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حامل (ḥāmil) is built on the native Arabic root ḥ-m-l, \"to carry\" (Lane). Ḥamala, to carry, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥāmil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥāmil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥāmil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥāmil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zawjat akhī ḥāmil bi-ṭiflihā al-awwal. — My brother's wife is pregnant with her first child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zawjat akhī ḥāmil bi-ṭiflihā al-awwal.* — My brother's wife is pregnant with her first child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a brother-in-law, then the Arabic for a marriage break-up, then say ḥāmil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a brother-in-law, then the Arabic for a marriage break-up, then say *ḥāmil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حامل (ḥāmil) mean? (\"Pregnant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C530-mahd",
+      "sequence": 29360,
+      "title": "مهد (mahd) — a cradle",
+      "headword": "مهد",
+      "romanization": "mahd",
+      "gloss": "a cradle",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29886e633bfbe721",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a marriage break-up, then the Arabic for pregnant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مهد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مهد — mahd — \"a cradle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نام الطفل في المهد. nāma aṭ-ṭifl fī al-mahd. The baby slept in the cradle."
+            },
+            {
+              "kind": "speech",
+              "text": "من المهد is from the cradle, from early childhood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مهد (mahd) is built on the native Arabic root m-h-d, \"to smooth, to spread out\" (Lane). A mahd is a bed made smooth for a child."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāma aṭ-ṭifl fī al-mahd. — The baby slept in the cradle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāma aṭ-ṭifl fī al-mahd.* — The baby slept in the cradle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a marriage break-up, then the Arabic for pregnant, then say mahd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a marriage break-up, then the Arabic for pregnant, then say *mahd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مهد (mahd) mean? (\"A cradle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C530-ardaa",
+      "sequence": 29370,
+      "title": "أرضع (arḍaʿa) — to breastfeed",
+      "headword": "أرضع",
+      "romanization": "arḍaʿa",
+      "gloss": "to breastfeed",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11fc007598bb67fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for pregnant, then the Arabic for a cradle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أرضع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أرضع — arḍaʿa — \"to breastfeed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أرضعت الأم طفلها في الصباح. arḍaʿat al-umm ṭiflahā fī aṣ-ṣabāḥ. The mother fed her baby in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يرضع, yurḍiʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أرضع (arḍaʿa) is built on the native Arabic root r-ḍ-ʿ, \"to suck the breast\" (Lane). Form IV arḍaʿa is to give the breast."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arḍaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arḍaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arḍaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arḍaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arḍaʿat al-umm ṭiflahā fī aṣ-ṣabāḥ. — The mother fed her baby in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arḍaʿat al-umm ṭiflahā fī aṣ-ṣabāḥ.* — The mother fed her baby in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for pregnant, then the Arabic for a cradle, then say arḍaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for pregnant, then the Arabic for a cradle, then say *arḍaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أرضع (arḍaʿa) mean? (\"To breastfeed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C530-fatama",
+      "sequence": 29380,
+      "title": "فطم (faṭama) — to wean",
+      "headword": "فطم",
+      "romanization": "faṭama",
+      "gloss": "to wean",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:580fedbc03b5d3c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a cradle, then the Arabic for to breastfeed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فطم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فطم — faṭama — \"to wean\"."
+            },
+            {
+              "kind": "speech",
+              "text": "فطمت أختي ابنها بعد سنتين. faṭamat ukhtī ibnahā baʿda sanatayn. My sister weaned her son after two years."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يفطم, yafṭim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فطم (faṭama) is built on the native Arabic root f-ṭ-m, \"to cut off\" (Lane). Lane gives faṭama, aor. yafṭimu, as to cut off: weaning cuts the child off the breast."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "faṭama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *faṭama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "faṭama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *faṭama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "faṭamat ukhtī ibnahā baʿda sanatayn. — My sister weaned her son after two years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *faṭamat ukhtī ibnahā baʿda sanatayn.* — My sister weaned her son after two years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a cradle, then the Arabic for to breastfeed, then say faṭama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a cradle, then the Arabic for to breastfeed, then say *faṭama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فطم (faṭama) mean? (\"To wean\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C530-rabba",
+      "sequence": 29390,
+      "title": "ربى (rabbā) — to bring up",
+      "headword": "ربى",
+      "romanization": "rabbā",
+      "gloss": "to bring up",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:524763b9c80c3114",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to breastfeed, then the Arabic for to wean."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ربى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ربى — rabbā — \"to bring up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ربت أمي خمسة أولاد. rabbat ummī khamsat awlād. My mother brought up five children."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يربي, yurabbī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ربى (rabbā) is built on the native Arabic root r-b-w, \"to grow, to increase\" (Lane). Form II rabbā is to make a child grow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rabbā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rabbā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rabbā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rabbā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rabbat ummī khamsat awlād. — My mother brought up five children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rabbat ummī khamsat awlād.* — My mother brought up five children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to breastfeed, then the Arabic for to wean, then say rabbā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to breastfeed, then the Arabic for to wean, then say *rabbā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ربى (rabbā) mean? (\"To bring up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

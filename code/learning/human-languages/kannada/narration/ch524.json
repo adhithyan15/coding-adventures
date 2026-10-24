@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 524,
+  "title": "Uncles and Aunts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a41f3be8af79839a",
+  "lessons": [
+    {
+      "id": "KA-C524-cikkappa",
+      "sequence": 26740,
+      "title": "ಚಿಕ್ಕಪ್ಪ (cikkappa) — father's younger brother",
+      "headword": "ಚಿಕ್ಕಪ್ಪ",
+      "romanization": "cikkappa",
+      "gloss": "father's younger brother",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b796a4cb7076262f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for the pain of parting, then the Kannada for married life."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚಿಕ್ಕಪ್ಪ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಿಕ್ಕಪ್ಪ — cikkappa — \"father's younger brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಚಿಕ್ಕಪ್ಪ ಹಳ್ಳಿಯಲ್ಲಿ ರೈತರು. nanna cikkappa haḷḷiyalli raitaru. My father's younger brother is a farmer in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "ಚಿಕ್ಕ, small + ಅಪ್ಪ, father: a \"small father\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಿಕ್ಕಪ್ಪ (cikkappa) is a native Dravidian compound: cikka, \"small, young\" (DEDR 2495), and appa, \"father\" (DEDR 156)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikkappa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikkappa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikkappa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikkappa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna cikkappa haḷḷiyalli raitaru. — My father's younger brother is a farmer in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna cikkappa haḷḷiyalli raitaru.* — My father's younger brother is a farmer in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for the pain of parting, then the Kannada for married life, then say cikkappa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for the pain of parting, then the Kannada for married life, then say *cikkappa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚಿಕ್ಕಪ್ಪ (cikkappa) mean? (\"Father's younger brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C524-doddappa",
+      "sequence": 26750,
+      "title": "ದೊಡ್ಡಪ್ಪ (doḍḍappa) — father's elder brother",
+      "headword": "ದೊಡ್ಡಪ್ಪ",
+      "romanization": "doḍḍappa",
+      "gloss": "father's elder brother",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:020018c9498deb74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for married life, then the Kannada for father's younger brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದೊಡ್ಡಪ್ಪ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೊಡ್ಡಪ್ಪ — doḍḍappa — \"father's elder brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ದೊಡ್ಡಪ್ಪ ನಮ್ಮ ಕುಟುಂಬದ ಹಿರಿಯರು. doḍḍappa namma kuṭumbada hiriyaru. My father's elder brother is an elder of our family."
+            },
+            {
+              "kind": "speech",
+              "text": "ದೊಡ್ಡ, big + ಅಪ್ಪ, father: a \"big father\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೊಡ್ಡಪ್ಪ (doḍḍappa) is a native Dravidian compound: doḍḍa, \"big, great\" (DEDR 3491), and appa, \"father\" (DEDR 156)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doḍḍappa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doḍḍappa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doḍḍappa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doḍḍappa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doḍḍappa namma kuṭumbada hiriyaru. — My father's elder brother is an elder of our family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doḍḍappa namma kuṭumbada hiriyaru.* — My father's elder brother is an elder of our family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for married life, then the Kannada for father's younger brother, then say doḍḍappa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for married life, then the Kannada for father's younger brother, then say *doḍḍappa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದೊಡ್ಡಪ್ಪ (doḍḍappa) mean? (\"Father's elder brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C524-cikkamma",
+      "sequence": 26760,
+      "title": "ಚಿಕ್ಕಮ್ಮ (cikkamma) — mother's younger sister",
+      "headword": "ಚಿಕ್ಕಮ್ಮ",
+      "romanization": "cikkamma",
+      "gloss": "mother's younger sister",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4673d6eaa7b23c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for father's younger brother, then the Kannada for father's elder brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚಿಕ್ಕಮ್ಮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಿಕ್ಕಮ್ಮ — cikkamma — \"mother's younger sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಜೆಯಲ್ಲಿ ನಾನು ಚಿಕ್ಕಮ್ಮನ ಮನೆಗೆ ಹೋಗುತ್ತೇನೆ. rajeyalli nānu cikkammana manege hōguttēne. In the holidays I go to my mother's younger sister's house."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the wife of ಚಿಕ್ಕಪ್ಪ (cikkappa)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಿಕ್ಕಮ್ಮ (cikkamma) is a native Dravidian compound: cikka, \"small, young\" (DEDR 2495), and amma, \"mother\" (DEDR 183)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikkamma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikkamma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikkamma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikkamma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rajeyalli nānu cikkammana manege hōguttēne. — In the holidays I go to my mother's younger sister's house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rajeyalli nānu cikkammana manege hōguttēne.* — In the holidays I go to my mother's younger sister's house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for father's younger brother, then the Kannada for father's elder brother, then say cikkamma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for father's younger brother, then the Kannada for father's elder brother, then say *cikkamma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚಿಕ್ಕಮ್ಮ (cikkamma) mean? (\"Mother's younger sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C524-doddamma",
+      "sequence": 26770,
+      "title": "ದೊಡ್ಡಮ್ಮ (doḍḍamma) — mother's elder sister",
+      "headword": "ದೊಡ್ಡಮ್ಮ",
+      "romanization": "doḍḍamma",
+      "gloss": "mother's elder sister",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:090dd4cd12d7224b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for father's elder brother, then the Kannada for mother's younger sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದೊಡ್ಡಮ್ಮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೊಡ್ಡಮ್ಮ — doḍḍamma — \"mother's elder sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ದೊಡ್ಡಮ್ಮ ರುಚಿಯಾದ ಹೋಳಿಗೆ ಮಾಡುತ್ತಾರೆ. doḍḍamma ruciyāda hōḷige māḍuttāre. My mother's elder sister makes tasty holige."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the wife of ದೊಡ್ಡಪ್ಪ (doḍḍappa)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೊಡ್ಡಮ್ಮ (doḍḍamma) is a native Dravidian compound: doḍḍa, \"big\" (DEDR 3491), and amma, \"mother\" (DEDR 183)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doḍḍamma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doḍḍamma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doḍḍamma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doḍḍamma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doḍḍamma ruciyāda hōḷige māḍuttāre. — My mother's elder sister makes tasty holige.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doḍḍamma ruciyāda hōḷige māḍuttāre.* — My mother's elder sister makes tasty holige.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for father's elder brother, then the Kannada for mother's younger sister, then say doḍḍamma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for father's elder brother, then the Kannada for mother's younger sister, then say *doḍḍamma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದೊಡ್ಡಮ್ಮ (doḍḍamma) mean? (\"Mother's elder sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C524-sodaraliya",
+      "sequence": 26780,
+      "title": "ಸೋದರಳಿಯ (sōdaraḷiya) — a nephew",
+      "headword": "ಸೋದರಳಿಯ",
+      "romanization": "sōdaraḷiya",
+      "gloss": "a nephew",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a0d4e52b8fed407",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for mother's younger sister, then the Kannada for mother's elder sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸೋದರಳಿಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೋದರಳಿಯ — sōdaraḷiya — \"a nephew\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಸೋದರಳಿಯ ಕಾಲೇಜಿನಲ್ಲಿ ಓದುತ್ತಾನೆ. nanna sōdaraḷiya kālējinalli ōduttāne. My nephew studies at college."
+            },
+            {
+              "kind": "speech",
+              "text": "A sister's son: ಸೋದರ, sibling + ಅಳಿಯ. A niece is ಸೋದರ ಸೊಸೆ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೋದರಳಿಯ (sōdaraḷiya) joins Sanskrit sodara, \"born of the same womb\" (Monier-Williams), and the native aḷiya, \"son-in-law; sister's son\" (DEDR 2410)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sōdaraḷiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sōdaraḷiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sōdaraḷiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sōdaraḷiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna sōdaraḷiya kālējinalli ōduttāne. — My nephew studies at college.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna sōdaraḷiya kālējinalli ōduttāne.* — My nephew studies at college.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for mother's younger sister, then the Kannada for mother's elder sister, then say sōdaraḷiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for mother's younger sister, then the Kannada for mother's elder sister, then say *sōdaraḷiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸೋದರಳಿಯ (sōdaraḷiya) mean? (\"A nephew\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

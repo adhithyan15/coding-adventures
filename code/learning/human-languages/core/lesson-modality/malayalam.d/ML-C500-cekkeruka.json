@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C500-cekkeruka",
+    "language": "malayalam",
+    "chapter": 500,
+    "sequence": 25020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7adcfa2a9ddaf800"
+  },
+  "findings": []
+}

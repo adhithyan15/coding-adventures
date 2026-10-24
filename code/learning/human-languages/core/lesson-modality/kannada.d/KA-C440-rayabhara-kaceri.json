@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C440-rayabhara-kaceri",
+    "language": "kannada",
+    "chapter": 440,
+    "sequence": 22380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:357a034246bb50cf"
+  },
+  "findings": []
+}

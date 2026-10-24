@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C535-mutantu",
+    "language": "malayalam",
+    "chapter": 535,
+    "sequence": 26930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6691781b072d701e"
+  },
+  "findings": []
+}

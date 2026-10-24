@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:8bc1a7bea2dc4c98",
+  "lessonIds": [
+    "TA-C519-oliperukki",
+    "TA-C519-olivanki",
+    "TA-C519-tolaipeci",
+    "TA-C519-accuppori",
+    "TA-C519-minnanu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch519.txt",
+  "json": "tamil/narration/ch519.json",
+  "textHash": "fnv1a64:f7c1c438fbcb6bbe",
+  "jsonHash": "fnv1a64:f2582166e8f1a97a",
+  "findings": []
+}

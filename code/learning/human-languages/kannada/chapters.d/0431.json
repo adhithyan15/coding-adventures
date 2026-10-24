@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Reaching a Decision",
+  "label": "ch:ka-reaching-a-decision",
+  "canDo": "I can say to conclude, to confer, a dialogue, a formal resolution and to include.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C431-olagollu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can say to conclude, to confer, a dialogue, a formal resolution and to include.",
+    "assesses": [
+      "KA-LEX-C431-TIRMANISU431-03",
+      "KA-LEX-C431-TIRMANISU431-04",
+      "KA-LEX-C431-TIRMANISU431-05"
+    ]
+  }
+}

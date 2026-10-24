@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "At the gate",
+  "label": "ch:ar-at-the-gate",
+  "canDo": "I can say a gate, a seat, to reserve, boarding and a runway.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C423-madraj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can say a gate, a seat, to reserve, boarding and a runway.",
+    "assesses": [
+      "AR-LEX-C423-BAWWABA423-03",
+      "AR-LEX-C423-BAWWABA423-04",
+      "AR-LEX-C423-BAWWABA423-05"
+    ]
+  }
+}

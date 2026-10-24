@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C393-taraqqi",
+    "language": "hindi",
+    "chapter": 393,
+    "sequence": 21590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7435d9c8ac099fc6"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 282,
+  "title": "Asking the Way",
+  "label": "ch:hi-asking-the-way",
+  "canDo": "I can ask how to get somewhere and how far it is (sṭeśan kaise jāte haiṁ?, kitnī dūr hai?), follow the answer (sīdhe jāie, bāẽ muṛiye), and ask someone to tell me (batāie).",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-R282-asking-the-way",
+    "kind": "production",
+    "summary": "Complete HI-R282-asking-the-way: ask the way, ask how far, and follow the answer.",
+    "assesses": [
+      "HI-GRAMMAR-C282-ASK-WAY-01",
+      "HI-LEX-C282-DUR-01",
+      "HI-GRAMMAR-C282-GIVE-WAY-01",
+      "HI-LEX-C282-BATANA-01"
+    ]
+  }
+}

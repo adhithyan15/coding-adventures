@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C464-mulawwath",
+    "language": "arabic",
+    "chapter": 464,
+    "sequence": 25910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:351fb229faa47fdc"
+  },
+  "findings": []
+}

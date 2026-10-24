@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "Eyewitness Accounts",
+  "label": "ch:mr-eyewitness-accounts",
+  "canDo": "I can say who saw something and how it was put on record.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C315-bhatakne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can say who saw something and how it was put on record.",
+    "assesses": [
+      "MR-LEX-C315-ANK315-03",
+      "MR-LEX-C315-ANK315-04",
+      "MR-LEX-C315-ANK315-05"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-293-WOULD-DEPENDS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what something depends on with … -aip poṟuttatu, say what would have happened with -iruntāl … -iruppēṉ, and write six connected lines about a trip.",
+  "prerequisites": [
+    "TA-EXT-292-IF-REAL"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Disaster",
+  "label": "ch:te-disaster",
+  "canDo": "I can say a disaster, a commotion, protection, a patrol and a measure.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C377-carya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can say a disaster, a commotion, protection, a patrol and a measure.",
+    "assesses": [
+      "TE-LEX-C377-VIPATTU377-03",
+      "TE-LEX-C377-VIPATTU377-04",
+      "TE-LEX-C377-VIPATTU377-05"
+    ]
+  }
+}

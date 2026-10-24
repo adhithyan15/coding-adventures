@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C400-kombne",
+    "language": "marathi",
+    "chapter": 400,
+    "sequence": 23240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:334d38f3dc23de23"
+  },
+  "findings": []
+}

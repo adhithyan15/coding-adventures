@@ -1,0 +1,11 @@
+{
+  "id": "HI-C411-peti",
+  "pathSegment": "HI-PATH-411-VAZAN411",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-411-VAZAN411",
+      "order": 2
+    }
+  ]
+}

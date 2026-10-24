@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:9bd9c9ca37e74b0e",
+  "lessonIds": [
+    "BN-C480-pushti",
+    "BN-C480-dhen",
+    "BN-C480-nesha",
+    "BN-C480-dhumpan",
+    "BN-C480-jhorano"
+  ],
+  "tex": "bengali/book/chapters/ch480-staying-healthy.tex"
+}

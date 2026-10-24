@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:162a370f2ef010e6",
+  "lessonIds": [
+    "BN-C271-nouka",
+    "BN-W271-letter-au-kar",
+    "BN-C271-tikit-deben",
+    "BN-C271-hariye-gechhe",
+    "BN-R271-at-the-station"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "bengali/narration/ch271.txt",
+  "json": "bengali/narration/ch271.json",
+  "textHash": "fnv1a64:a1ef49ae648c7563",
+  "jsonHash": "fnv1a64:fe4d352792f2920f",
+  "findings": []
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 510,
+  "title": "The Factory Floor",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:51f27b9d675cfaa1",
+  "lessons": [
+    {
+      "id": "TA-C510-urpatti",
+      "sequence": 29300,
+      "title": "உற்பத்தி (uṟpatti) — production; output",
+      "headword": "உற்பத்தி",
+      "romanization": "uṟpatti",
+      "gloss": "production; output",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10da1d8d4eb41a30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to encourage, then the Tamil for an expert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உற்பத்தி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உற்பத்தி — uṟpatti — \"production; output\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தத் தொழிற்சாலையில் உற்பத்தி இரண்டு மடங்கு அதிகரித்தது. intat toḻiṟcālaiyil uṟpatti iraṇṭu maṭaṅku atikarittatu. Production in this factory doubled."
+            },
+            {
+              "kind": "speech",
+              "text": "With செய் (cey) it becomes a verb: உற்பத்தி (uṟpatti) செய், to produce."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உற்பத்தி (uṟpatti) is borrowed from Sanskrit utpatti, \"origin, birth\", later also \"profit\" (CDIAL 1812). Tamil writes the cluster tp as ற்ப."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟpatti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟpatti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟpatti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟpatti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intat toḻiṟcālaiyil uṟpatti iraṇṭu maṭaṅku atikarittatu. — Production in this factory doubled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intat toḻiṟcālaiyil uṟpatti iraṇṭu maṭaṅku atikarittatu.* — Production in this factory doubled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to encourage, then the Tamil for an expert, then say uṟpatti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to encourage, then the Tamil for an expert, then say *uṟpatti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உற்பத்தி (uṟpatti) mean? (\"Production; output\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C510-poruttu",
+      "sequence": 29310,
+      "title": "பொருத்து (poruttu) — to fit; to install",
+      "headword": "பொருத்து",
+      "romanization": "poruttu",
+      "gloss": "to fit; to install",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1e6189db2f66400",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an expert, then the Tamil for production."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பொருத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொருத்து — poruttu — \"to fit; to install\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தத் தொழிற்சாலையில் மிதிவண்டிகளுக்குச் சக்கரங்களைப் பொருத்துகிறார்கள். intat toḻiṟcālaiyil mitivaṇṭikaḷukkuc cakkaraṅkaḷaip poruttukiṟārkaḷ. In this factory they fit wheels to bicycles."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பொருத்தினேன், poruttiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is fitted takes -ஐ, what it is fitted to -க்கு or -இல்: சுவரில் கடிகாரத்தைப் பொருத்து (poruttu), to put up a clock on the wall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொருத்து (poruttu) is native Dravidian: DEDR 4541 gives பொரு (poru), \"to join, to unite\", and beside it பொருத்து (poruttu), \"to fit, to join together\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poruttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poruttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poruttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poruttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intat toḻiṟcālaiyil mitivaṇṭikaḷukkuc cakkaraṅkaḷaip poruttukiṟārkaḷ. — In this factory they fit wheels to bicycles.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intat toḻiṟcālaiyil mitivaṇṭikaḷukkuc cakkaraṅkaḷaip poruttukiṟārkaḷ.* — In this factory they fit wheels to bicycles.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an expert, then the Tamil for production, then say poruttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an expert, then the Tamil for production, then say *poruttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பொருத்து (poruttu) mean? (\"To fit; to install\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C510-orunkinai",
+      "sequence": 29320,
+      "title": "ஒருங்கிணை (oruṅkiṇai) — to coordinate; to bring together",
+      "headword": "ஒருங்கிணை",
+      "romanization": "oruṅkiṇai",
+      "gloss": "to coordinate; to bring together",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:431eded0528eb57a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for production, then the Tamil for to fit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒருங்கிணை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒருங்கிணை — oruṅkiṇai — \"to coordinate; to bring together\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மேலாளர் எல்லாக் குழுக்களையும் ஒருங்கிணைத்தார். mēlāḷar ellāk kuḻukkaḷaiyum oruṅkiṇaittār. The manager coordinated all the teams."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஒருங்கிணைத்தேன், oruṅkiṇaittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is brought together takes -ஐ: குழுக்களை ஒருங்கிணை (oruṅkiṇai)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒருங்கிணை (oruṅkiṇai) is a native compound: ஒருங்கு (oruṅku), \"together\", and இணை (iṇai), \"to join, to unite\" (DEDR 457)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oruṅkiṇai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oruṅkiṇai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oruṅkiṇai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oruṅkiṇai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēlāḷar ellāk kuḻukkaḷaiyum oruṅkiṇaittār. — The manager coordinated all the teams.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēlāḷar ellāk kuḻukkaḷaiyum oruṅkiṇaittār.* — The manager coordinated all the teams.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for production, then the Tamil for to fit, then say oruṅkiṇai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for production, then the Tamil for to fit, then say *oruṅkiṇai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒருங்கிணை (oruṅkiṇai) mean? (\"To coordinate; to bring together\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C510-atukku",
+      "sequence": 29330,
+      "title": "அடுக்கு (aṭukku) — to stack; to pile up",
+      "headword": "அடுக்கு",
+      "romanization": "aṭukku",
+      "gloss": "to stack; to pile up",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1baae39333f96f79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to fit, then the Tamil for to coordinate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அடுக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடுக்கு — aṭukku — \"to stack; to pile up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தொழிலாளர்கள் பெட்டிகளை ஒன்றின் மேல் ஒன்றாக அடுக்கினார்கள். toḻilāḷarkaḷ peṭṭikaḷai oṉṟiṉ mēl oṉṟāka aṭukkiṉārkaḷ. The workers stacked the boxes one on top of another."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): அடுக்கினேன், aṭukkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The same word is a noun too: ஒரு அடுக்கு (aṭukku), a stack, a layer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடுக்கு (aṭukku) is native Dravidian: DEDR 80 gives அடுக்கு (aṭukku), \"to pile one on top of another\", and the noun \"a pile, a tier\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭukku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭukku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭukku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭukku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilāḷarkaḷ peṭṭikaḷai oṉṟiṉ mēl oṉṟāka aṭukkiṉārkaḷ. — The workers stacked the boxes one on top of another.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilāḷarkaḷ peṭṭikaḷai oṉṟiṉ mēl oṉṟāka aṭukkiṉārkaḷ.* — The workers stacked the boxes one on top of another.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to fit, then the Tamil for to coordinate, then say aṭukku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to fit, then the Tamil for to coordinate, then say *aṭukku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அடுக்கு (aṭukku) mean? (\"To stack; to pile up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C510-ala",
+      "sequence": 29340,
+      "title": "அள (aḷa) — to take measurements; to measure",
+      "headword": "அள",
+      "romanization": "aḷa",
+      "gloss": "to take measurements; to measure",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02e070b785aeb2a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to coordinate, then the Tamil for to stack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அள",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அள — aḷa — \"to take measurements; to measure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தையல்காரர் என் கையின் நீளத்தை அளந்தார். taiyalkārar eṉ kaiyiṉ nīḷattai aḷantār. The tailor measured the length of my arm."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): அளந்தேன், aḷantēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem ends in -அ, so the past is in -ந்த-: அளந்தேன். The noun அளவு (aḷavu), a size, comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அள (aḷa) is native Dravidian: DEDR 295 gives அள (aḷa), \"to measure, to limit\", and its noun அளவு (aḷavu), \"a measure, a size\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḷa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḷa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḷa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḷa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taiyalkārar eṉ kaiyiṉ nīḷattai aḷantār. — The tailor measured the length of my arm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taiyalkārar eṉ kaiyiṉ nīḷattai aḷantār.* — The tailor measured the length of my arm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to coordinate, then the Tamil for to stack, then say aḷa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to coordinate, then the Tamil for to stack, then say *aḷa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அள (aḷa) mean? (\"To take measurements; to measure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

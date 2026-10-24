@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:531500c4d85bbd03",
+  "lessonIds": [
+    "AR-C422-mawdui",
+    "AR-C422-tasamuh",
+    "AR-C422-mubarrir",
+    "AR-C422-ghiyab",
+    "AR-C422-istankara",
+    "AR-R422-review-422-422",
+    "AR-R422-review-final-422"
+  ],
+  "tex": "arabic/book/chapters/ch422-being-fair.tex"
+}

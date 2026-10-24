@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-540-KLINIKKU540",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-540-KLINIKKU540"
+  ],
+  "after": []
+}

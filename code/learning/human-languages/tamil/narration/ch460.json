@@ -1,0 +1,866 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 460,
+  "title": "Wonder and Awe",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:af3080dd8dcef593",
+  "lessons": [
+    {
+      "id": "TA-C460-viyappu",
+      "sequence": 26450,
+      "title": "வியப்பு (viyappu) — amazement; wonder",
+      "headword": "வியப்பு",
+      "romanization": "viyappu",
+      "gloss": "amazement; wonder",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21b6eded95d6d039",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for glee, then the Tamil for merriment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வியப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வியப்பு — viyappu — \"amazement; wonder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குழந்தையின் திறமை எனக்கு வியப்பாக இருந்தது. kuḻantaiyiṉ tiṟamai eṉakku viyappāka iruntatu. The child’s talent amazed me."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is விய \"to wonder\", with its past in -ந்த-: வியந்தேன், I marvelled."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வியப்பு (viyappu) is native Dravidian, a noun from விய viya, \"to wonder, to admire\" (DEDR 5403)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viyappu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viyappu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viyappu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viyappu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻantaiyiṉ tiṟamai eṉakku viyappāka iruntatu. — The child’s talent amazed me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻantaiyiṉ tiṟamai eṉakku viyappāka iruntatu.* — The child’s talent amazed me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for glee, then the Tamil for merriment, then say viyappu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for glee, then the Tamil for merriment, then say *viyappu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வியப்பு (viyappu) mean? (\"Amazement; wonder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C460-malaippu",
+      "sequence": 26460,
+      "title": "மலைப்பு (malaippu) — awe; being overwhelmed",
+      "headword": "மலைப்பு",
+      "romanization": "malaippu",
+      "gloss": "awe; being overwhelmed",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:202a6725eef4b943",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for merriment, then the Tamil for amazement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மலைப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மலைப்பு — malaippu — \"awe; being overwhelmed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவ்வளவு பெரிய கோயிலைப் பார்த்து எனக்கு மலைப்பாக இருந்தது. avvaḷavu periya kōyilaip pārttu eṉakku malaippāka iruntatu. I was awestruck to see such a big temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Not from மலை \"a hill\" but from a verb மலை \"to be staggered\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மலைப்பு (malaippu) is native Dravidian (DEDR 4736): the entry gives a verb மலை malai, \"to be staggered, amazed\", and this noun beside it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malaippu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malaippu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malaippu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malaippu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avvaḷavu periya kōyilaip pārttu eṉakku malaippāka iruntatu. — I was awestruck to see such a big temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avvaḷavu periya kōyilaip pārttu eṉakku malaippāka iruntatu.* — I was awestruck to see such a big temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for merriment, then the Tamil for amazement, then say malaippu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for merriment, then the Tamil for amazement, then say *malaippu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மலைப்பு (malaippu) mean? (\"Awe; being overwhelmed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C460-tikai",
+      "sequence": 26470,
+      "title": "திகை (tikai) — to be stunned; to be bewildered",
+      "headword": "திகை",
+      "romanization": "tikai",
+      "gloss": "to be stunned; to be bewildered",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54f38adb1d255d31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for amazement, then the Tamil for awe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: திகை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திகை — tikai — \"to be stunned; to be bewildered\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவனுடைய பதிலைக் கேட்டு நான் திகைத்தேன். avaṉuṭaiya patilaik kēṭṭu nāṉ tikaittēṉ. I was stunned to hear his answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): திகைத்தேன், tikaittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "திகைத்து நின்றேன், I stood dumbfounded."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திகை (tikai) is native Dravidian (DEDR 3207); the entry also gives திகைப்பு tikaippu, \"amazement\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tikai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tikai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tikai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tikai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉuṭaiya patilaik kēṭṭu nāṉ tikaittēṉ. — I was stunned to hear his answer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉuṭaiya patilaik kēṭṭu nāṉ tikaittēṉ.* — I was stunned to hear his answer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for amazement, then the Tamil for awe, then say tikai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for amazement, then the Tamil for awe, then say *tikai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does திகை (tikai) mean? (\"To be stunned; to be bewildered\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C460-paravacam",
+      "sequence": 26480,
+      "title": "பரவசம் (paravacam) — ecstasy; rapture",
+      "headword": "பரவசம்",
+      "romanization": "paravacam",
+      "gloss": "ecstasy; rapture",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b474879a66bd7605",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for awe, then the Tamil for to be stunned."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பரவசம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரவசம் — paravacam — \"ecstasy; rapture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இசையைக் கேட்டு அவர் பரவசம் அடைந்தார். icaiyaik kēṭṭu avar paravacam aṭaintār. Listening to the music, he was enraptured."
+            },
+            {
+              "kind": "speech",
+              "text": "பரவசம் (paravacam) அடை, to be carried away."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரவசம் (paravacam) is borrowed from Sanskrit paravaśa, \"under another's power\" (Monier-Williams): in Tamil, carried away by feeling."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paravacam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paravacam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paravacam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paravacam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "icaiyaik kēṭṭu avar paravacam aṭaintār. — Listening to the music, he was enraptured.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *icaiyaik kēṭṭu avar paravacam aṭaintār.* — Listening to the music, he was enraptured.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for awe, then the Tamil for to be stunned, then say paravacam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for awe, then the Tamil for to be stunned, then say *paravacam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பரவசம் (paravacam) mean? (\"Ecstasy; rapture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C460-cilir",
+      "sequence": 26490,
+      "title": "சிலிர் (cilir) — to tingle; to get goosebumps",
+      "headword": "சிலிர்",
+      "romanization": "cilir",
+      "gloss": "to tingle; to get goosebumps",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:628c274d2ca14aac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to be stunned, then the Tamil for ecstasy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிலிர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிலிர் — cilir — \"to tingle; to get goosebumps\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தப் பாடலைக் கேட்டதும் என் உடல் சிலிர்த்தது. antap pāṭalaik kēṭṭatum eṉ uṭal cilirttatu. When I heard that song, my body tingled."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): சிலிர்த்தது, cilirttatu."
+            },
+            {
+              "kind": "speech",
+              "text": "The body or the hair is the subject, so the past is சிலிர்த்தது."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிலிர் (cilir) is native Dravidian (DEDR 2565): hair standing on end from fright or delight."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cilir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cilir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cilir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cilir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antap pāṭalaik kēṭṭatum eṉ uṭal cilirttatu. — When I heard that song, my body tingled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antap pāṭalaik kēṭṭatum eṉ uṭal cilirttatu.* — When I heard that song, my body tingled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to be stunned, then the Tamil for ecstasy, then say cilir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to be stunned, then the Tamil for ecstasy, then say *cilir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிலிர் (cilir) mean? (\"To tingle; to get goosebumps\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R460-review-453-460",
+      "sequence": 26500,
+      "title": "Looking back at feelings",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Rage and Irritation to Wonder and Awe",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c3d934cb1ee226e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for rage and irritation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rage, irritation, to flare up, to seethe, to mutter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rage, irritation, to flare up, to seethe, to mutter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "terror, panic, shock, to be startled, to tremble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: terror, panic, shock, to be startled, to tremble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unease, anguish, frustration, to bemoan, to suffer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: unease, anguish, frustration, to bemoan, to suffer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "breath, a sigh, relief, consolation, to subside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: breath, a sigh, relief, consolation, to subside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mercy, tenderness, sympathy, pitifulness, concern",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mercy, tenderness, sympathy, pitifulness, concern]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wail, to sob, to whimper, to lament, to scream",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wail, to sob, to whimper, to lament, to scream]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bliss, pleasure, elation, glee, merriment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bliss, pleasure, elation, glee, merriment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amazement, awe, to be stunned, ecstasy, to tingle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: amazement, awe, to be stunned, ecstasy, to tingle]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Rage? (ஆத்திரம், āttiram.) Irritation? (எரிச்சல், ericcal.) To flare up? (சீறு, cīṟu.) To seethe? (கொந்தளி, kontaḷi.) To mutter? (முணுமுணு, muṇumuṇu.) Terror? (திகில், tikil.) Panic? (பீதி, pīti.) Shock? (அதிர்ச்சி, atircci.) To be startled? (திடுக்கிடு, tiṭukkiṭu.) To tremble? (நடுங்கு, naṭuṅku.) Unease? (சஞ்சலம், cañcalam.) Anguish? (உளைச்சல், uḷaiccal.) Frustration? (ஆதங்கம், ātaṅkam.) To bemoan? (அங்கலாய், aṅkalāy.) To suffer? (தவி, tavi.) Breath? (மூச்சு, mūccu.) A sigh? (பெருமூச்சு, perumūccu.) Relief? (நிம்மதி, nimmati.) Consolation? (ஆறுதல், āṟutal.) To subside? (தணி, taṇi.) Mercy? (கருணை, karuṇai.) Tenderness? (பரிவு, parivu.) Sympathy? (அனுதாபம், aṉutāpam.) Pitifulness? (பரிதாபம், paritāpam.) Concern? (அக்கறை, akkaṟai.) To wail? (கதறு, kataṟu.) To sob? (விம்மு, vimmu.) To whimper? (விசும்பு, vicumpu.) To lament? (புலம்பு, pulampu.) To scream? (அலறு, alaṟu.) Bliss? (ஆனந்தம், āṉantam.) Pleasure? (இன்பம், iṉpam.) Elation? (பூரிப்பு, pūrippu.) Glee? (குதூகலம், kutūkalam.) Merriment? (உல்லாசம், ullācam.) Amazement? (வியப்பு, viyappu.) Awe? (மலைப்பு, malaippu.) To be stunned? (திகை, tikai.) Ecstasy? (பரவசம், paravacam.) To tingle? (சிலிர், cilir.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

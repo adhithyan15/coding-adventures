@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C480-yatravivaranam",
+    "language": "malayalam",
+    "chapter": 480,
+    "sequence": 23970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1b85d46607b8d7e"
+  },
+  "findings": []
+}

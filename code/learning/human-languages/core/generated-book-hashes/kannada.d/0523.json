@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:bbbe32c5bbf211fc",
+  "lessonIds": [
+    "KA-C523-samsara",
+    "KA-C523-grhini",
+    "KA-C523-sangati",
+    "KA-C523-viraha",
+    "KA-C523-dampatya"
+  ],
+  "tex": "kannada/book/chapters/ch523-partners-and-households.tex"
+}

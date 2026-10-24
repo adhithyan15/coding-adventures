@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Getting Ahead",
+  "label": "ch:ka-getting-ahead",
+  "canDo": "I can say a promotion, progress, ambition, to achieve and to gain.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C517-galisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can say a promotion, progress, ambition, to achieve and to gain.",
+    "assesses": [
+      "KA-LEX-C517-PRAGATI517-03",
+      "KA-LEX-C517-PRAGATI517-04",
+      "KA-LEX-C517-PRAGATI517-05"
+    ]
+  }
+}

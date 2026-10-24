@@ -1,0 +1,11 @@
+{
+  "id": "TE-C320-ela-vellali",
+  "pathSegment": "TE-PATH-320-ASK-THE-WAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-320-ASK-THE-WAY",
+      "order": 3
+    }
+  ]
+}

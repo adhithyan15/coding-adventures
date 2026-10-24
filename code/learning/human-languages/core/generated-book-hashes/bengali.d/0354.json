@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:d3e2e3d2265797eb",
+  "lessonIds": [
+    "BN-C354-gobeshona",
+    "BN-C354-porikkha",
+    "BN-C354-tottvo",
+    "BN-C354-abishkar-kora",
+    "BN-C354-onusondhan-kora"
+  ],
+  "tex": "bengali/book/chapters/ch354-finding-out.tex"
+}

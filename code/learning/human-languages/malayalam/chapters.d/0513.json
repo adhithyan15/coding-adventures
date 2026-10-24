@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "After the Storm",
+  "label": "ch:ml-after-the-storm",
+  "canDo": "I can say a relief camp, disaster relief, to cave in, to be uprooted and to be in distress.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C513-valayuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can say a relief camp, disaster relief, to cave in, to be uprooted and to be in distress.",
+    "assesses": [
+      "ML-LEX-C513-CAMP513-03",
+      "ML-LEX-C513-CAMP513-04",
+      "ML-LEX-C513-CAMP513-05"
+    ]
+  }
+}

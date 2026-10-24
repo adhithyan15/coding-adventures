@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:ee2eb7719a8e2fbd",
+  "lessonIds": [
+    "HI-C292-daku",
+    "HI-C292-lutna",
+    "HI-C292-dakaiti",
+    "HI-C292-banduq",
+    "HI-C292-badhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch292.txt",
+  "json": "hindi/narration/ch292.json",
+  "textHash": "fnv1a64:15961800627baea3",
+  "jsonHash": "fnv1a64:c76dc4bbf1f15ca7",
+  "findings": []
+}

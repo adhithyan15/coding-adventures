@@ -952,6 +952,23 @@ mod tests {
     }
 
     #[test]
+    fn line_leading_html_close_comment_is_not_a_newline_led_decrement() {
+        // test262 annexB/language/comments/single-line-html-close-asi.js, in
+        // both of the runner's script variants. `-->[0];` is an Annex B
+        // HTML close comment, which javascript-lexer drops, so the newline-led
+        // `--` split above never sees it. (When the lexer handed over `--`,`>`,
+        // that split made `[23]; -- > [0]` and the program was rejected.)
+        let body = "var foo = [23]\n-->[0];\n\nif (foo[0] === 23) {\n  throw new Test262Error();\n}\n";
+        for src in [body.to_string(), format!("\"use strict\";\n{body}")] {
+            crate::parse_javascript_typed(&src, EsVersion::Es2025)
+                .unwrap_or_else(|e| panic!("{src:?}: {e}"));
+        }
+        assert_eq!(forced_semis("var foo = [23]\n-->[0];\nfoo"), 0);
+        // A real newline-led decrement is still split (#17840).
+        assert_eq!(forced_semis("var foo = [23]\n--foo"), 1);
+    }
+
+    #[test]
     fn increment_after_an_operator_or_on_the_same_line_is_untouched() {
         // `x =⏎++y` is `x = ++y`; `x++` on one line is ordinary postfix.
         assert_eq!(forced_semis("x =\n++y"), 0);

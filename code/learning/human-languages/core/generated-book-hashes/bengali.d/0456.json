@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:f52ea4d567a59077",
+  "lessonIds": [
+    "BN-C456-choritro",
+    "BN-C456-gun",
+    "BN-C456-obhyas",
+    "BN-C456-achoron",
+    "BN-C456-ropto-kora"
+  ],
+  "tex": "bengali/book/chapters/ch456-a-person-s-character.tex"
+}

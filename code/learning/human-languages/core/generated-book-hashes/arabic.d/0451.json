@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:51ba837f106cd553",
+  "lessonIds": [
+    "AR-C451-makhfar",
+    "AR-C451-maktaba",
+    "AR-C451-istafsara",
+    "AR-C451-rajaa-check",
+    "AR-C451-hazara"
+  ],
+  "tex": "arabic/book/chapters/ch451-offices-and-enquiries.tex"
+}

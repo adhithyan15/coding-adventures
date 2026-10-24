@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:c1c41bf5052885f9",
+  "lessonIds": [
+    "MR-C404-valsa",
+    "MR-C404-rahdari",
+    "MR-C404-signal",
+    "MR-C404-khetne",
+    "MR-C404-datne"
+  ],
+  "tex": "marathi/book/chapters/ch404-traffic-and-detours.tex"
+}

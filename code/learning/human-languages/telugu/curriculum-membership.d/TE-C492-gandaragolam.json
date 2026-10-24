@@ -1,0 +1,11 @@
+{
+  "id": "TE-C492-gandaragolam",
+  "pathSegment": "TE-PATH-492-PORABADU492",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-492-PORABADU492",
+      "order": 4
+    }
+  ]
+}

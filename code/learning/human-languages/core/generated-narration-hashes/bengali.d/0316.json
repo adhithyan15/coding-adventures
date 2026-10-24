@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:7891b183e44660f8",
+  "lessonIds": [
+    "BN-C316-ghera",
+    "BN-C316-prachir",
+    "BN-C316-porikha",
+    "BN-C316-teka",
+    "BN-C316-pichhono"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch316.txt",
+  "json": "bengali/narration/ch316.json",
+  "textHash": "fnv1a64:38cef856a9502657",
+  "jsonHash": "fnv1a64:453fd0a5983024e7",
+  "findings": []
+}

@@ -1,0 +1,923 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 395,
+  "title": "Useful or Not",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:f791b34317d28f08",
+  "lessons": [
+    {
+      "id": "MR-C395-upyukta",
+      "sequence": 22710,
+      "title": "उपयुक्त (upyukta) — useful",
+      "headword": "उपयुक्त",
+      "romanization": "upyukta",
+      "gloss": "useful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86ab961f707b09c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for good judgement, then the Marathi for to dawn on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपयुक्त",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपयुक्त — upyukta — \"useful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हे पुस्तक परीक्षेसाठी खूप उपयुक्त आहे. he pustak parīkṣesāṭhī khūp upyukta āhe. This book is very useful for the exam."
+            },
+            {
+              "kind": "speech",
+              "text": "Invariable; X साठी उपयुक्त (upyukta), useful for X."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपयुक्त (upyukta) is a tatsama, taken from Sanskrit upayukta, \"fit, suitable, useful\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upyukta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upyukta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upyukta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upyukta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "he pustak parīkṣesāṭhī khūp upyukta āhe. — This book is very useful for the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *he pustak parīkṣesāṭhī khūp upyukta āhe.* — This book is very useful for the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for good judgement, then the Marathi for to dawn on, then say upyukta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for good judgement, then the Marathi for to dawn on, then say *upyukta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपयुक्त (upyukta) mean? (\"Useful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C395-avghad",
+      "sequence": 22720,
+      "title": "अवघड (avghaḍ) — tricky; hard",
+      "headword": "अवघड",
+      "romanization": "avghaḍ",
+      "gloss": "tricky; hard",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7aefa23c32f197d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to dawn on, then the Marathi for useful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवघड",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवघड — avghaḍ — \"tricky; hard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गणिताचा पेपर अवघड होता. gaṇitācā pepar avghaḍ hotā. The maths paper was hard."
+            },
+            {
+              "kind": "speech",
+              "text": "Invariable; अवघड (avghaḍ) जागी, in an awkward spot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवघड (avghaḍ) is a Marathi word whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avghaḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avghaḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avghaḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avghaḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṇitācā pepar avghaḍ hotā. — The maths paper was hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṇitācā pepar avghaḍ hotā.* — The maths paper was hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to dawn on, then the Marathi for useful, then say avghaḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to dawn on, then the Marathi for useful, then say *avghaḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवघड (avghaḍ) mean? (\"Tricky; hard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C395-thet",
+      "sequence": 22730,
+      "title": "थेट (theṭ) — direct; straight",
+      "headword": "थेट",
+      "romanization": "theṭ",
+      "gloss": "direct; straight",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e408da2750972eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for useful, then the Marathi for tricky."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: थेट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थेट — theṭ — \"direct; straight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ही बस थेट पुण्याला जाते. hī bas theṭ puṇyālā jāte. This bus goes straight to Pune."
+            },
+            {
+              "kind": "speech",
+              "text": "Also an adverb: थेट (theṭ) सांगणे, to say straight out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थेट (theṭ) is a Marathi word whose origin is not settled. CDIAL lists a Marathi theṭ, \"genuine\", under Sanskrit sthēṣṭha, \"most fixed, durable\" (CDIAL 13778); whether the sense direct comes from it is not clear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "theṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *theṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "theṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *theṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hī bas theṭ puṇyālā jāte. — This bus goes straight to Pune.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hī bas theṭ puṇyālā jāte.* — This bus goes straight to Pune.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for useful, then the Marathi for tricky, then say theṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for useful, then the Marathi for tricky, then say *theṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does थेट (theṭ) mean? (\"Direct; straight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C395-apratyaksa",
+      "sequence": 22740,
+      "title": "अप्रत्यक्ष (apratyakṣa) — indirect",
+      "headword": "अप्रत्यक्ष",
+      "romanization": "apratyakṣa",
+      "gloss": "indirect",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f868b2304e772a04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for tricky, then the Marathi for direct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अप्रत्यक्ष",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अप्रत्यक्ष — apratyakṣa — \"indirect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याच्या बोलण्यात अप्रत्यक्ष टीका होती. tyācyā bolaṇyāt apratyakṣa ṭīkā hotī. There was indirect criticism in his words."
+            },
+            {
+              "kind": "speech",
+              "text": "अ + प्रत्यक्ष, not before the eyes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अप्रत्यक्ष (apratyakṣa) is a tatsama, taken from Sanskrit apratyakṣa, \"not present to the eyes, invisible\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apratyakṣa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apratyakṣa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apratyakṣa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apratyakṣa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyācyā bolaṇyāt apratyakṣa ṭīkā hotī. — There was indirect criticism in his words.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyācyā bolaṇyāt apratyakṣa ṭīkā hotī.* — There was indirect criticism in his words.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for tricky, then the Marathi for direct, then say apratyakṣa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for tricky, then the Marathi for direct, then say *apratyakṣa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अप्रत्यक्ष (apratyakṣa) mean? (\"Indirect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C395-aspasta",
+      "sequence": 22750,
+      "title": "अस्पष्ट (aspaṣṭa) — unclear",
+      "headword": "अस्पष्ट",
+      "romanization": "aspaṣṭa",
+      "gloss": "unclear",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01cce963e949323b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for direct, then the Marathi for indirect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अस्पष्ट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अस्पष्ट — aspaṣṭa — \"unclear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "फोनवर तुझा आवाज अस्पष्ट येत आहे. phonvar tujhā āvāj aspaṣṭa yet āhe. Your voice is coming through unclear on the phone."
+            },
+            {
+              "kind": "speech",
+              "text": "अ + स्पष्ट, not clear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अस्पष्ट (aspaṣṭa) is a tatsama, taken from Sanskrit aspaṣṭa, \"not clear, indistinct\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aspaṣṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aspaṣṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aspaṣṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aspaṣṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phonvar tujhā āvāj aspaṣṭa yet āhe. — Your voice is coming through unclear on the phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phonvar tujhā āvāj aspaṣṭa yet āhe.* — Your voice is coming through unclear on the phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for direct, then the Marathi for indirect, then say aspaṣṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for direct, then the Marathi for indirect, then say *aspaṣṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अस्पष्ट (aspaṣṭa) mean? (\"Unclear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R395-review-389-395",
+      "sequence": 22760,
+      "title": "Looking back on conditions, degrees and judgement",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from How Much and How Often to Useful or Not",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4fd3802398d277cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for partly and completely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "partly, completely, merely, purely, usually",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: partly, completely, merely, purely, usually]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "in total, on the whole, a principle, particular, apart from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: in total, on the whole, a principle, particular, apart from]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to decline, to hold up, a percent, a proportion, a level",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to decline, to hold up, a percent, a proportion, a level]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a clause, to allocate, to pass over, to follow, to embrace",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a clause, to allocate, to pass over, to follow, to embrace]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an excuse, a pretext, to brush aside, to request, to follow up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an excuse, a pretext, to brush aside, to request, to follow up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awareness, a realization, alertness, good judgement, to dawn on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: awareness, a realization, alertness, good judgement, to dawn on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "useful, tricky, direct, indirect, unclear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: useful, tricky, direct, indirect, unclear]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Partly? (अंशतः, aṁśataḥ.) Completely? (पूर्णपणे, pūrṇapaṇe.) Merely? (केवळ, kevaḷ.) Purely? (निव्वळ, nivvaḷ.) Usually? (सहसा, sahsā.) In total? (एकूण, ekūṇ.) On the whole? (एकंदरीत, ekandarīt.) A principle? (तत्त्व, tattva.) Particular? (विशेष, viśeṣ.) Apart from? (व्यतिरिक्त, vyatirikta.) To decline? (घटणे, ghaṭṇe.) To hold up? (टिकणे, ṭikṇe.) A percent? (टक्का, ṭakkā.) A proportion? (प्रमाण, pramāṇ.) A level? (स्तर, star.) A clause? (कलम, kalam.) To allocate? (वाटप करणे, vāṭap karṇe.) To pass over? (डावलणे, ḍāvalṇe.) To follow? (अनुसरणे, anusarṇe.) To embrace? (अंगीकारणे, aṅgīkārṇe.) An excuse? (सबब, sabab.) A pretext? (बहाणा, bahāṇā.) To brush aside? (धुडकावणे, dhuḍkāvṇe.) To request? (विनंती करणे, vinantī karṇe.) To follow up? (पाठपुरावा करणे, pāṭhpurāvā karṇe.) Awareness? (भान, bhān.) A realization? (जाणीव, jāṇīv.) Alertness? (जागरूकता, jāgarūktā.) Good judgement? (विवेक, vivek.) To dawn on? (उमगणे, umagṇe.) Useful? (उपयुक्त, upyukta.) Tricky? (अवघड, avghaḍ.) Direct? (थेट, theṭ.) Indirect? (अप्रत्यक्ष, apratyakṣa.) Unclear? (अस्पष्ट, aspaṣṭa.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R395-review-final-395",
+      "sequence": 22770,
+      "title": "Useful or Not — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf4b0cf4bec21052",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for useful and tricky."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "useful, tricky, direct, indirect, unclear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: useful, tricky, direct, indirect, unclear]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Useful? (उपयुक्त, upyukta.) Tricky? (अवघड, avghaḍ.) Direct? (थेट, theṭ.) Indirect? (अप्रत्यक्ष, apratyakṣa.) Unclear? (अस्पष्ट, aspaṣṭa.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

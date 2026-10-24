@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:59269ce173f5fb37",
+  "lessonIds": [
+    "KA-C364-dinacari",
+    "KA-C364-atmakathe",
+    "KA-C364-jivanacaritre",
+    "KA-C364-pithike",
+    "KA-C364-tirulu"
+  ],
+  "tex": "kannada/book/chapters/ch364-writing-lives.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C469-virotam",
+  "pathSegment": "TA-PATH-469-PAKAI469",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-469-PAKAI469",
+      "order": 1
+    }
+  ]
+}

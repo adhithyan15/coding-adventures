@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 558,
+  "sourceHash": "fnv1a64:70220b5822b5d35c",
+  "lessonIds": [
+    "TA-C558-natasvaram",
+    "TA-C558-melam",
+    "TA-C558-rakam",
+    "TA-C558-talam",
+    "TA-C558-piyano",
+    "TA-R558-review-552-558",
+    "TA-R558-review-final-558"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch558.txt",
+  "json": "tamil/narration/ch558.json",
+  "textHash": "fnv1a64:688c63075edc1735",
+  "jsonHash": "fnv1a64:dbf5f90db6293129",
+  "findings": []
+}

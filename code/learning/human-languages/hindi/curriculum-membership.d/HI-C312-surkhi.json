@@ -1,0 +1,11 @@
+{
+  "id": "HI-C312-surkhi",
+  "pathSegment": "HI-PATH-312-SAMACHAR312",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-312-SAMACHAR312",
+      "order": 3
+    }
+  ]
+}

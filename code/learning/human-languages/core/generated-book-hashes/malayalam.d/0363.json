@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:e2bb18c3e9f0f4ab",
+  "lessonIds": [
+    "ML-C363-jvala",
+    "ML-C363-nasanastam",
+    "ML-C363-alikkattuka",
+    "ML-C363-pottitterikkuka",
+    "ML-C363-takaruka"
+  ],
+  "tex": "malayalam/book/chapters/ch363-flames-and-damage.tex"
+}

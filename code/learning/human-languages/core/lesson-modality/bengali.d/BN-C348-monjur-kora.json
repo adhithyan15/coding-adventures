@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C348-monjur-kora",
+    "language": "bengali",
+    "chapter": 348,
+    "sequence": 21960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ec7865f8d842eed"
+  },
+  "findings": []
+}

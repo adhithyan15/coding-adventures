@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:f7ca12c9b5931546",
+  "lessonIds": [
+    "ML-C389-grhapravesam",
+    "ML-C389-namakaranam",
+    "ML-C389-madhuvidhu",
+    "ML-C389-tamasamakkuka",
+    "ML-C389-kutiyeruka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch389.txt",
+  "json": "malayalam/narration/ch389.json",
+  "textHash": "fnv1a64:b3638d9948f0b69f",
+  "jsonHash": "fnv1a64:85fd70d53e2425f3",
+  "findings": []
+}

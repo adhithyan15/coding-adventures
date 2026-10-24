@@ -1,7 +1,8 @@
-use der_asn1::{Asn1ErrorKind, Asn1Limits};
+use der_asn1::{Asn1Decoder, Asn1ErrorKind, Asn1Limits};
 use der_tlv::DerErrorKind;
 use x509_certificate::{
-    decode_x509_certificate, X509CertificateErrorKind, X509TbsCertificateErrorKind,
+    decode_x509_certificate, decode_x509_certificate_element, X509CertificateErrorKind,
+    X509TbsCertificateErrorKind,
 };
 use x509_certificate_version::X509CertificateVersion;
 
@@ -276,4 +277,33 @@ fn framing_and_shared_budget_failures_are_redacted() {
     ));
     assert!(!error.to_string().contains("dead"));
     assert!(error.to_string().contains("byte"));
+}
+
+#[test]
+fn composable_entry_point_uses_the_callers_existing_decoder_budget() {
+    let encoded_certificate = certificate(Some(2), &[]);
+    let container = der(0x30, &encoded_certificate);
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&container).unwrap();
+    let mut values = decoder.sequence(root).unwrap();
+    let certificate_element = values.read(&mut decoder).unwrap().unwrap();
+    let decoded = decode_x509_certificate_element(&mut decoder, certificate_element).unwrap();
+    assert_eq!(decoded.encoded(), encoded_certificate);
+    assert!(values.read(&mut decoder).unwrap().is_none());
+
+    let mut decoder = Asn1Decoder::new(Asn1Limits {
+        max_total_elements: 2,
+        ..Asn1Limits::default()
+    });
+    let root = decoder.decode_exact(&container).unwrap();
+    let mut values = decoder.sequence(root).unwrap();
+    let certificate_element = values.read(&mut decoder).unwrap().unwrap();
+    let error = decode_x509_certificate_element(&mut decoder, certificate_element).unwrap_err();
+    assert!(matches!(
+        error.kind(),
+        X509CertificateErrorKind::Structure(Asn1ErrorKind::ElementLimitExceeded)
+            | X509CertificateErrorKind::InvalidTbsCertificate(
+                X509TbsCertificateErrorKind::Structure(Asn1ErrorKind::ElementLimitExceeded)
+            )
+    ));
 }

@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Citizens and the Public",
+  "label": "ch:mr-citizens-and-the-public",
+  "canDo": "I can talk about citizens, the public and rural life.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C354-gramin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can talk about citizens, the public and rural life.",
+    "assesses": [
+      "MR-LEX-C354-NAGARIK354-03",
+      "MR-LEX-C354-NAGARIK354-04",
+      "MR-LEX-C354-NAGARIK354-05"
+    ]
+  }
+}

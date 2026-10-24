@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C484-purbopurush",
+    "language": "bengali",
+    "chapter": 484,
+    "sequence": 29390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdd520bd0fa7f91e"
+  },
+  "findings": []
+}

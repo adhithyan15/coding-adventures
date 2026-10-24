@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C420-garnaintr",
+    "language": "hindi",
+    "chapter": 420,
+    "sequence": 23160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d7b3b832c6b636a"
+  },
+  "findings": []
+}

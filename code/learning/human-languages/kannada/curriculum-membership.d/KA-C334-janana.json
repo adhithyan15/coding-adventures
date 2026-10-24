@@ -1,0 +1,11 @@
+{
+  "id": "KA-C334-janana",
+  "pathSegment": "KA-PATH-334-JANANA334",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-334-JANANA334",
+      "order": 1
+    }
+  ]
+}

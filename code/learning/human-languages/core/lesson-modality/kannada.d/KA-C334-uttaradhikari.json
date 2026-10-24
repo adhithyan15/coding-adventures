@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C334-uttaradhikari",
+    "language": "kannada",
+    "chapter": 334,
+    "sequence": 16810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e969095eb4babc0a"
+  },
+  "findings": []
+}

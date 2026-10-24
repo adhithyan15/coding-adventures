@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:2aafd0eb51b1d0b7",
+  "lessonIds": [
+    "AR-C408-istafada",
+    "AR-C408-tamattaa",
+    "AR-C408-harama",
+    "AR-C408-rafahiyya",
+    "AR-C408-riaya"
+  ],
+  "tex": "arabic/book/chapters/ch408-gains-and-losses.tex"
+}

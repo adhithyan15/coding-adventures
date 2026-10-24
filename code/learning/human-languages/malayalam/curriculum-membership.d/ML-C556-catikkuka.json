@@ -1,0 +1,11 @@
+{
+  "id": "ML-C556-catikkuka",
+  "pathSegment": "ML-PATH-556-VANCANA556",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-556-VANCANA556",
+      "order": 1
+    }
+  ]
+}

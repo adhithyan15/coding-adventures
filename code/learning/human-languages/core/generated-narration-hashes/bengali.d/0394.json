@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:74e0fb5b1411f404",
+  "lessonIds": [
+    "BN-C394-bigrano",
+    "BN-C394-jontrangsho",
+    "BN-C394-skru",
+    "BN-C394-stiyaring",
+    "BN-C394-ghosha"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "bengali/narration/ch394.txt",
+  "json": "bengali/narration/ch394.json",
+  "textHash": "fnv1a64:641f56b18e67b455",
+  "jsonHash": "fnv1a64:e277a49283bf14a4",
+  "findings": []
+}

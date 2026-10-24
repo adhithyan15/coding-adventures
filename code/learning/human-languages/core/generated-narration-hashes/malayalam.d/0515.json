@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:bd86111eb1bf1345",
+  "lessonIds": [
+    "ML-C515-ketupatu",
+    "ML-C515-nastapariharam",
+    "ML-C515-buddhimuttu",
+    "ML-C515-kurunnuka",
+    "ML-C515-tappuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch515.txt",
+  "json": "malayalam/narration/ch515.json",
+  "textHash": "fnv1a64:7c99f2619c5f412c",
+  "jsonHash": "fnv1a64:420c96279ceceda9",
+  "findings": []
+}

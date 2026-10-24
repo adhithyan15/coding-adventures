@@ -1,0 +1,21 @@
+{
+  "chapter": 376,
+  "title": "Aiming High",
+  "label": "ch:bn-aiming-high",
+  "canDo": "I can name a goal and say what it will take to reach it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-R376-review-370-376",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can name a goal and say what it will take to reach it.",
+    "assesses": [
+      "BN-LEX-C376-LOKKHYO376-01",
+      "BN-LEX-C376-LOKKHYO376-02",
+      "BN-LEX-C376-LOKKHYO376-03",
+      "BN-LEX-C376-LOKKHYO376-04",
+      "BN-LEX-C376-LOKKHYO376-05"
+    ]
+  }
+}

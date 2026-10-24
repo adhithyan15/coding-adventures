@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:8991eaa1d36c2ed3",
+  "lessonIds": [
+    "KA-C332-vipattu",
+    "KA-C332-siluku",
+    "KA-C332-badukuli",
+    "KA-C332-santrasta",
+    "KA-C332-munsucane"
+  ],
+  "tex": "kannada/book/chapters/ch332-after-the-disaster.tex"
+}

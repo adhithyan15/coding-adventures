@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:b5f9b2959a3ca611",
+  "lessonIds": [
+    "BN-C487-somporko",
+    "BN-C487-kol",
+    "BN-C487-chhoya",
+    "BN-C487-aglano",
+    "BN-C487-bolano"
+  ],
+  "tex": "bengali/book/chapters/ch487-close-ties.tex"
+}

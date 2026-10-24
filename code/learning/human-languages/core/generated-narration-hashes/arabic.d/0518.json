@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:76dab9b82123b13a",
+  "lessonIds": [
+    "AR-C518-mihna",
+    "AR-C518-sikritir",
+    "AR-C518-baytari",
+    "AR-C518-mustashar",
+    "AR-C518-tamaha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch518.txt",
+  "json": "arabic/narration/ch518.json",
+  "textHash": "fnv1a64:293ce00dc41790e1",
+  "jsonHash": "fnv1a64:5fec7133a019bcc7",
+  "findings": []
+}

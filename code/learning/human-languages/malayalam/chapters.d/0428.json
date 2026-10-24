@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Money Matters",
+  "label": "ch:ml-money-matters",
+  "canDo": "I can say income, rising prices, inflation, a budget and statistics.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-R428-review-421-428",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can say income, rising prices, inflation, a budget and statistics.",
+    "assesses": [
+      "ML-LEX-C428-VARUMANAM428-03",
+      "ML-LEX-C428-VARUMANAM428-04",
+      "ML-LEX-C428-VARUMANAM428-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C368-vicarana",
+  "pathSegment": "ML-PATH-368-KODATHI368",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-368-KODATHI368",
+      "order": 2
+    }
+  ]
+}

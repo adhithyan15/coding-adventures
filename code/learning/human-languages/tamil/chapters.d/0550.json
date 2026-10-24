@@ -1,0 +1,19 @@
+{
+  "chapter": 550,
+  "title": "Building a House",
+  "label": "ch:ta-building-a-house",
+  "canDo": "I can talk about bricks, cement and building work.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C550-mestiri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 550: I can talk about bricks, cement and building work.",
+    "assesses": [
+      "TA-LEX-C550-KATTIDAM550-03",
+      "TA-LEX-C550-KATTIDAM550-04",
+      "TA-LEX-C550-KATTIDAM550-05"
+    ]
+  }
+}

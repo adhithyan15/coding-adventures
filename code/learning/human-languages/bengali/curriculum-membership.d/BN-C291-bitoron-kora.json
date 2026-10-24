@@ -1,0 +1,11 @@
+{
+  "id": "BN-C291-bitoron-kora",
+  "pathSegment": "BN-PATH-291-TRAN291",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-291-TRAN291",
+      "order": 3
+    }
+  ]
+}

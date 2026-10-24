@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C446-abhayaranya",
+    "language": "marathi",
+    "chapter": 446,
+    "sequence": 25570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ff651f1d89dc11c"
+  },
+  "findings": []
+}

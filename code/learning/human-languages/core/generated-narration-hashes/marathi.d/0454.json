@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:fa8b047c7f73f84d",
+  "lessonIds": [
+    "MR-C454-samet",
+    "MR-C454-gairsamaj",
+    "MR-C454-rusne",
+    "MR-C454-manavne",
+    "MR-C454-hirmusne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch454.txt",
+  "json": "marathi/narration/ch454.json",
+  "textHash": "fnv1a64:ca5f8b03765324ba",
+  "jsonHash": "fnv1a64:a10726ef2dcf8db5",
+  "findings": []
+}

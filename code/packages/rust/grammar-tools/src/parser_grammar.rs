@@ -46,13 +46,14 @@
 //! rule          = rule_name "=" body ";" ;
 //! body          = sequence { "|" sequence } ;
 //! sequence      = { element } ;
-//! element       = rule_ref | token_ref | literal
+//! element       = rule_ref | token_ref | literal | predicate
 //!               | "{" body "}"
 //!               | "[" body "]"
 //!               | "(" body ")" ;
 //! rule_ref      = lowercase_identifier ;
 //! token_ref     = UPPERCASE_IDENTIFIER ;
 //! literal       = '"' characters '"' ;
+//! predicate     = "@" lowercase_identifier ;   (F11 adjacency predicates)
 //! ```
 //!
 //! Each level of this meta-grammar becomes a method in our parser.
@@ -221,6 +222,152 @@ pub enum GrammarElement {
         separator: Box<GrammarElement>,
         at_least_one: bool,
     },
+
+    /// A token-adjacency predicate, written `@name` in the grammar (F11,
+    /// LANG84 extension E6).
+    ///
+    /// Like `&x` and `!x` it is **zero-width**: it consumes no token and adds
+    /// no AST children. Instead of trying to match an element, it asks a
+    /// question about the *gap* in front of the next token, using the flags
+    /// the lexer recorded on that token:
+    ///
+    /// ```text
+    /// return_statement = "return" [ @no_newline_before expression ] SEMICOLON ;
+    /// command_arg      = @space_before MINUS @no_space_before primary ;
+    /// ```
+    ///
+    /// The first rule is ECMAScript's `[no LineTerminator here]`; the second
+    /// is Ruby's `f -1` (a space before the minus, none after it). See
+    /// [`AdjacencyPredicate`] for the full list.
+    AdjacencyPredicate { predicate: AdjacencyPredicate },
+}
+
+// ===========================================================================
+// Token-adjacency predicates (F11 / LANG84 E6)
+// ===========================================================================
+// The lexer throws whitespace and comments away, but it remembers two facts
+// about each gap it threw away, as bits on the token that follows the gap:
+//
+//   source        tokens and the gap facts recorded on them
+//   ------        -----------------------------------------
+//   f -1          f   -(space)   1
+//   f - 1         f   -(space)   1(space)
+//   f-1           f   -          1
+//   return⏎x      return         x(space, newline)
+//
+// A predicate is a yes/no question about one of those gaps. "Before" asks
+// about the gap in front of the next token, "after next" about the gap in
+// front of the token after that. Each question exists in both polarities so
+// that a grammar can say what it means without a double negative:
+//
+//   @space_before       @no_space_before        (trivia before next token?)
+//   @newline_before     @no_newline_before      (line break before next?)
+//   @space_after_next   @no_space_after_next    (trivia before the one after?)
+//
+// `!@p` (negative lookahead over a predicate) is always equal to `@no_p`.
+// ===========================================================================
+
+/// Which gap fact an [`GrammarElement::AdjacencyPredicate`] tests.
+///
+/// The grammar-tools crate does not depend on the lexer, so the answer is
+/// computed from two booleans — "was there trivia?" and "was there a line
+/// terminator?" — which the parser reads from the token's flag bits and
+/// hands to [`AdjacencyPredicate::holds`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum AdjacencyPredicate {
+    /// `@space_before`: whitespace, a comment or a line break precedes the
+    /// next token.
+    SpaceBefore,
+    /// `@no_space_before`: the next token touches the previous one.
+    NoSpaceBefore,
+    /// `@newline_before`: a line terminator precedes the next token.
+    NewlineBefore,
+    /// `@no_newline_before`: no line terminator precedes the next token
+    /// (ECMAScript's `[no LineTerminator here]`).
+    NoNewlineBefore,
+    /// `@space_after_next`: trivia precedes the token *after* the next one.
+    SpaceAfterNext,
+    /// `@no_space_after_next`: the token after the next one touches the
+    /// next one.
+    NoSpaceAfterNext,
+}
+
+impl AdjacencyPredicate {
+    /// Every predicate, in the order the documentation lists them.
+    pub const ALL: [AdjacencyPredicate; 6] = [
+        AdjacencyPredicate::SpaceBefore,
+        AdjacencyPredicate::NoSpaceBefore,
+        AdjacencyPredicate::NewlineBefore,
+        AdjacencyPredicate::NoNewlineBefore,
+        AdjacencyPredicate::SpaceAfterNext,
+        AdjacencyPredicate::NoSpaceAfterNext,
+    ];
+
+    /// The name as written after `@` in a `.grammar` file.
+    pub fn name(self) -> &'static str {
+        match self {
+            AdjacencyPredicate::SpaceBefore => "space_before",
+            AdjacencyPredicate::NoSpaceBefore => "no_space_before",
+            AdjacencyPredicate::NewlineBefore => "newline_before",
+            AdjacencyPredicate::NoNewlineBefore => "no_newline_before",
+            AdjacencyPredicate::SpaceAfterNext => "space_after_next",
+            AdjacencyPredicate::NoSpaceAfterNext => "no_space_after_next",
+        }
+    }
+
+    /// The Rust variant name, used by the grammar compiler.
+    pub fn variant_name(self) -> &'static str {
+        match self {
+            AdjacencyPredicate::SpaceBefore => "SpaceBefore",
+            AdjacencyPredicate::NoSpaceBefore => "NoSpaceBefore",
+            AdjacencyPredicate::NewlineBefore => "NewlineBefore",
+            AdjacencyPredicate::NoNewlineBefore => "NoNewlineBefore",
+            AdjacencyPredicate::SpaceAfterNext => "SpaceAfterNext",
+            AdjacencyPredicate::NoSpaceAfterNext => "NoSpaceAfterNext",
+        }
+    }
+
+    /// Look a predicate up by its `.grammar` name (without the `@`).
+    pub fn from_name(name: &str) -> Option<AdjacencyPredicate> {
+        AdjacencyPredicate::ALL.into_iter().find(|p| p.name() == name)
+    }
+
+    /// Whether the predicate inspects the token *after* the next token
+    /// rather than the next token itself.
+    pub fn reads_after_next(self) -> bool {
+        matches!(
+            self,
+            AdjacencyPredicate::SpaceAfterNext | AdjacencyPredicate::NoSpaceAfterNext
+        )
+    }
+
+    /// Decide the predicate from the facts about the inspected gap.
+    ///
+    /// | predicate              | true when       |
+    /// |------------------------|-----------------|
+    /// | `space_before`         | `space`         |
+    /// | `no_space_before`      | `!space`        |
+    /// | `newline_before`       | `newline`       |
+    /// | `no_newline_before`    | `!newline`      |
+    /// | `space_after_next`     | `space`         |
+    /// | `no_space_after_next`  | `!space`        |
+    ///
+    /// (`newline` implies `space` for lexer-produced tokens, because a line
+    /// break is itself trivia, but this function does not rely on that.)
+    pub fn holds(self, space: bool, newline: bool) -> bool {
+        match self {
+            AdjacencyPredicate::SpaceBefore | AdjacencyPredicate::SpaceAfterNext => space,
+            AdjacencyPredicate::NoSpaceBefore | AdjacencyPredicate::NoSpaceAfterNext => !space,
+            AdjacencyPredicate::NewlineBefore => newline,
+            AdjacencyPredicate::NoNewlineBefore => !newline,
+        }
+    }
+}
+
+impl fmt::Display for AdjacencyPredicate {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "@{}", self.name())
+    }
 }
 
 // ===========================================================================
@@ -311,7 +458,9 @@ fn collect_token_refs(node: &GrammarElement, refs: &mut HashSet<String>) {
         GrammarElement::TokenReference { name } => {
             refs.insert(name.clone());
         }
-        GrammarElement::RuleReference { .. } | GrammarElement::Literal { .. } => {
+        GrammarElement::RuleReference { .. }
+        | GrammarElement::Literal { .. }
+        | GrammarElement::AdjacencyPredicate { .. } => {
             // Leaf nodes that do not contain token references.
         }
         GrammarElement::Sequence { elements } => {
@@ -344,7 +493,9 @@ fn collect_rule_refs(node: &GrammarElement, refs: &mut HashSet<String>) {
         GrammarElement::RuleReference { name } => {
             refs.insert(name.clone());
         }
-        GrammarElement::TokenReference { .. } | GrammarElement::Literal { .. } => {
+        GrammarElement::TokenReference { .. }
+        | GrammarElement::Literal { .. }
+        | GrammarElement::AdjacencyPredicate { .. } => {
             // Leaf nodes that do not contain rule references.
         }
         GrammarElement::Sequence { elements } => {
@@ -389,6 +540,7 @@ fn collect_rule_refs(node: &GrammarElement, refs: &mut HashSet<String>) {
 //   LBRACE / RBRACE — { }
 //   LBRACKET / RBRACKET — [ ]
 //   LPAREN / RPAREN — ( )
+//   AT        — an adjacency predicate `@name` (F11); value = the name
 //   EOF       — end of input
 // ===========================================================================
 
@@ -425,6 +577,9 @@ enum TokenKind {
     Plus,
     /// `//` — separator operator inside repetition braces.
     DoubleSlash,
+    /// `@name` — a token-adjacency predicate (F11). The token's value is the
+    /// name without the `@`, which may be empty if nothing followed it.
+    At,
     Eof,
 }
 
@@ -513,6 +668,32 @@ fn tokenize_grammar(source: &str) -> Result<Vec<Token>, ParserGrammarError> {
                 b'+' => {
                     tokens.push(Token { kind: TokenKind::Plus, value: "+".to_string(), line: line_number });
                     i += 1;
+                }
+                // Adjacency predicate: `@` immediately followed by a name.
+                // The name is checked by the parser, which reports unknown
+                // names with the list of valid ones.
+                b'@' => {
+                    let start = i + 1;
+                    let mut j = start;
+                    while j < bytes.len()
+                        && (bytes[j].is_ascii_alphanumeric() || bytes[j] == b'_')
+                    {
+                        j += 1;
+                    }
+                    let value = String::from_utf8_lossy(&bytes[start..j]).to_string();
+                    // `@asi(T, C…)` is the other half of LANG84 E6. Its
+                    // argument list (with commas) is not even tokenizable
+                    // yet, so say so here rather than fail on the comma.
+                    if value == "asi" {
+                        return Err(ParserGrammarError {
+                            message: "'@asi' (automatic semicolon insertion, LANG84 E6) is \
+                                      not implemented yet; only the adjacency predicates are"
+                                .to_string(),
+                            line_number,
+                        });
+                    }
+                    tokens.push(Token { kind: TokenKind::At, value, line: line_number });
+                    i = j;
                 }
                 // Separator operator (// inside repetition braces).
                 b'/' if i + 1 < bytes.len() && bytes[i + 1] == b'/' => {
@@ -755,6 +936,26 @@ impl Parser {
                 Ok(GrammarElement::Literal { value: tok.value })
             }
 
+            // `@name` — a zero-width token-adjacency predicate (F11).
+            TokenKind::At => {
+                self.advance();
+                if let Some(predicate) = AdjacencyPredicate::from_name(&tok.value) {
+                    return Ok(GrammarElement::AdjacencyPredicate { predicate });
+                }
+                let valid: Vec<String> =
+                    AdjacencyPredicate::ALL.iter().map(|p| p.to_string()).collect();
+                let message = if tok.value.is_empty() {
+                    format!("Expected a predicate name after '@' (one of {})", valid.join(", "))
+                } else {
+                    format!(
+                        "Unknown predicate '@{}' (expected one of {})",
+                        tok.value,
+                        valid.join(", ")
+                    )
+                };
+                Err(ParserGrammarError { message, line_number: tok.line })
+            }
+
             // { body } — zero-or-more repetition, with extensions:
             //   { body }+         — one-or-more repetition
             //   { body // sep }   — separated repetition (zero-or-more)
@@ -960,6 +1161,25 @@ pub fn validate_parser_grammar(
         }
     }
 
+    // --- Repetitions whose body can match without consuming (F11) ---
+    //
+    // `{ [ X ] }`, `{ @space_before | X }` or `{ p }` with `p = &X` can
+    // succeed on an iteration that consumes nothing. The parser no longer
+    // hangs on them (it stops the repetition after such an iteration), but
+    // the body is almost certainly not what the author meant.
+    //
+    // Policy: an error when the nullable body involves an adjacency
+    // predicate (new F11 syntax, so no existing grammar is affected); a
+    // `Warning:` otherwise, because pre-F11 grammars in this repository
+    // already contain nullable repetition bodies that parse correctly.
+    let facts = RepetitionFacts {
+        nullable: nullable_rules(grammar),
+        with_predicate: predicate_rules(grammar),
+    };
+    for rule in &grammar.rules {
+        check_nullable_repetitions(&rule.body, rule, &facts, &mut issues);
+    }
+
     // --- Unreachable rules ---
     if !grammar.rules.is_empty() {
         let start_rule = &grammar.rules[0].name;
@@ -974,6 +1194,171 @@ pub fn validate_parser_grammar(
     }
 
     issues
+}
+
+/// The rules that can succeed without consuming a token ("nullable" rules),
+/// computed as a least fixpoint.
+///
+/// ```text
+///   element                     nullable when
+///   -------                     -------------
+///   NAME, "x"                   never
+///   @p, &x, !x                  always (zero-width)
+///   [ x ], { x }                always (zero matches is a match)
+///   { x }+, ( x )               x is
+///   { x // s }                  always;  { x // s }+ : x is
+///   a b c                       every element is
+///   a | b | c                   any choice is
+///   rule                        the rule's body is (fixpoint)
+/// ```
+///
+/// Each round adds at least one rule or stops, so this takes at most
+/// `rules.len() + 1` rounds.
+pub fn nullable_rules(grammar: &ParserGrammar) -> HashSet<String> {
+    let mut nullable = HashSet::new();
+    loop {
+        let mut changed = false;
+        for rule in &grammar.rules {
+            if !nullable.contains(&rule.name) && is_nullable(&rule.body, &nullable) {
+                nullable.insert(rule.name.clone());
+                changed = true;
+            }
+        }
+        if !changed {
+            return nullable;
+        }
+    }
+}
+
+/// Whether `element` can succeed without consuming a token, given the set
+/// of nullable rules (see [`nullable_rules`]).
+fn is_nullable(element: &GrammarElement, nullable: &HashSet<String>) -> bool {
+    match element {
+        GrammarElement::AdjacencyPredicate { .. }
+        | GrammarElement::PositiveLookahead { .. }
+        | GrammarElement::NegativeLookahead { .. }
+        | GrammarElement::Optional { .. }
+        | GrammarElement::Repetition { .. } => true,
+        GrammarElement::OneOrMore { element } | GrammarElement::Group { element } => {
+            is_nullable(element, nullable)
+        }
+        GrammarElement::SeparatedRepetition { element, at_least_one, .. } => {
+            !*at_least_one || is_nullable(element, nullable)
+        }
+        GrammarElement::Sequence { elements } => elements.iter().all(|e| is_nullable(e, nullable)),
+        GrammarElement::Alternation { choices } => choices.iter().any(|c| is_nullable(c, nullable)),
+        GrammarElement::RuleReference { name } => nullable.contains(name),
+        GrammarElement::TokenReference { .. } | GrammarElement::Literal { .. } => false,
+    }
+}
+
+/// The rules whose body contains an adjacency predicate, directly or through
+/// the rules it references (least fixpoint, like [`nullable_rules`]).
+fn predicate_rules(grammar: &ParserGrammar) -> HashSet<String> {
+    let mut with = HashSet::new();
+    loop {
+        let mut changed = false;
+        for rule in &grammar.rules {
+            if !with.contains(&rule.name) && contains_predicate(&rule.body, &with) {
+                with.insert(rule.name.clone());
+                changed = true;
+            }
+        }
+        if !changed {
+            return with;
+        }
+    }
+}
+
+/// Whether `element` contains an adjacency predicate, directly or through a
+/// rule in `with`.
+fn contains_predicate(element: &GrammarElement, with: &HashSet<String>) -> bool {
+    match element {
+        GrammarElement::AdjacencyPredicate { .. } => true,
+        GrammarElement::RuleReference { name } => with.contains(name),
+        GrammarElement::TokenReference { .. } | GrammarElement::Literal { .. } => false,
+        GrammarElement::Sequence { elements } => elements.iter().any(|e| contains_predicate(e, with)),
+        GrammarElement::Alternation { choices } => choices.iter().any(|c| contains_predicate(c, with)),
+        GrammarElement::Repetition { element }
+        | GrammarElement::Optional { element }
+        | GrammarElement::Group { element }
+        | GrammarElement::PositiveLookahead { element }
+        | GrammarElement::NegativeLookahead { element }
+        | GrammarElement::OneOrMore { element } => contains_predicate(element, with),
+        GrammarElement::SeparatedRepetition { element, separator, .. } => {
+            contains_predicate(element, with) || contains_predicate(separator, with)
+        }
+    }
+}
+
+/// Facts the repetition check needs about the whole grammar.
+struct RepetitionFacts {
+    nullable: HashSet<String>,
+    with_predicate: HashSet<String>,
+}
+
+/// Walk `element` and report every repetition whose body can match without
+/// consuming a token (see the F11 policy note in `validate_parser_grammar`).
+fn check_nullable_repetitions(
+    element: &GrammarElement,
+    rule: &GrammarRule,
+    facts: &RepetitionFacts,
+    issues: &mut Vec<String>,
+) {
+    let mut report = |body: &GrammarElement, nullable_body: bool| {
+        if !nullable_body {
+            return;
+        }
+        let severity = if contains_predicate(body, &facts.with_predicate) {
+            ""
+        } else {
+            "Warning: "
+        };
+        issues.push(format!(
+            "{}Line {}: Rule '{}' repeats a body that can match without consuming a \
+             token; the parser stops such a repetition after its first empty \
+             iteration instead of looping",
+            severity, rule.line_number, rule.name
+        ));
+    };
+    match element {
+        GrammarElement::Repetition { element: body }
+        | GrammarElement::OneOrMore { element: body } => {
+            report(body, is_nullable(body, &facts.nullable));
+            check_nullable_repetitions(body, rule, facts, issues);
+        }
+        GrammarElement::SeparatedRepetition { element: body, separator, .. } => {
+            let both = is_nullable(body, &facts.nullable) && is_nullable(separator, &facts.nullable);
+            if both {
+                let joined = GrammarElement::Sequence {
+                    elements: vec![(**separator).clone(), (**body).clone()],
+                };
+                report(&joined, true);
+            }
+            check_nullable_repetitions(body, rule, facts, issues);
+            check_nullable_repetitions(separator, rule, facts, issues);
+        }
+        GrammarElement::Sequence { elements } => {
+            for e in elements {
+                check_nullable_repetitions(e, rule, facts, issues);
+            }
+        }
+        GrammarElement::Alternation { choices } => {
+            for c in choices {
+                check_nullable_repetitions(c, rule, facts, issues);
+            }
+        }
+        GrammarElement::Group { element: inner }
+        | GrammarElement::Optional { element: inner }
+        | GrammarElement::PositiveLookahead { element: inner }
+        | GrammarElement::NegativeLookahead { element: inner } => {
+            check_nullable_repetitions(inner, rule, facts, issues);
+        }
+        GrammarElement::RuleReference { .. }
+        | GrammarElement::TokenReference { .. }
+        | GrammarElement::Literal { .. }
+        | GrammarElement::AdjacencyPredicate { .. } => {}
+    }
 }
 
 // ===========================================================================
@@ -1211,7 +1596,8 @@ factor       = NUMBER | STRING | NAME | LPAREN expression RPAREN ;
     #[test]
     fn test_error_unexpected_character() {
         // Characters that are not part of the EBNF notation.
-        let result = parse_parser_grammar("term = @ ;");
+        // (`@` used to be the example here; F11 gave it a meaning.)
+        let result = parse_parser_grammar("term = $ ;");
         assert!(result.is_err());
         assert!(result.unwrap_err().message.contains("Unexpected character"));
     }
@@ -1364,5 +1750,280 @@ factor       = NUMBER | STRING | NAME | LPAREN expression RPAREN ;
         let grammar = parse_parser_grammar(source).unwrap();
         assert_eq!(grammar.version, 0);
         assert_eq!(grammar.rules.len(), 1);
+    }
+
+    // -----------------------------------------------------------------------
+    // F11: token-adjacency predicates (`@space_before`, ...)
+    // -----------------------------------------------------------------------
+
+    fn pred(p: AdjacencyPredicate) -> GrammarElement {
+        GrammarElement::AdjacencyPredicate { predicate: p }
+    }
+
+    fn tok_ref(name: &str) -> GrammarElement {
+        GrammarElement::TokenReference { name: name.to_string() }
+    }
+
+    #[test]
+    fn test_each_adjacency_predicate_parses_by_name() {
+        for p in AdjacencyPredicate::ALL {
+            let source = format!("r = @{} NAME ;", p.name());
+            let g = parse_parser_grammar(&source).unwrap();
+            assert_eq!(
+                g.rules[0].body,
+                GrammarElement::Sequence { elements: vec![pred(p), tok_ref("NAME")] },
+                "predicate @{}",
+                p.name()
+            );
+            // Name and variant lookups are mutually consistent.
+            assert_eq!(AdjacencyPredicate::from_name(p.name()), Some(p));
+            assert_eq!(p.to_string(), format!("@{}", p.name()));
+        }
+    }
+
+    #[test]
+    fn test_adjacency_predicate_holds_truth_table() {
+        use AdjacencyPredicate::*;
+        // (space, newline) combinations a lexer can produce: none, space only,
+        // space + newline. Newline without space is included for robustness.
+        let cases = [(false, false), (true, false), (true, true), (false, true)];
+        for (space, newline) in cases {
+            assert_eq!(SpaceBefore.holds(space, newline), space);
+            assert_eq!(NoSpaceBefore.holds(space, newline), !space);
+            assert_eq!(SpaceAfterNext.holds(space, newline), space);
+            assert_eq!(NoSpaceAfterNext.holds(space, newline), !space);
+            assert_eq!(NewlineBefore.holds(space, newline), newline);
+            assert_eq!(NoNewlineBefore.holds(space, newline), !newline);
+        }
+        assert!(SpaceAfterNext.reads_after_next());
+        assert!(NoSpaceAfterNext.reads_after_next());
+        assert!(!SpaceBefore.reads_after_next());
+        assert!(!NoNewlineBefore.reads_after_next());
+    }
+
+    #[test]
+    fn test_lang84_e6_examples_parse_verbatim() {
+        // The examples from LANG84 §E6 (minus `@asi`, which is not part of F11).
+        let source = r#"
+return_statement = "return" [ @no_newline_before expression ] SEMICOLON ;
+postfix_expr     = NAME [ @no_newline_before ( "++" | "--" ) ] ;
+command_arg      = @space_before !@space_after_next MINUS primary ;
+expression       = NAME ;
+primary          = NUMBER ;
+"#;
+        let g = parse_parser_grammar(source).unwrap();
+        assert_eq!(
+            g.rules[0].body,
+            GrammarElement::Sequence {
+                elements: vec![
+                    GrammarElement::Literal { value: "return".to_string() },
+                    GrammarElement::Optional {
+                        element: Box::new(GrammarElement::Sequence {
+                            elements: vec![
+                                pred(AdjacencyPredicate::NoNewlineBefore),
+                                GrammarElement::RuleReference { name: "expression".to_string() },
+                            ],
+                        }),
+                    },
+                    tok_ref("SEMICOLON"),
+                ],
+            }
+        );
+        assert_eq!(
+            g.rules[2].body,
+            GrammarElement::Sequence {
+                elements: vec![
+                    pred(AdjacencyPredicate::SpaceBefore),
+                    GrammarElement::NegativeLookahead {
+                        element: Box::new(pred(AdjacencyPredicate::SpaceAfterNext)),
+                    },
+                    tok_ref("MINUS"),
+                    GrammarElement::RuleReference { name: "primary".to_string() },
+                ],
+            }
+        );
+    }
+
+    #[test]
+    fn test_adjacency_predicate_after_a_token_and_in_groups() {
+        // A predicate written after a token tests the gap that follows it.
+        let g = parse_parser_grammar(
+            r#"r = MINUS @no_space_before NUMBER | { @space_before NAME }+ | &@newline_before NAME ;"#,
+        )
+        .unwrap();
+        let GrammarElement::Alternation { choices } = &g.rules[0].body else {
+            panic!("expected alternation, got {:?}", g.rules[0].body);
+        };
+        assert_eq!(
+            choices[0],
+            GrammarElement::Sequence {
+                elements: vec![tok_ref("MINUS"), pred(AdjacencyPredicate::NoSpaceBefore), tok_ref("NUMBER")],
+            }
+        );
+        assert_eq!(
+            choices[1],
+            GrammarElement::OneOrMore {
+                element: Box::new(GrammarElement::Sequence {
+                    elements: vec![pred(AdjacencyPredicate::SpaceBefore), tok_ref("NAME")],
+                }),
+            }
+        );
+        assert_eq!(
+            choices[2],
+            GrammarElement::Sequence {
+                elements: vec![
+                    GrammarElement::PositiveLookahead {
+                        element: Box::new(pred(AdjacencyPredicate::NewlineBefore)),
+                    },
+                    tok_ref("NAME"),
+                ],
+            }
+        );
+        // A predicate before a literal.
+        let g = parse_parser_grammar(r#"r = NAME @no_newline_before "++" ;"#).unwrap();
+        assert_eq!(
+            g.rules[0].body,
+            GrammarElement::Sequence {
+                elements: vec![
+                    tok_ref("NAME"),
+                    pred(AdjacencyPredicate::NoNewlineBefore),
+                    GrammarElement::Literal { value: "++".to_string() },
+                ],
+            }
+        );
+    }
+
+    #[test]
+    fn test_unknown_adjacency_predicate_is_rejected_with_valid_names() {
+        let err = parse_parser_grammar("r = NAME\n  @spaces_before NAME ;").unwrap_err();
+        assert_eq!(err.line_number, 2);
+        assert!(err.message.contains("Unknown predicate '@spaces_before'"), "{}", err.message);
+        for p in AdjacencyPredicate::ALL {
+            assert!(err.message.contains(&p.to_string()), "{}", err.message);
+        }
+        // Case-sensitive.
+        let err = parse_parser_grammar("r = @Space_Before NAME ;").unwrap_err();
+        assert!(err.message.contains("Unknown predicate '@Space_Before'"), "{}", err.message);
+    }
+
+    #[test]
+    fn test_bare_at_sign_is_rejected() {
+        let err = parse_parser_grammar("r = @ NAME ;").unwrap_err();
+        assert!(err.message.contains("Expected a predicate name after '@'"), "{}", err.message);
+    }
+
+    #[test]
+    fn test_asi_is_rejected_as_not_yet_implemented() {
+        let err = parse_parser_grammar("end = SEMICOLON | @asi(SEMICOLON, RBRACE) ;").unwrap_err();
+        assert!(err.message.contains("'@asi'"), "{}", err.message);
+        assert!(err.message.contains("not implemented yet"), "{}", err.message);
+    }
+
+    #[test]
+    fn test_e7_binding_forms_are_rejected() {
+        // LANG84 E7 syntax is not implemented; it must fail loudly, not parse
+        // into something else.
+        let err = parse_parser_grammar("param = NAME@declare ;").unwrap_err();
+        assert!(err.message.contains("Unknown predicate '@declare'"), "{}", err.message);
+    }
+
+    #[test]
+    fn test_at_sign_inside_literal_or_comment_is_not_a_predicate() {
+        let g = parse_parser_grammar("# @version 2\nr = \"@space_before\" ; # @asi\n").unwrap();
+        assert_eq!(g.version, 2);
+        assert_eq!(g.rules[0].body, GrammarElement::Literal { value: "@space_before".to_string() });
+    }
+
+    #[test]
+    fn test_adjacency_predicates_add_no_references() {
+        let g = parse_parser_grammar("r = @space_before NAME @no_newline_before other ;\nother = NUMBER ;")
+            .unwrap();
+        let tokens = grammar_token_references(&g);
+        assert_eq!(tokens, ["NAME", "NUMBER"].iter().map(|s| s.to_string()).collect());
+        let rules = grammar_rule_references(&g);
+        assert_eq!(rules, ["other"].iter().map(|s| s.to_string()).collect());
+        let token_set: HashSet<String> = ["NAME", "NUMBER"].iter().map(|s| s.to_string()).collect();
+        assert!(validate_parser_grammar(&g, Some(&token_set)).is_empty());
+    }
+
+    fn nullable_issues(grammar: &str) -> Vec<String> {
+        let g = parse_parser_grammar(grammar).unwrap();
+        validate_parser_grammar(&g, None)
+            .into_iter()
+            .filter(|i| i.contains("without consuming a token"))
+            .collect()
+    }
+
+    #[test]
+    fn test_validation_rejects_nullable_repetitions_with_predicates() {
+        for grammar in [
+            // Every path zero-width.
+            "r = NAME { @space_before } ;",
+            "r = NAME { @space_before !NAME }+ ;",
+            "r = NAME { ( @newline_before | &NAME ) } ;",
+            "r = NAME { @space_before // @no_space_before } ;",
+            "r = NAME [ { [ @no_space_before ] } ] ;",
+            // Only *some* path is empty (security review probes).
+            "prog = NAME { @space_before | NAME } SEMI ;",
+            "prog = NAME { @space_before [ NAME ] } SEMI ;",
+            "prog = NAME { !@no_space_before | NAME } SEMI ;",
+            // Nullable through a rule reference.
+            "prog = NAME { p } SEMI ;\np = @space_before ;",
+            "prog = NAME { p } SEMI ;\np = q ;\nq = [ @space_before NAME ] ;",
+        ] {
+            let issues = nullable_issues(grammar);
+            assert_eq!(issues.len(), 1, "{}: {:?}", grammar, issues);
+            assert!(issues[0].starts_with("Line 1: Rule '"), "{}", issues[0]);
+            assert!(issues[0].contains("stops such a repetition"), "{}", issues[0]);
+        }
+    }
+
+    #[test]
+    fn test_validation_warns_on_nullable_repetitions_without_predicates() {
+        // Pre-F11 shapes. The C# grammars' `switch_block` has exactly the
+        // second one; the parser now stops after an empty iteration, so these
+        // are warnings, not errors.
+        for grammar in [
+            "r = NAME { [ NAME ] } ;",
+            "block = { section } ;\nsection = { label } { NAME } ;\nlabel = COLON ;",
+        ] {
+            let issues = nullable_issues(grammar);
+            assert_eq!(issues.len(), 1, "{}: {:?}", grammar, issues);
+            assert!(issues[0].starts_with("Warning: Line 1: Rule '"), "{}", issues[0]);
+        }
+    }
+
+    #[test]
+    fn test_separated_repetition_with_a_consuming_element_is_fine() {
+        // The separator may be nullable as long as the element consumes.
+        assert!(nullable_issues("r = { NAME // [ COMMA ] }+ ;").is_empty());
+        assert!(nullable_issues("r = { NAME // @no_space_before } ;").is_empty());
+    }
+
+    #[test]
+    fn test_nullable_rules_fixpoint() {
+        let g = parse_parser_grammar(
+            "a = b c ;\nb = [ NAME ] ;\nc = d | NAME ;\nd = &NAME ;\ne = NAME b ;\nf = { NAME // COMMA }+ ;\nh = { b }+ ;",
+        )
+        .unwrap();
+        let nullable = nullable_rules(&g);
+        let mut names: Vec<&str> = nullable.iter().map(|s| s.as_str()).collect();
+        names.sort();
+        assert_eq!(names, vec!["a", "b", "c", "d", "h"]);
+    }
+
+    #[test]
+    fn test_validation_accepts_predicates_next_to_consuming_elements() {
+        for body in [
+            "{ @space_before NAME }",
+            "{ @space_before NAME | COMMA }",
+            "{ NAME // @no_space_before }",
+            "{ @no_space_before // COMMA }",
+            "@no_newline_before",
+            "[ @space_before ]",
+        ] {
+            let g = parse_parser_grammar(&format!("r = NAME {} ;", body)).unwrap();
+            assert!(validate_parser_grammar(&g, None).is_empty(), "{}", body);
+        }
     }
 }

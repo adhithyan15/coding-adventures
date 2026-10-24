@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:0f309fc9da4c514a",
+  "lessonIds": [
+    "ML-C366-sucana",
+    "ML-C366-atayalam",
+    "ML-C366-kalppatu",
+    "ML-C366-viralatayalam",
+    "ML-C366-duruhamaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch366.txt",
+  "json": "malayalam/narration/ch366.json",
+  "textHash": "fnv1a64:f10b29de3785eea9",
+  "jsonHash": "fnv1a64:b569cd711ea8e410",
+  "findings": []
+}

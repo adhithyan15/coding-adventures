@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Noise in the Market",
+  "label": "ch:mr-noise-in-the-market",
+  "canDo": "I can talk about a vegetable market, noise, an uproar and a bustling street.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C422-vardal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can talk about a vegetable market, noise, an uproar and a bustling street.",
+    "assesses": [
+      "MR-LEX-C422-MANDAI422-03",
+      "MR-LEX-C422-MANDAI422-04",
+      "MR-LEX-C422-MANDAI422-05"
+    ]
+  }
+}

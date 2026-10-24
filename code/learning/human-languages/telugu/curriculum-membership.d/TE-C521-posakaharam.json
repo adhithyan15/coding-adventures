@@ -1,0 +1,11 @@
+{
+  "id": "TE-C521-posakaharam",
+  "pathSegment": "TE-PATH-521-BALAM521",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-521-BALAM521",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C354-onusondhan-kora",
+  "pathSegment": "BN-PATH-354-GOBESHONA354",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-354-GOBESHONA354",
+      "order": 4
+    }
+  ]
+}

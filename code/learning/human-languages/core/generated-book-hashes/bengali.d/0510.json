@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:96c3eb9a47466269",
+  "lessonIds": [
+    "BN-C510-phinail",
+    "BN-C510-jhul",
+    "BN-C510-saph",
+    "BN-C510-ningrano",
+    "BN-C510-maja"
+  ],
+  "tex": "bengali/book/chapters/ch510-cleaning-day.tex"
+}

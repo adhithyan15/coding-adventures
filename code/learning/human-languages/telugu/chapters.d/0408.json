@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Society",
+  "label": "ch:te-society",
+  "canDo": "I can talk about society, associations and discrimination.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C408-vivaksa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can talk about society, associations and discrimination.",
+    "assesses": [
+      "TE-LEX-C408-SAMAJAM408-03",
+      "TE-LEX-C408-SAMAJAM408-04",
+      "TE-LEX-C408-SAMAJAM408-05"
+    ]
+  }
+}

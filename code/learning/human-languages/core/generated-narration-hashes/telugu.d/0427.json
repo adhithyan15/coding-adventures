@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:62eb5df73858211a",
+  "lessonIds": [
+    "TE-C427-pattubattu",
+    "TE-C427-kudurcu",
+    "TE-C427-samadhanaparacu",
+    "TE-C427-santrptiparacu",
+    "TE-C427-madhyavarti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch427.txt",
+  "json": "telugu/narration/ch427.json",
+  "textHash": "fnv1a64:d12f7722168166ee",
+  "jsonHash": "fnv1a64:3d3dfc55f133f211",
+  "findings": []
+}

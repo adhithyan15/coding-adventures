@@ -1,0 +1,11 @@
+{
+  "id": "ML-C367-pitikutuka",
+  "pathSegment": "ML-PATH-367-KURRAM367",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-367-KURRAM367",
+      "order": 2
+    }
+  ]
+}

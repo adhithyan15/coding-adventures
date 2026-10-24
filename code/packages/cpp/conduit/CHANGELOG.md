@@ -1,5 +1,22 @@
 # Changelog — Conduit (C++)
 
+## [0.1.1] - 2026-10-23
+
+### Fixed
+
+- **Use-after-free after `bind()`.** `bind()` marked the `Application`
+  consumed but registration methods ignored the flag and kept writing through
+  the stale `app_` pointer, which `conduit_server_bind` had already freed (it
+  takes the app on success *and* on failure). `bind()` now nulls `app_` before
+  the native call, and every method goes through a private `live()` check that
+  throws `std::logic_error` on a bound or moved-from `Application`.
+- `live()` is called in its own statement before each `new Handler(...)`:
+  C++ leaves function-argument evaluation order unspecified, so folding it into
+  the argument list could allocate the closure first and leak it on the throw.
+- New tests: `application_is_unusable_after_bind`,
+  `application_is_unusable_after_failed_bind`,
+  `moved_from_application_is_unusable`.
+
 ## [0.1.0] - 2026-06-13
 
 ### Added — WEB13 C++ Conduit port

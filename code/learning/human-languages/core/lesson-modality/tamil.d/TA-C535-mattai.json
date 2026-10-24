@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C535-mattai",
+    "language": "tamil",
+    "chapter": 535,
+    "sequence": 30620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c855c745c8c4dd7a"
+  },
+  "findings": []
+}

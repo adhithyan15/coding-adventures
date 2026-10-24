@@ -1,0 +1,866 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 397,
+  "title": "Adding a Point",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9849962a01d71e74",
+  "lessons": [
+    {
+      "id": "TE-C397-antekakunda",
+      "sequence": 19760,
+      "title": "అంతేకాకుండా (antēkākuṇḍā) — not only that; moreover",
+      "headword": "అంతేకాకుండా",
+      "romanization": "antēkākuṇḍā",
+      "gloss": "not only that; moreover",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99197768e33f8b02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for contrary, then the Telugu for likewise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అంతేకాకుండా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంతేకాకుండా — antēkākuṇḍā — \"not only that; moreover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ ఇల్లు పెద్దది, అంతేకాకుండా చౌక కూడా. ā illu peddadi, antēkākuṇḍā cauka kūḍā. That house is big; not only that, it is cheap too."
+            },
+            {
+              "kind": "speech",
+              "text": "అంతే, only that, + కాకుండా, without being: not only that."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంతేకాకుండా (antēkākuṇḍā) is a native Telugu phrase: antē, \"only that\", on the far-pointing base a- (DEDR 1), and kākuṇḍā, \"without being\", a form of avu, \"to be\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antēkākuṇḍā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antēkākuṇḍā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antēkākuṇḍā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antēkākuṇḍā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā illu peddadi, antēkākuṇḍā cauka kūḍā. — That house is big; not only that, it is cheap too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā illu peddadi, antēkākuṇḍā cauka kūḍā.* — That house is big; not only that, it is cheap too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for contrary, then the Telugu for likewise, then say antēkākuṇḍā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for contrary, then the Telugu for likewise, then say *antēkākuṇḍā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అంతేకాకుండా (antēkākuṇḍā) mean? (\"Not only that; moreover\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C397-adananga",
+      "sequence": 19770,
+      "title": "అదనంగా (adanaṅgā) — in addition; extra",
+      "headword": "అదనంగా",
+      "romanization": "adanaṅgā",
+      "gloss": "in addition; extra",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f80003ff1cf8ecb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for likewise, then the Telugu for not only that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అదనంగా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అదనంగా — adanaṅgā — \"in addition; extra\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆదివారం పని చేస్తే అదనంగా డబ్బు ఇస్తారు. ādivāraṁ pani cēstē adanaṅgā ḍabbu istāru. If you work on Sunday they pay extra."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a noun: అదనపు ఖర్చు, an extra cost."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అదనంగా (adanaṅgā) is native Dravidian: DEDR 136 lists Telugu adanamu, \"exceeding, much, excessive\"; -గా makes the adverb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adanaṅgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adanaṅgā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adanaṅgā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adanaṅgā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādivāraṁ pani cēstē adanaṅgā ḍabbu istāru. — If you work on Sunday they pay extra.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādivāraṁ pani cēstē adanaṅgā ḍabbu istāru.* — If you work on Sunday they pay extra.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for likewise, then the Telugu for not only that, then say adanaṅgā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for likewise, then the Telugu for not only that, then say *adanaṅgā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అదనంగా (adanaṅgā) mean? (\"In addition; extra\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C397-sanksiptanga",
+      "sequence": 19780,
+      "title": "సంక్షిప్తంగా (saṅkṣiptaṅgā) — in short; briefly",
+      "headword": "సంక్షిప్తంగా",
+      "romanization": "saṅkṣiptaṅgā",
+      "gloss": "in short; briefly",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7cc5a62cf8905308",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for not only that, then the Telugu for in addition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంక్షిప్తంగా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంక్షిప్తంగా — saṅkṣiptaṅgā — \"in short; briefly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సంక్షిప్తంగా చెప్పాలంటే, మా దగ్గర డబ్బు లేదు. saṅkṣiptaṅgā ceppālaṇṭē, mā daggara ḍabbu lēdu. To put it briefly, we have no money."
+            },
+            {
+              "kind": "speech",
+              "text": "సంక్షిప్తంగా (saṅkṣiptaṅgā) చెప్పాలంటే, to put it in a few words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంక్షిప్తంగా (saṅkṣiptaṅgā) is built on Sanskrit saṁkṣipta, \"abbreviated, contracted, condensed\" (Monier-Williams), with the Telugu adverb ending -గా."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkṣiptaṅgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkṣiptaṅgā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkṣiptaṅgā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkṣiptaṅgā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkṣiptaṅgā ceppālaṇṭē, mā daggara ḍabbu lēdu. — To put it briefly, we have no money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkṣiptaṅgā ceppālaṇṭē, mā daggara ḍabbu lēdu.* — To put it briefly, we have no money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for not only that, then the Telugu for in addition, then say saṅkṣiptaṅgā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for not only that, then the Telugu for in addition, then say *saṅkṣiptaṅgā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంక్షిప్తంగా (saṅkṣiptaṅgā) mean? (\"In short; briefly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C397-perkonu",
+      "sequence": 19790,
+      "title": "పేర్కొను (pērkonu) — to mention; to state",
+      "headword": "పేర్కొను",
+      "romanization": "pērkonu",
+      "gloss": "to mention; to state",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9f2c9554a5400a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for in addition, then the Telugu for in short."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పేర్కొను",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పేర్కొను — pērkonu — \"to mention; to state\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ ఉత్తరంలో అతను తన కారణాలు పేర్కొన్నాడు. ā uttaraṁlō atanu tana kāraṇālu pērkonnāḍu. In that letter he stated his reasons."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పేర్కొన్నాను, pērkonnānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal and written; in talk, చెప్పు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పేర్కొను (pērkonu) is native Dravidian, a compound of pēru, \"a name\" (DEDR 4410), and konu, \"to take\" (DEDR 2151): to name a thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pērkonu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pērkonu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pērkonu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pērkonu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā uttaraṁlō atanu tana kāraṇālu pērkonnāḍu. — In that letter he stated his reasons.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā uttaraṁlō atanu tana kāraṇālu pērkonnāḍu.* — In that letter he stated his reasons.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for in addition, then the Telugu for in short, then say pērkonu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for in addition, then the Telugu for in short, then say *pērkonu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పేర్కొను (pērkonu) mean? (\"To mention; to state\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C397-vyaktam-ceyu",
+      "sequence": 19800,
+      "title": "వ్యక్తం చేయు (vyaktaṁ cēyu) — to express; to voice",
+      "headword": "వ్యక్తం చేయు",
+      "romanization": "vyaktaṁ cēyu",
+      "gloss": "to express; to voice",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bed32ba2c0b6da24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for in short, then the Telugu for to mention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వ్యక్తం చేయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వ్యక్తం చేయు — vyaktaṁ cēyu — \"to express; to voice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె తన సంతోషాన్ని వ్యక్తం చేసింది. āme tana santōṣānni vyaktaṁ cēsindi. She expressed her happiness."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వ్యక్తం చేశాను, vyaktaṁ cēśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "For feelings and views: అభిప్రాయం వ్యక్తం చేయు (vyaktaṁ cēyu), to express an opinion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వ్యక్తం చేయు (vyaktaṁ cēyu) is built from Sanskrit vyakta, \"manifested, apparent, evident\" (Monier-Williams), and the native verb చేయు, \"to do\" (DEDR 1957): to make a feeling plain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyaktaṁ cēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyaktaṁ cēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyaktaṁ cēyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyaktaṁ cēyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme tana santōṣānni vyaktaṁ cēsindi. — She expressed her happiness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme tana santōṣānni vyaktaṁ cēsindi.* — She expressed her happiness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for in short, then the Telugu for to mention, then say vyaktaṁ cēyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for in short, then the Telugu for to mention, then say *vyaktaṁ cēyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వ్యక్తం చేయు (vyaktaṁ cēyu) mean? (\"To express; to voice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R397-review-390-397",
+      "sequence": 19810,
+      "title": "Words from chapters 390–397 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 390-397",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24b924c00d82861f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for a fact and a theory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fact, a theory, a principle, a process, to define",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fact, a theory, a principle, a process, to define]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "importance, priority, basic, to stress, to bring up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: importance, priority, basic, to stress, to bring up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a source, to originate, to lead to, to arise, to crop up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a source, to originate, to lead to, to arise, to crop up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a benefit, to benefit, to suffer a loss, harmful, to be useful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a benefit, to benefit, to suffer a loss, harmful, to be useful]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an explanation, clarity, a justification, to justify, exact",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an explanation, clarity, a justification, to justify, exact]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "so, for that reason, in view of, that is to say, a footing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: so, for that reason, in view of, that is to say, a footing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nevertheless, on the other hand, whereas, contrary, likewise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nevertheless, on the other hand, whereas, contrary, likewise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "not only that, in addition, in short, to mention, to express",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: not only that, in addition, in short, to mention, to express]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A fact? (వాస్తవం, vāstavaṁ.) A theory? (సిద్ధాంతం, siddhāntaṁ.) A principle? (సూత్రం, sūtraṁ.) A process? (ప్రక్రియ, prakriya.) To define? (నిర్వచించు, nirvaciñcu.) Importance? (ప్రాముఖ్యత, prāmukhyata.) Priority? (ప్రాధాన్యం, prādhānyaṁ.) Basic? (ప్రాథమిక, prāthamika.) To stress? (నొక్కిచెప్పు, nokkiceppu.) To bring up? (ప్రస్తావించు, prastāviñcu.) A source? (మూలం, mūlaṁ.) To originate? (ఉద్భవించు, udbhaviñcu.) To lead to? (దారితీయు, dāritīyu.) To arise? (కలుగు, kalugu.) To crop up? (తలెత్తు, talettu.) A benefit? (ప్రయోజనం, prayōjanaṁ.) To benefit? (లాభపడు, lābhapaḍu.) To suffer a loss? (నష్టపోవు, naṣṭapōvu.) Harmful? (హానికరమైన, hānikaramaina.) To be useful? (ఉపయోగపడు, upayōgapaḍu.) An explanation? (వివరణ, vivaraṇa.) Clarity? (స్పష్టత, spaṣṭata.) A justification? (సమర్థన, samarthana.) To justify? (సమర్థించు, samarthiñcu.) Exact? (ఖచ్చితమైన, khaccitamaina.) So? (కనుక, kanuka.) For that reason? (అందుచేత, anducēta.) In view of? (దృష్ట్యా, dṛṣṭyā.) That is to say? (అనగా, anagā.) A footing? (ప్రాతిపదిక, prātipadika.) Nevertheless? (అయినప్పటికీ, ayinappaṭikī.) On the other hand? (మరోవైపు, marōvaipu.) Whereas? (కాగా, kāgā.) Contrary? (విరుద్ధం, viruddhaṁ.) Likewise? (అదేవిధంగా, adēvidhaṅgā.) Not only that? (అంతేకాకుండా, antēkākuṇḍā.) In addition? (అదనంగా, adanaṅgā.) In short? (సంక్షిప్తంగా, saṅkṣiptaṅgā.) To mention? (పేర్కొను, pērkonu.) To express? (వ్యక్తం చేయు, vyaktaṁ cēyu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C519-ujalne",
+    "language": "marathi",
+    "chapter": 519,
+    "sequence": 29800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2810f2e63dc18990"
+  },
+  "findings": []
+}

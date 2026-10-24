@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:19d71fd8ecaa4361",
+  "lessonIds": [
+    "KA-C348-nidhi",
+    "KA-C348-kadalgalla",
+    "KA-C348-sahasa",
+    "KA-C348-rahasya",
+    "KA-C348-mantrika"
+  ],
+  "tex": "kannada/book/chapters/ch348-the-pirate-treasure.tex"
+}

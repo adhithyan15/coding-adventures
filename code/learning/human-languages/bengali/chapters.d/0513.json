@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Chopping and Kneading",
+  "label": "ch:bn-chopping-and-kneading",
+  "canDo": "I can say how food is chopped, peeled, kneaded and rolled out.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C513-kuchono",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can say how food is chopped, peeled, kneaded and rolled out.",
+    "assesses": [
+      "BN-LEX-C513-KOTA513-03",
+      "BN-LEX-C513-KOTA513-04",
+      "BN-LEX-C513-KOTA513-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Musts and Limits",
+  "label": "ch:ta-musts-and-limits",
+  "canDo": "I can say what is necessary, compulsory and the limit.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C384-anaiyitu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can say what is necessary, compulsory and the limit.",
+    "assesses": [
+      "TA-LEX-C384-AVACIYAM384-03",
+      "TA-LEX-C384-AVACIYAM384-04",
+      "TA-LEX-C384-AVACIYAM384-05"
+    ]
+  }
+}

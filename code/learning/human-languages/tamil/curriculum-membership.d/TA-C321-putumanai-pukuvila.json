@@ -1,0 +1,11 @@
+{
+  "id": "TA-C321-putumanai-pukuvila",
+  "pathSegment": "TA-PATH-321-SADANGU321",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-321-SADANGU321",
+      "order": 4
+    }
+  ]
+}

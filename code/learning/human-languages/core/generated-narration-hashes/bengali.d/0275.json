@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:ddba5117ca11b013",
+  "lessonIds": [
+    "BN-C275-nirbhor-kore",
+    "BN-C275-jetam",
+    "BN-C275-songge",
+    "BN-W275-letter-uma",
+    "BN-W275-six-lines",
+    "BN-R275-depends-and-would"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "bengali/narration/ch275.txt",
+  "json": "bengali/narration/ch275.json",
+  "textHash": "fnv1a64:058157cc060dbfd0",
+  "jsonHash": "fnv1a64:f8646f9726e154d7",
+  "findings": []
+}

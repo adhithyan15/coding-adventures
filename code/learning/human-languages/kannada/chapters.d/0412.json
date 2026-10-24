@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "When Danger Comes",
+  "label": "ch:ka-when-danger-comes",
+  "canDo": "I can say a danger, a precaution, probable, hardship and to ward off.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C412-nivarisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can say a danger, a precaution, probable, hardship and to ward off.",
+    "assesses": [
+      "KA-LEX-C412-APAYA412-03",
+      "KA-LEX-C412-APAYA412-04",
+      "KA-LEX-C412-APAYA412-05"
+    ]
+  }
+}

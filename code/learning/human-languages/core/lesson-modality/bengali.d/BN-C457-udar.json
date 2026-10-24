@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C457-udar",
+    "language": "bengali",
+    "chapter": 457,
+    "sequence": 27970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f3992b25262ca6f"
+  },
+  "findings": []
+}

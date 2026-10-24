@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 384,
+  "title": "Grasping an Idea",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2a6970a4b587bb0b",
+  "lessons": [
+    {
+      "id": "KA-C384-grahisu",
+      "sequence": 19410,
+      "title": "ಗ್ರಹಿಸು (grahisu) — to grasp; to comprehend",
+      "headword": "ಗ್ರಹಿಸು",
+      "romanization": "grahisu",
+      "gloss": "to grasp; to comprehend",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d2dc25820de60b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for impossible, then the Kannada for to deny."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗ್ರಹಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗ್ರಹಿಸು — grahisu — \"to grasp; to comprehend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಗು ಪಾಠವನ್ನು ಬೇಗ ಗ್ರಹಿಸಿತು. magu pāṭhavannu bēga grahisitu. The child grasped the lesson quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಗ್ರಹಿಸಿದೆ, grahiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗ್ರಹಿಕೆ, understanding."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗ್ರಹಿಸು (grahisu) is built on Sanskrit grahaṇa, \"seizing, grasping\" (CDIAL 4364), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grahisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grahisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grahisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grahisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "magu pāṭhavannu bēga grahisitu. — The child grasped the lesson quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *magu pāṭhavannu bēga grahisitu.* — The child grasped the lesson quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for impossible, then the Kannada for to deny, then say grahisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for impossible, then the Kannada for to deny, then say *grahisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗ್ರಹಿಸು (grahisu) mean? (\"To grasp; to comprehend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C384-vyakhyana",
+      "sequence": 19420,
+      "title": "ವ್ಯಾಖ್ಯಾನ (vyākhyāna) — an interpretation",
+      "headword": "ವ್ಯಾಖ್ಯಾನ",
+      "romanization": "vyākhyāna",
+      "gloss": "an interpretation",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d765a052193430db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to deny, then the Kannada for to grasp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವ್ಯಾಖ್ಯಾನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವ್ಯಾಖ್ಯಾನ — vyākhyāna — \"an interpretation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಹಳೆಯ ಹಾಡಿಗೆ ಹಲವು ವ್ಯಾಖ್ಯಾನಗಳು ಇವೆ. ā haḷeya hāḍige halavu vyākhyānagaḷu ive. That old song has many interpretations."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ವ್ಯಾಖ್ಯಾನಗಳು, vyākhyānagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a commentary on a text."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವ್ಯಾಖ್ಯಾನ (vyākhyāna) is borrowed from Sanskrit vyākhyāna, \"explaining, commenting\" (CDIAL 12188)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyākhyāna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyākhyāna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyākhyāna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyākhyāna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā haḷeya hāḍige halavu vyākhyānagaḷu ive. — That old song has many interpretations.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā haḷeya hāḍige halavu vyākhyānagaḷu ive.* — That old song has many interpretations.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to deny, then the Kannada for to grasp, then say vyākhyāna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to deny, then the Kannada for to grasp, then say *vyākhyāna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವ್ಯಾಖ್ಯಾನ (vyākhyāna) mean? (\"An interpretation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C384-kalpane",
+      "sequence": 19430,
+      "title": "ಕಲ್ಪನೆ (kalpane) — a notion; an idea",
+      "headword": "ಕಲ್ಪನೆ",
+      "romanization": "kalpane",
+      "gloss": "a notion; an idea",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02973eee3558d733",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to grasp, then the Kannada for an interpretation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಲ್ಪನೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಲ್ಪನೆ — kalpane — \"a notion; an idea\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇದು ಒಳ್ಳೆಯ ಕಲ್ಪನೆ. idu oḷḷeya kalpane. This is a good idea."
+            },
+            {
+              "kind": "speech",
+              "text": "Also imagination: ಕಲ್ಪನೆಯ ಕಥೆ, a made-up story."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಲ್ಪನೆ (kalpane) is borrowed from Sanskrit kalpanā, \"making, forming, arranging\" (Monier-Williams), from kḷp, \"to be fit, to arrange\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalpane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalpane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalpane, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalpane*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "idu oḷḷeya kalpane. — This is a good idea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *idu oḷḷeya kalpane.* — This is a good idea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to grasp, then the Kannada for an interpretation, then say kalpane again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to grasp, then the Kannada for an interpretation, then say *kalpane* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಲ್ಪನೆ (kalpane) mean? (\"A notion; an idea\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C384-amsa",
+      "sequence": 19440,
+      "title": "ಅಂಶ (aṃśa) — an aspect; a point",
+      "headword": "ಅಂಶ",
+      "romanization": "aṃśa",
+      "gloss": "an aspect; a point",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d931530fbef3216e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an interpretation, then the Kannada for a notion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಂಶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಂಶ — aṃśa — \"an aspect; a point\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಪಾಠದಲ್ಲಿ ಮೂರು ಮುಖ್ಯ ಅಂಶಗಳು ಇವೆ. ī pāṭhadalli mūru mukhya aṃśagaḷu ive. This lesson has three main points."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಅಂಶಗಳು, aṃśagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a share or a part."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಂಶ (aṃśa) is borrowed from Sanskrit aṃśa, \"a share, a portion, a part\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṃśa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṃśa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṃśa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṃśa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī pāṭhadalli mūru mukhya aṃśagaḷu ive. — This lesson has three main points.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī pāṭhadalli mūru mukhya aṃśagaḷu ive.* — This lesson has three main points.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an interpretation, then the Kannada for a notion, then say aṃśa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an interpretation, then the Kannada for a notion, then say *aṃśa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಂಶ (aṃśa) mean? (\"An aspect; a point\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C384-laksana",
+      "sequence": 19450,
+      "title": "ಲಕ್ಷಣ (lakṣaṇa) — a feature; a mark",
+      "headword": "ಲಕ್ಷಣ",
+      "romanization": "lakṣaṇa",
+      "gloss": "a feature; a mark",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eabd4914095e4655",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a notion, then the Kannada for an aspect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಲಕ್ಷಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಲಕ್ಷಣ — lakṣaṇa — \"a feature; a mark\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ತಾಳ್ಮೆ ಒಳ್ಳೆಯ ಶಿಕ್ಷಕನ ಲಕ್ಷಣ. tāḷme oḷḷeya śikṣakana lakṣaṇa. Patience is the mark of a good teacher."
+            },
+            {
+              "kind": "speech",
+              "text": "ಲಕ್ಷಣವಾಗಿ, neatly, handsomely."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಲಕ್ಷಣ (lakṣaṇa) is borrowed from Sanskrit lakṣaṇa, \"a mark, a sign, a characteristic\" (CDIAL 10882)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakṣaṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakṣaṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakṣaṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakṣaṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḷme oḷḷeya śikṣakana lakṣaṇa. — Patience is the mark of a good teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḷme oḷḷeya śikṣakana lakṣaṇa.* — Patience is the mark of a good teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a notion, then the Kannada for an aspect, then say lakṣaṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a notion, then the Kannada for an aspect, then say *lakṣaṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಲಕ್ಷಣ (lakṣaṇa) mean? (\"A feature; a mark\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

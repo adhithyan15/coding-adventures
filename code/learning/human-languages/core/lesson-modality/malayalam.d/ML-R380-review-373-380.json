@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R380-review-373-380",
+    "language": "malayalam",
+    "chapter": 380,
+    "sequence": 18630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4be3eff021b64c4"
+  },
+  "findings": []
+}

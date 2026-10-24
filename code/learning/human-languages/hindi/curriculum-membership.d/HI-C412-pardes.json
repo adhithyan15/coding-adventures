@@ -1,0 +1,11 @@
+{
+  "id": "HI-C412-pardes",
+  "pathSegment": "HI-PATH-412-VIDESH412",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-412-VIDESH412",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 324,
+  "title": "Remembering the Dead",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ffd0cbfaa38703c8",
+  "lessons": [
+    {
+      "id": "TA-C324-ancali",
+      "sequence": 18630,
+      "title": "அஞ்சலி (añcali) — a tribute; homage",
+      "headword": "அஞ்சலி",
+      "romanization": "añcali",
+      "gloss": "a tribute; homage",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:242d7d888cb83788",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to bury, then the Tamil for a grave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அஞ்சலி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அஞ்சலி — añcali — \"a tribute; homage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மக்கள் அவருக்கு அஞ்சலி செலுத்தினார்கள். makkaḷ avarukku añcali celuttiṉārkaḷ. The people paid tribute to him."
+            },
+            {
+              "kind": "speech",
+              "text": "அஞ்சலி (añcali) செலுத்து, to pay homage; the person honoured takes -க்கு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அஞ்சலி (añcali) is borrowed from Sanskrit añjali, \"the hollowed hands placed together\" (CDIAL 171), the gesture of homage."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "añcali",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *añcali*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "añcali, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *añcali*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkaḷ avarukku añcali celuttiṉārkaḷ. — The people paid tribute to him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkaḷ avarukku añcali celuttiṉārkaḷ.* — The people paid tribute to him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to bury, then the Tamil for a grave, then say añcali again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to bury, then the Tamil for a grave, then say *añcali* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அஞ்சலி (añcali) mean? (\"A tribute; homage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C324-irutimariyatai",
+      "sequence": 18640,
+      "title": "இறுதிமரியாதை (iṟutimariyātai) — last respects",
+      "headword": "இறுதிமரியாதை",
+      "romanization": "iṟutimariyātai",
+      "gloss": "last respects",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6facea71efda00b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a grave, then the Tamil for a tribute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இறுதிமரியாதை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இறுதிமரியாதை — iṟutimariyātai — \"last respects\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஊர் மக்கள் அவருக்கு இறுதிமரியாதை செலுத்தினார்கள். ūr makkaḷ avarukku iṟutimariyātai celuttiṉārkaḷ. The villagers paid him their last respects."
+            },
+            {
+              "kind": "speech",
+              "text": "இறுதி, last + மரியாதை, respect."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இறுதிமரியாதை (iṟutimariyātai) joins native இறுதி, \"end\" (DEDR 514), with மரியாதை, \"respect\", borrowed from Sanskrit maryādā, \"boundary, propriety\" (CDIAL 9895)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṟutimariyātai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṟutimariyātai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṟutimariyātai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṟutimariyātai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūr makkaḷ avarukku iṟutimariyātai celuttiṉārkaḷ. — The villagers paid him their last respects.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūr makkaḷ avarukku iṟutimariyātai celuttiṉārkaḷ.* — The villagers paid him their last respects.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a grave, then the Tamil for a tribute, then say iṟutimariyātai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a grave, then the Tamil for a tribute, then say *iṟutimariyātai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இறுதிமரியாதை (iṟutimariyātai) mean? (\"Last respects\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C324-ninaivunal",
+      "sequence": 18650,
+      "title": "நினைவுநாள் (niṉaivunāḷ) — a memorial day",
+      "headword": "நினைவுநாள்",
+      "romanization": "niṉaivunāḷ",
+      "gloss": "a memorial day",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4c072923a47ee05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a tribute, then the Tamil for last respects."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நினைவுநாள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நினைவுநாள் — niṉaivunāḷ — \"a memorial day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இன்று என் தாத்தாவின் நினைவுநாள். iṉṟu eṉ tāttāviṉ niṉaivunāḷ. Today is my grandfather's memorial day."
+            },
+            {
+              "kind": "speech",
+              "text": "The yearly day of a death, kept in memory."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நினைவுநாள் (niṉaivunāḷ) is a Tamil compound built from நினைவு, \"remembrance\" (DEDR 3683), and நாள், \"day\" (DEDR 3656)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṉaivunāḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṉaivunāḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṉaivunāḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṉaivunāḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṉṟu eṉ tāttāviṉ niṉaivunāḷ. — Today is my grandfather's memorial day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṉṟu eṉ tāttāviṉ niṉaivunāḷ.* — Today is my grandfather's memorial day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a tribute, then the Tamil for last respects, then say niṉaivunāḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a tribute, then the Tamil for last respects, then say *niṉaivunāḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நினைவுநாள் (niṉaivunāḷ) mean? (\"A memorial day\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C324-eriyuttu",
+      "sequence": 18660,
+      "title": "எரியூட்டு (eriyūṭṭu) — to cremate",
+      "headword": "எரியூட்டு",
+      "romanization": "eriyūṭṭu",
+      "gloss": "to cremate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d04285a7855ebf48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for last respects, then the Tamil for a memorial day."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எரியூட்டு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எரியூட்டு — eriyūṭṭu — \"to cremate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவருடைய உடலை மாலையில் எரியூட்டினார்கள். avaruṭaiya uṭalai mālaiyil eriyūṭṭiṉārkaḷ. They cremated his body in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): எரியூட்டினேன், eriyūṭṭiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of a cremation; the body takes -ஐ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எரியூட்டு (eriyūṭṭu) is a Tamil compound built from எரி, \"fire, flame\" (DEDR 811), and ஊட்டு, \"to feed\" (DEDR 600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eriyūṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eriyūṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eriyūṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eriyūṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaruṭaiya uṭalai mālaiyil eriyūṭṭiṉārkaḷ. — They cremated his body in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaruṭaiya uṭalai mālaiyil eriyūṭṭiṉārkaḷ.* — They cremated his body in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for last respects, then the Tamil for a memorial day, then say eriyūṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for last respects, then the Tamil for a memorial day, then say *eriyūṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எரியூட்டு (eriyūṭṭu) mean? (\"To cremate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C324-ninaivental",
+      "sequence": 18670,
+      "title": "நினைவேந்தல் (niṉaivēntal) — a memorial meeting",
+      "headword": "நினைவேந்தல்",
+      "romanization": "niṉaivēntal",
+      "gloss": "a memorial meeting",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be07ec324a211d6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a memorial day, then the Tamil for to cremate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நினைவேந்தல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நினைவேந்தல் — niṉaivēntal — \"a memorial meeting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பள்ளியில் ஒரு நினைவேந்தல் கூட்டம் நடந்தது. paḷḷiyil oru niṉaivēntal kūṭṭam naṭantatu. A memorial meeting was held at the school."
+            },
+            {
+              "kind": "speech",
+              "text": "நினைவு, memory + ஏந்தல், holding up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நினைவேந்தல் (niṉaivēntal) is a Tamil compound built from நினைவு, \"remembrance\" (DEDR 3683), and ஏந்தல், \"holding up\", from ஏந்து, \"to hold up in the hands\" (DEDR 894)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṉaivēntal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṉaivēntal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṉaivēntal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṉaivēntal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḷḷiyil oru niṉaivēntal kūṭṭam naṭantatu. — A memorial meeting was held at the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḷḷiyil oru niṉaivēntal kūṭṭam naṭantatu.* — A memorial meeting was held at the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a memorial day, then the Tamil for to cremate, then say niṉaivēntal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a memorial day, then the Tamil for to cremate, then say *niṉaivēntal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நினைவேந்தல் (niṉaivēntal) mean? (\"A memorial meeting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

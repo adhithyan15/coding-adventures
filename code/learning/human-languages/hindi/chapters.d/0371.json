@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Even So",
+  "label": "ch:hi-even-so",
+  "canDo": "I can say what happened in spite of something.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C371-arna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can say what happened in spite of something.",
+    "assesses": [
+      "HI-LEX-C371-HALANKI371-03",
+      "HI-LEX-C371-HALANKI371-04",
+      "HI-LEX-C371-HALANKI371-05"
+    ]
+  }
+}

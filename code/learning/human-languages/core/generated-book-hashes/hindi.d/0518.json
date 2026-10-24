@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:35018dcd5f92b612",
+  "lessonIds": [
+    "HI-C518-tar",
+    "HI-C518-balb",
+    "HI-C518-svic",
+    "HI-C518-khuti",
+    "HI-C518-tagna"
+  ],
+  "tex": "hindi/book/chapters/ch518-wires-and-switches.tex"
+}

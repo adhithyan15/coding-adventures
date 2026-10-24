@@ -1,0 +1,952 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 549,
+  "title": "Making a Home",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:ecbbc6440e7a06c5",
+  "lessons": [
+    {
+      "id": "TE-C549-amarcu",
+      "sequence": 27810,
+      "title": "అమర్చు (amarcu) — to set up; to arrange",
+      "headword": "అమర్చు",
+      "romanization": "amarcu",
+      "gloss": "to set up; to arrange",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f25165884dba701",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to sift, then the Telugu for tempering."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అమర్చు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అమర్చు — amarcu — \"to set up; to arrange\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొత్త ఇంట్లో మేము సామాను అమర్చాము. kotta iṇṭlō mēmu sāmānu amarcāmu. We set up our things in the new house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): అమర్చాను, amarcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Putting things where they belong."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అమర్చు (amarcu) is native Dravidian: DEDR 162 lists Telugu amaru, \"to suit, to be fit\", and amar(u)cu, \"to fit, to arrange\", with Tamil amar."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amarcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amarcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amarcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amarcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotta iṇṭlō mēmu sāmānu amarcāmu. — We set up our things in the new house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotta iṇṭlō mēmu sāmānu amarcāmu.* — We set up our things in the new house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to sift, then the Telugu for tempering, then say amarcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to sift, then the Telugu for tempering, then say *amarcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అమర్చు (amarcu) mean? (\"To set up; to arrange\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C549-paracu",
+      "sequence": 27820,
+      "title": "పరచు (paracu) — to spread out; to lay",
+      "headword": "పరచు",
+      "romanization": "paracu",
+      "gloss": "to spread out; to lay",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af546fcda8843e31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for tempering, then the Telugu for to set up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పరచు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరచు — paracu — \"to spread out; to lay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతిథుల కోసం అమ్మ నేల మీద చాప పరిచింది. atithula kōsaṁ amma nēla mīda cāpa paricindi. Mum spread a mat on the floor for the guests."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పరిచాను, paricānu."
+            },
+            {
+              "kind": "speech",
+              "text": "For mats, sheets and beds."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరచు (paracu) is native Dravidian: DEDR 3949 lists Telugu paravu, \"to spread\", and parapu, \"spreading; bedding\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paracu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paracu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paracu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paracu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atithula kōsaṁ amma nēla mīda cāpa paricindi. — Mum spread a mat on the floor for the guests.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atithula kōsaṁ amma nēla mīda cāpa paricindi.* — Mum spread a mat on the floor for the guests.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for tempering, then the Telugu for to set up, then say paracu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for tempering, then the Telugu for to set up, then say *paracu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పరచు (paracu) mean? (\"To spread out; to lay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C549-veligincu",
+      "sequence": 27830,
+      "title": "వెలిగించు (veligiñcu) — to kindle; to light",
+      "headword": "వెలిగించు",
+      "romanization": "veligiñcu",
+      "gloss": "to kindle; to light",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bac83bb82f69bb28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to set up, then the Telugu for to spread out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వెలిగించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెలిగించు — veligiñcu — \"to kindle; to light\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సాయంత్రం అమ్మ దీపం వెలిగించింది. sāyantraṁ amma dīpaṁ veligiñcindi. In the evening mum lit the lamp."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వెలిగించాను, veligiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "For lamps, candles and stoves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెలిగించు (veligiñcu) is native Dravidian: DEDR 5496 lists Telugu velũgu, \"to shine, to give light, to burn\", and its causative velĩgincu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veligiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veligiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veligiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veligiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāyantraṁ amma dīpaṁ veligiñcindi. — In the evening mum lit the lamp.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāyantraṁ amma dīpaṁ veligiñcindi.* — In the evening mum lit the lamp.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to set up, then the Telugu for to spread out, then say veligiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to set up, then the Telugu for to spread out, then say *veligiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వెలిగించు (veligiñcu) mean? (\"To kindle; to light\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C549-ciluku",
+      "sequence": 27840,
+      "title": "చిలుకు (ciluku) — to churn",
+      "headword": "చిలుకు",
+      "romanization": "ciluku",
+      "gloss": "to churn",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6432a909c5818d49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to spread out, then the Telugu for to kindle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చిలుకు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చిలుకు — ciluku — \"to churn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అమ్మమ్మ పెరుగు చిలికి వెన్న తీసింది. ammamma perugu ciliki venna tīsindi. Grandma churned the curd and took out the butter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): చిలికాను, cilikānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Churning curd for butter or buttermilk."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చిలుకు (ciluku) is native Dravidian: DEDR 2570 lists Telugu ciluku, \"to churn\", with Tamil ciluppu, \"to churn, to stir\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciluku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciluku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciluku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciluku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammamma perugu ciliki venna tīsindi. — Grandma churned the curd and took out the butter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammamma perugu ciliki venna tīsindi.* — Grandma churned the curd and took out the butter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to spread out, then the Telugu for to kindle, then say ciluku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to spread out, then the Telugu for to kindle, then say *ciluku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చిలుకు (ciluku) mean? (\"To churn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C549-alasipovu",
+      "sequence": 27850,
+      "title": "అలసిపోవు (alasipōvu) — to get tired; to wear out",
+      "headword": "అలసిపోవు",
+      "romanization": "alasipōvu",
+      "gloss": "to get tired; to wear out",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01414e12614bc0cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to kindle, then the Telugu for to churn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అలసిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అలసిపోవు — alasipōvu — \"to get tired; to wear out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇల్లు సర్దిన తరువాత మేము బాగా అలసిపోయాము. illu sardina taruvāta mēmu bāgā alasipōyāmu. After tidying the house we were very tired."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): అలసిపోయాను, alasipōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Its noun అలసట is tiredness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అలసిపోవు (alasipōvu) is native Dravidian: DEDR 236 lists Telugu alayu, \"to be tired\", and alasaṭa, \"fatigue\"; the verb ends in pōvu, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alasipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alasipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alasipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alasipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "illu sardina taruvāta mēmu bāgā alasipōyāmu. — After tidying the house we were very tired.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *illu sardina taruvāta mēmu bāgā alasipōyāmu.* — After tidying the house we were very tired.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to kindle, then the Telugu for to churn, then say alasipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to kindle, then the Telugu for to churn, then say *alasipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అలసిపోవు (alasipōvu) mean? (\"To get tired; to wear out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R549-review-542-549",
+      "sequence": 27860,
+      "title": "Making a home, again",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 542-549",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb79be1c65781fb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for the art of painting and to portray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the art of painting, to portray, a sculpture, a sculptor, a masterpiece",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the art of painting, to portray, a sculpture, a sculptor, a masterpiece]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a concert, applause, to congratulate, to savour, a stick dance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a concert, applause, to congratulate, to savour, a stick dance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sportsman, an opponent, to clash, to prevail, running",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sportsman, an opponent, to clash, to prevail, running]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to study closely, a workout, to aim, to shove, a bet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to study closely, a workout, to aim, to shove, a bet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the eaves, a low wooden stool, a dug well, a small water pot, a cockroach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the eaves, a low wooden stool, a dug well, a small water pot, a cockroach]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cleanse, to wash clothes, to hang to dry, to shake out, to hang up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cleanse, to wash clothes, to hang to dry, to shake out, to hang up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to boil milk, to scorch, to chop, to sift, tempering",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to boil milk, to scorch, to chop, to sift, tempering]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to set up, to spread out, to kindle, to churn, to get tired",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to set up, to spread out, to kindle, to churn, to get tired]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The art of painting? (చిత్రలేఖనం, citralēkhanaṁ.) To portray? (చిత్రించు, citriñcu.) A sculpture? (శిల్పం, śilpaṁ.) A sculptor? (శిల్పి, śilpi.) A masterpiece? (కళాఖండం, kaḷākhaṇḍaṁ.) A concert? (కచేరీ, kacērī.) Applause? (చప్పట్లు, cappaṭlu.) To congratulate? (అభినందించు, abhinandiñcu.) To savour? (ఆస్వాదించు, āsvādiñcu.) A stick dance? (కోలాటం, kōlāṭaṁ.) A sportsman? (క్రీడాకారుడు, krīḍākāruḍu.) An opponent? (ప్రత్యర్థి, pratyarthi.) To clash? (తలపడు, talapaḍu.) To prevail? (నెగ్గు, neggu.) Running? (పరుగు, parugu.) To study closely? (అభ్యసించు, abhyasiñcu.) A workout? (కసరత్తు, kasarattu.) To aim? (గురిపెట్టు, guripeṭṭu.) To shove? (తోయు, tōyu.) A bet? (పందెం, pandeṁ.) The eaves? (చూరు, cūru.) A low wooden stool? (పీట, pīṭa.) A dug well? (బావి, bāvi.) A small water pot? (చెంబు, cembu.) A cockroach? (బొద్దింక, boddiṅka.) To cleanse? (శుభ్రపరచు, śubhraparacu.) To wash clothes? (ఉతుకు, utuku.) To hang to dry? (ఆరవేయు, āravēyu.) To shake out? (దులుపు, dulupu.) To hang up? (తగిలించు, tagiliñcu.) To boil milk? (కాచు, kācu.) To scorch? (మాడ్చు, māḍcu.) To chop? (తరుగు, tarugu.) To sift? (జల్లించు, jalliñcu.) Tempering? (తాలింపు, tālimpu.) To set up? (అమర్చు, amarcu.) To spread out? (పరచు, paracu.) To kindle? (వెలిగించు, veligiñcu.) To churn? (చిలుకు, ciluku.) To get tired? (అలసిపోవు, alasipōvu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R549-review-final-549",
+      "sequence": 27870,
+      "title": "Making a Home — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 549",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4076bfaa01decc07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for to set up and to spread out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to set up, to spread out, to kindle, to churn, to get tired",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to set up, to spread out, to kindle, to churn, to get tired]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To set up? (అమర్చు, amarcu.) To spread out? (పరచు, paracu.) To kindle? (వెలిగించు, veligiñcu.) To churn? (చిలుకు, ciluku.) To get tired? (అలసిపోవు, alasipōvu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

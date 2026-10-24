@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Books for Pleasure",
+  "label": "ch:ta-books-for-pleasure",
+  "canDo": "I can talk about writers, novels and poems.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C528-toku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about writers, novels and poems.",
+    "assesses": [
+      "TA-LEX-C528-VASIPPU528-03",
+      "TA-LEX-C528-VASIPPU528-04",
+      "TA-LEX-C528-VASIPPU528-05"
+    ]
+  }
+}

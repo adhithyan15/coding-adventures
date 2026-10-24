@@ -1,0 +1,11 @@
+{
+  "language": "marathi",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:0b216bb6f3fcd07c",
+  "lessonIds": [
+    "MR-C286-jar-tar",
+    "MR-C286-padlyas",
+    "MR-R286-if-and-otherwise"
+  ],
+  "tex": "marathi/book/chapters/ch286-if-and-otherwise.tex"
+}

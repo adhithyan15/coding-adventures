@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C463-santos",
+    "language": "hindi",
+    "chapter": 463,
+    "sequence": 25570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f622573e6a2b64a0"
+  },
+  "findings": []
+}

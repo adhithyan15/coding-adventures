@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:2c0a4d26c2e55d59",
+  "lessonIds": [
+    "ML-C417-cattam",
+    "ML-C417-palikkuka",
+    "ML-C417-anusarikkuka",
+    "ML-C417-niyamaparamaya",
+    "ML-C417-niyamaviruddhamaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch417.txt",
+  "json": "malayalam/narration/ch417.json",
+  "textHash": "fnv1a64:4fd9bbc094463316",
+  "jsonHash": "fnv1a64:06bc89ffcead17f4",
+  "findings": []
+}

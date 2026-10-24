@@ -1,0 +1,11 @@
+{
+  "id": "KA-C396-angikarisu",
+  "pathSegment": "KA-PATH-396-MASUDE396",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-396-MASUDE396",
+      "order": 1
+    }
+  ]
+}

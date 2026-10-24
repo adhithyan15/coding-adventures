@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:818235d72262e153",
+  "lessonIds": [
+    "KA-C457-oni",
+    "KA-C457-haduhogu",
+    "KA-C457-anvesisu",
+    "KA-C457-tana",
+    "KA-C457-kangolisu"
+  ],
+  "tex": "kannada/book/chapters/ch457-wandering-about.tex"
+}

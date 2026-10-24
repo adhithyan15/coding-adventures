@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C386-svikaranam",
+    "language": "malayalam",
+    "chapter": 386,
+    "sequence": 18910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9babd33abde6eb47"
+  },
+  "findings": []
+}

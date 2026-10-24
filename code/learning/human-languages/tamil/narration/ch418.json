@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 418,
+  "title": "At the Lodge",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:70f28887c0de3153",
+  "lessons": [
+    {
+      "id": "TA-C418-vituti",
+      "sequence": 24020,
+      "title": "விடுதி (viṭuti) — a lodge; a hostel",
+      "headword": "விடுதி",
+      "romanization": "viṭuti",
+      "gloss": "a lodge; a hostel",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1665b6e9e8377277",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to flounder, then the Tamil for a shore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விடுதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விடுதி — viṭuti — \"a lodge; a hostel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாங்கள் ஒரு சிறிய விடுதியில் தங்கினோம். nāṅkaḷ oru ciṟiya viṭutiyil taṅkiṉōm. We stayed in a small lodge."
+            },
+            {
+              "kind": "speech",
+              "text": "மாணவர் விடுதி (viṭuti) is a students' hostel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விடுதி (viṭuti) is native Dravidian: DEDR 5393 lists it under விடு, \"to leave, to let go\", as \"a lodging\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṭuti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṭuti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṭuti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṭuti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṅkaḷ oru ciṟiya viṭutiyil taṅkiṉōm. — We stayed in a small lodge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṅkaḷ oru ciṟiya viṭutiyil taṅkiṉōm.* — We stayed in a small lodge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to flounder, then the Tamil for a shore, then say viṭuti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to flounder, then the Tamil for a shore, then say *viṭuti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விடுதி (viṭuti) mean? (\"A lodge; a hostel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C418-varaverpalar",
+      "sequence": 24030,
+      "title": "வரவேற்பாளர் (varavēṟpāḷar) — a receptionist",
+      "headword": "வரவேற்பாளர்",
+      "romanization": "varavēṟpāḷar",
+      "gloss": "a receptionist",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86d7d06a8fc4d6ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a shore, then the Tamil for a lodge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வரவேற்பாளர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வரவேற்பாளர் — varavēṟpāḷar — \"a receptionist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வரவேற்பாளர் எங்களுக்கு அறைச் சாவியைக் கொடுத்தார். varavēṟpāḷar eṅkaḷukku aṟaic cāviyaik koṭuttār. The receptionist gave us the room key."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending -ஆளர் makes a person: வரவேற்பு, a welcome, gives வரவேற்பாளர் (varavēṟpāḷar)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வரவேற்பாளர் (varavēṟpāḷar) is built from வரவேற்பு, \"a welcome\" (வரவு, \"coming\", DEDR 5270, + ஏற்பு, \"receiving\", DEDR 905), with the ending -āḷar, \"one who\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varavēṟpāḷar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varavēṟpāḷar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varavēṟpāḷar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varavēṟpāḷar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varavēṟpāḷar eṅkaḷukku aṟaic cāviyaik koṭuttār. — The receptionist gave us the room key.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varavēṟpāḷar eṅkaḷukku aṟaic cāviyaik koṭuttār.* — The receptionist gave us the room key.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a shore, then the Tamil for a lodge, then say varavēṟpāḷar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a shore, then the Tamil for a lodge, then say *varavēṟpāḷar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வரவேற்பாளர் (varavēṟpāḷar) mean? (\"A receptionist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C418-mintukki",
+      "sequence": 24040,
+      "title": "மின்தூக்கி (miṉtūkki) — an elevator; a lift",
+      "headword": "மின்தூக்கி",
+      "romanization": "miṉtūkki",
+      "gloss": "an elevator; a lift",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:983051244857fa29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a lodge, then the Tamil for a receptionist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மின்தூக்கி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மின்தூக்கி — miṉtūkki — \"an elevator; a lift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மின்தூக்கி வேலை செய்யாததால் படிக்கட்டில் ஏறினோம். miṉtūkki vēlai ceyyātatāl paṭikkaṭṭil ēṟiṉōm. Because the lift was not working, we climbed the stairs."
+            },
+            {
+              "kind": "speech",
+              "text": "மின், electric, + தூக்கி, a lifter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மின்தூக்கி (miṉtūkki) is a modern coinage built from மின், \"lightning, electric\" (DEDR 4876), and தூக்கி, \"a lifter\", from தூக்கு, \"to lift\" (DEDR 3376)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṉtūkki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṉtūkki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṉtūkki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṉtūkki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṉtūkki vēlai ceyyātatāl paṭikkaṭṭil ēṟiṉōm. — Because the lift was not working, we climbed the stairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṉtūkki vēlai ceyyātatāl paṭikkaṭṭil ēṟiṉōm.* — Because the lift was not working, we climbed the stairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a lodge, then the Tamil for a receptionist, then say miṉtūkki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a lodge, then the Tamil for a receptionist, then say *miṉtūkki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மின்தூக்கி (miṉtūkki) mean? (\"An elevator; a lift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C418-patukkai",
+      "sequence": 24050,
+      "title": "படுக்கை (paṭukkai) — bedding; a bed",
+      "headword": "படுக்கை",
+      "romanization": "paṭukkai",
+      "gloss": "bedding; a bed",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:443f48c269067245",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a receptionist, then the Tamil for an elevator."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: படுக்கை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "படுக்கை — paṭukkai — \"bedding; a bed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அறையில் இரண்டு படுக்கைகள் இருந்தன. aṟaiyil iraṇṭu paṭukkaikaḷ iruntaṉa. There were two beds in the room."
+            },
+            {
+              "kind": "speech",
+              "text": "படுக்கையறை, a bedroom, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "படுக்கை (paṭukkai) is native Dravidian (DEDR 3852), from படு, \"to lie down\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭukkai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭukkai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭukkai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭukkai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟaiyil iraṇṭu paṭukkaikaḷ iruntaṉa. — There were two beds in the room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟaiyil iraṇṭu paṭukkaikaḷ iruntaṉa.* — There were two beds in the room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a receptionist, then the Tamil for an elevator, then say paṭukkai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a receptionist, then the Tamil for an elevator, then say *paṭukkai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does படுக்கை (paṭukkai) mean? (\"Bedding; a bed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C418-viri",
+      "sequence": 24060,
+      "title": "விரி (viri) — to spread out; to unfold",
+      "headword": "விரி",
+      "romanization": "viri",
+      "gloss": "to spread out; to unfold",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa292ddaa09f6758",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an elevator, then the Tamil for bedding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விரி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விரி — viri — \"to spread out; to unfold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அம்மா படுக்கையில் புதிய போர்வையை விரித்தாள். ammā paṭukkaiyil putiya pōrvaiyai virittāḷ. Mother spread a new blanket on the bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): விரித்தேன், virittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "விரித்தேன் is I spread something; விரிந்தது, it opened out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விரி (viri) is native Dravidian (DEDR 5411), \"to expand, to spread out, to unfold\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammā paṭukkaiyil putiya pōrvaiyai virittāḷ. — Mother spread a new blanket on the bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammā paṭukkaiyil putiya pōrvaiyai virittāḷ.* — Mother spread a new blanket on the bed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an elevator, then the Tamil for bedding, then say viri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an elevator, then the Tamil for bedding, then say *viri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விரி (viri) mean? (\"To spread out; to unfold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

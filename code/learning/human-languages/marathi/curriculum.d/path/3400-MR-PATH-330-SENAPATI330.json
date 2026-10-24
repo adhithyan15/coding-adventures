@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-330-SENAPATI330",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "MR-EXT-330-SENAPATI330"
+  ],
+  "after": []
+}

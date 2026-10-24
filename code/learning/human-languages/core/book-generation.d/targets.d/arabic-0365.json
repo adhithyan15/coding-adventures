@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 365,
+  "output": "arabic/book/chapters/ch365-fact-and-fancy.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

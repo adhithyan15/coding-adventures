@@ -1,0 +1,11 @@
+{
+  "id": "ML-C392-semitteri",
+  "pathSegment": "ML-PATH-392-ANUSOCHANAM392",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-392-ANUSOCHANAM392",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "At the Border",
+  "label": "ch:ta-at-the-border",
+  "canDo": "I can talk about a visa, a border, a checkpoint and an entrance, and goods being seized.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C414-parimutal-cey",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can talk about a visa, a border, a checkpoint and an entrance, and goods being seized.",
+    "assesses": [
+      "TA-LEX-C414-ELLAI414-03",
+      "TA-LEX-C414-ELLAI414-04",
+      "TA-LEX-C414-ELLAI414-05"
+    ]
+  }
+}

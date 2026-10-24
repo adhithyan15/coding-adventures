@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:71e2a80d18c539f8",
+  "lessonIds": [
+    "ML-C504-cavaru",
+    "ML-C504-valicceriyuka",
+    "ML-C504-kuminnukutuka",
+    "ML-C504-nasikkuka",
+    "ML-C504-punarupayogikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch504-litter.tex"
+}

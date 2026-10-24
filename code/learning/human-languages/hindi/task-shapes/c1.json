@@ -68,7 +68,7 @@
       "skill": "listening", "minutes": 50,
       "parts": [
         {
-          "id": "c1-listening-unscripted-discussion", "promptModes": ["recorded Hindi at 160-185 words per minute with natural variation", "multiple speakers"],
+          "id": "c1-listening-unscripted-discussion", "promptModes": ["recorded Hindi at 160-185 words per minute with natural variation", "multiple speakers including one documented regional Hindi voice"],
           "promptGenres": ["unscripted discussion with overlap, repair, and implicit alignment"],
           "responseModes": ["selection", "speaker-stance match", "interaction-function match"], "items": 7,
           "stimulusLength": {"unit": "seconds", "minimum": 300, "maximum": 420, "approximate": false},
@@ -90,7 +90,7 @@
           "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
         },
         {
-          "id": "c1-listening-interview", "promptModes": ["recorded Hindi at 160-185 words per minute with natural variation", "multiple speakers"],
+          "id": "c1-listening-interview", "promptModes": ["recorded Hindi at 160-185 words per minute with natural variation", "multiple speakers including a second documented regional Hindi voice"],
           "promptGenres": ["extended interview with challenge and qualification"],
           "responseModes": ["selection", "speaker-intent match", "evidence match"], "items": 7,
           "stimulusLength": {"unit": "seconds", "minimum": 330, "maximum": 450, "approximate": false},

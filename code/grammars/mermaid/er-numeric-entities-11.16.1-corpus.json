@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER numeric entity identifier vertical slice",
+  "fixtures": [
+    {
+      "name": "numeric-entity-identifiers",
+      "source": "erDiagram\ndirection TB\n1\n2.5 {\n  string value\n}\n99.99\n2.5 ||--|| 99.99 : \"\""
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:82b6c7e3f25c972d",
+  "lessonIds": [
+    "KA-C527-dattu-tegeduko",
+    "KA-C527-salahu",
+    "KA-C527-posisu",
+    "KA-C527-ambegalu",
+    "KA-C527-malatayi"
+  ],
+  "tex": "kannada/book/chapters/ch527-raising-a-child.tex"
+}

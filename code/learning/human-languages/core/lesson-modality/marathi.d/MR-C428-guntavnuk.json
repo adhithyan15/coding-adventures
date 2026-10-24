@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C428-guntavnuk",
+    "language": "marathi",
+    "chapter": 428,
+    "sequence": 24660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83a852bd44692ae9"
+  },
+  "findings": []
+}

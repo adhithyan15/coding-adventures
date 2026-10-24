@@ -1,0 +1,11 @@
+{
+  "id": "TE-C482-pillagali",
+  "pathSegment": "TE-PATH-482-HIMAPATAM482",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-482-HIMAPATAM482",
+      "order": 3
+    }
+  ]
+}

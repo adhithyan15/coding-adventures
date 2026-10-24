@@ -1,0 +1,11 @@
+{
+  "id": "TA-C444-karai-stain",
+  "pathSegment": "TA-PATH-444-KARAI444",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-444-KARAI444",
+      "order": 3
+    }
+  ]
+}

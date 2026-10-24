@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 548,
+  "sourceHash": "fnv1a64:8ab4a7638ec0f50f",
+  "lessonIds": [
+    "MR-C548-adthala",
+    "MR-C548-todga",
+    "MR-C548-pelne",
+    "MR-C548-nistarne",
+    "MR-C548-dalmalne"
+  ],
+  "tex": "marathi/book/chapters/ch548-obstacles.tex"
+}

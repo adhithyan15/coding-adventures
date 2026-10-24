@@ -1,0 +1,11 @@
+{
+  "id": "TA-C340-tura",
+  "pathSegment": "TA-PATH-340-VEEZHCHI340",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-340-VEEZHCHI340",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 479,
+  "title": "A day in the hills",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bcc72072a07d83a0",
+  "lessons": [
+    {
+      "id": "AR-C479-tazallaja",
+      "sequence": 26670,
+      "title": "تزلج (tazallaja) — to ski; to skate",
+      "headword": "تزلج",
+      "romanization": "tazallaja",
+      "gloss": "to ski; to skate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5646c8a3a2c92ab4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for fur, then the Arabic for to graze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تزلج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تزلج — tazallaja — \"to ski; to skate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تزلجنا على الثلج في الشتاء. tazallajnā ʿalā ath-thalj fī ash-shitāʾ. We skied on the snow in winter."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتزلج, yatazallaj."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تزلج (tazallaja) is usually traced to the native Arabic root z-l-j, \"to slip, to slide\". It is Form V."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tazallaja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tazallaja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tazallaja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tazallaja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tazallajnā ʿalā ath-thalj fī ash-shitāʾ. — We skied on the snow in winter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tazallajnā ʿalā ath-thalj fī ash-shitāʾ.* — We skied on the snow in winter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for fur, then the Arabic for to graze, then say tazallaja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for fur, then the Arabic for to graze, then say *tazallaja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تزلج (tazallaja) mean? (\"To ski; to skate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C479-wahsh",
+      "sequence": 26680,
+      "title": "وحش (waḥsh) — a wild beast; a monster",
+      "headword": "وحش",
+      "romanization": "waḥsh",
+      "gloss": "a wild beast; a monster",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d53d80ee6ab51d13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to graze, then the Arabic for to ski."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وحش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وحش — waḥsh — \"a wild beast; a monster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خاف الطفل من الوحش في القصة. khāfa aṭ-ṭifl min al-waḥsh fī al-qiṣṣa. The child was afraid of the beast in the story."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: وحوش, wuḥūsh."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وحش (waḥsh) is built on the native Arabic root w-ḥ-sh, \"wild, desolate\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waḥsh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waḥsh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waḥsh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waḥsh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāfa aṭ-ṭifl min al-waḥsh fī al-qiṣṣa. — The child was afraid of the beast in the story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāfa aṭ-ṭifl min al-waḥsh fī al-qiṣṣa.* — The child was afraid of the beast in the story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to graze, then the Arabic for to ski, then say waḥsh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to graze, then the Arabic for to ski, then say *waḥsh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وحش (waḥsh) mean? (\"A wild beast; a monster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C479-kis",
+      "sequence": 26690,
+      "title": "كيس (kīs) — a plastic bag; a sack",
+      "headword": "كيس",
+      "romanization": "kīs",
+      "gloss": "a plastic bag; a sack",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49cde385b51d4278",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to ski, then the Arabic for a wild beast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كيس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كيس — kīs — \"a plastic bag; a sack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وضعنا الطعام في كيس كبير. waḍaʿnā aṭ-ṭaʿām fī kīs kabīr. We put the food in a big bag."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أكياس, akyās."
+            },
+            {
+              "kind": "speech",
+              "text": "ḥaqība is a bag one carries; kīs is a sack or a plastic bag."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كيس (kīs) is given by Lane as a purse for money; the origin of the word is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kīs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kīs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kīs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kīs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waḍaʿnā aṭ-ṭaʿām fī kīs kabīr. — We put the food in a big bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waḍaʿnā aṭ-ṭaʿām fī kīs kabīr.* — We put the food in a big bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to ski, then the Arabic for a wild beast, then say kīs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to ski, then the Arabic for a wild beast, then say *kīs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does كيس (kīs) mean? (\"A plastic bag; a sack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C479-tabadala",
+      "sequence": 26700,
+      "title": "تبادل (tabādala) — to exchange (with each other)",
+      "headword": "تبادل",
+      "romanization": "tabādala",
+      "gloss": "to exchange (with each other)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b482b49ee2d1e80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a wild beast, then the Arabic for a plastic bag."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تبادل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تبادل — tabādala — \"to exchange (with each other)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تبادلنا العناوين في نهاية الرحلة. tabādalnā al-ʿanāwīn fī nihāyat ar-riḥla. We exchanged addresses at the end of the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتبادل, yatabādal."
+            },
+            {
+              "kind": "speech",
+              "text": "Form VI makes the action mutual: each gives to the other."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تبادل (tabādala) is built on the native Arabic root b-d-l, \"to change, to replace\" (Lane). It is Form VI."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabādala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabādala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabādala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabādala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabādalnā al-ʿanāwīn fī nihāyat ar-riḥla. — We exchanged addresses at the end of the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabādalnā al-ʿanāwīn fī nihāyat ar-riḥla.* — We exchanged addresses at the end of the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a wild beast, then the Arabic for a plastic bag, then say tabādala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a wild beast, then the Arabic for a plastic bag, then say *tabādala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تبادل (tabādala) mean? (\"To exchange (with each other)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C479-hazama",
+      "sequence": 26710,
+      "title": "حزم (ḥazama) — to pack (luggage)",
+      "headword": "حزم",
+      "romanization": "ḥazama",
+      "gloss": "to pack (luggage)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94809e20489ef7f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a plastic bag, then the Arabic for to exchange."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حزم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حزم — ḥazama — \"to pack (luggage)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حزمت أمتعتي قبل الرحلة بيوم. ḥazamtu amtiʿatī qabla ar-riḥla bi-yawm. I packed my luggage a day before the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحزم, yaḥzim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حزم (ḥazama) is built on the native Arabic root ḥ-z-m, \"to bind, to tie up a bundle\" (Lane). It shares its root with ḥizām, \"a belt\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥazama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥazama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥazama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥazama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥazamtu amtiʿatī qabla ar-riḥla bi-yawm. — I packed my luggage a day before the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥazamtu amtiʿatī qabla ar-riḥla bi-yawm.* — I packed my luggage a day before the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a plastic bag, then the Arabic for to exchange, then say ḥazama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a plastic bag, then the Arabic for to exchange, then say *ḥazama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حزم (ḥazama) mean? (\"To pack (luggage)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

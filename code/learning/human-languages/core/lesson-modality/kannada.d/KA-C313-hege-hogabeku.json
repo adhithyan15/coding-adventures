@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C313-hege-hogabeku",
+    "language": "kannada",
+    "chapter": 313,
+    "sequence": 15160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:057c73aaf3a627cc"
+  },
+  "findings": []
+}

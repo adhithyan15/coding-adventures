@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:33244a81e5925b17",
+  "lessonIds": [
+    "TA-C449-elam",
+    "TA-C449-kuttakai",
+    "TA-C449-parivarttanai",
+    "TA-C449-mutalitu",
+    "TA-C449-ataku-vai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch449.txt",
+  "json": "tamil/narration/ch449.json",
+  "textHash": "fnv1a64:a982ef5152d8310c",
+  "jsonHash": "fnv1a64:81c62ffccaf6b55e",
+  "findings": []
+}

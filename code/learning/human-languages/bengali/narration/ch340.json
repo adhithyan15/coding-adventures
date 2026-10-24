@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 340,
+  "title": "What the Law Allows",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:89d7eef74035dc32",
+  "lessons": [
+    {
+      "id": "BN-C340-boidho",
+      "sequence": 21510,
+      "title": "বৈধ (boidhô) — lawful; valid",
+      "headword": "বৈধ",
+      "romanization": "boidhô",
+      "gloss": "lawful; valid",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ab2c3d7dfda7c79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to defend, then the Bengali for to enjoy a right."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বৈধ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বৈধ — boidhô — \"lawful; valid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তোমার ভিসা কি বৈধ? tomār bhisā ki boidhô? Is your visa valid?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বৈধ (boidhô) is Sanskrit vaidha, 'according to rule', legal (Monier-Williams), from vidhi 'a rule'. A paper or an act can be বৈধ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boidhô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boidhô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boidhô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boidhô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomār bhisā ki boidhô? — Is your visa valid?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomār bhisā ki boidhô?* — Is your visa valid?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to defend, then the Bengali for to enjoy a right, then say boidhô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to defend, then the Bengali for to enjoy a right, then say *boidhô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বৈধ (boidhô) mean? (\"Lawful; valid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C340-nishiddho",
+      "sequence": 21520,
+      "title": "নিষিদ্ধ (nishiddhô) — forbidden; banned",
+      "headword": "নিষিদ্ধ",
+      "romanization": "nishiddhô",
+      "gloss": "forbidden; banned",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:feaa39f7159677d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to enjoy a right, then the Bengali for lawful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নিষিদ্ধ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিষিদ্ধ — nishiddhô — \"forbidden; banned\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এখানে পার্কিং নিষিদ্ধ। ekhāne pārking nishiddhô. Parking is forbidden here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিষিদ্ধ (nishiddhô) is Sanskrit niṣiddha, kept back or forbidden (Monier-Williams). It is the word on notices: ধূমপান নিষিদ্ধ, no smoking."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nishiddhô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nishiddhô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nishiddhô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nishiddhô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekhāne pārking nishiddhô. — Parking is forbidden here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekhāne pārking nishiddhô.* — Parking is forbidden here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to enjoy a right, then the Bengali for lawful, then say nishiddhô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to enjoy a right, then the Bengali for lawful, then say *nishiddhô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নিষিদ্ধ (nishiddhô) mean? (\"Forbidden; banned\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C340-dhara",
+      "sequence": 21530,
+      "title": "ধারা (dhārā) — a section (of a law); a clause",
+      "headword": "ধারা",
+      "romanization": "dhārā",
+      "gloss": "a section (of a law); a clause",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6837128afe2fdc56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for lawful, then the Bengali for banned."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ধারা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধারা — dhārā — \"a section (of a law); a clause\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আইনের এই ধারাটা জটিল। āiner ei dhārāṭā jôṭil. This section of the law is complicated."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধারা (dhārā) is Sanskrit dhārā, a stream or flow (Monier-Williams). The sense 'a section of a law', one strand in the flow of the text, is a later legal use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhārā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhārā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āiner ei dhārāṭā jôṭil. — This section of the law is complicated.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āiner ei dhārāṭā jôṭil.* — This section of the law is complicated.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for lawful, then the Bengali for banned, then say dhārā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for lawful, then the Bengali for banned, then say *dhārā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ধারা (dhārā) mean? (\"A section (of a law); a clause\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C340-palon-kora",
+      "sequence": 21540,
+      "title": "পালন করা (pālôn kôrā) — to observe (a rule, a duty); to carry out",
+      "headword": "পালন করা",
+      "romanization": "pālôn kôrā",
+      "gloss": "to observe (a rule, a duty); to carry out",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3db755664a5e9688",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for banned, then the Bengali for a clause."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পালন করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পালন করা — pālôn kôrā — \"to observe (a rule, a duty); to carry out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমরা সব নিয়ম পালন করি। āmrā sôb niyôm pālôn kôri. We follow all the rules."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি তাঁর কর্তব্য পালন করলেন, tini tā̃r kôrtôbyô pālôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পালন করা (pālôn kôrā) is Sanskrit pālana, guarding and keeping (Monier-Williams), with করা: to keep a rule, a duty or a festival day."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pālôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pālôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pālôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pālôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmrā sôb niyôm pālôn kôri. — We follow all the rules.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmrā sôb niyôm pālôn kôri.* — We follow all the rules.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for banned, then the Bengali for a clause, then say pālôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for banned, then the Bengali for a clause, then say *pālôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পালন করা (pālôn kôrā) mean? (\"To observe (a rule, a duty); to carry out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C340-proyog-kora",
+      "sequence": 21550,
+      "title": "প্রয়োগ করা (prôyog kôrā) — to apply; to enforce",
+      "headword": "প্রয়োগ করা",
+      "romanization": "prôyog kôrā",
+      "gloss": "to apply; to enforce",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86743ef50f7a7ef6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a clause, then the Bengali for to carry out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রয়োগ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রয়োগ করা — prôyog kôrā — \"to apply; to enforce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পুলিশ নতুন আইনটা প্রয়োগ করছে। pulish nôtun āinṭā prôyog kôrchhe. The police are enforcing the new law."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি পদ্ধতিটা প্রয়োগ করলেন, tini pôddhôtiṭā prôyog kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রয়োগ করা (prôyog kôrā) is Sanskrit prayoga, application or use (Monier-Williams), with করা: to put a law, a method or a force to work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôyog kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôyog kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôyog kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôyog kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulish nôtun āinṭā prôyog kôrchhe. — The police are enforcing the new law.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulish nôtun āinṭā prôyog kôrchhe.* — The police are enforcing the new law.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a clause, then the Bengali for to carry out, then say prôyog kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a clause, then the Bengali for to carry out, then say *prôyog kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রয়োগ করা (prôyog kôrā) mean? (\"To apply; to enforce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

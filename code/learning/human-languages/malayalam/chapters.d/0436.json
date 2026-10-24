@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "In the Lab",
+  "label": "ch:ml-in-the-lab",
+  "canDo": "I can say a laboratory, an experiment, a survey, a discovery and scientific.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-R436-review-429-436",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can say a laboratory, an experiment, a survey, a discovery and scientific.",
+    "assesses": [
+      "ML-LEX-C436-PARIKSANAM436-03",
+      "ML-LEX-C436-PARIKSANAM436-04",
+      "ML-LEX-C436-PARIKSANAM436-05"
+    ]
+  }
+}

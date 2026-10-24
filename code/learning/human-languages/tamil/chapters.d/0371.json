@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Equal Rights",
+  "label": "ch:ta-equal-rights",
+  "canDo": "I can talk about equality, discrimination and minorities.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C371-otukku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can talk about equality, discrimination and minorities.",
+    "assesses": [
+      "TA-LEX-C371-CAMATTUVAM371-03",
+      "TA-LEX-C371-CAMATTUVAM371-04",
+      "TA-LEX-C371-CAMATTUVAM371-05"
+    ]
+  }
+}

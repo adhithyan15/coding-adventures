@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C439-kadadne",
+    "language": "marathi",
+    "chapter": 439,
+    "sequence": 25240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:246584f1ac58acb5"
+  },
+  "findings": []
+}

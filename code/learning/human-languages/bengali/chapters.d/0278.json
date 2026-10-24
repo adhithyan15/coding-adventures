@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "A Crash on the Road",
+  "label": "ch:bn-a-crash-on-the-road",
+  "canDo": "I can tell what happened in a road accident.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C278-ahoto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can tell what happened in a road accident.",
+    "assesses": [
+      "BN-LEX-C278-DHAKKA278-03",
+      "BN-LEX-C278-DHAKKA278-04",
+      "BN-LEX-C278-DHAKKA278-05"
+    ]
+  }
+}

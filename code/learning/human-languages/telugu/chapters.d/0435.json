@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Thinkers and Reformers",
+  "label": "ch:te-thinkers-and-reformers",
+  "canDo": "I can talk about intellectuals, scholars, philosophy and reform.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C435-prerepincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can talk about intellectuals, scholars, philosophy and reform.",
+    "assesses": [
+      "TE-LEX-C435-MEDHAVI435-03",
+      "TE-LEX-C435-MEDHAVI435-04",
+      "TE-LEX-C435-MEDHAVI435-05"
+    ]
+  }
+}

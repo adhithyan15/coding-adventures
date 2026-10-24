@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "The Prince in Disguise",
+  "label": "ch:hi-the-prince-in-disguise",
+  "canDo": "I can tell how a prince tested the people.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C339-lubhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can tell how a prince tested the people.",
+    "assesses": [
+      "HI-LEX-C339-RAJKUMAR339-03",
+      "HI-LEX-C339-RAJKUMAR339-04",
+      "HI-LEX-C339-RAJKUMAR339-05"
+    ]
+  }
+}

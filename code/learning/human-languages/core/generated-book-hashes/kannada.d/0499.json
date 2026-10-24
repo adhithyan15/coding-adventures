@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:5ab35ef14170495a",
+  "lessonIds": [
+    "KA-C499-munisiko",
+    "KA-C499-mugulnagu",
+    "KA-C499-hinjari",
+    "KA-C499-hottekiccu",
+    "KA-C499-atmavisvasa"
+  ],
+  "tex": "kannada/book/chapters/ch499-changing-moods.tex"
+}

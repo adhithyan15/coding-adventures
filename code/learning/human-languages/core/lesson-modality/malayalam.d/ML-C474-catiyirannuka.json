@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C474-catiyirannuka",
+    "language": "malayalam",
+    "chapter": 474,
+    "sequence": 23680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c96adaf4425b190"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C407-udyamam",
+    "language": "telugu",
+    "chapter": 407,
+    "sequence": 20290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:701f62028b52f4bf"
+  },
+  "findings": []
+}

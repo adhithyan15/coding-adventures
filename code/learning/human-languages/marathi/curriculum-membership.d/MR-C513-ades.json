@@ -1,0 +1,11 @@
+{
+  "id": "MR-C513-ades",
+  "pathSegment": "MR-PATH-513-KARYASHALA513",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-513-KARYASHALA513",
+      "order": 1
+    }
+  ]
+}

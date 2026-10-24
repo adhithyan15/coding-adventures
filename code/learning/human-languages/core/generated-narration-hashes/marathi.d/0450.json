@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:6edc01f30e0138c8",
+  "lessonIds": [
+    "MR-C450-man",
+    "MR-C450-jiv",
+    "MR-C450-sukh",
+    "MR-C450-ascarya",
+    "MR-C450-helavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch450.txt",
+  "json": "marathi/narration/ch450.json",
+  "textHash": "fnv1a64:586f2fc32f6afcf3",
+  "jsonHash": "fnv1a64:d4007a6fc3774c24",
+  "findings": []
+}

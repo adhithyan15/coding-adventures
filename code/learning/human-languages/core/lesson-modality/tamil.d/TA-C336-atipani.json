@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C336-atipani",
+    "language": "tamil",
+    "chapter": 336,
+    "sequence": 19280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0adc98fc1f8c1532"
+  },
+  "findings": []
+}

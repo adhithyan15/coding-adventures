@@ -1,0 +1,11 @@
+{
+  "id": "AR-C283-kana",
+  "pathSegment": "AR-PATH-283-PAST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-283-PAST",
+      "order": 2
+    }
+  ]
+}

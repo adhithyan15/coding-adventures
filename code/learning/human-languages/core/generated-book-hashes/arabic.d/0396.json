@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:ba7330e58286dda7",
+  "lessonIds": [
+    "AR-C396-mustalah",
+    "AR-C396-tarif",
+    "AR-C396-fihris",
+    "AR-C396-utruha",
+    "AR-C396-manhaj"
+  ],
+  "tex": "arabic/book/chapters/ch396-terms-and-theses.tex"
+}

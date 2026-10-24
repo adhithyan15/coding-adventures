@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-453-KOPAM453",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-453-KOPAM453"
+  ],
+  "after": []
+}

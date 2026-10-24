@@ -1,0 +1,11 @@
+{
+  "id": "TE-C357-purvikulu",
+  "pathSegment": "TE-PATH-357-VAMSAM357",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-357-VAMSAM357",
+      "order": 2
+    }
+  ]
+}

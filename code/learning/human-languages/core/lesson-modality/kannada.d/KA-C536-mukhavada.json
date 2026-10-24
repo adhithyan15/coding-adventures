@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C536-mukhavada",
+    "language": "kannada",
+    "chapter": 536,
+    "sequence": 27380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f21746a2685a8ab"
+  },
+  "findings": []
+}

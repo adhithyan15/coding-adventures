@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Promises and Agreements",
+  "label": "ch:ta-promises-and-agreements",
+  "canDo": "I can talk about contracts, promises and pledges.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C387-niraiverru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can talk about contracts, promises and pledges.",
+    "assesses": [
+      "TA-LEX-C387-OPPANTAM387-03",
+      "TA-LEX-C387-OPPANTAM387-04",
+      "TA-LEX-C387-OPPANTAM387-05"
+    ]
+  }
+}

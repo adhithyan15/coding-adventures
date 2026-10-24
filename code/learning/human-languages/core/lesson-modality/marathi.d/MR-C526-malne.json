@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C526-malne",
+    "language": "marathi",
+    "chapter": 526,
+    "sequence": 30150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:010cad3f221fc972"
+  },
+  "findings": []
+}

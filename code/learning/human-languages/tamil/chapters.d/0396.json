@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Pressure and Response",
+  "label": "ch:ta-pressure-and-response",
+  "canDo": "I can talk about stirring people up and how they react.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C396-porutpatuttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can talk about stirring people up and how they react.",
+    "assesses": [
+      "TA-LEX-C396-TUNTU396-03",
+      "TA-LEX-C396-TUNTU396-04",
+      "TA-LEX-C396-TUNTU396-05"
+    ]
+  }
+}

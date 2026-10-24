@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:9cd7c789efc2b5af",
+  "lessonIds": [
+    "AR-C381-faqr",
+    "AR-C381-batala",
+    "AR-C381-tamyiz",
+    "AR-C381-unf",
+    "AR-C381-ana",
+    "AR-R381-review-374-381"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch381.txt",
+  "json": "arabic/narration/ch381.json",
+  "textHash": "fnv1a64:3f6e211de97c3a8b",
+  "jsonHash": "fnv1a64:3fe0e77ecca854db",
+  "findings": []
+}

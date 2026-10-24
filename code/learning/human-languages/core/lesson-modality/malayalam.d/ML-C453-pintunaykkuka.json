@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C453-pintunaykkuka",
+    "language": "malayalam",
+    "chapter": 453,
+    "sequence": 22470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45cc744f244f5271"
+  },
+  "findings": []
+}

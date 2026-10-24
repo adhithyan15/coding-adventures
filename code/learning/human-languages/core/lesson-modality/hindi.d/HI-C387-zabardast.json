@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C387-zabardast",
+    "language": "hindi",
+    "chapter": 387,
+    "sequence": 21290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2eba97c05109d134"
+  },
+  "findings": []
+}

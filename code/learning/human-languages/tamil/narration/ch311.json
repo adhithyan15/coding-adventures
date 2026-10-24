@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 311,
+  "title": "Raising Voices",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bcf6dc91b452a613",
+  "lessons": [
+    {
+      "id": "TA-C311-mulakkam",
+      "sequence": 17970,
+      "title": "முழக்கம் (muḻakkam) — a slogan; a roar",
+      "headword": "முழக்கம்",
+      "romanization": "muḻakkam",
+      "gloss": "a slogan; a roar",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8dea75b47b8bcaac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to portray, then the Tamil for the media."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முழக்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முழக்கம் — muḻakkam — \"a slogan; a roar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மக்கள் தெருவில் முழக்கங்களை எழுப்பினார்கள். makkaḷ teruvil muḻakkaṅkaḷai eḻuppiṉārkaḷ. People raised slogans in the street."
+            },
+            {
+              "kind": "speech",
+              "text": "முழக்கம் (muḻakkam) எழுப்பு, to raise a slogan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முழக்கம் (muḻakkam) is native Dravidian (DEDR 4989): a loud noise, as of thunder or drums, from முழங்கு, \"to roar\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muḻakkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muḻakkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muḻakkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muḻakkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkaḷ teruvil muḻakkaṅkaḷai eḻuppiṉārkaḷ. — People raised slogans in the street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkaḷ teruvil muḻakkaṅkaḷai eḻuppiṉārkaḷ.* — People raised slogans in the street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to portray, then the Tamil for the media, then say muḻakkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to portray, then the Tamil for the media, then say *muḻakkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முழக்கம் (muḻakkam) mean? (\"A slogan; a roar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C311-unnaviratam",
+      "sequence": 17980,
+      "title": "உண்ணாவிரதம் (uṇṇāviratam) — a hunger strike; a fast",
+      "headword": "உண்ணாவிரதம்",
+      "romanization": "uṇṇāviratam",
+      "gloss": "a hunger strike; a fast",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:167909d314483d2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the media, then the Tamil for a slogan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உண்ணாவிரதம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உண்ணாவிரதம் — uṇṇāviratam — \"a hunger strike; a fast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "விவசாயிகள் மூன்று நாள் உண்ணாவிரதம் இருந்தார்கள். vivacāyikaḷ mūṉṟu nāḷ uṇṇāviratam iruntārkaḷ. The farmers went on a three-day hunger strike."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is இரு: உண்ணாவிரதம் (uṇṇāviratam) இரு, to fast in protest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உண்ணாவிரதம் (uṇṇāviratam) joins native உண்ணா, \"not eating\", from உண், \"to eat\" (DEDR 600), and விரதம், \"a vow\", borrowed from Sanskrit vrata (CDIAL 12228)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇṇāviratam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇṇāviratam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇṇāviratam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇṇāviratam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivacāyikaḷ mūṉṟu nāḷ uṇṇāviratam iruntārkaḷ. — The farmers went on a three-day hunger strike.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivacāyikaḷ mūṉṟu nāḷ uṇṇāviratam iruntārkaḷ.* — The farmers went on a three-day hunger strike.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the media, then the Tamil for a slogan, then say uṇṇāviratam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the media, then the Tamil for a slogan, then say *uṇṇāviratam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உண்ணாவிரதம் (uṇṇāviratam) mean? (\"A hunger strike; a fast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C311-kilarntelu",
+      "sequence": 17990,
+      "title": "கிளர்ந்தெழு (kiḷarnteḻu) — to rise up",
+      "headword": "கிளர்ந்தெழு",
+      "romanization": "kiḷarnteḻu",
+      "gloss": "to rise up",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5bce745294aa150a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a slogan, then the Tamil for a hunger strike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கிளர்ந்தெழு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கிளர்ந்தெழு — kiḷarnteḻu — \"to rise up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்த முடிவுக்கு எதிராக மக்கள் கிளர்ந்தெழுந்தார்கள். anta muṭivukku etirāka makkaḷ kiḷarnteḻuntārkaḷ. The people rose up against that decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கிளர்ந்தெழுந்தேன், kiḷarnteḻuntēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "A written word: கிளர், to rise up + எழு, to rise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கிளர்ந்தெழு (kiḷarnteḻu) is a Tamil compound built from கிளர், \"to rise, emerge, be stirred\" (DEDR 1583), and எழு, \"to rise\" (DEDR 851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiḷarnteḻu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiḷarnteḻu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiḷarnteḻu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiḷarnteḻu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anta muṭivukku etirāka makkaḷ kiḷarnteḻuntārkaḷ. — The people rose up against that decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anta muṭivukku etirāka makkaḷ kiḷarnteḻuntārkaḷ.* — The people rose up against that decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a slogan, then the Tamil for a hunger strike, then say kiḷarnteḻu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a slogan, then the Tamil for a hunger strike, then say *kiḷarnteḻu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கிளர்ந்தெழு (kiḷarnteḻu) mean? (\"To rise up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C311-elucci",
+      "sequence": 18000,
+      "title": "எழுச்சி (eḻucci) — an uprising; an upsurge",
+      "headword": "எழுச்சி",
+      "romanization": "eḻucci",
+      "gloss": "an uprising; an upsurge",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77de49cf4ed26d68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a hunger strike, then the Tamil for to rise up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எழுச்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எழுச்சி — eḻucci — \"an uprising; an upsurge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாடு முழுவதும் ஒரு பெரிய எழுச்சி நடந்தது. nāṭu muḻuvatum oru periya eḻucci naṭantatu. A great uprising took place across the country."
+            },
+            {
+              "kind": "speech",
+              "text": "From எழு, to rise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எழுச்சி (eḻucci) is native Dravidian: a noun from எழு, \"to rise, be aroused\" (DEDR 851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eḻucci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eḻucci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eḻucci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eḻucci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭu muḻuvatum oru periya eḻucci naṭantatu. — A great uprising took place across the country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭu muḻuvatum oru periya eḻucci naṭantatu.* — A great uprising took place across the country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a hunger strike, then the Tamil for to rise up, then say eḻucci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a hunger strike, then the Tamil for to rise up, then say *eḻucci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எழுச்சி (eḻucci) mean? (\"An uprising; an upsurge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C311-pirakatanam",
+      "sequence": 18010,
+      "title": "பிரகடனம் (pirakaṭaṉam) — a proclamation",
+      "headword": "பிரகடனம்",
+      "romanization": "pirakaṭaṉam",
+      "gloss": "a proclamation",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8dd5762cfe837cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to rise up, then the Tamil for an uprising."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பிரகடனம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிரகடனம் — pirakaṭaṉam — \"a proclamation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அரசு ஒரு முக்கியமான பிரகடனம் வெளியிட்டது. aracu oru mukkiyamāṉa pirakaṭaṉam veḷiyiṭṭatu. The government issued an important proclamation."
+            },
+            {
+              "kind": "speech",
+              "text": "The verbs are செய் or வெளியிடு: பிரகடனம் (pirakaṭaṉam) செய்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிரகடனம் (pirakaṭaṉam) is borrowed from Sanskrit prakaṭana, \"manifesting, bringing to light\" (Monier-Williams), from prakaṭa, \"manifest\" (CDIAL 8428)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pirakaṭaṉam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pirakaṭaṉam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pirakaṭaṉam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pirakaṭaṉam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aracu oru mukkiyamāṉa pirakaṭaṉam veḷiyiṭṭatu. — The government issued an important proclamation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aracu oru mukkiyamāṉa pirakaṭaṉam veḷiyiṭṭatu.* — The government issued an important proclamation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to rise up, then the Tamil for an uprising, then say pirakaṭaṉam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to rise up, then the Tamil for an uprising, then say *pirakaṭaṉam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பிரகடனம் (pirakaṭaṉam) mean? (\"A proclamation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

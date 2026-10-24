@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "In-Laws",
+  "label": "ch:bn-in-laws",
+  "canDo": "I can name a son-in-law, a daughter-in-law and a husband's family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C483-bhashur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can name a son-in-law, a daughter-in-law and a husband's family.",
+    "assesses": [
+      "BN-LEX-C483-JAMAI483-03",
+      "BN-LEX-C483-JAMAI483-04",
+      "BN-LEX-C483-JAMAI483-05"
+    ]
+  }
+}

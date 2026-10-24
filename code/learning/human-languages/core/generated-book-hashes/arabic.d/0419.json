@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:28fd3e8dcc093d1a",
+  "lessonIds": [
+    "AR-C419-ijabi",
+    "AR-C419-salbi",
+    "AR-C419-asasi",
+    "AR-C419-thanawi",
+    "AR-C419-shamil"
+  ],
+  "tex": "arabic/book/chapters/ch419-positive-and-negative.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C463-katukutu-deoya",
+    "language": "bengali",
+    "chapter": 463,
+    "sequence": 28320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:355cd1e4ad46bbf6"
+  },
+  "findings": []
+}

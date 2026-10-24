@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C466-udyanavanam",
+    "language": "telugu",
+    "chapter": 466,
+    "sequence": 23440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9eb61fcd57b90f69"
+  },
+  "findings": []
+}

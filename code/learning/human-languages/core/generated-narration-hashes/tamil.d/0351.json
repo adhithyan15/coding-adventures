@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:388d0a2c50a6b7ee",
+  "lessonIds": [
+    "TA-C351-kurippitu",
+    "TA-C351-cuttikkattu",
+    "TA-C351-etutturai",
+    "TA-C351-atavatu",
+    "TA-C351-etuttukkattu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch351.txt",
+  "json": "tamil/narration/ch351.json",
+  "textHash": "fnv1a64:5c560732ca1f6db5",
+  "jsonHash": "fnv1a64:478a4e40330919f9",
+  "findings": []
+}

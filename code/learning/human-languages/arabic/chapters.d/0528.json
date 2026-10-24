@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Single, engaged and married",
+  "label": "ch:ar-single-engaged-and-married",
+  "canDo": "I can talk about a fiance, marriage and a mother-in-law, say that someone is single, and that someone loves something passionately.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C528-ashiqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about a fiance, marriage and a mother-in-law, say that someone is single, and that someone loves something passionately.",
+    "assesses": [
+      "AR-LEX-C528-ZAWAJ528-03",
+      "AR-LEX-C528-ZAWAJ528-04",
+      "AR-LEX-C528-ZAWAJ528-05"
+    ]
+  }
+}

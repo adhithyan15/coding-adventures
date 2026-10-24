@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:f67feabbd14b8a37",
+  "lessonIds": [
+    "ML-C404-caritrakaran",
+    "ML-C404-puratana",
+    "ML-C404-taliyola",
+    "ML-C404-lipi",
+    "ML-C404-nasippikkuka",
+    "ML-R404-review-397-404",
+    "ML-R404-review-final-404"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch404.txt",
+  "json": "malayalam/narration/ch404.json",
+  "textHash": "fnv1a64:249537cf883cd461",
+  "jsonHash": "fnv1a64:d7ae6c96d58fb3b6",
+  "findings": []
+}

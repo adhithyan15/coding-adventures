@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C557-kampali",
+    "language": "tamil",
+    "chapter": 557,
+    "sequence": 31720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47fd4d76f042e79f"
+  },
+  "findings": []
+}

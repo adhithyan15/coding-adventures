@@ -1,0 +1,19 @@
+{
+  "chapter": 562,
+  "title": "Rhythm, Raga and the Screen",
+  "label": "ch:ml-rhythm-raga-and-the-screen",
+  "canDo": "I can say rhythm, a raga, a director, a screenplay and a novel.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C562-noval",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 562: I can say rhythm, a raga, a director, a screenplay and a novel.",
+    "assesses": [
+      "ML-LEX-C562-RAGAM562-03",
+      "ML-LEX-C562-RAGAM562-04",
+      "ML-LEX-C562-RAGAM562-05"
+    ]
+  }
+}

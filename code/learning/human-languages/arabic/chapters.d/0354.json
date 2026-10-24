@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "After the blast",
+  "label": "ch:ar-after-the-blast",
+  "canDo": "I can say wreckage, ash, a spark, a flame and to leak.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C354-tasarraba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say wreckage, ash, a spark, a flame and to leak.",
+    "assesses": [
+      "AR-LEX-C354-HUTAM354-03",
+      "AR-LEX-C354-HUTAM354-04",
+      "AR-LEX-C354-HUTAM354-05"
+    ]
+  }
+}

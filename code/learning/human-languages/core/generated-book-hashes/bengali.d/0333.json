@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:112229d6991c0892",
+  "lessonIds": [
+    "BN-C333-jukti",
+    "BN-C333-boktobyo",
+    "BN-C333-pokkho",
+    "BN-C333-biruddhe",
+    "BN-C333-somorthon-kora"
+  ],
+  "tex": "bengali/book/chapters/ch333-making-a-case.tex"
+}

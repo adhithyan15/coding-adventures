@@ -1,0 +1,11 @@
+{
+  "id": "MR-C320-sohla",
+  "pathSegment": "MR-PATH-320-UTSAV320",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-320-UTSAV320",
+      "order": 2
+    }
+  ]
+}

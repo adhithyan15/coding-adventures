@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:573bd77ca50c4922",
+  "lessonIds": [
+    "AR-C324-hadhdhara",
+    "AR-C324-haddada-threaten",
+    "AR-C324-indhar",
+    "AR-C324-saffara",
+    "AR-C324-fawda",
+    "AR-R324-review-317-324"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch324.txt",
+  "json": "arabic/narration/ch324.json",
+  "textHash": "fnv1a64:448f7e58a9e5b10b",
+  "jsonHash": "fnv1a64:8739bdfeb9576e79",
+  "findings": []
+}

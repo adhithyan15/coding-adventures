@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C488-shoishob",
+    "language": "bengali",
+    "chapter": 488,
+    "sequence": 29560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71eef6f28e7cc396"
+  },
+  "findings": []
+}

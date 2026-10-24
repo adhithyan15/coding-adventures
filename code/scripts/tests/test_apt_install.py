@@ -275,6 +275,10 @@ class PruneTests(unittest.TestCase):
 FAKE_APT_GET = """\
 #!/usr/bin/env bash
 echo "DEBIAN_FRONTEND=${DEBIAN_FRONTEND:-} $*" >> "$FAKE_LOG"
+# Which mirror this run would try first, as apt would read the list now.
+if [ -n "${FAKE_MIRROR_LOG:-}" ] && [ -f "${APT_MIRROR_LIST:-}" ]; then
+  head -n 1 "$APT_MIRROR_LIST" | cut -f 1 >> "$FAKE_MIRROR_LOG"
+fi
 for arg in "$@"; do
   if [ "$arg" = "--print-uris" ]; then
     [ -n "${FAKE_URIS:-}" ] && cat "$FAKE_URIS"
@@ -297,6 +301,15 @@ exit 0
 """
 
 
+# The runner image's mirror list, byte for byte as apt logged it
+# (`Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]`).
+RUNNER_MIRRORS = (
+    "http://azure.archive.ubuntu.com/ubuntu/\tpriority:1\n"
+    "https://archive.ubuntu.com/ubuntu/\tpriority:2\n"
+    "https://security.ubuntu.com/ubuntu/\tpriority:3\n"
+)
+
+
 def _install(root: Path, mode: str, *packages: str, **extra: str):
     """Run the whole script, update and install, against the fake apt-get."""
 
@@ -314,6 +327,9 @@ def _install(root: Path, mode: str, *packages: str, **extra: str):
         "APT_RETRY_DELAY": "0",
         "APT_SOURCES_DIR": str(sources_dir),
         "APT_SOURCES_LIST": str(sources_list),
+        # Never the machine's own list: a test run as root would rewrite it.
+        # Absent unless a test writes it, which is the self-hosted case.
+        "APT_MIRROR_LIST": str(root / "apt-mirrors.txt"),
         "FAKE_LOG": str(log),
         "FAKE_MODE": mode,
     }
@@ -407,6 +423,105 @@ class BoundedAptTests(unittest.TestCase):
             self.assertEqual(result.returncode, 2, result.stderr)
             self.assertIn("APT_ATTEMPTS must be a non-negative integer", result.stderr)
             self.assertEqual(calls, [], calls)
+
+    def test_a_retry_starts_on_the_next_mirror_in_the_runner_s_list(self) -> None:
+        # The books job's TeX install met an Azure mirror serving 50-170 KB/s.
+        # apt leaves a mirror only when a fetch fails, so all three attempts
+        # crawled on the same one. Each retry now starts one mirror further
+        # down the list, with apt's priorities renumbered to match.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            mirrors = root / "apt-mirrors.txt"
+            mirrors.write_text(RUNNER_MIRRORS)
+            seen = root / "mirrors.log"
+            result, _calls = _install(
+                root,
+                "missing-package",
+                "texlive-xetex",
+                FAKE_MIRROR_LOG=str(seen),
+            )
+
+            self.assertEqual(result.returncode, 100, result.stderr)
+            # update, then the three install attempts.
+            self.assertEqual(
+                seen.read_text().splitlines(),
+                [
+                    "http://azure.archive.ubuntu.com/ubuntu/",
+                    "http://azure.archive.ubuntu.com/ubuntu/",
+                    "https://archive.ubuntu.com/ubuntu/",
+                    "https://security.ubuntu.com/ubuntu/",
+                ],
+            )
+            self.assertIn(
+                "apt mirrors: the next attempt starts on "
+                "https://archive.ubuntu.com/ubuntu/",
+                result.stderr,
+            )
+            # Two rotations of three entries: the list apt reads is still
+            # complete, one entry per line, numbered 1..3.
+            self.assertEqual(
+                mirrors.read_text(),
+                "https://security.ubuntu.com/ubuntu/\tpriority:1\n"
+                "http://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n"
+                "https://archive.ubuntu.com/ubuntu/\tpriority:3\n",
+            )
+
+    def test_rotation_follows_apt_s_priorities_and_keeps_other_fields(self) -> None:
+        # apt orders the list by priority, not by line, so the rotation must
+        # too; fields it does not own are carried along untouched.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            mirrors = root / "apt-mirrors.txt"
+            mirrors.touch(mode=0o644)
+            mirrors.chmod(0o644)
+            mirrors.write_text(
+                "# comment\n"
+                "https://b.example/ubuntu/\tpriority:2\tarch:amd64\tpriority:x\n"
+                "\n"
+                "https://a.example/ubuntu/\tpriority:1\n"
+            )
+            result, _calls = _install(
+                root, "flaky-update", "libcairo2-dev", FAKE_FAILS="2"
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            # A malformed priority is dropped, not carried beside the new one.
+            self.assertEqual(
+                mirrors.read_text(),
+                "https://b.example/ubuntu/\tpriority:1\tarch:amd64\n"
+                "https://a.example/ubuntu/\tpriority:2\n",
+            )
+            # Replaced by a rename, not rewritten in place: nothing left over.
+            self.assertEqual(sorted(p.name for p in root.glob(".apt-mirrors.*")), [])
+            self.assertEqual(oct(mirrors.stat().st_mode & 0o777), oct(0o644))
+
+    def test_no_list_one_mirror_or_a_symlink_leaves_the_retry_as_it_was(self) -> None:
+        # A self-hosted runner has no list; a single mirror has nowhere to go;
+        # a symlink is not this script's to rewrite. The retry still happens.
+        for setup in ("absent", "single", "symlink"):
+            with self.subTest(setup=setup), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                mirrors = root / "apt-mirrors.txt"
+                target = root / "elsewhere.txt"
+                if setup == "single":
+                    mirrors.write_text("https://a.example/ubuntu/\tpriority:1\n")
+                elif setup == "symlink":
+                    target.write_text(RUNNER_MIRRORS)
+                    mirrors.symlink_to(target)
+                result, calls = _install(
+                    root, "flaky-update", "libcairo2-dev", FAKE_FAILS="2"
+                )
+
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(sum(c.endswith(" update") for c in calls), 2, calls)
+                self.assertNotIn("apt mirrors:", result.stderr)
+                if setup == "single":
+                    self.assertEqual(
+                        mirrors.read_text(),
+                        "https://a.example/ubuntu/\tpriority:1\n",
+                    )
+                if setup == "symlink":
+                    self.assertEqual(target.read_text(), RUNNER_MIRRORS)
 
     def test_a_missing_package_still_fails_after_its_retries(self) -> None:
         # Retrying must not become swallowing: the last attempt's status is

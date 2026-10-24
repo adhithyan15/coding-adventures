@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-309-PAST-SCENE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-309-PAST-SCENE"
+  ],
+  "after": []
+}

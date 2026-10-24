@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 342,
+  "title": "The Siege of the Fort",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9c6bce4bc8c285a3",
+  "lessons": [
+    {
+      "id": "KA-C342-muttige-haku",
+      "sequence": 17180,
+      "title": "ಮುತ್ತಿಗೆ ಹಾಕು (muttige hāku) — to besiege",
+      "headword": "ಮುತ್ತಿಗೆ ಹಾಕು",
+      "romanization": "muttige hāku",
+      "gloss": "to besiege",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa36e14a497238a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a family line, then the Kannada for a monarch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮುತ್ತಿಗೆ ಹಾಕು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುತ್ತಿಗೆ ಹಾಕು — muttige hāku — \"to besiege\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ದೊಡ್ಡ ಸೈನ್ಯ ಕೋಟೆಗೆ ಮುತ್ತಿಗೆ ಹಾಕಿತು. ā doḍḍa sainya kōṭege muttige hākitu. That great army besieged the fort."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮುತ್ತಿಗೆ ಹಾಕಿದೆ, muttige hākide."
+            },
+            {
+              "kind": "speech",
+              "text": "What is besieged takes -ಗೆ. Today people also ಮುತ್ತಿಗೆ ಹಾಕು (muttige hāku) an office in protest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುತ್ತಿಗೆ ಹಾಕು (muttige hāku) is native Dravidian: ಮುತ್ತಿಗೆ, \"a siege\", belongs with Kannada muttu, \"to enclose\", and Tamil muṟṟu, \"to surround, besiege\" (DEDR 5018), with ಹಾಕು, \"to put\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttige hāku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttige hāku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttige hāku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttige hāku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā doḍḍa sainya kōṭege muttige hākitu. — That great army besieged the fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā doḍḍa sainya kōṭege muttige hākitu.* — That great army besieged the fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a family line, then the Kannada for a monarch, then say muttige hāku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a family line, then the Kannada for a monarch, then say *muttige hāku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮುತ್ತಿಗೆ ಹಾಕು (muttige hāku) mean? (\"To besiege\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C342-kandaka",
+      "sequence": 17190,
+      "title": "ಕಂದಕ (kandaka) — a moat; a trench",
+      "headword": "ಕಂದಕ",
+      "romanization": "kandaka",
+      "gloss": "a moat; a trench",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6323ab2fbd52be92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a monarch, then the Kannada for to besiege."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಂದಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂದಕ — kandaka — \"a moat; a trench\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೋಟೆಯ ಸುತ್ತ ಆಳವಾದ ಕಂದಕ ಇತ್ತು. kōṭeya sutta āḷavāda kandaka ittu. There was a deep moat around the fort."
+            },
+            {
+              "kind": "speech",
+              "text": "A ditch dug for defence, often full of water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂದಕ (kandaka) is usually traced to Arabic khandaq, \"a ditch, a trench\", which came into the Indian languages through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kandaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kandaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kandaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kandaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōṭeya sutta āḷavāda kandaka ittu. — There was a deep moat around the fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōṭeya sutta āḷavāda kandaka ittu.* — There was a deep moat around the fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a monarch, then the Kannada for to besiege, then say kandaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a monarch, then the Kannada for to besiege, then say *kandaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಂದಕ (kandaka) mean? (\"A moat; a trench\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C342-suttuvari",
+      "sequence": 17200,
+      "title": "ಸುತ್ತುವರಿ (suttuvari) — to surround",
+      "headword": "ಸುತ್ತುವರಿ",
+      "romanization": "suttuvari",
+      "gloss": "to surround",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11e056392c1567b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to besiege, then the Kannada for a moat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸುತ್ತುವರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸುತ್ತುವರಿ — suttuvari — \"to surround\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೊಲೀಸರು ಆ ಮನೆಯನ್ನು ಸುತ್ತುವರಿದರು. polīsaru ā maneyannu suttuvaridaru. The police surrounded that house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಸುತ್ತುವರಿದೆ, suttuvaride."
+            },
+            {
+              "kind": "speech",
+              "text": "What is surrounded takes -ಅನ್ನು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸುತ್ತುವರಿ (suttuvari) is built on native suttu, \"to surround, go round\" (DEDR 2715), as in ಸುತ್ತ, \"around\"; the origin of the second part is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suttuvari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suttuvari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suttuvari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suttuvari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīsaru ā maneyannu suttuvaridaru. — The police surrounded that house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīsaru ā maneyannu suttuvaridaru.* — The police surrounded that house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to besiege, then the Kannada for a moat, then say suttuvari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to besiege, then the Kannada for a moat, then say *suttuvari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸುತ್ತುವರಿ (suttuvari) mean? (\"To surround\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C342-saranagu",
+      "sequence": 17210,
+      "title": "ಶರಣಾಗು (śaraṇāgu) — to surrender",
+      "headword": "ಶರಣಾಗು",
+      "romanization": "śaraṇāgu",
+      "gloss": "to surrender",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7c0b6ae14e84f28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a moat, then the Kannada for to surround."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಶರಣಾಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶರಣಾಗು — śaraṇāgu — \"to surrender\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊಟ ಇಲ್ಲದೆ ಕೋಟೆಯ ಸೈನಿಕರು ಶರಣಾದರು. ūṭa illade kōṭeya sainikaru śaraṇādaru. With no food, the soldiers in the fort surrendered."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಶರಣಾದೆ, śaraṇāde."
+            },
+            {
+              "kind": "speech",
+              "text": "The one surrendered to takes -ಗೆ: ಪೊಲೀಸರಿಗೆ ಶರಣಾಗು (śaraṇāgu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶರಣಾಗು (śaraṇāgu) is built from Sanskrit śaraṇa, \"protecting, shelter\" (CDIAL 12326), and native āgu, \"to become\" (DEDR 333): to seek shelter with the stronger side."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaraṇāgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaraṇāgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaraṇāgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaraṇāgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṭa illade kōṭeya sainikaru śaraṇādaru. — With no food, the soldiers in the fort surrendered.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṭa illade kōṭeya sainikaru śaraṇādaru.* — With no food, the soldiers in the fort surrendered.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a moat, then the Kannada for to surround, then say śaraṇāgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a moat, then the Kannada for to surround, then say *śaraṇāgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಶರಣಾಗು (śaraṇāgu) mean? (\"To surrender\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C342-phirangi",
+      "sequence": 17220,
+      "title": "ಫಿರಂಗಿ (phiraṅgi) — a cannon",
+      "headword": "ಫಿರಂಗಿ",
+      "romanization": "phiraṅgi",
+      "gloss": "a cannon",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74cc76c32f8bf381",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to surround, then the Kannada for to surrender."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಫಿರಂಗಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಫಿರಂಗಿ — phiraṅgi — \"a cannon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೋಟೆಯ ಗೋಡೆಯ ಮೇಲೆ ಹಳೆಯ ಫಿರಂಗಿ ಇದೆ. kōṭeya gōḍeya mēle haḷeya phiraṅgi ide. There is an old cannon on the fort wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಫಿರಂಗಿಗಳು, phiraṅgigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Many old forts still show their ಫಿರಂಗಿಗಳು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಫಿರಂಗಿ (phiraṅgi) is a loan from Persian firangī, \"a Frank, a European\": the guns came with European traders and soldiers."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phiraṅgi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phiraṅgi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phiraṅgi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phiraṅgi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōṭeya gōḍeya mēle haḷeya phiraṅgi ide. — There is an old cannon on the fort wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōṭeya gōḍeya mēle haḷeya phiraṅgi ide.* — There is an old cannon on the fort wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to surround, then the Kannada for to surrender, then say phiraṅgi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to surround, then the Kannada for to surrender, then say *phiraṅgi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಫಿರಂಗಿ (phiraṅgi) mean? (\"A cannon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

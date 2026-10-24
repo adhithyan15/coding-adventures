@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-367-KURRAM367",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-367-KURRAM367"
+  ],
+  "after": []
+}

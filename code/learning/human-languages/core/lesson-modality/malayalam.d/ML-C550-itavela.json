@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C550-itavela",
+    "language": "malayalam",
+    "chapter": 550,
+    "sequence": 27730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cb8c82ab6e76e8a"
+  },
+  "findings": []
+}

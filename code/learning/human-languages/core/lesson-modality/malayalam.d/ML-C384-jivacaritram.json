@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C384-jivacaritram",
+    "language": "malayalam",
+    "chapter": 384,
+    "sequence": 18830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29e39b846f541cce"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C566-dhyanikkuka",
+    "language": "malayalam",
+    "chapter": 566,
+    "sequence": 28550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a4352559e5ba217"
+  },
+  "findings": []
+}

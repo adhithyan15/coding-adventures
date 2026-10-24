@@ -1,0 +1,11 @@
+{
+  "id": "BN-C282-pakrano",
+  "pathSegment": "BN-PATH-282-CHURI282",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-282-CHURI282",
+      "order": 2
+    }
+  ]
+}

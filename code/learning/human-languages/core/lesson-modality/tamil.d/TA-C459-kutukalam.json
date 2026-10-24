@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C459-kutukalam",
+    "language": "tamil",
+    "chapter": 459,
+    "sequence": 26430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:430f8773b14898f9"
+  },
+  "findings": []
+}

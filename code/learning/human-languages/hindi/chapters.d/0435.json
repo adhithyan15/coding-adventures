@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Change, Sizes and Clothes",
+  "label": "ch:hi-change-sizes-and-clothes",
+  "canDo": "I can ask for change, find my size, buy a handkerchief and say a child curled up against the cold.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C435-simatna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can ask for change, find my size, buy a handkerchief and say a child curled up against the cold.",
+    "assesses": [
+      "HI-LEX-C435-REZGARI435-03",
+      "HI-LEX-C435-REZGARI435-04",
+      "HI-LEX-C435-REZGARI435-05"
+    ]
+  }
+}

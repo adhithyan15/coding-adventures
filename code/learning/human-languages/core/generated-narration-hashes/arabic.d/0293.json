@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:778bb1d41ed83a23",
+  "lessonIds": [
+    "AR-C293-murasil",
+    "AR-C293-bayan",
+    "AR-C293-sahifa",
+    "AR-C293-alana",
+    "AR-C293-sarraha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch293.txt",
+  "json": "arabic/narration/ch293.json",
+  "textHash": "fnv1a64:f281e22b64180443",
+  "jsonHash": "fnv1a64:391ceaa7d240711a",
+  "findings": []
+}

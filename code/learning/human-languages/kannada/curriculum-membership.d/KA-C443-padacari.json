@@ -1,0 +1,11 @@
+{
+  "id": "KA-C443-padacari",
+  "pathSegment": "KA-PATH-443-SANCHARA443",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-443-SANCHARA443",
+      "order": 2
+    }
+  ]
+}

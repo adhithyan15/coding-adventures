@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "A Rumour Spreads",
+  "label": "ch:te-a-rumour-spreads",
+  "canDo": "I can say a rumour, hearsay, an exaggeration, an uproar and to disclose.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C336-velladincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can say a rumour, hearsay, an exaggeration, an uproar and to disclose.",
+    "assesses": [
+      "TE-LEX-C336-PUKARU336-03",
+      "TE-LEX-C336-PUKARU336-04",
+      "TE-LEX-C336-PUKARU336-05"
+    ]
+  }
+}

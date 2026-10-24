@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:1789d185c2cfe1df",
+  "lessonIds": [
+    "TE-C339-sainyam",
+    "TE-C339-sainikudu",
+    "TE-C339-senadhipati",
+    "TE-C339-kavatu",
+    "TE-C339-dandettu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch339.txt",
+  "json": "telugu/narration/ch339.json",
+  "textHash": "fnv1a64:a8e59320f0c8f1ef",
+  "jsonHash": "fnv1a64:dae63f637828a3f8",
+  "findings": []
+}

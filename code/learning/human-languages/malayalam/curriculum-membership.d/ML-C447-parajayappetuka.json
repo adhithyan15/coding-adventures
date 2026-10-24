@@ -1,0 +1,11 @@
+{
+  "id": "ML-C447-parajayappetuka",
+  "pathSegment": "ML-PATH-447-NETTAM447",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-447-NETTAM447",
+      "order": 2
+    }
+  ]
+}

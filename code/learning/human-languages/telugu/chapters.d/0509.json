@@ -1,0 +1,21 @@
+{
+  "chapter": 509,
+  "title": "What Kind of Person",
+  "label": "ch:te-what-kind-of-person",
+  "canDo": "I can say that someone is cowardly, naive, foolish, lazy or lively.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-R509-review-502-509",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can say that someone is cowardly, naive, foolish, lazy or lively.",
+    "assesses": [
+      "TE-LEX-C509-MANISHI509-01",
+      "TE-LEX-C509-MANISHI509-02",
+      "TE-LEX-C509-MANISHI509-03",
+      "TE-LEX-C509-MANISHI509-04",
+      "TE-LEX-C509-MANISHI509-05"
+    ]
+  }
+}

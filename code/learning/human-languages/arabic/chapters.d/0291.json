@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "If It Rains",
+  "label": "ch:ar-if-it-rains",
+  "canDo": "I can make a plan that depends on a real condition, and give its result.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-R291-if-it-rains",
+    "kind": "production",
+    "summary": "Complete AR-R291-if-it-rains: a real condition with idhā and the past, and its result with fa-.",
+    "assesses": [
+      "AR-GRAMMAR-C291-IDHA-PAST-01",
+      "AR-GRAMMAR-C291-IN-01",
+      "AR-GRAMMAR-C291-FA-RESULT-01"
+    ]
+  }
+}

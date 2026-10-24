@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:be5d851dbe78fdb9",
+  "lessonIds": [
+    "AR-C442-mukhayyam",
+    "AR-C442-muntaja",
+    "AR-C442-shalih",
+    "AR-C442-ashala",
+    "AR-C442-sanawbar"
+  ],
+  "tex": "arabic/book/chapters/ch442-camps-and-resorts.tex"
+}

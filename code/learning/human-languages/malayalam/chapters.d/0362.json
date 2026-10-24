@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "A Fire in the Market",
+  "label": "ch:ml-a-fire-in-the-market",
+  "canDo": "I can say a fire, the fire brigade, ashes, to catch fire and to burn down.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C362-kattinasikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can say a fire, the fire brigade, ashes, to catch fire and to burn down.",
+    "assesses": [
+      "ML-LEX-C362-TEE362-03",
+      "ML-LEX-C362-TEE362-04",
+      "ML-LEX-C362-TEE362-05"
+    ]
+  }
+}

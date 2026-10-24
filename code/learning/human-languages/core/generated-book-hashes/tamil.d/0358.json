@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:40d69ac6064c32ba",
+  "lessonIds": [
+    "TA-C358-kotpatu",
+    "TA-C358-tattuvam",
+    "TA-C358-cittantam",
+    "TA-C358-kolkai",
+    "TA-C358-niruvu"
+  ],
+  "tex": "tamil/book/chapters/ch358-theories-and-principles.tex"
+}

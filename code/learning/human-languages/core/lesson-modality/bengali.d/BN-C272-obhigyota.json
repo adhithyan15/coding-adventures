@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C272-obhigyota",
+    "language": "bengali",
+    "chapter": 272,
+    "sequence": 16900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d06b5ed61beda68"
+  },
+  "findings": []
+}

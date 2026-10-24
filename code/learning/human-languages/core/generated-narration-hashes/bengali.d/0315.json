@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:1f06522e5cdbb5b0",
+  "lessonIds": [
+    "BN-C315-ostro",
+    "BN-C315-toloyar",
+    "BN-C315-dhal",
+    "BN-C315-bonduk",
+    "BN-C315-kaman",
+    "BN-R315-review-308-315"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch315.txt",
+  "json": "bengali/narration/ch315.json",
+  "textHash": "fnv1a64:65340137b404c8bc",
+  "jsonHash": "fnv1a64:36ac58b09f695451",
+  "findings": []
+}

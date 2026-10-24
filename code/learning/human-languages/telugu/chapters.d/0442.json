@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "On the Rails",
+  "label": "ch:te-on-the-rails",
+  "canDo": "I can say a rail, the metro, traffic, to be packed and to derail.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C442-pattalu-tappu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can say a rail, the metro, traffic, to be packed and to derail.",
+    "assesses": [
+      "TE-LEX-C442-PATTA442-03",
+      "TE-LEX-C442-PATTA442-04",
+      "TE-LEX-C442-PATTA442-05"
+    ]
+  }
+}

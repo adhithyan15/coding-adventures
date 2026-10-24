@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:86047430e1913906",
+  "lessonIds": [
+    "BN-C354-gobeshona",
+    "BN-C354-porikkha",
+    "BN-C354-tottvo",
+    "BN-C354-abishkar-kora",
+    "BN-C354-onusondhan-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch354.txt",
+  "json": "bengali/narration/ch354.json",
+  "textHash": "fnv1a64:126925fe57e3c49e",
+  "jsonHash": "fnv1a64:07c90ae2c9f5398f",
+  "findings": []
+}

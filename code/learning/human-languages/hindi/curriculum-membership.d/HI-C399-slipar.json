@@ -1,0 +1,11 @@
+{
+  "id": "HI-C399-slipar",
+  "pathSegment": "HI-PATH-399-LAIN399",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-399-LAIN399",
+      "order": 2
+    }
+  ]
+}

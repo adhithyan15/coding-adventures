@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Instruments",
+  "label": "ch:bn-instruments",
+  "canDo": "I can name some instruments and say how they sound.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C526-tungtang-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can name some instruments and say how they sound.",
+    "assesses": [
+      "BN-LEX-C526-BAJNA526-03",
+      "BN-LEX-C526-BAJNA526-04",
+      "BN-LEX-C526-BAJNA526-05"
+    ]
+  }
+}

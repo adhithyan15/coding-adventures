@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Unions and Warehouses",
+  "label": "ch:ta-unions-and-warehouses",
+  "canDo": "I can talk about strikes, unions and storing goods.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C514-perunar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about strikes, unions and storing goods.",
+    "assesses": [
+      "TA-LEX-C514-SANKAM514-03",
+      "TA-LEX-C514-SANKAM514-04",
+      "TA-LEX-C514-SANKAM514-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C449-carana",
+  "pathSegment": "HI-PATH-449-SIYAR449",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-449-SIYAR449",
+      "order": 4
+    }
+  ]
+}

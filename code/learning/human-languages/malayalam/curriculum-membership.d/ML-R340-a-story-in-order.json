@@ -1,0 +1,11 @@
+{
+  "id": "ML-R340-a-story-in-order",
+  "pathSegment": "ML-PATH-340-STORY-ORDER",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ML-EXT-340-STORY-ORDER",
+      "order": 5
+    }
+  ]
+}

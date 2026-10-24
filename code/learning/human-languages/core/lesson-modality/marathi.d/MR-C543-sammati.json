@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C543-sammati",
+    "language": "marathi",
+    "chapter": 543,
+    "sequence": 31000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3cda35d92bbf064"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:47bc1551d7edc210",
+  "lessonIds": [
+    "BN-C363-somosya",
+    "BN-C363-upay",
+    "BN-C363-bikolpo",
+    "BN-C363-uttor",
+    "BN-C363-utre-jaoya"
+  ],
+  "tex": "bengali/book/chapters/ch363-problems-and-answers.tex"
+}

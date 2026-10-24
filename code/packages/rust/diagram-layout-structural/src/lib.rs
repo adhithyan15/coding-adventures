@@ -15,7 +15,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.28.0";
+pub const VERSION: &str = "0.30.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -29,6 +29,9 @@ const GROUP_HEADER_H: f64 = 32.0;
 const TITLE_H: f64 = 44.0;
 const ROUTE_CLEARANCE: f64 = 12.0;
 const ROUTE_BEND_COST: f64 = 8.0;
+const SELF_RELATIONSHIP_GAP: f64 = 48.0;
+const PARALLEL_RELATIONSHIP_GAP: f64 = 48.0;
+const RELATIONSHIP_LABEL_HALF_WIDTH: f64 = 44.0;
 const DEFAULT_EDGE_ELASTICITY: f64 = 0.45;
 
 fn horizontal_gap(config: Option<&ArchitectureConfig>) -> f64 {
@@ -160,9 +163,17 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         }
     }
     let groups = layout_groups(diagram, &nodes);
-    let canvas_w = canvas_width(&nodes, &groups, diagram.architecture_config.as_ref());
-    let canvas_h = canvas_height(&nodes, &groups, diagram.architecture_config.as_ref());
+    let mut canvas_w = canvas_width(&nodes, &groups, diagram.architecture_config.as_ref());
+    let mut canvas_h = canvas_height(&nodes, &groups, diagram.architecture_config.as_ref());
     let rels = layout_relationships(diagram, &nodes, &groups);
+    for point in rels.iter().flat_map(|relationship| &relationship.points) {
+        canvas_w = canvas_w.max(point.x + COMP_PAD);
+        canvas_h = canvas_h.max(point.y + COMP_PAD);
+    }
+    for (position, _) in rels.iter().filter_map(|relationship| relationship.label.as_ref()) {
+        canvas_w = canvas_w.max(position.x + RELATIONSHIP_LABEL_HALF_WIDTH + COMP_PAD);
+        canvas_h = canvas_h.max(position.y + ROW_H + COMP_PAD);
+    }
     LayoutedStructuralDiagram {
         width: canvas_w,
         height: canvas_h,
@@ -302,7 +313,7 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
     // Track max height per row so rows don't overlap.
     let padding = outer_padding(architecture_config);
     let mut row_y: Vec<f64> = vec![padding];
-    let mut row_adjustments: Vec<f64> = vec![0.0];
+    let mut row_x: Vec<f64> = vec![padding];
 
     let mut previous_index = None;
     for (slot, node_index) in placement_order.into_iter().enumerate() {
@@ -316,23 +327,20 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
         while row_y.len() <= row {
             row_y.push(*row_y.last().unwrap_or(&padding));
         }
-        while row_adjustments.len() <= row {
-            row_adjustments.push(0.0);
+        while row_x.len() <= row {
+            row_x.push(padding);
         }
 
-        if col > 0 {
+        let gap = if col > 0 {
             let fallback = horizontal_gap(architecture_config);
-            row_adjustments[row] += previous_index.map_or(0.0, |previous| {
-                connected_node_gap(&nodes[previous], node, diagram, fallback) - fallback
-            });
-        }
-
-        let minimum_width = architecture_config.map_or(MIN_NODE_W, |config| {
-            MIN_NODE_W * config.icon_size / 80.0
-        });
-        let x = padding
-            + col as f64 * (minimum_width + horizontal_gap(architecture_config))
-            + row_adjustments[row];
+            previous_index.map_or(fallback, |previous| {
+                connected_node_gap(&nodes[previous], node, diagram, fallback)
+            })
+        } else {
+            0.0
+        };
+        let x = row_x[row] + gap;
+        row_x[row] = x + nw;
         let y =
             row_y[row] + group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
 
@@ -926,6 +934,113 @@ fn relationship_path(
     }
 }
 
+fn self_relationship_path(bounds: StructuralBounds) -> Vec<Point> {
+    let right = bounds.x + bounds.width;
+    let bottom = bounds.y + bounds.height;
+    let start_y = bounds.y + bounds.height * 0.35;
+    let end_x = bounds.x + bounds.width * 0.65;
+    vec![
+        Point { x: right, y: start_y },
+        Point {
+            x: right + SELF_RELATIONSHIP_GAP,
+            y: start_y,
+        },
+        Point {
+            x: right + SELF_RELATIONSHIP_GAP,
+            y: bottom + SELF_RELATIONSHIP_GAP,
+        },
+        Point {
+            x: end_x,
+            y: bottom + SELF_RELATIONSHIP_GAP,
+        },
+        Point { x: end_x, y: bottom },
+    ]
+}
+
+fn parallel_relationship_lane(
+    diagram: &StructuralDiagram,
+    relationship_index: usize,
+) -> Option<f64> {
+    let relationship = &diagram.relationships[relationship_index];
+    if relationship.from == relationship.to
+        || relationship.routing != StructuralRouting::Direct
+    {
+        return None;
+    }
+    let matching: Vec<usize> = diagram
+        .relationships
+        .iter()
+        .enumerate()
+        .filter(|(_, candidate)| {
+            candidate.routing == StructuralRouting::Direct
+                && ((candidate.from == relationship.from
+                    && candidate.to == relationship.to
+                    && candidate.from_group == relationship.from_group
+                    && candidate.to_group == relationship.to_group)
+                    || (candidate.from == relationship.to
+                        && candidate.to == relationship.from
+                        && candidate.from_group == relationship.to_group
+                        && candidate.to_group == relationship.from_group))
+        })
+        .map(|(index, _)| index)
+        .collect();
+    if matching.len() < 2 {
+        return None;
+    }
+    let ordinal = matching
+        .iter()
+        .position(|index| *index == relationship_index)? as f64;
+    let centered = ordinal - (matching.len() as f64 - 1.0) / 2.0;
+    let direction = if relationship.from <= relationship.to { 1.0 } else { -1.0 };
+    Some(centered * PARALLEL_RELATIONSHIP_GAP * direction)
+}
+
+fn offset_parallel_relationship(points: Vec<Point>, offset: Option<f64>) -> Vec<Point> {
+    let Some(offset) = offset else {
+        return points;
+    };
+    let (Some(from), Some(to)) = (points.first(), points.last()) else {
+        return points;
+    };
+    let dx = to.x - from.x;
+    let dy = to.y - from.y;
+    let length = dx.hypot(dy);
+    if length == 0.0 {
+        return points;
+    }
+    let normal_x = -dy / length * offset;
+    let normal_y = dx / length * offset;
+    if points.len() == 2 {
+        return vec![
+            from.clone(),
+            Point {
+                x: from.x + dx / 3.0 + normal_x,
+                y: from.y + dy / 3.0 + normal_y,
+            },
+            Point {
+                x: from.x + dx * 2.0 / 3.0 + normal_x,
+                y: from.y + dy * 2.0 / 3.0 + normal_y,
+            },
+            to.clone(),
+        ];
+    }
+    let point_count = points.len();
+    points
+        .into_iter()
+        .enumerate()
+        .map(|(index, point)| {
+            if index == 0 || index + 1 == point_count {
+                point
+            } else {
+                Point {
+                    x: point.x + normal_x,
+                    y: point.y + normal_y,
+                }
+            }
+        })
+        .collect()
+}
+
 fn path_midpoint(points: &[Point]) -> Point {
     let total_length: f64 = points
         .windows(2)
@@ -1017,7 +1132,8 @@ fn layout_relationships(
     diagram
         .relationships
         .iter()
-        .filter_map(|rel| {
+        .enumerate()
+        .filter_map(|(relationship_index, rel)| {
             let a = find_node(nodes, &rel.from)?;
             let b = find_node(nodes, &rel.to)?;
             let a_bounds = relationship_endpoint_bounds(a, rel.from_group, diagram, groups);
@@ -1027,14 +1143,21 @@ fn layout_relationships(
             let p1 = rel.to_port.map_or(default_p1, |port| point_on_port(b_bounds, port));
             let obstacles =
                 relationship_obstacles(diagram, &rel.from, &rel.to, nodes, groups);
-            let points = relationship_path(
-                p0,
-                p1,
-                rel.routing,
-                rel.from_port,
-                rel.to_port,
-                &obstacles,
-            );
+            let points = if rel.from == rel.to && !rel.from_group && !rel.to_group {
+                self_relationship_path(a_bounds)
+            } else {
+                offset_parallel_relationship(
+                    relationship_path(
+                        p0,
+                        p1,
+                        rel.routing,
+                        rel.from_port,
+                        rel.to_port,
+                        &obstacles,
+                    ),
+                    parallel_relationship_lane(diagram, relationship_index),
+                )
+            };
             let label = rel.label.as_ref().map(|label| {
                 (path_midpoint(&points), label.clone())
             });
@@ -1147,7 +1270,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.28.0");
+        assert_eq!(crate::VERSION, "0.30.0");
     }
 
     #[test]
@@ -1167,9 +1290,65 @@ mod tests {
     }
 
     #[test]
+    fn wide_grid_nodes_do_not_overlap_following_nodes() {
+        let mut diagram = two_class_diagram();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "title: string [PK] - A deliberately wide field comment".into(),
+        ];
+        let layout = layout_structural_diagram(&diagram);
+
+        assert!(layout.nodes[1].x >= layout.nodes[0].x + layout.nodes[0].width + COL_GAP);
+    }
+
+    #[test]
     fn relationship_has_two_points() {
         let r = layout_structural_diagram(&two_class_diagram());
         assert_eq!(r.relationships[0].points.len(), 2);
+    }
+
+    #[test]
+    fn recursive_relationship_routes_outside_the_node_and_expands_the_canvas() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.relationships[0].from = "Animal".into();
+        diagram.relationships[0].to = "Animal".into();
+        diagram.relationships[0].label = Some("loops".into());
+        let layout = layout_structural_diagram(&diagram);
+        let node = &layout.nodes[0];
+        let points = &layout.relationships[0].points;
+        let right = node.x + node.width;
+        let bottom = node.y + node.height;
+
+        assert_eq!(points.len(), 5);
+        assert!(points.iter().any(|point| point.x > right));
+        assert!(points.iter().any(|point| point.y > bottom));
+        assert!(layout.width > points.iter().map(|point| point.x).fold(0.0, f64::max));
+        assert!(layout.height > points.iter().map(|point| point.y).fold(0.0, f64::max));
+        let label_position = &layout.relationships[0].label.as_ref().expect("loop label").0;
+        assert!(layout.width > label_position.x + RELATIONSHIP_LABEL_HALF_WIDTH);
+    }
+
+    #[test]
+    fn parallel_relationships_use_distinct_backend_neutral_lanes() {
+        let mut diagram = two_class_diagram();
+        let mut second = diagram.relationships[0].clone();
+        diagram.relationships[0].label = Some("insured for".into());
+        second.label = Some("owned by".into());
+        diagram.relationships.push(second);
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.relationships.len(), 2);
+        assert_eq!(layout.relationships[0].points.len(), 4);
+        assert_eq!(layout.relationships[1].points.len(), 4);
+        assert_ne!(
+            layout.relationships[0].points,
+            layout.relationships[1].points
+        );
+        assert_ne!(
+            layout.relationships[0].label.as_ref().map(|label| &label.0),
+            layout.relationships[1].label.as_ref().map(|label| &label.0)
+        );
     }
 
     #[test]

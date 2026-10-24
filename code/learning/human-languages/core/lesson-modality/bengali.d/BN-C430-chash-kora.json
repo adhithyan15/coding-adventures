@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C430-chash-kora",
+    "language": "bengali",
+    "chapter": 430,
+    "sequence": 26390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcf2e2057e91f28d"
+  },
+  "findings": []
+}

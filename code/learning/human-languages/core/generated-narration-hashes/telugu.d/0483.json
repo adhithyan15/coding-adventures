@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:248909c1db10c68a",
+  "lessonIds": [
+    "TE-C483-aviravu",
+    "TE-C483-inkipovu",
+    "TE-C483-mandu",
+    "TE-C483-aripovu",
+    "TE-C483-cigurincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch483.txt",
+  "json": "telugu/narration/ch483.json",
+  "textHash": "fnv1a64:2eafadedfbfbe61b",
+  "jsonHash": "fnv1a64:245d2b2cbc731ef1",
+  "findings": []
+}

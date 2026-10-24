@@ -1,0 +1,11 @@
+{
+  "id": "MR-C494-anath",
+  "pathSegment": "MR-PATH-494-NATE494",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-494-NATE494",
+      "order": 3
+    }
+  ]
+}

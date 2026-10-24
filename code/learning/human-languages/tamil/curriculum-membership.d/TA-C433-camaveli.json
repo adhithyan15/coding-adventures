@@ -1,0 +1,11 @@
+{
+  "id": "TA-C433-camaveli",
+  "pathSegment": "TA-PATH-433-SIKARAM433",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-433-SIKARAM433",
+      "order": 4
+    }
+  ]
+}

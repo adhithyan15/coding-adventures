@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Two Wheels and Three",
+  "label": "ch:mr-two-wheels-and-three",
+  "canDo": "I can talk about vehicles, scooters, autorickshaws and trucks.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C400-kombne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can talk about vehicles, scooters, autorickshaws and trucks.",
+    "assesses": [
+      "MR-LEX-C400-VAHAN400-03",
+      "MR-LEX-C400-VAHAN400-04",
+      "MR-LEX-C400-VAHAN400-05"
+    ]
+  }
+}

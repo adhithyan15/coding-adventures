@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:f22e8f6641339087",
+  "lessonIds": [
+    "AR-C481-zakhkha",
+    "AR-C481-radhadh",
+    "AR-C481-wabil",
+    "AR-C481-hatala",
+    "AR-C481-safa"
+  ],
+  "tex": "arabic/book/chapters/ch481-rain.tex"
+}

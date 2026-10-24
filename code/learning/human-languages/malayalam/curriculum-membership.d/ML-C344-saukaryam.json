@@ -1,0 +1,11 @@
+{
+  "id": "ML-C344-saukaryam",
+  "pathSegment": "ML-PATH-344-TICKETS-TROUBLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-344-TICKETS-TROUBLE",
+      "order": 1
+    }
+  ]
+}

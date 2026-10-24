@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C427-anupata",
+    "language": "kannada",
+    "chapter": 427,
+    "sequence": 21620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72817356e9d79a50"
+  },
+  "findings": []
+}

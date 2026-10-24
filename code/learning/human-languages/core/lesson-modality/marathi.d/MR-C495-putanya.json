@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C495-putanya",
+    "language": "marathi",
+    "chapter": 495,
+    "sequence": 28300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c48496e34ac0f7cc"
+  },
+  "findings": []
+}

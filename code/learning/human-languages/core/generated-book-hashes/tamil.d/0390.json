@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:90d79ef16e1e1394",
+  "lessonIds": [
+    "TA-C390-cirtiruttam",
+    "TA-C390-munnerram",
+    "TA-C390-mempatuttu",
+    "TA-C390-ciramai",
+    "TA-C390-valuppatuttu"
+  ],
+  "tex": "tamil/book/chapters/ch390-change-for-the-better.tex"
+}

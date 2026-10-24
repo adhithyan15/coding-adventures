@@ -1,0 +1,11 @@
+{
+  "id": "KA-C338-satya",
+  "pathSegment": "KA-PATH-338-VADANTI338",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-338-VADANTI338",
+      "order": 3
+    }
+  ]
+}

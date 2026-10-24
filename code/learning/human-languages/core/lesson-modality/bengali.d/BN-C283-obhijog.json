@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C283-obhijog",
+    "language": "bengali",
+    "chapter": 283,
+    "sequence": 18360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb342301cb3e470f"
+  },
+  "findings": []
+}

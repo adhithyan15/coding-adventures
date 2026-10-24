@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:22adf434bedb313d",
+  "lessonIds": [
+    "KA-C424-avalokisu",
+    "KA-C424-vimarsisu",
+    "KA-C424-suttole",
+    "KA-C424-nirdista",
+    "KA-C424-parisodhane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch424.txt",
+  "json": "kannada/narration/ch424.json",
+  "textHash": "fnv1a64:f9922c779014a5ea",
+  "jsonHash": "fnv1a64:5f786ec407ecff00",
+  "findings": []
+}

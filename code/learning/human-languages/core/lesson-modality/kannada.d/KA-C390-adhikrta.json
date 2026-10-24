@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C390-adhikrta",
+    "language": "kannada",
+    "chapter": 390,
+    "sequence": 19740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01e4bff1b03377ad"
+  },
+  "findings": []
+}

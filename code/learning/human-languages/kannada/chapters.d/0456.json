@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Sights in the Old Town",
+  "label": "ch:ka-sights-in-the-old-town",
+  "canDo": "I can say a town hall, a tower, a fountain, a landmark and to view.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C456-viksisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can say a town hall, a tower, a fountain, a landmark and to view.",
+    "assesses": [
+      "KA-LEX-C456-SMARAKA456-03",
+      "KA-LEX-C456-SMARAKA456-04",
+      "KA-LEX-C456-SMARAKA456-05"
+    ]
+  }
+}

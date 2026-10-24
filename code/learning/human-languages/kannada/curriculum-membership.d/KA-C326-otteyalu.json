@@ -1,0 +1,11 @@
+{
+  "id": "KA-C326-otteyalu",
+  "pathSegment": "KA-PATH-326-KANE326",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-326-KANE326",
+      "order": 4
+    }
+  ]
+}

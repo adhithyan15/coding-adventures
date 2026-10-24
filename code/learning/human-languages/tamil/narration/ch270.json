@@ -4,7 +4,7 @@
   "chapter": 270,
   "title": "Handkerchief, Earring, Chain, Chapati, Puri",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7494d4851b8db6aa",
+  "sourceHash": "fnv1a64:79744be02326065c",
   "lessons": [
     {
       "id": "TA-C270-kaikkuttai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2626c54195747dfd",
+      "sourceHash": "fnv1a64:a1e66251bfa2aad5",
       "notice": null,
       "blocks": [
         {

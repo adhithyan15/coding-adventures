@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:93819ef3efde229e",
+  "lessonIds": [
+    "TA-C333-porkkalam",
+    "TA-C333-porvirar",
+    "TA-C333-val-sword",
+    "TA-C333-ketayam",
+    "TA-C333-kavacam"
+  ],
+  "tex": "tamil/book/chapters/ch333-the-battlefield.tex"
+}

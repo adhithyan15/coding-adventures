@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:c4af7166cba9e8b5",
+  "lessonIds": [
+    "TA-C436-timinkalam",
+    "TA-C436-cura",
+    "TA-C436-nantu",
+    "TA-C436-cippi",
+    "TA-C436-pavalam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch436.txt",
+  "json": "tamil/narration/ch436.json",
+  "textHash": "fnv1a64:409fd437918e867c",
+  "jsonHash": "fnv1a64:fae6ac9b1401f38b",
+  "findings": []
+}

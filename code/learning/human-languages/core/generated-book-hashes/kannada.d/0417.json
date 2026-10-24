@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:276d86d85f329576",
+  "lessonIds": [
+    "KA-C417-kantu",
+    "KA-C417-baki",
+    "KA-C417-ulitaya",
+    "KA-C417-vasuli-madu",
+    "KA-C417-sallisu"
+  ],
+  "tex": "kannada/book/chapters/ch417-paying-back.tex"
+}

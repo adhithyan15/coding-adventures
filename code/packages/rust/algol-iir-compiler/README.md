@@ -257,6 +257,46 @@ bounded denominator remain conservative. Static whole-number factors may
 precede the bounded numerator, including exact divisions among those factors,
 provided multiplication connects the resulting prefix to its root; division
 by that root remains conservative.
+Variable-free integer `div` and `mod` reductions may likewise be folded
+left-to-right before that multiplying connection. Zero or dynamic divisors,
+oversized folded prefixes, and a non-multiplying connection to the root remain
+conservative.
+The same checked reduction is accepted inside parentheses as a static additive
+term or multiplicative factor around the sign-rooted transform. Grouped zero
+or dynamic divisors, inexact real divisions, and results beyond `2^53` remain
+conservative.
+Those grouped reductions may also use right-associative checked powers whose
+nonnegative exponent chain stays within the existing unroll cap. Negative or
+dynamic exponents, overflowing powers, and deeper exponent chains remain
+conservative.
+Built-in `abs`, `sign`, and `entier` may normalize those checked variable-free
+integer reductions before they become a static offset, factor, or exponent.
+User-declared procedures with the same names retain runtime call semantics;
+dynamic inputs, zero divisors, and results beyond `2^53` remain conservative.
+Exact local integer snapshots may also supply leaves of those checked
+reductions. Captured globals, by-name actuals, dynamic assignments, and values
+whose composed reduction exceeds `2^53` remain conservative.
+Finite local real snapshots may supply the same leaves through built-in
+`entier` when the normalized result remains in the exact binary64 integer
+range. Non-finite, oversized, dynamic, captured, array-backed, and by-name real
+values remain conservative.
+Built-in `sqrt` may normalize a nonnegative checked reduction when its value is
+an exact perfect square. Non-square, negative, dynamic, and user-overridden
+roots remain conservative. The radicand may itself contain checked integer
+`div`/`mod`, powers, and supported exact built-in normalizers, so long as the
+complete reduction remains bounded by `2^53` before the exact-root check.
+Built-in `sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and `ln(1)` may likewise
+supply their exact integer identity values inside a checked reduction. Their
+arguments may be checked integer reductions themselves; non-identity,
+dynamic, and user-overridden calls remain conservative.
+Built-in exact normalizers may consume a pure runtime conditional when every
+branch independently maps to the same checked integer result. Unequal mapped
+results, procedure-calling selectors, and dynamic branches remain
+conservative.
+Those normalizers may also consume finite fractional static-real inputs when
+their result is an exact integer, including nested call-free conditionals whose
+normalized branches agree. Nonintegral, path-dependent, dynamic, and oversized
+results remain conservative.
 Positive variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
 exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C339-hajama",
+  "pathSegment": "AR-PATH-339-GHAZW339",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-339-GHAZW339",
+      "order": 1
+    }
+  ]
+}

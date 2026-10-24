@@ -1,0 +1,21 @@
+{
+  "chapter": 504,
+  "title": "Talk and Temper",
+  "label": "ch:ka-talk-and-temper",
+  "canDo": "I can say to snap irritably, a talker, short-tempered, a coward and a stammer.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-R504-review-498-504",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can say to snap irritably, a talker, short-tempered, a coward and a stammer.",
+    "assesses": [
+      "KA-LEX-C504-MATU504-01",
+      "KA-LEX-C504-MATU504-02",
+      "KA-LEX-C504-MATU504-03",
+      "KA-LEX-C504-MATU504-04",
+      "KA-LEX-C504-MATU504-05"
+    ]
+  }
+}

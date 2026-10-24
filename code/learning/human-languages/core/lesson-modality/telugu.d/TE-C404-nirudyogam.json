@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C404-nirudyogam",
+    "language": "telugu",
+    "chapter": 404,
+    "sequence": 20160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96a1f985ae9bb276"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:881e32c347564891",
+  "lessonIds": [
+    "TE-C436-palgonu",
+    "TE-C436-todpadu",
+    "TE-C436-kudagattu",
+    "TE-C436-akarsincu",
+    "TE-C436-vibhajincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch436.txt",
+  "json": "telugu/narration/ch436.json",
+  "textHash": "fnv1a64:91cbaa61f1b08fec",
+  "jsonHash": "fnv1a64:076a6901be80bfcd",
+  "findings": []
+}

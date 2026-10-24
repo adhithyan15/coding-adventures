@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "The Pirate Treasure",
+  "label": "ch:ka-the-pirate-treasure",
+  "canDo": "I can say a treasure, a pirate, an adventure, a secret and a sorcerer.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C348-mantrika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can say a treasure, a pirate, an adventure, a secret and a sorcerer.",
+    "assesses": [
+      "KA-LEX-C348-NIDHI348-03",
+      "KA-LEX-C348-NIDHI348-04",
+      "KA-LEX-C348-NIDHI348-05"
+    ]
+  }
+}

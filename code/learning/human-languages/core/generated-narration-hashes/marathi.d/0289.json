@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:e22a6093b8c45560",
+  "lessonIds": [
+    "MR-C289-saksidar",
+    "MR-C289-gunha",
+    "MR-C289-daroda",
+    "MR-C289-pakitmar",
+    "MR-C289-phasavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch289.txt",
+  "json": "marathi/narration/ch289.json",
+  "textHash": "fnv1a64:220ef48ce6b4c708",
+  "jsonHash": "fnv1a64:9a830e786ba5de0d",
+  "findings": []
+}

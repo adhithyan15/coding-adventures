@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:fd875c52579c249b",
+  "lessonIds": [
+    "AR-C550-thurayya",
+    "AR-C550-mazhariyya",
+    "AR-C550-nafada",
+    "AR-C550-lammaa",
+    "AR-C550-sana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch550.txt",
+  "json": "arabic/narration/ch550.json",
+  "textHash": "fnv1a64:329aa43a4bf724c9",
+  "jsonHash": "fnv1a64:df6548e4302d677e",
+  "findings": []
+}

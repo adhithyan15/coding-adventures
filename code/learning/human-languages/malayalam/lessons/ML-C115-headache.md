@@ -11,7 +11,7 @@ romanization: "talavēdana"
 concept_tag: ML-UNWELL-HEADACHE
 prerequisites: [ML-C63-fever, ML-C115-cold]
 sounds: []
-roots: [dravidian-tala-kai, sanskrit-vedana]
+roots: [dravidian-talai-head, sanskrit-vedana]
 etymology_hook: "talavēdana: native tala 'head' (DEDR 3103) + Sanskrit vēdanā 'pain' (CDIAL 12106)"
 duration:
   max_seconds: 200

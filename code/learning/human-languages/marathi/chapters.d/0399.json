@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Drivers and Conductors",
+  "label": "ch:mr-drivers-and-conductors",
+  "canDo": "I can talk about a driver, a conductor and the people I travel with.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C399-vatsaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can talk about a driver, a conductor and the people I travel with.",
+    "assesses": [
+      "MR-LEX-C399-VAHAK399-03",
+      "MR-LEX-C399-VAHAK399-04",
+      "MR-LEX-C399-VAHAK399-05"
+    ]
+  }
+}

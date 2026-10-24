@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 558,
+  "sourceHash": "fnv1a64:f6fb0bc5f0335417",
+  "lessonIds": [
+    "ML-C558-kusalam",
+    "ML-C558-balyam",
+    "ML-C558-koncuka",
+    "ML-C558-mutirnna",
+    "ML-C558-irattakkutti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch558.txt",
+  "json": "malayalam/narration/ch558.json",
+  "textHash": "fnv1a64:4ebb3bdab73fd4ea",
+  "jsonHash": "fnv1a64:bbd657349c8734fb",
+  "findings": []
+}

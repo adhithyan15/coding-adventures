@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 455,
+  "title": "Being a Tourist",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:77bf3bea38634aa8",
+  "lessons": [
+    {
+      "id": "TE-C455-paryatakudu",
+      "sequence": 22870,
+      "title": "పర్యాటకుడు (paryāṭakuḍu) — a tourist",
+      "headword": "పర్యాటకుడు",
+      "romanization": "paryāṭakuḍu",
+      "gloss": "a tourist",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a892fac0c6470ef4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for transport, then the Telugu for to see off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పర్యాటకుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పర్యాటకుడు — paryāṭakuḍu — \"a tourist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వేసవిలో ఆ కొండ మీద పర్యాటకులు ఎక్కువగా ఉంటారు. vēsavilō ā koṇḍa mīda paryāṭakulu ekkuvagā uṇṭāru. In summer there are a lot of tourists on that hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: పర్యాటకులు, paryāṭakulu."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural పర్యాటకులు. పర్యాటక ప్రదేశం is a tourist spot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పర్యాటకుడు (paryāṭakuḍu) is borrowed from Sanskrit paryaṭaka, which Monier-Williams glosses as a wanderer, a vagabond, from pari-aṭ, \"to roam about\". Telugu gave the roamer a camera."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryāṭakuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryāṭakuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryāṭakuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryāṭakuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēsavilō ā koṇḍa mīda paryāṭakulu ekkuvagā uṇṭāru. — In summer there are a lot of tourists on that hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēsavilō ā koṇḍa mīda paryāṭakulu ekkuvagā uṇṭāru.* — In summer there are a lot of tourists on that hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for transport, then the Telugu for to see off, then say paryāṭakuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for transport, then the Telugu for to see off, then say *paryāṭakuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పర్యాటకుడు (paryāṭakuḍu) mean? (\"A tourist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C455-paryatana",
+      "sequence": 22880,
+      "title": "పర్యటన (paryaṭana) — a tour; an official visit",
+      "headword": "పర్యటన",
+      "romanization": "paryaṭana",
+      "gloss": "a tour; an official visit",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a835ab4286585a0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to see off, then the Telugu for a tourist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పర్యటన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పర్యటన — paryaṭana — \"a tour; an official visit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మంత్రి పర్యటన వల్ల రోడ్లు మూసివేశారు. mantri paryaṭana valla rōḍlu mūsivēśāru. The roads were closed because of the minister's visit."
+            },
+            {
+              "kind": "speech",
+              "text": "A tour of places, and also the official visit of a leader. పర్యటించు, to tour, is its verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పర్యటన (paryaṭana) is borrowed from Sanskrit paryaṭana, \"wandering about, roaming through\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryaṭana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryaṭana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryaṭana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryaṭana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantri paryaṭana valla rōḍlu mūsivēśāru. — The roads were closed because of the minister's visit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantri paryaṭana valla rōḍlu mūsivēśāru.* — The roads were closed because of the minister's visit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to see off, then the Telugu for a tourist, then say paryaṭana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to see off, then the Telugu for a tourist, then say *paryaṭana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పర్యటన (paryaṭana) mean? (\"A tour; an official visit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C455-gaidu",
+      "sequence": 22890,
+      "title": "గైడు (gaiḍu) — a tour guide",
+      "headword": "గైడు",
+      "romanization": "gaiḍu",
+      "gloss": "a tour guide",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:365475f22f8402e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a tourist, then the Telugu for a tour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గైడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గైడు — gaiḍu — \"a tour guide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గైడు మాకు కోట చరిత్ర చెప్పాడు. gaiḍu māku kōṭa caritra ceppāḍu. The guide told us the history of the fort."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes -ఉ like other English loans. A guidebook is also called a గైడు (gaiḍu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గైడు (gaiḍu) is a loan from English guide, with the Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaiḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaiḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaiḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaiḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaiḍu māku kōṭa caritra ceppāḍu. — The guide told us the history of the fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaiḍu māku kōṭa caritra ceppāḍu.* — The guide told us the history of the fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a tourist, then the Telugu for a tour, then say gaiḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a tourist, then the Telugu for a tour, then say *gaiḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గైడు (gaiḍu) mean? (\"A tour guide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C455-pravesam",
+      "sequence": 22900,
+      "title": "ప్రవేశం (pravēśaṁ) — entry; admission",
+      "headword": "ప్రవేశం",
+      "romanization": "pravēśaṁ",
+      "gloss": "entry; admission",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c53ead0234035534",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a tour, then the Telugu for a tour guide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రవేశం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రవేశం — pravēśaṁ — \"entry; admission\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మ్యూజియంలో పిల్లలకు ప్రవేశం ఉచితం. myūjiyaṁlō pillalaku pravēśaṁ ucitaṁ. Entry to the museum is free for children."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రవేశం (pravēśaṁ) లేదు, no entry. ప్రవేశించు, to enter, is its verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రవేశం (pravēśaṁ) is borrowed from Sanskrit praveśa, \"entering, entrance\" (Monier-Williams), from pra-viś, \"to enter\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravēśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravēśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravēśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravēśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "myūjiyaṁlō pillalaku pravēśaṁ ucitaṁ. — Entry to the museum is free for children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *myūjiyaṁlō pillalaku pravēśaṁ ucitaṁ.* — Entry to the museum is free for children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a tour, then the Telugu for a tour guide, then say pravēśaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a tour, then the Telugu for a tour guide, then say *pravēśaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రవేశం (pravēśaṁ) mean? (\"Entry; admission\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C455-viharayatra",
+      "sequence": 22910,
+      "title": "విహారయాత్ర (vihārayātra) — a pleasure trip; an excursion",
+      "headword": "విహారయాత్ర",
+      "romanization": "vihārayātra",
+      "gloss": "a pleasure trip; an excursion",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:398bedff151855d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a tour guide, then the Telugu for entry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విహారయాత్ర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విహారయాత్ర — vihārayātra — \"a pleasure trip; an excursion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బడి పిల్లలు అడవికి విహారయాత్రకు వెళ్ళారు. baḍi pillalu aḍaviki vihārayātraku veḷḷāru. The schoolchildren went on an excursion to the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "విహార-, roaming for pleasure, + యాత్ర, a journey. A school trip is a విహారయాత్ర (vihārayātra)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విహారయాత్ర (vihārayātra) is a compound of two words borrowed from Sanskrit: vihāra, \"roaming, a pleasure ground\" (CDIAL 12033), and yātrā, \"a journey\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vihārayātra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vihārayātra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vihārayātra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vihārayātra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baḍi pillalu aḍaviki vihārayātraku veḷḷāru. — The schoolchildren went on an excursion to the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baḍi pillalu aḍaviki vihārayātraku veḷḷāru.* — The schoolchildren went on an excursion to the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a tour guide, then the Telugu for entry, then say vihārayātra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a tour guide, then the Telugu for entry, then say *vihārayātra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విహారయాత్ర (vihārayātra) mean? (\"A pleasure trip; an excursion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

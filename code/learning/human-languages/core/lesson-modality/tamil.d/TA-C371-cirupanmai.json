@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C371-cirupanmai",
+    "language": "tamil",
+    "chapter": 371,
+    "sequence": 21350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa81f3bd487c0c21"
+  },
+  "findings": []
+}

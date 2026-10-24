@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:1e71337db2c0c720",
+  "lessonIds": [
+    "TE-C369-rajabhavanam",
+    "TE-C369-ratham",
+    "TE-C369-varasatvam",
+    "TE-C369-kulcu",
+    "TE-C369-nirmincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch369.txt",
+  "json": "telugu/narration/ch369.json",
+  "textHash": "fnv1a64:1c1e2c9cb79f8542",
+  "jsonHash": "fnv1a64:ed18b6d4b84647ce",
+  "findings": []
+}

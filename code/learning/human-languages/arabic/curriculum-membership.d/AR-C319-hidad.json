@@ -1,0 +1,11 @@
+{
+  "id": "AR-C319-hidad",
+  "pathSegment": "AR-PATH-319-AZA319",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-319-AZA319",
+      "order": 4
+    }
+  ]
+}

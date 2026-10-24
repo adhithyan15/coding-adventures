@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:7eb739deed65c795",
+  "lessonIds": [
+    "KA-C406-visvavidyalaya",
+    "KA-C406-padavi",
+    "KA-C406-upanyasa",
+    "KA-C406-pradhyapaka",
+    "KA-C406-bodhisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch406.txt",
+  "json": "kannada/narration/ch406.json",
+  "textHash": "fnv1a64:7a1e0198faeeb716",
+  "jsonHash": "fnv1a64:e9e436e1dcc02a2b",
+  "findings": []
+}

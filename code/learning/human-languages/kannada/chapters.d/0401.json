@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Growth and Finance",
+  "label": "ch:ka-growth-and-finance",
+  "canDo": "I can say development, economic, finance, to promote and to invest.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C401-hudu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can say development, economic, finance, to promote and to invest.",
+    "assesses": [
+      "KA-LEX-C401-ABHIVRIDDHI401-03",
+      "KA-LEX-C401-ABHIVRIDDHI401-04",
+      "KA-LEX-C401-ABHIVRIDDHI401-05"
+    ]
+  }
+}

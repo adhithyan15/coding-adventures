@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C534-maic",
+    "language": "hindi",
+    "chapter": 534,
+    "sequence": 29430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e8a424d35b980a7"
+  },
+  "findings": []
+}

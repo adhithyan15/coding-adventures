@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 456,
+  "title": "Strolling Around",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ec749d30947e808a",
+  "lessons": [
+    {
+      "id": "TE-C456-sikaru",
+      "sequence": 22920,
+      "title": "షికారు (ṣikāru) — a jaunt; an outing",
+      "headword": "షికారు",
+      "romanization": "ṣikāru",
+      "gloss": "a jaunt; an outing",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:427261a850176b51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for entry, then the Telugu for a pleasure trip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: షికారు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "షికారు — ṣikāru — \"a jaunt; an outing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సాయంత్రం మేము సముద్రం దగ్గర షికారుకు వెళ్ళాం. sāyantraṁ mēmu samudraṁ daggara ṣikāruku veḷḷāṁ. In the evening we went for a stroll by the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "షికారుకు వెళ్ళు, to go for an outing. An outing with no aim but pleasure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "షికారు (ṣikāru) is a loan from Persian shikār, \"hunting, the chase\", which reached Telugu through Hindustani; a hunting trip became any trip for pleasure."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣikāru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣikāru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣikāru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣikāru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāyantraṁ mēmu samudraṁ daggara ṣikāruku veḷḷāṁ. — In the evening we went for a stroll by the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāyantraṁ mēmu samudraṁ daggara ṣikāruku veḷḷāṁ.* — In the evening we went for a stroll by the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for entry, then the Telugu for a pleasure trip, then say ṣikāru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for entry, then the Telugu for a pleasure trip, then say *ṣikāru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does షికారు (ṣikāru) mean? (\"A jaunt; an outing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C456-viharincu",
+      "sequence": 22930,
+      "title": "విహరించు (vihariñcu) — to stroll; to roam for pleasure",
+      "headword": "విహరించు",
+      "romanization": "vihariñcu",
+      "gloss": "to stroll; to roam for pleasure",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a8237b8b9380a12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a pleasure trip, then the Telugu for a jaunt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విహరించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విహరించు — vihariñcu — \"to stroll; to roam for pleasure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పర్యాటకులు తోటలో హాయిగా విహరించారు. paryāṭakulu tōṭalō hāyigā vihariñcāru. The tourists strolled happily in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): విహరించాను, vihariñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "A rather literary verb; విహారయాత్ర, an excursion, holds the same root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విహరించు (vihariñcu) is built from Sanskrit vihāra, \"roaming, pleasure\" (CDIAL 12033), from vi-hṛ, \"to roam about\", with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vihariñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vihariñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vihariñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vihariñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryāṭakulu tōṭalō hāyigā vihariñcāru. — The tourists strolled happily in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryāṭakulu tōṭalō hāyigā vihariñcāru.* — The tourists strolled happily in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a pleasure trip, then the Telugu for a jaunt, then say vihariñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a pleasure trip, then the Telugu for a jaunt, then say *vihariñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విహరించు (vihariñcu) mean? (\"To stroll; to roam for pleasure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C456-drsyam",
+      "sequence": 22940,
+      "title": "దృశ్యం (dṛśyaṁ) — a view; a scene",
+      "headword": "దృశ్యం",
+      "romanization": "dṛśyaṁ",
+      "gloss": "a view; a scene",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f978375b14e9fbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a jaunt, then the Telugu for to stroll."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దృశ్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దృశ్యం — dṛśyaṁ — \"a view; a scene\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొండ మీద నుంచి దృశ్యం చాలా అందంగా ఉంది. koṇḍa mīda nuñci dṛśyaṁ cālā andaṅgā undi. The view from the top of the hill is very beautiful."
+            },
+            {
+              "kind": "speech",
+              "text": "A view of nature, and also a scene in a film or a play."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దృశ్యం (dṛśyaṁ) is borrowed from Sanskrit dṛśya, \"visible, what is to be seen\" (Monier-Williams), from dṛś, \"to see\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dṛśyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dṛśyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dṛśyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dṛśyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṇḍa mīda nuñci dṛśyaṁ cālā andaṅgā undi. — The view from the top of the hill is very beautiful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṇḍa mīda nuñci dṛśyaṁ cālā andaṅgā undi.* — The view from the top of the hill is very beautiful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a jaunt, then the Telugu for to stroll, then say dṛśyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a jaunt, then the Telugu for to stroll, then say *dṛśyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దృశ్యం (dṛśyaṁ) mean? (\"A view; a scene\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C456-sandhya",
+      "sequence": 22950,
+      "title": "సంధ్య (sandhya) — dusk; twilight",
+      "headword": "సంధ్య",
+      "romanization": "sandhya",
+      "gloss": "dusk; twilight",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f41fa90f3fa23a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to stroll, then the Telugu for a view."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంధ్య",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంధ్య — sandhya — \"dusk; twilight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సంధ్య వేళ ఆకాశం ఎర్రగా ఉంది. sandhya vēḷa ākāśaṁ erragā undi. At dusk the sky is red."
+            },
+            {
+              "kind": "speech",
+              "text": "సంధ్య (sandhya) వేళ, at dusk. The word also names the meeting of day and night at dawn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంధ్య (sandhya) is borrowed from Sanskrit sandhyā, \"a joining, the twilight\" where day and night meet (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhya vēḷa ākāśaṁ erragā undi. — At dusk the sky is red.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhya vēḷa ākāśaṁ erragā undi.* — At dusk the sky is red.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to stroll, then the Telugu for a view, then say sandhya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to stroll, then the Telugu for a view, then say *sandhya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంధ్య (sandhya) mean? (\"Dusk; twilight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C456-majili",
+      "sequence": 22960,
+      "title": "మజిలీ (majilī) — a stopover; a halt",
+      "headword": "మజిలీ",
+      "romanization": "majilī",
+      "gloss": "a stopover; a halt",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89124036de6e0d7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a view, then the Telugu for dusk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మజిలీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మజిలీ — majilī — \"a stopover; a halt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రెండు రోజుల ప్రయాణంలో మొదటి మజిలీ ఒక చిన్న పట్టణం. reṇḍu rōjula prayāṇaṁlō modaṭi majilī oka cinna paṭṭaṇaṁ. On the two-day journey the first stopover was a small town."
+            },
+            {
+              "kind": "speech",
+              "text": "A stop on a long journey. మజిలీ (majilī) కథలు are stories told at each halt of a journey."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మజిలీ (majilī) is usually traced to Arabic manzil, \"a place where travellers halt\", which came into Telugu through Persian and Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majilī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majilī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majilī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majilī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reṇḍu rōjula prayāṇaṁlō modaṭi majilī oka cinna paṭṭaṇaṁ. — On the two-day journey the first stopover was a small town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reṇḍu rōjula prayāṇaṁlō modaṭi majilī oka cinna paṭṭaṇaṁ.* — On the two-day journey the first stopover was a small town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a view, then the Telugu for dusk, then say majilī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a view, then the Telugu for dusk, then say *majilī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మజిలీ (majilī) mean? (\"A stopover; a halt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

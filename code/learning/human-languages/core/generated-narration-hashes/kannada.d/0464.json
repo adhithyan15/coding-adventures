@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:5b69ed1563ff423f",
+  "lessonIds": [
+    "KA-C464-upahara",
+    "KA-C464-menu",
+    "KA-C464-paricaraka",
+    "KA-C464-bhaksisu",
+    "KA-C464-ardar-madu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch464.txt",
+  "json": "kannada/narration/ch464.json",
+  "textHash": "fnv1a64:15d2eedaf3106ff5",
+  "jsonHash": "fnv1a64:6d6d9e110647f530",
+  "findings": []
+}

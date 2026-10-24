@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Kinds of People",
+  "label": "ch:ta-kinds-of-people",
+  "canDo": "I can describe gentle, naive, gullible, stingy and wasteful people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C472-utari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can describe gentle, naive, gullible, stingy and wasteful people.",
+    "assesses": [
+      "TA-LEX-C472-MANITAR472-03",
+      "TA-LEX-C472-MANITAR472-04",
+      "TA-LEX-C472-MANITAR472-05"
+    ]
+  }
+}

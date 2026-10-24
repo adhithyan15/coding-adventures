@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "Mind and Heart",
+  "label": "ch:mr-mind-and-heart",
+  "canDo": "I can talk about the mind, life, happiness and surprise.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C450-helavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can talk about the mind, life, happiness and surprise.",
+    "assesses": [
+      "MR-LEX-C450-MAN450-03",
+      "MR-LEX-C450-MAN450-04",
+      "MR-LEX-C450-MAN450-05"
+    ]
+  }
+}

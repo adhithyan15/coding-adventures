@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:f9ec31768fc663b0",
+  "lessonIds": [
+    "TE-C444-indhanam",
+    "TE-C444-cedipovu",
+    "TE-C444-morayincu",
+    "TE-C444-pankcaru",
+    "TE-C444-marammatu-ceyu"
+  ],
+  "tex": "telugu/book/chapters/ch444-fuel-and-breakdowns.tex"
+}

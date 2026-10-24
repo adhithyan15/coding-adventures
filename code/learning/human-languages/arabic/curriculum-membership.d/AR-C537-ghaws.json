@@ -1,0 +1,11 @@
+{
+  "id": "AR-C537-ghaws",
+  "pathSegment": "AR-PATH-537-HIWAYA537",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-537-HIWAYA537",
+      "order": 1
+    }
+  ]
+}

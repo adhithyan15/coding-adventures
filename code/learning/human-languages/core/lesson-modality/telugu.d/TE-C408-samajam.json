@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C408-samajam",
+    "language": "telugu",
+    "chapter": 408,
+    "sequence": 20330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec09f7877a0ecf2d"
+  },
+  "findings": []
+}

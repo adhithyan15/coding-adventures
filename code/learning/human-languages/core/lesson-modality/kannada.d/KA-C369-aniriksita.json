@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C369-aniriksita",
+    "language": "kannada",
+    "chapter": 369,
+    "sequence": 18590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f51dd2a82dd5da03"
+  },
+  "findings": []
+}

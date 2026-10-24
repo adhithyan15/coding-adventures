@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:2f69d69c296d7f64",
+  "lessonIds": [
+    "KA-C513-cetarisiko",
+    "KA-C513-unisu",
+    "KA-C513-badita",
+    "KA-C513-araike",
+    "KA-C513-kasaya"
+  ],
+  "tex": "kannada/book/chapters/ch513-getting-better.tex"
+}

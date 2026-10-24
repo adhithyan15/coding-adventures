@@ -1,0 +1,11 @@
+{
+  "id": "KA-C423-upaya",
+  "pathSegment": "KA-PATH-423-HANTA423",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-423-HANTA423",
+      "order": 3
+    }
+  ]
+}

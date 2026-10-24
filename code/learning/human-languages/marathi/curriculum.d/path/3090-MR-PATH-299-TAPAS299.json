@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-299-TAPAS299",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "MR-EXT-299-TAPAS299"
+  ],
+  "after": []
+}

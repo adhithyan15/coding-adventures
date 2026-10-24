@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C448-udas",
+    "language": "bengali",
+    "chapter": 448,
+    "sequence": 27530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5067e7287427a3f"
+  },
+  "findings": []
+}

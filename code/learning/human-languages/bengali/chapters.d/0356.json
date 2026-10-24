@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Counting and Measuring",
+  "label": "ch:bn-counting-and-measuring",
+  "canDo": "I can give a share in figures and say how it was measured.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C356-mulyayon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can give a share in figures and say how it was measured.",
+    "assesses": [
+      "BN-LEX-C356-SHOTANGSHO356-03",
+      "BN-LEX-C356-SHOTANGSHO356-04",
+      "BN-LEX-C356-SHOTANGSHO356-05"
+    ]
+  }
+}

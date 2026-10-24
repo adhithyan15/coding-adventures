@@ -1,0 +1,11 @@
+{
+  "id": "ML-C532-cikitsikkuka",
+  "pathSegment": "ML-PATH-532-ROGAM532",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-532-ROGAM532",
+      "order": 4
+    }
+  ]
+}

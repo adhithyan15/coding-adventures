@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Getting In",
+  "label": "ch:ml-getting-in",
+  "canDo": "I can say admission, an entrance exam, a course, a semester and a syllabus.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C433-silabasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can say admission, an entrance exam, a course, a semester and a syllabus.",
+    "assesses": [
+      "ML-LEX-C433-PRAVESANAM433-03",
+      "ML-LEX-C433-PRAVESANAM433-04",
+      "ML-LEX-C433-PRAVESANAM433-05"
+    ]
+  }
+}

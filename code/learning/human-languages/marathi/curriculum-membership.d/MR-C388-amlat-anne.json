@@ -1,0 +1,11 @@
+{
+  "id": "MR-C388-amlat-anne",
+  "pathSegment": "MR-PATH-388-UDDISHTA388",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-388-UDDISHTA388",
+      "order": 4
+    }
+  ]
+}

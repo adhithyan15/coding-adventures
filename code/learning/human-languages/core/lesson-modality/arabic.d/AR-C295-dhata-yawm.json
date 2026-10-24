@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C295-dhata-yawm",
+    "language": "arabic",
+    "chapter": 295,
+    "sequence": 17140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c91b202cc33e38d5"
+  },
+  "findings": []
+}

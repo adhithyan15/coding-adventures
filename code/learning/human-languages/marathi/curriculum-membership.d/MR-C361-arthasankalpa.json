@@ -1,0 +1,11 @@
+{
+  "id": "MR-C361-arthasankalpa",
+  "pathSegment": "MR-PATH-361-ARTHIK361",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-361-ARTHIK361",
+      "order": 1
+    }
+  ]
+}

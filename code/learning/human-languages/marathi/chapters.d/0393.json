@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Excuses and Requests",
+  "label": "ch:mr-excuses-and-requests",
+  "canDo": "I can talk about excuses, pretexts and requests.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C393-pathpurava-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can talk about excuses, pretexts and requests.",
+    "assesses": [
+      "MR-LEX-C393-SABAB393-03",
+      "MR-LEX-C393-SABAB393-04",
+      "MR-LEX-C393-SABAB393-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C375-sibira",
+  "pathSegment": "KA-PATH-375-SHIBIRA375",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-375-SHIBIRA375",
+      "order": 0
+    }
+  ]
+}

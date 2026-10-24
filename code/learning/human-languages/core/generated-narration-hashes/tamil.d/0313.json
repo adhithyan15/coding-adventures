@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:b787b76ef572ea27",
+  "lessonIds": [
+    "TA-C313-itarkitaiyil",
+    "TA-C313-utanatiyaka",
+    "TA-C313-patippatiyaka",
+    "TA-C313-oruvaliyaka",
+    "TA-C313-munnataka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch313.txt",
+  "json": "tamil/narration/ch313.json",
+  "textHash": "fnv1a64:ae39ed2ff812af9a",
+  "jsonHash": "fnv1a64:7e9e32518075d48a",
+  "findings": []
+}

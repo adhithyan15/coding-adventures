@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Pure Gold and Touchstones",
+  "label": "ch:hi-pure-gold-and-touchstones",
+  "canDo": "I can tell real from pure, say a colour suits someone and see gold tested on a touchstone.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C434-kasauti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can tell real from pure, say a colour suits someone and see gold tested on a touchstone.",
+    "assesses": [
+      "HI-LEX-C434-SHUDDH434-03",
+      "HI-LEX-C434-SHUDDH434-04",
+      "HI-LEX-C434-SHUDDH434-05"
+    ]
+  }
+}

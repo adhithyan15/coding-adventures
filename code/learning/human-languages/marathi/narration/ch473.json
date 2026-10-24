@@ -1,0 +1,866 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 473,
+  "title": "Mischief and Fun",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8cf93c1cfbfae5f8",
+  "lessons": [
+    {
+      "id": "MR-C473-khodkar",
+      "sequence": 27170,
+      "title": "खोडकर (khoḍkar) — naughty",
+      "headword": "खोडकर",
+      "romanization": "khoḍkar",
+      "gloss": "naughty",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a950239adc0d5359",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for hasty, then the Marathi for impatient."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खोडकर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोडकर — khoḍkar — \"naughty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खोडकर मुलगा वर्गात सारखा बोलत असतो. khoḍkar mulgā vargāt sārkhā bolat asto. The naughty boy keeps talking in class."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on खोड, a bad habit or prank (not the tree trunk): खोडी काढणे, to play a prank. Unchanging."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोडकर (khoḍkar) is a Marathi adjective, खोड, \"mischief\", with the ending -kar; the origin of खोड is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoḍkar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoḍkar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoḍkar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoḍkar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoḍkar mulgā vargāt sārkhā bolat asto. — The naughty boy keeps talking in class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoḍkar mulgā vargāt sārkhā bolat asto.* — The naughty boy keeps talking in class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for hasty, then the Marathi for impatient, then say khoḍkar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for hasty, then the Marathi for impatient, then say *khoḍkar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खोडकर (khoḍkar) mean? (\"Naughty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C473-miskil",
+      "sequence": 27180,
+      "title": "मिश्किल (miśkil) — impish; playful",
+      "headword": "मिश्किल",
+      "romanization": "miśkil",
+      "gloss": "impish; playful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:786effa29935dccf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for impatient, then the Marathi for naughty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मिश्किल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिश्किल — miśkil — \"impish; playful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजोबा मिश्किल हसले. ājobā miśkil hasle. Grandfather smiled impishly."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a smile or a remark with a twinkle: मिश्किल (miśkil) नजर."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिश्किल (miśkil) is a Marathi adjective whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miśkil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miśkil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miśkil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miśkil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājobā miśkil hasle. — Grandfather smiled impishly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājobā miśkil hasle.* — Grandfather smiled impishly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for impatient, then the Marathi for naughty, then say miśkil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for impatient, then the Marathi for naughty, then say *miśkil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मिश्किल (miśkil) mean? (\"Impish; playful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C473-vinodi",
+      "sequence": 27190,
+      "title": "विनोदी (vinodī) — funny; witty",
+      "headword": "विनोदी",
+      "romanization": "vinodī",
+      "gloss": "funny; witty",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a346da28a2fd8bb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for naughty, then the Marathi for impish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विनोदी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विनोदी — vinodī — \"funny; witty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आमच्या मावशी खूप विनोदी आहेत. āmcyā māvśī khūp vinodī āhet. Our aunt is very funny."
+            },
+            {
+              "kind": "speech",
+              "text": "From विनोद, a joke. Unchanging."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विनोदी (vinodī) is a Marathi adjective built on विनोद, \"a joke\", a tatsama from Sanskrit vinoda, \"driving away; diversion\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinodī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinodī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinodī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinodī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmcyā māvśī khūp vinodī āhet. — Our aunt is very funny.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmcyā māvśī khūp vinodī āhet.* — Our aunt is very funny.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for naughty, then the Marathi for impish, then say vinodī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for naughty, then the Marathi for impish, then say *vinodī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विनोदी (vinodī) mean? (\"Funny; witty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C473-gammat",
+      "sequence": 27200,
+      "title": "गंमत (gammat) — amusement; a bit of fun",
+      "headword": "गंमत",
+      "romanization": "gammat",
+      "gloss": "amusement; a bit of fun",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f642b21a8238177",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for impish, then the Marathi for funny."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गंमत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गंमत — gammat — \"amusement; a bit of fun\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पावसात भिजायला खूप गंमत आली. pāvsāt bhijāylā khūp gammat ālī. Getting soaked in the rain was great fun."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "गंमत (gammat) येणे, to be fun, with the dative; गंमत (gammat) म्हणून, as a joke."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गंमत (gammat) is a Marathi noun whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gammat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gammat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gammat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gammat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvsāt bhijāylā khūp gammat ālī. — Getting soaked in the rain was great fun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvsāt bhijāylā khūp gammat ālī.* — Getting soaked in the rain was great fun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for impish, then the Marathi for funny, then say gammat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for impish, then the Marathi for funny, then say *gammat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गंमत (gammat) mean? (\"Amusement; a bit of fun\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C473-thatta-karne",
+      "sequence": 27210,
+      "title": "थट्टा करणे (thaṭṭā karṇe) — to tease; to joke",
+      "headword": "थट्टा करणे",
+      "romanization": "thaṭṭā karṇe",
+      "gloss": "to tease; to joke",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18ef2964371d6434",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for funny, then the Marathi for amusement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: थट्टा करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थट्टा करणे — thaṭṭā karṇe — \"to tease; to joke\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मित्रांनी माझ्या टोपीची थट्टा केली. mitrānnī mājhyā ṭopīcī thaṭṭā kelī. My friends teased me about my cap."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने थट्टा केली, tyāne thaṭṭā kelī."
+            },
+            {
+              "kind": "speech",
+              "text": "The target takes the genitive: भावाची थट्टा करणे (thaṭṭā karṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थट्टा करणे (thaṭṭā karṇe) is a Marathi phrase built on थट्टा, \"a joke\", which CDIAL lists under the reconstructed ṭhaṭṭha, \"joke\" (CDIAL 5492), with करणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thaṭṭā karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thaṭṭā karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thaṭṭā karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thaṭṭā karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitrānnī mājhyā ṭopīcī thaṭṭā kelī. — My friends teased me about my cap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitrānnī mājhyā ṭopīcī thaṭṭā kelī.* — My friends teased me about my cap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for funny, then the Marathi for amusement, then say thaṭṭā karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for funny, then the Marathi for amusement, then say *thaṭṭā karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does थट्टा करणे (thaṭṭā karṇe) mean? (\"To tease; to joke\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R473-review-466-473",
+      "sequence": 27220,
+      "title": "Looking back: from Peace of Mind to Mischief and Fun",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Peace of Mind to Mischief and Fun",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e091b75d8798067",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for satisfaction and well-being."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satisfaction, well-being, relaxed, to rest a while, to brighten up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: satisfaction, well-being, relaxed, to rest a while, to brighten up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torment, to writhe, to ache with pity, to stay alive, to wobble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: torment, to writhe, to ache with pity, to stay alive, to wobble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soft-hearted, mild, tender-hearted, sensitive, helpful to others",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: soft-hearted, mild, tender-hearted, sensitive, helpful to others]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harsh, merciless, wicked, fierce, deceitful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: harsh, merciless, wicked, fierce, deceitful]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sly, hypocritical, naive, innocent, to dupe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sly, hypocritical, naive, innocent, to dupe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sensible, shrewd, intelligent, understanding, common sense",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sensible, shrewd, intelligent, understanding, common sense]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stubborn, obstinate, moody, hasty, impatient",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stubborn, obstinate, moody, hasty, impatient]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naughty, impish, funny, amusement, to tease",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: naughty, impish, funny, amusement, to tease]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Satisfaction? (समाधान, samādhān.) Well-being? (स्वास्थ्य, svāsthya.) Relaxed? (निवांत, nivānt.) To rest a while? (विसावणे, visāvṇe.) To brighten up? (खुलणे, khulṇe.) Torment? (यातना, yātnā.) To writhe? (तडफडणे, taḍphaḍṇe.) To ache with pity? (कळवळणे, kaḷvaḷṇe.) To stay alive? (जगणे, jagṇe.) To wobble? (डगमगणे, ḍagmagṇe.) Soft-hearted? (मृदू, mṛdū.) Mild? (सौम्य, saumya.) Tender-hearted? (हळवा, haḷvā.) Sensitive? (संवेदनशील, saṁvedanśīl.) Helpful to others? (परोपकारी, paropkārī.) Harsh? (कठोर, kaṭhor.) Merciless? (निर्दयी, nirdayī.) Wicked? (दुष्ट, duṣṭa.) Fierce? (उग्र, ugra.) Deceitful? (कपटी, kapṭī.) Sly? (लबाड, labāḍ.) Hypocritical? (ढोंगी, ḍhoṅgī.) Naive? (भोळा, bhoḷā.) Innocent? (निरागस, nirāgas.) To dupe? (ठकवणे, ṭhakavṇe.) Sensible? (शहाणा, śahāṇā.) Shrewd? (चतुर, catur.) Intelligent? (बुद्धिमान, buddhimān.) Understanding? (समजूतदार, samjūtdār.) Common sense? (अक्कल, akkal.) Stubborn? (हट्टी, haṭṭī.) Obstinate? (आडमुठा, āḍmuṭhā.) Moody? (लहरी, lahrī.) Hasty? (उतावळा, utāvḷā.) Impatient? (अधीर, adhīr.) Naughty? (खोडकर, khoḍkar.) Impish? (मिश्किल, miśkil.) Funny? (विनोदी, vinodī.) Amusement? (गंमत, gammat.) To tease? (थट्टा करणे, thaṭṭā karṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

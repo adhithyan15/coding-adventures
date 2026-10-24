@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:fa4a1931f9457c57",
+  "lessonIds": [
+    "KA-C484-tapamana",
+    "KA-C484-ardrate",
+    "KA-C484-havaguna",
+    "KA-C484-teva",
+    "KA-C484-hadagedu"
+  ],
+  "tex": "kannada/book/chapters/ch484-the-weather-report.tex"
+}

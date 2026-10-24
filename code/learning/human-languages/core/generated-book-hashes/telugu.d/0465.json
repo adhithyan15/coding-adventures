@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:3d99b4ed0c3edd11",
+  "lessonIds": [
+    "TE-C465-purapalaka-sangham",
+    "TE-C465-janabha",
+    "TE-C465-nivasi",
+    "TE-C465-sthanikudu",
+    "TE-C465-aparicitudu"
+  ],
+  "tex": "telugu/book/chapters/ch465-townspeople.tex"
+}

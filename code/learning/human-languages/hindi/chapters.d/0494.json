@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Looking After Someone",
+  "label": "ch:hi-looking-after-someone",
+  "canDo": "I can say how I look after someone who is ill.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C494-orhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can say how I look after someone who is ill.",
+    "assesses": [
+      "HI-LEX-C494-DEKHBHAL494-03",
+      "HI-LEX-C494-DEKHBHAL494-04",
+      "HI-LEX-C494-DEKHBHAL494-05"
+    ]
+  }
+}

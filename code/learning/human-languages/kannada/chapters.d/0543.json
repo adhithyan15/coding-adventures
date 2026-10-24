@@ -1,0 +1,19 @@
+{
+  "chapter": 543,
+  "title": "A New Home",
+  "label": "ch:ka-a-new-home",
+  "canDo": "I can say a veranda, a lantern, a cushion, furniture and to lean back.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C543-oragu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 543: I can say a veranda, a lantern, a cushion, furniture and to lean back.",
+    "assesses": [
+      "KA-LEX-C543-GRHA543-03",
+      "KA-LEX-C543-GRHA543-04",
+      "KA-LEX-C543-GRHA543-05"
+    ]
+  }
+}

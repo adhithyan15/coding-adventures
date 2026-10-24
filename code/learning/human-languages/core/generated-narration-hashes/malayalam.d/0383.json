@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:1587678a931d8f20",
+  "lessonIds": [
+    "ML-C383-rahasyam",
+    "ML-C383-pratyaksappetuka",
+    "ML-C383-marayuka",
+    "ML-C383-kantupitikkuka",
+    "ML-C383-kantetukkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch383.txt",
+  "json": "malayalam/narration/ch383.json",
+  "textHash": "fnv1a64:d74d45b041ddd6f7",
+  "jsonHash": "fnv1a64:62e665194d6415fa",
+  "findings": []
+}

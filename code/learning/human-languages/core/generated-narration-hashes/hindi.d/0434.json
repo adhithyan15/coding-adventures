@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:8d2c218e97575122",
+  "lessonIds": [
+    "HI-C434-asli",
+    "HI-C434-suddh",
+    "HI-C434-ragarna",
+    "HI-C434-phabna",
+    "HI-C434-kasauti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch434.txt",
+  "json": "hindi/narration/ch434.json",
+  "textHash": "fnv1a64:c357fb53f843db30",
+  "jsonHash": "fnv1a64:68cb1f7a324cbc10",
+  "findings": []
+}

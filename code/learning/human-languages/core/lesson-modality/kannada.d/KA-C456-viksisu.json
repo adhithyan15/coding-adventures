@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C456-viksisu",
+    "language": "kannada",
+    "chapter": 456,
+    "sequence": 23220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c86eb82632a0a27d"
+  },
+  "findings": []
+}

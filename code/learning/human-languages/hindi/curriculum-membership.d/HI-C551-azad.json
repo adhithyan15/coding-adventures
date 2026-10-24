@@ -1,0 +1,11 @@
+{
+  "id": "HI-C551-azad",
+  "pathSegment": "HI-PATH-551-MAJBUR551",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-551-MAJBUR551",
+      "order": 1
+    }
+  ]
+}

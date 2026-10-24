@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Situations and Requirements",
+  "label": "ch:ka-situations-and-requirements",
+  "canDo": "I can say a state of affairs, a circumstance, to arise, a stipulation and a requirement.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C430-avasyakate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can say a state of affairs, a circumstance, to arise, a stipulation and a requirement.",
+    "assesses": [
+      "KA-LEX-C430-SANDARBHA430-03",
+      "KA-LEX-C430-SANDARBHA430-04",
+      "KA-LEX-C430-SANDARBHA430-05"
+    ]
+  }
+}

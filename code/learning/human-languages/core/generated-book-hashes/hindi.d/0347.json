@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:36063a8ae9597cfc",
+  "lessonIds": [
+    "HI-C347-paks",
+    "HI-C347-khilaf",
+    "HI-C347-virodhkarna",
+    "HI-C347-samarthankarna",
+    "HI-C347-sahmathona"
+  ],
+  "tex": "hindi/book/chapters/ch347-taking-sides.tex"
+}

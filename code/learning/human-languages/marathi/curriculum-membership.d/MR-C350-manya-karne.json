@@ -1,0 +1,11 @@
+{
+  "id": "MR-C350-manya-karne",
+  "pathSegment": "MR-PATH-350-SVIKAR350",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-350-SVIKAR350",
+      "order": 1
+    }
+  ]
+}

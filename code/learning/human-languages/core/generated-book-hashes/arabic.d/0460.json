@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:4580e6e9c5adc046",
+  "lessonIds": [
+    "AR-C460-utl",
+    "AR-C460-khalal",
+    "AR-C460-inkasara",
+    "AR-C460-talifa",
+    "AR-C460-tadarrara"
+  ],
+  "tex": "arabic/book/chapters/ch460-when-things-break.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C550-melnottam",
+    "language": "malayalam",
+    "chapter": 550,
+    "sequence": 27700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bb3daa16e5b0d47"
+  },
+  "findings": []
+}

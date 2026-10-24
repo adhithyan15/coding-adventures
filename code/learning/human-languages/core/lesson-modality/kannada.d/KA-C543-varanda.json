@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C543-varanda",
+    "language": "kannada",
+    "chapter": 543,
+    "sequence": 27720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3f89edb537fc1ee"
+  },
+  "findings": []
+}

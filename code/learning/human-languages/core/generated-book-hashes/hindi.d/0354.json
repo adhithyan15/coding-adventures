@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:291acb2d6785e2be",
+  "lessonIds": [
+    "HI-C354-vot",
+    "HI-C354-nagrik",
+    "HI-C354-janmat",
+    "HI-C354-loktantra",
+    "HI-C354-thopna"
+  ],
+  "tex": "hindi/book/chapters/ch354-citizens-and-votes.tex"
+}

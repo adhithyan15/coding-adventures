@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:95ca10f9c303a80b",
+  "lessonIds": [
+    "MR-C386-pratibandh-karne",
+    "MR-C386-rokhne",
+    "MR-C386-adavne",
+    "MR-C386-dakhal-ghene",
+    "MR-C386-palvat"
+  ],
+  "tex": "marathi/book/chapters/ch386-stopping-trouble.tex"
+}

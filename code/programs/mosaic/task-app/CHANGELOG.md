@@ -4,14 +4,31 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-- Qt preserves the calendar heading's fill width and the timeline's 150/190
-  text column widths. Both themes now report 78 style drops instead of 81.
+### Fixed
 
-Entries added after `task-app-v0.5.8` accumulate here until the next version is
-cut.
+- Preserve the 260-pixel board-column minimum in both themes and across Qt's
+  repeated-column delegate wrapper (#18030). Unsupported flex-shrink remains
+  reported; the style-drop budget and release artifact coverage are unchanged.
+
+### Documentation
+
+- Record the completed immutable v0.5.9 publication and independent asset audit
+  in the README, completion spec, and backlog (#17999); artifact coverage and
+  unsigned-platform limitations remain unchanged.
+
+### Changed
 
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
 
+Entries added after `task-app-v0.5.9` accumulate here until the next version is
+cut.
+
+## [0.5.9] - 2026-10-22
+
+### Fixed — Qt text widths and Web Component input fidelity
+
+- Qt preserves the calendar heading's fill width and the timeline's 150/190
+  text column widths. Both themes now report 78 style drops instead of 81.
 - The Web Component acceptance test types into the task name with an `input`
   event. A Web Component text field now dispatches `onChange` per keystroke, as
   on every other backend, and keeps focus across the re-render that follows.

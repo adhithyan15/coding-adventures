@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C320-ela-vellali",
+    "language": "telugu",
+    "chapter": 320,
+    "sequence": 15420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19d7345cdc8b2b56"
+  },
+  "findings": []
+}

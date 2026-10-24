@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:33c4dad5bd603c33",
+  "lessonIds": [
+    "MR-C341-kadambari",
+    "MR-C341-caritra",
+    "MR-C341-adbhut",
+    "MR-C341-avismaraniy",
+    "MR-C341-ciradne",
+    "MR-R341-review-335-341",
+    "MR-R341-review-final-341"
+  ],
+  "tex": "marathi/book/chapters/ch341-books-to-remember.tex"
+}

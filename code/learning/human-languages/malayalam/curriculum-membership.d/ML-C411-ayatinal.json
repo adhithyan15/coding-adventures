@@ -1,0 +1,11 @@
+{
+  "id": "ML-C411-ayatinal",
+  "pathSegment": "ML-PATH-411-KARANAM411",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-411-KARANAM411",
+      "order": 1
+    }
+  ]
+}

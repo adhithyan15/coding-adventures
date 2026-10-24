@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Experts",
+  "label": "ch:bn-experts",
+  "canDo": "I can name some experts and say how they help.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C501-nirnoy-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can name some experts and say how they help.",
+    "assesses": [
+      "BN-LEX-C501-BISHESHOGGO501-03",
+      "BN-LEX-C501-BISHESHOGGO501-04",
+      "BN-LEX-C501-BISHESHOGGO501-05"
+    ]
+  }
+}

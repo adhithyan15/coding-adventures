@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Contrast and addition",
+  "label": "ch:ar-contrast-and-addition",
+  "canDo": "I can say even so, yet, as for, likewise and moreover.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C375-ilawatan-ala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say even so, yet, as for, likewise and moreover.",
+    "assesses": [
+      "AR-LEX-C375-TADADD375-03",
+      "AR-LEX-C375-TADADD375-04",
+      "AR-LEX-C375-TADADD375-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Fields and Parks",
+  "label": "ch:bn-fields-and-parks",
+  "canDo": "I can talk about the playing field, the park, the courtyard and the square.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C410-paychari-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can talk about the playing field, the park, the courtyard and the square.",
+    "assesses": [
+      "BN-LEX-C410-MATH410-03",
+      "BN-LEX-C410-MATH410-04",
+      "BN-LEX-C410-MATH410-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:24f34da7540d08a4",
+  "lessonIds": [
+    "AR-C429-qubtan",
+    "AR-C429-qarib",
+    "AR-C429-abbara",
+    "AR-C429-abhara",
+    "AR-C429-rasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch429.txt",
+  "json": "arabic/narration/ch429.json",
+  "textHash": "fnv1a64:c4c6c1f03a7e4232",
+  "jsonHash": "fnv1a64:f1cf4f120892b7dc",
+  "findings": []
+}

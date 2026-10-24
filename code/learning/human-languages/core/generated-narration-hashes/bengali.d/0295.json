@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:0dfad64331d6ef13",
+  "lessonIds": [
+    "BN-C295-khoti",
+    "BN-C295-dhvongsostup",
+    "BN-C295-meramot-kora",
+    "BN-C295-mokabila-kora",
+    "BN-C295-phire-paoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch295.txt",
+  "json": "bengali/narration/ch295.json",
+  "textHash": "fnv1a64:3bcd59540c638f74",
+  "jsonHash": "fnv1a64:fc2fff0abe434081",
+  "findings": []
+}

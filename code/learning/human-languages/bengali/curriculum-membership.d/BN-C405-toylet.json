@@ -1,0 +1,11 @@
+{
+  "id": "BN-C405-toylet",
+  "pathSegment": "BN-PATH-405-BATHRUM405",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-405-BATHRUM405",
+      "order": 1
+    }
+  ]
+}

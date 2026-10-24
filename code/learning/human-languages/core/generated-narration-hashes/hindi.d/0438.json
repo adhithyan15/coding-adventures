@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:c67f71b36f7c1fd5",
+  "lessonIds": [
+    "HI-C438-jara",
+    "HI-C438-ola",
+    "HI-C438-sit",
+    "HI-C438-himpat",
+    "HI-C438-orhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch438.txt",
+  "json": "hindi/narration/ch438.json",
+  "textHash": "fnv1a64:1d088f0586d4eaeb",
+  "jsonHash": "fnv1a64:8f3071ceb939087c",
+  "findings": []
+}

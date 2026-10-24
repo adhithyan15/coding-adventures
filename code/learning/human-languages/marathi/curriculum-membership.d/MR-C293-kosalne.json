@@ -1,0 +1,11 @@
+{
+  "id": "MR-C293-kosalne",
+  "pathSegment": "MR-PATH-293-BHUKAMP293",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-293-BHUKAMP293",
+      "order": 2
+    }
+  ]
+}

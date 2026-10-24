@@ -1,0 +1,11 @@
+{
+  "id": "ML-C362-tipitikkuka",
+  "pathSegment": "ML-PATH-362-TEE362",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-362-TEE362",
+      "order": 3
+    }
+  ]
+}

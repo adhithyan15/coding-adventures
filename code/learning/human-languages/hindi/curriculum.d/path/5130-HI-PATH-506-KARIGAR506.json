@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-506-KARIGAR506",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-506-KARIGAR506"
+  ],
+  "after": []
+}

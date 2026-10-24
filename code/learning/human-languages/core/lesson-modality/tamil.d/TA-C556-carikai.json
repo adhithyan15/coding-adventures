@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C556-carikai",
+    "language": "tamil",
+    "chapter": 556,
+    "sequence": 31700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61e0997145cae554"
+  },
+  "findings": []
+}

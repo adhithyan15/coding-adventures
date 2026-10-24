@@ -1,0 +1,11 @@
+{
+  "id": "HI-C421-qasba",
+  "pathSegment": "HI-PATH-421-BASTI421",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-421-BASTI421",
+      "order": 1
+    }
+  ]
+}

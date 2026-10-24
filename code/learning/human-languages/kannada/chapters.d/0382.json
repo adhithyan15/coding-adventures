@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Facts and Illusions",
+  "label": "ch:ka-facts-and-illusions",
+  "canDo": "I can say a fact, reality, an illusion, existence and to realise.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C382-managanu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can say a fact, reality, an illusion, existence and to realise.",
+    "assesses": [
+      "KA-LEX-C382-VASTAVA382-03",
+      "KA-LEX-C382-VASTAVA382-04",
+      "KA-LEX-C382-VASTAVA382-05"
+    ]
+  }
+}

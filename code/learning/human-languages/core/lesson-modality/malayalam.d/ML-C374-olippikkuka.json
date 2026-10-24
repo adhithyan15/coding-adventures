@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C374-olippikkuka",
+    "language": "malayalam",
+    "chapter": 374,
+    "sequence": 18320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3b6201da42b219e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C359-ghosavakya",
+  "pathSegment": "KA-PATH-359-UTSAVA359",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-359-UTSAVA359",
+      "order": 2
+    }
+  ]
+}

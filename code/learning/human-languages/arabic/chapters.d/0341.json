@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Knights and treaties",
+  "label": "ch:ar-knights-and-treaties",
+  "canDo": "I can say a knight, a helmet, a truce, a treaty and to betray.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C341-khana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can say a knight, a helmet, a truce, a treaty and to betray.",
+    "assesses": [
+      "AR-LEX-C341-FARIS341-03",
+      "AR-LEX-C341-FARIS341-04",
+      "AR-LEX-C341-FARIS341-05"
+    ]
+  }
+}

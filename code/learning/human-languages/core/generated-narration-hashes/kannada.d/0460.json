@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:e22c1cabeadf4303",
+  "lessonIds": [
+    "KA-C460-vasati",
+    "KA-C460-ladj",
+    "KA-C460-kothadi",
+    "KA-C460-svagatakara",
+    "KA-C460-kauntar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch460.txt",
+  "json": "kannada/narration/ch460.json",
+  "textHash": "fnv1a64:ec77b6779bcf9428",
+  "jsonHash": "fnv1a64:a51a0c3fd6dee0e3",
+  "findings": []
+}

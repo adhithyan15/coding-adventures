@@ -1,0 +1,11 @@
+{
+  "id": "BN-C497-bodli",
+  "pathSegment": "BN-PATH-497-ISTOPHA497",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-497-ISTOPHA497",
+      "order": 1
+    }
+  ]
+}

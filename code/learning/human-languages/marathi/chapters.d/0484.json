@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Germs and Infections",
+  "label": "ch:mr-germs-and-infections",
+  "canDo": "I can talk about a disease, an infection, germs and an epidemic.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C484-sath",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can talk about a disease, an infection, germs and an epidemic.",
+    "assesses": [
+      "MR-LEX-C484-ROG484-03",
+      "MR-LEX-C484-ROG484-04",
+      "MR-LEX-C484-ROG484-05"
+    ]
+  }
+}

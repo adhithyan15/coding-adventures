@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:2af1bd4de15eecd9",
+  "lessonIds": [
+    "KA-C312-hogabeku",
+    "KA-C312-banda-karana",
+    "KA-R312-advice-and-reasons"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "kannada/narration/ch312.txt",
+  "json": "kannada/narration/ch312.json",
+  "textHash": "fnv1a64:02ec090088c52bcf",
+  "jsonHash": "fnv1a64:c4c24050abedfccc",
+  "findings": []
+}

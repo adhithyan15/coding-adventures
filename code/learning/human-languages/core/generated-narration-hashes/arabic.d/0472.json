@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:869fecbffe92d2fb",
+  "lessonIds": [
+    "AR-C472-sakhra",
+    "AR-C472-hadba",
+    "AR-C472-qimma",
+    "AR-C472-munhadar",
+    "AR-C472-haffa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch472.txt",
+  "json": "arabic/narration/ch472.json",
+  "textHash": "fnv1a64:2f647066cabb38b7",
+  "jsonHash": "fnv1a64:58fb00f3adb3587f",
+  "findings": []
+}

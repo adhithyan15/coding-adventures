@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C435-prerepincu",
+    "language": "telugu",
+    "chapter": 435,
+    "sequence": 21750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccc10e3a97b65379"
+  },
+  "findings": []
+}

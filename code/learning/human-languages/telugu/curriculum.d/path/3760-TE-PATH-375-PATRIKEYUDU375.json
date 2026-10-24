@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-375-PATRIKEYUDU375",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-375-PATRIKEYUDU375"
+  ],
+  "after": []
+}

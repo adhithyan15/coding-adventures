@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-419-KAKAPOTE419",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-419-KAKAPOTE419"
+  ],
+  "after": []
+}

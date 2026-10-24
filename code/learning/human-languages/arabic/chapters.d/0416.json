@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Instead and besides",
+  "label": "ch:ar-instead-and-besides",
+  "canDo": "I can say instead of, in addition to and apart from, talk about insurance, and say that someone adopted something.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C416-siwa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can say instead of, in addition to and apart from, talk about insurance, and say that someone adopted something.",
+    "assesses": [
+      "AR-LEX-C416-BADAL416-03",
+      "AR-LEX-C416-BADAL416-04",
+      "AR-LEX-C416-BADAL416-05"
+    ]
+  }
+}

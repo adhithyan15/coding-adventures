@@ -1,0 +1,11 @@
+{
+  "id": "KA-C472-paragu",
+  "pathSegment": "KA-PATH-472-HALU472",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-472-HALU472",
+      "order": 2
+    }
+  ]
+}

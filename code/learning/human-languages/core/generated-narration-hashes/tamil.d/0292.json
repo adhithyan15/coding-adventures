@@ -1,0 +1,17 @@
+{
+  "language": "tamil",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:ef7e771ef9806a02",
+  "lessonIds": [
+    "TA-C292-vantal",
+    "TA-C292-malai-peytal",
+    "TA-R292-if-and-if-not"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch292.txt",
+  "json": "tamil/narration/ch292.json",
+  "textHash": "fnv1a64:770a4e399c57a93c",
+  "jsonHash": "fnv1a64:70b7535dbaf07c4e",
+  "findings": []
+}

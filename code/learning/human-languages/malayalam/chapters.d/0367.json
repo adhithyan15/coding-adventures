@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "A Crime and a Confession",
+  "label": "ch:ml-a-crime-and-a-confession",
+  "canDo": "I can say a crime, a confession, to capture, to kidnap and to keep watch on.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C367-niriksikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can say a crime, a confession, to capture, to kidnap and to keep watch on.",
+    "assesses": [
+      "ML-LEX-C367-KURRAM367-03",
+      "ML-LEX-C367-KURRAM367-04",
+      "ML-LEX-C367-KURRAM367-05"
+    ]
+  }
+}

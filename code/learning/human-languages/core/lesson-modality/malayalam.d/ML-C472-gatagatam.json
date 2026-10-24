@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C472-gatagatam",
+    "language": "malayalam",
+    "chapter": 472,
+    "sequence": 23560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4316fa2e9c6ce965"
+  },
+  "findings": []
+}

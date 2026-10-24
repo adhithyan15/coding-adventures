@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C399-injan",
+    "language": "hindi",
+    "chapter": 399,
+    "sequence": 22060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3772ae98ba2d6bd"
+  },
+  "findings": []
+}

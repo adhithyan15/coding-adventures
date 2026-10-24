@@ -1,0 +1,11 @@
+{
+  "id": "TE-C512-mancam-pattu",
+  "pathSegment": "TE-PATH-512-JABBU512",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-512-JABBU512",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C564-mittuka",
+    "language": "malayalam",
+    "chapter": 564,
+    "sequence": 28430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4345f1960a020743"
+  },
+  "findings": []
+}

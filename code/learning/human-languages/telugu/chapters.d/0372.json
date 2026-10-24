@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "How a Story Works",
+  "label": "ch:te-how-a-story-works",
+  "canDo": "I can say a storyteller, a plot, a character, imagination and a made-up story.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C372-kattukatha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can say a storyteller, a plot, a character, imagination and a made-up story.",
+    "assesses": [
+      "TE-LEX-C372-KATHAKUDU372-03",
+      "TE-LEX-C372-KATHAKUDU372-04",
+      "TE-LEX-C372-KATHAKUDU372-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C452-revu",
+  "pathSegment": "TE-PATH-452-NAUKA452",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-452-NAUKA452",
+      "order": 0
+    }
+  ]
+}

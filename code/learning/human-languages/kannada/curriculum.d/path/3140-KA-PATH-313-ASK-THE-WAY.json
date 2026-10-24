@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-313-ASK-THE-WAY",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "KA-EXT-313-ASK-THE-WAY"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:484f73844bce8cbf",
+  "lessonIds": [
+    "AR-C295-hikaya",
+    "AR-C295-rawa",
+    "AR-C295-qassa",
+    "AR-C295-sarada",
+    "AR-C295-dhata-yawm"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch295.txt",
+  "json": "arabic/narration/ch295.json",
+  "textHash": "fnv1a64:6e6247983e4533ab",
+  "jsonHash": "fnv1a64:c1f22b4e4eca0b98",
+  "findings": []
+}

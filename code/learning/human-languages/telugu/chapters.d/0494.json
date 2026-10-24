@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Worry and Unease",
+  "label": "ch:te-worry-and-unease",
+  "canDo": "I can say that I feel low, worried, upset or flustered.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C494-atruta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can say that I feel low, worried, upset or flustered.",
+    "assesses": [
+      "TE-LEX-C494-BHAVAM494-03",
+      "TE-LEX-C494-BHAVAM494-04",
+      "TE-LEX-C494-BHAVAM494-05"
+    ]
+  }
+}

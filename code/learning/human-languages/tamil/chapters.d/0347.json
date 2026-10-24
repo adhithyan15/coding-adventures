@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "Evidence and Logic",
+  "label": "ch:ta-evidence-and-logic",
+  "canDo": "I can ask for evidence and say whether an argument holds together.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C347-vilakkam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can ask for evidence and say whether an argument holds together.",
+    "assesses": [
+      "TA-LEX-C347-ATARAM347-03",
+      "TA-LEX-C347-ATARAM347-04",
+      "TA-LEX-C347-ATARAM347-05"
+    ]
+  }
+}

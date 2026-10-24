@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:8ee4feddad4f4d8a",
+  "lessonIds": [
+    "TE-C481-vadagali",
+    "TE-C481-endamavi",
+    "TE-C481-galidumaram",
+    "TE-C481-endipovu",
+    "TE-C481-bitalu-varu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch481.txt",
+  "json": "telugu/narration/ch481.json",
+  "textHash": "fnv1a64:5e775fdcb2d7d468",
+  "jsonHash": "fnv1a64:44440510c456fd49",
+  "findings": []
+}

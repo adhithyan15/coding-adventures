@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Grandfather's Will",
+  "label": "ch:ka-grandfather-s-will",
+  "canDo": "I can say a will, an heir, a legacy, a heritage and to pester.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C353-pidisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say a will, an heir, a legacy, a heritage and to pester.",
+    "assesses": [
+      "KA-LEX-C353-UYILU353-03",
+      "KA-LEX-C353-UYILU353-04",
+      "KA-LEX-C353-UYILU353-05"
+    ]
+  }
+}

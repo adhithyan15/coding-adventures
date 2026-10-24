@@ -1,0 +1,11 @@
+{
+  "id": "TE-W325-six-lines",
+  "pathSegment": "TE-PATH-325-WOULD-DEPENDS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-325-WOULD-DEPENDS",
+      "order": 3
+    }
+  ]
+}

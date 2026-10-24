@@ -1,0 +1,11 @@
+{
+  "id": "AR-C531-kabira",
+  "pathSegment": "AR-PATH-531-KIBAR531",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-531-KIBAR531",
+      "order": 1
+    }
+  ]
+}

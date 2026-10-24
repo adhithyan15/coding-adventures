@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Traffic Rules",
+  "label": "ch:te-traffic-rules",
+  "canDo": "I can say a traffic signal, a licence, a pedestrian, a footpath and to break a rule.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C447-atikramincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can say a traffic signal, a licence, a pedestrian, a footpath and to break a rule.",
+    "assesses": [
+      "TE-LEX-C447-SIGNALU447-03",
+      "TE-LEX-C447-SIGNALU447-04",
+      "TE-LEX-C447-SIGNALU447-05"
+    ]
+  }
+}

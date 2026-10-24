@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Ogres and Fairies",
+  "label": "ch:mr-ogres-and-fairies",
+  "canDo": "I can tell a fairy tale with an ogre, a witch and a curse.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C338-sap",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can tell a fairy tale with an ogre, a witch and a curse.",
+    "assesses": [
+      "MR-LEX-C338-RAKSHAS338-03",
+      "MR-LEX-C338-RAKSHAS338-04",
+      "MR-LEX-C338-RAKSHAS338-05"
+    ]
+  }
+}

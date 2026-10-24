@@ -1,0 +1,14 @@
+{
+  "language": "arabic",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:b4538326a33a9233",
+  "lessonIds": [
+    "AR-C430-marfa",
+    "AR-C430-marsa",
+    "AR-C430-manara",
+    "AR-C430-zawraq",
+    "AR-C430-jaddafa",
+    "AR-R430-review-423-430"
+  ],
+  "tex": "arabic/book/chapters/ch430-in-the-harbour.tex"
+}

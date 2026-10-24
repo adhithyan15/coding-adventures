@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:16eb60e79e2b2109",
+  "lessonIds": [
+    "TE-C415-vidya",
+    "TE-C415-jnanam",
+    "TE-C415-adhyayanam",
+    "TE-C415-tarkincu",
+    "TE-C415-bodhincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch415.txt",
+  "json": "telugu/narration/ch415.json",
+  "textHash": "fnv1a64:892dc96ce6e1ccbb",
+  "jsonHash": "fnv1a64:0b4e08626055a01a",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C505-nirlaksya",
+    "language": "kannada",
+    "chapter": 505,
+    "sequence": 25780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f614cf372f4420c"
+  },
+  "findings": []
+}

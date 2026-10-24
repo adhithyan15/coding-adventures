@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 379,
+  "title": "Parties and campaigns",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1869caceccd4c188",
+  "lessons": [
+    {
+      "id": "AR-C379-hizb",
+      "sequence": 21470,
+      "title": "حزب (ḥizb) — a political party",
+      "headword": "حزب",
+      "romanization": "ḥizb",
+      "gloss": "a political party",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bb56e6a5b38e482",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a voter, then the Arabic for a candidate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حزب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حزب — ḥizb — \"a political party\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لكل حزب برنامج مختلف. li-kulli ḥizb barnāmaj mukhtalif. Each party has a different programme."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أحزاب, aḥzāb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حزب (ḥizb) is built on the native Arabic root ḥ-z-b (Lane), where it names a band of people who hold together. Modern Arabic gave it the political party."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥizb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥizb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥizb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥizb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "li-kulli ḥizb barnāmaj mukhtalif. — Each party has a different programme.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *li-kulli ḥizb barnāmaj mukhtalif.* — Each party has a different programme.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a voter, then the Arabic for a candidate, then say ḥizb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a voter, then the Arabic for a candidate, then say *ḥizb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حزب (ḥizb) mean? (\"A political party\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C379-hamla",
+      "sequence": 21480,
+      "title": "حملة (ḥamla) — a campaign",
+      "headword": "حملة",
+      "romanization": "ḥamla",
+      "gloss": "a campaign",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1bd777f6a6dfacc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a candidate, then the Arabic for a political party."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حملة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حملة — ḥamla — \"a campaign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بدأت الحملة قبل شهرين. badaʾat al-ḥamla qabla shahrayn. The campaign began two months ago."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حملة (ḥamla) is built on the native Arabic root ḥ-m-l, \"to carry, to bear\" (Lane). A ḥamla is one charge, one carrying forward: an attack, and so a campaign."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥamla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥamla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥamla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥamla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badaʾat al-ḥamla qabla shahrayn. — The campaign began two months ago.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badaʾat al-ḥamla qabla shahrayn.* — The campaign began two months ago.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a candidate, then the Arabic for a political party, then say ḥamla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a candidate, then the Arabic for a political party, then say *ḥamla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حملة (ḥamla) mean? (\"A campaign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C379-tarashshaha",
+      "sequence": 21490,
+      "title": "ترشح (tarashshaḥa) — to run for office",
+      "headword": "ترشح",
+      "romanization": "tarashshaḥa",
+      "gloss": "to run for office",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b173943ffab3fab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a political party, then the Arabic for a campaign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ترشح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترشح — tarashshaḥa — \"to run for office\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ترشحت جارتنا في الانتخابات. tarashshaḥat jāratunā fī al-intikhābāt. Our neighbour ran in the elections."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يترشح, yatarashshaḥ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes لـ for the post one runs for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترشح (tarashshaḥa) is built on the native Arabic root r-sh-ḥ, \"to sweat, to ooze\" (Lane). It is Form V, to make oneself ready for a post: to stand as a candidate."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarashshaḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarashshaḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarashshaḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarashshaḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarashshaḥat jāratunā fī al-intikhābāt. — Our neighbour ran in the elections.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarashshaḥat jāratunā fī al-intikhābāt.* — Our neighbour ran in the elections.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a political party, then the Arabic for a campaign, then say tarashshaḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a political party, then the Arabic for a campaign, then say *tarashshaḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ترشح (tarashshaḥa) mean? (\"To run for office\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C379-nashit",
+      "sequence": 21500,
+      "title": "ناشط (nāshiṭ) — an activist",
+      "headword": "ناشط",
+      "romanization": "nāshiṭ",
+      "gloss": "an activist",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e20d14885f4c6b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a campaign, then the Arabic for to run for office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ناشط",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ناشط — nāshiṭ — \"an activist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعمل الناشطة مع الأطفال الفقراء. taʿmalu an-nāshiṭa maʿa al-aṭfāl al-fuqarāʾ. The activist works with poor children."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ناشط (nāshiṭ) is built on the native Arabic root n-sh-ṭ, \"to be brisk, lively\" (Lane). Nāshiṭ is the active participle: one who is active, an activist. نشيط, active, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāshiṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāshiṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāshiṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāshiṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿmalu an-nāshiṭa maʿa al-aṭfāl al-fuqarāʾ. — The activist works with poor children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿmalu an-nāshiṭa maʿa al-aṭfāl al-fuqarāʾ.* — The activist works with poor children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a campaign, then the Arabic for to run for office, then say nāshiṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a campaign, then the Arabic for to run for office, then say *nāshiṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ناشط (nāshiṭ) mean? (\"An activist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C379-dimuqratiyya",
+      "sequence": 21510,
+      "title": "ديمقراطية (dīmuqrāṭiyya) — democracy",
+      "headword": "ديمقراطية",
+      "romanization": "dīmuqrāṭiyya",
+      "gloss": "democracy",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4dd064c122f522b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to run for office, then the Arabic for an activist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ديمقراطية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ديمقراطية — dīmuqrāṭiyya — \"democracy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يتكلم الكتاب عن تاريخ الديمقراطية. yatakallamu al-kitāb ʿan tārīkh ad-dīmuqrāṭiyya. The book talks about the history of democracy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ديمقراطية (dīmuqrāṭiyya) is a modern loan, usually traced to Greek dēmokratia, \"rule of the people\", through European languages. Arabic added its own abstract ending -iyya."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīmuqrāṭiyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīmuqrāṭiyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīmuqrāṭiyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīmuqrāṭiyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yatakallamu al-kitāb ʿan tārīkh ad-dīmuqrāṭiyya. — The book talks about the history of democracy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yatakallamu al-kitāb ʿan tārīkh ad-dīmuqrāṭiyya.* — The book talks about the history of democracy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to run for office, then the Arabic for an activist, then say dīmuqrāṭiyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to run for office, then the Arabic for an activist, then say *dīmuqrāṭiyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ديمقراطية (dīmuqrāṭiyya) mean? (\"Democracy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

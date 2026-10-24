@@ -1,0 +1,11 @@
+{
+  "id": "AR-C470-diffa",
+  "pathSegment": "AR-PATH-470-YANBU470",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-470-YANBU470",
+      "order": 3
+    }
+  ]
+}

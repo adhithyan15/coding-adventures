@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "On Stage",
+  "label": "ch:ka-on-stage",
+  "canDo": "I can say a stage play, theatre, a mask, to perform and to act.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C536-abhinayisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can say a stage play, theatre, a mask, to perform and to act.",
+    "assesses": [
+      "KA-LEX-C536-NATAKA536-03",
+      "KA-LEX-C536-NATAKA536-04",
+      "KA-LEX-C536-NATAKA536-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:552bfbc58c2f291b",
+  "lessonIds": [
+    "AR-C352-mukhalafa",
+    "AR-C352-gharama",
+    "AR-C352-shijar",
+    "AR-C352-dajja",
+    "AR-C352-hashd"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch352.txt",
+  "json": "arabic/narration/ch352.json",
+  "textHash": "fnv1a64:ba6b3c12110fa246",
+  "jsonHash": "fnv1a64:a212d7ae2eb10c71",
+  "findings": []
+}

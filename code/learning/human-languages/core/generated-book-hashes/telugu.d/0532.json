@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:6db5a5b3448707f2",
+  "lessonIds": [
+    "TE-C532-pempakam",
+    "TE-C532-garabam",
+    "TE-C532-posincu",
+    "TE-C532-bujjagincu",
+    "TE-C532-maram"
+  ],
+  "tex": "telugu/book/chapters/ch532-bringing-up-children.tex"
+}

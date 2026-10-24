@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:935bb98cc60c1620",
+  "lessonIds": [
+    "TE-C439-rijarvesanu",
+    "TE-C439-bukingu",
+    "TE-C439-bertu",
+    "TE-C439-bogi",
+    "TE-C439-kirayi"
+  ],
+  "tex": "telugu/book/chapters/ch439-booking-a-berth.tex"
+}

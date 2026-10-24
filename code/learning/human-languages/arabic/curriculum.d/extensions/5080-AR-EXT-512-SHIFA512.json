@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-512-SHIFA512",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about recovery, convalescence and good health, and say that someone recovered or was in pain.",
+  "prerequisites": []
+}

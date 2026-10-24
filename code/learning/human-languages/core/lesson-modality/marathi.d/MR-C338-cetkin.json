@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C338-cetkin",
+    "language": "marathi",
+    "chapter": 338,
+    "sequence": 19590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5554e19d3f55e46"
+  },
+  "findings": []
+}

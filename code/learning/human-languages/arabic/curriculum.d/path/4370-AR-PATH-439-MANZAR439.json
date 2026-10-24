@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-439-MANZAR439",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-439-MANZAR439"
+  ],
+  "after": []
+}

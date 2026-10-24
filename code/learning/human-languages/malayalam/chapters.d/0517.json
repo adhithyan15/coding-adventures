@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Feelings Run High",
+  "label": "ch:ml-feelings-run-high",
+  "canDo": "I can say an emotion, delight, to bellow, wrath and to be upset.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C517-visamikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can say an emotion, delight, to bellow, wrath and to be upset.",
+    "assesses": [
+      "ML-LEX-C517-VIKARAM517-03",
+      "ML-LEX-C517-VIKARAM517-04",
+      "ML-LEX-C517-VIKARAM517-05"
+    ]
+  }
+}

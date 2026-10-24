@@ -1,0 +1,857 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 525,
+  "title": "In-laws and Cousins",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8523b44d7200085d",
+  "lessons": [
+    {
+      "id": "KA-C525-bhava",
+      "sequence": 26790,
+      "title": "ಭಾವ (bhāva) — a brother-in-law",
+      "headword": "ಭಾವ",
+      "romanization": "bhāva",
+      "gloss": "a brother-in-law",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:687882fbaffbdab2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for mother's elder sister, then the Kannada for a nephew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಭಾವ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭಾವ — bhāva — \"a brother-in-law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಅಕ್ಕನ ಗಂಡ, ಅಂದರೆ ನನ್ನ ಭಾವ, ವೈದ್ಯರು. nanna akkana gaṇḍa, andare nanna bhāva, vaidyaru. My elder sister's husband, that is, my brother-in-law, is a doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "An elder sister's husband, or a husband's elder brother."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭಾವ (bhāva), the kinship word, is usually traced to Sanskrit bhāvuka, \"a sister's husband\" (Monier-Williams). It is a different word from bhāva, \"being, feeling\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāva, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāva*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna akkana gaṇḍa, andare nanna bhāva, vaidyaru. — My elder sister's husband, that is, my brother-in-law, is a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna akkana gaṇḍa, andare nanna bhāva, vaidyaru.* — My elder sister's husband, that is, my brother-in-law, is a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for mother's elder sister, then the Kannada for a nephew, then say bhāva again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for mother's elder sister, then the Kannada for a nephew, then say *bhāva* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಭಾವ (bhāva) mean? (\"A brother-in-law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C525-nadini",
+      "sequence": 26800,
+      "title": "ನಾದಿನಿ (nādini) — husband's sister",
+      "headword": "ನಾದಿನಿ",
+      "romanization": "nādini",
+      "gloss": "husband's sister",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f67db3548d9501a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a nephew, then the Kannada for a brother-in-law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಾದಿನಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾದಿನಿ — nādini — \"husband's sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ನಾದಿನಿ ನಮ್ಮ ಮನೆಯ ಹತ್ತಿರ ಇರುತ್ತಾಳೆ. nanna nādini namma maneya hattira iruttāḷe. My husband's sister lives near our house."
+            },
+            {
+              "kind": "speech",
+              "text": "Also used for a wife's sister in some families."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾದಿನಿ (nādini) is native Dravidian: DEDR 3644 lists Kannada nādani, nādini, \"husband's sister, brother's wife\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nādini",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nādini*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nādini, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nādini*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna nādini namma maneya hattira iruttāḷe. — My husband's sister lives near our house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna nādini namma maneya hattira iruttāḷe.* — My husband's sister lives near our house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a nephew, then the Kannada for a brother-in-law, then say nādini again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a nephew, then the Kannada for a brother-in-law, then say *nādini* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಾದಿನಿ (nādini) mean? (\"Husband's sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C525-maiduna",
+      "sequence": 26810,
+      "title": "ಮೈದುನ (maiduna) — husband's younger brother",
+      "headword": "ಮೈದುನ",
+      "romanization": "maiduna",
+      "gloss": "husband's younger brother",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f361c260d265240",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a brother-in-law, then the Kannada for husband's sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೈದುನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೈದುನ — maiduna — \"husband's younger brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಮೈದುನ ಎಂಜಿನಿಯರ್ ಆಗಿ ಕೆಲಸ ಮಾಡುತ್ತಾನೆ. nanna maiduna eñjiniyar āgi kelasa māḍuttāne. My husband's younger brother works as an engineer."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a wife's brother in some families."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೈದುನ (maiduna) is a Kannada kinship word for a younger brother-in-law; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiduna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiduna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiduna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiduna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna maiduna eñjiniyar āgi kelasa māḍuttāne. — My husband's younger brother works as an engineer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna maiduna eñjiniyar āgi kelasa māḍuttāne.* — My husband's younger brother works as an engineer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a brother-in-law, then the Kannada for husband's sister, then say maiduna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a brother-in-law, then the Kannada for husband's sister, then say *maiduna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೈದುನ (maiduna) mean? (\"Husband's younger brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C525-sodarasambandhi",
+      "sequence": 26820,
+      "title": "ಸೋದರಸಂಬಂಧಿ (sōdarasambandhi) — a cousin",
+      "headword": "ಸೋದರಸಂಬಂಧಿ",
+      "romanization": "sōdarasambandhi",
+      "gloss": "a cousin",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a91b50a5f8228f7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for husband's sister, then the Kannada for husband's younger brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸೋದರಸಂಬಂಧಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೋದರಸಂಬಂಧಿ — sōdarasambandhi — \"a cousin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮದುವೆಯಲ್ಲಿ ನನ್ನ ಎಲ್ಲಾ ಸೋದರಸಂಬಂಧಿಗಳನ್ನು ನೋಡಿದೆ. maduveyalli nanna ellā sōdarasambandhigaḷannu nōḍide. I saw all my cousins at the wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸೋದರಸಂಬಂಧಿಗಳು, sōdarasambandhigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Everyday talk often names the exact tie instead: ಮಾವನ ಮಗ, an uncle's son."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೋದರಸಂಬಂಧಿ (sōdarasambandhi) is a learned compound built from Sanskrit sodara, \"born of the same womb\", and sambandha, \"close connection; a relative\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sōdarasambandhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sōdarasambandhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sōdarasambandhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sōdarasambandhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maduveyalli nanna ellā sōdarasambandhigaḷannu nōḍide. — I saw all my cousins at the wedding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maduveyalli nanna ellā sōdarasambandhigaḷannu nōḍide.* — I saw all my cousins at the wedding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for husband's sister, then the Kannada for husband's younger brother, then say sōdarasambandhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for husband's sister, then the Kannada for husband's younger brother, then say *sōdarasambandhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸೋದರಸಂಬಂಧಿ (sōdarasambandhi) mean? (\"A cousin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C525-sahodara",
+      "sequence": 26830,
+      "title": "ಸಹೋದರ (sahōdara) — a brother",
+      "headword": "ಸಹೋದರ",
+      "romanization": "sahōdara",
+      "gloss": "a brother",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3996989d20d16070",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for husband's younger brother, then the Kannada for a cousin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಹೋದರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಹೋದರ — sahōdara — \"a brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಇಬ್ಬರು ಸಹೋದರರು ಇದ್ದಾರೆ. nanage ibbaru sahōdararu iddāre. I have two brothers."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸಹೋದರರು, sahōdararu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal for ಅಣ್ಣ or ತಮ್ಮ; a sister is ಸಹೋದರಿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಹೋದರ (sahōdara) is borrowed from Sanskrit sahodara, \"co-uterine, born of the same womb\" (Monier-Williams): saha, \"with\", and udara, \"womb\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahōdara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahōdara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahōdara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahōdara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanage ibbaru sahōdararu iddāre. — I have two brothers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanage ibbaru sahōdararu iddāre.* — I have two brothers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for husband's younger brother, then the Kannada for a cousin, then say sahōdara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for husband's younger brother, then the Kannada for a cousin, then say *sahōdara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಹೋದರ (sahōdara) mean? (\"A brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R525-review-519-525",
+      "sequence": 26840,
+      "title": "Looking back: from Running a Business to In-laws and Cousins",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Running a Business to In-laws and Cousins",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19f4fb0c52c7b43f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for an entrepreneur and a manager."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an entrepreneur, a manager, an assistant, to assign, to save up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an entrepreneur, a manager, an assistant, to assign, to save up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get involved, to take charge of, to get practised, supervision, punctuality",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get involved, to take charge of, to get practised, supervision, punctuality]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to toil, oversight, to insist, hard work, rivalry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to toil, oversight, to insist, hard work, rivalry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a blacksmith, a goldsmith, a weaver, a sculptor, to carve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a blacksmith, a goldsmith, a weaver, a sculptor, to carve]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "family life, a homemaker, a partner, the pain of parting, married life",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: family life, a homemaker, a partner, the pain of parting, married life]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "father's younger brother, father's elder brother, mother's younger sister, mother's elder sister, a nephew",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: father's younger brother, father's elder brother, mother's younger sister, mother's elder sister, a nephew]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a brother-in-law, husband's sister, husband's younger brother, a cousin, a brother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a brother-in-law, husband's sister, husband's younger brother, a cousin, a brother]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An entrepreneur? (ಉದ್ಯಮಿ, udyami.) A manager? (ವ್ಯವಸ್ಥಾಪಕ, vyavasthāpaka.) An assistant? (ಸಹಾಯಕ, sahāyaka.) To assign? (ನಿಯೋಜಿಸು, niyōjisu.) To save up? (ಕೂಡಿಡು, kūḍiḍu.) To get involved? (ತೊಡಗು, toḍagu.) To take charge of? (ವಹಿಸು, vahisu.) To get practised? (ಪಳಗು, paḷagu.) Supervision? (ಮೇಲ್ವಿಚಾರಣೆ, mēlvicāraṇe.) Punctuality? (ಸಮಯಪಾಲನೆ, samayapālane.) To toil? (ದುಡಿ, duḍi.) Oversight? (ಉಸ್ತುವಾರಿ, ustuvāri.) To insist? (ಒತ್ತಾಯಿಸು, ottāyisu.) Hard work? (ಪರಿಶ್ರಮ, pariśrama.) Rivalry? (ಪೈಪೋಟಿ, paipōṭi.) A blacksmith? (ಕಮ್ಮಾರ, kammāra.) A goldsmith? (ಅಕ್ಕಸಾಲಿಗ, akkasāliga.) A weaver? (ನೇಕಾರ, nēkāra.) A sculptor? (ಶಿಲ್ಪಿ, śilpi.) To carve? (ಕೆತ್ತು, kettu.) Family life? (ಸಂಸಾರ, saṃsāra.) A homemaker? (ಗೃಹಿಣಿ, gṛhiṇi.) A partner? (ಸಂಗಾತಿ, saṅgāti.) The pain of parting? (ವಿರಹ, viraha.) Married life? (ದಾಂಪತ್ಯ, dāmpatya.) Father's younger brother? (ಚಿಕ್ಕಪ್ಪ, cikkappa.) Father's elder brother? (ದೊಡ್ಡಪ್ಪ, doḍḍappa.) Mother's younger sister? (ಚಿಕ್ಕಮ್ಮ, cikkamma.) Mother's elder sister? (ದೊಡ್ಡಮ್ಮ, doḍḍamma.) A nephew? (ಸೋದರಳಿಯ, sōdaraḷiya.) A brother-in-law? (ಭಾವ, bhāva.) Husband's sister? (ನಾದಿನಿ, nādini.) Husband's younger brother? (ಮೈದುನ, maiduna.) A cousin? (ಸೋದರಸಂಬಂಧಿ, sōdarasambandhi.) A brother? (ಸಹೋದರ, sahōdara.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

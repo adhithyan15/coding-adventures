@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-511-SONKU511",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-511-SONKU511"
+  ],
+  "after": []
+}

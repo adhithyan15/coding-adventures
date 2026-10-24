@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C399-kilatakkuka",
+    "language": "malayalam",
+    "chapter": 399,
+    "sequence": 19600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e480ea990a7999fd"
+  },
+  "findings": []
+}

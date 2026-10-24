@@ -1,0 +1,11 @@
+{
+  "id": "ML-C434-skolarsippu",
+  "pathSegment": "ML-PATH-434-HOSTAL434",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-434-HOSTAL434",
+      "order": 3
+    }
+  ]
+}

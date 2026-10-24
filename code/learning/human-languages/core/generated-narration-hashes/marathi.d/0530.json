@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:2ee3c3b9019ce0c5",
+  "lessonIds": [
+    "MR-C530-padak",
+    "MR-C530-casak",
+    "MR-C530-vikram",
+    "MR-C530-spardhak",
+    "MR-C530-patkavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch530.txt",
+  "json": "marathi/narration/ch530.json",
+  "textHash": "fnv1a64:5ac930b3bc841ef4",
+  "jsonHash": "fnv1a64:b31f1355244bef86",
+  "findings": []
+}

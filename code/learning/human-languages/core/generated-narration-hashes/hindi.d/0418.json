@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:b2bf7b14e2b29ad0",
+  "lessonIds": [
+    "HI-C418-nazdik",
+    "HI-C418-nikat",
+    "HI-C418-par",
+    "HI-C418-bagal",
+    "HI-C418-pahucana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch418.txt",
+  "json": "hindi/narration/ch418.json",
+  "textHash": "fnv1a64:17b0d9077523644b",
+  "jsonHash": "fnv1a64:fea872a561fc5389",
+  "findings": []
+}

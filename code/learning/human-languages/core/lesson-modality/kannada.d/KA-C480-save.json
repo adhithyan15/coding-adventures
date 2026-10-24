@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C480-save",
+    "language": "kannada",
+    "chapter": 480,
+    "sequence": 24450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:057f6b67d0444f5b"
+  },
+  "findings": []
+}

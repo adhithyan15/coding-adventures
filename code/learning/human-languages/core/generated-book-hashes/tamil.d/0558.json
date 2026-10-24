@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 558,
+  "sourceHash": "fnv1a64:b2c4cd5a0035ee54",
+  "lessonIds": [
+    "TA-C558-natasvaram",
+    "TA-C558-melam",
+    "TA-C558-rakam",
+    "TA-C558-talam",
+    "TA-C558-piyano",
+    "TA-R558-review-552-558",
+    "TA-R558-review-final-558"
+  ],
+  "tex": "tamil/book/chapters/ch558-booking-musicians.tex"
+}

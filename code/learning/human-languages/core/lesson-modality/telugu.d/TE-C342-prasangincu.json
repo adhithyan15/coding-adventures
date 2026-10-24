@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C342-prasangincu",
+    "language": "telugu",
+    "chapter": 342,
+    "sequence": 16860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ea8fe9fbf8127ed"
+  },
+  "findings": []
+}

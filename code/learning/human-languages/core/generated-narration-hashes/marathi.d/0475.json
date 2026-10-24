@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:aa224f48bded3e3d",
+  "lessonIds": [
+    "MR-C475-sahsi",
+    "MR-C475-darpok",
+    "MR-C475-bindhasta",
+    "MR-C475-bephikir",
+    "MR-C475-bhine"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch475.txt",
+  "json": "marathi/narration/ch475.json",
+  "textHash": "fnv1a64:7444ceec90994139",
+  "jsonHash": "fnv1a64:48f0fe14fc08ac4a",
+  "findings": []
+}

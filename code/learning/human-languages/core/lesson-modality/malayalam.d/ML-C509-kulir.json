@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C509-kulir",
+    "language": "malayalam",
+    "chapter": 509,
+    "sequence": 25490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f28b7f33b4ace9e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C438-tajawwala",
+  "pathSegment": "AR-PATH-438-SIYAHA438",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-438-SIYAHA438",
+      "order": 3
+    }
+  ]
+}

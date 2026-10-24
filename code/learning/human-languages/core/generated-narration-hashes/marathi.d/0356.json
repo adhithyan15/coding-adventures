@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:1b8dde6916da4c10",
+  "lessonIds": [
+    "MR-C356-loksahi",
+    "MR-C356-bahumat",
+    "MR-C356-alpasankhyak",
+    "MR-C356-janmat",
+    "MR-C356-kaul-dene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch356.txt",
+  "json": "marathi/narration/ch356.json",
+  "textHash": "fnv1a64:66dc6f90e08eafc9",
+  "jsonHash": "fnv1a64:f173ce9c21707d52",
+  "findings": []
+}

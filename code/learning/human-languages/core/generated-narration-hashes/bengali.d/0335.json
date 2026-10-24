@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:026ffc56686defd3",
+  "lessonIds": [
+    "BN-C335-osvikar-kora",
+    "BN-C335-somalochona-kora",
+    "BN-C335-drishtibhonggi",
+    "BN-C335-udahoron",
+    "BN-C335-prosonggo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch335.txt",
+  "json": "bengali/narration/ch335.json",
+  "textHash": "fnv1a64:babfc797113534cc",
+  "jsonHash": "fnv1a64:6c12f8dd03d1338b",
+  "findings": []
+}

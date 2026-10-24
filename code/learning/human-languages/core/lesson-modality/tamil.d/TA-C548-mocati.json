@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C548-mocati",
+    "language": "tamil",
+    "chapter": 548,
+    "sequence": 31280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4700e839ba6b3be"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:d0f8a4e3845b0e3c",
+  "lessonIds": [
+    "TA-C360-niyayam",
+    "TA-C360-niti",
+    "TA-C360-aram",
+    "TA-C360-pali",
+    "TA-C360-cakku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch360.txt",
+  "json": "tamil/narration/ch360.json",
+  "textHash": "fnv1a64:d93acc5805d01940",
+  "jsonHash": "fnv1a64:734e160fb80ee6ab",
+  "findings": []
+}

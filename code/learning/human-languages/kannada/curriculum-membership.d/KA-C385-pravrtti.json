@@ -1,0 +1,11 @@
+{
+  "id": "KA-C385-pravrtti",
+  "pathSegment": "KA-PATH-385-PRABHAVA385",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-385-PRABHAVA385",
+      "order": 3
+    }
+  ]
+}

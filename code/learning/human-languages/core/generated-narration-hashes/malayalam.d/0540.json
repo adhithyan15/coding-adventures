@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:d7ff1830fd466d1d",
+  "lessonIds": [
+    "ML-C540-klinikku",
+    "ML-C540-unnuvati",
+    "ML-C540-mukhakkuru",
+    "ML-C540-maravikkuka",
+    "ML-C540-kalaykkuka",
+    "ML-R540-review-533-540"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch540.txt",
+  "json": "malayalam/narration/ch540.json",
+  "textHash": "fnv1a64:80eef126c0a44db3",
+  "jsonHash": "fnv1a64:d91dd7c09384b2e3",
+  "findings": []
+}

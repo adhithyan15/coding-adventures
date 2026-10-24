@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C311-qabila-midwife",
+    "language": "arabic",
+    "chapter": 311,
+    "sequence": 17940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b817b80312d73cb"
+  },
+  "findings": []
+}

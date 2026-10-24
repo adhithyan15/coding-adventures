@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C382-takuti",
+    "language": "tamil",
+    "chapter": 382,
+    "sequence": 21910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55ca4ab2b1a19748"
+  },
+  "findings": []
+}

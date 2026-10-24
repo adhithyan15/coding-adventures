@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 416,
+  "title": "Promises and Rewards",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2e5b73047e4f2be3",
+  "lessons": [
+    {
+      "id": "KA-C416-muccalike",
+      "sequence": 21050,
+      "title": "ಮುಚ್ಚಳಿಕೆ (muccaḷike) — a written undertaking",
+      "headword": "ಮುಚ್ಚಳಿಕೆ",
+      "romanization": "muccaḷike",
+      "gloss": "a written undertaking",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c33e7770dd88fb2e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to sanction, then the Kannada for an official order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮುಚ್ಚಳಿಕೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಚ್ಚಳಿಕೆ — muccaḷike — \"a written undertaking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮತ್ತೆ ತಪ್ಪು ಮಾಡುವುದಿಲ್ಲ ಅಂತ ಅವನು ಮುಚ್ಚಳಿಕೆ ಬರೆದುಕೊಟ್ಟನು. matte tappu māḍuvudilla anta avanu muccaḷike baredukoṭṭanu. He gave a written undertaking not to do wrong again."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮುಚ್ಚಳಿಕೆ (muccaḷike) ಬರೆದುಕೊಡು, to sign an undertaking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಚ್ಚಳಿಕೆ (muccaḷike) is a Kannada word of the offices and courts whose origin is not settled: neither DEDR nor CDIAL lists it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muccaḷike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muccaḷike*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muccaḷike, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muccaḷike*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matte tappu māḍuvudilla anta avanu muccaḷike baredukoṭṭanu. — He gave a written undertaking not to do wrong again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matte tappu māḍuvudilla anta avanu muccaḷike baredukoṭṭanu.* — He gave a written undertaking not to do wrong again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to sanction, then the Kannada for an official order, then say muccaḷike again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to sanction, then the Kannada for an official order, then say *muccaḷike* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮುಚ್ಚಳಿಕೆ (muccaḷike) mean? (\"A written undertaking\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C416-pratijne",
+      "sequence": 21060,
+      "title": "ಪ್ರತಿಜ್ಞೆ (pratijñe) — a vow; a pledge",
+      "headword": "ಪ್ರತಿಜ್ಞೆ",
+      "romanization": "pratijñe",
+      "gloss": "a vow; a pledge",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5465e37e61c92910",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an official order, then the Kannada for a written undertaking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರತಿಜ್ಞೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಜ್ಞೆ — pratijñe — \"a vow; a pledge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇನ್ನು ಮುಂದೆ ಸಿಗರೇಟು ಸೇದುವುದಿಲ್ಲ ಅಂತ ಅಪ್ಪ ಪ್ರತಿಜ್ಞೆ ಮಾಡಿದರು. innu munde sigarēṭu sēduvudilla anta appa pratijñe māḍidaru. Father vowed never to smoke again."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಜ್ಞೆ (pratijñe) ಮಾಡು, to vow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಜ್ಞೆ (pratijñe) is borrowed from Sanskrit pratijñā, \"admission, promise, vow\" (CDIAL 8563)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratijñe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratijñe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratijñe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratijñe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "innu munde sigarēṭu sēduvudilla anta appa pratijñe māḍidaru. — Father vowed never to smoke again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *innu munde sigarēṭu sēduvudilla anta appa pratijñe māḍidaru.* — Father vowed never to smoke again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an official order, then the Kannada for a written undertaking, then say pratijñe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an official order, then the Kannada for a written undertaking, then say *pratijñe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರತಿಜ್ಞೆ (pratijñe) mean? (\"A vow; a pledge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C416-pratiphala",
+      "sequence": 21070,
+      "title": "ಪ್ರತಿಫಲ (pratiphala) — a reward; a return",
+      "headword": "ಪ್ರತಿಫಲ",
+      "romanization": "pratiphala",
+      "gloss": "a reward; a return",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22819ccd16fa1c67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a written undertaking, then the Kannada for a vow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರತಿಫಲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಫಲ — pratiphala — \"a reward; a return\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳ ಶ್ರಮಕ್ಕೆ ಒಳ್ಳೆಯ ಪ್ರತಿಫಲ ಸಿಕ್ಕಿತು. avaḷa śramakke oḷḷeya pratiphala sikkitu. Her hard work brought a good reward."
+            },
+            {
+              "kind": "speech",
+              "text": "What comes back for what one gave."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಫಲ (pratiphala) is borrowed from Sanskrit pratiphala, \"a return, a requital\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiphala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiphala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiphala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiphala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷa śramakke oḷḷeya pratiphala sikkitu. — Her hard work brought a good reward.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷa śramakke oḷḷeya pratiphala sikkitu.* — Her hard work brought a good reward.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a written undertaking, then the Kannada for a vow, then say pratiphala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a written undertaking, then the Kannada for a vow, then say *pratiphala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರತಿಫಲ (pratiphala) mean? (\"A reward; a return\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C416-koru",
+      "sequence": 21080,
+      "title": "ಕೋರು (kōru) — to ask formally",
+      "headword": "ಕೋರು",
+      "romanization": "kōru",
+      "gloss": "to ask formally",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de608e56ec490859",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a vow, then the Kannada for a reward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೋರು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೋರು — kōru — \"to ask formally\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಕಚೇರಿಯಿಂದ ಒಂದು ವಾರದ ರಜೆ ಕೋರಿದೆ. nānu kacēriyinda ondu vārada raje kōride. I asked the office for a week of leave."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಕೋರಿದೆ, kōride."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal. ಕೋರಿಕೆ, a request."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೋರು (kōru) is native Dravidian: DEDR 2232 lists Kannada kōṟu, kōru, \"to purpose, to wish, to desire\", beside Tamil kōru, \"to request\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu kacēriyinda ondu vārada raje kōride. — I asked the office for a week of leave.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu kacēriyinda ondu vārada raje kōride.* — I asked the office for a week of leave.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a vow, then the Kannada for a reward, then say kōru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a vow, then the Kannada for a reward, then say *kōru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೋರು (kōru) mean? (\"To ask formally\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C416-pramanavacana",
+      "sequence": 21090,
+      "title": "ಪ್ರಮಾಣವಚನ (pramāṇavacana) — an oath of office",
+      "headword": "ಪ್ರಮಾಣವಚನ",
+      "romanization": "pramāṇavacana",
+      "gloss": "an oath of office",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27d97412b2099852",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a reward, then the Kannada for to ask formally."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಮಾಣವಚನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಮಾಣವಚನ — pramāṇavacana — \"an oath of office\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಸ ಮಂತ್ರಿಗಳು ಪ್ರಮಾಣವಚನ ತೆಗೆದುಕೊಂಡರು. hosa mantrigaḷu pramāṇavacana tegedukoṇḍaru. The new ministers took the oath of office."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಮಾಣ (proof, oath) + ವಚನ (word)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಮಾಣವಚನ (pramāṇavacana) is built from Sanskrit pramāṇa, \"a standard, a proof\" (CDIAL 8723), and vacana, \"speech, a word\" (CDIAL 11199)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramāṇavacana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramāṇavacana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramāṇavacana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramāṇavacana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hosa mantrigaḷu pramāṇavacana tegedukoṇḍaru. — The new ministers took the oath of office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hosa mantrigaḷu pramāṇavacana tegedukoṇḍaru.* — The new ministers took the oath of office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a reward, then the Kannada for to ask formally, then say pramāṇavacana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a reward, then the Kannada for to ask formally, then say *pramāṇavacana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಮಾಣವಚನ (pramāṇavacana) mean? (\"An oath of office\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

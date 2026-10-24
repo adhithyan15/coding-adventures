@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-279-SHIKHA279",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "BN-EXT-279-SHIKHA279"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C443-breku",
+  "pathSegment": "TE-PATH-443-VAHANAM443",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-443-VAHANAM443",
+      "order": 3
+    }
+  ]
+}

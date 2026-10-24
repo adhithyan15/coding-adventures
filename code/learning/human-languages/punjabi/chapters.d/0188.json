@@ -1,0 +1,20 @@
+{
+  "chapter": 188,
+  "title": "To Meet; We Meet; I Met",
+  "label": "ch:pa-a2-meeting-family",
+  "canDo": "I can distinguish and use a meeting infinitive, a regular-group meeting form, and one completed masculine-singular meeting frame.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C188-payoff",
+    "kind": "production",
+    "summary": "Retrieve the bounded infinitive, habitual-plural, and masculine-singular perfective meeting contrast through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-FORM-MILNA-188",
+      "PA-FORM-MILDE-188",
+      "PA-FORM-MILIA-188"
+    ],
+    "note": "This eleventh Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

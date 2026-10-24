@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:ce3564264903d33b",
+  "lessonIds": [
+    "AR-C473-waha",
+    "AR-C473-sarab",
+    "AR-C473-adghal",
+    "AR-C473-mustanqa",
+    "AR-C473-qahil"
+  ],
+  "tex": "arabic/book/chapters/ch473-desert-and-jungle.tex"
+}

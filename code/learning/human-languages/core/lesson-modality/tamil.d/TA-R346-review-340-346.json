@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R346-review-340-346",
+    "language": "tamil",
+    "chapter": 346,
+    "sequence": 19810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5c6e251c42e1693"
+  },
+  "findings": []
+}

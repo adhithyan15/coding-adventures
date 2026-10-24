@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Elections",
+  "label": "ch:ar-elections",
+  "canDo": "I can talk about an election, a voter and a candidate, and say that people voted and elected.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C378-murashshah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can talk about an election, a voter and a candidate, and say that people voted and elected.",
+    "assesses": [
+      "AR-LEX-C378-INTIKHAB378-03",
+      "AR-LEX-C378-INTIKHAB378-04",
+      "AR-LEX-C378-INTIKHAB378-05"
+    ]
+  }
+}

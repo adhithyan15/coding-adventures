@@ -1,0 +1,11 @@
+{
+  "id": "TE-C394-khaccitamaina",
+  "pathSegment": "TE-PATH-394-VIVARANA394",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-394-VIVARANA394",
+      "order": 4
+    }
+  ]
+}

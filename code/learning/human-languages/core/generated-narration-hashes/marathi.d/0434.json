@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:7ef5cd5107ae60e0",
+  "lessonIds": [
+    "MR-C434-gairsoy",
+    "MR-C434-cukamuk",
+    "MR-C434-phajiti",
+    "MR-C434-dhavpal-karne",
+    "MR-C434-marga-kadhne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch434.txt",
+  "json": "marathi/narration/ch434.json",
+  "textHash": "fnv1a64:0df0b03d79bc3bff",
+  "jsonHash": "fnv1a64:28aa4c1c17caadd0",
+  "findings": []
+}

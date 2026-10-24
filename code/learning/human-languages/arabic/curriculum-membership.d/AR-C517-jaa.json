@@ -1,0 +1,11 @@
+{
+  "id": "AR-C517-jaa",
+  "pathSegment": "AR-PATH-517-ADAT517",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-517-ADAT517",
+      "order": 3
+    }
+  ]
+}

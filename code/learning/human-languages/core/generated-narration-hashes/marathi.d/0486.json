@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:3b80bed55c38519d",
+  "lessonIds": [
+    "MR-C486-ija",
+    "MR-C486-khapli",
+    "MR-C486-kharcatne",
+    "MR-C486-murgalne",
+    "MR-C486-sujne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch486.txt",
+  "json": "marathi/narration/ch486.json",
+  "textHash": "fnv1a64:df97a2678b59f908",
+  "jsonHash": "fnv1a64:2dc9cf82fe71c09c",
+  "findings": []
+}

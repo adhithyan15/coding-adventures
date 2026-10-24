@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 516,
+  "title": "Stretching and shaking",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f7293b3bc471f77e",
+  "lessons": [
+    {
+      "id": "AR-C516-tamaddada",
+      "sequence": 28630,
+      "title": "تمدد (tamaddada) — to stretch out",
+      "headword": "تمدد",
+      "romanization": "tamaddada",
+      "gloss": "to stretch out",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7725beddcd355336",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to get up, then the Arabic for fainting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تمدد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تمدد — tamaddada — \"to stretch out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تمدد القط في الشمس. tamaddada al-qiṭṭ fī ash-shams. The cat stretched out in the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتمدد, yatamaddad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تمدد (tamaddada) is built on the native Arabic root m-d-d, \"to stretch, to extend\" (Lane). Mudda, a period, which you know, is from the same root: a stretch of time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamaddada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamaddada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamaddada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamaddada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamaddada al-qiṭṭ fī ash-shams. — The cat stretched out in the sun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamaddada al-qiṭṭ fī ash-shams.* — The cat stretched out in the sun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to get up, then the Arabic for fainting, then say tamaddada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to get up, then the Arabic for fainting, then say *tamaddada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تمدد (tamaddada) mean? (\"To stretch out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C516-inhana",
+      "sequence": 28640,
+      "title": "انحنى (inḥanā) — to bend down",
+      "headword": "انحنى",
+      "romanization": "inḥanā",
+      "gloss": "to bend down",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94ab12063d486d7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for fainting, then the Arabic for to stretch out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انحنى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انحنى — inḥanā — \"to bend down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انحنى الرجل وأخذ المفتاح من الأرض. inḥanā ar-rajul wa-akhadha al-miftāḥ min al-arḍ. The man bent down and took the key from the floor."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينحني, yanḥanī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انحنى (inḥanā) is built on the native Arabic root ḥ-n-w, \"to bend, to curve\" (Lane). Form VII inḥanā is to bend oneself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inḥanā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inḥanā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inḥanā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inḥanā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inḥanā ar-rajul wa-akhadha al-miftāḥ min al-arḍ. — The man bent down and took the key from the floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inḥanā ar-rajul wa-akhadha al-miftāḥ min al-arḍ.* — The man bent down and took the key from the floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for fainting, then the Arabic for to stretch out, then say inḥanā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for fainting, then the Arabic for to stretch out, then say *inḥanā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انحنى (inḥanā) mean? (\"To bend down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C516-irtajafa",
+      "sequence": 28650,
+      "title": "ارتجف (irtajafa) — to tremble",
+      "headword": "ارتجف",
+      "romanization": "irtajafa",
+      "gloss": "to tremble",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8be6769397442b5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to stretch out, then the Arabic for to bend down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ارتجف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارتجف — irtajafa — \"to tremble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ارتجفت يد الطالب من التوتر. irtajafat yad aṭ-ṭālib min at-tawattur. The student's hand trembled from nerves."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يرتجف, yartajif."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارتجف (irtajafa) is built on the native Arabic root r-j-f, \"to quake, to shake\" (Lane). Form VIII irtajafa is to shake all over."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtajafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtajafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtajafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtajafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtajafat yad aṭ-ṭālib min at-tawattur. — The student's hand trembled from nerves.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtajafat yad aṭ-ṭālib min at-tawattur.* — The student's hand trembled from nerves.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to stretch out, then the Arabic for to bend down, then say irtajafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to stretch out, then the Arabic for to bend down, then say *irtajafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ارتجف (irtajafa) mean? (\"To tremble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C516-saala",
+      "sequence": 28660,
+      "title": "سعل (saʿala) — to have a cough",
+      "headword": "سعل",
+      "romanization": "saʿala",
+      "gloss": "to have a cough",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d9a4bfe2dc984e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to bend down, then the Arabic for to tremble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سعل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سعل — saʿala — \"to have a cough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سعل المريض كثيرا في الليل. saʿala al-marīḍ kathīran fī al-layl. The patient coughed a lot in the night."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يسعل, yasʿul."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun سعال, a cough, shares the root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سعل (saʿala) is built on the native Arabic root s-ʿ-l, \"to cough\" (Lane). Suʿāl, a cough, which you know, is its noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saʿala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saʿala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saʿala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saʿala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saʿala al-marīḍ kathīran fī al-layl. — The patient coughed a lot in the night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saʿala al-marīḍ kathīran fī al-layl.* — The patient coughed a lot in the night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to bend down, then the Arabic for to tremble, then say saʿala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to bend down, then the Arabic for to tremble, then say *saʿala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سعل (saʿala) mean? (\"To have a cough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C516-iltiwa",
+      "sequence": 28670,
+      "title": "التواء (iltiwāʾ) — a sprain",
+      "headword": "التواء",
+      "romanization": "iltiwāʾ",
+      "gloss": "a sprain",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ef39c3c7800dbab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to tremble, then the Arabic for to have a cough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: التواء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "التواء — iltiwāʾ — \"a sprain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عنده التواء في الكاحل. ʿindahu iltiwāʾ fī al-kāḥil. He has a sprained ankle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "التواء (iltiwāʾ) is built on the native Arabic root l-w-y, \"to twist, to bend\" (Lane). Iltiwāʾ is the verbal noun of Form VIII: a twisting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iltiwāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iltiwāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iltiwāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iltiwāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿindahu iltiwāʾ fī al-kāḥil. — He has a sprained ankle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿindahu iltiwāʾ fī al-kāḥil.* — He has a sprained ankle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to tremble, then the Arabic for to have a cough, then say iltiwāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to tremble, then the Arabic for to have a cough, then say *iltiwāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does التواء (iltiwāʾ) mean? (\"A sprain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

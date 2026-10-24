@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 516,
+  "title": "Screens and Phones",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d8d1525d9cf23337",
+  "lessons": [
+    {
+      "id": "MR-C516-sanganak",
+      "sequence": 29610,
+      "title": "संगणक (saṅgaṇak) — a computer",
+      "headword": "संगणक",
+      "romanization": "saṅgaṇak",
+      "gloss": "a computer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffebc9c9bd9bb42d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an accountant, then the Marathi for to wrap up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संगणक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संगणक — saṅgaṇak — \"a computer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझ्या भावाने नवीन संगणक घेतला. mājhyā bhāvāne navīn saṅgaṇak ghetlā. My brother bought a new computer."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संगणक (saṅgaṇak) is a modern Marathi coinage built from Sanskrit saṁ-, \"together\", and gaṇaka, \"one who counts\" (Monier-Williams): the machine that reckons."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgaṇak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgaṇak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgaṇak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgaṇak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhyā bhāvāne navīn saṅgaṇak ghetlā. — My brother bought a new computer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhyā bhāvāne navīn saṅgaṇak ghetlā.* — My brother bought a new computer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an accountant, then the Marathi for to wrap up, then say saṅgaṇak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an accountant, then the Marathi for to wrap up, then say *saṅgaṇak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संगणक (saṅgaṇak) mean? (\"A computer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C516-bhramandhvani",
+      "sequence": 29620,
+      "title": "भ्रमणध्वनी (bhramaṇdhvanī) — a mobile phone",
+      "headword": "भ्रमणध्वनी",
+      "romanization": "bhramaṇdhvanī",
+      "gloss": "a mobile phone",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8840ba63edeae35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to wrap up, then the Marathi for a computer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भ्रमणध्वनी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भ्रमणध्वनी — bhramaṇdhvanī — \"a mobile phone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीराचा भ्रमणध्वनी बसमध्ये हरवला. mīrācā bhramaṇdhvanī basmadhye haravlā. Meera's mobile phone got lost on the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "In speech people say मोबाईल; भ्रमणध्वनी (bhramaṇdhvanī) is the formal word, a sound that roams."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भ्रमणध्वनी (bhramaṇdhvanī) is a modern tatsama coinage from Sanskrit bhramaṇa, \"roaming\", and dhvani, \"sound\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhramaṇdhvanī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhramaṇdhvanī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhramaṇdhvanī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhramaṇdhvanī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrācā bhramaṇdhvanī basmadhye haravlā. — Meera's mobile phone got lost on the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrācā bhramaṇdhvanī basmadhye haravlā.* — Meera's mobile phone got lost on the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to wrap up, then the Marathi for a computer, then say bhramaṇdhvanī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to wrap up, then the Marathi for a computer, then say *bhramaṇdhvanī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भ्रमणध्वनी (bhramaṇdhvanī) mean? (\"A mobile phone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C516-durdhvani",
+      "sequence": 29630,
+      "title": "दूरध्वनी (dūrdhvanī) — a telephone; a landline",
+      "headword": "दूरध्वनी",
+      "romanization": "dūrdhvanī",
+      "gloss": "a telephone; a landline",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e919eea30d78afa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a computer, then the Marathi for a mobile phone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दूरध्वनी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूरध्वनी — dūrdhvanī — \"a telephone; a landline\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कार्यालयातला दूरध्वनी सकाळपासून वाजत होता. kāryālayātlā dūrdhvanī sakāḷpāsūn vājat hotā. The office telephone had been ringing since morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूरध्वनी (dūrdhvanī) is a modern tatsama coinage from Sanskrit dūra, \"far\", and dhvani, \"sound\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūrdhvanī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūrdhvanī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūrdhvanī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūrdhvanī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryālayātlā dūrdhvanī sakāḷpāsūn vājat hotā. — The office telephone had been ringing since morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryālayātlā dūrdhvanī sakāḷpāsūn vājat hotā.* — The office telephone had been ringing since morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a computer, then the Marathi for a mobile phone, then say dūrdhvanī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a computer, then the Marathi for a mobile phone, then say *dūrdhvanī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दूरध्वनी (dūrdhvanī) mean? (\"A telephone; a landline\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C516-citraphit",
+      "sequence": 29640,
+      "title": "चित्रफीत (citraphīt) — a video clip",
+      "headword": "चित्रफीत",
+      "romanization": "citraphīt",
+      "gloss": "a video clip",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4dc585a6da1d41c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a mobile phone, then the Marathi for a telephone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चित्रफीत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चित्रफीत — citraphīt — \"a video clip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मी सहलीची एक छोटी चित्रफीत बनवली. mī sahlīcī ek choṭī citraphīt banavlī. I made a short video of the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "The oblique is चित्रफिती-: चित्रफितीत, in the video."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चित्रफीत (citraphīt) is a Marathi compound of चित्र, \"picture\", from Sanskrit citra (Monier-Williams), and फीत, \"ribbon, tape\", a loan from Portuguese fita."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citraphīt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citraphīt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citraphīt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citraphīt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī sahlīcī ek choṭī citraphīt banavlī. — I made a short video of the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī sahlīcī ek choṭī citraphīt banavlī.* — I made a short video of the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a mobile phone, then the Marathi for a telephone, then say citraphīt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a mobile phone, then the Marathi for a telephone, then say *citraphīt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चित्रफीत (citraphīt) mean? (\"A video clip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C516-vaparne",
+      "sequence": 29650,
+      "title": "वापरणे (vāparṇe) — to use",
+      "headword": "वापरणे",
+      "romanization": "vāparṇe",
+      "gloss": "to use",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:477496f199735a3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a telephone, then the Marathi for a video clip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वापरणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वापरणे — vāparṇe — \"to use\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजोबांनी पहिल्यांदा भ्रमणध्वनी वापरला. ājobānnī pahilyāndā bhramaṇdhvanī vāparlā. Grandfather used a mobile phone for the first time."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने संगणक वापरला, tyāne saṅgaṇak vāparlā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वापरणे (vāparṇe) is usually traced to Sanskrit vyāpārayati, \"employs\". CDIAL lists under it the related Marathi vāvarṇẽ, \"to manage, to do the business of\" (CDIAL 12206), but not वापरणे itself, so the path is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāparṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāparṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāparṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāparṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājobānnī pahilyāndā bhramaṇdhvanī vāparlā. — Grandfather used a mobile phone for the first time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājobānnī pahilyāndā bhramaṇdhvanī vāparlā.* — Grandfather used a mobile phone for the first time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a telephone, then the Marathi for a video clip, then say vāparṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a telephone, then the Marathi for a video clip, then say *vāparṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वापरणे (vāparṇe) mean? (\"To use\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

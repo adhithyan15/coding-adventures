@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-511-BASON511",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-511-BASON511"
+  ],
+  "after": []
+}

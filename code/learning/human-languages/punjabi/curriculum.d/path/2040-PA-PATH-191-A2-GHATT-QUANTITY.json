@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-191-A2-GHATT-QUANTITY",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-191-A2-GHATT-QUANTITY"
+  ],
+  "after": []
+}

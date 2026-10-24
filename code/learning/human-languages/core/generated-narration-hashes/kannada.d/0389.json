@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:71dffd571634de77",
+  "lessonIds": [
+    "KA-C389-slaghisu",
+    "KA-C389-puraskarisu",
+    "KA-C389-pratisthe",
+    "KA-C389-utpreksisu",
+    "KA-C389-sthanamana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch389.txt",
+  "json": "kannada/narration/ch389.json",
+  "textHash": "fnv1a64:dc83ec0ac7da8ee7",
+  "jsonHash": "fnv1a64:45eca44f313c2eb1",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C323-siba",
+  "pathSegment": "AR-PATH-323-NASHAA323",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-323-NASHAA323",
+      "order": 3
+    }
+  ]
+}

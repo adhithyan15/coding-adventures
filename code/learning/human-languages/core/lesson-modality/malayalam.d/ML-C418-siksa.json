@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C418-siksa",
+    "language": "malayalam",
+    "chapter": 418,
+    "sequence": 20660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e8f5ba9ea981fcc"
+  },
+  "findings": []
+}

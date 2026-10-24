@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-350-NASHIR350",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-350-NASHIR350"
+  ],
+  "after": []
+}

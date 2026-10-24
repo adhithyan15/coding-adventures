@@ -1,0 +1,11 @@
+{
+  "id": "HI-C340-nayak",
+  "pathSegment": "HI-PATH-340-UPANYAS340",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-340-UPANYAS340",
+      "order": 1
+    }
+  ]
+}

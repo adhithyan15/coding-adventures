@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:f0156bbb9c15024e",
+  "lessonIds": [
+    "TA-C532-kuttuccantai",
+    "TA-C532-malyuttam",
+    "TA-C532-cilampam",
+    "TA-C532-utai-kick",
+    "TA-C532-eri-throw"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch532.txt",
+  "json": "tamil/narration/ch532.json",
+  "textHash": "fnv1a64:982164ede51458b8",
+  "jsonHash": "fnv1a64:396f27be25cef902",
+  "findings": []
+}

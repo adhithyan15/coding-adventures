@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:138d8cb7133bc3d6",
+  "lessonIds": [
+    "KA-C450-mekyanik",
+    "KA-C450-gyarej",
+    "KA-C450-bidibhaga",
+    "KA-C450-kettuhogu",
+    "KA-C450-riperi"
+  ],
+  "tex": "kannada/book/chapters/ch450-at-the-garage.tex"
+}

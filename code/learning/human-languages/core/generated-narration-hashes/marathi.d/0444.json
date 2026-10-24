@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:d9689899d3a1981f",
+  "lessonIds": [
+    "MR-C444-dabke",
+    "MR-C444-gal",
+    "MR-C444-gadhul",
+    "MR-C444-jhirapne",
+    "MR-C444-osandne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch444.txt",
+  "json": "marathi/narration/ch444.json",
+  "textHash": "fnv1a64:a2357c57730530f3",
+  "jsonHash": "fnv1a64:278b0662a384f982",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Patience and Temper",
+  "label": "ch:hi-patience-and-temper",
+  "canDo": "I can say whether someone keeps their patience.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C468-jhallana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can say whether someone keeps their patience.",
+    "assesses": [
+      "HI-LEX-C468-DHAIRYA468-03",
+      "HI-LEX-C468-DHAIRYA468-04",
+      "HI-LEX-C468-DHAIRYA468-05"
+    ]
+  }
+}

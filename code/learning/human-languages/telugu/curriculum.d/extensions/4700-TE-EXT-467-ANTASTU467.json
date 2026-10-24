@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-467-ANTASTU467",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a storey, a basement, a compound wall, spacious and deserted.",
+  "prerequisites": []
+}

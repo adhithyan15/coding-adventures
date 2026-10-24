@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C544-ghoniye-asa",
+    "language": "bengali",
+    "chapter": 544,
+    "sequence": 32680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac3e637818b87eb8"
+  },
+  "findings": []
+}

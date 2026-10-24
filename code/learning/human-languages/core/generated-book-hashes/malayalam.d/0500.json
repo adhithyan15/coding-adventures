@@ -1,0 +1,14 @@
+{
+  "language": "malayalam",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:003597cb9b038427",
+  "lessonIds": [
+    "ML-C500-velampal",
+    "ML-C500-maramkotti",
+    "ML-C500-desatanam",
+    "ML-C500-cekkeruka",
+    "ML-C500-kutukuttuka",
+    "ML-R500-review-493-500"
+  ],
+  "tex": "malayalam/book/chapters/ch500-birds.tex"
+}

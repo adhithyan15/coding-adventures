@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:ae5a706a043ba86a",
+  "lessonIds": [
+    "MR-C554-muddam",
+    "MR-C554-agau",
+    "MR-C554-ainveli",
+    "MR-C554-bahutek",
+    "MR-C554-sadharan"
+  ],
+  "tex": "marathi/book/chapters/ch554-chance-and-timing.tex"
+}

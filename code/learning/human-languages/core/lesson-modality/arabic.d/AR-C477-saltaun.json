@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C477-saltaun",
+    "language": "arabic",
+    "chapter": 477,
+    "sequence": 26570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50ca61f879644236"
+  },
+  "findings": []
+}

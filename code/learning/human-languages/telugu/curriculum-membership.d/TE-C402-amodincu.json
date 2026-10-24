@@ -1,0 +1,11 @@
+{
+  "id": "TE-C402-amodincu",
+  "pathSegment": "TE-PATH-402-MANTRI402",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-402-MANTRI402",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C286-bi-sabab",
+    "language": "arabic",
+    "chapter": 286,
+    "sequence": 16580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26de90f3827dcc82"
+  },
+  "findings": []
+}

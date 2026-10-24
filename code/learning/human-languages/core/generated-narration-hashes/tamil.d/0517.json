@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:a4228fef2e913876",
+  "lessonIds": [
+    "TA-C517-minkalam",
+    "TA-C517-minnerru",
+    "TA-C517-kampi",
+    "TA-C517-tunti",
+    "TA-C517-olir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch517.txt",
+  "json": "tamil/narration/ch517.json",
+  "textHash": "fnv1a64:5e2f59dca1435e2c",
+  "jsonHash": "fnv1a64:85159502a452a9a9",
+  "findings": []
+}

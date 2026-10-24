@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:f0f8534248cb052e",
+  "lessonIds": [
+    "KA-C509-nara",
+    "KA-C509-pakkelubu",
+    "KA-C509-bennumule",
+    "KA-C509-tolu",
+    "KA-C509-kuntu"
+  ],
+  "tex": "kannada/book/chapters/ch509-the-frame-of-the-body.tex"
+}

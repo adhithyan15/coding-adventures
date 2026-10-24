@@ -11,7 +11,7 @@ romanization: "talaivali"
 concept_tag: TA-DOCTOR-HEADACHE
 prerequisites: [TA-C88-hospital, TA-C88-vomiting]
 sounds: []
-roots: [dravidian-talai-kai, dravidian-vali-pain]
+roots: [dravidian-talai-head, dravidian-vali-pain]
 etymology_hook: "தலைவலி — native: talai 'head' (DEDR 3103) + vali 'pain' (DEDR 5281)"
 duration:
   max_seconds: 200

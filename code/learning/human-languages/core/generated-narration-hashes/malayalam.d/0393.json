@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:136099db29d2eef5",
+  "lessonIds": [
+    "ML-C393-anusmaranam",
+    "ML-C393-smarakam",
+    "ML-C393-pratima",
+    "ML-C393-silalikhitam",
+    "ML-C393-anusmarikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch393.txt",
+  "json": "malayalam/narration/ch393.json",
+  "textHash": "fnv1a64:bb89a32aa9b9b99a",
+  "jsonHash": "fnv1a64:6e226c09bda7dfde",
+  "findings": []
+}

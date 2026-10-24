@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "A Fire Breaks Out",
+  "label": "ch:mr-a-fire-breaks-out",
+  "canDo": "I can describe a fire: a spark, flames, ash and the fire brigade.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C292-agnisaman-dal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can describe a fire: a spark, flames, ash and the fire brigade.",
+    "assesses": [
+      "MR-LEX-C292-AAG292-03",
+      "MR-LEX-C292-AAG292-04",
+      "MR-LEX-C292-AAG292-05"
+    ]
+  }
+}

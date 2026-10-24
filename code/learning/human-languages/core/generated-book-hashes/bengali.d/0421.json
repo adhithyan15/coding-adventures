@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:dfbbc99fe514a384",
+  "lessonIds": [
+    "BN-C421-mal",
+    "BN-C421-gudam",
+    "BN-C421-ordar",
+    "BN-C421-paikari",
+    "BN-C421-mojut-kora"
+  ],
+  "tex": "bengali/book/chapters/ch421-goods-and-stock.tex"
+}

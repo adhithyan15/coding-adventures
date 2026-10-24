@@ -1,0 +1,11 @@
+{
+  "id": "TE-C418-sambhavyata",
+  "pathSegment": "TE-PATH-418-SADHYAM418",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-418-SADHYAM418",
+      "order": 2
+    }
+  ]
+}

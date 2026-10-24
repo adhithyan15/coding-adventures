@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:dc1856db78b03b47",
+  "lessonIds": [
+    "AR-C462-istaadda",
+    "AR-C462-ikhtasara",
+    "AR-C462-nafida",
+    "AR-C462-ittasaa",
+    "AR-C462-rafaa",
+    "AR-R462-review-455-462"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch462.txt",
+  "json": "arabic/narration/ch462.json",
+  "textHash": "fnv1a64:3f99b80ba873ef96",
+  "jsonHash": "fnv1a64:047ca5964d6a26e1",
+  "findings": []
+}

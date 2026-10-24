@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C516-cevudu",
+    "language": "telugu",
+    "chapter": 516,
+    "sequence": 26140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18e0165f7c530292"
+  },
+  "findings": []
+}

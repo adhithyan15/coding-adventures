@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C298-rajul-itfa",
+    "language": "arabic",
+    "chapter": 298,
+    "sequence": 17290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c2ff317b0b074d4"
+  },
+  "findings": []
+}

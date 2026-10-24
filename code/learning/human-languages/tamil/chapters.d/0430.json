@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Light in the Sky",
+  "label": "ch:ta-light-in-the-sky",
+  "canDo": "I can talk about sunrise, brightness and the horizon, and things glittering and ringing out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C430-oli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk about sunrise, brightness and the horizon, and things glittering and ringing out.",
+    "assesses": [
+      "TA-LEX-C430-VANAM430-03",
+      "TA-LEX-C430-VANAM430-04",
+      "TA-LEX-C430-VANAM430-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 381,
+  "title": "As Long As",
+  "label": "ch:mr-as-long-as",
+  "canDo": "I can say until, as long as, provided that and so that.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-R381-review-374-381",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can say until, as long as, provided that and so that.",
+    "assesses": [
+      "MR-LEX-C381-JOPARYANT381-01",
+      "MR-LEX-C381-JOPARYANT381-02",
+      "MR-LEX-C381-JOPARYANT381-03",
+      "MR-LEX-C381-JOPARYANT381-04",
+      "MR-LEX-C381-JOPARYANT381-05"
+    ]
+  }
+}

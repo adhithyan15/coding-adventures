@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C491-ophar",
+    "language": "malayalam",
+    "chapter": 491,
+    "sequence": 24540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3789149be329cd4d"
+  },
+  "findings": []
+}

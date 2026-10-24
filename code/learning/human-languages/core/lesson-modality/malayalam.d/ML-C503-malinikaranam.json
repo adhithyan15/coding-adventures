@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C503-malinikaranam",
+    "language": "malayalam",
+    "chapter": 503,
+    "sequence": 25170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd78f1c1b6268bed"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C499-wafi",
+    "language": "arabic",
+    "chapter": 499,
+    "sequence": 27800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adb6f54f7d8a6367"
+  },
+  "findings": []
+}

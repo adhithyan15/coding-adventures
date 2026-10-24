@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R442-review-436-442",
+    "language": "marathi",
+    "chapter": 442,
+    "sequence": 25400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a643eee06484264b"
+  },
+  "findings": []
+}

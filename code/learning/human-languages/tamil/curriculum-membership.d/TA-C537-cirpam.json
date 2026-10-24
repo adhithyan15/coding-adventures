@@ -1,0 +1,11 @@
+{
+  "id": "TA-C537-cirpam",
+  "pathSegment": "TA-PATH-537-SIRPAM537",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-537-SIRPAM537",
+      "order": 0
+    }
+  ]
+}

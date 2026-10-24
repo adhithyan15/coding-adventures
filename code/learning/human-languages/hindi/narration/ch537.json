@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 537,
+  "title": "A Change of Programme",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:4200d9c45a78d07f",
+  "lessons": [
+    {
+      "id": "HI-C537-karyakram",
+      "sequence": 29580,
+      "title": "कार्यक्रम (kāryakram) — a programme; a schedule",
+      "headword": "कार्यक्रम",
+      "romanization": "kāryakram",
+      "gloss": "a programme; a schedule",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ddb8867015a6191",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an outline, then the Hindi for a draft (of a text)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कार्यक्रम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कार्यक्रम — kāryakram — \"a programme; a schedule\"."
+            },
+            {
+              "kind": "speech",
+              "text": "स्कूल का कार्यक्रम शाम छह बजे है। Skūl kā kāryakram śām chah baje hai. The school programme is at six in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कार्यक्रम (kāryakram) is a modern compound of two Sanskrit words, kārya, \"to be done\", and krama, \"a step, a course\" (Monier-Williams): the things to be done, one after another."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryakram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryakram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryakram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryakram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Skūl kā kāryakram śām chah baje hai. — The school programme is at six in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Skūl kā kāryakram śām chah baje hai.* — The school programme is at six in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an outline, then the Hindi for a draft (of a text), then say kāryakram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an outline, then the Hindi for a draft (of a text), then say *kāryakram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कार्यक्रम (kāryakram) mean? (\"A programme; a schedule\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C537-mohlat",
+      "sequence": 29590,
+      "title": "मोहलत (mohlat) — extra time; a respite",
+      "headword": "मोहलत",
+      "romanization": "mohlat",
+      "gloss": "extra time; a respite",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94f6de041baa9f0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a draft (of a text), then the Hindi for a programme."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मोहलत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोहलत — mohlat — \"extra time; a respite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मालिक ने हमें किराया देने के लिए एक हफ़्ते की मोहलत दी। Mālik ne hamẽ kirāyā dene ke liye ek hafte kī mohlat dī. The landlord gave us a week's grace to pay the rent."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोहलत (mohlat) is usually traced to Arabic muhla, \"respite, delay\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mohlat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mohlat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mohlat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mohlat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mālik ne hamẽ kirāyā dene ke liye ek hafte kī mohlat dī. — The landlord gave us a week's grace to pay the rent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mālik ne hamẽ kirāyā dene ke liye ek hafte kī mohlat dī.* — The landlord gave us a week's grace to pay the rent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a draft (of a text), then the Hindi for a programme, then say mohlat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a draft (of a text), then the Hindi for a programme, then say *mohlat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मोहलत (mohlat) mean? (\"Extra time; a respite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C537-harbari",
+      "sequence": 29600,
+      "title": "हड़बड़ी (haṛbaṛī) — a flustered hurry",
+      "headword": "हड़बड़ी",
+      "romanization": "haṛbaṛī",
+      "gloss": "a flustered hurry",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:495280b399327bba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a programme, then the Hindi for extra time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हड़बड़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हड़बड़ी — haṛbaṛī — \"a flustered hurry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हड़बड़ी (haṛbaṛī) में मैं अपना बटुआ घर पर भूल गया। Haṛbaṛī meṁ maiṁ apnā baṭuā ghar par bhūl gayā. In my hurry I forgot my wallet at home."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हड़बड़ी (haṛbaṛī) is a tadbhava, inherited from haḍabaḍa, \"confusion\", a form CDIAL reconstructs from its descendants (CDIAL 13949). Today it is the confusion of someone short of time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṛbaṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṛbaṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṛbaṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṛbaṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Haṛbaṛī meṁ maiṁ apnā baṭuā ghar par bhūl gayā. — In my hurry I forgot my wallet at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Haṛbaṛī meṁ maiṁ apnā baṭuā ghar par bhūl gayā.* — In my hurry I forgot my wallet at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a programme, then the Hindi for extra time, then say haṛbaṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a programme, then the Hindi for extra time, then say *haṛbaṛī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हड़बड़ी (haṛbaṛī) mean? (\"A flustered hurry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C537-muhurt",
+      "sequence": 29610,
+      "title": "मुहूर्त (muhūrt) — an auspicious moment (to begin something)",
+      "headword": "मुहूर्त",
+      "romanization": "muhūrt",
+      "gloss": "an auspicious moment (to begin something)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7eca1674bd4b57a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for extra time, then the Hindi for a flustered hurry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मुहूर्त",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुहूर्त — muhūrt — \"an auspicious moment (to begin something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुजारी ने शादी का मुहूर्त निकाला। Pujārī ne śādī kā muhūrt nikālā. The priest worked out the auspicious time for the wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुहूर्त (muhūrt) is a tatsama, taken whole from Sanskrit muhūrta, \"a moment, a short space of time\" (Monier-Williams). Hindi uses it for the moment the stars favour."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muhūrt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muhūrt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muhūrt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muhūrt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Pujārī ne śādī kā muhūrt nikālā. — The priest worked out the auspicious time for the wedding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Pujārī ne śādī kā muhūrt nikālā.* — The priest worked out the auspicious time for the wedding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for extra time, then the Hindi for a flustered hurry, then say muhūrt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for extra time, then the Hindi for a flustered hurry, then say *muhūrt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मुहूर्त (muhūrt) mean? (\"An auspicious moment (to begin something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C537-khiskana",
+      "sequence": 29620,
+      "title": "खिसकाना (khiskānā) — to shift; to push back (a date)",
+      "headword": "खिसकाना",
+      "romanization": "khiskānā",
+      "gloss": "to shift; to push back (a date)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f5ee822daa7af6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a flustered hurry, then the Hindi for an auspicious moment (to begin something)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खिसकाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिसकाना — khiskānā — \"to shift; to push back (a date)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हमने बैठक अगले हफ़्ते तक खिसका दी। Hamne baiṭhak agle hafte tak khiskā dī. We pushed the meeting back to next week."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने मेज़ खिसकाई, usne mez khiskāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिसकाना (khiskānā) is the causative of khisaknā, \"to slip away\", which CDIAL files under khis, a reconstructed form (CDIAL 3888)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiskānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiskānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiskānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiskānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hamne baiṭhak agle hafte tak khiskā dī. — We pushed the meeting back to next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hamne baiṭhak agle hafte tak khiskā dī.* — We pushed the meeting back to next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a flustered hurry, then the Hindi for an auspicious moment (to begin something), then say khiskānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a flustered hurry, then the Hindi for an auspicious moment (to begin something), then say *khiskānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खिसकाना (khiskānā) mean? (\"To shift; to push back (a date)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R537-review-530-537",
+      "sequence": 29630,
+      "title": "Looking back: from Learning a Raga to A Change of Programme",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Learning a Raga to A Change of Programme",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:569195e1ebbf9a9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for music and a musical note."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "music, a musical note, a beat, a raga, to hum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: music, a musical note, a beat, a raga, to hum]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a small two-headed drum, a shehnai (a reed pipe), ankle bells, a musical instrument, a mridang (a barrel drum)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a small two-headed drum, a shehnai (a reed pipe), ankle bells, a musical instrument, a mridang (a barrel drum)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lyric, tempo, practice (of music), a gathering (for music or poetry), to make dance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lyric, tempo, practice (of music), a gathering (for music or poetry), to make dance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wrestling, a wrestler, a wrestling ground, to pit against, a stance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wrestling, a wrestler, a wrestling ground, to pit against, a stance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a match (a game), a contest, to bring victory to, a winner, a prize, an award",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a match (a game), a contest, to bring victory to, a winner, a prize, an award]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a round, a phase, quickness, to leap over, a medal, to make run",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a round, a phase, quickness, to leap over, a medal, to make run]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plan, a decision (formal), an arrangement, a system, an outline, a draft (of a text)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plan, a decision (formal), an arrangement, a system, an outline, a draft (of a text)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a programme, extra time, a flustered hurry, an auspicious moment (to begin something), to shift",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a programme, extra time, a flustered hurry, an auspicious moment (to begin something), to shift]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Music? (संगीत, saṅgīt.) A musical note? (सुर, sur.) A beat? (ताल, tāl.) A raga? (राग, rāg.) To hum? (गुनगुनाना, gungunānā.) A small two-headed drum? (ढोलक, ḍholak.) A shehnai (a reed pipe)? (शहनाई, śahnāī.) Ankle bells? (घुँघरू, ghũghrū.) A musical instrument? (बाजा, bājā.) A mridang (a barrel drum)? (मृदंग, mṛdaṅg.) A lyric? (गीत, gīt.) Tempo? (लय, lay.) Practice (of music)? (रियाज़, riyāz.) A gathering (for music or poetry)? (महफ़िल, mahfil.) To make dance? (नचाना, nacānā.) Wrestling? (कुश्ती, kuśtī.) A wrestler? (पहलवान, pahalvān.) A wrestling ground? (अखाड़ा, akhāṛā.) To pit against? (लड़ाना, laṛānā.) A stance? (पैंतरा, paĩtrā.) A match (a game)? (मैच, maic.) A contest? (मुक़ाबला, muqāblā.) To bring victory to? (जिताना, jitānā.) A winner? (विजेता, vijetā.) A prize, an award? (पुरस्कार, puraskār.) A round, a phase? (दौर, daur.) Quickness? (फुर्ती, phurtī.) To leap over? (फाँदना, phā̃dnā.) A medal? (मेडल, meḍal.) To make run? (दौड़ाना, dauṛānā.) A plan? (योजना, yojnā.) A decision (formal)? (निर्णय, nirṇay.) An arrangement, a system? (व्यवस्था, vyavasthā.) An outline? (रूपरेखा, rūprekhā.) A draft (of a text)? (मसौदा, masaudā.) A programme? (कार्यक्रम, kāryakram.) Extra time? (मोहलत, mohlat.) A flustered hurry? (हड़बड़ी, haṛbaṛī.) An auspicious moment (to begin something)? (मुहूर्त, muhūrt.) To shift? (खिसकाना, khiskānā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

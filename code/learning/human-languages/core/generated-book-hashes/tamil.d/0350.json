@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:1893feb535b5b225",
+  "lessonIds": [
+    "TA-C350-kannottam",
+    "TA-C350-nilaippatu",
+    "TA-C350-manappanmai",
+    "TA-C350-konam",
+    "TA-C350-velippatuttu"
+  ],
+  "tex": "tamil/book/chapters/ch350-points-of-view.tex"
+}

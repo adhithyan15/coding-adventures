@@ -1,0 +1,11 @@
+{
+  "id": "AR-C392-dhakara",
+  "pathSegment": "AR-PATH-392-MUHADIR392",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-392-MUHADIR392",
+      "order": 4
+    }
+  ]
+}

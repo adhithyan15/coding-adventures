@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 431,
+  "title": "Traffic",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:06e920a8a248bdd2",
+  "lessons": [
+    {
+      "id": "AR-C431-nafaq",
+      "sequence": 24210,
+      "title": "نفق (nafaq) — a tunnel",
+      "headword": "نفق",
+      "romanization": "nafaq",
+      "gloss": "a tunnel",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30ff6da14e2c42ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a dinghy, then the Arabic for to row."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نفق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نفق — nafaq — \"a tunnel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دخل القطار نفقا طويلا تحت الجبل. dakhala al-qiṭār nafaqan ṭawīlan taḥta al-jabal. The train went into a long tunnel under the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أنفاق, anfāq."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نفق (nafaq) is built on the native Arabic root n-f-q, \"to pass away, to run out\" (Lane). Lane gives nafaq as a passage under the ground."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nafaq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nafaq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nafaq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nafaq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dakhala al-qiṭār nafaqan ṭawīlan taḥta al-jabal. — The train went into a long tunnel under the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dakhala al-qiṭār nafaqan ṭawīlan taḥta al-jabal.* — The train went into a long tunnel under the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a dinghy, then the Arabic for to row, then say nafaq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a dinghy, then the Arabic for to row, then say *nafaq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نفق (nafaq) mean? (\"A tunnel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C431-ishara",
+      "sequence": 24220,
+      "title": "إشارة (ishāra) — a signal; traffic lights",
+      "headword": "إشارة",
+      "romanization": "ishāra",
+      "gloss": "a signal; traffic lights",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c425ddaa68559c7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to row, then the Arabic for a tunnel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: إشارة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إشارة — ishāra — \"a signal; traffic lights\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وقفت السيارة عند الإشارة الحمراء. waqafat as-sayyāra ʿinda al-ishāra al-ḥamrāʾ. The car stopped at the red light."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إشارة (ishāra) is built on the native Arabic root sh-w-r, \"to point, to make a sign\" (Lane). It is the verbal noun of Form IV ashāra."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waqafat as-sayyāra ʿinda al-ishāra al-ḥamrāʾ. — The car stopped at the red light.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waqafat as-sayyāra ʿinda al-ishāra al-ḥamrāʾ.* — The car stopped at the red light.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to row, then the Arabic for a tunnel, then say ishāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to row, then the Arabic for a tunnel, then say *ishāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does إشارة (ishāra) mean? (\"A signal; traffic lights\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C431-murur",
+      "sequence": 24230,
+      "title": "مرور (murūr) — traffic; passing",
+      "headword": "مرور",
+      "romanization": "murūr",
+      "gloss": "traffic; passing",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06634cc9083e9517",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a tunnel, then the Arabic for a signal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مرور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرور — murūr — \"traffic; passing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان المرور خفيفا يوم الجمعة. kāna al-murūr khafīfan yawm al-jumʿa. Traffic was light on Friday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرور (murūr) is built on the native Arabic root m-r-r, \"to pass\" (Lane). It is the verbal noun of marra, \"to pass by\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "murūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *murūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "murūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *murūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna al-murūr khafīfan yawm al-jumʿa. — Traffic was light on Friday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna al-murūr khafīfan yawm al-jumʿa.* — Traffic was light on Friday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a tunnel, then the Arabic for a signal, then say murūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a tunnel, then the Arabic for a signal, then say *murūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مرور (murūr) mean? (\"Traffic; passing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C431-izdiham",
+      "sequence": 24240,
+      "title": "ازدحام (izdiḥām) — congestion; a traffic jam",
+      "headword": "ازدحام",
+      "romanization": "izdiḥām",
+      "gloss": "congestion; a traffic jam",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15acfbdf12f5eb4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a signal, then the Arabic for traffic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ازدحام",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ازدحام — izdiḥām — \"congestion; a traffic jam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تأخرنا بسبب الازدحام في الشارع. taʾakhkharnā bi-sabab al-izdiḥām fī ash-shāriʿ. We were late because of the congestion in the street."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ازدحام (izdiḥām) is built on the native Arabic root z-ḥ-m, \"to crowd, to press\" (Lane). It is the verbal noun of Form VIII, beside muzdaḥim, \"crowded\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izdiḥām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izdiḥām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izdiḥām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izdiḥām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʾakhkharnā bi-sabab al-izdiḥām fī ash-shāriʿ. — We were late because of the congestion in the street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʾakhkharnā bi-sabab al-izdiḥām fī ash-shāriʿ.* — We were late because of the congestion in the street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a signal, then the Arabic for traffic, then say izdiḥām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a signal, then the Arabic for traffic, then say *izdiḥām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ازدحام (izdiḥām) mean? (\"Congestion; a traffic jam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C431-inatafa",
+      "sequence": 24250,
+      "title": "انعطف (inʿaṭafa) — to turn off; to turn (left or right)",
+      "headword": "انعطف",
+      "romanization": "inʿaṭafa",
+      "gloss": "to turn off; to turn (left or right)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:478667174bd978fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for traffic, then the Arabic for congestion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انعطف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انعطف — inʿaṭafa — \"to turn off; to turn (left or right)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انعطفنا يسارا بعد الجسر. inʿaṭafnā yasāran baʿda al-jisr. We turned left after the bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينعطف, yanʿaṭif."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انعطف (inʿaṭafa) is built on the native Arabic root ʿ-ṭ-f, \"to bend, to turn\" (Lane). It is Form VII."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inʿaṭafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inʿaṭafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inʿaṭafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inʿaṭafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inʿaṭafnā yasāran baʿda al-jisr. — We turned left after the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inʿaṭafnā yasāran baʿda al-jisr.* — We turned left after the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for traffic, then the Arabic for congestion, then say inʿaṭafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for traffic, then the Arabic for congestion, then say *inʿaṭafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انعطف (inʿaṭafa) mean? (\"To turn off; to turn (left or right)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

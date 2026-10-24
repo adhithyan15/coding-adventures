@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 548,
+  "sourceHash": "fnv1a64:69fc1ead9a5847e0",
+  "lessonIds": [
+    "AR-C548-sibaha",
+    "AR-C548-mulakama",
+    "AR-C548-saraa",
+    "AR-C548-nafasa",
+    "AR-C548-lakama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch548.txt",
+  "json": "arabic/narration/ch548.json",
+  "textHash": "fnv1a64:90f87498d5a9bb9d",
+  "jsonHash": "fnv1a64:0368124607a6e84e",
+  "findings": []
+}

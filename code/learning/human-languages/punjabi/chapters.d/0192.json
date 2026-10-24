@@ -1,0 +1,18 @@
+{
+  "chapter": 192,
+  "title": "People Before Postpositions",
+  "label": "ch:pa-a2-lokaan-oblique",
+  "canDo": "I can distinguish the standalone word for people from its form before three familiar postpositions.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C192-payoff",
+    "kind": "production",
+    "summary": "Contrast standalone people with three familiar postposition phrases through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-FORM-LOKAAN-OBLIQUE-192"
+    ],
+    "note": "This fifteenth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

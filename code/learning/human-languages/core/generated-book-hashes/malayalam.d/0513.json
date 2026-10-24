@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:648795848d5bf33f",
+  "lessonIds": [
+    "ML-C513-kyampu",
+    "ML-C513-duritasvasam",
+    "ML-C513-itiyuka",
+    "ML-C513-katapulakuka",
+    "ML-C513-valayuka"
+  ],
+  "tex": "malayalam/book/chapters/ch513-after-the-storm.tex"
+}

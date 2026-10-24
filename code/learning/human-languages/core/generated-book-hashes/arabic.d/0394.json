@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:b7abf5aa72e5d9eb",
+  "lessonIds": [
+    "AR-C394-atqana",
+    "AR-C394-iktasaba",
+    "AR-C394-taammaqa",
+    "AR-C394-lakhkhasa",
+    "AR-C394-mulakhkhas"
+  ],
+  "tex": "arabic/book/chapters/ch394-learning-well.tex"
+}

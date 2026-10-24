@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Lights and Fireworks",
+  "label": "ch:bn-lights-and-fireworks",
+  "canDo": "I can describe festival lights, floor paintings and fireworks.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C305-phanus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can describe festival lights, floor paintings and fireworks.",
+    "assesses": [
+      "BN-LEX-C305-PRODIP305-03",
+      "BN-LEX-C305-PRODIP305-04",
+      "BN-LEX-C305-PRODIP305-05"
+    ]
+  }
+}

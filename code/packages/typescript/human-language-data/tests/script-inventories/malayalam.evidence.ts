@@ -571,8 +571,38 @@ export const scriptInventoryEvidence = {
       expect(mark.compositionOrder, sign).toBeUndefined();
       expect(missingByScript.get("malayalam.json")?.has(sign) ?? false, sign).toBe(false);
     }
+    // The B1 core (chapters 339-348) writes four independent vowels, ഈ ഐ ഔ ഋ,
+    // and two signs, the au length mark ൗ and the visarga ഃ, each after a word
+    // that holds it. Their rows are recognition-only: no stroke order, lift
+    // count or source. A cited order would need a font-checked ductus in
+    // script-ductus with the same source (its "every verified prose claim"
+    // test), and none has been fitted for these six yet, so the B1 core claims
+    // none and no lesson promises a numbered strip for them.
+    //
+    // The two signs are new rows, appended after ോ; a mark row covers its glyph
+    // as identity, so neither is a glyph gap. The four vowels stay out of
+    // closure (validate.ts covers an independent vowel only once its
+    // handwriting row is source-backed and font-checked), so each anchoring
+    // headword is one glyph gap, held in the corpus queue until a cited row
+    // and its ductus land.
+    for (const glyph of ["ഈ", "ഐ", "ഔ", "ഋ"]) {
+      const row = scripts.malayalam!.independentVowels!.find((entry) => entry.glyph === glyph)!;
+      expect(row, glyph).toBeDefined();
+      expect(row.strokeOrder, glyph).toEqual([]);
+      expect(row.penLifts, glyph).toBeUndefined();
+      expect(row.strokeOrderSource, glyph).toBeUndefined();
+      expect(missingByScript.get("malayalam.json")?.has(glyph) ?? false, glyph).toBe(true);
+    }
+    for (const sign of ["ൗ", "ഃ"]) {
+      const mark = scripts.malayalam!.marks!.find((entry) => entry.mark === sign)!;
+      expect(mark, sign).toBeDefined();
+      expect(mark.strokeOrder, sign).toBeUndefined();
+      expect(mark.penLifts, sign).toBeUndefined();
+      expect(mark.strokeOrderSource, sign).toBeUndefined();
+      expect(missingByScript.get("malayalam.json")?.has(sign) ?? false, sign).toBe(false);
+    }
     expect(scripts.malayalam!.marks!.map((mark) => mark.mark)).toEqual([
-      "ം", "്", "ാ", "ി", "ീ", "ു", "ൂ", "ൃ", "െ", "േ", "ൈ", "ൊ", "ോ",
+      "ം", "്", "ാ", "ി", "ീ", "ു", "ൂ", "ൃ", "െ", "േ", "ൈ", "ൊ", "ോ", "ൗ", "ഃ",
     ]);
   },
 };

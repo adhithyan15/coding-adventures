@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C489-pronam-kora",
+    "language": "bengali",
+    "chapter": 489,
+    "sequence": 29650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a63a3ff9d161738e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 295,
+  "title": "After the Disaster",
+  "label": "ch:mr-after-the-disaster",
+  "canDo": "I can talk about the damage a disaster leaves behind.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-R295-review-288-295",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can talk about the damage a disaster leaves behind.",
+    "assesses": [
+      "MR-LEX-C295-SANKAT295-01",
+      "MR-LEX-C295-SANKAT295-02",
+      "MR-LEX-C295-SANKAT295-03",
+      "MR-LEX-C295-SANKAT295-04",
+      "MR-LEX-C295-SANKAT295-05"
+    ]
+  }
+}

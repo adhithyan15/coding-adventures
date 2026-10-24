@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:87d6ec13d4dec5b0",
+  "lessonIds": [
+    "MR-C483-apcan",
+    "MR-C483-pitta",
+    "MR-C483-julab",
+    "MR-C483-okne",
+    "MR-C483-pacne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch483.txt",
+  "json": "marathi/narration/ch483.json",
+  "textHash": "fnv1a64:d7d84bbf44f592bb",
+  "jsonHash": "fnv1a64:c380b3267bae7a97",
+  "findings": []
+}

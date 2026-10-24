@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Dust and dunes",
+  "label": "ch:ar-dust-and-dunes",
+  "canDo": "I can say fine dust, dusty, desertification, a sand dune and to choke.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C466-ikhtanaqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can say fine dust, dusty, desertification, a sand dune and to choke.",
+    "assesses": [
+      "AR-LEX-C466-GHUBAR466-03",
+      "AR-LEX-C466-GHUBAR466-04",
+      "AR-LEX-C466-GHUBAR466-05"
+    ]
+  }
+}

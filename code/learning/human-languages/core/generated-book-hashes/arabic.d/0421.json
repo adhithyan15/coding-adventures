@@ -1,0 +1,14 @@
+{
+  "language": "arabic",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:83f013a10131626b",
+  "lessonIds": [
+    "AR-C421-fursa",
+    "AR-C421-laalla",
+    "AR-C421-iktishaf",
+    "AR-C421-dhaka",
+    "AR-C421-ijtihad",
+    "AR-R421-review-414-421"
+  ],
+  "tex": "arabic/book/chapters/ch421-chances-and-discoveries.tex"
+}

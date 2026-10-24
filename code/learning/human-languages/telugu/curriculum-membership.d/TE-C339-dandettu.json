@@ -1,0 +1,11 @@
+{
+  "id": "TE-C339-dandettu",
+  "pathSegment": "TE-PATH-339-SAINYAM339",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-339-SAINYAM339",
+      "order": 4
+    }
+  ]
+}

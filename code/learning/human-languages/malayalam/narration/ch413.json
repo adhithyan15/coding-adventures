@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 413,
+  "title": "Opinions and Praise",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a997ebb7ceb8ce88",
+  "lessons": [
+    {
+      "id": "ML-C413-suparsa-ceyyuka",
+      "sequence": 20410,
+      "title": "ശുപാർശ ചെയ്യുക (śupārśa ceyyuka) — to recommend",
+      "headword": "ശുപാർശ ചെയ്യുക",
+      "romanization": "śupārśa ceyyuka",
+      "gloss": "to recommend",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c614dbdf1139a3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for generally, then the Malayalam for that means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശുപാർശ ചെയ്യുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശുപാർശ ചെയ്യുക — śupārśa ceyyuka — \"to recommend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ ആ പുസ്തകം എല്ലാവർക്കും ശുപാർശ ചെയ്യുന്നു. ñān ā pustakaṁ ellāvarkkuṁ śupārśa ceyyunnu. I recommend that book to everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ശുപാർശ ചെയ്തു, śupārśa ceytu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun ശുപാർശ is a recommendation, also a word put in for someone: ഒരു ശുപാർശക്കത്ത്, a letter of recommendation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശുപാർശ ചെയ്യുക (śupārśa ceyyuka) is a phrase verb built on the noun ശുപാർശ, \"a recommendation\", which is usually traced to Persian sifāriš, \"recommendation\"; ചെയ്യുക, \"to do\", makes it a verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śupārśa ceyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śupārśa ceyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śupārśa ceyyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śupārśa ceyyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān ā pustakaṁ ellāvarkkuṁ śupārśa ceyyunnu. — I recommend that book to everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān ā pustakaṁ ellāvarkkuṁ śupārśa ceyyunnu.* — I recommend that book to everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for generally, then the Malayalam for that means, then say śupārśa ceyyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for generally, then the Malayalam for that means, then say *śupārśa ceyyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശുപാർശ ചെയ്യുക (śupārśa ceyyuka) mean? (\"To recommend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C413-abhiprayappetuka",
+      "sequence": 20420,
+      "title": "അഭിപ്രായപ്പെടുക (abhiprāyappeṭuka) — to remark; to opine",
+      "headword": "അഭിപ്രായപ്പെടുക",
+      "romanization": "abhiprāyappeṭuka",
+      "gloss": "to remark; to opine",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e64775311ed78834",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for that means, then the Malayalam for to recommend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അഭിപ്രായപ്പെടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അഭിപ്രായപ്പെടുക — abhiprāyappeṭuka — \"to remark; to opine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ സിനിമ നല്ലതാണെന്ന് എല്ലാവരും അഭിപ്രായപ്പെട്ടു. ā sinima nallatāṇennŭ ellāvaruṁ abhiprāyappeṭṭu. Everyone remarked that the film was good."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അഭിപ്രായപ്പെട്ടു, abhiprāyappeṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on അഭിപ്രായം, an opinion. What is said comes before എന്ന്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അഭിപ്രായപ്പെടുക (abhiprāyappeṭuka) is built on അഭിപ്രായം, \"an opinion\", from Sanskrit abhiprāya, \"intention, opinion\" (Monier-Williams), with -പ്പെടുക from native പെടുക (DEDR 3853): to give an opinion."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhiprāyappeṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhiprāyappeṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhiprāyappeṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhiprāyappeṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā sinima nallatāṇennŭ ellāvaruṁ abhiprāyappeṭṭu. — Everyone remarked that the film was good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā sinima nallatāṇennŭ ellāvaruṁ abhiprāyappeṭṭu.* — Everyone remarked that the film was good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for that means, then the Malayalam for to recommend, then say abhiprāyappeṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for that means, then the Malayalam for to recommend, then say *abhiprāyappeṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അഭിപ്രായപ്പെടുക (abhiprāyappeṭuka) mean? (\"To remark; to opine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C413-prasamsikkuka",
+      "sequence": 20430,
+      "title": "പ്രശംസിക്കുക (praśaṁsikkuka) — to commend; to praise",
+      "headword": "പ്രശംസിക്കുക",
+      "romanization": "praśaṁsikkuka",
+      "gloss": "to commend; to praise",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89a994c9527aa693",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to recommend, then the Malayalam for to remark."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രശംസിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രശംസിക്കുക — praśaṁsikkuka — \"to commend; to praise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അധ്യാപകൻ അവളുടെ ഉപന്യാസത്തെ പ്രശംസിച്ചു. adhyāpakan avaḷuṭe upanyāsatte praśaṁsiccu. The teacher praised her essay."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പ്രശംസിച്ചു, praśaṁsiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "What is praised takes -നെ. The noun is പ്രശംസ, praise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രശംസിക്കുക (praśaṁsikkuka) is built from Sanskrit praśaṁsā, \"praise, commendation\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśaṁsikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśaṁsikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśaṁsikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśaṁsikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhyāpakan avaḷuṭe upanyāsatte praśaṁsiccu. — The teacher praised her essay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhyāpakan avaḷuṭe upanyāsatte praśaṁsiccu.* — The teacher praised her essay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to recommend, then the Malayalam for to remark, then say praśaṁsikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to recommend, then the Malayalam for to remark, then say *praśaṁsikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രശംസിക്കുക (praśaṁsikkuka) mean? (\"To commend; to praise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C413-prerippikkuka",
+      "sequence": 20440,
+      "title": "പ്രേരിപ്പിക്കുക (prērippikkuka) — to urge; to motivate",
+      "headword": "പ്രേരിപ്പിക്കുക",
+      "romanization": "prērippikkuka",
+      "gloss": "to urge; to motivate",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23372119256e0fb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to remark, then the Malayalam for to commend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രേരിപ്പിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രേരിപ്പിക്കുക — prērippikkuka — \"to urge; to motivate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കൂട്ടുകാർ അവനെ ആ ജോലി ഉപേക്ഷിക്കാൻ പ്രേരിപ്പിച്ചു. kūṭṭukār avane ā jōli upēkṣikkān prērippiccu. His friends urged him to give up that job."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പ്രേരിപ്പിച്ചു, prērippiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is പ്രേരണ, an urging, a motive."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രേരിപ്പിക്കുക (prērippikkuka) is built from Sanskrit preraṇa, \"driving on, urging\" (CDIAL 9000), with the Malayalam verb ending -ിപ്പിക്കുക. It is the verb of പ്രേരണ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prērippikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prērippikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prērippikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prērippikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭṭukār avane ā jōli upēkṣikkān prērippiccu. — His friends urged him to give up that job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭṭukār avane ā jōli upēkṣikkān prērippiccu.* — His friends urged him to give up that job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to remark, then the Malayalam for to commend, then say prērippikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to remark, then the Malayalam for to commend, then say *prērippikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രേരിപ്പിക്കുക (prērippikkuka) mean? (\"To urge; to motivate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C413-prakatippikkuka",
+      "sequence": 20450,
+      "title": "പ്രകടിപ്പിക്കുക (prakaṭippikkuka) — to express; to show",
+      "headword": "പ്രകടിപ്പിക്കുക",
+      "romanization": "prakaṭippikkuka",
+      "gloss": "to express; to show",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90377a874a9dee4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to commend, then the Malayalam for to urge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രകടിപ്പിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രകടിപ്പിക്കുക — prakaṭippikkuka — \"to express; to show\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ തന്റെ നന്ദി ഒരു കത്തിലൂടെ പ്രകടിപ്പിച്ചു. avan tanṟe nandi oru kattilūṭe prakaṭippiccu. He expressed his thanks in a letter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പ്രകടിപ്പിച്ചു, prakaṭippiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of feelings and opinions: അഭിപ്രായം പ്രകടിപ്പിക്കുക (prakaṭippikkuka), to express an opinion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രകടിപ്പിക്കുക (prakaṭippikkuka) is built from Sanskrit prakaṭana, \"bringing to light\" (CDIAL 8429), with the Malayalam causative verb ending -ിപ്പിക്കുക: to bring a feeling to light."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakaṭippikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakaṭippikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakaṭippikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakaṭippikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan tanṟe nandi oru kattilūṭe prakaṭippiccu. — He expressed his thanks in a letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan tanṟe nandi oru kattilūṭe prakaṭippiccu.* — He expressed his thanks in a letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to commend, then the Malayalam for to urge, then say prakaṭippikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to commend, then the Malayalam for to urge, then say *prakaṭippikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രകടിപ്പിക്കുക (prakaṭippikkuka) mean? (\"To express; to show\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

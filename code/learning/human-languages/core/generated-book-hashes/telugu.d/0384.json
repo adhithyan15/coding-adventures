@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:c7eb50345e31b779",
+  "lessonIds": [
+    "TE-C384-sucincu",
+    "TE-C384-pratipadincu",
+    "TE-C384-pratipadana",
+    "TE-C384-sipharsu-ceyu",
+    "TE-C384-amsam"
+  ],
+  "tex": "telugu/book/chapters/ch384-suggestions-and-proposals.tex"
+}

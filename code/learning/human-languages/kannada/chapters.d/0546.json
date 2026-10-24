@@ -1,0 +1,21 @@
+{
+  "chapter": 546,
+  "title": "Home Comforts",
+  "label": "ch:ka-home-comforts",
+  "canDo": "I can say a kitchen garden, a neighbourhood, lime, a terrace and to puff.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-R546-review-final-546",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 546: I can say a kitchen garden, a neighbourhood, lime, a terrace and to puff.",
+    "assesses": [
+      "KA-LEX-C546-NEMMADI546-01",
+      "KA-LEX-C546-NEMMADI546-02",
+      "KA-LEX-C546-NEMMADI546-03",
+      "KA-LEX-C546-NEMMADI546-04",
+      "KA-LEX-C546-NEMMADI546-05"
+    ]
+  }
+}

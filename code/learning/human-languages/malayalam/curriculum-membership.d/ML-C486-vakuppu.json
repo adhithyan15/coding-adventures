@@ -1,0 +1,11 @@
+{
+  "id": "ML-C486-vakuppu",
+  "pathSegment": "ML-PATH-486-OPHIS486",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-486-OPHIS486",
+      "order": 1
+    }
+  ]
+}

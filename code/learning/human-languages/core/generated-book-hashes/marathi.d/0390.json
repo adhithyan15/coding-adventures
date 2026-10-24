@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:50cae122e12f9803",
+  "lessonIds": [
+    "MR-C390-ekun",
+    "MR-C390-ekandarit",
+    "MR-C390-tattva",
+    "MR-C390-vises",
+    "MR-C390-vyatirikta"
+  ],
+  "tex": "marathi/book/chapters/ch390-on-the-whole.tex"
+}

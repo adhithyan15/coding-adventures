@@ -1,0 +1,11 @@
+{
+  "id": "TA-C532-malyuttam",
+  "pathSegment": "TA-PATH-532-SANDAI532",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-532-SANDAI532",
+      "order": 1
+    }
+  ]
+}

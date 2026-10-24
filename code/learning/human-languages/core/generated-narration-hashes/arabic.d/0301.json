@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:1cad2d18a86f8336",
+  "lessonIds": [
+    "AR-C301-istadama",
+    "AR-C301-inqalaba",
+    "AR-C301-dahiyya",
+    "AR-C301-jarih",
+    "AR-C301-asafa-aid"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch301.txt",
+  "json": "arabic/narration/ch301.json",
+  "textHash": "fnv1a64:aa4a21d3f3f96b15",
+  "jsonHash": "fnv1a64:7ccbdf26b214630b",
+  "findings": []
+}

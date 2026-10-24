@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C500-todarok-kora",
+    "language": "bengali",
+    "chapter": 500,
+    "sequence": 30450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4404317e3740581f"
+  },
+  "findings": []
+}

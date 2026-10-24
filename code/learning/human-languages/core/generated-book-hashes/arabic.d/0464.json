@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:9bf0c8040451c664",
+  "lessonIds": [
+    "AR-C464-talawwuth",
+    "AR-C464-mulawwath",
+    "AR-C464-nufayat",
+    "AR-C464-lawwatha",
+    "AR-C464-faraza"
+  ],
+  "tex": "arabic/book/chapters/ch464-pollution.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C455-ghusmatne",
+    "language": "marathi",
+    "chapter": 455,
+    "sequence": 26290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc539ef71b6ff104"
+  },
+  "findings": []
+}

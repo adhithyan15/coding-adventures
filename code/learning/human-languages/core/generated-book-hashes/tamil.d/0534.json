@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:7de67b1282d9f957",
+  "lessonIds": [
+    "TA-C534-torkati",
+    "TA-C534-camanilai",
+    "TA-C534-natuvar",
+    "TA-C534-patakkam",
+    "TA-C534-vakaiyalar"
+  ],
+  "tex": "tamil/book/chapters/ch534-winning-and-losing.tex"
+}

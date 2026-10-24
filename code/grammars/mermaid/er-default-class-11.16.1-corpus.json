@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER default class precedence vertical slice",
+  "fixtures": [
+    {
+      "name": "default-class-precedence",
+      "source": "erDiagram\nCAR ||--|| PERSON:::blue : owns\nPERSON ||--|| HOUSE : visits\nCAR {\n  string registration PK\n}\nPERSON {\n  string name\n}\nHOUSE {\n  string address\n}\nclassDef default fill:#fce7f3,stroke:#be185d,stroke-width:4px;\nclassDef blue fill:#dbeafe,stroke:#1d4ed8,color:#172554\nstyle HOUSE fill:#fef3c7,stroke:#b45309"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C399-savalattu",
+  "pathSegment": "KA-PATH-399-BADATANA399",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-399-BADATANA399",
+      "order": 2
+    }
+  ]
+}

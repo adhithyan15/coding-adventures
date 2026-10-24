@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:c243d9e3896781b0",
+  "lessonIds": [
+    "HI-C541-rukavat",
+    "HI-C541-jhamela",
+    "HI-C541-atkana",
+    "HI-C541-phanda",
+    "HI-C541-uljhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch541.txt",
+  "json": "hindi/narration/ch541.json",
+  "textHash": "fnv1a64:e04e7f70c62fb324",
+  "jsonHash": "fnv1a64:32ff89da54ebb51c",
+  "findings": []
+}

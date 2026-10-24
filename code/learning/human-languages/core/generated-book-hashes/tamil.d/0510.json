@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:58bbe3b9fb9d0655",
+  "lessonIds": [
+    "TA-C510-urpatti",
+    "TA-C510-poruttu",
+    "TA-C510-orunkinai",
+    "TA-C510-atukku",
+    "TA-C510-ala"
+  ],
+  "tex": "tamil/book/chapters/ch510-the-factory-floor.tex"
+}

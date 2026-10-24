@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C401-arthika",
+    "language": "kannada",
+    "chapter": 401,
+    "sequence": 20290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7c05677db57f0e9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 559,
+  "sourceHash": "fnv1a64:89dc9937591332d8",
+  "lessonIds": [
+    "HI-C559-kalpna",
+    "HI-C559-suruat",
+    "HI-C559-udghatan",
+    "HI-C559-bhavi",
+    "HI-C559-zindagi",
+    "HI-R559-review-553-559",
+    "HI-R559-review-final-559"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch559.txt",
+  "json": "hindi/narration/ch559.json",
+  "textHash": "fnv1a64:1251db258dd905e4",
+  "jsonHash": "fnv1a64:b148b0b67e389bef",
+  "findings": []
+}

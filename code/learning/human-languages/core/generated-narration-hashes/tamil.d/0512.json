@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:dcd55ea546b0c0b0",
+  "lessonIds": [
+    "TA-C512-paninikkam",
+    "TA-C512-patavi-vilaku",
+    "TA-C512-oyvu-peru",
+    "TA-C512-itamarram",
+    "TA-C512-totanku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch512.txt",
+  "json": "tamil/narration/ch512.json",
+  "textHash": "fnv1a64:c4451fb1ffd6e0aa",
+  "jsonHash": "fnv1a64:2479d4cd36bd2573",
+  "findings": []
+}

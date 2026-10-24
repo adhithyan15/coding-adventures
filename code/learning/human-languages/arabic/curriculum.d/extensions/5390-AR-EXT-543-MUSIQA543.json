@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-543-MUSIQA543",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a melody, a rhythm, a composer and a choir, and say that someone played an instrument.",
+  "prerequisites": []
+}

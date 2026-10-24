@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C386-utti",
+    "language": "tamil",
+    "chapter": 386,
+    "sequence": 22100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1b6a36f12c8e635"
+  },
+  "findings": []
+}

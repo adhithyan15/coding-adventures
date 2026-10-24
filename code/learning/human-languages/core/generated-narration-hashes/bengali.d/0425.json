@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:2ce784259e9b9cfb",
+  "lessonIds": [
+    "BN-C425-megh",
+    "BN-C425-borsha",
+    "BN-C425-musholdhare",
+    "BN-C425-bojropat",
+    "BN-C425-chhaoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch425.txt",
+  "json": "bengali/narration/ch425.json",
+  "textHash": "fnv1a64:277d3585eec05648",
+  "jsonHash": "fnv1a64:4e0b0de090dc2d58",
+  "findings": []
+}

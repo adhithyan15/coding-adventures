@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C488-paruman",
+    "language": "tamil",
+    "chapter": 488,
+    "sequence": 27890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:146857088a35b481"
+  },
+  "findings": []
+}

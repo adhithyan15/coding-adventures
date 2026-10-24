@@ -1,0 +1,11 @@
+{
+  "id": "HI-C359-cherna",
+  "pathSegment": "HI-PATH-359-MUDDA359",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-359-MUDDA359",
+      "order": 4
+    }
+  ]
+}

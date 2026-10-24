@@ -1,0 +1,22 @@
+{
+  "chapter": 290,
+  "title": "Feelings and Hopes",
+  "label": "ch:ta-feelings-and-hopes",
+  "canDo": "I can say how I felt with eṉakkuk kōpam vantatu and eṉakkuc cantōṣamāka iruntatu, say what I long for with ācai and virumpukiṟēṉ, and name a goal (ilakku) and what I want to become.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R290-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: say how you felt, what you long for and what you aim to become.",
+    "assesses": [
+      "TA-LEX-C290-ACAI-01",
+      "TA-LEX-C290-ILAKKU-01",
+      "TA-GRAMMAR-C290-FEELING-DATIVE-01",
+      "TA-GRAMMAR-C290-FEELING-STATE-01",
+      "TA-GRAMMAR-C290-WISH-01",
+      "TA-GRAMMAR-C290-BECOME-01"
+    ]
+  }
+}

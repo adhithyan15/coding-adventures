@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:278929257c82c4c5",
+  "lessonIds": [
+    "BN-C400-thikana",
+    "BN-C400-chihno",
+    "BN-C400-ulto",
+    "BN-C400-nirdesh",
+    "BN-C400-inggit-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch400.txt",
+  "json": "bengali/narration/ch400.json",
+  "textHash": "fnv1a64:93fda0267bd40e32",
+  "jsonHash": "fnv1a64:10d6cd6637b57078",
+  "findings": []
+}

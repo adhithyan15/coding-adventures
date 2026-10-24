@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:347384498dbf8eab",
+  "lessonIds": [
+    "KA-C347-suddigosthi",
+    "KA-C347-prasnisu",
+    "KA-C347-pratikriyisu",
+    "KA-C347-ullekhisu",
+    "KA-C347-saramsa",
+    "KA-R347-review-341-347"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch347.txt",
+  "json": "kannada/narration/ch347.json",
+  "textHash": "fnv1a64:8041c79931ecfe35",
+  "jsonHash": "fnv1a64:74c53f45048a7b2d",
+  "findings": []
+}

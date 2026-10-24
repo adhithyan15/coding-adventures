@@ -1,0 +1,11 @@
+{
+  "id": "BN-C301-biboron",
+  "pathSegment": "BN-PATH-301-BIBORON301",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-301-BIBORON301",
+      "order": 1
+    }
+  ]
+}

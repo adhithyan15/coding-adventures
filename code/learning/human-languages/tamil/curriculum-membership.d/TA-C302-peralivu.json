@@ -1,0 +1,11 @@
+{
+  "id": "TA-C302-peralivu",
+  "pathSegment": "TA-PATH-302-AZHIVU302",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-302-AZHIVU302",
+      "order": 0
+    }
+  ]
+}

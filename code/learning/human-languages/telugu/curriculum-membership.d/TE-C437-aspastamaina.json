@@ -1,0 +1,11 @@
+{
+  "id": "TE-C437-aspastamaina",
+  "pathSegment": "TE-PATH-437-SANKLISTAM437",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-437-SANKLISTAM437",
+      "order": 2
+    }
+  ]
+}

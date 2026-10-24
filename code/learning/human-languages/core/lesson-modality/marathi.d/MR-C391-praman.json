@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C391-praman",
+    "language": "marathi",
+    "chapter": 391,
+    "sequence": 22540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe374d5ae09c689b"
+  },
+  "findings": []
+}

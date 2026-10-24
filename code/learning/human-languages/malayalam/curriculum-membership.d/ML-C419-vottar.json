@@ -1,0 +1,11 @@
+{
+  "id": "ML-C419-vottar",
+  "pathSegment": "ML-PATH-419-VOTTU419",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-419-VOTTU419",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R347-if-and-otherwise",
+    "language": "malayalam",
+    "chapter": 347,
+    "sequence": 16520,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:39ecb4a01398392e"
+  },
+  "findings": []
+}

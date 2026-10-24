@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 565,
+  "sourceHash": "fnv1a64:c08e893562d8a202",
+  "lessonIds": [
+    "ML-C565-citrakaran",
+    "ML-C565-samgitajnan",
+    "ML-C565-narttaki",
+    "ML-C565-eluttukaran",
+    "ML-C565-nirmmikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch565.txt",
+  "json": "malayalam/narration/ch565.json",
+  "textHash": "fnv1a64:9619c198c58524aa",
+  "jsonHash": "fnv1a64:7914bedbda1a4a6a",
+  "findings": []
+}

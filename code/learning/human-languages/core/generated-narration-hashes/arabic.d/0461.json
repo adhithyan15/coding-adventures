@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:4b6441d1f6088cd2",
+  "lessonIds": [
+    "AR-C461-ilgha",
+    "AR-C461-tajil",
+    "AR-C461-algha",
+    "AR-C461-fawwata",
+    "AR-C461-dayyaa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch461.txt",
+  "json": "arabic/narration/ch461.json",
+  "textHash": "fnv1a64:101955649fbf59ec",
+  "jsonHash": "fnv1a64:fe3dc99ee0f7f0a5",
+  "findings": []
+}

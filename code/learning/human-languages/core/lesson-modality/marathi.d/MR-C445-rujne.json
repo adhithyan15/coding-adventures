@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C445-rujne",
+    "language": "marathi",
+    "chapter": 445,
+    "sequence": 25520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f705ee59024c1a1"
+  },
+  "findings": []
+}

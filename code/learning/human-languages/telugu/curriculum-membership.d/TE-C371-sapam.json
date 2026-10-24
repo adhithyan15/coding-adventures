@@ -1,0 +1,11 @@
+{
+  "id": "TE-C371-sapam",
+  "pathSegment": "TE-PATH-371-MAYA371",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-371-MAYA371",
+      "order": 4
+    }
+  ]
+}

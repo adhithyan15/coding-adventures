@@ -1,0 +1,11 @@
+{
+  "id": "TA-C489-kurattai-vitu",
+  "pathSegment": "TA-PATH-489-TUKKAM489",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-489-TUKKAM489",
+      "order": 1
+    }
+  ]
+}

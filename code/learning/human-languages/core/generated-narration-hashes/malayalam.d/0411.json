@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:281f1389257aa318",
+  "lessonIds": [
+    "ML-C411-atinal",
+    "ML-C411-ayatinal",
+    "ML-C411-mulam",
+    "ML-C411-yathartthattil",
+    "ML-C411-vastavattil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch411.txt",
+  "json": "malayalam/narration/ch411.json",
+  "textHash": "fnv1a64:24e5730cb922a3fe",
+  "jsonHash": "fnv1a64:b0035868b4db7cf7",
+  "findings": []
+}

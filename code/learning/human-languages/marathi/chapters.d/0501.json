@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Hugs and Pats",
+  "label": "ch:mr-hugs-and-pats",
+  "canDo": "I can talk about a touch, a hug, a pat and a caress.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C501-kurvalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can talk about a touch, a hug, a pat and a caress.",
+    "assesses": [
+      "MR-LEX-C501-MITHI501-03",
+      "MR-LEX-C501-MITHI501-04",
+      "MR-LEX-C501-MITHI501-05"
+    ]
+  }
+}

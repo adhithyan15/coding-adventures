@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Daring and Fearful",
+  "label": "ch:mr-daring-and-fearful",
+  "canDo": "I can describe a daring, fearful or carefree person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C475-bhine",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can describe a daring, fearful or carefree person.",
+    "assesses": [
+      "MR-LEX-C475-SAHAS475-03",
+      "MR-LEX-C475-SAHAS475-04",
+      "MR-LEX-C475-SAHAS475-05"
+    ]
+  }
+}

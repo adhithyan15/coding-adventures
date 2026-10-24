@@ -1,0 +1,11 @@
+{
+  "id": "AR-C376-akadimi",
+  "pathSegment": "AR-PATH-376-ILM376",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-376-ILM376",
+      "order": 4
+    }
+  ]
+}

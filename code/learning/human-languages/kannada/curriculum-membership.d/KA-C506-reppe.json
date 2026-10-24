@@ -1,0 +1,11 @@
+{
+  "id": "KA-C506-reppe",
+  "pathSegment": "KA-PATH-506-NIDDE506",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-506-NIDDE506",
+      "order": 4
+    }
+  ]
+}

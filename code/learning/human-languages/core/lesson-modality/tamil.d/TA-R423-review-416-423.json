@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R423-review-416-423",
+    "language": "tamil",
+    "chapter": 423,
+    "sequence": 24320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cbd0b358ca0fd89"
+  },
+  "findings": []
+}

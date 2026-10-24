@@ -1,0 +1,11 @@
+{
+  "id": "BN-C282-poketmar",
+  "pathSegment": "BN-PATH-282-CHURI282",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-282-CHURI282",
+      "order": 4
+    }
+  ]
+}

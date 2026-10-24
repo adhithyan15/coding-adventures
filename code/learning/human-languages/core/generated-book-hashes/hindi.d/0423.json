@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:4bd2ccbd60a194e7",
+  "lessonIds": [
+    "HI-C423-gard",
+    "HI-C423-khambha",
+    "HI-C423-sor",
+    "HI-C423-gurrana",
+    "HI-C423-bhaukna"
+  ],
+  "tex": "hindi/book/chapters/ch423-guards-and-street-dogs.tex"
+}

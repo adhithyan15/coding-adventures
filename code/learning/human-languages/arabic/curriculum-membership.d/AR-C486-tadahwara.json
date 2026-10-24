@@ -1,0 +1,11 @@
+{
+  "id": "AR-C486-tadahwara",
+  "pathSegment": "AR-PATH-486-TAQALLUB486",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-486-TAQALLUB486",
+      "order": 1
+    }
+  ]
+}

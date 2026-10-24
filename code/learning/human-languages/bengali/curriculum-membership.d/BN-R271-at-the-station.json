@@ -1,0 +1,11 @@
+{
+  "id": "BN-R271-at-the-station",
+  "pathSegment": "BN-PATH-271-TICKET-TROUBLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-271-TICKET-TROUBLE",
+      "order": 4
+    }
+  ]
+}

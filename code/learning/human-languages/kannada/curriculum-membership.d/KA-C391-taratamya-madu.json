@@ -1,0 +1,11 @@
+{
+  "id": "KA-C391-taratamya-madu",
+  "pathSegment": "KA-PATH-391-SAMANATE391",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-391-SAMANATE391",
+      "order": 1
+    }
+  ]
+}

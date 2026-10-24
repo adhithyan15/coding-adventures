@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-467-YATANA467",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-467-YATANA467"
+  ],
+  "after": []
+}

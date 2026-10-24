@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:56e4cc8d698be8f4",
+  "lessonIds": [
+    "ML-C528-sathyam",
+    "ML-C528-kathinadhvani",
+    "ML-C528-subhaptivisvasam",
+    "ML-C528-atmartthata",
+    "ML-C528-accatakkam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch528.txt",
+  "json": "malayalam/narration/ch528.json",
+  "textHash": "fnv1a64:5fd165c7b23e281e",
+  "jsonHash": "fnv1a64:e50943abf59be475",
+  "findings": []
+}

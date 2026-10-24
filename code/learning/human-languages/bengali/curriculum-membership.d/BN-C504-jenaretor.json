@@ -1,0 +1,11 @@
+{
+  "id": "BN-C504-jenaretor",
+  "pathSegment": "BN-PATH-504-JONTRO504",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-504-JONTRO504",
+      "order": 2
+    }
+  ]
+}

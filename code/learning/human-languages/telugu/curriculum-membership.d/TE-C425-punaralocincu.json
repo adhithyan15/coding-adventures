@@ -1,0 +1,11 @@
+{
+  "id": "TE-C425-punaralocincu",
+  "pathSegment": "TE-PATH-425-NIRNAYAM425",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-425-NIRNAYAM425",
+      "order": 4
+    }
+  ]
+}

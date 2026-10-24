@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C537-ogotya",
+    "language": "bengali",
+    "chapter": 537,
+    "sequence": 32310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50754d9ce714e094"
+  },
+  "findings": []
+}

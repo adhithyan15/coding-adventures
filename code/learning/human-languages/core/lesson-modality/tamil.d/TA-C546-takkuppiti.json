@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C546-takkuppiti",
+    "language": "tamil",
+    "chapter": 546,
+    "sequence": 31190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdf3c912e1575ad5"
+  },
+  "findings": []
+}

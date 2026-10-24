@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C294-madatkarya",
+    "language": "marathi",
+    "chapter": 294,
+    "sequence": 17320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a24bd0fd69dce87e"
+  },
+  "findings": []
+}

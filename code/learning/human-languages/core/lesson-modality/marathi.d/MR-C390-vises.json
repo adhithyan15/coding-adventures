@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C390-vises",
+    "language": "marathi",
+    "chapter": 390,
+    "sequence": 22490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a214a8e71fbac0c7"
+  },
+  "findings": []
+}

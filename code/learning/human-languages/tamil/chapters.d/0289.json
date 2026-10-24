@@ -1,0 +1,21 @@
+{
+  "chapter": 289,
+  "title": "Tickets, Seats and Trouble",
+  "label": "ch:ta-tickets-seats-and-trouble",
+  "canDo": "I can buy a ticket with … oru cīṭṭu koṭuṅkaḷ, ask for a seat (irukkai) and when a train leaves, and report a problem: a bag that is missing (kāṇavillai), a passport that is lost, a bus I missed.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-R289-at-the-station",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: buy a ticket, ask for a seat and a time, and report something lost or missed.",
+    "assesses": [
+      "TA-LEX-C289-IRUKKAI-01",
+      "TA-GRAMMAR-C289-BUY-TICKET-01",
+      "TA-GRAMMAR-C289-WHEN-LEAVES-01",
+      "TA-GRAMMAR-C289-LOST-REPORT-01",
+      "TA-GRAMMAR-C289-MISSED-01"
+    ]
+  }
+}

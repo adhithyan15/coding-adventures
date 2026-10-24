@@ -1,0 +1,11 @@
+{
+  "id": "MR-C424-ghauk",
+  "pathSegment": "MR-PATH-424-VIKRI424",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-424-VIKRI424",
+      "order": 2
+    }
+  ]
+}

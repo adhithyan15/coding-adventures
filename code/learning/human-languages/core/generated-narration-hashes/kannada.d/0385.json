@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:df79ec23fec41362",
+  "lessonIds": [
+    "KA-C385-prabhava",
+    "KA-C385-badhisu",
+    "KA-C385-untagu",
+    "KA-C385-pravrtti",
+    "KA-C385-mula"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch385.txt",
+  "json": "kannada/narration/ch385.json",
+  "textHash": "fnv1a64:2d8bafbfdc87bfbf",
+  "jsonHash": "fnv1a64:86547e0a10e0727c",
+  "findings": []
+}

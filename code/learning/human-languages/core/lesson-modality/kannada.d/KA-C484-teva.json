@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C484-teva",
+    "language": "kannada",
+    "chapter": 484,
+    "sequence": 24650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa21e4e640a4dadd"
+  },
+  "findings": []
+}

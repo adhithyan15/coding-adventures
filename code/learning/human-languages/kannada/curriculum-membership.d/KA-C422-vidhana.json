@@ -1,0 +1,11 @@
+{
+  "id": "KA-C422-vidhana",
+  "pathSegment": "KA-PATH-422-MANADANDA422",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-422-MANADANDA422",
+      "order": 3
+    }
+  ]
+}

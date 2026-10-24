@@ -1,0 +1,19 @@
+{
+  "chapter": 553,
+  "title": "Orphans, Steps and Siblings",
+  "label": "ch:ml-orphans-steps-and-siblings",
+  "canDo": "I can say a cradle, to adopt, a stepmother, a sibling and a brother.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C553-sahodaran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 553: I can say a cradle, to adopt, a stepmother, a sibling and a brother.",
+    "assesses": [
+      "ML-LEX-C553-SAHODARAN553-03",
+      "ML-LEX-C553-SAHODARAN553-04",
+      "ML-LEX-C553-SAHODARAN553-05"
+    ]
+  }
+}

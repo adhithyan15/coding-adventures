@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C447-tavanai",
+    "language": "tamil",
+    "chapter": 447,
+    "sequence": 25520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08a3d817e4140ae6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C468-tuval",
+  "pathSegment": "TA-PATH-468-CORVU468",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-468-CORVU468",
+      "order": 2
+    }
+  ]
+}

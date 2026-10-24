@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C381-tegincu",
+    "language": "telugu",
+    "chapter": 381,
+    "sequence": 18810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a52ed2cf51fe8a70"
+  },
+  "findings": []
+}

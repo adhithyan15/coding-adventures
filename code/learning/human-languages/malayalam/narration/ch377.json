@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 377,
+  "title": "Earthquake and Landslide",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ee0b32d5ad4f4b73",
+  "lessons": [
+    {
+      "id": "ML-C377-bhukampam",
+      "sequence": 18430,
+      "title": "ഭൂകമ്പം (bhūkampaṁ) — an earthquake",
+      "headword": "ഭൂകമ്പം",
+      "romanization": "bhūkampaṁ",
+      "gloss": "an earthquake",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37bf4645bdff5d83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to get hurt, then the Malayalam for to drown."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഭൂകമ്പം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭൂകമ്പം — bhūkampaṁ — \"an earthquake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഭൂകമ്പത്തിൽ നഗരത്തിലെ ഒരുപാട് കെട്ടിടങ്ങൾ തകർന്നു. bhūkampattil nagarattile orupāṭŭ keṭṭiṭaṅṅaḷ takarnnu. Many buildings in the city collapsed in the earthquake."
+            },
+            {
+              "kind": "speech",
+              "text": "ഭൂ, the earth, + കമ്പം, trembling."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭൂകമ്പം (bhūkampaṁ) is borrowed from Sanskrit bhūkampa, \"an earthquake\" (CDIAL 9547), made of bhū, \"the earth\", and kampa, \"trembling\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūkampaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūkampaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūkampaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūkampaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūkampattil nagarattile orupāṭŭ keṭṭiṭaṅṅaḷ takarnnu. — Many buildings in the city collapsed in the earthquake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūkampattil nagarattile orupāṭŭ keṭṭiṭaṅṅaḷ takarnnu.* — Many buildings in the city collapsed in the earthquake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to get hurt, then the Malayalam for to drown, then say bhūkampaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to get hurt, then the Malayalam for to drown, then say *bhūkampaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഭൂകമ്പം (bhūkampaṁ) mean? (\"An earthquake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C377-urulpottal",
+      "sequence": 18440,
+      "title": "ഉരുൾപൊട്ടൽ (uruḷpoṭṭal) — a landslide",
+      "headword": "ഉരുൾപൊട്ടൽ",
+      "romanization": "uruḷpoṭṭal",
+      "gloss": "a landslide",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:caf8bad6d8568ecb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to drown, then the Malayalam for an earthquake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉരുൾപൊട്ടൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉരുൾപൊട്ടൽ — uruḷpoṭṭal — \"a landslide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മലയിൽ ഉരുൾപൊട്ടൽ ഉണ്ടായി. malayil uruḷpoṭṭal uṇṭāyi. There was a landslide on the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Common on the hills in the rainy season."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉരുൾപൊട്ടൽ (uruḷpoṭṭal) is a native Dravidian compound of ഉരുൾ, \"a rolling\" (DEDR 664), and പൊട്ടൽ, \"a bursting\", from പൊട്ടുക (DEDR 4490): the hillside bursts and rolls down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uruḷpoṭṭal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uruḷpoṭṭal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uruḷpoṭṭal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uruḷpoṭṭal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malayil uruḷpoṭṭal uṇṭāyi. — There was a landslide on the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malayil uruḷpoṭṭal uṇṭāyi.* — There was a landslide on the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to drown, then the Malayalam for an earthquake, then say uruḷpoṭṭal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to drown, then the Malayalam for an earthquake, then say *uruḷpoṭṭal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉരുൾപൊട്ടൽ (uruḷpoṭṭal) mean? (\"A landslide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C377-oliccupokuka",
+      "sequence": 18450,
+      "title": "ഒലിച്ചുപോകുക (oliccupōkuka) — to be washed away",
+      "headword": "ഒലിച്ചുപോകുക",
+      "romanization": "oliccupōkuka",
+      "gloss": "to be washed away",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:116d621848ea9a03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an earthquake, then the Malayalam for a landslide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഒലിച്ചുപോകുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒലിച്ചുപോകുക — oliccupōkuka — \"to be washed away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വെള്ളപ്പൊക്കത്തിൽ പാലം ഒലിച്ചുപോയി. veḷḷappokkattil pālaṁ oliccupōyi. The bridge was washed away in the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഒലിച്ചുപോയി, oliccupōyi."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒലിക്കുക, to flow, + പോകുക, to go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒലിച്ചുപോകുക (oliccupōkuka) joins the native verb ഒലിക്കുക, \"to flow, to run as water\" (DEDR 999), and പോകുക (pōkuka), \"to go\": to go off with the flowing water."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oliccupōkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oliccupōkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oliccupōkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oliccupōkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷappokkattil pālaṁ oliccupōyi. — The bridge was washed away in the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷappokkattil pālaṁ oliccupōyi.* — The bridge was washed away in the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an earthquake, then the Malayalam for a landslide, then say oliccupōkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an earthquake, then the Malayalam for a landslide, then say *oliccupōkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഒലിച്ചുപോകുക (oliccupōkuka) mean? (\"To be washed away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C377-orrappetuka",
+      "sequence": 18460,
+      "title": "ഒറ്റപ്പെടുക (oṟṟappeṭuka) — to be cut off; to be isolated",
+      "headword": "ഒറ്റപ്പെടുക",
+      "romanization": "oṟṟappeṭuka",
+      "gloss": "to be cut off; to be isolated",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18fcbe3e3741a02c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a landslide, then the Malayalam for to be washed away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഒറ്റപ്പെടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒറ്റപ്പെടുക — oṟṟappeṭuka — \"to be cut off; to be isolated\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴ കാരണം ഗ്രാമം ഒറ്റപ്പെട്ടു. maḻa kāraṇaṁ grāmaṁ oṟṟappeṭṭu. The village was cut off because of the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഒറ്റപ്പെട്ടു, oṟṟappeṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "From ഒറ്റ, single, alone: also of a lonely person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒറ്റപ്പെടുക (oṟṟappeṭuka) is native Dravidian: ഒറ്റ (oṟṟa), \"single, alone\", which DEDR 990 sets with the word for one, and -പ്പെടുക, \"to come to be\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṟṟappeṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṟṟappeṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṟṟappeṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṟṟappeṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻa kāraṇaṁ grāmaṁ oṟṟappeṭṭu. — The village was cut off because of the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻa kāraṇaṁ grāmaṁ oṟṟappeṭṭu.* — The village was cut off because of the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a landslide, then the Malayalam for to be washed away, then say oṟṟappeṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a landslide, then the Malayalam for to be washed away, then say *oṟṟappeṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഒറ്റപ്പെടുക (oṟṟappeṭuka) mean? (\"To be cut off; to be isolated\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C377-kanatakuka",
+      "sequence": 18470,
+      "title": "കാണാതാകുക (kāṇātākuka) — to go missing",
+      "headword": "കാണാതാകുക",
+      "romanization": "kāṇātākuka",
+      "gloss": "to go missing",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7243aaa2b8670f3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to be washed away, then the Malayalam for to be cut off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കാണാതാകുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാണാതാകുക — kāṇātākuka — \"to go missing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മൂന്ന് ദിവസം മുൻപ് ഒരു കുട്ടിയെ കാണാതായി. mūnnŭ divasaṁ munpŭ oru kuṭṭiye kāṇātāyi. A child went missing three days ago."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കാണാതായി, kāṇātāyi."
+            },
+            {
+              "kind": "speech",
+              "text": "The missing person takes -എ: അവനെ കാണാതായി, literally it became not seeing him."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാണാതാകുക (kāṇātākuka) is native Dravidian: the negative of കാണുക (kāṇuka), \"to see\" (DEDR 1443), with ആകുക, \"to become\": someone comes to be not seen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṇātākuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṇātākuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṇātākuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṇātākuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūnnŭ divasaṁ munpŭ oru kuṭṭiye kāṇātāyi. — A child went missing three days ago.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūnnŭ divasaṁ munpŭ oru kuṭṭiye kāṇātāyi.* — A child went missing three days ago.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to be washed away, then the Malayalam for to be cut off, then say kāṇātākuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to be washed away, then the Malayalam for to be cut off, then say *kāṇātākuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കാണാതാകുക (kāṇātākuka) mean? (\"To go missing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 312,
+  "title": "On the Air",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6c1558900d82328f",
+  "lessons": [
+    {
+      "id": "MR-C312-akasvani",
+      "sequence": 18230,
+      "title": "आकाशवाणी (ākāśvāṇī) — radio; the radio service",
+      "headword": "आकाशवाणी",
+      "romanization": "ākāśvāṇī",
+      "gloss": "radio; the radio service",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:847c683c946cd49a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an editorial, then the Marathi for to publish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आकाशवाणी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आकाशवाणी — ākāśvāṇī — \"radio; the radio service\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजी रोज सकाळी आकाशवाणीवर गाणी ऐकते. ājī roj sakāḷī ākāśvāṇīvar gāṇī aikte. Grandma listens to songs on the radio every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "आकाशवाणीवर, on the radio. रेडिओ is also said."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आकाशवाणी (ākāśvāṇī) is a tatsama, taken from Sanskrit ākāśavāṇī, 'a voice from the air or from heaven' (Monier-Williams), a fitting name for the radio."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākāśvāṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākāśvāṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākāśvāṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākāśvāṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājī roj sakāḷī ākāśvāṇīvar gāṇī aikte. — Grandma listens to songs on the radio every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājī roj sakāḷī ākāśvāṇīvar gāṇī aikte.* — Grandma listens to songs on the radio every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an editorial, then the Marathi for to publish, then say ākāśvāṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an editorial, then the Marathi for to publish, then say *ākāśvāṇī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आकाशवाणी (ākāśvāṇī) mean? (\"Radio; the radio service\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C312-durdarsan",
+      "sequence": 18240,
+      "title": "दूरदर्शन (dūrdarśan) — television",
+      "headword": "दूरदर्शन",
+      "romanization": "dūrdarśan",
+      "gloss": "television",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:002e2bc7142b9fc1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to publish, then the Marathi for radio."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दूरदर्शन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूरदर्शन — dūrdarśan — \"television\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात्री आम्ही दूरदर्शनवर बातम्या पाहतो. rātrī āmhī dūrdarśanvar bātamyā pāhto. At night we watch the news on television."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the name of the national channel; in speech टीव्ही."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूरदर्शन (dūrdarśan) is a modern coinage built from Sanskrit dūra, 'far', and darśana, 'seeing' (Monier-Williams): seeing far."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūrdarśan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūrdarśan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūrdarśan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūrdarśan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātrī āmhī dūrdarśanvar bātamyā pāhto. — At night we watch the news on television.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātrī āmhī dūrdarśanvar bātamyā pāhto.* — At night we watch the news on television.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to publish, then the Marathi for radio, then say dūrdarśan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to publish, then the Marathi for radio, then say *dūrdarśan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दूरदर्शन (dūrdarśan) mean? (\"Television\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C312-vahini",
+      "sequence": 18250,
+      "title": "वाहिनी (vāhinī) — a channel",
+      "headword": "वाहिनी",
+      "romanization": "vāhinī",
+      "gloss": "a channel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:611ed7792137281c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for radio, then the Marathi for television."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वाहिनी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाहिनी — vāhinī — \"a channel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ही वाहिनी दिवसभर फक्त बातम्या दाखवते. hī vāhinī divasbhar phakta bātamyā dākhavte. This channel shows only news all day."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "वृत्तवाहिनी, a news channel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाहिनी (vāhinī) is a tatsama, taken from Sanskrit vāhinī, 'an army, a host' (Monier-Williams), a word built on vah, 'to carry'; the sense 'a channel' is modern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāhinī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāhinī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāhinī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāhinī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hī vāhinī divasbhar phakta bātamyā dākhavte. — This channel shows only news all day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hī vāhinī divasbhar phakta bātamyā dākhavte.* — This channel shows only news all day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for radio, then the Marathi for television, then say vāhinī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for radio, then the Marathi for television, then say *vāhinī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वाहिनी (vāhinī) mean? (\"A channel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C312-nivedak",
+      "sequence": 18260,
+      "title": "निवेदक (nivedak) — a newsreader; a presenter",
+      "headword": "निवेदक",
+      "romanization": "nivedak",
+      "gloss": "a newsreader; a presenter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c4bf67b6bef31ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for television, then the Marathi for a channel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निवेदक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निवेदक — nivedak — \"a newsreader; a presenter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "निवेदकाने शांत आवाजात बातमी वाचली. nivedakāne śānt āvājāt bātmī vāclī. The newsreader read the news in a calm voice."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman presenter is निवेदिका."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निवेदक (nivedak) is a tatsama, taken from Sanskrit nivedaka, 'communicating, relating' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivedak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivedak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivedak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivedak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivedakāne śānt āvājāt bātmī vāclī. — The newsreader read the news in a calm voice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivedakāne śānt āvājāt bātmī vāclī.* — The newsreader read the news in a calm voice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for television, then the Marathi for a channel, then say nivedak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for television, then the Marathi for a channel, then say *nivedak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निवेदक (nivedak) mean? (\"A newsreader; a presenter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C312-prasarit-karne",
+      "sequence": 18270,
+      "title": "प्रसारित करणे (prasārit karṇe) — to broadcast",
+      "headword": "प्रसारित करणे",
+      "romanization": "prasārit karṇe",
+      "gloss": "to broadcast",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f38a3a4bb4cec45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a channel, then the Marathi for a newsreader."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रसारित करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रसारित करणे — prasārit karṇe — \"to broadcast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वाहिनीने ती मुलाखत संध्याकाळी प्रसारित केली. vāhinīne tī mulākhat sandhyākāḷī prasārit kelī. The channel broadcast that interview in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने प्रसारित केलं, tyāne prasārit kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is broadcast agrees: मुलाखत प्रसारित केली, कार्यक्रम प्रसारित केला."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रसारित करणे (prasārit karṇe) joins prasārit, a tatsama taken from Sanskrit prasārita, 'spread out, stretched forth' (Monier-Williams), to karṇe, 'to do'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasārit karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasārit karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasārit karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasārit karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāhinīne tī mulākhat sandhyākāḷī prasārit kelī. — The channel broadcast that interview in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāhinīne tī mulākhat sandhyākāḷī prasārit kelī.* — The channel broadcast that interview in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a channel, then the Marathi for a newsreader, then say prasārit karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a channel, then the Marathi for a newsreader, then say *prasārit karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रसारित करणे (prasārit karṇe) mean? (\"To broadcast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

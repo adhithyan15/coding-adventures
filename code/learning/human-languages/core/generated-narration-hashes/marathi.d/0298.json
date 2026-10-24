@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:2eedcafde527780f",
+  "lessonIds": [
+    "MR-C298-kincalne",
+    "MR-C298-gondhal",
+    "MR-C298-hahakar",
+    "MR-C298-jamav",
+    "MR-C298-kujbujne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch298.txt",
+  "json": "marathi/narration/ch298.json",
+  "textHash": "fnv1a64:efa0fe5a1b8b9175",
+  "jsonHash": "fnv1a64:30b133c758e9ba9b",
+  "findings": []
+}

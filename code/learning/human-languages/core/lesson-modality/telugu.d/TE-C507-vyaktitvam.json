@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C507-vyaktitvam",
+    "language": "telugu",
+    "chapter": 507,
+    "sequence": 25670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09b7f2cd1d9d229d"
+  },
+  "findings": []
+}

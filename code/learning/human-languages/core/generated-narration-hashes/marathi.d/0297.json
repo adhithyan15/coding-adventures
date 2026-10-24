@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:35576f3fe43223a2",
+  "lessonIds": [
+    "MR-C297-ghusne",
+    "MR-C297-phodne",
+    "MR-C297-hiskavne",
+    "MR-C297-lutne",
+    "MR-C297-lubadne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch297.txt",
+  "json": "marathi/narration/ch297.json",
+  "textHash": "fnv1a64:52cce035e86ccad2",
+  "jsonHash": "fnv1a64:d8578fec79367196",
+  "findings": []
+}

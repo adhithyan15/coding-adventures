@@ -1,0 +1,11 @@
+{
+  "id": "TA-C365-talaippu",
+  "pathSegment": "TA-PATH-365-KATTURAI365",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-365-KATTURAI365",
+      "order": 1
+    }
+  ]
+}

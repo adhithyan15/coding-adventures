@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C444-badhyata",
+    "language": "malayalam",
+    "chapter": 444,
+    "sequence": 22010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:681ee74e52dc1bd4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C326-kuruhu",
+  "pathSegment": "KA-PATH-326-KANE326",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-326-KANE326",
+      "order": 2
+    }
+  ]
+}

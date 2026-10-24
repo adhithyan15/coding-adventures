@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:1627a35ec41561ad",
+  "lessonIds": [
+    "TA-C314-tarunam",
+    "TA-C314-ninaivukur",
+    "TA-C314-nalataivil",
+    "TA-C314-atarkul",
+    "TA-C314-itaiyatuttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch314.txt",
+  "json": "tamil/narration/ch314.json",
+  "textHash": "fnv1a64:1835e9bcddc188fe",
+  "jsonHash": "fnv1a64:a8de8e1ac3748775",
+  "findings": []
+}

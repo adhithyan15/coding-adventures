@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:fc82488e9f329f2c",
+  "lessonIds": [
+    "BN-C382-nishtha",
+    "BN-C382-odhyobosay",
+    "BN-C382-puron-kora",
+    "BN-C382-bojay-rakha",
+    "BN-C382-songshodhon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch382.txt",
+  "json": "bengali/narration/ch382.json",
+  "textHash": "fnv1a64:d50cd2cbd92637f2",
+  "jsonHash": "fnv1a64:2d2222a091456805",
+  "findings": []
+}

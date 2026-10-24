@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C533-kasuti",
+    "language": "kannada",
+    "chapter": 533,
+    "sequence": 27210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2921f1bb8fc2807d"
+  },
+  "findings": []
+}

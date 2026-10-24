@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-379-OMMATA379",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-379-OMMATA379"
+  ],
+  "after": []
+}

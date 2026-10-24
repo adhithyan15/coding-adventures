@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Weapons of Old",
+  "label": "ch:ka-weapons-of-old",
+  "canDo": "I can say a weapon, a gun, a battlefield, a chariot and to do battle.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C344-kadadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can say a weapon, a gun, a battlefield, a chariot and to do battle.",
+    "assesses": [
+      "KA-LEX-C344-AYUDHA344-03",
+      "KA-LEX-C344-AYUDHA344-04",
+      "KA-LEX-C344-AYUDHA344-05"
+    ]
+  }
+}

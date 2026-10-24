@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:636dec3f942bb4a5",
+  "lessonIds": [
+    "AR-C530-hamil",
+    "AR-C530-mahd",
+    "AR-C530-ardaa",
+    "AR-C530-fatama",
+    "AR-C530-rabba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch530.txt",
+  "json": "arabic/narration/ch530.json",
+  "textHash": "fnv1a64:0f093d99b77a3e2f",
+  "jsonHash": "fnv1a64:32bcb01b36b3f6cb",
+  "findings": []
+}

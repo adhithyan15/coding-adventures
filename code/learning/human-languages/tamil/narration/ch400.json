@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 400,
+  "title": "Platforms and Tracks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7180e253064881f3",
+  "lessons": [
+    {
+      "id": "TA-C400-nataimetai",
+      "sequence": 23100,
+      "title": "நடைமேடை (naṭaimēṭai) — a platform; a raised walkway",
+      "headword": "நடைமேடை",
+      "romanization": "naṭaimēṭai",
+      "gloss": "a platform; a raised walkway",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47667726ba225e91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a complaint, then the Tamil for an athlete."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நடைமேடை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நடைமேடை — naṭaimēṭai — \"a platform; a raised walkway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ரயில் மூன்றாவது நடைமேடைக்கு வருகிறது. rayil mūṉṟāvatu naṭaimēṭaikku varukiṟatu. The train is coming to the third platform."
+            },
+            {
+              "kind": "speech",
+              "text": "Before -க்கு the final -ஐ stays as it is: நடைமேடைக்கு, to the platform."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நடைமேடை (naṭaimēṭai) is built from naṭai, \"walking, gait\" (DEDR 3582, the family of நட, to walk), and mēṭai, \"a raised floor, a stage\", whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṭaimēṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṭaimēṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṭaimēṭai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṭaimēṭai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rayil mūṉṟāvatu naṭaimēṭaikku varukiṟatu. — The train is coming to the third platform.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rayil mūṉṟāvatu naṭaimēṭaikku varukiṟatu.* — The train is coming to the third platform.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a complaint, then the Tamil for an athlete, then say naṭaimēṭai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a complaint, then the Tamil for an athlete, then say *naṭaimēṭai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நடைமேடை (naṭaimēṭai) mean? (\"A platform; a raised walkway\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C400-tantavalam",
+      "sequence": 23110,
+      "title": "தண்டவாளம் (taṇṭavāḷam) — a railway track; a rail",
+      "headword": "தண்டவாளம்",
+      "romanization": "taṇṭavāḷam",
+      "gloss": "a railway track; a rail",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef3be07e50575370",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an athlete, then the Tamil for a platform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தண்டவாளம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தண்டவாளம் — taṇṭavāḷam — \"a railway track; a rail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குழந்தைகள் தண்டவாளத்தில் நடக்கக் கூடாது. kuḻantaikaḷ taṇṭavāḷattil naṭakkak kūṭātu. Children must not walk on the railway track."
+            },
+            {
+              "kind": "speech",
+              "text": "A -அம் noun takes -அத்து- before a case ending: தண்டவாளத்தில், on the rails."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தண்டவாளம் (taṇṭavāḷam) is listed in DEDR 3050 with the senses \"cast iron, an iron rail, a girder\"; where the word comes from before that is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇṭavāḷam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇṭavāḷam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇṭavāḷam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇṭavāḷam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻantaikaḷ taṇṭavāḷattil naṭakkak kūṭātu. — Children must not walk on the railway track.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻantaikaḷ taṇṭavāḷattil naṭakkak kūṭātu.* — Children must not walk on the railway track.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an athlete, then the Tamil for a platform, then say taṇṭavāḷam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an athlete, then the Tamil for a platform, then say *taṇṭavāḷam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தண்டவாளம் (taṇṭavāḷam) mean? (\"A railway track; a rail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C400-varukai",
+      "sequence": 23120,
+      "title": "வருகை (varukai) — arrival; a visit",
+      "headword": "வருகை",
+      "romanization": "varukai",
+      "gloss": "arrival; a visit",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba147b17d28c4aa6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a platform, then the Tamil for a railway track."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வருகை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வருகை — varukai — \"arrival; a visit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "விமானத்தின் வருகை ஒரு மணி நேரம் தாமதமானது. vimāṉattiṉ varukai oru maṇi nēram tāmatamāṉatu. The plane's arrival was an hour late."
+            },
+            {
+              "kind": "speech",
+              "text": "வருகை (varukai) is a noun made from வா, to come: its stem வரு- takes the ending -கை."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வருகை (varukai) is built on varu-, the stem of வா, \"to come\", with the noun ending -kai; DEDR 5270 gathers the family, including வரவு, \"coming, income\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varukai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varukai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varukai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varukai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimāṉattiṉ varukai oru maṇi nēram tāmatamāṉatu. — The plane's arrival was an hour late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimāṉattiṉ varukai oru maṇi nēram tāmatamāṉatu.* — The plane's arrival was an hour late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a platform, then the Tamil for a railway track, then say varukai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a platform, then the Tamil for a railway track, then say *varukai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வருகை (varukai) mean? (\"Arrival; a visit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C400-ottivai",
+      "sequence": 23130,
+      "title": "ஒத்திவை (ottivai) — to postpone; to put off",
+      "headword": "ஒத்திவை",
+      "romanization": "ottivai",
+      "gloss": "to postpone; to put off",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a318e09245ebdea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a railway track, then the Tamil for arrival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒத்திவை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒத்திவை — ottivai — \"to postpone; to put off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழை பெய்ததால் நாங்கள் பயணத்தை ஒத்திவைத்தோம். maḻai peytatāl nāṅkaḷ payaṇattai ottivaittōm. Because it rained, we put off the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஒத்திவைத்தேன், ottivaittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is put off takes -ஐ: பயணத்தை ஒத்திவை (ottivai), to postpone a journey."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒத்திவை (ottivai) is built from otti, the joining form of ஒத்து, \"to move aside, make room\" (DEDR 973), and வை, \"to put\": to put a thing aside for later."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ottivai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ottivai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ottivai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ottivai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻai peytatāl nāṅkaḷ payaṇattai ottivaittōm. — Because it rained, we put off the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻai peytatāl nāṅkaḷ payaṇattai ottivaittōm.* — Because it rained, we put off the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a railway track, then the Tamil for arrival, then say ottivai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a railway track, then the Tamil for arrival, then say *ottivai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒத்திவை (ottivai) mean? (\"To postpone; to put off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C400-maru-change",
+      "sequence": 23140,
+      "title": "மாறு (māṟu) — to switch; to change",
+      "headword": "மாறு",
+      "romanization": "māṟu",
+      "gloss": "to switch; to change",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e2c1794e632c1aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for arrival, then the Tamil for to postpone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மாறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாறு — māṟu — \"to switch; to change\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அடுத்த நிலையத்தில் நாங்கள் ரயில் மாற வேண்டும். aṭutta nilaiyattil nāṅkaḷ rayil māṟa vēṇṭum. We have to change trains at the next station."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): மாறினேன், māṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "மாறு (māṟu) is to change or become different oneself; மாற்று is to change something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாறு (māṟu) is native Dravidian (DEDR 4834); the same article holds the transitive மாற்று, \"to change something\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭutta nilaiyattil nāṅkaḷ rayil māṟa vēṇṭum. — We have to change trains at the next station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭutta nilaiyattil nāṅkaḷ rayil māṟa vēṇṭum.* — We have to change trains at the next station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for arrival, then the Tamil for to postpone, then say māṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for arrival, then the Tamil for to postpone, then say *māṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மாறு (māṟu) mean? (\"To switch; to change\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

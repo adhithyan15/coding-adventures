@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C444-gadhul",
+    "language": "marathi",
+    "chapter": 444,
+    "sequence": 25480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1bf649d017a9fb0"
+  },
+  "findings": []
+}

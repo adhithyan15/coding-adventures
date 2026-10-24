@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C498-atmagauravam",
+    "language": "telugu",
+    "chapter": 498,
+    "sequence": 25200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd499492e88d5c97"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:bfb77c66ed8fb5ae",
+  "lessonIds": [
+    "TE-C532-pempakam",
+    "TE-C532-garabam",
+    "TE-C532-posincu",
+    "TE-C532-bujjagincu",
+    "TE-C532-maram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch532.txt",
+  "json": "telugu/narration/ch532.json",
+  "textHash": "fnv1a64:09b88da75e49650e",
+  "jsonHash": "fnv1a64:9ec825a4b32eb017",
+  "findings": []
+}

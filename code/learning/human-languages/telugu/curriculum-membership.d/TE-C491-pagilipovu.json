@@ -1,0 +1,11 @@
+{
+  "id": "TE-C491-pagilipovu",
+  "pathSegment": "TE-PATH-491-TUPPU491",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-491-TUPPU491",
+      "order": 3
+    }
+  ]
+}

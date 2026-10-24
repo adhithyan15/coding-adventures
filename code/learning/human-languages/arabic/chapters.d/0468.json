@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Plants",
+  "label": "ch:ar-plants",
+  "canDo": "I can say plant life, a shrub, to wilt, to bloom and to bear fruit.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C468-athmara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can say plant life, a shrub, to wilt, to bloom and to bear fruit.",
+    "assesses": [
+      "AR-LEX-C468-NABAT468-03",
+      "AR-LEX-C468-NABAT468-04",
+      "AR-LEX-C468-NABAT468-05"
+    ]
+  }
+}

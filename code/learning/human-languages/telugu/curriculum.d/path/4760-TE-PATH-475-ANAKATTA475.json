@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-475-ANAKATTA475",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-475-ANAKATTA475"
+  ],
+  "after": []
+}

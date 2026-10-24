@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:e5b4d4d95234c6bb",
+  "lessonIds": [
+    "BN-C439-sukh",
+    "BN-C439-koshto",
+    "BN-C439-tripti",
+    "BN-C439-upobhog-kora",
+    "BN-C439-mete-otha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch439.txt",
+  "json": "bengali/narration/ch439.json",
+  "textHash": "fnv1a64:86a0786ab59e1758",
+  "jsonHash": "fnv1a64:e6b8e5a27d407a12",
+  "findings": []
+}

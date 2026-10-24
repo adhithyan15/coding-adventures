@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:c72b2095bb33a994",
+  "lessonIds": [
+    "AR-C383-iqtisad",
+    "AR-C383-dariba",
+    "AR-C383-ajz",
+    "AR-C383-tadakhkhum",
+    "AR-C383-istathmara"
+  ],
+  "tex": "arabic/book/chapters/ch383-the-economy.tex"
+}

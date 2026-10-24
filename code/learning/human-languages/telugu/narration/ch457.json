@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 457,
+  "title": "A Place to Stay",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e41b1c1abbfca4a0",
+  "lessons": [
+    {
+      "id": "TE-C457-vasati",
+      "sequence": 22970,
+      "title": "వసతి (vasati) — lodging; accommodation",
+      "headword": "వసతి",
+      "romanization": "vasati",
+      "gloss": "lodging; accommodation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbfa09851588cd33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for dusk, then the Telugu for a stopover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వసతి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వసతి — vasati — \"lodging; accommodation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పండుగ రోజుల్లో హోటళ్ళలో వసతి దొరకలేదు. paṇḍuga rōjullō hōṭaḷḷalō vasati dorakalēdu. In the festival days we could not find lodging in the hotels."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a hostel for students: విద్యార్థి వసతి (vasati) గృహం."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వసతి (vasati) is borrowed from Sanskrit vasati, \"staying, dwelling\", from vas, \"to stay\" (CDIAL 11435)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vasati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vasati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vasati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vasati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇḍuga rōjullō hōṭaḷḷalō vasati dorakalēdu. — In the festival days we could not find lodging in the hotels.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇḍuga rōjullō hōṭaḷḷalō vasati dorakalēdu.* — In the festival days we could not find lodging in the hotels.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for dusk, then the Telugu for a stopover, then say vasati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for dusk, then the Telugu for a stopover, then say *vasati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వసతి (vasati) mean? (\"Lodging; accommodation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C457-satram",
+      "sequence": 22980,
+      "title": "సత్రం (satraṁ) — an inn; a rest house",
+      "headword": "సత్రం",
+      "romanization": "satraṁ",
+      "gloss": "an inn; a rest house",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b1816bfabbd7d09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a stopover, then the Telugu for lodging."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సత్రం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సత్రం — satraṁ — \"an inn; a rest house\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పాత రోజుల్లో ప్రయాణికులు సత్రంలో ఉండేవారు. pāta rōjullō prayāṇikulu satraṁlō uṇḍēvāru. In the old days travellers used to stay at an inn."
+            },
+            {
+              "kind": "speech",
+              "text": "A free or cheap rest house for travellers and pilgrims, often run by a trust."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సత్రం (satraṁ) is borrowed from Sanskrit sattra, first a long sacrificial session and later a house where food and shelter were given (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāta rōjullō prayāṇikulu satraṁlō uṇḍēvāru. — In the old days travellers used to stay at an inn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāta rōjullō prayāṇikulu satraṁlō uṇḍēvāru.* — In the old days travellers used to stay at an inn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a stopover, then the Telugu for lodging, then say satraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a stopover, then the Telugu for lodging, then say *satraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సత్రం (satraṁ) mean? (\"An inn; a rest house\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C457-risepsanu",
+      "sequence": 22990,
+      "title": "రిసెప్షను (risepṣanu) — a reception desk",
+      "headword": "రిసెప్షను",
+      "romanization": "risepṣanu",
+      "gloss": "a reception desk",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:194c79a3b8947422",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for lodging, then the Telugu for an inn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రిసెప్షను",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రిసెప్షను — risepṣanu — \"a reception desk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "హోటలు రిసెప్షనులో తాళంచెవి ఇచ్చారు. hōṭalu risepṣanulō tāḷañcevi iccāru. They gave us the key at the hotel reception."
+            },
+            {
+              "kind": "speech",
+              "text": "The person at the desk is the రిసెప్షనిస్టు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రిసెప్షను (risepṣanu) is a loan from English reception, with the Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "risepṣanu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *risepṣanu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "risepṣanu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *risepṣanu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōṭalu risepṣanulō tāḷañcevi iccāru. — They gave us the key at the hotel reception.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōṭalu risepṣanulō tāḷañcevi iccāru.* — They gave us the key at the hotel reception.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for lodging, then the Telugu for an inn, then say risepṣanu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for lodging, then the Telugu for an inn, then say *risepṣanu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రిసెప్షను (risepṣanu) mean? (\"A reception desk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C457-liphtu",
+      "sequence": 23000,
+      "title": "లిఫ్టు (liphṭu) — an elevator; a lift",
+      "headword": "లిఫ్టు",
+      "romanization": "liphṭu",
+      "gloss": "an elevator; a lift",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e94b3331a083124",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an inn, then the Telugu for a reception desk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: లిఫ్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లిఫ్టు — liphṭu — \"an elevator; a lift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "లిఫ్టు పనిచేయలేదు, అందుకే మెట్లు ఎక్కాం. liphṭu panicēyalēdu, andukē meṭlu ekkāṁ. The lift was not working, so we climbed the stairs."
+            },
+            {
+              "kind": "speech",
+              "text": "లిఫ్టు (liphṭu) ఎక్కు, to take the lift. In Telugu it also means a free ride: లిఫ్టు (liphṭu) ఇచ్చాడు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లిఫ్టు (liphṭu) is a loan from English lift, with the Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liphṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liphṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liphṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liphṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liphṭu panicēyalēdu, andukē meṭlu ekkāṁ. — The lift was not working, so we climbed the stairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liphṭu panicēyalēdu, andukē meṭlu ekkāṁ.* — The lift was not working, so we climbed the stairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an inn, then the Telugu for a reception desk, then say liphṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an inn, then the Telugu for a reception desk, then say *liphṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does లిఫ్టు (liphṭu) mean? (\"An elevator; a lift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C457-basa-ceyu",
+      "sequence": 23010,
+      "title": "బస చేయు (basa cēyu) — to stay overnight; to put up",
+      "headword": "బస చేయు",
+      "romanization": "basa cēyu",
+      "gloss": "to stay overnight; to put up",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bdd1bdb37b289de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a reception desk, then the Telugu for an elevator."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బస చేయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బస చేయు — basa cēyu — \"to stay overnight; to put up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ రాత్రి మేము సత్రంలో బస చేశాం. ā rātri mēmu satraṁlō basa cēśāṁ. That night we put up at an inn."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): బస చేశాను, basa cēśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "బస, a halt, a lodging, + చేయు. Used for a stay on a journey, away from home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బస చేయు (basa cēyu) is a Telugu phrase: బస, \"a halt, a lodging\", whose origin is not settled, and the native చేయు, \"to do\" (DEDR 1957)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basa cēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *basa cēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basa cēyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *basa cēyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rātri mēmu satraṁlō basa cēśāṁ. — That night we put up at an inn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rātri mēmu satraṁlō basa cēśāṁ.* — That night we put up at an inn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a reception desk, then the Telugu for an elevator, then say basa cēyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a reception desk, then the Telugu for an elevator, then say *basa cēyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బస చేయు (basa cēyu) mean? (\"To stay overnight; to put up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

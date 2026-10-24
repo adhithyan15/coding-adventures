@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C295-nuksan",
+    "language": "marathi",
+    "chapter": 295,
+    "sequence": 17350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6021d360bc3b2230"
+  },
+  "findings": []
+}

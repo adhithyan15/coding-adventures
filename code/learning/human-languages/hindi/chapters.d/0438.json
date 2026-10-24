@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Winter Cold",
+  "label": "ch:hi-winter-cold",
+  "canDo": "I can talk about winter, hail and a cold wave, snowfall in the hills and wrapping up warm.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C438-orhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can talk about winter, hail and a cold wave, snowfall in the hills and wrapping up warm.",
+    "assesses": [
+      "HI-LEX-C438-JADA438-03",
+      "HI-LEX-C438-JADA438-04",
+      "HI-LEX-C438-JADA438-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C542-sthanamoliyuka",
+    "language": "malayalam",
+    "chapter": 542,
+    "sequence": 27320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b1416e06204026d"
+  },
+  "findings": []
+}

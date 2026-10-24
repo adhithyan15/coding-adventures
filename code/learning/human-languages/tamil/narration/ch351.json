@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 351,
+  "title": "Making a Point",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:388d0a2c50a6b7ee",
+  "lessons": [
+    {
+      "id": "TA-C351-kurippitu",
+      "sequence": 20300,
+      "title": "குறிப்பிடு (kuṟippiṭu) — to mention; to specify",
+      "headword": "குறிப்பிடு",
+      "romanization": "kuṟippiṭu",
+      "gloss": "to mention; to specify",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0696be21c38763e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an angle, then the Tamil for to express."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குறிப்பிடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறிப்பிடு — kuṟippiṭu — \"to mention; to specify\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் தன் கடிதத்தில் இந்தப் பிரச்சினையைக் குறிப்பிட்டார். avar taṉ kaṭitattil intap piracciṉaiyaik kuṟippiṭṭār. He mentioned this problem in his letter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): குறிப்பிட்டேன், kuṟippiṭṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is mentioned takes -ஐ. குறிப்பிட்ட, specific: குறிப்பிட்ட நேரம், a set time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறிப்பிடு (kuṟippiṭu) is native: kuṟippu, \"a mark, a sign\", belongs to kuṟi, \"to aim at, to mark\" (DEDR 1847), and iṭu, \"to put\" (DEDR 442), makes the verb: \"to put a mark on\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟippiṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟippiṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟippiṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟippiṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar taṉ kaṭitattil intap piracciṉaiyaik kuṟippiṭṭār. — He mentioned this problem in his letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar taṉ kaṭitattil intap piracciṉaiyaik kuṟippiṭṭār.* — He mentioned this problem in his letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an angle, then the Tamil for to express, then say kuṟippiṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an angle, then the Tamil for to express, then say *kuṟippiṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குறிப்பிடு (kuṟippiṭu) mean? (\"To mention; to specify\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C351-cuttikkattu",
+      "sequence": 20310,
+      "title": "சுட்டிக்காட்டு (cuṭṭikkāṭṭu) — to indicate; to point out",
+      "headword": "சுட்டிக்காட்டு",
+      "romanization": "cuṭṭikkāṭṭu",
+      "gloss": "to indicate; to point out",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e29f6e66a391bd1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to express, then the Tamil for to mention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சுட்டிக்காட்டு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுட்டிக்காட்டு — cuṭṭikkāṭṭu — \"to indicate; to point out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆசிரியர் என் தவறுகளைச் சுட்டிக்காட்டினார். āciriyar eṉ tavaṟukaḷaic cuṭṭikkāṭṭiṉār. The teacher pointed out my mistakes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): சுட்டிக்காட்டினேன், cuṭṭikkāṭṭiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is pointed out takes -ஐ: தவறைச் சுட்டிக்காட்டு (cuṭṭikkāṭṭu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுட்டிக்காட்டு (cuṭṭikkāṭṭu) is native: cuṭṭi, \"having indicated\", from cuṭṭu, \"to point out, designate\" (DEDR 2658), joined to kāṭṭu, \"to show\" (DEDR 1443)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuṭṭikkāṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuṭṭikkāṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuṭṭikkāṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuṭṭikkāṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āciriyar eṉ tavaṟukaḷaic cuṭṭikkāṭṭiṉār. — The teacher pointed out my mistakes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āciriyar eṉ tavaṟukaḷaic cuṭṭikkāṭṭiṉār.* — The teacher pointed out my mistakes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to express, then the Tamil for to mention, then say cuṭṭikkāṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to express, then the Tamil for to mention, then say *cuṭṭikkāṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சுட்டிக்காட்டு (cuṭṭikkāṭṭu) mean? (\"To indicate; to point out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C351-etutturai",
+      "sequence": 20320,
+      "title": "எடுத்துரை (eṭutturai) — to expound; to set out in full",
+      "headword": "எடுத்துரை",
+      "romanization": "eṭutturai",
+      "gloss": "to expound; to set out in full",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8dd32345a6d404d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to mention, then the Tamil for to indicate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எடுத்துரை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எடுத்துரை — eṭutturai — \"to expound; to set out in full\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் தன் காரணங்களை எடுத்துரைத்தார். avar taṉ kāraṇaṅkaḷai eṭutturaittār. He set out his reasons."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): எடுத்துரைத்தேன், eṭutturaittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal written word; the everyday phrase is எடுத்துச் சொல்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எடுத்துரை (eṭutturai) is native: eṭuttu, \"having taken up\", from eṭu (DEDR 851), joined to urai, \"to speak, tell\" (DEDR 648): to take up a point and speak it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṭutturai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṭutturai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṭutturai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṭutturai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar taṉ kāraṇaṅkaḷai eṭutturaittār. — He set out his reasons.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar taṉ kāraṇaṅkaḷai eṭutturaittār.* — He set out his reasons.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to mention, then the Tamil for to indicate, then say eṭutturai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to mention, then the Tamil for to indicate, then say *eṭutturai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எடுத்துரை (eṭutturai) mean? (\"To expound; to set out in full\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C351-atavatu",
+      "sequence": 20330,
+      "title": "அதாவது (atāvatu) — that is to say; in other words",
+      "headword": "அதாவது",
+      "romanization": "atāvatu",
+      "gloss": "that is to say; in other words",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65ccc8e61bd10af2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to indicate, then the Tamil for to expound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அதாவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அதாவது — atāvatu — \"that is to say; in other words\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் நாளை வருவார், அதாவது திங்கள்கிழமை. avar nāḷai varuvār, atāvatu tiṅkaḷkiḻamai. He will come tomorrow, that is, on Monday."
+            },
+            {
+              "kind": "speech",
+              "text": "It introduces a restatement: அதாவது (atāvatu), that is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அதாவது (atāvatu) is native: atu, \"that\" (DEDR 1), and āvatu, \"that which is\", a verbal noun of āku, \"to become\" (DEDR 333): \"that which it is\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atāvatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atāvatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atāvatu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atāvatu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar nāḷai varuvār, atāvatu tiṅkaḷkiḻamai. — He will come tomorrow, that is, on Monday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar nāḷai varuvār, atāvatu tiṅkaḷkiḻamai.* — He will come tomorrow, that is, on Monday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to indicate, then the Tamil for to expound, then say atāvatu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to indicate, then the Tamil for to expound, then say *atāvatu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அதாவது (atāvatu) mean? (\"That is to say; in other words\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C351-etuttukkattu",
+      "sequence": 20340,
+      "title": "எடுத்துக்காட்டு (eṭuttukkāṭṭu) — an example",
+      "headword": "எடுத்துக்காட்டு",
+      "romanization": "eṭuttukkāṭṭu",
+      "gloss": "an example",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15c94c58bb5b6113",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to expound, then the Tamil for that is to say."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எடுத்துக்காட்டு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எடுத்துக்காட்டு — eṭuttukkāṭṭu — \"an example\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆசிரியர் ஒரு எளிய எடுத்துக்காட்டு கொடுத்தார். āciriyar oru eḷiya eṭuttukkāṭṭu koṭuttār. The teacher gave a simple example."
+            },
+            {
+              "kind": "speech",
+              "text": "The pure-Tamil word beside உதாரணம்: எடுத்துக்காட்டாக, for example."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எடுத்துக்காட்டு (eṭuttukkāṭṭu) is native: eṭuttu, \"having taken up\" (DEDR 851), and kāṭṭu, \"a showing\" (DEDR 1443): something picked up and shown."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṭuttukkāṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṭuttukkāṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṭuttukkāṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṭuttukkāṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āciriyar oru eḷiya eṭuttukkāṭṭu koṭuttār. — The teacher gave a simple example.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āciriyar oru eḷiya eṭuttukkāṭṭu koṭuttār.* — The teacher gave a simple example.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to expound, then the Tamil for that is to say, then say eṭuttukkāṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to expound, then the Tamil for that is to say, then say *eṭuttukkāṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எடுத்துக்காட்டு (eṭuttukkāṭṭu) mean? (\"An example\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

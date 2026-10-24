@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-290-COMPARE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-290-COMPARE"
+  ],
+  "after": []
+}

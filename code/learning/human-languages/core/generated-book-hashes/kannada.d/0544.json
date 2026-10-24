@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:1e243cd92b730c33",
+  "lessonIds": [
+    "KA-C544-svic",
+    "KA-C544-plag",
+    "KA-C544-silindar",
+    "KA-C544-kolave",
+    "KA-C544-tanti"
+  ],
+  "tex": "kannada/book/chapters/ch544-power-and-water.tex"
+}

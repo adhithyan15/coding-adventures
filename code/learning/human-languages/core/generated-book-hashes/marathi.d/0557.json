@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 557,
+  "sourceHash": "fnv1a64:3d5c08bbfb658680",
+  "lessonIds": [
+    "MR-C557-kuvat",
+    "MR-C557-avaka",
+    "MR-C557-katkasar",
+    "MR-C557-purvasucana",
+    "MR-C557-anumati",
+    "MR-R557-review-551-557",
+    "MR-R557-review-final-557"
+  ],
+  "tex": "marathi/book/chapters/ch557-means-and-notice.tex"
+}

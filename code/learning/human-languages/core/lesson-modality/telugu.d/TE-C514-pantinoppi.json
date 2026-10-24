@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C514-pantinoppi",
+    "language": "telugu",
+    "chapter": 514,
+    "sequence": 26030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b80ba392b0ac52c7"
+  },
+  "findings": []
+}

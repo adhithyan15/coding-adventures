@@ -1,0 +1,11 @@
+{
+  "id": "BN-C300-prochar-kora",
+  "pathSegment": "BN-PATH-300-PATHOK300",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-300-PATHOK300",
+      "order": 3
+    }
+  ]
+}

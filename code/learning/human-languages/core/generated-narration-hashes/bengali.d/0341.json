@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:67e109dbf1bcf5cf",
+  "lessonIds": [
+    "BN-C341-longghon-kora",
+    "BN-C341-omanyo-kora",
+    "BN-C341-jaliyati",
+    "BN-C341-durniti",
+    "BN-C341-onyay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch341.txt",
+  "json": "bengali/narration/ch341.json",
+  "textHash": "fnv1a64:a38583a3ffa461ee",
+  "jsonHash": "fnv1a64:f82cf72b9e86c28c",
+  "findings": []
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 543,
+  "title": "A New Home",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0ec031aefd1a560d",
+  "lessons": [
+    {
+      "id": "KA-C543-varanda",
+      "sequence": 27720,
+      "title": "ವರಾಂಡ (varāṇḍa) — a veranda",
+      "headword": "ವರಾಂಡ",
+      "romanization": "varāṇḍa",
+      "gloss": "a veranda",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3f89edb537fc1ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a basement, then the Kannada for a cabinet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವರಾಂಡ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವರಾಂಡ — varāṇḍa — \"a veranda\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂಜೆ ಅಜ್ಜ ವರಾಂಡದಲ್ಲಿ ಕುಳಿತು ಪತ್ರಿಕೆ ಓದುತ್ತಾರೆ. sañje ajja varāṇḍadalli kuḷitu patrike ōduttāre. In the evening grandfather sits on the veranda and reads the paper."
+            },
+            {
+              "kind": "speech",
+              "text": "A roofed space along the front of the house; ಜಗಲಿ is the raised one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವರಾಂಡ (varāṇḍa) is a loan from English veranda."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varāṇḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varāṇḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varāṇḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varāṇḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sañje ajja varāṇḍadalli kuḷitu patrike ōduttāre. — In the evening grandfather sits on the veranda and reads the paper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sañje ajja varāṇḍadalli kuḷitu patrike ōduttāre.* — In the evening grandfather sits on the veranda and reads the paper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a basement, then the Kannada for a cabinet, then say varāṇḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a basement, then the Kannada for a cabinet, then say *varāṇḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವರಾಂಡ (varāṇḍa) mean? (\"A veranda\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C543-landra",
+      "sequence": 27730,
+      "title": "ಲಾಂದ್ರ (lāndra) — a lantern",
+      "headword": "ಲಾಂದ್ರ",
+      "romanization": "lāndra",
+      "gloss": "a lantern",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68edf359cf85efd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a cabinet, then the Kannada for a veranda."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಲಾಂದ್ರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಲಾಂದ್ರ — lāndra — \"a lantern\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕರೆಂಟ್ ಹೋದಾಗ ಅಜ್ಜಿ ಲಾಂದ್ರ ಹಚ್ಚಿದರು. kareṇṭ hōdāga ajji lāndra haccidaru. When the power went off, grandmother lit the lantern."
+            },
+            {
+              "kind": "speech",
+              "text": "A glass-covered oil lamp with a handle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಲಾಂದ್ರ (lāndra) is usually traced to a European word for a lantern, such as English lantern; the path into Kannada is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāndra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāndra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāndra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāndra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kareṇṭ hōdāga ajji lāndra haccidaru. — When the power went off, grandmother lit the lantern.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kareṇṭ hōdāga ajji lāndra haccidaru.* — When the power went off, grandmother lit the lantern.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a cabinet, then the Kannada for a veranda, then say lāndra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a cabinet, then the Kannada for a veranda, then say *lāndra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಲಾಂದ್ರ (lāndra) mean? (\"A lantern\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C543-mette",
+      "sequence": 27740,
+      "title": "ಮೆತ್ತೆ (mette) — a cushion; a soft mattress",
+      "headword": "ಮೆತ್ತೆ",
+      "romanization": "mette",
+      "gloss": "a cushion; a soft mattress",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e47643b42e4afab2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a veranda, then the Kannada for a lantern."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೆತ್ತೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆತ್ತೆ — mette — \"a cushion; a soft mattress\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಜ್ಜ ಸೋಫಾದ ಮೇಲೆ ಮೆತ್ತೆ ಇಟ್ಟು ಕುಳಿತರು. ajja sōphāda mēle mette iṭṭu kuḷitaru. Grandfather put a cushion on the sofa and sat down."
+            },
+            {
+              "kind": "speech",
+              "text": "Soft like the word ಮೆತ್ತಗೆ, softly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆತ್ತೆ (mette) is native Dravidian: DEDR 5068 lists Kannada mette, \"bedding, mattress\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mette",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mette*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mette, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mette*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajja sōphāda mēle mette iṭṭu kuḷitaru. — Grandfather put a cushion on the sofa and sat down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajja sōphāda mēle mette iṭṭu kuḷitaru.* — Grandfather put a cushion on the sofa and sat down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a veranda, then the Kannada for a lantern, then say mette again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a veranda, then the Kannada for a lantern, then say *mette* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೆತ್ತೆ (mette) mean? (\"A cushion; a soft mattress\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C543-pithopakarana",
+      "sequence": 27750,
+      "title": "ಪೀಠೋಪಕರಣ (pīṭhōpakaraṇa) — furniture",
+      "headword": "ಪೀಠೋಪಕರಣ",
+      "romanization": "pīṭhōpakaraṇa",
+      "gloss": "furniture",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba8195447bf68208",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a lantern, then the Kannada for a cushion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪೀಠೋಪಕರಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೀಠೋಪಕರಣ — pīṭhōpakaraṇa — \"furniture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಸ ಮನೆಗೆ ನಾವು ಹೊಸ ಪೀಠೋಪಕರಣ ತಂದೆವು. hosa manege nāvu hosa pīṭhōpakaraṇa tandevu. We brought new furniture for the new house."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೀಠ, a seat + ಉಪಕರಣ, an implement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೀಠೋಪಕರಣ (pīṭhōpakaraṇa) is a modern learned compound built from Sanskrit pīṭha, \"a stool, a bench\" (CDIAL 8222), and upakaraṇa, \"an implement\" (CDIAL 2138)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṭhōpakaraṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṭhōpakaraṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṭhōpakaraṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṭhōpakaraṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hosa manege nāvu hosa pīṭhōpakaraṇa tandevu. — We brought new furniture for the new house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hosa manege nāvu hosa pīṭhōpakaraṇa tandevu.* — We brought new furniture for the new house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a lantern, then the Kannada for a cushion, then say pīṭhōpakaraṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a lantern, then the Kannada for a cushion, then say *pīṭhōpakaraṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪೀಠೋಪಕರಣ (pīṭhōpakaraṇa) mean? (\"Furniture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C543-oragu",
+      "sequence": 27760,
+      "title": "ಒರಗು (oragu) — to lean back; to recline",
+      "headword": "ಒರಗು",
+      "romanization": "oragu",
+      "gloss": "to lean back; to recline",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ecb5b75164d24dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a cushion, then the Kannada for furniture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒರಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒರಗು — oragu — \"to lean back; to recline\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಜ್ಜ ಗೋಡೆಗೆ ಒರಗಿ ಕುಳಿತರು. ajja gōḍege oragi kuḷitaru. Grandfather sat leaning against the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಒರಗಿದೆ, oragide."
+            },
+            {
+              "kind": "speech",
+              "text": "Against what: -ಗೆ. ಒರಗು (oragu) ಕುರ್ಚಿ, an easy chair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒರಗು (oragu) is native Dravidian: DEDR 707 lists Kannada oṟagu, \"to incline, recline, lean upon, lie down\", and the noun oṟagu, \"a cushion to lean the back against\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oragu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oragu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oragu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oragu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajja gōḍege oragi kuḷitaru. — Grandfather sat leaning against the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajja gōḍege oragi kuḷitaru.* — Grandfather sat leaning against the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a cushion, then the Kannada for furniture, then say oragu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a cushion, then the Kannada for furniture, then say *oragu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒರಗು (oragu) mean? (\"To lean back; to recline\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

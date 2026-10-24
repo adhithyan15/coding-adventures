@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 477,
+  "title": "Serious Illness",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b89ad6bffa4b7a07",
+  "lessons": [
+    {
+      "id": "TA-C477-marataippu",
+      "sequence": 27330,
+      "title": "மாரடைப்பு (māraṭaippu) — a heart attack",
+      "headword": "மாரடைப்பு",
+      "romanization": "māraṭaippu",
+      "gloss": "a heart attack",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e08cefa48bf5b84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for hygiene, then the Tamil for to fall ill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மாரடைப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாரடைப்பு — māraṭaippu — \"a heart attack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தாத்தாவுக்கு மாரடைப்பு வந்ததால் மருத்துவமனைக்குப் போனோம். tāttāvukku māraṭaippu vantatāl maruttuvamaṉaikkup pōṉōm. We went to the hospital because grandfather had a heart attack."
+            },
+            {
+              "kind": "speech",
+              "text": "மார் \"chest\" + aṭaippu \"a blockage\": the heart's vessels close."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாரடைப்பு (māraṭaippu) is a native compound built from மார் mār, \"breast, chest\" (DEDR 4818), and aṭaippu, \"a blockage\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māraṭaippu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māraṭaippu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māraṭaippu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māraṭaippu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāttāvukku māraṭaippu vantatāl maruttuvamaṉaikkup pōṉōm. — We went to the hospital because grandfather had a heart attack.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāttāvukku māraṭaippu vantatāl maruttuvamaṉaikkup pōṉōm.* — We went to the hospital because grandfather had a heart attack.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for hygiene, then the Tamil for to fall ill, then say māraṭaippu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for hygiene, then the Tamil for to fall ill, then say *māraṭaippu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மாரடைப்பு (māraṭaippu) mean? (\"A heart attack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C477-purrunoy",
+      "sequence": 27340,
+      "title": "புற்றுநோய் (puṟṟunōy) — cancer",
+      "headword": "புற்றுநோய்",
+      "romanization": "puṟṟunōy",
+      "gloss": "cancer",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34b25b8f10124c83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to fall ill, then the Tamil for a heart attack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புற்றுநோய்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புற்றுநோய் — puṟṟunōy — \"cancer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புற்றுநோய்க்கு இப்போது நல்ல சிகிச்சை இருக்கிறது. puṟṟunōykku ippōtu nalla cikiccai irukkiṟatu. There is good treatment for cancer now."
+            },
+            {
+              "kind": "speech",
+              "text": "புற்று \"a cancerous growth\" + நோய் \"disease\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புற்றுநோய் (puṟṟunōy) is a native compound of புற்று puṟṟu, \"anything scurvy or cancerous\" (DEDR 4336), and நோய், \"disease\" (DEDR 3793)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṟṟunōy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṟṟunōy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṟṟunōy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṟṟunōy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṟṟunōykku ippōtu nalla cikiccai irukkiṟatu. — There is good treatment for cancer now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṟṟunōykku ippōtu nalla cikiccai irukkiṟatu.* — There is good treatment for cancer now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to fall ill, then the Tamil for a heart attack, then say puṟṟunōy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to fall ill, then the Tamil for a heart attack, then say *puṟṟunōy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புற்றுநோய் (puṟṟunōy) mean? (\"Cancer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C477-pakkavatam",
+      "sequence": 27350,
+      "title": "பக்கவாதம் (pakkavātam) — a stroke; paralysis",
+      "headword": "பக்கவாதம்",
+      "romanization": "pakkavātam",
+      "gloss": "a stroke; paralysis",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:254eaef0d2fc2e32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a heart attack, then the Tamil for cancer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பக்கவாதம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பக்கவாதம் — pakkavātam — \"a stroke; paralysis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பக்கவாதம் வந்த பிறகு அவரால் நடக்க முடியவில்லை. pakkavātam vanta piṟaku avarāl naṭakka muṭiyavillai. After the stroke he could not walk."
+            },
+            {
+              "kind": "speech",
+              "text": "பக்கம் \"side\" + வாதம், a disorder of wind in traditional medicine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பக்கவாதம் (pakkavātam) is borrowed from Sanskrit, built from pakṣa, \"side\" (CDIAL 7627), and vāta, \"wind, a humour of the body\" (CDIAL 11491)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakkavātam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakkavātam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakkavātam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakkavātam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakkavātam vanta piṟaku avarāl naṭakka muṭiyavillai. — After the stroke he could not walk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakkavātam vanta piṟaku avarāl naṭakka muṭiyavillai.* — After the stroke he could not walk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a heart attack, then the Tamil for cancer, then say pakkavātam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a heart attack, then the Tamil for cancer, then say *pakkavātam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பக்கவாதம் (pakkavātam) mean? (\"A stroke; paralysis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C477-astuma",
+      "sequence": 27360,
+      "title": "ஆஸ்துமா (āstumā) — asthma",
+      "headword": "ஆஸ்துமா",
+      "romanization": "āstumā",
+      "gloss": "asthma",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1cc6aca2d209dd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for cancer, then the Tamil for a stroke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆஸ்துமா",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆஸ்துமா — āstumā — \"asthma\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குளிர் காலத்தில் என் தம்பிக்கு ஆஸ்துமா அதிகமாகும். kuḷir kālattil eṉ tampikku āstumā atikamākum. In winter my younger brother’s asthma gets worse."
+            },
+            {
+              "kind": "speech",
+              "text": "Dative: அவனுக்கு ஆஸ்துமா (āstumā) இருக்கிறது, he has asthma."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆஸ்துமா (āstumā) is a loan from English asthma, written with the grantha letter ஸ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āstumā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āstumā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āstumā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āstumā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷir kālattil eṉ tampikku āstumā atikamākum. — In winter my younger brother’s asthma gets worse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷir kālattil eṉ tampikku āstumā atikamākum.* — In winter my younger brother’s asthma gets worse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for cancer, then the Tamil for a stroke, then say āstumā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for cancer, then the Tamil for a stroke, then say *āstumā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆஸ்துமா (āstumā) mean? (\"Asthma\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C477-kamalai",
+      "sequence": 27370,
+      "title": "காமாலை (kāmālai) — jaundice",
+      "headword": "காமாலை",
+      "romanization": "kāmālai",
+      "gloss": "jaundice",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dca6c88de364a5eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a stroke, then the Tamil for asthma."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: காமாலை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காமாலை — kāmālai — \"jaundice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "காமாலை வந்ததால் அவனுடைய கண்கள் மஞ்சளாக இருந்தன. kāmālai vantatāl avaṉuṭaiya kaṇkaḷ mañcaḷāka iruntaṉa. Because he had jaundice, his eyes were yellow."
+            },
+            {
+              "kind": "speech",
+              "text": "Often மஞ்சள் காமாலை (kāmālai), yellow jaundice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காமாலை (kāmālai) is borrowed from Sanskrit kāmalā, \"jaundice\" (CDIAL 3044)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmālai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmālai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmālai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmālai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmālai vantatāl avaṉuṭaiya kaṇkaḷ mañcaḷāka iruntaṉa. — Because he had jaundice, his eyes were yellow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmālai vantatāl avaṉuṭaiya kaṇkaḷ mañcaḷāka iruntaṉa.* — Because he had jaundice, his eyes were yellow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a stroke, then the Tamil for asthma, then say kāmālai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a stroke, then the Tamil for asthma, then say *kāmālai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does காமாலை (kāmālai) mean? (\"Jaundice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

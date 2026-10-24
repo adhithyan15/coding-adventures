@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C436-barasna",
+    "language": "hindi",
+    "chapter": 436,
+    "sequence": 23980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90f115e5db192fbb"
+  },
+  "findings": []
+}

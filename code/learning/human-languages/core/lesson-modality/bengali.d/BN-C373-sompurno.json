@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C373-sompurno",
+    "language": "bengali",
+    "chapter": 373,
+    "sequence": 23210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2e8c2b4c71085fd"
+  },
+  "findings": []
+}

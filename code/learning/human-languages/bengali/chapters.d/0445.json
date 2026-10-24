@@ -1,0 +1,21 @@
+{
+  "chapter": 445,
+  "title": "Grief and Tears",
+  "label": "ch:bn-grief-and-tears",
+  "canDo": "I can talk about grief, tears and sighing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R445-review-438-445",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can talk about grief, tears and sighing.",
+    "assesses": [
+      "BN-LEX-C445-SHOK445-01",
+      "BN-LEX-C445-SHOK445-02",
+      "BN-LEX-C445-SHOK445-03",
+      "BN-LEX-C445-SHOK445-04",
+      "BN-LEX-C445-SHOK445-05"
+    ]
+  }
+}

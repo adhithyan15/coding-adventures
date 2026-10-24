@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C386-abhyantaram",
+    "language": "telugu",
+    "chapter": 386,
+    "sequence": 19210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd648e7139ee3147"
+  },
+  "findings": []
+}

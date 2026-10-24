@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "How sure",
+  "label": "ch:ar-how-sure",
+  "canDo": "I can say inevitably, necessarily, relatively and not at all, and talk about certainty.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C402-yaqin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can say inevitably, necessarily, relatively and not at all, and talk about certainty.",
+    "assesses": [
+      "AR-LEX-C402-HATMAN402-03",
+      "AR-LEX-C402-HATMAN402-04",
+      "AR-LEX-C402-HATMAN402-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:7c45df046612f844",
+  "lessonIds": [
+    "BN-C484-sontan",
+    "BN-C484-jomoj",
+    "BN-C484-bongsho",
+    "BN-C484-projonmo",
+    "BN-C484-purbopurush",
+    "BN-R484-review-478-484"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch484.txt",
+  "json": "bengali/narration/ch484.json",
+  "textHash": "fnv1a64:3ff4605e3fa6593a",
+  "jsonHash": "fnv1a64:4287d1d90f2acadc",
+  "findings": []
+}

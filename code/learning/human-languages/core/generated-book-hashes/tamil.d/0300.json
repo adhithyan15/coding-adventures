@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:963682af61482b87",
+  "lessonIds": [
+    "TA-C300-avacaranilai",
+    "TA-C300-uratanku",
+    "TA-C300-mutanku",
+    "TA-C300-nilaikulai",
+    "TA-C300-itintuvilu"
+  ],
+  "tex": "tamil/book/chapters/ch300-a-state-of-emergency.tex"
+}

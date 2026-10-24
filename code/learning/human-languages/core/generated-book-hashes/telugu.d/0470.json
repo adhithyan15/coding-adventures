@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:009cdf5931503512",
+  "lessonIds": [
+    "TE-C470-kalusyam",
+    "TE-C470-vyarthalu",
+    "TE-C470-vayuvu",
+    "TE-C470-kalusitam-ceyu",
+    "TE-C470-svacchamaina"
+  ],
+  "tex": "telugu/book/chapters/ch470-dirty-air-and-water.tex"
+}

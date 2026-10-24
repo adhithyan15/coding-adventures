@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:725ac7dad84340c1",
+  "lessonIds": [
+    "BN-C527-moncho",
+    "BN-C527-obhinoy-kora",
+    "BN-C527-obhineta",
+    "BN-C527-riharsal",
+    "BN-C527-hattali"
+  ],
+  "tex": "bengali/book/chapters/ch527-on-stage.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:48c729261f9f178f",
+  "lessonIds": [
+    "AR-C360-wafaqa",
+    "AR-C360-itarada",
+    "AR-C360-ijma",
+    "AR-C360-jadala",
+    "AR-C360-jadal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch360.txt",
+  "json": "arabic/narration/ch360.json",
+  "textHash": "fnv1a64:09cb16e5f87653af",
+  "jsonHash": "fnv1a64:de8eb77febab8dcf",
+  "findings": []
+}

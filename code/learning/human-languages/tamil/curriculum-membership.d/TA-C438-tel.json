@@ -1,0 +1,11 @@
+{
+  "id": "TA-C438-tel",
+  "pathSegment": "TA-PATH-438-PARAVAI438",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-438-PARAVAI438",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-428-ONDOMME428",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "KA-EXT-428-ONDOMME428"
+  ],
+  "after": []
+}

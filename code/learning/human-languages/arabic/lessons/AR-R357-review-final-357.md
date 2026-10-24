@@ -1,0 +1,49 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-R357-review-final-357
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 20340
+chapter: 357
+type: review
+headword: (dialogue)
+gloss: one more pass over chapter 357
+concept_tag: REVIEW
+prerequisites: [AR-C357-khitab, AR-C357-alqa, AR-C357-inaqada, AR-C357-iftataha, AR-C357-ikhtatama]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-LEX-C357-KHITAB357-01, AR-LEX-C357-KHITAB357-02, AR-LEX-C357-KHITAB357-03, AR-LEX-C357-KHITAB357-04, AR-LEX-C357-KHITAB357-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [AR-LEX-C357-KHITAB357-01, AR-LEX-C357-KHITAB357-02, AR-LEX-C357-KHITAB357-03, AR-LEX-C357-KHITAB357-04, AR-LEX-C357-KHITAB357-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C357-khitab, AR-C357-alqa, AR-C357-inaqada, AR-C357-iftataha, AR-C357-ikhtatama]
+---
+
+# Speeches and openings — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C357-KHITAB357-01, AR-LEX-C357-KHITAB357-02] -->
+
+[PAUSE 3s] Say the Arabic for a speech and to deliver a speech.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C357-KHITAB357-01, AR-LEX-C357-KHITAB357-02, AR-LEX-C357-KHITAB357-03, AR-LEX-C357-KHITAB357-04, AR-LEX-C357-KHITAB357-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a speech, to deliver a speech, to convene, to inaugurate, to conclude]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C357-KHITAB357-01, AR-LEX-C357-KHITAB357-02, AR-LEX-C357-KHITAB357-03, AR-LEX-C357-KHITAB357-04, AR-LEX-C357-KHITAB357-05] -->
+
+[PAUSE 3s] A speech? (**خطاب**, *khiṭāb*.) To deliver a speech? (**ألقى**, *alqā*.) To convene? (**انعقد**, *inʿaqada*.) To inaugurate? (**افتتح**, *iftataḥa*.) To conclude? (**اختتم**, *ikhtatama*.)

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C417-tattali",
+  "pathSegment": "TA-PATH-417-MALUMI417",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-417-MALUMI417",
+      "order": 3
+    }
+  ]
+}

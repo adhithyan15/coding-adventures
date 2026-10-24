@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:84b546de2c0711a0",
+  "lessonIds": [
+    "KA-C527-dattu-tegeduko",
+    "KA-C527-salahu",
+    "KA-C527-posisu",
+    "KA-C527-ambegalu",
+    "KA-C527-malatayi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch527.txt",
+  "json": "kannada/narration/ch527.json",
+  "textHash": "fnv1a64:d6c922363740c7a9",
+  "jsonHash": "fnv1a64:0e39c26a673d22af",
+  "findings": []
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 545,
+  "title": "Poets and directors",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:24e7b589af9bbe71",
+  "lessons": [
+    {
+      "id": "AR-C545-shair",
+      "sequence": 30120,
+      "title": "شاعر (shāʿir) — a poet",
+      "headword": "شاعر",
+      "romanization": "shāʿir",
+      "gloss": "a poet",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db942ac7b7180a50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a reed flute, then the Arabic for a band."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شاعر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شاعر — shāʿir — \"a poet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كتب الشاعر قصيدة عن البحر. kataba ash-shāʿir qaṣīda ʿan al-baḥr. The poet wrote a poem about the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: شعراء, shuʿarāʾ."
+            },
+            {
+              "kind": "speech",
+              "text": "Shiʿr, poetry, has the same letters as shaʿr, hair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شاعر (shāʿir) is built on the native Arabic root sh-ʿ-r, \"to know, to perceive\" (Lane). Shuʿūr, a feeling, which you know, is from the same root: a poet is one who perceives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāʿir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāʿir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāʿir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāʿir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kataba ash-shāʿir qaṣīda ʿan al-baḥr. — The poet wrote a poem about the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kataba ash-shāʿir qaṣīda ʿan al-baḥr.* — The poet wrote a poem about the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a reed flute, then the Arabic for a band, then say shāʿir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a reed flute, then the Arabic for a band, then say *shāʿir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شاعر (shāʿir) mean? (\"A poet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C545-qafiya",
+      "sequence": 30130,
+      "title": "قافية (qāfiya) — a rhyme",
+      "headword": "قافية",
+      "romanization": "qāfiya",
+      "gloss": "a rhyme",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e0a63594b5693c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a band, then the Arabic for a poet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قافية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قافية — qāfiya — \"a rhyme\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كل بيت في القصيدة له نفس القافية. kull bayt fī al-qaṣīda lahu nafs al-qāfiya. Every line in the poem has the same rhyme."
+            },
+            {
+              "kind": "speech",
+              "text": "بيت is a line of verse as well as a house."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قافية (qāfiya) is built on the native Arabic root q-f-w, \"to follow\" (Lane). The qāfiya is the end of the line that follows the same sound each time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qāfiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qāfiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qāfiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qāfiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kull bayt fī al-qaṣīda lahu nafs al-qāfiya. — Every line in the poem has the same rhyme.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kull bayt fī al-qaṣīda lahu nafs al-qāfiya.* — Every line in the poem has the same rhyme.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a band, then the Arabic for a poet, then say qāfiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a band, then the Arabic for a poet, then say *qāfiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قافية (qāfiya) mean? (\"A rhyme\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C545-anshada",
+      "sequence": 30140,
+      "title": "أنشد (anshada) — to recite (verse); to chant",
+      "headword": "أنشد",
+      "romanization": "anshada",
+      "gloss": "to recite (verse); to chant",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40c7fcb45afb2331",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a poet, then the Arabic for a rhyme."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أنشد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنشد — anshada — \"to recite (verse); to chant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أنشد الطلاب نشيد المدرسة. anshada aṭ-ṭullāb nashīd al-madrasa. The students sang the school anthem."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينشد, yunshid."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun نشيد is an anthem or a chant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنشد (anshada) is built on the native Arabic root n-sh-d, \"to seek; to recite verse\" (Lane). Form IV anshada is to recite verse aloud."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anshada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anshada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anshada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anshada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anshada aṭ-ṭullāb nashīd al-madrasa. — The students sang the school anthem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anshada aṭ-ṭullāb nashīd al-madrasa.* — The students sang the school anthem.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a poet, then the Arabic for a rhyme, then say anshada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a poet, then the Arabic for a rhyme, then say *anshada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أنشد (anshada) mean? (\"To recite (verse); to chant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C545-abdaa",
+      "sequence": 30150,
+      "title": "أبدع (abdaʿa) — to create; to excel",
+      "headword": "أبدع",
+      "romanization": "abdaʿa",
+      "gloss": "to create; to excel",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0043ede691e22ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a rhyme, then the Arabic for to recite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أبدع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أبدع — abdaʿa — \"to create; to excel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أبدعت الفرقة في الحفلة. abdaʿat al-firqa fī al-ḥafla. The band was brilliant at the party."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يبدع, yubdiʿ."
+            },
+            {
+              "kind": "speech",
+              "text": "أبدع (abdaʿa) في … is to do brilliantly at a thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أبدع (abdaʿa) is built on the native Arabic root b-d-ʿ, \"to originate, to make a thing new\" (Lane). Mubdiʿ, creative, is its participle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abdaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abdaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abdaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abdaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abdaʿat al-firqa fī al-ḥafla. — The band was brilliant at the party.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abdaʿat al-firqa fī al-ḥafla.* — The band was brilliant at the party.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a rhyme, then the Arabic for to recite, then say abdaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a rhyme, then the Arabic for to recite, then say *abdaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أبدع (abdaʿa) mean? (\"To create; to excel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C545-akhraja",
+      "sequence": 30160,
+      "title": "أخرج (akhraja) — to direct films; to bring out",
+      "headword": "أخرج",
+      "romanization": "akhraja",
+      "gloss": "to direct films; to bring out",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf5c4839984a1fba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to recite, then the Arabic for to create."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أخرج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أخرج — akhraja — \"to direct films; to bring out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أخرج صديقي فيلما قصيرا. akhraja ṣadīqī fīlman qaṣīran. My friend directed a short film."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يخرج, yukhrij."
+            },
+            {
+              "kind": "speech",
+              "text": "Its first sense is to take out; the director, مخرج, is spelled like makhraj, an exit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أخرج (akhraja) is built on the native Arabic root kh-r-j, \"to go out\" (Lane). Kharaja, to go out, which you know, is from the same root; Form IV is to bring out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhraja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhraja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhraja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhraja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhraja ṣadīqī fīlman qaṣīran. — My friend directed a short film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhraja ṣadīqī fīlman qaṣīran.* — My friend directed a short film.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to recite, then the Arabic for to create, then say akhraja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to recite, then the Arabic for to create, then say *akhraja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أخرج (akhraja) mean? (\"To direct films; to bring out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

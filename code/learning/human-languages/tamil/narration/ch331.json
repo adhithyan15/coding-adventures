@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 331,
+  "title": "Decrees and Patrons",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b59fd195fd98deea",
+  "lessons": [
+    {
+      "id": "TA-C331-aracanai",
+      "sequence": 18990,
+      "title": "அரசாணை (aracāṇai) — a royal decree",
+      "headword": "அரசாணை",
+      "romanization": "aracāṇai",
+      "gloss": "a royal decree",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0e540956a13c7ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a royal tribute, then the Tamil for to flourish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அரசாணை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அரசாணை — aracāṇai — \"a royal decree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மன்னர் ஒரு புதிய அரசாணையை வெளியிட்டார். maṉṉar oru putiya aracāṇaiyai veḷiyiṭṭār. The king issued a new royal decree."
+            },
+            {
+              "kind": "speech",
+              "text": "Today also a government order."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அரசாணை (aracāṇai) joins அரசு, \"king, government\", which DEDR 201 traces to Sanskrit rājan, with ஆணை, \"order, command\", whose origin is not settled in the sources at hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aracāṇai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aracāṇai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aracāṇai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aracāṇai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṉṉar oru putiya aracāṇaiyai veḷiyiṭṭār. — The king issued a new royal decree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṉṉar oru putiya aracāṇaiyai veḷiyiṭṭār.* — The king issued a new royal decree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a royal tribute, then the Tamil for to flourish, then say aracāṇai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a royal tribute, then the Tamil for to flourish, then say *aracāṇai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அரசாணை (aracāṇai) mean? (\"A royal decree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C331-ceppetu",
+      "sequence": 19000,
+      "title": "செப்பேடு (ceppēṭu) — a copper-plate grant",
+      "headword": "செப்பேடு",
+      "romanization": "ceppēṭu",
+      "gloss": "a copper-plate grant",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1994fa04f90984a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to flourish, then the Tamil for a royal decree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: செப்பேடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செப்பேடு — ceppēṭu — \"a copper-plate grant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அருங்காட்சியகத்தில் பழைய செப்பேடுகள் இருக்கின்றன. aruṅkāṭciyakattil paḻaiya ceppēṭukaḷ irukkiṉṟaṉa. There are old copper-plate grants in the museum."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: செப்பேடுகள், ceppēṭukaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "செம்பு, copper + ஏடு, leaf: records cut on copper sheets."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செப்பேடு (ceppēṭu) is a Tamil compound built from செம்பு, \"copper\" (DEDR 2775), and ஏடு, \"a strip of palmyra leaf for writing, a book\" (DEDR 884)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceppēṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceppēṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceppēṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceppēṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruṅkāṭciyakattil paḻaiya ceppēṭukaḷ irukkiṉṟaṉa. — There are old copper-plate grants in the museum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruṅkāṭciyakattil paḻaiya ceppēṭukaḷ irukkiṉṟaṉa.* — There are old copper-plate grants in the museum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to flourish, then the Tamil for a royal decree, then say ceppēṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to flourish, then the Tamil for a royal decree, then say *ceppēṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does செப்பேடு (ceppēṭu) mean? (\"A copper-plate grant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C331-vallal",
+      "sequence": 19010,
+      "title": "வள்ளல் (vaḷḷal) — a patron; a generous giver",
+      "headword": "வள்ளல்",
+      "romanization": "vaḷḷal",
+      "gloss": "a patron; a generous giver",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3dd4212dca41276",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a royal decree, then the Tamil for a copper-plate grant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வள்ளல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வள்ளல் — vaḷḷal — \"a patron; a generous giver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்த வள்ளல் புலவர்களுக்கு நிறையப் பரிசுகள் கொடுத்தார். anta vaḷḷal pulavarkaḷukku niṟaiyap paricukaḷ koṭuttār. That patron gave many gifts to poets."
+            },
+            {
+              "kind": "speech",
+              "text": "A famous figure in old Tamil poems."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வள்ளல் (vaḷḷal) is native Dravidian (DEDR 5304): a person of boundless liberality, from வள், \"abundance\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷḷal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷḷal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷḷal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷḷal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anta vaḷḷal pulavarkaḷukku niṟaiyap paricukaḷ koṭuttār. — That patron gave many gifts to poets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anta vaḷḷal pulavarkaḷukku niṟaiyap paricukaḷ koṭuttār.* — That patron gave many gifts to poets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a royal decree, then the Tamil for a copper-plate grant, then say vaḷḷal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a royal decree, then the Tamil for a copper-plate grant, then say *vaḷḷal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வள்ளல் (vaḷḷal) mean? (\"A patron; a generous giver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C331-kotai",
+      "sequence": 19020,
+      "title": "கொடை (koṭai) — a donation; a gift",
+      "headword": "கொடை",
+      "romanization": "koṭai",
+      "gloss": "a donation; a gift",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0194bf5b7d0203a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a copper-plate grant, then the Tamil for a patron."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கொடை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொடை — koṭai — \"a donation; a gift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தப் பள்ளி ஒரு வணிகரின் கொடை. intap paḷḷi oru vaṇikariṉ koṭai. This school is a merchant's donation."
+            },
+            {
+              "kind": "speech",
+              "text": "From கொடு, to give."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொடை (koṭai) is native Dravidian: DEDR 2053 gives it under கொடு, \"to give\", as \"giving away as a gift\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intap paḷḷi oru vaṇikariṉ koṭai. — This school is a merchant's donation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intap paḷḷi oru vaṇikariṉ koṭai.* — This school is a merchant's donation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a copper-plate grant, then the Tamil for a patron, then say koṭai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a copper-plate grant, then the Tamil for a patron, then say *koṭai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கொடை (koṭai) mean? (\"A donation; a gift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C331-celi",
+      "sequence": 19030,
+      "title": "செழி (ceḻi) — to prosper; to thrive",
+      "headword": "செழி",
+      "romanization": "ceḻi",
+      "gloss": "to prosper; to thrive",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd7c39d275d1dd75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a patron, then the Tamil for a donation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: செழி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செழி — ceḻi — \"to prosper; to thrive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆற்றின் கரையில் நகரங்கள் செழித்தன. āṟṟiṉ karaiyil nakaraṅkaḷ ceḻittaṉa. Towns prospered on the banks of the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): செழித்தது, ceḻittatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of plants too: to grow well."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செழி (ceḻi) is native Dravidian (DEDR 2789): to thrive, flourish, prosper, as a crop or a kingdom."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṟṟiṉ karaiyil nakaraṅkaḷ ceḻittaṉa. — Towns prospered on the banks of the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṟṟiṉ karaiyil nakaraṅkaḷ ceḻittaṉa.* — Towns prospered on the banks of the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a patron, then the Tamil for a donation, then say ceḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a patron, then the Tamil for a donation, then say *ceḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does செழி (ceḻi) mean? (\"To prosper; to thrive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Ships and Harbours",
+  "label": "ch:te-ships-and-harbours",
+  "canDo": "I can say a harbour, a ship, a sailor, an anchor and a lighthouse.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C452-dipastambham",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can say a harbour, a ship, a sailor, an anchor and a lighthouse.",
+    "assesses": [
+      "TE-LEX-C452-NAUKA452-03",
+      "TE-LEX-C452-NAUKA452-04",
+      "TE-LEX-C452-NAUKA452-05"
+    ]
+  }
+}

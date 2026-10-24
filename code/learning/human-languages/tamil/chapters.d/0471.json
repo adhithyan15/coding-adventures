@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Character and Nature",
+  "label": "ch:ta-character-and-nature",
+  "canDo": "I can talk about virtues, temperament, maturity and carelessness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C471-alatciyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can talk about virtues, temperament, maturity and carelessness.",
+    "assesses": [
+      "TA-LEX-C471-KUNAM471-03",
+      "TA-LEX-C471-KUNAM471-04",
+      "TA-LEX-C471-KUNAM471-05"
+    ]
+  }
+}

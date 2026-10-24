@@ -1,0 +1,11 @@
+{
+  "id": "KA-C400-bajet",
+  "pathSegment": "KA-PATH-400-BAJET400",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-400-BAJET400",
+      "order": 0
+    }
+  ]
+}

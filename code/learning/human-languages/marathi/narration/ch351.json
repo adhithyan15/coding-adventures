@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 351,
+  "title": "Linking Ideas",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:67041a1c8a451c26",
+  "lessons": [
+    {
+      "id": "MR-C351-matra",
+      "sequence": 20460,
+      "title": "मात्र (mātra) — however; though",
+      "headword": "मात्र",
+      "romanization": "mātra",
+      "gloss": "however; though",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41720129e525bbb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to blame, then the Marathi for to accuse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मात्र",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मात्र — mātra — \"however; though\"."
+            },
+            {
+              "kind": "speech",
+              "text": "घर लहान आहे, मात्र खूप स्वच्छ आहे. ghar lahān āhe, mātra khūp svaccha āhe. The house is small; it is very clean, though."
+            },
+            {
+              "kind": "speech",
+              "text": "Often after the first word: मी मात्र (mātra) घरीच राहिलो, I, however, stayed home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मात्र (mātra) is a tatsama, taken from Sanskrit mātra, \"measure\", which at the end of a compound meant \"nothing but, only\" (Monier-Williams); Marathi uses it on its own for \"only\" and \"however\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghar lahān āhe, mātra khūp svaccha āhe. — The house is small; it is very clean, though.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghar lahān āhe, mātra khūp svaccha āhe.* — The house is small; it is very clean, though.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to blame, then the Marathi for to accuse, then say mātra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to blame, then the Marathi for to accuse, then say *mātra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मात्र (mātra) mean? (\"However; though\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C351-tasec",
+      "sequence": 20470,
+      "title": "तसेच (tasec) — likewise; as well as",
+      "headword": "तसेच",
+      "romanization": "tasec",
+      "gloss": "likewise; as well as",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80655e215a350af7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to accuse, then the Marathi for however."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तसेच",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तसेच — tasec — \"likewise; as well as\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आम्ही पुस्तकं वाचली, तसेच गाणी ऐकली. āmhī pustakaṁ vāclī, tasec gāṇī aiklī. We read books and also listened to songs."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; तसंच in speech. Built from तसे, in that way, and -च."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तसेच (tasec) is built from तसे, \"in that way\", and the stressing ending -च. तसा is inherited: CDIAL lists Marathi tasā, \"suchlike\", under Sanskrit tādṛśa, \"suchlike\" (CDIAL 5760)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasec",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasec*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasec, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasec*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmhī pustakaṁ vāclī, tasec gāṇī aiklī. — We read books and also listened to songs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmhī pustakaṁ vāclī, tasec gāṇī aiklī.* — We read books and also listened to songs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to accuse, then the Marathi for however, then say tasec again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to accuse, then the Marathi for however, then say *tasec* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तसेच (tasec) mean? (\"Likewise; as well as\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C351-kimbahuna",
+      "sequence": 20480,
+      "title": "किंबहुना (kimbahunā) — in fact; rather",
+      "headword": "किंबहुना",
+      "romanization": "kimbahunā",
+      "gloss": "in fact; rather",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b05c0bac12dfb5ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for however, then the Marathi for likewise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किंबहुना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किंबहुना — kimbahunā — \"in fact; rather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तो हुशार आहे, किंबहुना वर्गात सर्वात हुशार आहे. to huśār āhe, kimbahunā vargāt sarvāt huśār āhe. He is clever; in fact, the cleverest in the class."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal: it makes what was said stronger."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किंबहुना (kimbahunā) is a tatsama phrase, taken whole from Sanskrit kiṁ, \"what\", and bahunā, \"with more\" (Monier-Williams): what need is there to say more."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kimbahunā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kimbahunā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kimbahunā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kimbahunā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to huśār āhe, kimbahunā vargāt sarvāt huśār āhe. — He is clever; in fact, the cleverest in the class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *to huśār āhe, kimbahunā vargāt sarvāt huśār āhe.* — He is clever; in fact, the cleverest in the class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for however, then the Marathi for likewise, then say kimbahunā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for however, then the Marathi for likewise, then say *kimbahunā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does किंबहुना (kimbahunā) mean? (\"In fact; rather\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C351-tathapi",
+      "sequence": 20490,
+      "title": "तथापि (tathāpi) — nevertheless",
+      "headword": "तथापि",
+      "romanization": "tathāpi",
+      "gloss": "nevertheless",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c03b527ece8943cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for likewise, then the Marathi for in fact."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तथापि",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तथापि — tathāpi — \"nevertheless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पाऊस पडत होता, तथापि कार्यक्रम वेळेवर सुरू झाला. pāūs paḍat hotā, tathāpi kāryakram veḷevar surū jhālā. It was raining; nevertheless, the programme began on time."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal and written; in speech पण or तरीही."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तथापि (tathāpi) is a tatsama, taken from Sanskrit tathāpi, \"even so, nevertheless\" (CDIAL 5647), from tathā, \"so\", and api, \"even\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tathāpi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tathāpi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tathāpi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tathāpi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāūs paḍat hotā, tathāpi kāryakram veḷevar surū jhālā. — It was raining; nevertheless, the programme began on time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāūs paḍat hotā, tathāpi kāryakram veḷevar surū jhālā.* — It was raining; nevertheless, the programme began on time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for likewise, then the Marathi for in fact, then say tathāpi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for likewise, then the Marathi for in fact, then say *tathāpi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तथापि (tathāpi) mean? (\"Nevertheless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C351-udaharanartha",
+      "sequence": 20500,
+      "title": "उदाहरणार्थ (udāharaṇārtha) — for example",
+      "headword": "उदाहरणार्थ",
+      "romanization": "udāharaṇārtha",
+      "gloss": "for example",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46dd008c29e04122",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for in fact, then the Marathi for nevertheless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उदाहरणार्थ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उदाहरणार्थ — udāharaṇārtha — \"for example\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मला फळं आवडतात, उदाहरणार्थ आंबा आणि केळं. malā phaḷaṁ āvaḍtāt, udāharaṇārtha āmbā āṇi keḷaṁ. I like fruit, for example mangoes and bananas."
+            },
+            {
+              "kind": "speech",
+              "text": "उदाहरण + अर्थ: for the sake of an example."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उदाहरणार्थ (udāharaṇārtha) is a learned compound built from Sanskrit udāharaṇa, \"example\", and artha, \"aim, sake\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udāharaṇārtha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udāharaṇārtha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udāharaṇārtha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udāharaṇārtha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malā phaḷaṁ āvaḍtāt, udāharaṇārtha āmbā āṇi keḷaṁ. — I like fruit, for example mangoes and bananas.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malā phaḷaṁ āvaḍtāt, udāharaṇārtha āmbā āṇi keḷaṁ.* — I like fruit, for example mangoes and bananas.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for in fact, then the Marathi for nevertheless, then say udāharaṇārtha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for in fact, then the Marathi for nevertheless, then say *udāharaṇārtha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उदाहरणार्थ (udāharaṇārtha) mean? (\"For example\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

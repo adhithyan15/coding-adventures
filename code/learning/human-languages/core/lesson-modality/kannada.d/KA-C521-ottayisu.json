@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C521-ottayisu",
+    "language": "kannada",
+    "chapter": 521,
+    "sequence": 26610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52b017e3ba4fcfad"
+  },
+  "findings": []
+}

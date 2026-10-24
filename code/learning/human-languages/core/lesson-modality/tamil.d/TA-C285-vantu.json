@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C285-vantu",
+    "language": "tamil",
+    "chapter": 285,
+    "sequence": 16170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5abddc0cdcd5666a"
+  },
+  "findings": []
+}

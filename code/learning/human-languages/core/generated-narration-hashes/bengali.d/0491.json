@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:60c2188426cdaaa3",
+  "lessonIds": [
+    "BN-C491-ayu",
+    "BN-C491-shmoshan",
+    "BN-C491-shraddho",
+    "BN-C491-somobedona",
+    "BN-C491-kobor-deoya",
+    "BN-R491-review-485-491",
+    "BN-R491-review-final-491"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch491.txt",
+  "json": "bengali/narration/ch491.json",
+  "textHash": "fnv1a64:bb2ca0b1c6a796f7",
+  "jsonHash": "fnv1a64:7e5b1786f82aa817",
+  "findings": []
+}

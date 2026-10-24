@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:a52fbcc16fbe999a",
+  "lessonIds": [
+    "TE-C399-kartavyam",
+    "TE-C399-sveccha",
+    "TE-C399-samanatvam",
+    "TE-C399-anyayam",
+    "TE-C399-gauravincu"
+  ],
+  "tex": "telugu/book/chapters/ch399-rights-and-duties.tex"
+}

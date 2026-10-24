@@ -1,0 +1,11 @@
+{
+  "id": "TA-C408-carivu",
+  "pathSegment": "TA-PATH-408-VALAIVU408",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-408-VALAIVU408",
+      "order": 1
+    }
+  ]
+}

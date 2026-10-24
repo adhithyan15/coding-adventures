@@ -1,0 +1,11 @@
+{
+  "id": "AR-C405-shamila",
+  "pathSegment": "AR-PATH-405-ISTITHNA405",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-405-ISTITHNA405",
+      "order": 2
+    }
+  ]
+}

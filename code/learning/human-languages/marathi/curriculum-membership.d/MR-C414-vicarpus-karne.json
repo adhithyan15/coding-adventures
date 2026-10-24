@@ -1,0 +1,11 @@
+{
+  "id": "MR-C414-vicarpus-karne",
+  "pathSegment": "MR-PATH-414-ATITHI414",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-414-ATITHI414",
+      "order": 3
+    }
+  ]
+}

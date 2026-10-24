@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Already, Meanwhile, Suddenly",
+  "label": "ch:te-already-meanwhile-suddenly",
+  "canDo": "I can say already by then, in the meantime, all of a sudden, a moment and to yell.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C332-arucu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can say already by then, in the meantime, all of a sudden, a moment and to yell.",
+    "assesses": [
+      "TE-LEX-C332-KSHANAM332-03",
+      "TE-LEX-C332-KSHANAM332-04",
+      "TE-LEX-C332-KSHANAM332-05"
+    ]
+  }
+}

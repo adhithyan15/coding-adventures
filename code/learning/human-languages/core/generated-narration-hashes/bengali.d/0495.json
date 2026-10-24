@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:cd2eca627eed427c",
+  "lessonIds": [
+    "BN-C495-beton",
+    "BN-C495-bonas",
+    "BN-C495-uparjon",
+    "BN-C495-penshon",
+    "BN-C495-poshano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch495.txt",
+  "json": "bengali/narration/ch495.json",
+  "textHash": "fnv1a64:4f6454dcd002fef5",
+  "jsonHash": "fnv1a64:025264c8daddaaa4",
+  "findings": []
+}

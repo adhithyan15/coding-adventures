@@ -1,0 +1,11 @@
+{
+  "id": "MR-C392-davalne",
+  "pathSegment": "MR-PATH-392-KALAM392",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-392-KALAM392",
+      "order": 2
+    }
+  ]
+}

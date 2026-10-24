@@ -1,0 +1,11 @@
+{
+  "id": "HI-C432-lebal",
+  "pathSegment": "HI-PATH-432-MAAL432",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-432-MAAL432",
+      "order": 3
+    }
+  ]
+}

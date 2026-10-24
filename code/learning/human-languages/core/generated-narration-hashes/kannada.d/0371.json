@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:c984befd99dabd90",
+  "lessonIds": [
+    "KA-C371-tali",
+    "KA-C371-pallakki",
+    "KA-C371-palegara",
+    "KA-C371-mahalu",
+    "KA-C371-kalidu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch371.txt",
+  "json": "kannada/narration/ch371.json",
+  "textHash": "fnv1a64:85fa8c235c136a26",
+  "jsonHash": "fnv1a64:4bff2847708f0913",
+  "findings": []
+}

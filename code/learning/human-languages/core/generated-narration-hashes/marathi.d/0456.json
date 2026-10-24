@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:411a42640fedb2cf",
+  "lessonIds": [
+    "MR-C456-atmavisvas",
+    "MR-C456-sankoc",
+    "MR-C456-bicakne",
+    "MR-C456-gangarne",
+    "MR-C456-bujne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch456.txt",
+  "json": "marathi/narration/ch456.json",
+  "textHash": "fnv1a64:6016dbd663aacc1b",
+  "jsonHash": "fnv1a64:4b0962287d417700",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C422-manadanda",
+  "pathSegment": "KA-PATH-422-MANADANDA422",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-422-MANADANDA422",
+      "order": 1
+    }
+  ]
+}

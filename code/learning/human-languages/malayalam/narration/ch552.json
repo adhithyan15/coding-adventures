@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 552,
+  "title": "Love and Divorce",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1dcdd33b4b73114d",
+  "lessons": [
+    {
+      "id": "ML-C552-bandham",
+      "sequence": 27790,
+      "title": "ബന്ധം (bandhaṁ) — a relationship; a tie",
+      "headword": "ബന്ധം",
+      "romanization": "bandhaṁ",
+      "gloss": "a relationship; a tie",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59d47539cf1e99ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to put in work, then the Malayalam for to toil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ബന്ധം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബന്ധം — bandhaṁ — \"a relationship; a tie\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സഹപ്രവർത്തകരുമായി എനിക്ക് നല്ല ബന്ധമാണ്. sahapravarttakarumāyi enikkŭ nalla bandhamāṇŭ. I have a good relationship with my colleagues."
+            },
+            {
+              "kind": "speech",
+              "text": "ബന്ധു, a relative, shares its root; ബന്ധപ്പെടുക is to get in touch."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബന്ധം (bandhaṁ) is borrowed from Sanskrit bandha, \"a bond, a tie\" (CDIAL 9136)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahapravarttakarumāyi enikkŭ nalla bandhamāṇŭ. — I have a good relationship with my colleagues.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahapravarttakarumāyi enikkŭ nalla bandhamāṇŭ.* — I have a good relationship with my colleagues.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to put in work, then the Malayalam for to toil, then say bandhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to put in work, then the Malayalam for to toil, then say *bandhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ബന്ധം (bandhaṁ) mean? (\"A relationship; a tie\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C552-dampatyam",
+      "sequence": 27800,
+      "title": "ദാമ്പത്യം (dāmpatyaṁ) — married life",
+      "headword": "ദാമ്പത്യം",
+      "romanization": "dāmpatyaṁ",
+      "gloss": "married life",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dba267feb45549b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to toil, then the Malayalam for a relationship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ദാമ്പത്യം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദാമ്പത്യം — dāmpatyaṁ — \"married life\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മുത്തച്ഛന്റെയും മുത്തശ്ശിയുടെയും ദാമ്പത്യം അമ്പത് വർഷം നീണ്ടു. muttacchanṟeyuṁ muttaśśiyuṭeyuṁ dāmpatyaṁ ampatŭ varṣaṁ nīṇṭu. My grandparents' married life lasted fifty years."
+            },
+            {
+              "kind": "speech",
+              "text": "ദമ്പതികൾ, a married couple, is already familiar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദാമ്പത്യം (dāmpatyaṁ) is borrowed from Sanskrit dāmpatya, \"the state of husband and wife\" (Monier-Williams), the noun of dampati, \"a married couple\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāmpatyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāmpatyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāmpatyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāmpatyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttacchanṟeyuṁ muttaśśiyuṭeyuṁ dāmpatyaṁ ampatŭ varṣaṁ nīṇṭu. — My grandparents' married life lasted fifty years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttacchanṟeyuṁ muttaśśiyuṭeyuṁ dāmpatyaṁ ampatŭ varṣaṁ nīṇṭu.* — My grandparents' married life lasted fifty years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to toil, then the Malayalam for a relationship, then say dāmpatyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to toil, then the Malayalam for a relationship, then say *dāmpatyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ദാമ്പത്യം (dāmpatyaṁ) mean? (\"Married life\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C552-pranayalekhanam",
+      "sequence": 27810,
+      "title": "പ്രണയലേഖനം (praṇayalēkhanaṁ) — a love letter",
+      "headword": "പ്രണയലേഖനം",
+      "romanization": "praṇayalēkhanaṁ",
+      "gloss": "a love letter",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5bb3aedb9723722a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a relationship, then the Malayalam for married life."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രണയലേഖനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രണയലേഖനം — praṇayalēkhanaṁ — \"a love letter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ അവൾക്ക് ഒരു പ്രണയലേഖനം എഴുതി. avan avaḷkkŭ oru praṇayalēkhanaṁ eḻuti. He wrote her a love letter."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രണയം love + ലേഖനം a piece of writing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രണയലേഖനം (praṇayalēkhanaṁ) is a learned compound built from Sanskrit praṇaya, \"affection\" (CDIAL 8525), and lekhana, \"writing down\" (Monier-Williams), a word CDIAL 11103 records in its older sense of scraping."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praṇayalēkhanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praṇayalēkhanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praṇayalēkhanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praṇayalēkhanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan avaḷkkŭ oru praṇayalēkhanaṁ eḻuti. — He wrote her a love letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan avaḷkkŭ oru praṇayalēkhanaṁ eḻuti.* — He wrote her a love letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a relationship, then the Malayalam for married life, then say praṇayalēkhanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a relationship, then the Malayalam for married life, then say *praṇayalēkhanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രണയലേഖനം (praṇayalēkhanaṁ) mean? (\"A love letter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C552-kamukan",
+      "sequence": 27820,
+      "title": "കാമുകൻ (kāmukan) — a boyfriend; a lover",
+      "headword": "കാമുകൻ",
+      "romanization": "kāmukan",
+      "gloss": "a boyfriend; a lover",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ea751aea26aa3dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for married life, then the Malayalam for a love letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കാമുകൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാമുകൻ — kāmukan — \"a boyfriend; a lover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൾ കാമുകനോടൊപ്പം സിനിമയ്ക്ക് പോയി. avaḷ kāmukanōṭoppaṁ sinimaykkŭ pōyi. She went to the cinema with her boyfriend."
+            },
+            {
+              "kind": "speech",
+              "text": "A girlfriend is കാമുകി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാമുകൻ (kāmukan) is borrowed from Sanskrit kāmuka, \"longing for, in love with\" (Monier-Williams), with the Malayalam masculine ending -ൻ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmukan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmukan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmukan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmukan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ kāmukanōṭoppaṁ sinimaykkŭ pōyi. — She went to the cinema with her boyfriend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ kāmukanōṭoppaṁ sinimaykkŭ pōyi.* — She went to the cinema with her boyfriend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for married life, then the Malayalam for a love letter, then say kāmukan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for married life, then the Malayalam for a love letter, then say *kāmukan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കാമുകൻ (kāmukan) mean? (\"A boyfriend; a lover\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C552-pranayikkuka",
+      "sequence": 27830,
+      "title": "പ്രണയിക്കുക (praṇayikkuka) — to be in love",
+      "headword": "പ്രണയിക്കുക",
+      "romanization": "praṇayikkuka",
+      "gloss": "to be in love",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31bcb967c046ea27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a love letter, then the Malayalam for a boyfriend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രണയിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രണയിക്കുക — praṇayikkuka — \"to be in love\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കോളേജിൽ വെച്ച് അവർ പ്രണയിച്ചു. kōḷējil veccŭ avar praṇayiccu. They fell in love at college."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പ്രണയിച്ചു, praṇayiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is പ്രണയം, romantic love; പ്രണയവിവാഹം is a love marriage."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രണയിക്കുക (praṇayikkuka) is built from Sanskrit praṇaya, \"guidance; affection\" (CDIAL 8525), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praṇayikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praṇayikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praṇayikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praṇayikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōḷējil veccŭ avar praṇayiccu. — They fell in love at college.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōḷējil veccŭ avar praṇayiccu.* — They fell in love at college.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a love letter, then the Malayalam for a boyfriend, then say praṇayikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a love letter, then the Malayalam for a boyfriend, then say *praṇayikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രണയിക്കുക (praṇayikkuka) mean? (\"To be in love\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

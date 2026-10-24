@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 546,
+  "title": "Around the House",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dd632774efbff90f",
+  "lessons": [
+    {
+      "id": "TE-C546-curu",
+      "sequence": 27660,
+      "title": "చూరు (cūru) — the eaves",
+      "headword": "చూరు",
+      "romanization": "cūru",
+      "gloss": "the eaves",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7de8230b797dc63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to shove, then the Telugu for a bet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చూరు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చూరు — cūru — \"the eaves\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వర్షం నీళ్ళు చూరు నుంచి కారుతున్నాయి. varṣaṁ nīḷḷu cūru nuñci kārutunnāyi. Rainwater is dripping from the eaves."
+            },
+            {
+              "kind": "speech",
+              "text": "The edge of a sloping roof."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చూరు (cūru) is native Dravidian: DEDR 2729 lists Telugu cūru, \"eaves, the edge of a roof\", with Kannada cūru."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṣaṁ nīḷḷu cūru nuñci kārutunnāyi. — Rainwater is dripping from the eaves.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṣaṁ nīḷḷu cūru nuñci kārutunnāyi.* — Rainwater is dripping from the eaves.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to shove, then the Telugu for a bet, then say cūru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to shove, then the Telugu for a bet, then say *cūru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చూరు (cūru) mean? (\"The eaves\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C546-pita",
+      "sequence": 27670,
+      "title": "పీట (pīṭa) — a low wooden stool",
+      "headword": "పీట",
+      "romanization": "pīṭa",
+      "gloss": "a low wooden stool",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e895976c8adba4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a bet, then the Telugu for the eaves."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పీట",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పీట — pīṭa — \"a low wooden stool\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అమ్మమ్మ పీట మీద కూర్చుని కూరగాయలు కోసింది. ammamma pīṭa mīda kūrcuni kūragāyalu kōsindi. Grandma sat on a low stool and cut the vegetables."
+            },
+            {
+              "kind": "speech",
+              "text": "The low plank seat for eating or working on the floor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పీట (pīṭa) is borrowed from Sanskrit pīṭha, \"a stool, a bench\" (CDIAL 8222)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammamma pīṭa mīda kūrcuni kūragāyalu kōsindi. — Grandma sat on a low stool and cut the vegetables.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammamma pīṭa mīda kūrcuni kūragāyalu kōsindi.* — Grandma sat on a low stool and cut the vegetables.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a bet, then the Telugu for the eaves, then say pīṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a bet, then the Telugu for the eaves, then say *pīṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పీట (pīṭa) mean? (\"A low wooden stool\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C546-bavi",
+      "sequence": 27680,
+      "title": "బావి (bāvi) — a dug well",
+      "headword": "బావి",
+      "romanization": "bāvi",
+      "gloss": "a dug well",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8bb90239c0ce003b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for the eaves, then the Telugu for a low wooden stool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బావి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బావి — bāvi — \"a dug well\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా పెరట్లో ఒక పాత బావి ఉంది. mā peraṭlō oka pāta bāvi undi. There is an old well in our backyard."
+            },
+            {
+              "kind": "speech",
+              "text": "బావి (bāvi) నీళ్ళు, well water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బావి (bāvi) is usually traced to Sanskrit vāpī, \"a pond, a tank\" (CDIAL 11529)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāvi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāvi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāvi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāvi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā peraṭlō oka pāta bāvi undi. — There is an old well in our backyard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā peraṭlō oka pāta bāvi undi.* — There is an old well in our backyard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for the eaves, then the Telugu for a low wooden stool, then say bāvi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for the eaves, then the Telugu for a low wooden stool, then say *bāvi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బావి (bāvi) mean? (\"A dug well\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C546-cembu",
+      "sequence": 27690,
+      "title": "చెంబు (cembu) — a small water pot",
+      "headword": "చెంబు",
+      "romanization": "cembu",
+      "gloss": "a small water pot",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aacfe276a98bed1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a low wooden stool, then the Telugu for a dug well."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చెంబు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెంబు — cembu — \"a small water pot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తాతయ్య చెంబుతో నీళ్ళు తాగారు. tātayya cembutō nīḷḷu tāgāru. Grandpa drank water from a small pot."
+            },
+            {
+              "kind": "speech",
+              "text": "A small round metal pot with a neck."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెంబు (cembu) is native Dravidian: DEDR 2775 lists Telugu cembu, \"goblet, pitcher\", with Tamil cempu, \"copper; a metal vessel\"; DEDR also raises the possibility that Sanskrit tāmra, \"copper\", played a part."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cembu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cembu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cembu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cembu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tātayya cembutō nīḷḷu tāgāru. — Grandpa drank water from a small pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tātayya cembutō nīḷḷu tāgāru.* — Grandpa drank water from a small pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a low wooden stool, then the Telugu for a dug well, then say cembu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a low wooden stool, then the Telugu for a dug well, then say *cembu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చెంబు (cembu) mean? (\"A small water pot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C546-boddinka",
+      "sequence": 27700,
+      "title": "బొద్దింక (boddiṅka) — a cockroach",
+      "headword": "బొద్దింక",
+      "romanization": "boddiṅka",
+      "gloss": "a cockroach",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32834e1b0c0ad5c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a dug well, then the Telugu for a small water pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బొద్దింక",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బొద్దింక — boddiṅka — \"a cockroach\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వంటగదిలో బొద్దింకలు తిరుగుతున్నాయి. vaṇṭagadilō boddiṅkalu tirugutunnāyi. Cockroaches are running about in the kitchen."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: బొద్దింకలు, boddiṅkalu."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: బొద్దింకలు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బొద్దింక (boddiṅka) is a Telugu word for a cockroach; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boddiṅka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boddiṅka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boddiṅka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boddiṅka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṇṭagadilō boddiṅkalu tirugutunnāyi. — Cockroaches are running about in the kitchen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṇṭagadilō boddiṅkalu tirugutunnāyi.* — Cockroaches are running about in the kitchen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a dug well, then the Telugu for a small water pot, then say boddiṅka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a dug well, then the Telugu for a small water pot, then say *boddiṅka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బొద్దింక (boddiṅka) mean? (\"A cockroach\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

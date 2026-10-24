@@ -1,0 +1,11 @@
+{
+  "id": "TE-C350-nerasthudu",
+  "pathSegment": "TE-PATH-350-NERAM350",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-350-NERAM350",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:41ba260325c16d8c",
+  "lessonIds": [
+    "MR-C290-havaldar",
+    "MR-C290-atak-karne",
+    "MR-C290-cauksi-karne",
+    "MR-C290-turung",
+    "MR-C290-kaidi"
+  ],
+  "tex": "marathi/book/chapters/ch290-at-the-police-station.tex"
+}

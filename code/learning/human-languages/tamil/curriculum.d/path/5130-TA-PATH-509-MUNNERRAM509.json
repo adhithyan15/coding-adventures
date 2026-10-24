@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-509-MUNNERRAM509",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-509-MUNNERRAM509"
+  ],
+  "after": []
+}

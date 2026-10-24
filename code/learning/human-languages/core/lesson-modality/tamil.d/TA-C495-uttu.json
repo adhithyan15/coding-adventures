@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C495-uttu",
+    "language": "tamil",
+    "chapter": 495,
+    "sequence": 28290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:587d8d1e41405be2"
+  },
+  "findings": []
+}

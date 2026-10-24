@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:6855b144c0fdc05d",
+  "lessonIds": [
+    "AR-C400-lawla",
+    "AR-C400-mahma",
+    "AR-C400-kullama",
+    "AR-C400-sawa",
+    "AR-C400-aynama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch400.txt",
+  "json": "arabic/narration/ch400.json",
+  "textHash": "fnv1a64:ac05c109c4a91c8f",
+  "jsonHash": "fnv1a64:7587c9cf3926090d",
+  "findings": []
+}

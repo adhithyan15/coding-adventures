@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:26e3bed6ca0e81f8",
+  "lessonIds": [
+    "TE-C354-kutra",
+    "TE-C354-mabhyapettu",
+    "TE-C354-bayatapettu",
+    "TE-C354-kappipuccu",
+    "TE-C354-gudhacari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch354.txt",
+  "json": "telugu/narration/ch354.json",
+  "textHash": "fnv1a64:fbaf4e4b29c3291a",
+  "jsonHash": "fnv1a64:601457ac97810ee7",
+  "findings": []
+}

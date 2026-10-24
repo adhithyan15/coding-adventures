@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:cd3995d401c34b2b",
+  "lessonIds": [
+    "ML-C542-tolil",
+    "ML-C542-udyogam",
+    "ML-C542-sthanakkayarram",
+    "ML-C542-vetanam",
+    "ML-C542-sthanamoliyuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch542.txt",
+  "json": "malayalam/narration/ch542.json",
+  "textHash": "fnv1a64:3b6ff5bd6c4682f7",
+  "jsonHash": "fnv1a64:20179a0653590f69",
+  "findings": []
+}

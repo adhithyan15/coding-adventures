@@ -1,0 +1,11 @@
+{
+  "id": "ML-C363-alikkattuka",
+  "pathSegment": "ML-PATH-363-JVALA363",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-363-JVALA363",
+      "order": 2
+    }
+  ]
+}

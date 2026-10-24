@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:9e6aa2d1c1bb2a0f",
+  "lessonIds": [
+    "BN-C529-monopputo",
+    "BN-C529-dotana",
+    "BN-C529-ruchi",
+    "BN-C529-jhoka",
+    "BN-C529-morji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch529.txt",
+  "json": "bengali/narration/ch529.json",
+  "textHash": "fnv1a64:48490cbed8c40c3e",
+  "jsonHash": "fnv1a64:fb8d95aac89e3c2d",
+  "findings": []
+}

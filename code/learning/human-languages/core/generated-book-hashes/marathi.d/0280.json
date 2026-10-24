@@ -1,0 +1,11 @@
+{
+  "language": "marathi",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:254a6bb3331ba0eb",
+  "lessonIds": [
+    "MR-C280-mala-vatte",
+    "MR-C280-mhanun",
+    "MR-R280-opinion-and-result"
+  ],
+  "tex": "marathi/book/chapters/ch280-what-i-think-and-so.tex"
+}

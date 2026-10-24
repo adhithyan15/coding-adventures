@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-401-PAURUDU401",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TE-EXT-401-PAURUDU401"
+  ],
+  "after": []
+}

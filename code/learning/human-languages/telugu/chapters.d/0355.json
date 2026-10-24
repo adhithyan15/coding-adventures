@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Anniversaries",
+  "label": "ch:te-anniversaries",
+  "canDo": "I can say an anniversary, a wedding anniversary, a sixtieth birthday, a birth anniversary and a felicitation.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C355-sanmanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can say an anniversary, a wedding anniversary, a sixtieth birthday, a birth anniversary and a felicitation.",
+    "assesses": [
+      "TE-LEX-C355-VARSHIKAM355-03",
+      "TE-LEX-C355-VARSHIKAM355-04",
+      "TE-LEX-C355-VARSHIKAM355-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Sightseeing",
+  "label": "ch:ml-sightseeing",
+  "canDo": "I can say a tourist, a guide, a destination, an itinerary and to roam around.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C478-currikkarannuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can say a tourist, a guide, a destination, an itinerary and to roam around.",
+    "assesses": [
+      "ML-LEX-C478-SANCARI478-03",
+      "ML-LEX-C478-SANCARI478-04",
+      "ML-LEX-C478-SANCARI478-05"
+    ]
+  }
+}

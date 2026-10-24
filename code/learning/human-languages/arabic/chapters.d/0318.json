@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Ancient civilizations",
+  "label": "ch:ar-ancient-civilizations",
+  "canDo": "I can say a civilization, a trace, remains, a temple and a pyramid.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C318-haram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can say a civilization, a trace, remains, a temple and a pyramid.",
+    "assesses": [
+      "AR-LEX-C318-HADARA318-03",
+      "AR-LEX-C318-HADARA318-04",
+      "AR-LEX-C318-HADARA318-05"
+    ]
+  }
+}

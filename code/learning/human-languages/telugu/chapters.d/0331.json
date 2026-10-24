@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Fire!",
+  "label": "ch:te-fire",
+  "canDo": "I can say a flame, an explosion, a life, to rescue and to run for it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C331-parugulu-tiyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can say a flame, an explosion, a life, to rescue and to run for it.",
+    "assesses": [
+      "TE-LEX-C331-MANTA331-03",
+      "TE-LEX-C331-MANTA331-04",
+      "TE-LEX-C331-MANTA331-05"
+    ]
+  }
+}

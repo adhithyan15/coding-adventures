@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C347-khatif",
+    "language": "arabic",
+    "chapter": 347,
+    "sequence": 19800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:034a6a9ba1057f24"
+  },
+  "findings": []
+}

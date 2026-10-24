@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:5f5e8c61dd7d4ca5",
+  "lessonIds": [
+    "ML-C533-vaksin",
+    "ML-C533-pratirodhasesi",
+    "ML-C533-kurippati",
+    "ML-C533-talaruka",
+    "ML-C533-svasammuttu"
+  ],
+  "tex": "malayalam/book/chapters/ch533-vaccines-and-prescriptions.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Staying Healthy",
+  "label": "ch:mr-staying-healthy",
+  "canDo": "I can talk about a diet regimen, good health, immunity and home remedies.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C490-colne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about a diet regimen, good health, immunity and home remedies.",
+    "assesses": [
+      "MR-LEX-C490-PATHYA490-03",
+      "MR-LEX-C490-PATHYA490-04",
+      "MR-LEX-C490-PATHYA490-05"
+    ]
+  }
+}

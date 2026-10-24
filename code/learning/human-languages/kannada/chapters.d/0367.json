@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Heroes and Villains",
+  "label": "ch:ka-heroes-and-villains",
+  "canDo": "I can say a villain, a hero, an enemy, to destroy and to disappear.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C367-kanmareyagu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can say a villain, a hero, an enemy, to destroy and to disappear.",
+    "assesses": [
+      "KA-LEX-C367-KHALA367-03",
+      "KA-LEX-C367-KHALA367-04",
+      "KA-LEX-C367-KHALA367-05"
+    ]
+  }
+}

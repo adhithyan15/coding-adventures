@@ -1,0 +1,11 @@
+{
+  "id": "TA-C384-kattayam",
+  "pathSegment": "TA-PATH-384-AVACIYAM384",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-384-AVACIYAM384",
+      "order": 1
+    }
+  ]
+}

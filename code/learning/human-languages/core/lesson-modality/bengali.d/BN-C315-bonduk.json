@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C315-bonduk",
+    "language": "bengali",
+    "chapter": 315,
+    "sequence": 20020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5678890727e682a"
+  },
+  "findings": []
+}

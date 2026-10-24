@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:93f23e7392eb8b58",
+  "lessonIds": [
+    "HI-C509-hartal",
+    "HI-C509-istifa",
+    "HI-C509-canda",
+    "HI-C509-manmani",
+    "HI-C509-nara"
+  ],
+  "tex": "hindi/book/chapters/ch509-trouble-at-the-factory.tex"
+}

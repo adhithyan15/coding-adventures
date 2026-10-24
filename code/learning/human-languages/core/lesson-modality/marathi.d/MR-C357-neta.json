@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C357-neta",
+    "language": "marathi",
+    "chapter": 357,
+    "sequence": 20790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abb44dee5c639a2c"
+  },
+  "findings": []
+}

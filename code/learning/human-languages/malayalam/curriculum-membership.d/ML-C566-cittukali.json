@@ -1,0 +1,11 @@
+{
+  "id": "ML-C566-cittukali",
+  "pathSegment": "ML-PATH-566-VINODAM566",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-566-VINODAM566",
+      "order": 2
+    }
+  ]
+}

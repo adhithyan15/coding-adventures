@@ -153,9 +153,18 @@ for every case today), the command, and the observed result.
 `ruby-iir-compiler`'s `tests/release_subsets.rs` runs the corpus on every row
 whose `iir_status` lists `rb-int-puts` — today 3.3.5, 3.3.6 and 3.3.7, which
 name profile `ruby33` and compile to identical IIR — and re-checks every case
-against a host ruby 3.3. 3.3.6, the default release, also claims
-`backend_status`: `lang-aot`'s matrix runs thirteen corpus cases on every
-backend there. 0.49 and 0.50 stay at stage P with no profile: their grammars
+against a host ruby 3.3. All three also claim `backend_status` (since LANG84
+phase 5b slice 2). `ruby-iir-compiler`'s `tests/release_sweep.rs` groups the
+claiming releases into IIR-identity classes and writes
+`release_classes.csv` (`subset,case,release,class`, one row per positive
+case and claiming release; `class` is a 16-hex digest of the release's IIR
+for the whole corpus, or `rejected`). Today there is one class, so the
+`class` column is the same everywhere. Its representative is 3.3.5, the first
+claiming row in this file. `lang-aot`'s matrix runs all fourteen positive
+cases on every backend on 3.3.5 and on the default 3.3.6, and
+`check --matrix` credits the 3.3.5 rows to 3.3.7. After a deliberate change,
+`RUBY_RELEASE_SWEEP_WRITE=1 cargo test -p ruby-iir-compiler --test
+release_sweep` rewrites the CSV. 0.49 and 0.50 stay at stage P with no profile: their grammars
 parse the subset, but in those releases `puts` is only `IO#puts` and
 `Fixnum#/` truncates, so the programs do not run as written (see
 `code/packages/rust/ruby-iir-compiler/src/profiles.rs`).

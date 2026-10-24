@@ -1,0 +1,11 @@
+{
+  "id": "MR-C295-sankat",
+  "pathSegment": "MR-PATH-295-SANKAT295",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-295-SANKAT295",
+      "order": 3
+    }
+  ]
+}

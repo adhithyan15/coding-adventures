@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:4af2c072c981071d",
+  "lessonIds": [
+    "TA-C295-tuppu",
+    "TA-C295-tatayam",
+    "TA-C295-canteki",
+    "TA-C295-kurram",
+    "TA-C295-kurravali"
+  ],
+  "tex": "tamil/book/chapters/ch295-clues-and-suspects.tex"
+}

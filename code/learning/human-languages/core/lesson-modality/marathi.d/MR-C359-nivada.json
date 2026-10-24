@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C359-nivada",
+    "language": "marathi",
+    "chapter": 359,
+    "sequence": 20900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08cdf39b3c78da9a"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:c5099756483c9352",
+  "lessonIds": [
+    "BN-C327-uponyas",
+    "BN-C327-jiboni",
+    "BN-C327-grontho",
+    "BN-C327-odhyay",
+    "BN-C327-prokashok"
+  ],
+  "tex": "bengali/book/chapters/ch327-books-to-remember.tex"
+}

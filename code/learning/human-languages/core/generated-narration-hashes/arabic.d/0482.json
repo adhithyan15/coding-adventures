@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:d78f9efc66c5ab14",
+  "lessonIds": [
+    "AR-C482-nasim",
+    "AR-C482-isar",
+    "AR-C482-asafa",
+    "AR-C482-ishtadda",
+    "AR-C482-khatar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch482.txt",
+  "json": "arabic/narration/ch482.json",
+  "textHash": "fnv1a64:60cb9c2c95e6d471",
+  "jsonHash": "fnv1a64:9c4b4e5c66ca60d4",
+  "findings": []
+}

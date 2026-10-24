@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C481-itaru",
+    "language": "tamil",
+    "chapter": 481,
+    "sequence": 27560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5f130900f0ff960"
+  },
+  "findings": []
+}

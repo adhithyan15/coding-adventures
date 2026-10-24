@@ -1,0 +1,11 @@
+{
+  "id": "HI-C420-ghusna",
+  "pathSegment": "HI-PATH-420-DHALAN420",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-420-DHALAN420",
+      "order": 2
+    }
+  ]
+}

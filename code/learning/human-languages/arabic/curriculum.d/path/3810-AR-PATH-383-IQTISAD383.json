@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-383-IQTISAD383",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "AR-EXT-383-IQTISAD383"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C352-mukhalafa",
+    "language": "arabic",
+    "chapter": 352,
+    "sequence": 20020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88c8fc0e5d2a5ccf"
+  },
+  "findings": []
+}

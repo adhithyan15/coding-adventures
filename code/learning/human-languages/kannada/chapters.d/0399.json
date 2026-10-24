@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Poverty and Need",
+  "label": "ch:ka-poverty-and-need",
+  "canDo": "I can say poverty, a labourer, a privilege, to distribute and rural.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C399-gramina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can say poverty, a labourer, a privilege, to distribute and rural.",
+    "assesses": [
+      "KA-LEX-C399-BADATANA399-03",
+      "KA-LEX-C399-BADATANA399-04",
+      "KA-LEX-C399-BADATANA399-05"
+    ]
+  }
+}

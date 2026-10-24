@@ -1,0 +1,21 @@
+{
+  "chapter": 529,
+  "title": "Puzzles and Old Games",
+  "label": "ch:ta-puzzles-and-old-games",
+  "canDo": "I can name puzzles and old board games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R529-review-522-529",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can name puzzles and old board games.",
+    "assesses": [
+      "TA-LEX-C529-VILAIYATTU529-01",
+      "TA-LEX-C529-VILAIYATTU529-02",
+      "TA-LEX-C529-VILAIYATTU529-03",
+      "TA-LEX-C529-VILAIYATTU529-04",
+      "TA-LEX-C529-VILAIYATTU529-05"
+    ]
+  }
+}

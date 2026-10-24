@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C554-muddam",
+    "language": "marathi",
+    "chapter": 554,
+    "sequence": 31560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18c5855040fcde6b"
+  },
+  "findings": []
+}

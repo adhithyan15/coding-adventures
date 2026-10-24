@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C483-mandu",
+    "language": "telugu",
+    "chapter": 483,
+    "sequence": 24320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2247db5812d3907"
+  },
+  "findings": []
+}

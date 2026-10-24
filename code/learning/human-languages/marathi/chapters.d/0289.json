@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "Crimes and Witnesses",
+  "label": "ch:mr-crimes-and-witnesses",
+  "canDo": "I can talk about a crime, a robbery and the witness who saw it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C289-phasavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can talk about a crime, a robbery and the witness who saw it.",
+    "assesses": [
+      "MR-LEX-C289-GUNHA289-03",
+      "MR-LEX-C289-GUNHA289-04",
+      "MR-LEX-C289-GUNHA289-05"
+    ]
+  }
+}

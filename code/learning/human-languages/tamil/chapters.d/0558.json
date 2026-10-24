@@ -1,0 +1,21 @@
+{
+  "chapter": 558,
+  "title": "Booking Musicians",
+  "label": "ch:ta-booking-musicians",
+  "canDo": "I can talk about booking musicians for a function.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-R558-review-final-558",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 558: I can talk about booking musicians for a function.",
+    "assesses": [
+      "TA-LEX-C558-MELAM558-01",
+      "TA-LEX-C558-MELAM558-02",
+      "TA-LEX-C558-MELAM558-03",
+      "TA-LEX-C558-MELAM558-04",
+      "TA-LEX-C558-MELAM558-05"
+    ]
+  }
+}

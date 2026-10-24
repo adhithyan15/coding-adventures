@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:fa8aa310d9672a09",
+  "lessonIds": [
+    "TA-C553-tarkalika",
+    "TA-C553-nirantara",
+    "TA-C553-inriyamaiyata",
+    "TA-C553-marruvali",
+    "TA-C553-torayamaka"
+  ],
+  "tex": "tamil/book/chapters/ch553-for-now-or-for-good.tex"
+}

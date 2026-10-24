@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:c7c6186e430ae796",
+  "lessonIds": [
+    "ML-C405-vadikkuka",
+    "ML-C405-yukti",
+    "ML-C405-vastuta",
+    "ML-C405-sammatikkuka",
+    "ML-C405-nigamanam"
+  ],
+  "tex": "malayalam/book/chapters/ch405-arguing-a-point.tex"
+}

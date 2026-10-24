@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "A Sudden Fright",
+  "label": "ch:bn-a-sudden-fright",
+  "canDo": "I can say that something frightened me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C441-dhorphor-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can say that something frightened me.",
+    "assesses": [
+      "BN-LEX-C441-ATONKO441-03",
+      "BN-LEX-C441-ATONKO441-04",
+      "BN-LEX-C441-ATONKO441-05"
+    ]
+  }
+}

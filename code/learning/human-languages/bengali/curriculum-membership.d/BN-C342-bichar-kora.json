@@ -1,0 +1,11 @@
+{
+  "id": "BN-C342-bichar-kora",
+  "pathSegment": "BN-PATH-342-BICHAR342",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-342-BICHAR342",
+      "order": 1
+    }
+  ]
+}

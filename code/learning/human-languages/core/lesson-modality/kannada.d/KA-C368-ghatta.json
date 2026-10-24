@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C368-ghatta",
+    "language": "kannada",
+    "chapter": 368,
+    "sequence": 18540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee511a0c7a7e30c0"
+  },
+  "findings": []
+}

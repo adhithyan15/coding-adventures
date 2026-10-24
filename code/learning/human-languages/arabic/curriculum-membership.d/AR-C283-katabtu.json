@@ -1,0 +1,11 @@
+{
+  "id": "AR-C283-katabtu",
+  "pathSegment": "AR-PATH-283-PAST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-283-PAST",
+      "order": 1
+    }
+  ]
+}

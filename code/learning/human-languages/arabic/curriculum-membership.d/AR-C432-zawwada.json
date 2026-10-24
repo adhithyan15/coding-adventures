@@ -1,0 +1,11 @@
+{
+  "id": "AR-C432-zawwada",
+  "pathSegment": "AR-PATH-432-WAQUD432",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-432-WAQUD432",
+      "order": 4
+    }
+  ]
+}

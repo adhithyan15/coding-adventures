@@ -1,0 +1,11 @@
+{
+  "id": "ML-C513-duritasvasam",
+  "pathSegment": "ML-PATH-513-CAMP513",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-513-CAMP513",
+      "order": 1
+    }
+  ]
+}

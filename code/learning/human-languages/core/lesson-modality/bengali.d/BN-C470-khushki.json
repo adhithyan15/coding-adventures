@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C470-khushki",
+    "language": "bengali",
+    "chapter": 470,
+    "sequence": 28650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5620a0bcbd58b520"
+  },
+  "findings": []
+}

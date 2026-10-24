@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import path from "node:path";
 import { humanLanguageLedgerPlugin } from "./human-language-ledger-plugin.ts";
+import { rawLoadThrottlePlugin } from "./raw-load-throttle-plugin.ts";
 import { scriptInventoryPlugin } from "@coding-adventures/script-ductus/script-inventory-plugin.ts";
 import { isBookLedgerModuleId } from "./chunk-routing.ts";
 // How lesson batches are grouped lives in ONE module, imported by both this
@@ -23,6 +24,9 @@ const curriculumRoot = path.join(
 
 export default defineConfig({
   plugins: [
+    // Must sit before Vite's own asset plugin; see raw-load-throttle-plugin.ts
+    // for the Windows EMFILE it prevents.
+    rawLoadThrottlePlugin({ curriculumRoot }),
     humanLanguageLedgerPlugin({ curriculumRoot }),
     scriptInventoryPlugin({ curriculumRoot }),
   ],

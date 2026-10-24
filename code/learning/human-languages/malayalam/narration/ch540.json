@@ -1,0 +1,866 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 540,
+  "title": "At the Clinic",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d7ff1830fd466d1d",
+  "lessons": [
+    {
+      "id": "ML-C540-klinikku",
+      "sequence": 27170,
+      "title": "ക്ലിനിക്ക് (klinikkŭ) — a clinic",
+      "headword": "ക്ലിനിക്ക്",
+      "romanization": "klinikkŭ",
+      "gloss": "a clinic",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ec9ea819c4e7c8d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a diet, then the Malayalam for nutritious food."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ക്ലിനിക്ക്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ലിനിക്ക് — klinikkŭ — \"a clinic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞങ്ങളുടെ കവലയിൽ ഒരു ചെറിയ ക്ലിനിക്ക് ഉണ്ട്. ñaṅṅaḷuṭe kavalayil oru ceṟiya klinikkŭ uṇṭŭ. There is a small clinic at our junction."
+            },
+            {
+              "kind": "speech",
+              "text": "Smaller than an ആശുപത്രി, often one doctor's rooms."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ലിനിക്ക് (klinikkŭ) was borrowed from English clinic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "klinikkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *klinikkŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "klinikkŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *klinikkŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñaṅṅaḷuṭe kavalayil oru ceṟiya klinikkŭ uṇṭŭ. — There is a small clinic at our junction.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñaṅṅaḷuṭe kavalayil oru ceṟiya klinikkŭ uṇṭŭ.* — There is a small clinic at our junction.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a diet, then the Malayalam for nutritious food, then say klinikkŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a diet, then the Malayalam for nutritious food, then say *klinikkŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്ലിനിക്ക് (klinikkŭ) mean? (\"A clinic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C540-unnuvati",
+      "sequence": 27180,
+      "title": "ഊന്നുവടി (ūnnuvaṭi) — a walking stick; a crutch",
+      "headword": "ഊന്നുവടി",
+      "romanization": "ūnnuvaṭi",
+      "gloss": "a walking stick; a crutch",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcd1e4cb7128f6ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for nutritious food, then the Malayalam for a clinic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഊന്നുവടി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊന്നുവടി — ūnnuvaṭi — \"a walking stick; a crutch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കാൽ ഒടിഞ്ഞ ശേഷം അവൻ ഊന്നുവടിയുമായി നടന്നു. kāl oṭiñña śēṣaṁ avan ūnnuvaṭiyumāyi naṭannu. After breaking his leg, he walked with a crutch."
+            },
+            {
+              "kind": "speech",
+              "text": "ഊന്നുക to lean on + വടി a stick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊന്നുവടി (ūnnuvaṭi) is native Dravidian, a compound of ഊന്നുക, \"to lean, to rest upon\" (DEDR 763), and വടി, \"a stick\" (DEDR 5224)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūnnuvaṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūnnuvaṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūnnuvaṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūnnuvaṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāl oṭiñña śēṣaṁ avan ūnnuvaṭiyumāyi naṭannu. — After breaking his leg, he walked with a crutch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāl oṭiñña śēṣaṁ avan ūnnuvaṭiyumāyi naṭannu.* — After breaking his leg, he walked with a crutch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for nutritious food, then the Malayalam for a clinic, then say ūnnuvaṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for nutritious food, then the Malayalam for a clinic, then say *ūnnuvaṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഊന്നുവടി (ūnnuvaṭi) mean? (\"A walking stick; a crutch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C540-mukhakkuru",
+      "sequence": 27190,
+      "title": "മുഖക്കുരു (mukhakkuru) — a pimple; acne",
+      "headword": "മുഖക്കുരു",
+      "romanization": "mukhakkuru",
+      "gloss": "a pimple; acne",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f56007c638ada00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a clinic, then the Malayalam for a walking stick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുഖക്കുരു",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുഖക്കുരു — mukhakkuru — \"a pimple; acne\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അനിയത്തിക്ക് മുഖത്ത് ഒരുപാട് മുഖക്കുരു ഉണ്ട്. aniyattikkŭ mukhattŭ orupāṭŭ mukhakkuru uṇṭŭ. My little sister has a lot of pimples on her face."
+            },
+            {
+              "kind": "speech",
+              "text": "മുഖം face + കുരു a pimple, a boil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുഖക്കുരു (mukhakkuru) is a Malayalam compound built from മുഖം, from Sanskrit mukha, \"mouth, face\" (CDIAL 10158), and കുരു, \"a pustule, a boil\", which is native (DEDR 1780)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhakkuru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhakkuru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhakkuru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhakkuru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aniyattikkŭ mukhattŭ orupāṭŭ mukhakkuru uṇṭŭ. — My little sister has a lot of pimples on her face.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aniyattikkŭ mukhattŭ orupāṭŭ mukhakkuru uṇṭŭ.* — My little sister has a lot of pimples on her face.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a clinic, then the Malayalam for a walking stick, then say mukhakkuru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a clinic, then the Malayalam for a walking stick, then say *mukhakkuru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മുഖക്കുരു (mukhakkuru) mean? (\"A pimple; acne\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C540-maravikkuka",
+      "sequence": 27200,
+      "title": "മരവിക്കുക (maravikkuka) — to go numb",
+      "headword": "മരവിക്കുക",
+      "romanization": "maravikkuka",
+      "gloss": "to go numb",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c62a9eea1775eab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a walking stick, then the Malayalam for a pimple."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മരവിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മരവിക്കുക — maravikkuka — \"to go numb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തണുത്ത വെള്ളത്തിൽ കൈ മരവിച്ചു. taṇutta veḷḷattil kai maraviccu. My hand went numb in the cold water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മരവിച്ചു, maraviccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of feelings: മനസ്സ് മരവിച്ചു, the heart went numb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മരവിക്കുക (maravikkuka) looks native, but DEDR has no entry that clearly holds it, so its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maravikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maravikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maravikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maravikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇutta veḷḷattil kai maraviccu. — My hand went numb in the cold water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇutta veḷḷattil kai maraviccu.* — My hand went numb in the cold water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a walking stick, then the Malayalam for a pimple, then say maravikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a walking stick, then the Malayalam for a pimple, then say *maravikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മരവിക്കുക (maravikkuka) mean? (\"To go numb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C540-kalaykkuka",
+      "sequence": 27210,
+      "title": "കഴയ്ക്കുക (kaḻaykkuka) — to feel sore (of limbs)",
+      "headword": "കഴയ്ക്കുക",
+      "romanization": "kaḻaykkuka",
+      "gloss": "to feel sore (of limbs)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8489ae2babd98a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a pimple, then the Malayalam for to go numb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കഴയ്ക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കഴയ്ക്കുക — kaḻaykkuka — \"to feel sore (of limbs)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒരുപാട് നടന്നതുകൊണ്ട് കാലുകൾ കഴച്ചു. orupāṭŭ naṭannatukoṇṭŭ kālukaḷ kaḻaccu. My legs ached from walking so much."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കഴച്ചു, kaḻaccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The tired ache in arms and legs after hard use."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കഴയ്ക്കുക (kaḻaykkuka) looks native, but DEDR has no entry that clearly holds it, so its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḻaykkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḻaykkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḻaykkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḻaykkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "orupāṭŭ naṭannatukoṇṭŭ kālukaḷ kaḻaccu. — My legs ached from walking so much.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *orupāṭŭ naṭannatukoṇṭŭ kālukaḷ kaḻaccu.* — My legs ached from walking so much.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a pimple, then the Malayalam for to go numb, then say kaḻaykkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a pimple, then the Malayalam for to go numb, then say *kaḻaykkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കഴയ്ക്കുക (kaḻaykkuka) mean? (\"To feel sore (of limbs)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R540-review-533-540",
+      "sequence": 27220,
+      "title": "Words from chapters 533–540 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 533-540",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3e8fe0d6021045e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for a vaccine and immunity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a vaccine, immunity, a prescription, to grow weak, breathlessness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a vaccine, immunity, a prescription, to grow weak, breathlessness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asthma, heartburn, constipation, insomnia, to have a cough",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: asthma, heartburn, constipation, insomnia, to have a cough]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cancer, a limp, a migraine, rheumatism, to throw up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cancer, a limp, a migraine, rheumatism, to throw up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a blood test, a vein, a muscle, the lungs, to take a rest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a blood test, a vein, a muscle, the lungs, to take a rest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the brain, the intestines, tears, to snore, to perspire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the brain, the intestines, tears, to snore, to perspire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get well, to tend, a wheelchair, to hurt, to pass out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get well, to tend, a wheelchair, to hurt, to pass out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to doze off, to pant, to smart, a diet, nutritious food",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to doze off, to pant, to smart, a diet, nutritious food]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a clinic, a walking stick, a pimple, to go numb, to feel sore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a clinic, a walking stick, a pimple, to go numb, to feel sore]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A vaccine? (വാക്സിൻ, vāksin.) Immunity? (പ്രതിരോധശേഷി, pratirōdhaśēṣi.) A prescription? (കുറിപ്പടി, kuṟippaṭi.) To grow weak? (തളരുക, taḷaruka.) Breathlessness? (ശ്വാസംമുട്ട്, śvāsaṁmuṭṭŭ.) Asthma? (ആസ്ത്മ, āstma.) Heartburn? (നെഞ്ചെരിച്ചിൽ, neñcericcil.) Constipation? (മലബന്ധം, malabandhaṁ.) Insomnia? (ഉറക്കമില്ലായ്മ, uṟakkamillāyma.) To have a cough? (ചുമയ്ക്കുക, cumaykkuka.) Cancer? (അർബുദം, arbudaṁ.) A limp? (മുടന്ത്, muṭantŭ.) A migraine? (ചെന്നിക്കുത്ത്, cennikkuttŭ.) Rheumatism? (വാതം, vātaṁ.) To throw up? (ഛർദ്ദിക്കുക, charddikkuka.) A blood test? (രക്തപരിശോധന, raktapariśōdhana.) A vein? (ഞരമ്പ്, ñarampŭ.) A muscle? (പേശി, pēśi.) The lungs? (ശ്വാസകോശം, śvāsakōśaṁ.) To take a rest? (വിശ്രമിക്കുക, viśramikkuka.) The brain? (തലച്ചോറ്, talaccōṟŭ.) The intestines? (കുടൽ, kuṭal.) Tears? (കണ്ണുനീർ, kaṇṇunīr.) To snore? (കൂർക്കംവലിക്കുക, kūrkkaṁvalikkuka.) To perspire? (വിയർക്കുക, viyarkkuka.) To get well? (സുഖം പ്രാപിക്കുക, sukhaṁ prāpikkuka.) To tend? (പരിചരിക്കുക, paricarikkuka.) A wheelchair? (വീൽചെയർ, vīlceyar.) To hurt? (വേദനിക്കുക, vēdanikkuka.) To pass out? (ബോധം കെടുക, bōdhaṁ keṭuka.) To doze off? (മയങ്ങുക, mayaṅṅuka.) To pant? (കിതയ്ക്കുക, kitaykkuka.) To smart? (നീറുക, nīṟuka.) A diet? (ഭക്ഷണക്രമം, bhakṣaṇakramaṁ.) Nutritious food? (പോഷകാഹാരം, pōṣakāhāraṁ.) A clinic? (ക്ലിനിക്ക്, klinikkŭ.) A walking stick? (ഊന്നുവടി, ūnnuvaṭi.) A pimple? (മുഖക്കുരു, mukhakkuru.) To go numb? (മരവിക്കുക, maravikkuka.) To feel sore? (കഴയ്ക്കുക, kaḻaykkuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C477-pakkavatam",
+  "pathSegment": "TA-PATH-477-NOYKAL477",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-477-NOYKAL477",
+      "order": 2
+    }
+  ]
+}

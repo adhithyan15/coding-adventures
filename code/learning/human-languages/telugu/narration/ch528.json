@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 528,
+  "title": "Brothers and Sisters",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ef0405af55aa0d79",
+  "lessons": [
+    {
+      "id": "TE-C528-tobuttuvu",
+      "sequence": 26740,
+      "title": "తోబుట్టువు (tōbuṭṭuvu) — a sibling",
+      "headword": "తోబుట్టువు",
+      "romanization": "tōbuṭṭuvu",
+      "gloss": "a sibling",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50e1839ffbc528c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a resignation, then the Telugu for to quit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తోబుట్టువు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తోబుట్టువు — tōbuṭṭuvu — \"a sibling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నాకు ఇద్దరు తోబుట్టువులు ఉన్నారు. nāku iddaru tōbuṭṭuvulu unnāru. I have two siblings."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: తోబుట్టువులు, tōbuṭṭuvulu."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally born with: brothers and sisters alike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తోబుట్టువు (tōbuṭṭuvu) is a native compound: tōḍa, \"with\" (DEDR 3563), and puṭṭu, \"to be born\" (DEDR 4264): one born with you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōbuṭṭuvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōbuṭṭuvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōbuṭṭuvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōbuṭṭuvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāku iddaru tōbuṭṭuvulu unnāru. — I have two siblings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāku iddaru tōbuṭṭuvulu unnāru.* — I have two siblings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a resignation, then the Telugu for to quit, then say tōbuṭṭuvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a resignation, then the Telugu for to quit, then say *tōbuṭṭuvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తోబుట్టువు (tōbuṭṭuvu) mean? (\"A sibling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C528-annadammulu",
+      "sequence": 26750,
+      "title": "అన్నదమ్ములు (annadammulu) — brothers; a set of brothers",
+      "headword": "అన్నదమ్ములు",
+      "romanization": "annadammulu",
+      "gloss": "brothers; a set of brothers",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:828e93a28a3f0706",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to quit, then the Telugu for a sibling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అన్నదమ్ములు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అన్నదమ్ములు — annadammulu — \"brothers; a set of brothers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ అన్నదమ్ములు కలిసి వ్యాపారం చేస్తున్నారు. ā annadammulu kalisi vyāpāraṁ cēstunnāru. Those brothers run a business together."
+            },
+            {
+              "kind": "speech",
+              "text": "A pair word: అన్న, elder brother, + తమ్ముడు, younger brother."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అన్నదమ్ములు (annadammulu) is a native pair word: anna, \"elder brother\" (DEDR 131), and tammuḍu, \"younger brother\" (DEDR 3085)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annadammulu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annadammulu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annadammulu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annadammulu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā annadammulu kalisi vyāpāraṁ cēstunnāru. — Those brothers run a business together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā annadammulu kalisi vyāpāraṁ cēstunnāru.* — Those brothers run a business together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to quit, then the Telugu for a sibling, then say annadammulu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to quit, then the Telugu for a sibling, then say *annadammulu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అన్నదమ్ములు (annadammulu) mean? (\"Brothers; a set of brothers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C528-maridi",
+      "sequence": 26760,
+      "title": "మరిది (maridi) — a husband's younger brother",
+      "headword": "మరిది",
+      "romanization": "maridi",
+      "gloss": "a husband's younger brother",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b179cfd0fc78f02f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a sibling, then the Telugu for brothers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మరిది",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మరిది — maridi — \"a husband's younger brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పెళ్ళి తరువాత మా మరిది మాతోనే ఉన్నాడు. peḷḷi taruvāta mā maridi mātōnē unnāḍu. After the wedding my husband's younger brother lived with us."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a younger sister's husband."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మరిది (maridi) is native Dravidian: DEDR 4762 lists Telugu maṟãdi, \"a spouse's younger brother, a younger sister's husband\", beside maṟãdalu, the same for women."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maridi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maridi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maridi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maridi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peḷḷi taruvāta mā maridi mātōnē unnāḍu. — After the wedding my husband's younger brother lived with us.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peḷḷi taruvāta mā maridi mātōnē unnāḍu.* — After the wedding my husband's younger brother lived with us.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a sibling, then the Telugu for brothers, then say maridi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a sibling, then the Telugu for brothers, then say *maridi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మరిది (maridi) mean? (\"A husband's younger brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C528-adapaducu",
+      "sequence": 26770,
+      "title": "ఆడపడుచు (āḍapaḍucu) — a husband's sister",
+      "headword": "ఆడపడుచు",
+      "romanization": "āḍapaḍucu",
+      "gloss": "a husband's sister",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8eba53e813e220eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for brothers, then the Telugu for a husband's younger brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆడపడుచు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆడపడుచు — āḍapaḍucu — \"a husband's sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పండుగకు ఆడపడుచు ఇంటికి వచ్చింది. paṇḍugaku āḍapaḍucu iṇṭiki vaccindi. My husband's sister came home for the festival."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a married daughter of the house visiting home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆడపడుచు (āḍapaḍucu) is built from ఆడ, \"female\", and native paḍucu, \"a girl\", which DEDR 3840 lists with paḍãti, \"a woman\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḍapaḍucu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḍapaḍucu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḍapaḍucu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḍapaḍucu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇḍugaku āḍapaḍucu iṇṭiki vaccindi. — My husband's sister came home for the festival.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇḍugaku āḍapaḍucu iṇṭiki vaccindi.* — My husband's sister came home for the festival.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for brothers, then the Telugu for a husband's younger brother, then say āḍapaḍucu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for brothers, then the Telugu for a husband's younger brother, then say *āḍapaḍucu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆడపడుచు (āḍapaḍucu) mean? (\"A husband's sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C528-vadina",
+      "sequence": 26780,
+      "title": "వదిన (vadina) — an elder brother's wife",
+      "headword": "వదిన",
+      "romanization": "vadina",
+      "gloss": "an elder brother's wife",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec98657ac3743c2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a husband's younger brother, then the Telugu for a husband's sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వదిన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వదిన — vadina — \"an elder brother's wife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా వదిన చాలా బాగా వంట చేస్తుంది. mā vadina cālā bāgā vaṇṭa cēstundi. My elder brother's wife cooks very well."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a husband's or a wife's elder sister."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వదిన (vadina) is native Dravidian: DEDR 4690 lists Telugu vadine, \"an elder sister-in-law, an elder brother's wife\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vadina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vadina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vadina, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vadina*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā vadina cālā bāgā vaṇṭa cēstundi. — My elder brother's wife cooks very well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā vadina cālā bāgā vaṇṭa cēstundi.* — My elder brother's wife cooks very well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a husband's younger brother, then the Telugu for a husband's sister, then say vadina again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a husband's younger brother, then the Telugu for a husband's sister, then say *vadina* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వదిన (vadina) mean? (\"An elder brother's wife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

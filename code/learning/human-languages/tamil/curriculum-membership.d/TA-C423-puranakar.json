@@ -1,0 +1,11 @@
+{
+  "id": "TA-C423-puranakar",
+  "pathSegment": "TA-PATH-423-NAKAR423",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-423-NAKAR423",
+      "order": 1
+    }
+  ]
+}

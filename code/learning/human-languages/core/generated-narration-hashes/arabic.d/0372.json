@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:9a22001fcb0de9fb",
+  "lessonIds": [
+    "AR-C372-aqaba",
+    "AR-C372-suuba",
+    "AR-C372-mudila",
+    "AR-C372-akhfaqa",
+    "AR-C372-tamakkana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch372.txt",
+  "json": "arabic/narration/ch372.json",
+  "textHash": "fnv1a64:82a2e310023e76ea",
+  "jsonHash": "fnv1a64:bf7558ef231c9502",
+  "findings": []
+}

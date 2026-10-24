@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C448-hadaa",
+    "language": "arabic",
+    "chapter": 448,
+    "sequence": 25110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ec5188e5221726e"
+  },
+  "findings": []
+}

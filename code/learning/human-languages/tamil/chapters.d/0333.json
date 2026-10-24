@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "The Battlefield",
+  "label": "ch:ta-the-battlefield",
+  "canDo": "I can describe soldiers and what they carried.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C333-kavacam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can describe soldiers and what they carried.",
+    "assesses": [
+      "TA-LEX-C333-KALAM333-03",
+      "TA-LEX-C333-KALAM333-04",
+      "TA-LEX-C333-KALAM333-05"
+    ]
+  }
+}

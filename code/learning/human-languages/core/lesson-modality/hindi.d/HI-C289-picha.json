@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C289-picha",
+    "language": "hindi",
+    "chapter": 289,
+    "sequence": 16090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:487f53b809517338"
+  },
+  "findings": []
+}

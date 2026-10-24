@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C438-musaldhar",
+    "language": "marathi",
+    "chapter": 438,
+    "sequence": 25160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d7f4e4b9e2fd58b"
+  },
+  "findings": []
+}

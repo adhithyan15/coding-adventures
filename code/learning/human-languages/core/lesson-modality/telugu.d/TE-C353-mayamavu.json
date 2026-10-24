@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C353-mayamavu",
+    "language": "telugu",
+    "chapter": 353,
+    "sequence": 17390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f0f559a913f7f9b"
+  },
+  "findings": []
+}

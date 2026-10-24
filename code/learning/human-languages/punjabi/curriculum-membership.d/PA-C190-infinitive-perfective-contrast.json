@@ -1,0 +1,11 @@
+{
+  "id": "PA-C190-infinitive-perfective-contrast",
+  "pathSegment": "PA-PATH-190-A2-KITA-PERFECTIVE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-190-A2-KITA-PERFECTIVE",
+      "order": 5
+    }
+  ]
+}

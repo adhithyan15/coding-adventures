@@ -1,0 +1,11 @@
+{
+  "id": "MR-C422-kolahal",
+  "pathSegment": "MR-PATH-422-MANDAI422",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-422-MANDAI422",
+      "order": 2
+    }
+  ]
+}

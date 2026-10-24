@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:79f8f08274abd2e0",
+  "lessonIds": [
+    "AR-C415-injaz",
+    "AR-C415-taaththara-affected",
+    "AR-C415-tabayyana",
+    "AR-C415-tawassala",
+    "AR-C415-mustawa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch415.txt",
+  "json": "arabic/narration/ch415.json",
+  "textHash": "fnv1a64:c85f76f85fdd6074",
+  "jsonHash": "fnv1a64:d97faecb7090e0f6",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "At reception",
+  "label": "ch:ar-at-reception",
+  "canDo": "I can say reception, a hotel guest, a residence, to depart from and to vacate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C441-akhla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can say reception, a hotel guest, a residence, to depart from and to vacate.",
+    "assesses": [
+      "AR-LEX-C441-ISTIQBAL441-03",
+      "AR-LEX-C441-ISTIQBAL441-04",
+      "AR-LEX-C441-ISTIQBAL441-05"
+    ]
+  }
+}

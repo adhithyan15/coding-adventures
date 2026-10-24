@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:b8928ec0620bd4ed",
+  "lessonIds": [
+    "MR-C345-niskarsa",
+    "MR-C345-anuman-kadhne",
+    "MR-C345-adhar",
+    "MR-C345-sarams",
+    "MR-C345-thodkyat"
+  ],
+  "tex": "marathi/book/chapters/ch345-reaching-conclusions.tex"
+}

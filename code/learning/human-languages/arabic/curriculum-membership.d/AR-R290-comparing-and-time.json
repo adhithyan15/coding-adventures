@@ -1,0 +1,11 @@
+{
+  "id": "AR-R290-comparing-and-time",
+  "pathSegment": "AR-PATH-290-COMPARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-290-COMPARE",
+      "order": 2
+    }
+  ]
+}

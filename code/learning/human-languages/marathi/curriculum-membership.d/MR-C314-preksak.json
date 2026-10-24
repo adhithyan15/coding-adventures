@@ -1,0 +1,11 @@
+{
+  "id": "MR-C314-preksak",
+  "pathSegment": "MR-PATH-314-VACHAK314",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-314-VACHAK314",
+      "order": 1
+    }
+  ]
+}

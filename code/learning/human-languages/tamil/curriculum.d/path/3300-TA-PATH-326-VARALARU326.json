@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-326-VARALARU326",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-326-VARALARU326"
+  ],
+  "after": []
+}

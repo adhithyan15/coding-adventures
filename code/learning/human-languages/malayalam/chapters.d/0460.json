@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Near and Far",
+  "label": "ch:ml-near-and-far",
+  "canDo": "I can say international, global, practical, to intend and to vary.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-R460-review-final-460",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can say international, global, practical, to intend and to vary.",
+    "assesses": [
+      "ML-LEX-C460-AGOLAM460-03",
+      "ML-LEX-C460-AGOLAM460-04",
+      "ML-LEX-C460-AGOLAM460-05"
+    ]
+  }
+}

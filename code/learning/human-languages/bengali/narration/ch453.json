@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 453,
+  "title": "Courage and Nerve",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:7bbfe9ccb24cc31e",
+  "lessons": [
+    {
+      "id": "BN-C453-atmobishvas",
+      "sequence": 27760,
+      "title": "আত্মবিশ্বাস (ātmôbishvās) — self-confidence",
+      "headword": "আত্মবিশ্বাস",
+      "romanization": "ātmôbishvās",
+      "gloss": "self-confidence",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4949c27469305874",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to show off, then the Bengali for to be humiliated."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আত্মবিশ্বাস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আত্মবিশ্বাস — ātmôbishvās — \"self-confidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গান শেখার পরে মীরার আত্মবিশ্বাস বাড়ল। gān shekhār pôre mīrār ātmôbishvās bāṛlô. After learning to sing, Mira's self-confidence grew."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আত্মবিশ্বাস (ātmôbishvās) puts Sanskrit ātman, \"self\", in front of viśvāsa, \"trust\" (Monier-Williams), the বিশ্বাস of বিশ্বাস করা (taught), to believe: trust in yourself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmôbishvās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmôbishvās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmôbishvās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmôbishvās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gān shekhār pôre mīrār ātmôbishvās bāṛlô. — After learning to sing, Mira's self-confidence grew.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gān shekhār pôre mīrār ātmôbishvās bāṛlô.* — After learning to sing, Mira's self-confidence grew.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to show off, then the Bengali for to be humiliated, then say ātmôbishvās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to show off, then the Bengali for to be humiliated, then say *ātmôbishvās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আত্মবিশ্বাস (ātmôbishvās) mean? (\"Self-confidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C453-monobol",
+      "sequence": 27770,
+      "title": "মনোবল (mônobôl) — morale; strength of mind",
+      "headword": "মনোবল",
+      "romanization": "mônobôl",
+      "gloss": "morale; strength of mind",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fe71f7a6334b63b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to be humiliated, then the Bengali for self-confidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মনোবল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মনোবল — mônobôl — \"morale; strength of mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দলটা খেলায় জিতল না, কিন্তু খেলোয়াড়দের মনোবল কমল না। dôlṭā khelāy jitlô nā, kintu kheloyāṛder mônobôl kômlô nā. The team did not win the match, but the players' morale did not drop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মনোবল (mônobôl) joins Sanskrit manas, \"mind\" (CDIAL 9822), in its compound form mano-, and bala, \"strength\" (Monier-Williams): strength of mind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mônobôl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mônobôl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mônobôl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mônobôl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dôlṭā khelāy jitlô nā, kintu kheloyāṛder mônobôl kômlô nā. — The team did not win the match, but the players' morale did not drop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dôlṭā khelāy jitlô nā, kintu kheloyāṛder mônobôl kômlô nā.* — The team did not win the match, but the players' morale did not drop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to be humiliated, then the Bengali for self-confidence, then say mônobôl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to be humiliated, then the Bengali for self-confidence, then say *mônobôl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মনোবল (mônobôl) mean? (\"Morale; strength of mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C453-kapurush",
+      "sequence": 27780,
+      "title": "কাপুরুষ (kāpurush) — a coward",
+      "headword": "কাপুরুষ",
+      "romanization": "kāpurush",
+      "gloss": "a coward",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce3226f9fc8a5077",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for self-confidence, then the Bengali for morale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কাপুরুষ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাপুরুষ — kāpurush — \"a coward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বিপদ দেখে পালানো কাপুরুষের কাজ। bipôd dekhe pālāno kāpurusher kāj. Running away at the sight of danger is a coward's act."
+            },
+            {
+              "kind": "speech",
+              "text": "ভীতু (taught) is timid; কাপুরুষ (kāpurush) names the man himself, and it stings."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাপুরুষ (kāpurush) is a tatsama, Sanskrit kāpuruṣa, \"a contemptible man, a coward\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāpurush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāpurush*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāpurush, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāpurush*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bipôd dekhe pālāno kāpurusher kāj. — Running away at the sight of danger is a coward's act.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bipôd dekhe pālāno kāpurusher kāj.* — Running away at the sight of danger is a coward's act.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for self-confidence, then the Bengali for morale, then say kāpurush again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for self-confidence, then the Bengali for morale, then say *kāpurush* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কাপুরুষ (kāpurush) mean? (\"A coward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C453-rukhe-darano",
+      "sequence": 27790,
+      "title": "রুখে দাঁড়ানো (rukhe dā̃ṛāno) — to stand up to; to resist",
+      "headword": "রুখে দাঁড়ানো",
+      "romanization": "rukhe dā̃ṛāno",
+      "gloss": "to stand up to; to resist",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a2354f418c97f1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for morale, then the Bengali for a coward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রুখে দাঁড়ানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রুখে দাঁড়ানো — rukhe dā̃ṛāno — \"to stand up to; to resist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরা একা ডাকাতদের সামনে রুখে দাঁড়াল। mīrā ekā ḍākātder sāmne rukhe dā̃ṛālô. Mira stood up to the robbers on her own."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি চোরের সামনে রুখে দাঁড়ালেন, tini chorer sāmne rukhe dā̃ṛālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রুখে দাঁড়ানো (rukhe dā̃ṛāno) is rukhe, the -এ form of rokhā, \"to hold back, to resist\". CDIAL lists a Bengali rokā, to hinder (CDIAL 10827), and a rukhā, to be angry (CDIAL 10800); which of them this is, is not settled. দাঁড়ানো (taught), to stand, probably belongs with Sanskrit daṇḍa, a stick (CDIAL 6128)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rukhe dā̃ṛāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rukhe dā̃ṛāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rukhe dā̃ṛāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rukhe dā̃ṛāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā ekā ḍākātder sāmne rukhe dā̃ṛālô. — Mira stood up to the robbers on her own.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā ekā ḍākātder sāmne rukhe dā̃ṛālô.* — Mira stood up to the robbers on her own.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for morale, then the Bengali for a coward, then say rukhe dā̃ṛāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for morale, then the Bengali for a coward, then say *rukhe dā̃ṛāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does রুখে দাঁড়ানো (rukhe dā̃ṛāno) mean? (\"To stand up to; to resist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C453-pichhiye-jaoya",
+      "sequence": 27800,
+      "title": "পিছিয়ে যাওয়া (pichhiye jāoyā) — to back down; to fall behind",
+      "headword": "পিছিয়ে যাওয়া",
+      "romanization": "pichhiye jāoyā",
+      "gloss": "to back down; to fall behind",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75cd6b7357c7abf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a coward, then the Bengali for to stand up to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পিছিয়ে যাওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পিছিয়ে যাওয়া — pichhiye jāoyā — \"to back down; to fall behind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরা ভয় পেল, কিন্তু পিছিয়ে গেল না। mīrā bhôy pelô, kintu pichhiye gelô nā. Mira was afraid, but she did not back down."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি শেষে পিছিয়ে গেলেন, tini sheshe pichhiye gelen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পিছিয়ে যাওয়া (pichhiye jāoyā) is pichhiye, the -এ form of pichhāno, \"to move back\", built on the word for the rear that CDIAL lists for Bengali (CDIAL 7990), the পিছ of পিছনে (taught), behind; jāoyā is \"to go\" (CDIAL 10452)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pichhiye jāoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pichhiye jāoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pichhiye jāoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pichhiye jāoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā bhôy pelô, kintu pichhiye gelô nā. — Mira was afraid, but she did not back down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā bhôy pelô, kintu pichhiye gelô nā.* — Mira was afraid, but she did not back down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a coward, then the Bengali for to stand up to, then say pichhiye jāoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a coward, then the Bengali for to stand up to, then say *pichhiye jāoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পিছিয়ে যাওয়া (pichhiye jāoyā) mean? (\"To back down; to fall behind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R453-review-446-453",
+      "sequence": 27810,
+      "title": "Looking back: from Comfort and Relief to Courage and Nerve",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Comfort and Relief to Courage and Nerve",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc9366e920a46971",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for consolation and ease of mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "consolation, ease of mind, reliance, to breathe a sigh of relief, to cope with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: consolation, ease of mind, reliance, to breathe a sigh of relief, to cope with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "regret, remorse, repentant, to rue, to admit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: regret, remorse, repentant, to rue, to admit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pain of separation, a yearning, wistful, anxious with longing, to cry out in despair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pain of separation, a yearning, wistful, anxious with longing, to cry out in despair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "affection, tender attachment, cuddling and petting, romantic love, to be devoted to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: affection, tender attachment, cuddling and petting, romantic love, to be devoted to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trifling, mockery, to insult, to taunt, to belittle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: trifling, mockery, to insult, to taunt, to belittle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "revolting, aversion, envious of others' good fortune, to hate, to turn up one's nose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: revolting, aversion, envious of others' good fortune, to hate, to turn up one's nose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arrogance, conceit, self-respect, to show off, to be humiliated",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: arrogance, conceit, self-respect, to show off, to be humiliated]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "self-confidence, morale, a coward, to stand up to, to back down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: self-confidence, morale, a coward, to stand up to, to back down]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Consolation? (সান্ত্বনা, sāntvônā.) Ease of mind? (স্বস্তি, svôsti.) Reliance? (ভরসা, bhôrsā.) To breathe a sigh of relief? (হাঁফ ছাড়া, hā̃ph chhāṛā.) To cope with? (সামলানো, sāmlāno.) Regret? (আফসোস, āphsos.) Remorse? (অনুশোচনা, ônushochônā.) Repentant? (অনুতপ্ত, ônutôptô.) To rue? (পস্তানো, pôstāno.) To admit? (স্বীকার করা, svīkār kôrā.) The pain of separation? (বিরহ, birôhô.) A yearning? (আকাঙ্ক্ষা, ākāngkhā.) Wistful? (উদাস, udās.) Anxious with longing? (ব্যাকুল, bækul.) To cry out in despair? (হাহাকার করা, hāhākār kôrā.) Affection? (স্নেহ, sneh.) Tender attachment? (মায়া, māyā.) Cuddling and petting? (আদর, ādôr.) Romantic love? (প্রেম, prem.) To be devoted to? (ভক্তি করা, bhôkti kôrā.) Trifling? (তুচ্ছ, tuchchhô.) Mockery? (উপহাস, upôhās.) To insult? (অপমান করা, ôpômān kôrā.) To taunt? (খোঁটা দেওয়া, khõṭā deoyā.) To belittle? (হেয় করা, heyô kôrā.) Revolting? (ঘিনঘিনে, ghinghine.) Aversion? (বিতৃষ্ণা, bitrishnā.) Envious of others' good fortune? (পরশ্রীকাতর, pôrôshrīkātôr.) To hate? (ঘৃণা করা, ghrinā kôrā.) To turn up one's nose? (নাক সিঁটকানো, nāk sĩṭkāno.) Arrogance? (অহংকার, ôhôngkār.) Conceit? (দেমাক, demāk.) Self-respect? (আত্মসম্মান, ātmôsômmān.) To show off? (জাহির করা, jāhir kôrā.) To be humiliated? (অপদস্থ হওয়া, ôpôdôsthô hôoyā.) Self-confidence? (আত্মবিশ্বাস, ātmôbishvās.) Morale? (মনোবল, mônobôl.) A coward? (কাপুরুষ, kāpurush.) To stand up to? (রুখে দাঁড়ানো, rukhe dā̃ṛāno.) To back down? (পিছিয়ে যাওয়া, pichhiye jāoyā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

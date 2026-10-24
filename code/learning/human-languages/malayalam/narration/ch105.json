@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "Places",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3e0b56128302a911",
+  "sourceHash": "fnv1a64:99df769316a48810",
   "lessons": [
     {
       "id": "ML-C105-raajyam",
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0235b6e8708e7ec7",
+      "sourceHash": "fnv1a64:de0bbabb08e54c3d",
       "notice": null,
       "blocks": [
         {

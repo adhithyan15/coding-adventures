@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-435-MEDHAVI435",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-435-MEDHAVI435"
+  ],
+  "after": []
+}

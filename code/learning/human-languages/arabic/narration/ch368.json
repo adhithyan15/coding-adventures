@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 368,
+  "title": "What matters",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:94ea905461e050dd",
+  "lessons": [
+    {
+      "id": "AR-C368-ahammiyya",
+      "sequence": 20910,
+      "title": "أهمية (ahammiyya) — importance",
+      "headword": "أهمية",
+      "romanization": "ahammiyya",
+      "gloss": "importance",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6e6834c2ae8dc30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for awareness, then the Arabic for knowledge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أهمية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أهمية — ahammiyya — \"importance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يعرف الجميع أهمية (ahammiyya) النوم. yaʿrifu al-jamīʿ ahammiyyat an-nawm. Everyone knows the importance of sleep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أهمية (ahammiyya) is built on the native Arabic root h-m-m, \"to concern, to trouble\" (Lane). Ahammiyya is a modern abstract noun from ahamm, more important: importance."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahammiyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahammiyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahammiyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahammiyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaʿrifu al-jamīʿ ahammiyyat an-nawm. — Everyone knows the importance of sleep.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaʿrifu al-jamīʿ ahammiyyat an-nawm.* — Everyone knows the importance of sleep.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for awareness, then the Arabic for knowledge, then say ahammiyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for awareness, then the Arabic for knowledge, then say *ahammiyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أهمية (ahammiyya) mean? (\"Importance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C368-qima",
+      "sequence": 20920,
+      "title": "قيمة (qīma) — a value",
+      "headword": "قيمة",
+      "romanization": "qīma",
+      "gloss": "a value",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1762a31c3b5d87a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for knowledge, then the Arabic for importance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قيمة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قيمة — qīma — \"a value\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هذه الساعة لها قيمة كبيرة عندي. hādhihi as-sāʿa lahā qīma kabīra ʿindī. This watch has great value for me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قيمة (qīma) is built on the native Arabic root q-w-m, \"to stand, to rise\" (Lane). A qīma is what a thing stands at: its worth, its value."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qīma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qīma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qīma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qīma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hādhihi as-sāʿa lahā qīma kabīra ʿindī. — This watch has great value for me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hādhihi as-sāʿa lahā qīma kabīra ʿindī.* — This watch has great value for me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for knowledge, then the Arabic for importance, then say qīma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for knowledge, then the Arabic for importance, then say *qīma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قيمة (qīma) mean? (\"A value\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C368-rakkaza",
+      "sequence": 20930,
+      "title": "ركز (rakkaza) — to focus",
+      "headword": "ركز",
+      "romanization": "rakkaza",
+      "gloss": "to focus",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5fad0d576807e1cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for importance, then the Arabic for a value."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ركز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ركز — rakkaza — \"to focus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ركز الطالب على دروسه. rakkaza aṭ-ṭālib ʿalā durūsih. The student focused on his lessons."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يركز, yurakkiz."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على: ركز (rakkaza) على …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ركز (rakkaza) is built on the native Arabic root r-k-z, \"to fix firmly in the ground\" (Lane). It is Form II, to plant firmly: to fix the mind on one thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakkaza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakkaza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakkaza, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakkaza*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakkaza aṭ-ṭālib ʿalā durūsih. — The student focused on his lessons.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakkaza aṭ-ṭālib ʿalā durūsih.* — The student focused on his lessons.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for importance, then the Arabic for a value, then say rakkaza again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for importance, then the Arabic for a value, then say *rakkaza* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ركز (rakkaza) mean? (\"To focus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C368-ahmala",
+      "sequence": 20940,
+      "title": "أهمل (ahmala) — to neglect",
+      "headword": "أهمل",
+      "romanization": "ahmala",
+      "gloss": "to neglect",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94992c533ca3a0a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a value, then the Arabic for to focus."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أهمل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أهمل — ahmala — \"to neglect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أهمل الرجل حديقته فماتت الزهور. ahmala ar-rajul ḥadīqatahu fa-mātat az-zuhūr. The man neglected his garden, so the flowers died."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يهمل, yuhmil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أهمل (ahmala) is built on the native Arabic root h-m-l, whose Form I Lane gives for water overflowing (Lane). Form IV is to leave cattle to graze with no herdsman, and so to leave a thing to itself: to neglect."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahmala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahmala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahmala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahmala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahmala ar-rajul ḥadīqatahu fa-mātat az-zuhūr. — The man neglected his garden, so the flowers died.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahmala ar-rajul ḥadīqatahu fa-mātat az-zuhūr.* — The man neglected his garden, so the flowers died.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a value, then the Arabic for to focus, then say ahmala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a value, then the Arabic for to focus, then say *ahmala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أهمل (ahmala) mean? (\"To neglect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C368-ihtamma",
+      "sequence": 20950,
+      "title": "اهتم (ihtamma) — to care about",
+      "headword": "اهتم",
+      "romanization": "ihtamma",
+      "gloss": "to care about",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e6cb8eda1e5b5e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to focus, then the Arabic for to neglect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اهتم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اهتم — ihtamma — \"to care about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تهتم أختي بالموسيقى. tahtammu ukhtī bi-l-mūsīqā. My sister cares about music."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يهتم, yahtamm."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes بـ: اهتم (ihtamma) بـ …. The noun اهتمام is interest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اهتم (ihtamma) is built on the native Arabic root h-m-m, \"to concern, to trouble\" (Lane). It is Form VIII, to be concerned for: to care about."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ihtamma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ihtamma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ihtamma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ihtamma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tahtammu ukhtī bi-l-mūsīqā. — My sister cares about music.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tahtammu ukhtī bi-l-mūsīqā.* — My sister cares about music.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to focus, then the Arabic for to neglect, then say ihtamma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to focus, then the Arabic for to neglect, then say *ihtamma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اهتم (ihtamma) mean? (\"To care about\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

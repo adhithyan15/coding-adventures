@@ -1,0 +1,11 @@
+{
+  "id": "TA-C472-catu",
+  "pathSegment": "TA-PATH-472-MANITAR472",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-472-MANITAR472",
+      "order": 0
+    }
+  ]
+}

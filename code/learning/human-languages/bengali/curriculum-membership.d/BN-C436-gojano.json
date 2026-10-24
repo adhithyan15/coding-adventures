@@ -1,0 +1,11 @@
+{
+  "id": "BN-C436-gojano",
+  "pathSegment": "BN-PATH-436-PHOTA436",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-436-PHOTA436",
+      "order": 3
+    }
+  ]
+}

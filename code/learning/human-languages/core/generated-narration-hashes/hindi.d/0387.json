@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:d92b01b00b53a597",
+  "lessonIds": [
+    "HI-C387-behad",
+    "HI-C387-atyant",
+    "HI-C387-zara",
+    "HI-C387-khub",
+    "HI-C387-zabardast"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch387.txt",
+  "json": "hindi/narration/ch387.json",
+  "textHash": "fnv1a64:24c5316386dade0b",
+  "jsonHash": "fnv1a64:32173507396046aa",
+  "findings": []
+}

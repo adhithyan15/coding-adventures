@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C295-kurram",
+    "language": "tamil",
+    "chapter": 295,
+    "sequence": 17180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:495e3a8e8b6a138a"
+  },
+  "findings": []
+}

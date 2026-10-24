@@ -1,0 +1,11 @@
+{
+  "id": "TE-C367-tavvakalu",
+  "pathSegment": "TE-PATH-367-TAVVAKALU367",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-367-TAVVAKALU367",
+      "order": 2
+    }
+  ]
+}

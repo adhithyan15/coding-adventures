@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Legs and Stumbling",
+  "label": "ch:ta-legs-and-stumbling",
+  "canDo": "I can talk about the thighs, the heels, limping and stumbling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C481-tatumaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can talk about the thighs, the heels, limping and stumbling.",
+    "assesses": [
+      "TA-LEX-C481-KAL481-03",
+      "TA-LEX-C481-KAL481-04",
+      "TA-LEX-C481-KAL481-05"
+    ]
+  }
+}

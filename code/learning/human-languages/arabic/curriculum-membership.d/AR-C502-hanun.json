@@ -1,0 +1,11 @@
+{
+  "id": "AR-C502-hanun",
+  "pathSegment": "AR-PATH-502-THARTHAR502",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-502-THARTHAR502",
+      "order": 3
+    }
+  ]
+}

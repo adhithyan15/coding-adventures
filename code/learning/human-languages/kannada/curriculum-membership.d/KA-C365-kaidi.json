@@ -1,0 +1,11 @@
+{
+  "id": "KA-C365-kaidi",
+  "pathSegment": "KA-PATH-365-HODEDATA365",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-365-HODEDATA365",
+      "order": 2
+    }
+  ]
+}

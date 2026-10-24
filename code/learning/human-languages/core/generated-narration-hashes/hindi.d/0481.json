@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:42b9c7938976f19c",
+  "lessonIds": [
+    "HI-C481-letna",
+    "HI-C481-sikorna",
+    "HI-C481-lagrana",
+    "HI-C481-ucakna",
+    "HI-C481-kudna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch481.txt",
+  "json": "hindi/narration/ch481.json",
+  "textHash": "fnv1a64:e4f8d2de98e159e0",
+  "jsonHash": "fnv1a64:086839c9622a61ca",
+  "findings": []
+}

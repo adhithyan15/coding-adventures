@@ -1,0 +1,11 @@
+{
+  "id": "BN-C363-bikolpo",
+  "pathSegment": "BN-PATH-363-SOMOSSHA363",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-363-SOMOSSHA363",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:5a22feaf0373a4cc",
+  "lessonIds": [
+    "AR-C312-kashafa",
+    "AR-C312-iktashafa",
+    "AR-C312-athara-find",
+    "AR-C312-mustakshif",
+    "AR-C312-kanz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch312.txt",
+  "json": "arabic/narration/ch312.json",
+  "textHash": "fnv1a64:6f3c7e352afae2e2",
+  "jsonHash": "fnv1a64:625befc9b30d1870",
+  "findings": []
+}

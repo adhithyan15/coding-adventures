@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:15d088f80bf0d2f3",
+  "lessonIds": [
+    "TA-C382-nipantanai",
+    "TA-C382-utpatu",
+    "TA-C382-takuti",
+    "TA-C382-vitivilakku",
+    "TA-C382-ventumanal"
+  ],
+  "tex": "tamil/book/chapters/ch382-on-one-condition.tex"
+}

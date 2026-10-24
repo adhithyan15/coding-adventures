@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C392-udbhavincu",
+    "language": "telugu",
+    "chapter": 392,
+    "sequence": 19520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f31e057bdff7243"
+  },
+  "findings": []
+}

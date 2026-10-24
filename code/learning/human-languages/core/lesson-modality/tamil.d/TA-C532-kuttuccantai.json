@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C532-kuttuccantai",
+    "language": "tamil",
+    "chapter": 532,
+    "sequence": 30430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5c11c7b94715f19"
+  },
+  "findings": []
+}

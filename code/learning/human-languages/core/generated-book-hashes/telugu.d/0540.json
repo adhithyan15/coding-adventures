@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:cfd085d5ca6b62a2",
+  "lessonIds": [
+    "TE-C540-sahityam",
+    "TE-C540-kathanika",
+    "TE-C540-racana",
+    "TE-C540-racincu",
+    "TE-C540-anuvadam"
+  ],
+  "tex": "telugu/book/chapters/ch540-literature.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C380-pintiriyuka",
+    "language": "malayalam",
+    "chapter": 380,
+    "sequence": 18620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6b0f4c48c141ab4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C542-jumanne",
+    "language": "marathi",
+    "chapter": 542,
+    "sequence": 30970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71a46ce22b8b3fbe"
+  },
+  "findings": []
+}

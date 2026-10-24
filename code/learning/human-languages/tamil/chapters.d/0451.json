@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "At the Shopping Complex",
+  "label": "ch:ta-at-the-shopping-complex",
+  "canDo": "I can talk about a shopping complex, kilos, a subscription and compensation, and goods getting damaged.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C451-cetamatai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can talk about a shopping complex, kilos, a subscription and compensation, and goods getting damaged.",
+    "assesses": [
+      "TA-LEX-C451-VALAKAM451-03",
+      "TA-LEX-C451-VALAKAM451-04",
+      "TA-LEX-C451-VALAKAM451-05"
+    ]
+  }
+}

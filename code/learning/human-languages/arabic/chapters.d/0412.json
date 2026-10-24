@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Going up and down",
+  "label": "ch:ar-going-up-and-down",
+  "canDo": "I can say that something became greater, shrank, doubled or was reduced, and talk about a proportion.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C412-nisba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can say that something became greater, shrank, doubled or was reduced, and talk about a proportion.",
+    "assesses": [
+      "AR-LEX-C412-IZDIYAD412-03",
+      "AR-LEX-C412-IZDIYAD412-04",
+      "AR-LEX-C412-IZDIYAD412-05"
+    ]
+  }
+}

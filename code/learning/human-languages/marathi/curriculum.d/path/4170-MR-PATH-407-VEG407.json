@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-407-VEG407",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "MR-EXT-407-VEG407"
+  ],
+  "after": []
+}

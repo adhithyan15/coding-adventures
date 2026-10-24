@@ -1,0 +1,20 @@
+{
+  "chapter": 290,
+  "title": "Bigger, Better, For How Long",
+  "label": "ch:ar-bigger-better-for-how-long",
+  "canDo": "I can compare two things, name the best, and say how long something has gone on or how long ago it happened.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-R290-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete AR-R290-comparing-and-time: compare with akbar min and afḍal, and measure with mundhu and qabla.",
+    "assesses": [
+      "AR-GRAMMAR-C290-ELATIVE-01",
+      "AR-GRAMMAR-C290-SUPERLATIVE-01",
+      "AR-GRAMMAR-C290-MUNDHU-SPAN-01",
+      "AR-GRAMMAR-C290-QABLA-AGO-01"
+    ]
+  }
+}

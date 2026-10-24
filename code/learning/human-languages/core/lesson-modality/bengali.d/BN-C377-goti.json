@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C377-goti",
+    "language": "bengali",
+    "chapter": 377,
+    "sequence": 23430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0813b5d432424ee6"
+  },
+  "findings": []
+}

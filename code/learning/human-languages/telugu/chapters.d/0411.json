@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Counting People",
+  "label": "ch:te-counting-people",
+  "canDo": "I can talk about censuses, surveys, figures and percentages.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C411-satam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can talk about censuses, surveys, figures and percentages.",
+    "assesses": [
+      "TE-LEX-C411-SATAM411-03",
+      "TE-LEX-C411-SATAM411-04",
+      "TE-LEX-C411-SATAM411-05"
+    ]
+  }
+}

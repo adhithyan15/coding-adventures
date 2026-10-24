@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:5f3743fa9c30f526",
+  "lessonIds": [
+    "MR-C361-mahsul",
+    "MR-C361-arthasankalpa",
+    "MR-C361-nidhi",
+    "MR-C361-anudan",
+    "MR-C361-arthik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch361.txt",
+  "json": "marathi/narration/ch361.json",
+  "textHash": "fnv1a64:7e8e7aa9ff16297e",
+  "jsonHash": "fnv1a64:fc0be24b35a9894d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "An Empire",
+  "label": "ch:ta-an-empire",
+  "canDo": "I can talk about empires and their wealth.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C330-onku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can talk about empires and their wealth.",
+    "assesses": [
+      "TA-LEX-C330-PERARASU330-03",
+      "TA-LEX-C330-PERARASU330-04",
+      "TA-LEX-C330-PERARASU330-05"
+    ]
+  }
+}

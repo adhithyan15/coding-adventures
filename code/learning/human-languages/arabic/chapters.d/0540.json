@@ -1,0 +1,19 @@
+{
+  "chapter": 540,
+  "title": "Reading, clubs and passions",
+  "label": "ch:ar-reading-clubs-and-passions",
+  "canDo": "I can talk about reading, passion and fondness, and say that someone subscribed or met up with a friend.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C540-wala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can talk about reading, passion and fondness, and say that someone subscribed or met up with a friend.",
+    "assesses": [
+      "AR-LEX-C540-NADI540-03",
+      "AR-LEX-C540-NADI540-04",
+      "AR-LEX-C540-NADI540-05"
+    ]
+  }
+}

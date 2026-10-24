@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C377-halat",
+    "language": "hindi",
+    "chapter": 377,
+    "sequence": 20750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fab34f2b81cb7c0d"
+  },
+  "findings": []
+}

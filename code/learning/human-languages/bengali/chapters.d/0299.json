@@ -1,0 +1,21 @@
+{
+  "chapter": 299,
+  "title": "On the Air",
+  "label": "ch:bn-on-the-air",
+  "canDo": "I can talk about broadcasts, channels and live news.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-R299-review-292-299",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can talk about broadcasts, channels and live news.",
+    "assesses": [
+      "BN-LEX-C299-SOMPROCHAR299-01",
+      "BN-LEX-C299-SOMPROCHAR299-02",
+      "BN-LEX-C299-SOMPROCHAR299-03",
+      "BN-LEX-C299-SOMPROCHAR299-04",
+      "BN-LEX-C299-SOMPROCHAR299-05"
+    ]
+  }
+}

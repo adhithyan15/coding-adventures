@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C497-ahankara",
+    "language": "kannada",
+    "chapter": 497,
+    "sequence": 25370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51e16ca097d0e0c9"
+  },
+  "findings": []
+}

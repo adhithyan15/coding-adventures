@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:534bce679dc91208",
+  "lessonIds": [
+    "MR-C285-peksha",
+    "MR-C285-varshanpasun",
+    "MR-R285-comparing-and-time"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "marathi/narration/ch285.txt",
+  "json": "marathi/narration/ch285.json",
+  "textHash": "fnv1a64:88d27cc4b44aca1d",
+  "jsonHash": "fnv1a64:392d0af9c3d29043",
+  "findings": []
+}

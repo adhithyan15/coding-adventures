@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-282-ASK-WAY",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "MR-EXT-282-ASK-WAY"
+  ],
+  "after": []
+}

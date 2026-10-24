@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C453-pichhiye-jaoya",
+    "language": "bengali",
+    "chapter": 453,
+    "sequence": 27800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75cd6b7357c7abf2"
+  },
+  "findings": []
+}

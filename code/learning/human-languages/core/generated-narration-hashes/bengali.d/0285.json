@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:0d51adaccae683de",
+  "lessonIds": [
+    "BN-C285-shasano",
+    "BN-C285-ghush",
+    "BN-C285-phasano",
+    "BN-C285-lut-kora",
+    "BN-C285-protarona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch285.txt",
+  "json": "bengali/narration/ch285.json",
+  "textHash": "fnv1a64:b4a907b685a43f16",
+  "jsonHash": "fnv1a64:6cde07e2b0949eb1",
+  "findings": []
+}

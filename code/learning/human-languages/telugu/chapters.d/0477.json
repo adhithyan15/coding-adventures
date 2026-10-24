@@ -1,0 +1,21 @@
+{
+  "chapter": 477,
+  "title": "The Monsoon",
+  "label": "ch:te-the-monsoon",
+  "canDo": "I can say the monsoon, rainfall, a spell of drizzle, a shower of rain and to get soaked.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-R477-review-470-477",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can say the monsoon, rainfall, a spell of drizzle, a shower of rain and to get soaked.",
+    "assesses": [
+      "TE-LEX-C477-RUTUPAVANAM477-01",
+      "TE-LEX-C477-RUTUPAVANAM477-02",
+      "TE-LEX-C477-RUTUPAVANAM477-03",
+      "TE-LEX-C477-RUTUPAVANAM477-04",
+      "TE-LEX-C477-RUTUPAVANAM477-05"
+    ]
+  }
+}

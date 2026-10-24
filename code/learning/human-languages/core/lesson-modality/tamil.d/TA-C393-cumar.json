@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C393-cumar",
+    "language": "tamil",
+    "chapter": 393,
+    "sequence": 22490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a4701926ae2f795"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C407-beyara",
+    "language": "bengali",
+    "chapter": 407,
+    "sequence": 25180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8da13f20cd565d97"
+  },
+  "findings": []
+}

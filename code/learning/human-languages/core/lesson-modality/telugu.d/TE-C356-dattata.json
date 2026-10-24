@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C356-dattata",
+    "language": "telugu",
+    "chapter": 356,
+    "sequence": 17570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59d78b66de740c4c"
+  },
+  "findings": []
+}

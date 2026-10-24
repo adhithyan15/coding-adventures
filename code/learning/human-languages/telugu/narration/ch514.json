@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 514,
+  "title": "Aches",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:102f9c6f8921f63f",
+  "lessons": [
+    {
+      "id": "TE-C514-cevipotu",
+      "sequence": 26020,
+      "title": "చెవిపోటు (cevipōṭu) — an earache",
+      "headword": "చెవిపోటు",
+      "romanization": "cevipōṭu",
+      "gloss": "an earache",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aee4966c6aead7be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for paralysis, then the Telugu for asthma."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చెవిపోటు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెవిపోటు — cevipōṭu — \"an earache\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చల్లని గాలి వల్ల పాపకు చెవిపోటు వచ్చింది. callani gāli valla pāpaku cevipōṭu vaccindi. The cold wind gave the little girl an earache."
+            },
+            {
+              "kind": "speech",
+              "text": "చెవి, ear, + పోటు, a throbbing pain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెవిపోటు (cevipōṭu) is native Dravidian: DEDR 1977 lists Telugu cevi, \"ear\", with Tamil cevi; pōṭu is a stab of pain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cevipōṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cevipōṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cevipōṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cevipōṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "callani gāli valla pāpaku cevipōṭu vaccindi. — The cold wind gave the little girl an earache.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *callani gāli valla pāpaku cevipōṭu vaccindi.* — The cold wind gave the little girl an earache.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for paralysis, then the Telugu for asthma, then say cevipōṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for paralysis, then the Telugu for asthma, then say *cevipōṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చెవిపోటు (cevipōṭu) mean? (\"An earache\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C514-pantinoppi",
+      "sequence": 26030,
+      "title": "పంటినొప్పి (paṇṭinoppi) — a toothache",
+      "headword": "పంటినొప్పి",
+      "romanization": "paṇṭinoppi",
+      "gloss": "a toothache",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b80ba392b0ac52c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for asthma, then the Telugu for an earache."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పంటినొప్పి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పంటినొప్పి — paṇṭinoppi — \"a toothache\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పంటినొప్పితో రాత్రంతా నిద్ర పట్టలేదు. paṇṭinoppitō rātrantā nidra paṭṭalēdu. With a toothache I could not sleep all night."
+            },
+            {
+              "kind": "speech",
+              "text": "పన్ను, tooth, takes the form పంటి- before another word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పంటినొప్పి (paṇṭinoppi) is native Dravidian: pallu, pannu, \"tooth\" (DEDR 3986), in its joining form paṇṭi-, and noppi, \"pain\" (DEDR 3793)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇṭinoppi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇṭinoppi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇṭinoppi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇṭinoppi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇṭinoppitō rātrantā nidra paṭṭalēdu. — With a toothache I could not sleep all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇṭinoppitō rātrantā nidra paṭṭalēdu.* — With a toothache I could not sleep all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for asthma, then the Telugu for an earache, then say paṇṭinoppi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for asthma, then the Telugu for an earache, then say *paṇṭinoppi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పంటినొప్పి (paṇṭinoppi) mean? (\"A toothache\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C514-vennunoppi",
+      "sequence": 26040,
+      "title": "వెన్నునొప్పి (vennunoppi) — a backache",
+      "headword": "వెన్నునొప్పి",
+      "romanization": "vennunoppi",
+      "gloss": "a backache",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3dc28a030615e62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an earache, then the Telugu for a toothache."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వెన్నునొప్పి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెన్నునొప్పి — vennunoppi — \"a backache\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రోజంతా కూర్చుని పనిచేయడం వల్ల నాకు వెన్నునొప్పి వచ్చింది. rōjantā kūrcuni panicēyaḍaṁ valla nāku vennunoppi vaccindi. Sitting and working all day gave me a backache."
+            },
+            {
+              "kind": "speech",
+              "text": "వెన్ను, the back or spine, + నొప్పి, pain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెన్నునొప్పి (vennunoppi) is native Dravidian: vennu, \"the back\" (DEDR 5488), and noppi, \"pain\" (DEDR 3793), with Tamil nō, \"to ache\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vennunoppi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vennunoppi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vennunoppi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vennunoppi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rōjantā kūrcuni panicēyaḍaṁ valla nāku vennunoppi vaccindi. — Sitting and working all day gave me a backache.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rōjantā kūrcuni panicēyaḍaṁ valla nāku vennunoppi vaccindi.* — Sitting and working all day gave me a backache.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an earache, then the Telugu for a toothache, then say vennunoppi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an earache, then the Telugu for a toothache, then say *vennunoppi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వెన్నునొప్పి (vennunoppi) mean? (\"A backache\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C514-mulugu",
+      "sequence": 26050,
+      "title": "మూలుగు (mūlugu) — to groan; to moan",
+      "headword": "మూలుగు",
+      "romanization": "mūlugu",
+      "gloss": "to groan; to moan",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7837b5be33f15346",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a toothache, then the Telugu for a backache."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మూలుగు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మూలుగు — mūlugu — \"to groan; to moan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నొప్పితో రోగి రాత్రంతా మూలిగాడు. noppitō rōgi rātrantā mūligāḍu. The patient groaned all night with pain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మూలిగాను, mūligānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound of pain or tiredness; also to grumble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మూలుగు (mūlugu) is native Dravidian: DEDR 4896 lists Telugu mūl(u)gu, \"to groan, to moan as from pain, to grumble\", with Kannada mūlugu and Malayalam mūḷuka, \"to groan\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūlugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūlugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūlugu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūlugu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noppitō rōgi rātrantā mūligāḍu. — The patient groaned all night with pain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noppitō rōgi rātrantā mūligāḍu.* — The patient groaned all night with pain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a toothache, then the Telugu for a backache, then say mūlugu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a toothache, then the Telugu for a backache, then say *mūlugu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మూలుగు (mūlugu) mean? (\"To groan; to moan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C514-murchapovu",
+      "sequence": 26060,
+      "title": "మూర్ఛపోవు (mūrchapōvu) — to faint",
+      "headword": "మూర్ఛపోవు",
+      "romanization": "mūrchapōvu",
+      "gloss": "to faint",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd4f73e3dbe3fe7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a backache, then the Telugu for to groan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మూర్ఛపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మూర్ఛపోవు — mūrchapōvu — \"to faint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఎండలో నిలబడి ఒక విద్యార్థి మూర్ఛపోయాడు. eṇḍalō nilabaḍi oka vidyārthi mūrchapōyāḍu. Standing in the sun, a student fainted."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మూర్ఛపోయాను, mūrchapōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "మూర్ఛ, a faint or a fit, + పోవు, to go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మూర్ఛపోవు (mūrchapōvu) is built from మూర్ఛ, from Sanskrit mūrchā, \"fainting, stupor\" (CDIAL 10242) and pōvu, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūrchapōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūrchapōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūrchapōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūrchapōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṇḍalō nilabaḍi oka vidyārthi mūrchapōyāḍu. — Standing in the sun, a student fainted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṇḍalō nilabaḍi oka vidyārthi mūrchapōyāḍu.* — Standing in the sun, a student fainted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a backache, then the Telugu for to groan, then say mūrchapōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a backache, then the Telugu for to groan, then say *mūrchapōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మూర్ఛపోవు (mūrchapōvu) mean? (\"To faint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

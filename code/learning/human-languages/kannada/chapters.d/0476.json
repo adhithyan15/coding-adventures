@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Wildlife Sanctuaries",
+  "label": "ch:ka-wildlife-sanctuaries",
+  "canDo": "I can say wildlife, a sanctuary, a bird sanctuary, biodiversity and to migrate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C476-valase-hogu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can say wildlife, a sanctuary, a bird sanctuary, biodiversity and to migrate.",
+    "assesses": [
+      "KA-LEX-C476-VANYAJIVI476-03",
+      "KA-LEX-C476-VANYAJIVI476-04",
+      "KA-LEX-C476-VANYAJIVI476-05"
+    ]
+  }
+}

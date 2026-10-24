@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:c4fab6112b336350",
+  "lessonIds": [
+    "TE-C442-patta",
+    "TE-C442-metro",
+    "TE-C442-rakapokalu",
+    "TE-C442-kikkirisipovu",
+    "TE-C442-pattalu-tappu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch442.txt",
+  "json": "telugu/narration/ch442.json",
+  "textHash": "fnv1a64:2b45c8f230747fbe",
+  "jsonHash": "fnv1a64:34e4aaf1f73b87cf",
+  "findings": []
+}

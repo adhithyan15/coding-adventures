@@ -1,0 +1,11 @@
+{
+  "id": "BN-C362-bodh-kora",
+  "pathSegment": "BN-PATH-362-MONOJOG362",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-362-MONOJOG362",
+      "order": 3
+    }
+  ]
+}

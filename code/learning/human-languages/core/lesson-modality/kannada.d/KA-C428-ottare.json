@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C428-ottare",
+    "language": "kannada",
+    "chapter": 428,
+    "sequence": 21710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbbf5f75d9b76b16"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C361-siyaq",
+  "pathSegment": "AR-PATH-361-QADIYYA361",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-361-QADIYYA361",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Partners and Households",
+  "label": "ch:ka-partners-and-households",
+  "canDo": "I can say family life, a homemaker, a partner, the pain of parting and married life.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C523-dampatya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can say family life, a homemaker, a partner, the pain of parting and married life.",
+    "assesses": [
+      "KA-LEX-C523-SAMSARA523-03",
+      "KA-LEX-C523-SAMSARA523-04",
+      "KA-LEX-C523-SAMSARA523-05"
+    ]
+  }
+}

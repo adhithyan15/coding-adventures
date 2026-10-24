@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:575b71cad2950160",
+  "lessonIds": [
+    "MR-C472-hatti",
+    "MR-C472-admutha",
+    "MR-C472-lahri",
+    "MR-C472-utavla",
+    "MR-C472-adhir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch472.txt",
+  "json": "marathi/narration/ch472.json",
+  "textHash": "fnv1a64:2597bc6f4d7bb8fd",
+  "jsonHash": "fnv1a64:0c1cabc8bcea63b9",
+  "findings": []
+}

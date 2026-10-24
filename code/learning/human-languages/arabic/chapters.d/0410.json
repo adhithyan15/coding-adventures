@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Allowed or required",
+  "label": "ch:ar-allowed-or-required",
+  "canDo": "I can say that something is permitted, obligatory or exempt, and that someone broke or kept a rule.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C410-afa-exempt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can say that something is permitted, obligatory or exempt, and that someone broke or kept a rule.",
+    "assesses": [
+      "AR-LEX-C410-IBAHA410-03",
+      "AR-LEX-C410-IBAHA410-04",
+      "AR-LEX-C410-IBAHA410-05"
+    ]
+  }
+}

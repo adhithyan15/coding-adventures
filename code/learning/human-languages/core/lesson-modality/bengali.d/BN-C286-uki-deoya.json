@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C286-uki-deoya",
+    "language": "bengali",
+    "chapter": 286,
+    "sequence": 18510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:887801b9bd7decd3"
+  },
+  "findings": []
+}

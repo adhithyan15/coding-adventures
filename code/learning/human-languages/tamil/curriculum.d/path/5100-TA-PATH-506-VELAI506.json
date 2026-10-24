@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-506-VELAI506",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-506-VELAI506"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Theories and concepts",
+  "label": "ch:ar-theories-and-concepts",
+  "canDo": "I can talk about a theory, a hypothesis, a concept and a phenomenon, and say what something means.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C363-fassara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can talk about a theory, a hypothesis, a concept and a phenomenon, and say what something means.",
+    "assesses": [
+      "AR-LEX-C363-NAZARIYYA363-03",
+      "AR-LEX-C363-NAZARIYYA363-04",
+      "AR-LEX-C363-NAZARIYYA363-05"
+    ]
+  }
+}

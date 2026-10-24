@@ -1,0 +1,19 @@
+{
+  "chapter": 552,
+  "title": "Safety at Home",
+  "label": "ch:ta-safety-at-home",
+  "canDo": "I can talk about fire safety and acting quickly.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C552-avakacam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 552: I can talk about fire safety and acting quickly.",
+    "assesses": [
+      "TA-LEX-C552-PATHUKAPPU552-03",
+      "TA-LEX-C552-PATHUKAPPU552-04",
+      "TA-LEX-C552-PATHUKAPPU552-05"
+    ]
+  }
+}

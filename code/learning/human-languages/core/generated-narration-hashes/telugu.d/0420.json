@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:800c3b8c10f025b3",
+  "lessonIds": [
+    "TE-C420-empika",
+    "TE-C420-pratyamnayam",
+    "TE-C420-pariganincu",
+    "TE-C420-aicchikam",
+    "TE-C420-vaduluko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch420.txt",
+  "json": "telugu/narration/ch420.json",
+  "textHash": "fnv1a64:a826bd3b24bd49ee",
+  "jsonHash": "fnv1a64:4ad8032e84951bcd",
+  "findings": []
+}

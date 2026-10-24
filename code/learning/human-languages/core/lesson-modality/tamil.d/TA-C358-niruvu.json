@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C358-niruvu",
+    "language": "tamil",
+    "chapter": 358,
+    "sequence": 20700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98a53b2095613c34"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:b5c5175d669163c7",
+  "lessonIds": [
+    "KA-C522-kammara",
+    "KA-C522-akkasaliga",
+    "KA-C522-nekara",
+    "KA-C522-silpi",
+    "KA-C522-kettu"
+  ],
+  "tex": "kannada/book/chapters/ch522-craftspeople.tex"
+}

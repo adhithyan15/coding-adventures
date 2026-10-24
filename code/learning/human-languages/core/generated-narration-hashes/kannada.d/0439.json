@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:042d2547913b657e",
+  "lessonIds": [
+    "KA-C439-visa",
+    "KA-C439-kastams",
+    "KA-C439-sunka",
+    "KA-C439-vinimaya-madu",
+    "KA-C439-etiem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch439.txt",
+  "json": "kannada/narration/ch439.json",
+  "textHash": "fnv1a64:7ccc914f4aa348b3",
+  "jsonHash": "fnv1a64:b5e9b5a652c5f322",
+  "findings": []
+}

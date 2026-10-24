@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:23cb942494d59437",
+  "lessonIds": [
+    "MR-C552-phiskatne",
+    "MR-C552-bargalne",
+    "MR-C552-dhasalne",
+    "MR-C552-kolmadne",
+    "MR-C552-sutne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch552.txt",
+  "json": "marathi/narration/ch552.json",
+  "textHash": "fnv1a64:04c4a7ff0db48a26",
+  "jsonHash": "fnv1a64:65ef7d180c9e341a",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C398-nisedhincu",
+  "pathSegment": "TE-PATH-398-CATTAM398",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-398-CATTAM398",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C372-patra",
+  "pathSegment": "TE-PATH-372-KATHAKUDU372",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-372-KATHAKUDU372",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 341,
+  "title": "Knights and treaties",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d7b18f39f6a3d0d7",
+  "lessons": [
+    {
+      "id": "AR-C341-faris",
+      "sequence": 19460,
+      "title": "فارس (fāris) — a knight, a horseman",
+      "headword": "فارس",
+      "romanization": "fāris",
+      "gloss": "a knight, a horseman",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4057f4f0b60b54bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a royal court, then the Arabic for to take office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فارس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فارس — fāris — \"a knight, a horseman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ركب الفارس حصانه الأبيض. rakiba al-fāris ḥiṣānahu al-abyaḍ. The knight rode his white horse."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: فرسان, fursān."
+            },
+            {
+              "kind": "speech",
+              "text": "فارس (fāris) الأحلام: Prince Charming."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فارس (fāris) is built on the native Arabic root f-r-s (Lane), the root of faras, a horse. Fāris is the man on the horse; furūsiyya is horsemanship and knighthood."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakiba al-fāris ḥiṣānahu al-abyaḍ. — The knight rode his white horse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakiba al-fāris ḥiṣānahu al-abyaḍ.* — The knight rode his white horse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a royal court, then the Arabic for to take office, then say fāris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a royal court, then the Arabic for to take office, then say *fāris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فارس (fāris) mean? (\"A knight, a horseman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C341-khudha",
+      "sequence": 19470,
+      "title": "خوذة (khūdha) — a helmet",
+      "headword": "خوذة",
+      "romanization": "khūdha",
+      "gloss": "a helmet",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79d7cd3c99ed751e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to take office, then the Arabic for a knight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خوذة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خوذة — khūdha — \"a helmet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لبس العامل خوذة صفراء. labisa al-ʿāmil khūdha ṣafrāʾ. The worker put on a yellow helmet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خوذة (khūdha) is usually traced to Persian khōd, \"a helmet\", an old borrowing into Arabic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khūdha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khūdha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khūdha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khūdha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "labisa al-ʿāmil khūdha ṣafrāʾ. — The worker put on a yellow helmet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *labisa al-ʿāmil khūdha ṣafrāʾ.* — The worker put on a yellow helmet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to take office, then the Arabic for a knight, then say khūdha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to take office, then the Arabic for a knight, then say *khūdha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خوذة (khūdha) mean? (\"A helmet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C341-hudna",
+      "sequence": 19480,
+      "title": "هدنة (hudna) — a truce",
+      "headword": "هدنة",
+      "romanization": "hudna",
+      "gloss": "a truce",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67038092baa383be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a knight, then the Arabic for a helmet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: هدنة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هدنة — hudna — \"a truce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وقع الطرفان هدنة لمدة شهر. waqqaʿa aṭ-ṭarafān hudna li-muddat shahr. The two sides signed a truce for a month."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هدنة (hudna) is a native Arabic word built on the root h-d-n, recorded in hudna ʿalā dakhan, an illusory truce (Lane). The root is usually explained as \"to be still, to be quiet\": a time when the fighting is still."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hudna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hudna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hudna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hudna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waqqaʿa aṭ-ṭarafān hudna li-muddat shahr. — The two sides signed a truce for a month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waqqaʿa aṭ-ṭarafān hudna li-muddat shahr.* — The two sides signed a truce for a month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a knight, then the Arabic for a helmet, then say hudna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a knight, then the Arabic for a helmet, then say *hudna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does هدنة (hudna) mean? (\"A truce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C341-muahada",
+      "sequence": 19490,
+      "title": "معاهدة (muʿāhada) — a treaty",
+      "headword": "معاهدة",
+      "romanization": "muʿāhada",
+      "gloss": "a treaty",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc8ef82587f962a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a helmet, then the Arabic for a truce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: معاهدة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معاهدة — muʿāhada — \"a treaty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وقع البلدان معاهدة (muʿāhada) سلام. waqqaʿa al-baladān muʿāhadat salām. The two countries signed a peace treaty."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معاهدة (muʿāhada) is built on the native Arabic root ʿ-h-d (Lane), where ʿahd is a pledge. Muʿāhada is the verbal noun of Form III, \"pledging to one another\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muʿāhada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muʿāhada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muʿāhada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muʿāhada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waqqaʿa al-baladān muʿāhadat salām. — The two countries signed a peace treaty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waqqaʿa al-baladān muʿāhadat salām.* — The two countries signed a peace treaty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a helmet, then the Arabic for a truce, then say muʿāhada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a helmet, then the Arabic for a truce, then say *muʿāhada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does معاهدة (muʿāhada) mean? (\"A treaty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C341-khana",
+      "sequence": 19500,
+      "title": "خان (khāna) — to betray",
+      "headword": "خان",
+      "romanization": "khāna",
+      "gloss": "to betray",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:312dd9ac3b4cb496",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a truce, then the Arabic for a treaty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خان — khāna — \"to betray\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خان الوزير الملك في القصة. khāna al-wazīr al-malik fī al-qiṣṣa. In the story the minister betrayed the king."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يخون, yakhūn."
+            },
+            {
+              "kind": "speech",
+              "text": "Not the noun خان (khāna), an inn, which has another source."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خان (khāna) is built on the native Arabic root kh-w-n (Lane), \"to be unfaithful to a trust\"; khiyāna is treachery."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāna al-wazīr al-malik fī al-qiṣṣa. — In the story the minister betrayed the king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāna al-wazīr al-malik fī al-qiṣṣa.* — In the story the minister betrayed the king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a truce, then the Arabic for a treaty, then say khāna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a truce, then the Arabic for a treaty, then say *khāna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خان (khāna) mean? (\"To betray\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

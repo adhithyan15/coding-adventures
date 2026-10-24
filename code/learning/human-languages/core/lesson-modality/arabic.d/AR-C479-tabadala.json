@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C479-tabadala",
+    "language": "arabic",
+    "chapter": 479,
+    "sequence": 26700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b482b49ee2d1e80"
+  },
+  "findings": []
+}

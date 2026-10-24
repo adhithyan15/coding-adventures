@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:6a0bb544c0c0d4dd",
+  "lessonIds": [
+    "TA-C402-caman",
+    "TA-C402-cutkes",
+    "TA-C402-muttai",
+    "TA-C402-cuma",
+    "TA-C402-irakku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch402.txt",
+  "json": "tamil/narration/ch402.json",
+  "textHash": "fnv1a64:03e794a8ca4a296b",
+  "jsonHash": "fnv1a64:3de0e69ad0db4eba",
+  "findings": []
+}

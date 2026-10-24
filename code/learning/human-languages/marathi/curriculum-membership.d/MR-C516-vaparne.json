@@ -1,0 +1,11 @@
+{
+  "id": "MR-C516-vaparne",
+  "pathSegment": "MR-PATH-516-PHON516",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-516-PHON516",
+      "order": 4
+    }
+  ]
+}

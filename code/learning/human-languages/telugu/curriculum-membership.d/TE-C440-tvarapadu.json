@@ -1,0 +1,11 @@
+{
+  "id": "TE-C440-tvarapadu",
+  "pathSegment": "TE-PATH-440-ALASYAM440",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-440-ALASYAM440",
+      "order": 4
+    }
+  ]
+}

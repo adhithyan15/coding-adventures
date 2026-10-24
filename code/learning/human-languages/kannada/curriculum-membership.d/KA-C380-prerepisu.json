@@ -1,0 +1,11 @@
+{
+  "id": "KA-C380-prerepisu",
+  "pathSegment": "KA-PATH-380-MANAVOLISU380",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-380-MANAVOLISU380",
+      "order": 1
+    }
+  ]
+}

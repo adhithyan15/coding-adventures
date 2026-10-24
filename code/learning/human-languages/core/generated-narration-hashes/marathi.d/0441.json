@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:b7b152b23e455e89",
+  "lessonIds": [
+    "MR-C441-ksitij",
+    "MR-C441-candne",
+    "MR-C441-ugavne",
+    "MR-C441-mavalne",
+    "MR-C441-camakne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch441.txt",
+  "json": "marathi/narration/ch441.json",
+  "textHash": "fnv1a64:b4633607d6d5529a",
+  "jsonHash": "fnv1a64:5eed5987ab23bd62",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-485-MUNGARU485",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "KA-EXT-485-MUNGARU485"
+  ],
+  "after": []
+}

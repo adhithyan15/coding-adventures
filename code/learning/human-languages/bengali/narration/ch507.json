@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 507,
+  "title": "Cracks and Repairs",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:ed0d796be319ac63",
+  "lessons": [
+    {
+      "id": "BN-C507-chhidro",
+      "sequence": 30760,
+      "title": "ছিদ্র (chhidrô) — a hole; a small opening",
+      "headword": "ছিদ্র",
+      "romanization": "chhidrô",
+      "gloss": "a hole; a small opening",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6967e9ed5a06a0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to bail out water, then the Bengali for to seep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ছিদ্র",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছিদ্র — chhidrô — \"a hole; a small opening\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নৌকার তলায় একটা ছিদ্র ছিল। Noukār tôlāy ekṭā chhidrô chhilô. There was a hole in the bottom of the boat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছিদ্র (chhidrô) is a tatsama, Sanskrit chidra, \"torn asunder\", and so \"a hole, an opening\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhidrô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhidrô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhidrô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhidrô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Noukār tôlāy ekṭā chhidrô chhilô. — There was a hole in the bottom of the boat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Noukār tôlāy ekṭā chhidrô chhilô.* — There was a hole in the bottom of the boat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to bail out water, then the Bengali for to seep, then say chhidrô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to bail out water, then the Bengali for to seep, then say *chhidrô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ছিদ্র (chhidrô) mean? (\"A hole; a small opening\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C507-plastar",
+      "sequence": 30770,
+      "title": "প্লাস্টার (plāsṭār) — wall plaster",
+      "headword": "প্লাস্টার",
+      "romanization": "plāsṭār",
+      "gloss": "wall plaster",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5447e3da9e77ecf7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to seep, then the Bengali for a small opening."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্লাস্টার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্লাস্টার — plāsṭār — \"wall plaster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পুরনো দেওয়াল থেকে প্লাস্টার ঝরছিল। Purôno deoyāl theke plāsṭār jhôrchhilô. Plaster was flaking off the old wall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্লাস্টার (plāsṭār) is borrowed from English plaster."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plāsṭār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plāsṭār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plāsṭār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plāsṭār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Purôno deoyāl theke plāsṭār jhôrchhilô. — Plaster was flaking off the old wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Purôno deoyāl theke plāsṭār jhôrchhilô.* — Plaster was flaking off the old wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to seep, then the Bengali for a small opening, then say plāsṭār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to seep, then the Bengali for a small opening, then say *plāsṭār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্লাস্টার (plāsṭār) mean? (\"Wall plaster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C507-atha",
+      "sequence": 30780,
+      "title": "আঠা (āṭhā) — glue; paste",
+      "headword": "আঠা",
+      "romanization": "āṭhā",
+      "gloss": "glue; paste",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a98662b7e72196f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a small opening, then the Bengali for wall plaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আঠা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আঠা — āṭhā — \"glue; paste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ছেঁড়া বইটা আঠা লাগিয়ে জুড়লাম। Chhẽṛā bôiṭā āṭhā lāgiye juṛlām. I stuck the torn book back together with glue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আঠা (āṭhā) comes from a reconstructed aṭṭha; CDIAL lists Bengali āṭhā, \"gum, paste\" (CDIAL 186)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chhẽṛā bôiṭā āṭhā lāgiye juṛlām. — I stuck the torn book back together with glue.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chhẽṛā bôiṭā āṭhā lāgiye juṛlām.* — I stuck the torn book back together with glue.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a small opening, then the Bengali for wall plaster, then say āṭhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a small opening, then the Bengali for wall plaster, then say *āṭhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আঠা (āṭhā) mean? (\"Glue; paste\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C507-lepa",
+      "sequence": 30790,
+      "title": "লেপা (lepā) — to plaster; to smear",
+      "headword": "লেপা",
+      "romanization": "lepā",
+      "gloss": "to plaster; to smear",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdacc749b50e8ded",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for wall plaster, then the Bengali for glue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: লেপা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লেপা — lepā — \"to plaster; to smear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মজুর কাদা লেপে দেওয়ালের ফুটোটা বন্ধ করল। Mojur kādā lepe deoyāler phuṭoṭā bôndhô kôrlô. The labourer plastered mud over the hole in the wall and closed it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি দেওয়ালে কাদা লেপলেন, tini deoyāle kādā leplen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লেপা (lepā) is a tadbhava: CDIAL lists Bengali lepā, \"to plaster\", under Sanskrit lepya, \"to be smeared\" (CDIAL 11114)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lepā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lepā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lepā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lepā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mojur kādā lepe deoyāler phuṭoṭā bôndhô kôrlô. — The labourer plastered mud over the hole in the wall and closed it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mojur kādā lepe deoyāler phuṭoṭā bôndhô kôrlô.* — The labourer plastered mud over the hole in the wall and closed it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for wall plaster, then the Bengali for glue, then say lepā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for wall plaster, then the Bengali for glue, then say *lepā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does লেপা (lepā) mean? (\"To plaster; to smear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C507-thoka",
+      "sequence": 30800,
+      "title": "ঠোকা (ṭhokā) — to hammer in; to knock",
+      "headword": "ঠোকা",
+      "romanization": "ṭhokā",
+      "gloss": "to hammer in; to knock",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc2b666e9173933a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for glue, then the Bengali for to plaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঠোকা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠোকা — ṭhokā — \"to hammer in; to knock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মিস্ত্রি দেওয়ালে একটা পেরেক ঠুকল। Mistri deoyāle ekṭā perek ṭhuklô. The mechanic hammered a nail into the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি দরজায় ঠুকলেন, tini dôrjāy ṭhuklen."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem vowel rises in the past: ঠুকল, he hammered."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠোকা (ṭhokā) comes from a reconstructed root ṭhōkk, \"knock\"; CDIAL lists Bengali ṭhokā, \"to strike\" (CDIAL 5513)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhokā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhokā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhokā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhokā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mistri deoyāle ekṭā perek ṭhuklô. — The mechanic hammered a nail into the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mistri deoyāle ekṭā perek ṭhuklô.* — The mechanic hammered a nail into the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for glue, then the Bengali for to plaster, then say ṭhokā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for glue, then the Bengali for to plaster, then say *ṭhokā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঠোকা (ṭhokā) mean? (\"To hammer in; to knock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R507-review-500-507",
+      "sequence": 30810,
+      "title": "Looking back: from Orders and Departments to Cracks and Repairs",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Orders and Departments to Cracks and Repairs",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6796014a38a38326",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for a department and a command."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a department, a command, a workplace, to get done, to supervise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a department, a command, a workplace, to get done, to supervise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a specialist, an adviser, a translator, an architect, to diagnose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a specialist, an adviser, a translator, an architect, to diagnose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a computer, a mobile phone, a selfie, to rummage, to charge a phone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a computer, a mobile phone, a selfie, to rummage, to charge a phone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a website, a link online, online, a screen, to download",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a website, a link online, online, a screen, to download]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a robot, automatic, a generator, to rust, a motor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a robot, automatic, a generator, to rust, a motor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darkness, bright, a chandelier, to flicker, to go out (of a light)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: darkness, bright, a chandelier, to flicker, to go out (of a light)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a water tank, a hole right through, to overflow, to bail out water, to seep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a water tank, a hole right through, to overflow, to bail out water, to seep]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a small opening, wall plaster, glue, to plaster, to hammer in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a small opening, wall plaster, glue, to plaster, to hammer in]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A department? (বিভাগ, bibhāg.) A command? (হুকুম, hukum.) A workplace? (কর্মস্থল, kôrmôsthôl.) To get done? (সারা, sārā.) To supervise? (তদারক করা, tôdārôk kôrā.) A specialist? (বিশেষজ্ঞ, bisheshôgyô.) An adviser? (উপদেষ্টা, upôdeshṭā.) A translator? (অনুবাদক, ônubādôk.) An architect? (স্থপতি, sthôpôti.) To diagnose? (নির্ণয় করা, nirnôy kôrā.) A computer? (কম্পিউটার, kômpiuṭār.) A mobile phone? (মোবাইল, mobāil.) A selfie? (সেলফি, selphi.) To rummage? (ঘাঁটা, ghā̃ṭā.) To charge a phone? (চার্জ দেওয়া, chārj deoyā.) A website? (ওয়েবসাইট, oyebsāiṭ.) A link online? (লিংক, lingk.) Online? (অনলাইন, ônlāin.) A screen? (স্ক্রিন, skrin.) To download? (ডাউনলোড করা, ḍāunloḍ kôrā.) A robot? (রোবট, robôṭ.) Automatic? (স্বয়ংক্রিয়, svôyôngkriyô.) A generator? (জেনারেটর, jenāreṭôr.) To rust? (জং ধরা, jông dhôrā.) A motor? (মোটর, moṭôr.) Darkness? (অন্ধকার, ôndhôkār.) Bright? (উজ্জ্বল, ujjvôl.) A chandelier? (ঝাড়বাতি, jhāṛbāti.) To flicker? (টিমটিম করা, ṭimṭim kôrā.) To go out (of a light)? (নেভা, nebhā.) A water tank? (ট্যাংক, ṭængk.) A hole right through? (ফুটো, phuṭo.) To overflow? (উপচে পড়া, upôche pôṛā.) To bail out water? (সেঁচা, sẽchā.) To seep? (চুঁইয়ে পড়া, chũiye pôṛā.) A small opening? (ছিদ্র, chhidrô.) Wall plaster? (প্লাস্টার, plāsṭār.) Glue? (আঠা, āṭhā.) To plaster? (লেপা, lepā.) To hammer in? (ঠোকা, ṭhokā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

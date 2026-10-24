@@ -250,6 +250,23 @@
 % where the last word ended. Block callouts set ragged right is ordinary
 % typography, and it is what \chapteropening already does above.
 \tcbset{before upper=\raggedright}
+
+% Quote blocks are set ragged right as well (HL-C88, extended to quotes).
+%
+% The B1 chapters set each word's example sentence, its romanization and its
+% translation in a quote block, a narrower measure than the body. A Marathi
+% sentence carries its case endings and postpositions attached to the word
+% (वर्षांपासून, गेल्यावर), and its romanization carries the same long words
+% with diacritics that never hyphenate under English patterns, so a justified
+% line of them has two or three spaces to stretch: underfull hboxes, and
+% overfull ones where no stretch was enough and the line ran into the margin.
+% Ragged right is the same remedy as for the callouts above: the line ends
+% where its last word ends, so nothing stretches and nothing overruns.
+% \hbadness and \hfuzz stay at their defaults, so the CI log scanner still
+% sees every box that remains. The chapter opening already sets its quote
+% ragged right; this makes every quote agree with it.
+\let\hlorigquote\quote
+\def\quote{\hlorigquote\raggedright}
 \emergencystretch=2em
 
 % ---------------------------------------------------------------------------

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:57bb9cd5a6fa4221",
+  "lessonIds": [
+    "TA-C300-avacaranilai",
+    "TA-C300-uratanku",
+    "TA-C300-mutanku",
+    "TA-C300-nilaikulai",
+    "TA-C300-itintuvilu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch300.txt",
+  "json": "tamil/narration/ch300.json",
+  "textHash": "fnv1a64:cc897064bc3fc1cd",
+  "jsonHash": "fnv1a64:9ea452ce36a65a22",
+  "findings": []
+}

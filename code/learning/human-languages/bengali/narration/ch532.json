@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 532,
+  "title": "What Lies Ahead",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ae08047e5fa83f1f",
+  "lessons": [
+    {
+      "id": "BN-C532-niyoti",
+      "sequence": 32050,
+      "title": "নিয়তি (niyôti) — destiny; fate",
+      "headword": "নিয়তি",
+      "romanization": "niyôti",
+      "gloss": "destiny; fate",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ef8658d08e3b02f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an outline, then the Bengali for to leave out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নিয়তি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিয়তি — niyôti — \"destiny; fate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দাদু বলেন, নিয়তি কেউ বদলাতে পারে না। Dādu bôlen, niyôti keu bôdlāte pāre nā. My grandfather says no one can change destiny."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিয়তি (niyôti) is a tatsama, Sanskrit niyati, \"the fixed order of things, destiny\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyôti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyôti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyôti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyôti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dādu bôlen, niyôti keu bôdlāte pāre nā. — My grandfather says no one can change destiny.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dādu bôlen, niyôti keu bôdlāte pāre nā.* — My grandfather says no one can change destiny.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an outline, then the Bengali for to leave out, then say niyôti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an outline, then the Bengali for to leave out, then say *niyôti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নিয়তি (niyôti) mean? (\"Destiny; fate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C532-bhobitobyo",
+      "sequence": 32060,
+      "title": "ভবিতব্য (bhôbitôbyô) — what is bound to happen",
+      "headword": "ভবিতব্য",
+      "romanization": "bhôbitôbyô",
+      "gloss": "what is bound to happen",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2019d6378996b17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to leave out, then the Bengali for destiny."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভবিতব্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভবিতব্য — bhôbitôbyô — \"what is bound to happen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ট্রেনটা ছেড়ে গেল; এটাই ভবিতব্য ছিল। Ṭrenṭā chheṛe gelô; eṭāi bhôbitôbyô chhilô. The train left; it was bound to happen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভবিতব্য (bhôbitôbyô) is a tatsama, Sanskrit bhavitavya, \"what is to be\" (Monier-Williams), from bhū, \"to be\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhôbitôbyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhôbitôbyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhôbitôbyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhôbitôbyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ṭrenṭā chheṛe gelô; eṭāi bhôbitôbyô chhilô. — The train left; it was bound to happen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ṭrenṭā chheṛe gelô; eṭāi bhôbitôbyô chhilô.* — The train left; it was bound to happen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to leave out, then the Bengali for destiny, then say bhôbitôbyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to leave out, then the Bengali for destiny, then say *bhôbitôbyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভবিতব্য (bhôbitôbyô) mean? (\"What is bound to happen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C532-ach-kora",
+      "sequence": 32070,
+      "title": "আঁচ করা (ā̃ch kôrā) — to sense; to guess (what is coming)",
+      "headword": "আঁচ করা",
+      "romanization": "ā̃ch kôrā",
+      "gloss": "to sense; to guess (what is coming)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7633dd77f291f9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for destiny, then the Bengali for what is bound to happen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আঁচ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আঁচ করা — ā̃ch kôrā — \"to sense; to guess (what is coming)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আকাশ দেখে আমি ঝড়ের আঁচ করলাম। Ākāsh dekhe āmi jhôṛer ā̃ch kôrlām. Looking at the sky, I sensed a storm coming."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি বিপদটা আঁচ করলেন, tini bipôdṭā ā̃ch kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আঁচ করা (ā̃ch kôrā) joins আঁচ, \"an inkling, a rough guess\", to করা, \"to do\"; CDIAL lists Bengali ā̃cā, \"to estimate\", under Sanskrit añcati, \"bends\" (CDIAL 166)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā̃ch kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā̃ch kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā̃ch kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā̃ch kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ākāsh dekhe āmi jhôṛer ā̃ch kôrlām. — Looking at the sky, I sensed a storm coming.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ākāsh dekhe āmi jhôṛer ā̃ch kôrlām.* — Looking at the sky, I sensed a storm coming.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for destiny, then the Bengali for what is bound to happen, then say ā̃ch kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for destiny, then the Bengali for what is bound to happen, then say *ā̃ch kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আঁচ করা (ā̃ch kôrā) mean? (\"To sense; to guess (what is coming)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C532-purbabhas",
+      "sequence": 32080,
+      "title": "পূর্বাভাস (pūrbābhās) — a forecast",
+      "headword": "পূর্বাভাস",
+      "romanization": "pūrbābhās",
+      "gloss": "a forecast",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c99bde8ffa446480",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for what is bound to happen, then the Bengali for to sense trouble coming."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পূর্বাভাস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পূর্বাভাস — pūrbābhās — \"a forecast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পূর্বাভাস (pūrbābhās) ভালো হলে আমরা কাল নৌকায় নদী পার হব। Pūrbābhās bhālo hôle āmrā kāl noukāy nôdī pār hôbô. If the forecast is good, we'll cross the river by boat tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পূর্বাভাস (pūrbābhās) joins Sanskrit pūrva, \"before, earlier\", and ābhāsa, \"light, appearance\" (Monier-Williams): a first glimpse of what is coming."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrbābhās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrbābhās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrbābhās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrbābhās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Pūrbābhās bhālo hôle āmrā kāl noukāy nôdī pār hôbô. — If the forecast is good, we'll cross the river by boat tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Pūrbābhās bhālo hôle āmrā kāl noukāy nôdī pār hôbô.* — If the forecast is good, we'll cross the river by boat tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for what is bound to happen, then the Bengali for to sense trouble coming, then say pūrbābhās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for what is bound to happen, then the Bengali for to sense trouble coming, then say *pūrbābhās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পূর্বাভাস (pūrbābhās) mean? (\"A forecast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C532-jyotishi",
+      "sequence": 32090,
+      "title": "জ্যোতিষী (jyotishī) — an astrologer",
+      "headword": "জ্যোতিষী",
+      "romanization": "jyotishī",
+      "gloss": "an astrologer",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:308852398f34e869",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to sense trouble coming, then the Bengali for a forecast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জ্যোতিষী",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জ্যোতিষী — jyotishī — \"an astrologer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "জ্যোতিষী (jyotishī) আমার হাত দেখলেন। Jyotishī āmār hāt dekhlen. The astrologer read my palm."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জ্যোতিষী (jyotishī) is built on Sanskrit jyotiṣa, which Monier-Williams glosses as \"an astronomer\", with the ending -ī, \"one who does it\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jyotishī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jyotishī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jyotishī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jyotishī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Jyotishī āmār hāt dekhlen. — The astrologer read my palm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Jyotishī āmār hāt dekhlen.* — The astrologer read my palm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to sense trouble coming, then the Bengali for a forecast, then say jyotishī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to sense trouble coming, then the Bengali for a forecast, then say *jyotishī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জ্যোতিষী (jyotishī) mean? (\"An astrologer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

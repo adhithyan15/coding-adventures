@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C404-taliyola",
+    "language": "malayalam",
+    "chapter": 404,
+    "sequence": 19830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb7882d7daff5b58"
+  },
+  "findings": []
+}

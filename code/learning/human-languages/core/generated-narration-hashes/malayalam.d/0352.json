@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:df91e3ef78072a8c",
+  "lessonIds": [
+    "ML-C352-patrasammelanam",
+    "ML-C352-prastavana",
+    "ML-C352-satyavastha",
+    "ML-C352-peruppikkuka",
+    "ML-C352-mappu-parayuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch352.txt",
+  "json": "malayalam/narration/ch352.json",
+  "textHash": "fnv1a64:539d9b7389d26cd9",
+  "jsonHash": "fnv1a64:635e1aee2adeed49",
+  "findings": []
+}

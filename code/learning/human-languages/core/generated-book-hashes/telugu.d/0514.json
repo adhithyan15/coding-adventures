@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:f651c618eddaef81",
+  "lessonIds": [
+    "TE-C514-cevipotu",
+    "TE-C514-pantinoppi",
+    "TE-C514-vennunoppi",
+    "TE-C514-mulugu",
+    "TE-C514-murchapovu"
+  ],
+  "tex": "telugu/book/chapters/ch514-aches.tex"
+}

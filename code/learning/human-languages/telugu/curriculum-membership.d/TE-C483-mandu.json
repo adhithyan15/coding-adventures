@@ -1,0 +1,11 @@
+{
+  "id": "TE-C483-mandu",
+  "pathSegment": "TE-PATH-483-AVIRI483",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-483-AVIRI483",
+      "order": 2
+    }
+  ]
+}

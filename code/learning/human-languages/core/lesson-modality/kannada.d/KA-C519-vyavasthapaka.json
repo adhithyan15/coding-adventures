@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C519-vyavasthapaka",
+    "language": "kannada",
+    "chapter": 519,
+    "sequence": 26500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e7745d9ba403e1d"
+  },
+  "findings": []
+}

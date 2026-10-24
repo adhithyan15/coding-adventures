@@ -1,0 +1,11 @@
+{
+  "id": "KA-C345-talemaresiko",
+  "pathSegment": "KA-PATH-345-ADAGU345",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-345-ADAGU345",
+      "order": 1
+    }
+  ]
+}

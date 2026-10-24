@@ -1,0 +1,11 @@
+{
+  "id": "MR-C490-colne",
+  "pathSegment": "MR-PATH-490-PATHYA490",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-490-PATHYA490",
+      "order": 4
+    }
+  ]
+}

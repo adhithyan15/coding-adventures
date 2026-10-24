@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:c28faf1f3a445a54",
+  "lessonIds": [
+    "BN-C367-onuman-kora",
+    "BN-C367-andaj-kora",
+    "BN-C367-abhas",
+    "BN-C367-protyasha",
+    "BN-C367-bhobishyot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch367.txt",
+  "json": "bengali/narration/ch367.json",
+  "textHash": "fnv1a64:c62ab239f25e6aa1",
+  "jsonHash": "fnv1a64:bf82ac9f76f441c0",
+  "findings": []
+}

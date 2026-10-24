@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:3be994ba479c5be9",
+  "lessonIds": [
+    "TE-C395-kanuka",
+    "TE-C395-anduceta",
+    "TE-C395-drstya",
+    "TE-C395-anaga",
+    "TE-C395-pratipadika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch395.txt",
+  "json": "telugu/narration/ch395.json",
+  "textHash": "fnv1a64:07801c5a545e828d",
+  "jsonHash": "fnv1a64:46c2385abedb3499",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-421-BEDIKE421",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "KA-EXT-421-BEDIKE421"
+  ],
+  "after": []
+}

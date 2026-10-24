@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "Corruption and Accountability",
+  "label": "ch:te-corruption-and-accountability",
+  "canDo": "I can talk about corruption, bribes and allegations.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C406-aropincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can talk about corruption, bribes and allegations.",
+    "assesses": [
+      "TE-LEX-C406-AVINITI406-03",
+      "TE-LEX-C406-AVINITI406-04",
+      "TE-LEX-C406-AVINITI406-05"
+    ]
+  }
+}

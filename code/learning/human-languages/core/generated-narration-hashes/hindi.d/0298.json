@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:6e602bdd36f90527",
+  "lessonIds": [
+    "HI-C298-hadsa",
+    "HI-C298-ghayal",
+    "HI-C298-behos",
+    "HI-C298-kucalna",
+    "HI-C298-sambhalna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch298.txt",
+  "json": "hindi/narration/ch298.json",
+  "textHash": "fnv1a64:ea41b49c080bcdc5",
+  "jsonHash": "fnv1a64:91efbbb2a0a5fc49",
+  "findings": []
+}

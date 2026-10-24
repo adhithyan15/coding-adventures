@@ -1,0 +1,11 @@
+{
+  "id": "BN-C395-pari-deoya",
+  "pathSegment": "BN-PATH-395-BIMAN395",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-395-BIMAN395",
+      "order": 4
+    }
+  ]
+}

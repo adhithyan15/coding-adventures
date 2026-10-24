@@ -4,6 +4,44 @@ All notable changes to the `parser` crate will be documented in this file.
 
 ## Unreleased
 
+### Fixed — repetitions with a body that matches nothing no longer hang
+
+`{ }`, `{ }+` and `{ x // sep }` now stop after an iteration that succeeded
+without moving the cursor or splitting a `>>` token, undoing that iteration.
+Before, a body that can match empty (`{ [ NAME ] }`, `{ @space_before | NAME }`,
+`{ p }` with `p = @space_before`) repeated forever, and through memo hits on a
+rule body grew the tree until memory ran out. `GrammarParser::new` does not
+validate, so the engine itself now guarantees termination. Parses that
+terminated before are unchanged (such an iteration was always followed by an
+identical one). This also covers the C# grammars' nullable `switch_block`
+body. New `tests/repetition_progress.rs` (4 tests): the security review's
+probe grammars, `{ }+` and separated forms, ordered-choice results, and a
+`>>` split still counting as progress.
+
+### Added — token-adjacency predicates (F11, LANG84 E6)
+
+`GrammarParser` evaluates the new `GrammarElement::AdjacencyPredicate`
+(`@space_before`, `@no_space_before`, `@newline_before`, `@no_newline_before`,
+`@space_after_next`, `@no_space_after_next`) as a zero-width condition on the
+next token's gap flags. This expresses Ruby's `f -1` versus `f - 1` and
+ECMAScript's `[no LineTerminator here]` directly in `.grammar`.
+
+- The next token is found the way token matching finds it: when newlines are
+  insignificant, `NEWLINE` tokens in front of it are stepped over and count as
+  a line break. Past the end, EOF (unflagged) stands in.
+- Predicates never move the cursor or add children, and a failing predicate
+  records no expectation, so error messages and error tokens are unchanged.
+- They work under `[ ]`, `{ }`, alternation and `&`/`!`. They read only the
+  tokens at the cursor (one more for `_after_next`), so the packrat key
+  `(rule, position)` still determines every result.
+- They do not make a grammar newline-significant.
+- New `tests/adjacency_predicates.rs` (13 tests): Ruby `f -1` / `f - 1` /
+  `f-1` in all three F11 spellings, ECMAScript `return` and postfix `++` with
+  newlines skipped and with `NEWLINE` tokens, a newline-significant grammar,
+  lookahead and repetition, trailing predicates, EOF, memo reuse after a
+  failed predicate, unchanged errors, hand-built tokens, and a compiled-grammar
+  round trip through the checked-in fixture `tests/fixtures/adjacency_compiled.rs`.
+
 ### Fixed — the packrat memo copied every subtree once per enclosing rule
 
 `GrammarParser` memoised each successful `(rule, position)` by cloning the

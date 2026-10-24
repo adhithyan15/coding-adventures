@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 444,
+  "title": "Power and light",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:be3873ade46cf323",
+  "lessons": [
+    {
+      "id": "AR-C444-kahraba",
+      "sequence": 24870,
+      "title": "كهرباء (kahrabāʾ) — electricity",
+      "headword": "كهرباء",
+      "romanization": "kahrabāʾ",
+      "gloss": "electricity",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36cbf3051be7d6db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to overlook, then the Arabic for a strongbox."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كهرباء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كهرباء — kahrabāʾ — \"electricity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعمل الثلاجة بالكهرباء. taʿmalu ath-thallāja bi-l-kahrabāʾ. The fridge runs on electricity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كهرباء (kahrabāʾ) goes back to Persian kahrubā, \"amber\" (EtymDB), a name usually read as \"straw-robber\", since rubbed amber draws straw to it; the old name passed to electricity."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kahrabāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kahrabāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kahrabāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kahrabāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿmalu ath-thallāja bi-l-kahrabāʾ. — The fridge runs on electricity.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿmalu ath-thallāja bi-l-kahrabāʾ.* — The fridge runs on electricity.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to overlook, then the Arabic for a strongbox, then say kahrabāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to overlook, then the Arabic for a strongbox, then say *kahrabāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does كهرباء (kahrabāʾ) mean? (\"Electricity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C444-sakhkhana",
+      "sequence": 24880,
+      "title": "سخن (sakhkhana) — to heat up",
+      "headword": "سخن",
+      "romanization": "sakhkhana",
+      "gloss": "to heat up",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ecce853dd1f10dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a strongbox, then the Arabic for electricity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سخن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سخن — sakhkhana — \"to heat up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سخنت أمي الحساء. sakhkhanat ummī al-ḥasāʾ. My mother heated up the soup."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يسخن, yusakhkhin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سخن (sakhkhana) is built on the native Arabic root s-kh-n, \"to be hot\" (Lane). It is Form II, \"to make hot\", beside sākhin, \"hot\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakhkhana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakhkhana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakhkhana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakhkhana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakhkhanat ummī al-ḥasāʾ. — My mother heated up the soup.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakhkhanat ummī al-ḥasāʾ.* — My mother heated up the soup.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a strongbox, then the Arabic for electricity, then say sakhkhana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a strongbox, then the Arabic for electricity, then say *sakhkhana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سخن (sakhkhana) mean? (\"To heat up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C444-inqataa",
+      "sequence": 24890,
+      "title": "انقطع (inqaṭaʿa) — to be cut off",
+      "headword": "انقطع",
+      "romanization": "inqaṭaʿa",
+      "gloss": "to be cut off",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8774222ea1f7351b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for electricity, then the Arabic for to heat up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انقطع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انقطع — inqaṭaʿa — \"to be cut off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انقطعت الكهرباء في الفندق ليلة أمس. inqaṭaʿat al-kahrabāʾ fī al-funduq laylat ams. The electricity was cut off in the hotel last night."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينقطع, yanqaṭiʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انقطع (inqaṭaʿa) is built on the native Arabic root q-ṭ-ʿ, \"to cut\" (Lane). It is Form VII, \"to be cut\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inqaṭaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inqaṭaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inqaṭaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inqaṭaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inqaṭaʿat al-kahrabāʾ fī al-funduq laylat ams. — The electricity was cut off in the hotel last night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inqaṭaʿat al-kahrabāʾ fī al-funduq laylat ams.* — The electricity was cut off in the hotel last night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for electricity, then the Arabic for to heat up, then say inqaṭaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for electricity, then the Arabic for to heat up, then say *inqaṭaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انقطع (inqaṭaʿa) mean? (\"To be cut off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C444-muhawwil",
+      "sequence": 24900,
+      "title": "محول (muḥawwil) — an adapter; a transformer",
+      "headword": "محول",
+      "romanization": "muḥawwil",
+      "gloss": "an adapter; a transformer",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37a80137242148ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to heat up, then the Arabic for to be cut off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: محول",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "محول — muḥawwil — \"an adapter; a transformer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "احتجت إلى محول لشاحن الهاتف. iḥtajtu ilā muḥawwil li-shāḥin al-hātif. I needed an adapter for the phone charger."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "محول (muḥawwil) is built on the native Arabic root ḥ-w-l, \"to change, to shift\" (Lane). It is the Form II participle, \"a thing that converts\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muḥawwil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muḥawwil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muḥawwil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muḥawwil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtajtu ilā muḥawwil li-shāḥin al-hātif. — I needed an adapter for the phone charger.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtajtu ilā muḥawwil li-shāḥin al-hātif.* — I needed an adapter for the phone charger.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to heat up, then the Arabic for to be cut off, then say muḥawwil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to heat up, then the Arabic for to be cut off, then say *muḥawwil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does محول (muḥawwil) mean? (\"An adapter; a transformer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C444-anara",
+      "sequence": 24910,
+      "title": "أنار (anāra) — to light up",
+      "headword": "أنار",
+      "romanization": "anāra",
+      "gloss": "to light up",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:699bed77e6d8331c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be cut off, then the Arabic for an adapter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أنار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنار — anāra — \"to light up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أنار المصباح الممر الطويل. anāra al-miṣbāḥ al-mamarr aṭ-ṭawīl. The lamp lit up the long corridor."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينير, yunīr."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنار (anāra) is built on the native Arabic root n-w-r, \"light\" (Lane). It is Form IV, \"to give light\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anāra al-miṣbāḥ al-mamarr aṭ-ṭawīl. — The lamp lit up the long corridor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anāra al-miṣbāḥ al-mamarr aṭ-ṭawīl.* — The lamp lit up the long corridor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be cut off, then the Arabic for an adapter, then say anāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be cut off, then the Arabic for an adapter, then say *anāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أنار (anāra) mean? (\"To light up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

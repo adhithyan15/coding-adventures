@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:d008a523149bd374",
+  "lessonIds": [
+    "TE-C517-laksanam",
+    "TE-C517-maikam",
+    "TE-C517-ayasapadu",
+    "TE-C517-kakku",
+    "TE-C517-killanoppulu",
+    "TE-R517-review-510-517"
+  ],
+  "tex": "telugu/book/chapters/ch517-symptoms.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Inside the body",
+  "label": "ch:ar-inside-the-body",
+  "canDo": "I can name the liver, the spleen, the stomach, the intestines and the pulse.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C504-nabd",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can name the liver, the spleen, the stomach, the intestines and the pulse.",
+    "assesses": [
+      "AR-LEX-C504-BATN504-03",
+      "AR-LEX-C504-BATN504-04",
+      "AR-LEX-C504-BATN504-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:736a8049569ffdd7",
+  "lessonIds": [
+    "MR-C518-yantra",
+    "MR-C518-upakaran",
+    "MR-C518-yantramanav",
+    "MR-C518-svayancalit",
+    "MR-C518-phavarne"
+  ],
+  "tex": "marathi/book/chapters/ch518-machines-and-devices.tex"
+}

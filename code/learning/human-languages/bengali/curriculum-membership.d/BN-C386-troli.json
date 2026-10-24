@@ -1,0 +1,11 @@
+{
+  "id": "BN-C386-troli",
+  "pathSegment": "BN-PATH-386-KULI386",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-386-KULI386",
+      "order": 2
+    }
+  ]
+}

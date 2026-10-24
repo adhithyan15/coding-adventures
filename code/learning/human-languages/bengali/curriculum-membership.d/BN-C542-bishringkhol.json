@@ -1,0 +1,11 @@
+{
+  "id": "BN-C542-bishringkhol",
+  "pathSegment": "BN-PATH-542-BHESTE542",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-542-BHESTE542",
+      "order": 2
+    }
+  ]
+}

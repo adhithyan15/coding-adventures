@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C438-grahikkuka",
+    "language": "malayalam",
+    "chapter": 438,
+    "sequence": 21690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10b42098d4ef9091"
+  },
+  "findings": []
+}

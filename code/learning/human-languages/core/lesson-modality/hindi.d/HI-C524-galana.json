@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C524-galana",
+    "language": "hindi",
+    "chapter": 524,
+    "sequence": 28920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d73d8f8fb6c80694"
+  },
+  "findings": []
+}

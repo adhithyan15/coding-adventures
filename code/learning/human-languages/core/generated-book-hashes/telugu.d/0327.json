@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:1fd426c59ade463d",
+  "lessonIds": [
+    "TE-C327-okappudu",
+    "TE-C327-raju",
+    "TE-C327-rani",
+    "TE-C327-rajyam",
+    "TE-C327-elu"
+  ],
+  "tex": "telugu/book/chapters/ch327-once-upon-a-time.tex"
+}

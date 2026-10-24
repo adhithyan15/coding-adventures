@@ -289,6 +289,7 @@ function convertBlock(
       return [node];
     }
 
+    case "fenced_block":
     case "code_block": {
       // Pre-formatted monospace block with code background.
       const text = block.value;

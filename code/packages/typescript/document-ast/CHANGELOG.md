@@ -1,5 +1,9 @@
 # Changelog — @coding-adventures/document-ast
 
+## Unreleased
+
+- Exports the distinct readonly `FencedBlockNode` (`type`, `name`, `info`, `value`) in `BlockNode`. Legacy `CodeBlockNode` remains available for indented code and existing CommonMark/AsciiDoc producers.
+
 ## [0.1.0] — 2026-03-24
 
 ### Added

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C466-patunku",
+    "language": "tamil",
+    "chapter": 466,
+    "sequence": 26790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfa37b3513abd801"
+  },
+  "findings": []
+}

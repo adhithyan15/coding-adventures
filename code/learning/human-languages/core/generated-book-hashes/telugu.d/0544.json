@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:65cd2326da82a3d3",
+  "lessonIds": [
+    "TE-C544-kridakarudu",
+    "TE-C544-pratyarthi",
+    "TE-C544-talapadu",
+    "TE-C544-neggu",
+    "TE-C544-parugu"
+  ],
+  "tex": "telugu/book/chapters/ch544-sport.tex"
+}

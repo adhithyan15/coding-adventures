@@ -1,0 +1,11 @@
+{
+  "id": "AR-C374-bi-ma-anna",
+  "pathSegment": "AR-PATH-374-RABT374",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-374-RABT374",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:11bdee1814dbe6db",
+  "lessonIds": [
+    "BN-C463-dushtu",
+    "BN-C463-rosik",
+    "BN-C463-bachal",
+    "BN-C463-thatta-kora",
+    "BN-C463-katukutu-deoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch463.txt",
+  "json": "bengali/narration/ch463.json",
+  "textHash": "fnv1a64:a404a93d7f44b833",
+  "jsonHash": "fnv1a64:f4869f22e714d6ed",
+  "findings": []
+}

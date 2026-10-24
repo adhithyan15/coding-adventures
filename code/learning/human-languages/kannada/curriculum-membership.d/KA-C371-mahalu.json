@@ -1,0 +1,11 @@
+{
+  "id": "KA-C371-mahalu",
+  "pathSegment": "KA-PATH-371-PALLAKKI371",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-371-PALLAKKI371",
+      "order": 3
+    }
+  ]
+}

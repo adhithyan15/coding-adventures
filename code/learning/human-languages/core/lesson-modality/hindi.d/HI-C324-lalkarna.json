@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C324-lalkarna",
+    "language": "hindi",
+    "chapter": 324,
+    "sequence": 17880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20b8b1824376a7cf"
+  },
+  "findings": []
+}

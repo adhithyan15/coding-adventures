@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Let the repository gate accept a lane whose package tree moved after its
+  verified revision only through dependency lockfiles, so Dependabot and
+  repo-wide advisory sweeps no longer fail the pinned `package_tree` check.
+  Source, test, manifest, and capability changes still require re-verification.
 - Bind Ruby and Swift adoption evidence to PR #16361's durable squash-merge
   revision so fresh clones can verify the recorded package trees.
 - Expand the adoption registry to all twelve established implementations with

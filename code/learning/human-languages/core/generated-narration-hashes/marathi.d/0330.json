@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:dd070e68244b42d7",
+  "lessonIds": [
+    "MR-C330-senapati",
+    "MR-C330-paydal",
+    "MR-C330-chavni",
+    "MR-C330-pahara-dene",
+    "MR-C330-jhunjne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch330.txt",
+  "json": "marathi/narration/ch330.json",
+  "textHash": "fnv1a64:97c3fd6ccf7d1832",
+  "jsonHash": "fnv1a64:f98c4d39f5df9835",
+  "findings": []
+}

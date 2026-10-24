@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 463,
+  "title": "The Embassy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5da5e521d866d23d",
+  "lessons": [
+    {
+      "id": "TE-C463-rayabara-karyalayam",
+      "sequence": 23280,
+      "title": "రాయబార కార్యాలయం (rāyabāra kāryālayaṁ) — an embassy",
+      "headword": "రాయబార కార్యాలయం",
+      "romanization": "rāyabāra kāryālayaṁ",
+      "gloss": "an embassy",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90b22e09a455821b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to issue, then the Telugu for to sanction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రాయబార కార్యాలయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాయబార కార్యాలయం — rāyabāra kāryālayaṁ — \"an embassy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వీసా కోసం రాయబార కార్యాలయానికి వెళ్ళాను. vīsā kōsaṁ rāyabāra kāryālayāniki veḷḷānu. I went to the embassy for a visa."
+            },
+            {
+              "kind": "speech",
+              "text": "రాయబారం, an embassy or a mission, + కార్యాలయం, an office."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాయబార కార్యాలయం (rāyabāra kāryālayaṁ) is a Telugu phrase: రాయబార, \"of an envoy\", whose origin is not settled, and కార్యాలయం, \"an office\", built from Sanskrit kārya, \"work\", and ālaya, \"a house\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāyabāra kāryālayaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāyabāra kāryālayaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāyabāra kāryālayaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāyabāra kāryālayaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīsā kōsaṁ rāyabāra kāryālayāniki veḷḷānu. — I went to the embassy for a visa.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīsā kōsaṁ rāyabāra kāryālayāniki veḷḷānu.* — I went to the embassy for a visa.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to issue, then the Telugu for to sanction, then say rāyabāra kāryālayaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to issue, then the Telugu for to sanction, then say *rāyabāra kāryālayaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రాయబార కార్యాలయం (rāyabāra kāryālayaṁ) mean? (\"An embassy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C463-rayabari",
+      "sequence": 23290,
+      "title": "రాయబారి (rāyabāri) — an ambassador; an envoy",
+      "headword": "రాయబారి",
+      "romanization": "rāyabāri",
+      "gloss": "an ambassador; an envoy",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1647c8f73009af6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to sanction, then the Telugu for an embassy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రాయబారి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాయబారి — rāyabāri — \"an ambassador; an envoy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మన దేశ రాయబారి ఆ సభలో మాట్లాడారు. mana dēśa rāyabāri ā sabhalō māṭlāḍāru. Our country's ambassador spoke at that meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "In the old stories a రాయబారి (rāyabāri) carried a king's message to another court."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాయబారి (rāyabāri) is a Telugu word for an envoy whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāyabāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāyabāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāyabāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāyabāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mana dēśa rāyabāri ā sabhalō māṭlāḍāru. — Our country's ambassador spoke at that meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mana dēśa rāyabāri ā sabhalō māṭlāḍāru.* — Our country's ambassador spoke at that meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to sanction, then the Telugu for an embassy, then say rāyabāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to sanction, then the Telugu for an embassy, then say *rāyabāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రాయబారి (rāyabāri) mean? (\"An ambassador; an envoy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C463-ketayincu",
+      "sequence": 23300,
+      "title": "కేటాయించు (kēṭāyiñcu) — to allot; to assign",
+      "headword": "కేటాయించు",
+      "romanization": "kēṭāyiñcu",
+      "gloss": "to allot; to assign",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ce10585d3351caa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an embassy, then the Telugu for an ambassador."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కేటాయించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కేటాయించు — kēṭāyiñcu — \"to allot; to assign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "హోటలు వాళ్ళు మాకు పై అంతస్తులో గది కేటాయించారు. hōṭalu vāḷḷu māku pai antastulō gadi kēṭāyiñcāru. The hotel people gave us a room on the top floor."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కేటాయించాను, kēṭāyiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of rooms, seats, money or duties given out by an office."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కేటాయించు (kēṭāyiñcu) is a Telugu verb in -ఇంచు whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēṭāyiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēṭāyiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēṭāyiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēṭāyiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōṭalu vāḷḷu māku pai antastulō gadi kēṭāyiñcāru. — The hotel people gave us a room on the top floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōṭalu vāḷḷu māku pai antastulō gadi kēṭāyiñcāru.* — The hotel people gave us a room on the top floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an embassy, then the Telugu for an ambassador, then say kēṭāyiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an embassy, then the Telugu for an ambassador, then say *kēṭāyiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కేటాయించు (kēṭāyiñcu) mean? (\"To allot; to assign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C463-podigincu",
+      "sequence": 23310,
+      "title": "పొడిగించు (poḍigiñcu) — to extend; to lengthen",
+      "headword": "పొడిగించు",
+      "romanization": "poḍigiñcu",
+      "gloss": "to extend; to lengthen",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f912f409e927984",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an ambassador, then the Telugu for to allot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పొడిగించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొడిగించు — poḍigiñcu — \"to extend; to lengthen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రాయబార కార్యాలయం నా వీసాను ఆరు నెలలు పొడిగించింది. rāyabāra kāryālayaṁ nā vīsānu āru nelalu poḍigiñcindi. The embassy extended my visa by six months."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పొడిగించాను, poḍigiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of time and of length: a visa, a deadline, a road."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొడిగించు (poḍigiñcu) is native Dravidian: DEDR 4484 lists Telugu poḍigincu, \"to lengthen, to raise\", beside poḍugu, \"length, height\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poḍigiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poḍigiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poḍigiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poḍigiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāyabāra kāryālayaṁ nā vīsānu āru nelalu poḍigiñcindi. — The embassy extended my visa by six months.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāyabāra kāryālayaṁ nā vīsānu āru nelalu poḍigiñcindi.* — The embassy extended my visa by six months.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an ambassador, then the Telugu for to allot, then say poḍigiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an ambassador, then the Telugu for to allot, then say *poḍigiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పొడిగించు (poḍigiñcu) mean? (\"To extend; to lengthen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C463-punaruddharincu",
+      "sequence": 23320,
+      "title": "పునరుద్ధరించు (punaruddhariñcu) — to renew; to restore",
+      "headword": "పునరుద్ధరించు",
+      "romanization": "punaruddhariñcu",
+      "gloss": "to renew; to restore",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a10789b9babd4fcf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to allot, then the Telugu for to extend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పునరుద్ధరించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పునరుద్ధరించు — punaruddhariñcu — \"to renew; to restore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "లైసెన్సును ప్రతి ఐదు సంవత్సరాలకు పునరుద్ధరించాలి. laisensunu prati aidu saṁvatsarālaku punaruddhariñcāli. The licence must be renewed every five years."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పునరుద్ధరించాను, punaruddhariñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "పునర్, again, + ఉద్ధరించు, to raise up: to bring back to life. Used of a licence and of an old building."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పునరుద్ధరించు (punaruddhariñcu) is built from Sanskrit punar, \"again\", and ud-dhṛ, \"to raise up, to rescue\", whose noun is punaruddhāra, \"restoration\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "punaruddhariñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *punaruddhariñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "punaruddhariñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *punaruddhariñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laisensunu prati aidu saṁvatsarālaku punaruddhariñcāli. — The licence must be renewed every five years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laisensunu prati aidu saṁvatsarālaku punaruddhariñcāli.* — The licence must be renewed every five years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to allot, then the Telugu for to extend, then say punaruddhariñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to allot, then the Telugu for to extend, then say *punaruddhariñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పునరుద్ధరించు (punaruddhariñcu) mean? (\"To renew; to restore\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

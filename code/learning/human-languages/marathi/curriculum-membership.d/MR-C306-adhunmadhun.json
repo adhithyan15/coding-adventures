@@ -1,0 +1,11 @@
+{
+  "id": "MR-C306-adhunmadhun",
+  "pathSegment": "MR-PATH-306-KRAMASH306",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-306-KRAMASH306",
+      "order": 2
+    }
+  ]
+}

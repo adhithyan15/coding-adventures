@@ -1,0 +1,21 @@
+{
+  "chapter": 284,
+  "title": "Feelings and Hopes",
+  "label": "ch:hi-feelings-and-hopes",
+  "canDo": "I can say how I feel (mujhe ḍar lagtā hai, maiṁ khuś hūṁ, mujhe acchā lagā), what I want to become and what I hope for (maiṁ adhyāpak bannā cāhtā hūṁ, mujhe ummīd hai ki …).",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-R284-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete HI-R284-feelings-and-hopes: say how you feel, what you want to become and what you hope for.",
+    "assesses": [
+      "HI-LEX-C284-KHUSH-01",
+      "HI-GRAMMAR-C284-FEELING-DATIVE-01",
+      "HI-GRAMMAR-C284-FEELING-BE-01",
+      "HI-GRAMMAR-C284-WANT-TO-BECOME-01",
+      "HI-GRAMMAR-C284-HOPE-DREAM-01"
+    ]
+  }
+}

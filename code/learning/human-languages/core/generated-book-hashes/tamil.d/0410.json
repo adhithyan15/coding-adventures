@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:407f15e56008efa8",
+  "lessonIds": [
+    "TA-C410-patacari",
+    "TA-C410-valippokkar",
+    "TA-C410-palakai",
+    "TA-C410-ulavu",
+    "TA-C410-tantu"
+  ],
+  "tex": "tamil/book/chapters/ch410-walking-through-town.tex"
+}

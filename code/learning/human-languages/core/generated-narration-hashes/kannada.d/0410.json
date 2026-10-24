@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:1229b4fd6645a138",
+  "lessonIds": [
+    "KA-C410-higagi",
+    "KA-C410-adagyu",
+    "KA-C410-nimitta",
+    "KA-C410-melagi",
+    "KA-C410-matravallade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch410.txt",
+  "json": "kannada/narration/ch410.json",
+  "textHash": "fnv1a64:3202b5bdf9ef601f",
+  "jsonHash": "fnv1a64:b5da801e1255cb16",
+  "findings": []
+}

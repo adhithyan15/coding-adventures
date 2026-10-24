@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 533,
+  "title": "By Chance",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:865806a63cca1eca",
+  "lessons": [
+    {
+      "id": "BN-C533-doibat",
+      "sequence": 32100,
+      "title": "দৈবাৎ (doibāt) — by chance",
+      "headword": "দৈবাৎ",
+      "romanization": "doibāt",
+      "gloss": "by chance",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ad8ca91d05cf6bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a forecast, then the Bengali for an astrologer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দৈবাৎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দৈবাৎ — doibāt — \"by chance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাজারে দৈবাৎ আমার পুরনো বন্ধুর সঙ্গে দেখা হল। Bājāre doibāt āmār purôno bôndhur sôngge dækhā hôlô. By chance I met my old friend at the market."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দৈবাৎ (doibāt) is the Sanskrit form daivāt, \"from fate\", of daiva, \"coming from the gods, fate\" (Monier-Williams): by the gods' doing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doibāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doibāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doibāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doibāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bājāre doibāt āmār purôno bôndhur sôngge dækhā hôlô. — By chance I met my old friend at the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Bājāre doibāt āmār purôno bôndhur sôngge dækhā hôlô.* — By chance I met my old friend at the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a forecast, then the Bengali for an astrologer, then say doibāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a forecast, then the Bengali for an astrologer, then say *doibāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দৈবাৎ (doibāt) mean? (\"By chance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C533-kaktaliyo",
+      "sequence": 32110,
+      "title": "কাকতালীয় (kāktālīyô) — coincidental",
+      "headword": "কাকতালীয়",
+      "romanization": "kāktālīyô",
+      "gloss": "coincidental",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a0e25cf3544e6f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an astrologer, then the Bengali for by chance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কাকতালীয়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাকতালীয় — kāktālīyô — \"coincidental\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের জন্মদিন একই দিনে, এটা কাকতালীয়। Āmāder jônmôdin eki dine, eṭā kāktālīyô. Our birthdays fall on the same day; it's a coincidence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাকতালীয় (kāktālīyô) is Sanskrit kākatālīya (Monier-Williams), from a fable: a crow lands on a palm tree at the very moment a fruit falls, and the two events only look connected."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāktālīyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāktālīyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāktālīyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāktālīyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmāder jônmôdin eki dine, eṭā kāktālīyô. — Our birthdays fall on the same day; it's a coincidence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmāder jônmôdin eki dine, eṭā kāktālīyô.* — Our birthdays fall on the same day; it's a coincidence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an astrologer, then the Bengali for by chance, then say kāktālīyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an astrologer, then the Bengali for by chance, then say *kāktālīyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কাকতালীয় (kāktālīyô) mean? (\"Coincidental\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C533-mooka",
+      "sequence": 32120,
+      "title": "মওকা (môokā) — a lucky break; an opening",
+      "headword": "মওকা",
+      "romanization": "môokā",
+      "gloss": "a lucky break; an opening",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da32a4ace4600319",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for by chance, then the Bengali for coincidental."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মওকা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মওকা — môokā — \"a lucky break; an opening\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দোকানে ছাড় ছিল, আমি মওকা বুঝে একটা জ্যাকেট কিনলাম। Dokāne chhāṛ chhilô, āmi môokā bujhe ekṭā jækeṭ kinlām. There was a discount at the shop; I saw my chance and bought a jacket."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মওকা (môokā) is usually traced to Arabic mawqiʿ, \"a place, an occasion\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môokā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môokā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môokā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môokā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dokāne chhāṛ chhilô, āmi môokā bujhe ekṭā jækeṭ kinlām. — There was a discount at the shop; I saw my chance and bought a jacket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dokāne chhāṛ chhilô, āmi môokā bujhe ekṭā jækeṭ kinlām.* — There was a discount at the shop; I saw my chance and bought a jacket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for by chance, then the Bengali for coincidental, then say môokā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for by chance, then the Bengali for coincidental, then say *môokā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মওকা (môokā) mean? (\"A lucky break; an opening\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C533-phoskano",
+      "sequence": 32130,
+      "title": "ফসকানো (phôskāno) — to slip away; to be missed (a chance)",
+      "headword": "ফসকানো",
+      "romanization": "phôskāno",
+      "gloss": "to slip away; to be missed (a chance)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f4d55551f7db9c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for coincidental, then the Bengali for a lucky break."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফসকানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফসকানো — phôskāno — \"to slip away; to be missed (a chance)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই সুযোগ ফসকালে তুমি আর পাবে না। Ei sujog phôskāle tumi ār pābe nā. If you let this chance slip, you won't get it again."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই সুযোগ ফসকাল, sei sujog phôskālô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফসকানো (phôskāno) probably belongs with ফসকা, \"loose\", which CDIAL lists as Bengali phaskā under a reconstructed phass, \"loose\" (CDIAL 9068): what slips from a loose grip, a ball or a chance."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phôskāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phôskāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phôskāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phôskāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ei sujog phôskāle tumi ār pābe nā. — If you let this chance slip, you won't get it again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ei sujog phôskāle tumi ār pābe nā.* — If you let this chance slip, you won't get it again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for coincidental, then the Bengali for a lucky break, then say phôskāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for coincidental, then the Bengali for a lucky break, then say *phôskāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফসকানো (phôskāno) mean? (\"To slip away; to be missed (a chance)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C533-lotari",
+      "sequence": 32140,
+      "title": "লটারি (lôṭāri) — a lottery",
+      "headword": "লটারি",
+      "romanization": "lôṭāri",
+      "gloss": "a lottery",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e5655e4d0d3df1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a lucky break, then the Bengali for to slip away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: লটারি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লটারি — lôṭāri — \"a lottery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "লটারিতে জিতলে মামা একটা নতুন গাড়ি কিনবেন। Lôṭārite jitle māmā ekṭā nôtun gāṛi kinben. If my uncle wins the lottery, he will buy a new car."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লটারি (lôṭāri) is borrowed from English lottery."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lôṭāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lôṭāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lôṭāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lôṭāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Lôṭārite jitle māmā ekṭā nôtun gāṛi kinben. — If my uncle wins the lottery, he will buy a new car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Lôṭārite jitle māmā ekṭā nôtun gāṛi kinben.* — If my uncle wins the lottery, he will buy a new car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a lucky break, then the Bengali for to slip away, then say lôṭāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a lucky break, then the Bengali for to slip away, then say *lôṭāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does লটারি (lôṭāri) mean? (\"A lottery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

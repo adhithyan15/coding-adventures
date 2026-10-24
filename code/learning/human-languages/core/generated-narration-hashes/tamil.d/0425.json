@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:302fd41df8562793",
+  "lessonIds": [
+    "TA-C425-kalankarai-vilakkam",
+    "TA-C425-kolarankam",
+    "TA-C425-talam",
+    "TA-C425-katci",
+    "TA-C425-cirrunticcalai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch425.txt",
+  "json": "tamil/narration/ch425.json",
+  "textHash": "fnv1a64:2aa69b2e833f990f",
+  "jsonHash": "fnv1a64:73ae053637f7a94b",
+  "findings": []
+}

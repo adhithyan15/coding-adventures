@@ -1,0 +1,11 @@
+{
+  "id": "MR-C439-kadadne",
+  "pathSegment": "MR-PATH-439-VAVTAL439",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-439-VAVTAL439",
+      "order": 4
+    }
+  ]
+}

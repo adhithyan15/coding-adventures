@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "When the Earth Shook",
+  "label": "ch:mr-when-the-earth-shook",
+  "canDo": "I can describe an earthquake: the ground shakes, walls fall, roads cave in.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C293-darad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can describe an earthquake: the ground shakes, walls fall, roads cave in.",
+    "assesses": [
+      "MR-LEX-C293-BHUKAMP293-03",
+      "MR-LEX-C293-BHUKAMP293-04",
+      "MR-LEX-C293-BHUKAMP293-05"
+    ]
+  }
+}

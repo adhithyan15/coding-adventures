@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:7866d3af8eb22604",
+  "lessonIds": [
+    "TE-C507-svabhavam",
+    "TE-C507-vyaktitvam",
+    "TE-C507-mancitanam",
+    "TE-C507-vinayam",
+    "TE-C507-ahankaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch507.txt",
+  "json": "telugu/narration/ch507.json",
+  "textHash": "fnv1a64:b8f2e875eb0a8009",
+  "jsonHash": "fnv1a64:a9b6e77003007b46",
+  "findings": []
+}

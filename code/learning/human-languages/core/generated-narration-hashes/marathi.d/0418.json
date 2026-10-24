@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:73eb2ada79283831",
+  "lessonIds": [
+    "MR-C418-nagar",
+    "MR-C418-mahanagar",
+    "MR-C418-nagarpalika",
+    "MR-C418-khede",
+    "MR-C418-taluka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch418.txt",
+  "json": "marathi/narration/ch418.json",
+  "textHash": "fnv1a64:529cc1fbbb133be7",
+  "jsonHash": "fnv1a64:3fdc9f3fb6eeeb38",
+  "findings": []
+}

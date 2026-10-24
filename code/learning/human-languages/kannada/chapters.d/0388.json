@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "Right and Wrong",
+  "label": "ch:ka-right-and-wrong",
+  "canDo": "I can say ethical, a sacrifice, a conscience, well-being and to condemn.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C388-khandisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can say ethical, a sacrifice, a conscience, well-being and to condemn.",
+    "assesses": [
+      "KA-LEX-C388-NAITIKA388-03",
+      "KA-LEX-C388-NAITIKA388-04",
+      "KA-LEX-C388-NAITIKA388-05"
+    ]
+  }
+}

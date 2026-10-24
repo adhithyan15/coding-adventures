@@ -1,0 +1,11 @@
+{
+  "id": "HI-C320-mukut",
+  "pathSegment": "HI-PATH-320-SAMRAT320",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-320-SAMRAT320",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:b272c517e4058d89",
+  "lessonIds": [
+    "TE-C526-niyamincu",
+    "TE-C526-nirvahincu",
+    "TE-C526-paryaveksincu",
+    "TE-C526-sahakarincu",
+    "TE-C526-siksana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch526.txt",
+  "json": "telugu/narration/ch526.json",
+  "textHash": "fnv1a64:4761d2cd2c2f99f3",
+  "jsonHash": "fnv1a64:c5e425ac146be131",
+  "findings": []
+}

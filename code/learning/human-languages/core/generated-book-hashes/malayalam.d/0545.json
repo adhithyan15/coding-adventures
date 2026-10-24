@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:a4df5ba760b41dc6",
+  "lessonIds": [
+    "ML-C545-meludyogasthan",
+    "ML-C545-cumatala",
+    "ML-C545-sthalammarram",
+    "ML-C545-asutranam",
+    "ML-C545-sahakarikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch545-duties-at-work.tex"
+}

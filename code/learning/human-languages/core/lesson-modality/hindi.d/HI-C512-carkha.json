@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C512-carkha",
+    "language": "hindi",
+    "chapter": 512,
+    "sequence": 28310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30cfbfd68be51cde"
+  },
+  "findings": []
+}

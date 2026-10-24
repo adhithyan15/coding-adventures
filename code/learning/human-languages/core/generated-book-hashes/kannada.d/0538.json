@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:8ee4f67f8aceb748",
+  "lessonIds": [
+    "KA-C538-padaka",
+    "KA-C538-kridapatu",
+    "KA-C538-vijeta",
+    "KA-C538-pandyavali",
+    "KA-C538-solisu"
+  ],
+  "tex": "kannada/book/chapters/ch538-winning.tex"
+}

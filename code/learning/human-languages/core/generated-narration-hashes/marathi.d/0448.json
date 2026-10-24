@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:8091e7ef5e580ab8",
+  "lessonIds": [
+    "MR-C448-sandpani",
+    "MR-C448-durgandhi",
+    "MR-C448-pradusit",
+    "MR-C448-kujne",
+    "MR-C448-sadne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch448.txt",
+  "json": "marathi/narration/ch448.json",
+  "textHash": "fnv1a64:249932782380ce8f",
+  "jsonHash": "fnv1a64:3c7ab256cb382158",
+  "findings": []
+}

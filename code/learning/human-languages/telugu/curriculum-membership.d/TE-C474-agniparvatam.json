@@ -1,0 +1,11 @@
+{
+  "id": "TE-C474-agniparvatam",
+  "pathSegment": "TE-PATH-474-SIKHARAM474",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-474-SIKHARAM474",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C505-malakkuli",
+  "pathSegment": "ML-PATH-505-URJAM505",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-505-URJAM505",
+      "order": 4
+    }
+  ]
+}

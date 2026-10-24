@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Rooms of the House",
+  "label": "ch:mr-rooms-of-the-house",
+  "canDo": "I can name the rooms of a house and hang things on the walls.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C522-tangne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can name the rooms of a house and hang things on the walls.",
+    "assesses": [
+      "MR-LEX-C522-KHOLI522-03",
+      "MR-LEX-C522-KHOLI522-04",
+      "MR-LEX-C522-KHOLI522-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C280-aisa",
+  "pathSegment": "HI-PATH-280-OPINIONREASON",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-280-OPINIONREASON",
+      "order": 1
+    }
+  ]
+}

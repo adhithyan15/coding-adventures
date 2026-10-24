@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:f289952dc3a3b4e4",
+  "lessonIds": [
+    "BN-C445-shok",
+    "BN-C445-kanna",
+    "BN-C445-dirghoshvas",
+    "BN-C445-phopano",
+    "BN-C445-bilap-kora",
+    "BN-R445-review-438-445"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch445.txt",
+  "json": "bengali/narration/ch445.json",
+  "textHash": "fnv1a64:a9e933d4f673e14f",
+  "jsonHash": "fnv1a64:2844810e38d44b9e",
+  "findings": []
+}

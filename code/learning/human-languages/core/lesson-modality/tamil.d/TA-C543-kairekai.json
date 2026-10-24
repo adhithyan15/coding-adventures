@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C543-kairekai",
+    "language": "tamil",
+    "chapter": 543,
+    "sequence": 31010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6934370492cf0e1"
+  },
+  "findings": []
+}

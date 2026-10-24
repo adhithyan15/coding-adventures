@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:f9adc8c1e74da0df",
+  "lessonIds": [
+    "KA-C485-mungaru",
+    "KA-C485-karmoda",
+    "KA-C485-tunturu",
+    "KA-C485-jadimale",
+    "KA-C485-toyyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch485.txt",
+  "json": "kannada/narration/ch485.json",
+  "textHash": "fnv1a64:ef92d96783ca82fc",
+  "jsonHash": "fnv1a64:57818260e489c24c",
+  "findings": []
+}

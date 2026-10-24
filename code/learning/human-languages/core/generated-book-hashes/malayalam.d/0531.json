@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:d29c1d0cb7a02b10",
+  "lessonIds": [
+    "ML-C531-parihasikkuka",
+    "ML-C531-vimpilakkuka",
+    "ML-C531-anukarikkuka",
+    "ML-C531-ponnaccam",
+    "ML-C531-salyappetuttuka"
+  ],
+  "tex": "malayalam/book/chapters/ch531-mocking-and-encouraging.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:b5487f96437daf32",
+  "lessonIds": [
+    "AR-C513-sukkari",
+    "AR-C513-rabw",
+    "AR-C513-iaqa",
+    "AR-C513-daufa",
+    "AR-C513-nazafa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch513.txt",
+  "json": "arabic/narration/ch513.json",
+  "textHash": "fnv1a64:4dc278ede1c787b7",
+  "jsonHash": "fnv1a64:c9d09823b361c49e",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:308d1faa2bd73cac",
+  "lessonIds": [
+    "MR-C515-abhiyanta",
+    "MR-C515-sallagar",
+    "MR-C515-anuvadak",
+    "MR-C515-lekhapal",
+    "MR-C515-atopne"
+  ],
+  "tex": "marathi/book/chapters/ch515-experts-at-work.tex"
+}

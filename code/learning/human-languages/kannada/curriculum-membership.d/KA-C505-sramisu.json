@@ -1,0 +1,11 @@
+{
+  "id": "KA-C505-sramisu",
+  "pathSegment": "KA-PATH-505-SHRADDHE505",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-505-SHRADDHE505",
+      "order": 3
+    }
+  ]
+}

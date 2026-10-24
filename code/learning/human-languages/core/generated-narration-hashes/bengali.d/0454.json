@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:30f5e61fa8bbc08b",
+  "lessonIds": [
+    "BN-C454-songkoch",
+    "BN-C454-dvidha",
+    "BN-C454-aroshto",
+    "BN-C454-jorosoro",
+    "BN-C454-itostoto-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch454.txt",
+  "json": "bengali/narration/ch454.json",
+  "textHash": "fnv1a64:c7a123a1036b1152",
+  "jsonHash": "fnv1a64:461def33917b0eb4",
+  "findings": []
+}

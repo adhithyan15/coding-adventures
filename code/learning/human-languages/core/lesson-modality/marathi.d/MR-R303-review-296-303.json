@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R303-review-296-303",
+    "language": "marathi",
+    "chapter": 303,
+    "sequence": 17810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ec7b1dd71c52a31"
+  },
+  "findings": []
+}

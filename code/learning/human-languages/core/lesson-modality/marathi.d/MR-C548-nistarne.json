@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C548-nistarne",
+    "language": "marathi",
+    "chapter": 548,
+    "sequence": 31280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22cadd3ef392ab43"
+  },
+  "findings": []
+}

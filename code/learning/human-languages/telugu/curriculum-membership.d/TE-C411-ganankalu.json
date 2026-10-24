@@ -1,0 +1,11 @@
+{
+  "id": "TE-C411-ganankalu",
+  "pathSegment": "TE-PATH-411-SATAM411",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-411-SATAM411",
+      "order": 2
+    }
+  ]
+}

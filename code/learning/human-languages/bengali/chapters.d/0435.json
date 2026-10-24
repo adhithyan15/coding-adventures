@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Grass, Creepers and Wood",
+  "label": "ch:bn-grass-creepers-and-wood",
+  "canDo": "I can talk about grass, creepers, branches and wood, and trimming a garden.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C435-chhata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can talk about grass, creepers, branches and wood, and trimming a garden.",
+    "assesses": [
+      "BN-LEX-C435-GHAS435-03",
+      "BN-LEX-C435-GHAS435-04",
+      "BN-LEX-C435-GHAS435-05"
+    ]
+  }
+}

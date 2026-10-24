@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C312-rediyo",
+    "language": "hindi",
+    "chapter": 312,
+    "sequence": 17230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed210ceed0e40de7"
+  },
+  "findings": []
+}

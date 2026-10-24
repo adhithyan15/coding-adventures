@@ -1,0 +1,11 @@
+{
+  "id": "TA-C397-tanippatta",
+  "pathSegment": "TA-PATH-397-MAKKALATCI397",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-397-MAKKALATCI397",
+      "order": 3
+    }
+  ]
+}

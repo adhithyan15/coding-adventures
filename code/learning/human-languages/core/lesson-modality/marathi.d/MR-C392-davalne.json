@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C392-davalne",
+    "language": "marathi",
+    "chapter": 392,
+    "sequence": 22580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75e8897c78ca7641"
+  },
+  "findings": []
+}

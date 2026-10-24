@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 545,
+  "output": "bengali/book/chapters/ch545-choices.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

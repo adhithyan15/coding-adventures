@@ -1,0 +1,866 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 453,
+  "title": "On the Water",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:cba783d48f1c5c93",
+  "lessons": [
+    {
+      "id": "TE-C453-oddu",
+      "sequence": 22760,
+      "title": "ఒడ్డు (oḍḍu) — a riverbank; a shore",
+      "headword": "ఒడ్డు",
+      "romanization": "oḍḍu",
+      "gloss": "a riverbank; a shore",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f6d06b4b21bd65e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an anchor, then the Telugu for a lighthouse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఒడ్డు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఒడ్డు — oḍḍu — \"a riverbank; a shore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పిల్లలు నది ఒడ్డున ఆడుకుంటున్నారు. pillalu nadi oḍḍuna āḍukuṇṭunnāru. The children are playing on the riverbank."
+            },
+            {
+              "kind": "speech",
+              "text": "ఒడ్డున, on the bank, is the usual form. The bank of a pond, a river or a sea."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఒడ్డు (oḍḍu) is native Dravidian: DEDR 965 lists Telugu oḍḍu, \"a bank\", with Kannada oḍḍu, \"a bank, a causeway\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḍḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḍḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḍḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḍḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pillalu nadi oḍḍuna āḍukuṇṭunnāru. — The children are playing on the riverbank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pillalu nadi oḍḍuna āḍukuṇṭunnāru.* — The children are playing on the riverbank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an anchor, then the Telugu for a lighthouse, then say oḍḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an anchor, then the Telugu for a lighthouse, then say *oḍḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఒడ్డు (oḍḍu) mean? (\"A riverbank; a shore\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C453-vagu",
+      "sequence": 22770,
+      "title": "వాగు (vāgu) — a rivulet; a stream",
+      "headword": "వాగు",
+      "romanization": "vāgu",
+      "gloss": "a rivulet; a stream",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:637401ce16f8c337",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a lighthouse, then the Telugu for a riverbank."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వాగు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాగు — vāgu — \"a rivulet; a stream\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వర్షాకాలంలో ఆ వాగు నిండుగా పారుతుంది. varṣākālaṁlō ā vāgu niṇḍugā pārutundi. In the rainy season that stream runs full."
+            },
+            {
+              "kind": "speech",
+              "text": "A small stream that fills in the rains and dries in summer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాగు (vāgu) is native Dravidian: DEDR 5334 lists Telugu vāgu, \"a rivulet, a streamlet\", in the family of Tamil vākku, \"to pour\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṣākālaṁlō ā vāgu niṇḍugā pārutundi. — In the rainy season that stream runs full.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṣākālaṁlō ā vāgu niṇḍugā pārutundi.* — In the rainy season that stream runs full.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a lighthouse, then the Telugu for a riverbank, then say vāgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a lighthouse, then the Telugu for a riverbank, then say *vāgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వాగు (vāgu) mean? (\"A rivulet; a stream\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C453-teppa",
+      "sequence": 22780,
+      "title": "తెప్ప (teppa) — a raft",
+      "headword": "తెప్ప",
+      "romanization": "teppa",
+      "gloss": "a raft",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2b870026de4c94a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a riverbank, then the Telugu for a rivulet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తెప్ప",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తెప్ప — teppa — \"a raft\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వాళ్ళు తెప్ప మీద వాగు దాటారు. vāḷḷu teppa mīda vāgu dāṭāru. They crossed the stream on a raft."
+            },
+            {
+              "kind": "speech",
+              "text": "A raft of logs or bamboo tied together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తెప్ప (teppa) is native Dravidian: DEDR 3414 lists Telugu teppa, \"a raft, a catamaran\", with Tamil teppam."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teppa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teppa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teppa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teppa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḷḷu teppa mīda vāgu dāṭāru. — They crossed the stream on a raft.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḷḷu teppa mīda vāgu dāṭāru.* — They crossed the stream on a raft.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a riverbank, then the Telugu for a rivulet, then say teppa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a riverbank, then the Telugu for a rivulet, then say *teppa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తెప్ప (teppa) mean? (\"A raft\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C453-telipovu",
+      "sequence": 22790,
+      "title": "తేలిపోవు (tēlipōvu) — to float away",
+      "headword": "తేలిపోవు",
+      "romanization": "tēlipōvu",
+      "gloss": "to float away",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:835dd186ecd5dfe6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a rivulet, then the Telugu for a raft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తేలిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తేలిపోవు — tēlipōvu — \"to float away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గాలికి నా టోపీ నీటిలో తేలిపోయింది. gāliki nā ṭōpī nīṭilō tēlipōyindi. In the wind my cap floated away on the water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): తేలిపోయింది, tēlipōyindi."
+            },
+            {
+              "kind": "speech",
+              "text": "తేలు, to float, + పోవు, to go: carried off on the surface. Its subject is a thing, so the past shown is the third person: తేలిపోయింది, it floated away."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తేలిపోవు (tēlipōvu) is native Dravidian: తేలు, \"to float\" (DEDR 3464), with పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēlipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēlipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēlipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēlipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāliki nā ṭōpī nīṭilō tēlipōyindi. — In the wind my cap floated away on the water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāliki nā ṭōpī nīṭilō tēlipōyindi.* — In the wind my cap floated away on the water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a rivulet, then the Telugu for a raft, then say tēlipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a rivulet, then the Telugu for a raft, then say *tēlipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తేలిపోవు (tēlipōvu) mean? (\"To float away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C453-kottukupovu",
+      "sequence": 22800,
+      "title": "కొట్టుకుపోవు (koṭṭukupōvu) — to be swept away",
+      "headword": "కొట్టుకుపోవు",
+      "romanization": "koṭṭukupōvu",
+      "gloss": "to be swept away",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26660bf76ec5167c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a raft, then the Telugu for to float away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కొట్టుకుపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొట్టుకుపోవు — koṭṭukupōvu — \"to be swept away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వరదలో చాలా పశువులు కొట్టుకుపోయాయి. varadalō cālā paśuvulu koṭṭukupōyāyi. Many cattle were swept away in the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): కొట్టుకుపోయింది, koṭṭukupōyindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of anything a current carries off: a bridge, a road, a crop. Its subject is a thing, so the past shown is the third person: కొట్టుకుపోయింది, it was swept away."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొట్టుకుపోవు (koṭṭukupōvu) is native Dravidian: DEDR 2065 lists Telugu koṭṭukonipōvu, \"to be carried along by a stream or a current\", from koṭṭu, \"to pour forth\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭṭukupōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭṭukupōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭṭukupōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭṭukupōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varadalō cālā paśuvulu koṭṭukupōyāyi. — Many cattle were swept away in the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varadalō cālā paśuvulu koṭṭukupōyāyi.* — Many cattle were swept away in the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a raft, then the Telugu for to float away, then say koṭṭukupōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a raft, then the Telugu for to float away, then say *koṭṭukupōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కొట్టుకుపోవు (koṭṭukupōvu) mean? (\"To be swept away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R453-review-446-453",
+      "sequence": 22810,
+      "title": "Words from chapters 446–453 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 446-453",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4308b676c53d4e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for bumpy and a jolt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bumpy, a jolt, to avoid, to overturn, to get dented",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bumpy, a jolt, to avoid, to overturn, to get dented]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a traffic signal, a licence, a pedestrian, a footpath, to break a rule",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a traffic signal, a licence, a pedestrian, a footpath, to break a rule]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a compass direction, a signpost, to lose one's way, to take a turn, a shortcut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a compass direction, a signpost, to lose one's way, to take a turn, a shortcut]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an obstacle, a diversion, to stop dead, to seize up, to get blocked",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an obstacle, a diversion, to stop dead, to seize up, to get blocked]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parking, to pull up, to put aboard, to unload, to drop someone off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: parking, to pull up, to put aboard, to unload, to drop someone off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rickshaw, a bullock cart, a handcart, going on foot, a wayfarer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rickshaw, a bullock cart, a handcart, going on foot, a wayfarer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a harbour, a ship, a sailor, an anchor, a lighthouse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a harbour, a ship, a sailor, an anchor, a lighthouse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a riverbank, a rivulet, a raft, to float away, to be swept away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a riverbank, a rivulet, a raft, to float away, to be swept away]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Bumpy? (ఎగుడుదిగుడు, eguḍudiguḍu.) A jolt? (కుదుపు, kudupu.) To avoid? (తప్పించు, tappiñcu.) To overturn? (బోల్తాపడు, bōltāpaḍu.) To get dented? (సొట్టపడు, soṭṭapaḍu.) A traffic signal? (సిగ్నలు, signalu.) A licence? (లైసెన్సు, laisensu.) A pedestrian? (పాదచారి, pādacāri.) A footpath? (కాలిబాట, kālibāṭa.) To break a rule? (అతిక్రమించు, atikramiñcu.) A compass direction? (దిశ, diśa.) A signpost? (సూచిక, sūcika.) To lose one's way? (దారి తప్పు, dāri tappu.) To take a turn? (మలుపు తిరుగు, malupu tirugu.) A shortcut? (అడ్డదారి, aḍḍadāri.) An obstacle? (అడ్డంకి, aḍḍaṅki.) A diversion? (మళ్ళింపు, maḷḷimpu.) To stop dead? (నిలిచిపోవు, nilicipōvu.) To seize up? (స్తంభించు, stambhiñcu.) To get blocked? (మూసుకుపోవు, mūsukupōvu.) Parking? (పార్కింగు, pārkiṅgu.) To pull up? (నిలుపు, nilupu.) To put aboard? (ఎక్కించు, ekkiñcu.) To unload? (దించు, diñcu.) To drop someone off? (దిగబెట్టు, digabeṭṭu.) A rickshaw? (రిక్షా, rikṣā.) A bullock cart? (ఎడ్లబండి, eḍlabaṇḍi.) A handcart? (తోపుడుబండి, tōpuḍubaṇḍi.) Going on foot? (కాలినడక, kālinaḍaka.) A wayfarer? (బాటసారి, bāṭasāri.) A harbour? (రేవు, rēvu.) A ship? (నౌక, nauka.) A sailor? (నావికుడు, nāvikuḍu.) An anchor? (లంగరు, laṅgaru.) A lighthouse? (దీపస్తంభం, dīpastambhaṁ.) A riverbank? (ఒడ్డు, oḍḍu.) A rivulet? (వాగు, vāgu.) A raft? (తెప్ప, teppa.) To float away? (తేలిపోవు, tēlipōvu.) To be swept away? (కొట్టుకుపోవు, koṭṭukupōvu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

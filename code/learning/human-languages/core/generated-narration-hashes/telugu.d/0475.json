@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:dee44dc5050767a5",
+  "lessonIds": [
+    "TE-C475-sangamam",
+    "TE-C475-anakatta",
+    "TE-C475-jalasayam",
+    "TE-C475-nitiparudala",
+    "TE-C475-cittadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch475.txt",
+  "json": "telugu/narration/ch475.json",
+  "textHash": "fnv1a64:24168922aa66e35b",
+  "jsonHash": "fnv1a64:b3e26a742687c094",
+  "findings": []
+}

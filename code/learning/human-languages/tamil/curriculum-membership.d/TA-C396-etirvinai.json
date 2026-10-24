@@ -1,0 +1,11 @@
+{
+  "id": "TA-C396-etirvinai",
+  "pathSegment": "TA-PATH-396-TUNTU396",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-396-TUNTU396",
+      "order": 1
+    }
+  ]
+}

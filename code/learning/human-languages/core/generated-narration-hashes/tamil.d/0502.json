@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:6adf818bd246cd67",
+  "lessonIds": [
+    "TA-C502-anucari",
+    "TA-C502-nerunku",
+    "TA-C502-taluvu",
+    "TA-C502-varutu",
+    "TA-C502-pantam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch502.txt",
+  "json": "tamil/narration/ch502.json",
+  "textHash": "fnv1a64:75c64db535e960fb",
+  "jsonHash": "fnv1a64:188a664c0a70b0f4",
+  "findings": []
+}

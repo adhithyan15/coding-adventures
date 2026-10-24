@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C404-jolkhabar",
+    "language": "bengali",
+    "chapter": 404,
+    "sequence": 25040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f994f0cf3cef0605"
+  },
+  "findings": []
+}

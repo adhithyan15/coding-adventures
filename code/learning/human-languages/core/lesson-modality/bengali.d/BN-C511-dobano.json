@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C511-dobano",
+    "language": "bengali",
+    "chapter": 511,
+    "sequence": 31010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d80f8d62183530e"
+  },
+  "findings": []
+}

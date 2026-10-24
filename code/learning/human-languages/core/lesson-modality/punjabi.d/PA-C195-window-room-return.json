@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C195-window-room-return",
+    "language": "punjabi",
+    "chapter": 195,
+    "sequence": 10600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f925839a531d937"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C536-pesi",
+    "language": "malayalam",
+    "chapter": 536,
+    "sequence": 26990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40d4a8ecaed02119"
+  },
+  "findings": []
+}

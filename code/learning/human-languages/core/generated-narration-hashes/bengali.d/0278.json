@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:b6a6c237af27efe8",
+  "lessonIds": [
+    "BN-C278-dhakka",
+    "BN-C278-chola",
+    "BN-C278-bhanga",
+    "BN-C278-ultano",
+    "BN-C278-ahoto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch278.txt",
+  "json": "bengali/narration/ch278.json",
+  "textHash": "fnv1a64:7ffb5a6e959c2a34",
+  "jsonHash": "fnv1a64:698e1d1b15393bbb",
+  "findings": []
+}

@@ -32,6 +32,29 @@ finite variable-free real-arithmetic or exact tracked built-in-result leaves,
 including results over losslessly widened tracked integers, prove the same
 value over plain real bases. Exact variable-free built-in-result leaves may
 also participate; none of these forms requires a standard function in the base.
+The checked sign-rooted integer-reduction proof additionally accepts exact
+straight-line local integer snapshots as leaves while captured globals,
+by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.
+Finite straight-line local real snapshots may enter those reductions through
+built-in `entier` when the normalized result remains in the exact binary64
+integer range; oversized, dynamic, captured, array-backed, and by-name real
+values fail closed.
+Exact perfect-square roots of those checked reductions may also pass through
+built-in `sqrt`; non-square, negative, dynamic, and overridden roots fail
+closed. Their radicands may contain checked integer `div`/`mod`, bounded powers,
+and supported exact built-in normalizers while the complete reduction remains
+within `2^53`.
+Exact built-in real identities `sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and
+`ln(1)` may also supply checked integer leaves, including when their arguments
+are checked reductions. Non-identity, dynamic, and user-overridden calls fail
+closed.
+Exact built-in normalizers may consume a pure runtime conditional when every
+branch maps independently to the same checked integer result. Unequal mapped
+results, procedure-calling selectors, and dynamic branches fail closed.
+Finite fractional static-real inputs may feed those normalizers when the result
+is an exact integer, including nested call-free conditionals whose normalized
+branches agree. Nonintegral, path-dependent, dynamic, and oversized results
+fail closed.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
@@ -1340,6 +1363,11 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Additional built-in `entier` calls may wrap that already integral bounded
   result; an unrestricted runtime `entier` operand remains conservative.
+  A checked static integer reduction may contain a conditional whose selector
+  does not call a procedure when both branches independently reduce to the
+  same exact integer. The selector still executes at runtime; unequal,
+  dynamic, invalid, or oversized branch reductions and procedure-calling
+  selectors remain conservative.
   Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`
   or `1` before `entier`; an unnormalized or unrestricted operand remains
   conservative. Additional built-in `sqrt` calls may wrap that nonnegative
@@ -1484,6 +1512,22 @@ backend immediately) come before the enabler-dependent items.
   Static whole-number numerator factors may precede the sign-rooted transform,
   including exact divisions among those factors, when multiplication connects
   the resulting prefix to its root; division by the root remains conservative.
+  Variable-free integer `div` and `mod` reductions may also be folded
+  left-to-right before that multiplying connection, including composition
+  through later exact operations. Zero and dynamic divisors, oversized folded
+  prefixes, and non-multiplying connections to the root remain conservative.
+  Parenthesized variable-free integer reductions may likewise become checked
+  static offsets or factors around the sign-rooted transform. Grouped zero or
+  dynamic divisors, inexact real divisions, and results beyond `2^53` remain
+  conservative.
+  Those grouped reductions may use right-associative checked powers when every
+  exponent is nonnegative, the exponent chain stays within the existing unroll
+  cap, and the powered result remains within `2^53`. Dynamic or negative
+  exponents, deeper chains, and overflowing powers remain conservative.
+  Built-in `abs`, `sign`, and `entier` may normalize those checked
+  variable-free integer reductions before they become a static offset, factor,
+  or exponent. User-declared procedures with those names, dynamic inputs, zero
+  divisors, and results beyond `2^53` remain conservative.
   Positive variable-free whole-number powers may raise that exact sign-rooted
   integer transform within the existing exponent-unroll cap when checked
   exponentiation keeps its worst-case magnitude within `2^53`; zero, negative,

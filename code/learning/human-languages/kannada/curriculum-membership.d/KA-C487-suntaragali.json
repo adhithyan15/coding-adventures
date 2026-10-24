@@ -1,0 +1,11 @@
+{
+  "id": "KA-C487-suntaragali",
+  "pathSegment": "KA-PATH-487-CANDAMARUTA487",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-487-CANDAMARUTA487",
+      "order": 1
+    }
+  ]
+}

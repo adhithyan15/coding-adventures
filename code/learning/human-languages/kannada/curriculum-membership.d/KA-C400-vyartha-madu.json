@@ -1,0 +1,11 @@
+{
+  "id": "KA-C400-vyartha-madu",
+  "pathSegment": "KA-PATH-400-BAJET400",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-400-BAJET400",
+      "order": 4
+    }
+  ]
+}

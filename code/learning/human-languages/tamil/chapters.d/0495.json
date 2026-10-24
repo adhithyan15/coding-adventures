@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Babies",
+  "label": "ch:ta-babies",
+  "canDo": "I can talk about infants, toddlers, crawling, lullabies and feeding a baby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C495-uttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can talk about infants, toddlers, crawling, lullabies and feeding a baby.",
+    "assesses": [
+      "TA-LEX-C495-KUZHANTAI495-03",
+      "TA-LEX-C495-KUZHANTAI495-04",
+      "TA-LEX-C495-KUZHANTAI495-05"
+    ]
+  }
+}

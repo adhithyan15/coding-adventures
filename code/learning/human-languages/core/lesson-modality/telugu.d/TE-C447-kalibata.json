@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C447-kalibata",
+    "language": "telugu",
+    "chapter": 447,
+    "sequence": 22490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23460190bdbbc751"
+  },
+  "findings": []
+}

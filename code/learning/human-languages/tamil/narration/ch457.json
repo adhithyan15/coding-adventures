@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 457,
+  "title": "Mercy and Concern",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:781fc3f70096181c",
+  "lessons": [
+    {
+      "id": "TA-C457-karunai",
+      "sequence": 26300,
+      "title": "கருணை (karuṇai) — mercy; compassion",
+      "headword": "கருணை",
+      "romanization": "karuṇai",
+      "gloss": "mercy; compassion",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a31a46fb03fd2b24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for consolation, then the Tamil for to subside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கருணை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கருணை — karuṇai — \"mercy; compassion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்த மருத்துவர் ஏழைகளிடம் கருணையுடன் நடந்துகொண்டார். anta maruttuvar ēḻaikaḷiṭam karuṇaiyuṭaṉ naṭantukoṇṭār. That doctor treated the poor with compassion."
+            },
+            {
+              "kind": "speech",
+              "text": "-உடன் \"with\": கருணையுடன், with compassion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கருணை (karuṇai) is borrowed from Sanskrit karuṇā, \"pity\" (CDIAL 2811); the final -ā becomes Tamil -ஐ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karuṇai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karuṇai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karuṇai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karuṇai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anta maruttuvar ēḻaikaḷiṭam karuṇaiyuṭaṉ naṭantukoṇṭār. — That doctor treated the poor with compassion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anta maruttuvar ēḻaikaḷiṭam karuṇaiyuṭaṉ naṭantukoṇṭār.* — That doctor treated the poor with compassion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for consolation, then the Tamil for to subside, then say karuṇai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for consolation, then the Tamil for to subside, then say *karuṇai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கருணை (karuṇai) mean? (\"Mercy; compassion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C457-parivu",
+      "sequence": 26310,
+      "title": "பரிவு (parivu) — tenderness; affection",
+      "headword": "பரிவு",
+      "romanization": "parivu",
+      "gloss": "tenderness; affection",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e8978b8c6a37b81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to subside, then the Tamil for mercy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பரிவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரிவு — parivu — \"tenderness; affection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பாட்டி பேரனிடம் பரிவுடன் பேசினாள். pāṭṭi pēraṉiṭam parivuṭaṉ pēciṉāḷ. Grandmother spoke tenderly to her grandson."
+            },
+            {
+              "kind": "speech",
+              "text": "-இடம் marks the one a feeling is shown to: பேரனிடம், to the grandson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரிவு (parivu) is native Dravidian, a noun from பரி pari, \"to be affectionate\" (DEDR 3964)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parivu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parivu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parivu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parivu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭṭi pēraṉiṭam parivuṭaṉ pēciṉāḷ. — Grandmother spoke tenderly to her grandson.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭṭi pēraṉiṭam parivuṭaṉ pēciṉāḷ.* — Grandmother spoke tenderly to her grandson.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to subside, then the Tamil for mercy, then say parivu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to subside, then the Tamil for mercy, then say *parivu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பரிவு (parivu) mean? (\"Tenderness; affection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C457-anutapam",
+      "sequence": 26320,
+      "title": "அனுதாபம் (aṉutāpam) — sympathy",
+      "headword": "அனுதாபம்",
+      "romanization": "aṉutāpam",
+      "gloss": "sympathy",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9929e73403989760",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for mercy, then the Tamil for tenderness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அனுதாபம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அனுதாபம் — aṉutāpam — \"sympathy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தக் குடும்பத்தின் இழப்புக்கு நாங்கள் அனுதாபம் தெரிவித்தோம். antak kuṭumpattiṉ iḻappukku nāṅkaḷ aṉutāpam terivittōm. We expressed sympathy for that family’s loss."
+            },
+            {
+              "kind": "speech",
+              "text": "அனுதாபம் (aṉutāpam) தெரிவி, to express sympathy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அனுதாபம் (aṉutāpam) is borrowed from Sanskrit anutāpa, \"remorse; heat\" (Monier-Williams); in Tamil it means feeling the pain of another."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṉutāpam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṉutāpam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṉutāpam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṉutāpam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antak kuṭumpattiṉ iḻappukku nāṅkaḷ aṉutāpam terivittōm. — We expressed sympathy for that family’s loss.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antak kuṭumpattiṉ iḻappukku nāṅkaḷ aṉutāpam terivittōm.* — We expressed sympathy for that family’s loss.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for mercy, then the Tamil for tenderness, then say aṉutāpam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for mercy, then the Tamil for tenderness, then say *aṉutāpam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அனுதாபம் (aṉutāpam) mean? (\"Sympathy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C457-paritapam",
+      "sequence": 26330,
+      "title": "பரிதாபம் (paritāpam) — pitifulness; pity",
+      "headword": "பரிதாபம்",
+      "romanization": "paritāpam",
+      "gloss": "pitifulness; pity",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1b6886ba015a215",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for tenderness, then the Tamil for sympathy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பரிதாபம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரிதாபம் — paritāpam — \"pitifulness; pity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழையில் நனைந்த நாயைப் பார்க்கப் பரிதாபமாக இருந்தது. maḻaiyil naṉainta nāyaip pārkkap paritāpamāka iruntatu. The dog soaked in the rain was a pitiful sight."
+            },
+            {
+              "kind": "speech",
+              "text": "பரிதாபமாக இருக்கிறது, it is a sorry sight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரிதாபம் (paritāpam) is borrowed from Sanskrit paritāpa, \"scorching heat; pain, grief\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paritāpam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paritāpam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paritāpam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paritāpam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻaiyil naṉainta nāyaip pārkkap paritāpamāka iruntatu. — The dog soaked in the rain was a pitiful sight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻaiyil naṉainta nāyaip pārkkap paritāpamāka iruntatu.* — The dog soaked in the rain was a pitiful sight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for tenderness, then the Tamil for sympathy, then say paritāpam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for tenderness, then the Tamil for sympathy, then say *paritāpam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பரிதாபம் (paritāpam) mean? (\"Pitifulness; pity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C457-akkarai",
+      "sequence": 26340,
+      "title": "அக்கறை (akkaṟai) — concern; care",
+      "headword": "அக்கறை",
+      "romanization": "akkaṟai",
+      "gloss": "concern; care",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e79e6a054927ff7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for sympathy, then the Tamil for pitifulness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அக்கறை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அக்கறை — akkaṟai — \"concern; care\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அப்பா என் உடல்நலத்தில் அக்கறை காட்டினார். appā eṉ uṭalnalattil akkaṟai kāṭṭiṉār. Father showed concern for my health."
+            },
+            {
+              "kind": "speech",
+              "text": "What one cares about takes -இல்: படிப்பில் அக்கறை (akkaṟai), concern for one’s studies."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அக்கறை (akkaṟai) is native Dravidian (DEDR 21); in Kannada and Telugu the same word means need or necessity."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akkaṟai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akkaṟai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akkaṟai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akkaṟai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appā eṉ uṭalnalattil akkaṟai kāṭṭiṉār. — Father showed concern for my health.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appā eṉ uṭalnalattil akkaṟai kāṭṭiṉār.* — Father showed concern for my health.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for sympathy, then the Tamil for pitifulness, then say akkaṟai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for sympathy, then the Tamil for pitifulness, then say *akkaṟai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அக்கறை (akkaṟai) mean? (\"Concern; care\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

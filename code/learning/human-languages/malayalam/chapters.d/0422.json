@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "The Assembly",
+  "label": "ch:ml-the-assembly",
+  "canDo": "I can say an assembly, a member, a representative, to represent and the opposition.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C422-pratipaksam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can say an assembly, a member, a representative, to represent and the opposition.",
+    "assesses": [
+      "ML-LEX-C422-SABHA422-03",
+      "ML-LEX-C422-SABHA422-04",
+      "ML-LEX-C422-SABHA422-05"
+    ]
+  }
+}

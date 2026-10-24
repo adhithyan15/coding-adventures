@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C410-chotvor",
+    "language": "bengali",
+    "chapter": 410,
+    "sequence": 25360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3476aef7cc15c8d0"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C508-tawarrama",
+    "language": "arabic",
+    "chapter": 508,
+    "sequence": 28260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b12a62b7a969c57d"
+  },
+  "findings": []
+}

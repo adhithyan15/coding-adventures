@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:ed61e5e66ac4e050",
+  "lessonIds": [
+    "TE-C407-nirasana",
+    "TE-C407-udyamam",
+    "TE-C407-khandincu",
+    "TE-C407-dimandu",
+    "TE-C407-samskarana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch407.txt",
+  "json": "telugu/narration/ch407.json",
+  "textHash": "fnv1a64:fffcc007f0a2babe",
+  "jsonHash": "fnv1a64:76dfc25a804eeee9",
+  "findings": []
+}

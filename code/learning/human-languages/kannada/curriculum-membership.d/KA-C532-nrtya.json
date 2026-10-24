@@ -1,0 +1,11 @@
+{
+  "id": "KA-C532-nrtya",
+  "pathSegment": "KA-PATH-532-GITA532",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-532-GITA532",
+      "order": 1
+    }
+  ]
+}

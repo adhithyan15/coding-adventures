@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C343-majhul",
+    "language": "arabic",
+    "chapter": 343,
+    "sequence": 19570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a78f47d143178e4"
+  },
+  "findings": []
+}

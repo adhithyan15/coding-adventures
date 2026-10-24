@@ -1,0 +1,11 @@
+{
+  "id": "KA-C530-virama",
+  "pathSegment": "KA-PATH-530-BIDUVU530",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-530-BIDUVU530",
+      "order": 0
+    }
+  ]
+}

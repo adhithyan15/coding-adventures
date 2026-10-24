@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 318,
+  "title": "Ancient civilizations",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cc4ecb41a8f0d0de",
+  "lessons": [
+    {
+      "id": "AR-C318-hadara",
+      "sequence": 18280,
+      "title": "حضارة (ḥaḍāra) — a civilization",
+      "headword": "حضارة",
+      "romanization": "ḥaḍāra",
+      "gloss": "a civilization",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:512fa8c286e7522a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a patrol, then the Arabic for a checkpoint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حضارة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حضارة — ḥaḍāra — \"a civilization\"."
+            },
+            {
+              "kind": "speech",
+              "text": "درسنا حضارة قديمة في المدرسة. darasnā ḥaḍāra qadīma fī al-madrasa. We studied an ancient civilization at school."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حضارة (ḥaḍāra) is built on the native Arabic root ḥ-ḍ-r (Lane), \"to be present\", the root of ḥaḍara, to attend, and of the taught ḥaḍḍara, to prepare. Lane gives ḥaḍāra as dwelling in towns and villages, the opposite of desert life."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaḍāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaḍāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaḍāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaḍāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darasnā ḥaḍāra qadīma fī al-madrasa. — We studied an ancient civilization at school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darasnā ḥaḍāra qadīma fī al-madrasa.* — We studied an ancient civilization at school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a patrol, then the Arabic for a checkpoint, then say ḥaḍāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a patrol, then the Arabic for a checkpoint, then say *ḥaḍāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حضارة (ḥaḍāra) mean? (\"A civilization\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C318-athar",
+      "sequence": 18290,
+      "title": "أثر (athar) — a trace, a mark; an effect",
+      "headword": "أثر",
+      "romanization": "athar",
+      "gloss": "a trace, a mark; an effect",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11e0e9723360e385",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a checkpoint, then the Arabic for a civilization."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أثر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أثر — athar — \"a trace, a mark; an effect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "رأينا أثر قدم في الرمل. raʾaynā athar qadam fī ar-raml. We saw a footprint in the sand."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: آثار, āthār."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural الآثار is antiquities: عالم آثار, an archaeologist."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أثر (athar) is built on the native Arabic root ʾ-th-r (Lane), where athar is a mark or track left behind; athara is also \"to hand down a report\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "athar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *athar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "athar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *athar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raʾaynā athar qadam fī ar-raml. — We saw a footprint in the sand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raʾaynā athar qadam fī ar-raml.* — We saw a footprint in the sand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a checkpoint, then the Arabic for a civilization, then say athar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a checkpoint, then the Arabic for a civilization, then say *athar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أثر (athar) mean? (\"A trace, a mark; an effect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C318-atlal",
+      "sequence": 18300,
+      "title": "أطلال (aṭlāl) — remains of a dwelling, ruins",
+      "headword": "أطلال",
+      "romanization": "aṭlāl",
+      "gloss": "remains of a dwelling, ruins",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82820f224ab8d6c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a civilization, then the Arabic for a trace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أطلال",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أطلال — aṭlāl — \"remains of a dwelling, ruins\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وقف الشاعر على أطلال البيت. waqafa ash-shāʿir ʿalā aṭlāl al-bayt. The poet stood at the remains of the house."
+            },
+            {
+              "kind": "speech",
+              "text": "The old Arabic ode opens with the poet weeping at the أطلال (aṭlāl) of a camp."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أطلال (aṭlāl) is built on the native Arabic root ṭ-l-l (Lane), where ṭalal is the part of a dwelling that remains standing after people leave; aṭlāl is its plural."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭlāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭlāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭlāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭlāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waqafa ash-shāʿir ʿalā aṭlāl al-bayt. — The poet stood at the remains of the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waqafa ash-shāʿir ʿalā aṭlāl al-bayt.* — The poet stood at the remains of the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a civilization, then the Arabic for a trace, then say aṭlāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a civilization, then the Arabic for a trace, then say *aṭlāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أطلال (aṭlāl) mean? (\"Remains of a dwelling, ruins\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C318-mabad",
+      "sequence": 18310,
+      "title": "معبد (maʿbad) — a temple",
+      "headword": "معبد",
+      "romanization": "maʿbad",
+      "gloss": "a temple",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:049d12a7e73272b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a trace, then the Arabic for remains of a dwelling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: معبد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معبد — maʿbad — \"a temple\"."
+            },
+            {
+              "kind": "speech",
+              "text": "زرنا معبدا قديما على النهر. zurnā maʿbadan qadīman ʿalā an-nahr. We visited an ancient temple on the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: معابد, maʿābid."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معبد (maʿbad) is built on the native Arabic root ʿ-b-d (Lane), \"to serve, to worship\". The mafʿal pattern names a place: \"a place of worship\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maʿbad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maʿbad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maʿbad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maʿbad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zurnā maʿbadan qadīman ʿalā an-nahr. — We visited an ancient temple on the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zurnā maʿbadan qadīman ʿalā an-nahr.* — We visited an ancient temple on the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a trace, then the Arabic for remains of a dwelling, then say maʿbad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a trace, then the Arabic for remains of a dwelling, then say *maʿbad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does معبد (maʿbad) mean? (\"A temple\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C318-haram",
+      "sequence": 18320,
+      "title": "هرم (haram) — a pyramid",
+      "headword": "هرم",
+      "romanization": "haram",
+      "gloss": "a pyramid",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cfaa4c5b8601b13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for remains of a dwelling, then the Arabic for a temple."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: هرم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هرم — haram — \"a pyramid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الهرم الكبير قديم جدا. al-haram al-kabīr qadīm jiddan. The Great Pyramid is very old."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أهرام, ahrām."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هرم (haram) shares its letters with the root h-r-m, \"to grow very old\" (Lane). Whether the pyramid's name comes from it or from another language is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-haram al-kabīr qadīm jiddan. — The Great Pyramid is very old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-haram al-kabīr qadīm jiddan.* — The Great Pyramid is very old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for remains of a dwelling, then the Arabic for a temple, then say haram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for remains of a dwelling, then the Arabic for a temple, then say *haram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does هرم (haram) mean? (\"A pyramid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Bags, Bakeries and Deliveries",
+  "label": "ch:ka-bags-bakeries-and-deliveries",
+  "canDo": "I can say a handbag, to swap, a warranty, a bakery and a home delivery.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C469-delivari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can say a handbag, to swap, a warranty, a bakery and a home delivery.",
+    "assesses": [
+      "KA-LEX-C469-VARANTI469-03",
+      "KA-LEX-C469-VARANTI469-04",
+      "KA-LEX-C469-VARANTI469-05"
+    ]
+  }
+}

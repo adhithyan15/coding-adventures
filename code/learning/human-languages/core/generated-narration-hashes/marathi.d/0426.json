@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:084a7dd02714df94",
+  "lessonIds": [
+    "MR-C426-rokad",
+    "MR-C426-dhanades",
+    "MR-C426-cillar",
+    "MR-C426-rakkam",
+    "MR-C426-jama-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch426.txt",
+  "json": "marathi/narration/ch426.json",
+  "textHash": "fnv1a64:6d6025522ad457c2",
+  "jsonHash": "fnv1a64:9a7c0f122a38eb51",
+  "findings": []
+}

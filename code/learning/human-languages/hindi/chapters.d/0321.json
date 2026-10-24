@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "The Attack",
+  "label": "ch:hi-the-attack",
+  "canDo": "I can tell how an army attacked a fort.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C321-jujhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can tell how an army attacked a fort.",
+    "assesses": [
+      "HI-LEX-C321-HAMLA321-03",
+      "HI-LEX-C321-HAMLA321-04",
+      "HI-LEX-C321-HAMLA321-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C280-mhanun",
+  "pathSegment": "MR-PATH-280-OPINION-SO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-280-OPINION-SO",
+      "order": 1
+    }
+  ]
+}

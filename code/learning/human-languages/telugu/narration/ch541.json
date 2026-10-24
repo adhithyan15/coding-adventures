@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 541,
+  "title": "Stage and Screen",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c094380893327797",
+  "lessons": [
+    {
+      "id": "TE-C541-natana",
+      "sequence": 27400,
+      "title": "నటన (naṭana) — acting; a performance",
+      "headword": "నటన",
+      "romanization": "naṭana",
+      "gloss": "acting; a performance",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67267aae0cc923f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to compose, then the Telugu for a translation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నటన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నటన — naṭana — \"acting; a performance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ సినిమాలో ఆమె నటన అద్భుతం. ā sinimālō āme naṭana adbhutaṁ. Her acting in that film is wonderful."
+            },
+            {
+              "kind": "speech",
+              "text": "నటుడు is an actor; నటించు is to act."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నటన (naṭana) is borrowed from Sanskrit naṭana, \"dancing, dance, pantomime\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṭana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṭana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṭana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṭana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā sinimālō āme naṭana adbhutaṁ. — Her acting in that film is wonderful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā sinimālō āme naṭana adbhutaṁ.* — Her acting in that film is wonderful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to compose, then the Telugu for a translation, then say naṭana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to compose, then the Telugu for a translation, then say *naṭana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నటన (naṭana) mean? (\"Acting; a performance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C541-sannivesam",
+      "sequence": 27410,
+      "title": "సన్నివేశం (sannivēśaṁ) — a scene",
+      "headword": "సన్నివేశం",
+      "romanization": "sannivēśaṁ",
+      "gloss": "a scene",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8063337f11651960",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a translation, then the Telugu for acting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సన్నివేశం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సన్నివేశం — sannivēśaṁ — \"a scene\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సినిమాలో చివరి సన్నివేశం చూసి అందరూ ఏడ్చారు. sinimālō civari sannivēśaṁ cūsi andarū ēḍcāru. Everyone cried at the last scene of the film."
+            },
+            {
+              "kind": "speech",
+              "text": "A scene in a film or a play; also a situation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సన్నివేశం (sannivēśaṁ) is borrowed from Sanskrit saṁniveśa, \"settling down together; a position, a situation\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sannivēśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sannivēśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sannivēśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sannivēśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sinimālō civari sannivēśaṁ cūsi andarū ēḍcāru. — Everyone cried at the last scene of the film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sinimālō civari sannivēśaṁ cūsi andarū ēḍcāru.* — Everyone cried at the last scene of the film.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a translation, then the Telugu for acting, then say sannivēśaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a translation, then the Telugu for acting, then say *sannivēśaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సన్నివేశం (sannivēśaṁ) mean? (\"A scene\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C541-kathanayakudu",
+      "sequence": 27420,
+      "title": "కథానాయకుడు (kathānāyakuḍu) — a hero; a male lead",
+      "headword": "కథానాయకుడు",
+      "romanization": "kathānāyakuḍu",
+      "gloss": "a hero; a male lead",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4cd1aa136af6104",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for acting, then the Telugu for a scene."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కథానాయకుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కథానాయకుడు — kathānāyakuḍu — \"a hero; a male lead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ సినిమాలో కథానాయకుడు ఒక రైతు. ā sinimālō kathānāyakuḍu oka raitu. In that film the hero is a farmer."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine: కథానాయిక, the heroine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కథానాయకుడు (kathānāyakuḍu) is a learned compound built from Sanskrit kathā, \"story\" (CDIAL 2704), and nāyaka, \"a leader; in drama, the hero\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathānāyakuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathānāyakuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathānāyakuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathānāyakuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā sinimālō kathānāyakuḍu oka raitu. — In that film the hero is a farmer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā sinimālō kathānāyakuḍu oka raitu.* — In that film the hero is a farmer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for acting, then the Telugu for a scene, then say kathānāyakuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for acting, then the Telugu for a scene, then say *kathānāyakuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కథానాయకుడు (kathānāyakuḍu) mean? (\"A hero; a male lead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C541-hasyanatudu",
+      "sequence": 27430,
+      "title": "హాస్యనటుడు (hāsyanaṭuḍu) — a comedian; a comic actor",
+      "headword": "హాస్యనటుడు",
+      "romanization": "hāsyanaṭuḍu",
+      "gloss": "a comedian; a comic actor",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad3f31b6e836e97b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a scene, then the Telugu for a hero."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: హాస్యనటుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హాస్యనటుడు — hāsyanaṭuḍu — \"a comedian; a comic actor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ హాస్యనటుడిని చూస్తేనే అందరూ నవ్వుతారు. ā hāsyanaṭuḍini cūstēnē andarū navvutāru. The mere sight of that comedian makes everyone laugh."
+            },
+            {
+              "kind": "speech",
+              "text": "హాస్యం, humour, + నటుడు, actor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హాస్యనటుడు (hāsyanaṭuḍu) is a compound built from Sanskrit hāsya, \"laughable; laughter\" (CDIAL 14071), and నటుడు, \"an actor\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāsyanaṭuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāsyanaṭuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāsyanaṭuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāsyanaṭuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā hāsyanaṭuḍini cūstēnē andarū navvutāru. — The mere sight of that comedian makes everyone laugh.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā hāsyanaṭuḍini cūstēnē andarū navvutāru.* — The mere sight of that comedian makes everyone laugh.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a scene, then the Telugu for a hero, then say hāsyanaṭuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a scene, then the Telugu for a hero, then say *hāsyanaṭuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does హాస్యనటుడు (hāsyanaṭuḍu) mean? (\"A comedian; a comic actor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C541-preksakulu",
+      "sequence": 27440,
+      "title": "ప్రేక్షకులు (prēkṣakulu) — spectators; viewers",
+      "headword": "ప్రేక్షకులు",
+      "romanization": "prēkṣakulu",
+      "gloss": "spectators; viewers",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5585e7ec878d4c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a hero, then the Telugu for a comedian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రేక్షకులు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రేక్షకులు — prēkṣakulu — \"spectators; viewers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నాటకం అయ్యాక ప్రేక్షకులు లేచి నిలబడ్డారు. nāṭakaṁ ayyāka prēkṣakulu lēci nilabaḍḍāru. When the play ended, the audience stood up."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural; one spectator is ప్రేక్షకుడు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రేక్షకులు (prēkṣakulu) is borrowed from Sanskrit prekṣaka, \"looking on; a spectator, a member of an audience\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prēkṣakulu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prēkṣakulu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prēkṣakulu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prēkṣakulu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭakaṁ ayyāka prēkṣakulu lēci nilabaḍḍāru. — When the play ended, the audience stood up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭakaṁ ayyāka prēkṣakulu lēci nilabaḍḍāru.* — When the play ended, the audience stood up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a hero, then the Telugu for a comedian, then say prēkṣakulu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a hero, then the Telugu for a comedian, then say *prēkṣakulu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రేక్షకులు (prēkṣakulu) mean? (\"Spectators; viewers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R541-review-534-541",
+      "sequence": 27450,
+      "title": "Words from chapters 534–541 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 534-541",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4e59983c6a44423",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for to have a row and a dispute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to have a row, a dispute, to sulk, a compromise, a rift",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to have a row, a dispute, to sulk, a compromise, a rift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mockery, to mock, to reprimand, to call to account, to deceive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mockery, to mock, to reprimand, to call to account, to deceive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a picnic, a pastime, gardening, knitting, a card game",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a picnic, a pastime, gardening, knitting, a card game]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a spinning top, marbles, hide-and-seek, kabaddi, to hop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a spinning top, marbles, hide-and-seek, kabaddi, to hop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a musical note, a singing voice, to play an instrument, a mridangam drum, a reed pipe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a musical note, a singing voice, to play an instrument, a mridangam drum, a reed pipe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a refrain, a stanza, a metrical verse, a lyric, folk tradition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a refrain, a stanza, a metrical verse, a lyric, folk tradition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "literary works, a short story, a piece of writing, to compose, a translation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: literary works, a short story, a piece of writing, to compose, a translation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acting, a scene, a hero, a comedian, spectators",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: acting, a scene, a hero, a comedian, spectators]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To have a row? (గొడవపడు, goḍavapaḍu.) A dispute? (తగాదా, tagādā.) To sulk? (అలుగు, alugu.) A compromise? (రాజీ, rājī.) A rift? (మనస్పర్థ, manaspartha.) Mockery? (ఎగతాళి, egatāḷi.) To mock? (వెక్కిరించు, vekkiriñcu.) To reprimand? (మందలించు, mandaliñcu.) To call to account? (నిలదీయు, niladīyu.) To deceive? (మోసగించు, mōsagiñcu.) A picnic? (వనభోజనం, vanabhōjanaṁ.) A pastime? (కాలక్షేపం, kālakṣēpaṁ.) Gardening? (తోటపని, tōṭapani.) Knitting? (అల్లిక, allika.) A card game? (పేకాట, pēkāṭa.) A spinning top? (బొంగరం, boṅgaraṁ.) Marbles? (గోళీలు, gōḷīlu.) Hide-and-seek? (దాగుడుమూతలు, dāguḍumūtalu.) Kabaddi? (చెడుగుడు, ceḍuguḍu.) To hop? (గెంతు, gentu.) A musical note? (స్వరం, svaraṁ.) A singing voice? (గాత్రం, gātraṁ.) To play an instrument? (వాయించు, vāyiñcu.) A mridangam drum? (మృదంగం, mṛdaṅgaṁ.) A reed pipe? (సన్నాయి, sannāyi.) A refrain? (పల్లవి, pallavi.) A stanza? (చరణం, caraṇaṁ.) A metrical verse? (పద్యం, padyaṁ.) A lyric? (గేయం, gēyaṁ.) Folk tradition? (జానపదం, jānapadaṁ.) Literary works? (సాహిత్యం, sāhityaṁ.) A short story? (కథానిక, kathānika.) A piece of writing? (రచన, racana.) To compose? (రచించు, raciñcu.) A translation? (అనువాదం, anuvādaṁ.) Acting? (నటన, naṭana.) A scene? (సన్నివేశం, sannivēśaṁ.) A hero? (కథానాయకుడు, kathānāyakuḍu.) A comedian? (హాస్యనటుడు, hāsyanaṭuḍu.) Spectators? (ప్రేక్షకులు, prēkṣakulu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

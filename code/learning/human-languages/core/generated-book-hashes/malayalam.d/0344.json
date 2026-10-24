@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:622605882480d13f",
+  "lessonIds": [
+    "ML-C344-ticket-venam",
+    "ML-C344-saukaryam",
+    "ML-W344-au-sign",
+    "ML-C344-bus-kittiyilla",
+    "ML-R344-at-the-station"
+  ],
+  "tex": "malayalam/book/chapters/ch344-tickets-seats-and-trouble.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C405-istithna",
+  "pathSegment": "AR-PATH-405-ISTITHNA405",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-405-ISTITHNA405",
+      "order": 0
+    }
+  ]
+}

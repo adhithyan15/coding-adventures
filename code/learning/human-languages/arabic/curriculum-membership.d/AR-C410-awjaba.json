@@ -1,0 +1,11 @@
+{
+  "id": "AR-C410-awjaba",
+  "pathSegment": "AR-PATH-410-IBAHA410",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-410-IBAHA410",
+      "order": 1
+    }
+  ]
+}

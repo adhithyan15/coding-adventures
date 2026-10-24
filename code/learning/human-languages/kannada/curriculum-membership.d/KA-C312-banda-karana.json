@@ -1,0 +1,11 @@
+{
+  "id": "KA-C312-banda-karana",
+  "pathSegment": "KA-PATH-312-MUST-BECAUSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-312-MUST-BECAUSE",
+      "order": 1
+    }
+  ]
+}

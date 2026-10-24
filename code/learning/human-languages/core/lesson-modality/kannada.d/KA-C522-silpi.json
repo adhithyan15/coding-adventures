@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C522-silpi",
+    "language": "kannada",
+    "chapter": 522,
+    "sequence": 26670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fc118257b9ea3dd"
+  },
+  "findings": []
+}

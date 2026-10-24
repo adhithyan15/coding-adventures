@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C319-jharap",
+    "language": "hindi",
+    "chapter": 319,
+    "sequence": 17590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e74851ef06c2013"
+  },
+  "findings": []
+}

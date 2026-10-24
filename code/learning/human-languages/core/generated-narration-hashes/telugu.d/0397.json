@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:9849962a01d71e74",
+  "lessonIds": [
+    "TE-C397-antekakunda",
+    "TE-C397-adananga",
+    "TE-C397-sanksiptanga",
+    "TE-C397-perkonu",
+    "TE-C397-vyaktam-ceyu",
+    "TE-R397-review-390-397"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch397.txt",
+  "json": "telugu/narration/ch397.json",
+  "textHash": "fnv1a64:7f4995fa33efc0d3",
+  "jsonHash": "fnv1a64:5510e1435e84ba3b",
+  "findings": []
+}

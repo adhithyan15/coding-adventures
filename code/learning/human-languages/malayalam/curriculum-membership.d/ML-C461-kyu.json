@@ -1,0 +1,11 @@
+{
+  "id": "ML-C461-kyu",
+  "pathSegment": "ML-PATH-461-YATRA461",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-461-YATRA461",
+      "order": 3
+    }
+  ]
+}

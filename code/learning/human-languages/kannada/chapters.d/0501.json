@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Gentle and Cruel",
+  "label": "ch:ka-gentle-and-cruel",
+  "canDo": "I can say gentle, innocent, cruel, harshly frank and to mimic mockingly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C501-anakisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can say gentle, innocent, cruel, harshly frank and to mimic mockingly.",
+    "assesses": [
+      "KA-LEX-C501-SAUMYA501-03",
+      "KA-LEX-C501-SAUMYA501-04",
+      "KA-LEX-C501-SAUMYA501-05"
+    ]
+  }
+}

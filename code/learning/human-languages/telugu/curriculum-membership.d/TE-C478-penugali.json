@@ -1,0 +1,11 @@
+{
+  "id": "TE-C478-penugali",
+  "pathSegment": "TE-PATH-478-PEDAGALI478",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-478-PEDAGALI478",
+      "order": 1
+    }
+  ]
+}

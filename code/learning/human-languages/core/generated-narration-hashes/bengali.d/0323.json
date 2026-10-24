@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:709ca6ff24602195",
+  "lessonIds": [
+    "BN-C323-nayok",
+    "BN-C323-kholnayok",
+    "BN-C323-bhumika",
+    "BN-C323-sonnyasi",
+    "BN-C323-chhodmobesh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch323.txt",
+  "json": "bengali/narration/ch323.json",
+  "textHash": "fnv1a64:b8ab6794a07e520b",
+  "jsonHash": "fnv1a64:d3bfba3d5bfdb205",
+  "findings": []
+}

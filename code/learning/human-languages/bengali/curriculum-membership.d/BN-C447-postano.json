@@ -1,0 +1,11 @@
+{
+  "id": "BN-C447-postano",
+  "pathSegment": "BN-PATH-447-APHSOS447",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-447-APHSOS447",
+      "order": 3
+    }
+  ]
+}

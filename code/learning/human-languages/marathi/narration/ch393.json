@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 393,
+  "title": "Excuses and Requests",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a28b54cfb8a83b7a",
+  "lessons": [
+    {
+      "id": "MR-C393-sabab",
+      "sequence": 22610,
+      "title": "सबब (sabab) — an excuse",
+      "headword": "सबब",
+      "romanization": "sabab",
+      "gloss": "an excuse",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc363888ce538713",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to follow, then the Marathi for to embrace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सबब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सबब — sabab — \"an excuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उशिरा येण्याची त्याची सबब कोणालाच पटली नाही. uśirā yeṇyācī tyācī sabab koṇālāc paṭlī nāhī. Nobody believed his excuse for coming late."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine: सबब (sabab) सांगणे, to make an excuse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सबब (sabab) is a loan from Persian, usually traced to Arabic sabab, \"cause, reason\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabab",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabab*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabab, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabab*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uśirā yeṇyācī tyācī sabab koṇālāc paṭlī nāhī. — Nobody believed his excuse for coming late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uśirā yeṇyācī tyācī sabab koṇālāc paṭlī nāhī.* — Nobody believed his excuse for coming late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to follow, then the Marathi for to embrace, then say sabab again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to follow, then the Marathi for to embrace, then say *sabab* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सबब (sabab) mean? (\"An excuse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C393-bahana",
+      "sequence": 22620,
+      "title": "बहाणा (bahāṇā) — a pretext",
+      "headword": "बहाणा",
+      "romanization": "bahāṇā",
+      "gloss": "a pretext",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ba9be7f123b891a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to embrace, then the Marathi for an excuse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बहाणा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहाणा — bahāṇā — \"a pretext\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पोटदुखीचा बहाणा करून तो शाळेत गेला नाही. poṭdukhīcā bahāṇā karūn to śāḷet gelā nāhī. Pretending to have a stomach ache, he did not go to school."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "X चा बहाणा (bahāṇā) करणे, to pretend X."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहाणा (bahāṇā) is a loan from Persian bahāna, \"pretext, excuse\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahāṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahāṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahāṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahāṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭdukhīcā bahāṇā karūn to śāḷet gelā nāhī. — Pretending to have a stomach ache, he did not go to school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭdukhīcā bahāṇā karūn to śāḷet gelā nāhī.* — Pretending to have a stomach ache, he did not go to school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to embrace, then the Marathi for an excuse, then say bahāṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to embrace, then the Marathi for an excuse, then say *bahāṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बहाणा (bahāṇā) mean? (\"A pretext\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C393-dhudkavne",
+      "sequence": 22630,
+      "title": "धुडकावणे (dhuḍkāvṇe) — to brush aside; to spurn",
+      "headword": "धुडकावणे",
+      "romanization": "dhuḍkāvṇe",
+      "gloss": "to brush aside; to spurn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e4109d0e846ab37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an excuse, then the Marathi for a pretext."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धुडकावणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धुडकावणे — dhuḍkāvṇe — \"to brush aside; to spurn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याने माझा सल्ला धुडकावला. tyāne mājhā sallā dhuḍkāvlā. He brushed aside my advice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने सल्ला धुडकावला, tyāne sallā dhuḍkāvlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Stronger than नाकारणे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धुडकावणे (dhuḍkāvṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhuḍkāvṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhuḍkāvṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhuḍkāvṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhuḍkāvṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāne mājhā sallā dhuḍkāvlā. — He brushed aside my advice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāne mājhā sallā dhuḍkāvlā.* — He brushed aside my advice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an excuse, then the Marathi for a pretext, then say dhuḍkāvṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an excuse, then the Marathi for a pretext, then say *dhuḍkāvṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धुडकावणे (dhuḍkāvṇe) mean? (\"To brush aside; to spurn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C393-vinanti-karne",
+      "sequence": 22640,
+      "title": "विनंती करणे (vinantī karṇe) — to request",
+      "headword": "विनंती करणे",
+      "romanization": "vinantī karṇe",
+      "gloss": "to request",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26c2fa88b890e08c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a pretext, then the Marathi for to brush aside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विनंती करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विनंती करणे — vinantī karṇe — \"to request\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आम्ही त्यांना थोडं थांबण्याची विनंती केली. āmhī tyānnā thoḍaṁ thāmbaṇyācī vinantī kelī. We asked them to wait a little."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने विनंती केली, tyāne vinantī kelī."
+            },
+            {
+              "kind": "speech",
+              "text": "The person asked takes -ला, the thing asked for -ची."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विनंती करणे (vinantī karṇe) joins विनंती, \"a request\", a Marathi noun whose origin is not settled, to करणे, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinantī karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinantī karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinantī karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinantī karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmhī tyānnā thoḍaṁ thāmbaṇyācī vinantī kelī. — We asked them to wait a little.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmhī tyānnā thoḍaṁ thāmbaṇyācī vinantī kelī.* — We asked them to wait a little.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a pretext, then the Marathi for to brush aside, then say vinantī karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a pretext, then the Marathi for to brush aside, then say *vinantī karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विनंती करणे (vinantī karṇe) mean? (\"To request\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C393-pathpurava-karne",
+      "sequence": 22650,
+      "title": "पाठपुरावा करणे (pāṭhpurāvā karṇe) — to follow up; to pursue",
+      "headword": "पाठपुरावा करणे",
+      "romanization": "pāṭhpurāvā karṇe",
+      "gloss": "to follow up; to pursue",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e674db0c7a7dc51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to brush aside, then the Marathi for to request."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाठपुरावा करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाठपुरावा करणे — pāṭhpurāvā karṇe — \"to follow up; to pursue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तक्रारीचा पाठपुरावा केल्यावर काम झालं. takrārīcā pāṭhpurāvā kelyāvar kām jhālaṁ. After the complaint was followed up, the work got done."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने पाठपुरावा केला, tyāne pāṭhpurāvā kelā."
+            },
+            {
+              "kind": "speech",
+              "text": "What is pursued takes -चा: तक्रारीचा पाठपुरावा."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाठपुरावा करणे (pāṭhpurāvā karṇe) joins पाठपुरावा, \"pursuit, follow-up\", a Marathi noun whose origin is not settled, to करणे, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhpurāvā karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhpurāvā karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhpurāvā karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhpurāvā karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takrārīcā pāṭhpurāvā kelyāvar kām jhālaṁ. — After the complaint was followed up, the work got done.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takrārīcā pāṭhpurāvā kelyāvar kām jhālaṁ.* — After the complaint was followed up, the work got done.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to brush aside, then the Marathi for to request, then say pāṭhpurāvā karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to brush aside, then the Marathi for to request, then say *pāṭhpurāvā karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पाठपुरावा करणे (pāṭhpurāvā karṇe) mean? (\"To follow up; to pursue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Weight and Shape",
+  "label": "ch:ta-weight-and-shape",
+  "canDo": "I can talk about bulk, a paunch, getting thin, a stoop and going hungry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C488-pattini",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about bulk, a paunch, getting thin, a stoop and going hungry.",
+    "assesses": [
+      "TA-LEX-C488-EDAI488-03",
+      "TA-LEX-C488-EDAI488-04",
+      "TA-LEX-C488-EDAI488-05"
+    ]
+  }
+}

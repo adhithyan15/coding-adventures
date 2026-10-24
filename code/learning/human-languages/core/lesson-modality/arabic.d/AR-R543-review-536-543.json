@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R543-review-536-543",
+    "language": "arabic",
+    "chapter": 543,
+    "sequence": 30060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c753a4165b24739"
+  },
+  "findings": []
+}

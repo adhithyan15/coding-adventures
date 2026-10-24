@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C433-pravesanam",
+    "language": "malayalam",
+    "chapter": 433,
+    "sequence": 21430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5bfd7b27b908e013"
+  },
+  "findings": []
+}

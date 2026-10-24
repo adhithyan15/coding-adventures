@@ -1,0 +1,11 @@
+{
+  "id": "TE-C460-vapasu",
+  "pathSegment": "TE-PATH-460-ASAUKARYAM460",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-460-ASAUKARYAM460",
+      "order": 3
+    }
+  ]
+}

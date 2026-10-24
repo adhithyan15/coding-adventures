@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:b5ed3fb7613d9cc8",
+  "lessonIds": [
+    "KA-C505-sraddhe",
+    "KA-C505-nirlaksya",
+    "KA-C505-cata",
+    "KA-C505-sramisu",
+    "KA-C505-bedu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch505.txt",
+  "json": "kannada/narration/ch505.json",
+  "textHash": "fnv1a64:443e54e0eafe70d2",
+  "jsonHash": "fnv1a64:e26e89c27cada827",
+  "findings": []
+}

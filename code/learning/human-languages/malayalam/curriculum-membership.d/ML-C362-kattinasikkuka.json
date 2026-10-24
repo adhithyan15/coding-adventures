@@ -1,0 +1,11 @@
+{
+  "id": "ML-C362-kattinasikkuka",
+  "pathSegment": "ML-PATH-362-TEE362",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-362-TEE362",
+      "order": 4
+    }
+  ]
+}

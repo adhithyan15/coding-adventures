@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-382-VASTAVA382",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-382-VASTAVA382"
+  ],
+  "after": []
+}

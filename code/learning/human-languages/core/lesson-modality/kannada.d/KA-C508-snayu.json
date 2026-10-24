@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C508-snayu",
+    "language": "kannada",
+    "chapter": 508,
+    "sequence": 25960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0b6ed87061787cd"
+  },
+  "findings": []
+}

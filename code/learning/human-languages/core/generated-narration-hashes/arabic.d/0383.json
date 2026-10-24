@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:17f111bfaffb210c",
+  "lessonIds": [
+    "AR-C383-iqtisad",
+    "AR-C383-dariba",
+    "AR-C383-ajz",
+    "AR-C383-tadakhkhum",
+    "AR-C383-istathmara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch383.txt",
+  "json": "arabic/narration/ch383.json",
+  "textHash": "fnv1a64:0d10760423c44eac",
+  "jsonHash": "fnv1a64:e2143f7ddaec8309",
+  "findings": []
+}

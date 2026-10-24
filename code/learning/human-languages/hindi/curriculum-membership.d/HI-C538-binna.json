@@ -1,0 +1,11 @@
+{
+  "id": "HI-C538-binna",
+  "pathSegment": "HI-PATH-538-PRABANDH538",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-538-PRABANDH538",
+      "order": 4
+    }
+  ]
+}

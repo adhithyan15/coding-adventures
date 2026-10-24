@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:ef7548c5d396308f",
+  "lessonIds": [
+    "TA-C529-putir",
+    "TA-C529-vitukatai",
+    "TA-C529-tayam",
+    "TA-C529-pakatai",
+    "TA-C529-pallankuli",
+    "TA-R529-review-522-529"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch529.txt",
+  "json": "tamil/narration/ch529.json",
+  "textHash": "fnv1a64:7e5dcc325c7ee2f8",
+  "jsonHash": "fnv1a64:2026da299c460f83",
+  "findings": []
+}

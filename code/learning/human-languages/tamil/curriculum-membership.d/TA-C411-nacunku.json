@@ -1,0 +1,11 @@
+{
+  "id": "TA-C411-nacunku",
+  "pathSegment": "TA-PATH-411-KOLARU411",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-411-KOLARU411",
+      "order": 2
+    }
+  ]
+}

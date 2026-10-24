@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Camping Out",
+  "label": "ch:hi-camping-out",
+  "canDo": "I can talk about a tent and a roost for the night, settle a child to sleep and say how we spent our days.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C416-bitana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can talk about a tent and a roost for the night, settle a child to sleep and say how we spent our days.",
+    "assesses": [
+      "HI-LEX-C416-KHEMA416-03",
+      "HI-LEX-C416-KHEMA416-04",
+      "HI-LEX-C416-KHEMA416-05"
+    ]
+  }
+}

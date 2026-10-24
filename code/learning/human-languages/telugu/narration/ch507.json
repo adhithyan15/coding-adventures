@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 507,
+  "title": "Character",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7866d3af8eb22604",
+  "lessons": [
+    {
+      "id": "TE-C507-svabhavam",
+      "sequence": 25660,
+      "title": "స్వభావం (svabhāvaṁ) — temperament; nature",
+      "headword": "స్వభావం",
+      "romanization": "svabhāvaṁ",
+      "gloss": "temperament; nature",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ba0e796fe016416",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for peace of mind, then the Telugu for relief."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్వభావం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వభావం — svabhāvaṁ — \"temperament; nature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా తాతయ్యది చాలా మంచి స్వభావం. mā tātayyadi cālā mañci svabhāvaṁ. My grandfather has a very good nature."
+            },
+            {
+              "kind": "speech",
+              "text": "Whose nature it is: -ది స్వభావం (svabhāvaṁ), as in మా తాతయ్యది."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వభావం (svabhāvaṁ) is borrowed from Sanskrit svabhāva, \"one's own state, inborn disposition\" (Monier-Williams), from sva, \"own\", and bhāva, \"being\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svabhāvaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svabhāvaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svabhāvaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svabhāvaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā tātayyadi cālā mañci svabhāvaṁ. — My grandfather has a very good nature.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā tātayyadi cālā mañci svabhāvaṁ.* — My grandfather has a very good nature.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for peace of mind, then the Telugu for relief, then say svabhāvaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for peace of mind, then the Telugu for relief, then say *svabhāvaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్వభావం (svabhāvaṁ) mean? (\"Temperament; nature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C507-vyaktitvam",
+      "sequence": 25670,
+      "title": "వ్యక్తిత్వం (vyaktitvaṁ) — personality",
+      "headword": "వ్యక్తిత్వం",
+      "romanization": "vyaktitvaṁ",
+      "gloss": "personality",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09b7f2cd1d9d229d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for relief, then the Telugu for temperament."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వ్యక్తిత్వం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వ్యక్తిత్వం — vyaktitvaṁ — \"personality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె వ్యక్తిత్వం అందరికీ నచ్చుతుంది. āme vyaktitvaṁ andarikī naccutundi. Everyone likes her personality."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on వ్యక్తి, a person, + -త్వం, -ness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వ్యక్తిత్వం (vyaktitvaṁ) is borrowed from Sanskrit vyaktitva, \"distinctness, individuality, personality\" (Monier-Williams), built on vyakti, \"an individual\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyaktitvaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyaktitvaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyaktitvaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyaktitvaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme vyaktitvaṁ andarikī naccutundi. — Everyone likes her personality.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme vyaktitvaṁ andarikī naccutundi.* — Everyone likes her personality.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for relief, then the Telugu for temperament, then say vyaktitvaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for relief, then the Telugu for temperament, then say *vyaktitvaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వ్యక్తిత్వం (vyaktitvaṁ) mean? (\"Personality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C507-mancitanam",
+      "sequence": 25680,
+      "title": "మంచితనం (mañcitanaṁ) — goodness; decency",
+      "headword": "మంచితనం",
+      "romanization": "mañcitanaṁ",
+      "gloss": "goodness; decency",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cae90ada9b2387be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for temperament, then the Telugu for personality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మంచితనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మంచితనం — mañcitanaṁ — \"goodness; decency\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతని మంచితనం వల్ల అందరూ అతన్ని నమ్ముతారు. atani mañcitanaṁ valla andarū atanni nammutāru. Because of his decency, everyone trusts him."
+            },
+            {
+              "kind": "speech",
+              "text": "-తనం makes an abstract noun: మంచి, good; మంచితనం (mañcitanaṁ), goodness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మంచితనం (mañcitanaṁ) is built from మంచి, \"good\", and -తనం, the ending that makes abstract nouns; the origin of మంచి is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañcitanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañcitanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañcitanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañcitanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atani mañcitanaṁ valla andarū atanni nammutāru. — Because of his decency, everyone trusts him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atani mañcitanaṁ valla andarū atanni nammutāru.* — Because of his decency, everyone trusts him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for temperament, then the Telugu for personality, then say mañcitanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for temperament, then the Telugu for personality, then say *mañcitanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మంచితనం (mañcitanaṁ) mean? (\"Goodness; decency\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C507-vinayam",
+      "sequence": 25690,
+      "title": "వినయం (vinayaṁ) — humility; modesty",
+      "headword": "వినయం",
+      "romanization": "vinayaṁ",
+      "gloss": "humility; modesty",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62435906d4f02c1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for personality, then the Telugu for goodness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వినయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వినయం — vinayaṁ — \"humility; modesty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అంత డబ్బు ఉన్నా ఆయనకు వినయం ఎక్కువ. anta ḍabbu unnā āyanaku vinayaṁ ekkuva. Though he has so much money, he is very humble."
+            },
+            {
+              "kind": "speech",
+              "text": "వినయంగా, humbly, politely."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వినయం (vinayaṁ) is borrowed from Sanskrit vinaya, \"guidance, good breeding\" (CDIAL 11767)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinayaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinayaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinayaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinayaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anta ḍabbu unnā āyanaku vinayaṁ ekkuva. — Though he has so much money, he is very humble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anta ḍabbu unnā āyanaku vinayaṁ ekkuva.* — Though he has so much money, he is very humble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for personality, then the Telugu for goodness, then say vinayaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for personality, then the Telugu for goodness, then say *vinayaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వినయం (vinayaṁ) mean? (\"Humility; modesty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C507-ahankaram",
+      "sequence": 25700,
+      "title": "అహంకారం (ahaṅkāraṁ) — arrogance; ego",
+      "headword": "అహంకారం",
+      "romanization": "ahaṅkāraṁ",
+      "gloss": "arrogance; ego",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f6c583f38fc0424",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for goodness, then the Telugu for humility."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అహంకారం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అహంకారం — ahaṅkāraṁ — \"arrogance; ego\"."
+            },
+            {
+              "kind": "speech",
+              "text": "డబ్బు వచ్చాక అతనికి అహంకారం పెరిగింది. ḍabbu vaccāka ataniki ahaṅkāraṁ perigindi. Once he had money, his arrogance grew."
+            },
+            {
+              "kind": "speech",
+              "text": "The opposite of వినయం (vinayaṁ). అహం, I, + కారం, making."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అహంకారం (ahaṅkāraṁ) is borrowed from Sanskrit ahaṁkāra, \"self-consciousness, egotism, pride\" (CDIAL 991), from aham, \"I\", and kāra, \"making\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahaṅkāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahaṅkāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahaṅkāraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahaṅkāraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍabbu vaccāka ataniki ahaṅkāraṁ perigindi. — Once he had money, his arrogance grew.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍabbu vaccāka ataniki ahaṅkāraṁ perigindi.* — Once he had money, his arrogance grew.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for goodness, then the Telugu for humility, then say ahaṅkāraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for goodness, then the Telugu for humility, then say *ahaṅkāraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అహంకారం (ahaṅkāraṁ) mean? (\"Arrogance; ego\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

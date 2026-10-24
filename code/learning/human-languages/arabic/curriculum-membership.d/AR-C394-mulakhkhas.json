@@ -1,0 +1,11 @@
+{
+  "id": "AR-C394-mulakhkhas",
+  "pathSegment": "AR-PATH-394-ITQAN394",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-394-ITQAN394",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-315-FEELINGS-HOPES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-315-FEELINGS-HOPES"
+  ],
+  "after": []
+}

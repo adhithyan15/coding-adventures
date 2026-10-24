@@ -1,0 +1,11 @@
+{
+  "id": "TE-C522-hoda",
+  "pathSegment": "TE-PATH-522-VRTTI522",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-522-VRTTI522",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:a7525c254133ef61",
+  "lessonIds": [
+    "MR-C398-tikitghar",
+    "MR-C398-pas",
+    "MR-C398-partava",
+    "MR-C398-gantavya",
+    "MR-C398-rakhun-thevne"
+  ],
+  "tex": "marathi/book/chapters/ch398-at-the-ticket-office.tex"
+}

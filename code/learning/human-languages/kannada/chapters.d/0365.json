@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "A Fight Breaks Out",
+  "label": "ch:ka-a-fight-breaks-out",
+  "canDo": "I can say a fistfight, violence, a prisoner, to shove and a patrol.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C365-gastu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can say a fistfight, violence, a prisoner, to shove and a patrol.",
+    "assesses": [
+      "KA-LEX-C365-HODEDATA365-03",
+      "KA-LEX-C365-HODEDATA365-04",
+      "KA-LEX-C365-HODEDATA365-05"
+    ]
+  }
+}

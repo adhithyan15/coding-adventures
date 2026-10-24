@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C509-kuntu",
+    "language": "kannada",
+    "chapter": 509,
+    "sequence": 26010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1418cf9f69a1b52"
+  },
+  "findings": []
+}

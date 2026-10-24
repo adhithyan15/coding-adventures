@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C315-janta",
+    "language": "hindi",
+    "chapter": 315,
+    "sequence": 17390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9050ca6ba805d824"
+  },
+  "findings": []
+}

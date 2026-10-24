@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:bbf58a4acd5097f5",
+  "lessonIds": [
+    "KA-C482-tore",
+    "KA-C482-dhumuku",
+    "KA-C482-more",
+    "KA-C482-cimmu",
+    "KA-C482-jinugu",
+    "KA-R482-review-476-482"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch482.txt",
+  "json": "kannada/narration/ch482.json",
+  "textHash": "fnv1a64:a902373e438d199d",
+  "jsonHash": "fnv1a64:e835735932f80abe",
+  "findings": []
+}

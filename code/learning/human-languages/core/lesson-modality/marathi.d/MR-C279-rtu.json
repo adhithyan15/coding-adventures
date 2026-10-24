@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C279-rtu",
+    "language": "marathi",
+    "chapter": 279,
+    "sequence": 16130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4c3a2768fa18ea8"
+  },
+  "findings": []
+}

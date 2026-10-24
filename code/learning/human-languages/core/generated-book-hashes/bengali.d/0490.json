@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:2584f0760f342bbe",
+  "lessonIds": [
+    "BN-C490-bichchhed",
+    "BN-C490-bidhoba",
+    "BN-C490-onath",
+    "BN-C490-dottok-neoya",
+    "BN-C490-obosor-neoya"
+  ],
+  "tex": "bengali/book/chapters/ch490-separation-and-loss.tex"
+}

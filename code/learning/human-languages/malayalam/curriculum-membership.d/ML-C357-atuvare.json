@@ -1,0 +1,11 @@
+{
+  "id": "ML-C357-atuvare",
+  "pathSegment": "ML-PATH-357-PINNITU357",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-357-PINNITU357",
+      "order": 2
+    }
+  ]
+}

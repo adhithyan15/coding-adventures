@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "At Last, with My Own Eyes",
+  "label": "ch:ka-at-last-with-my-own-eyes",
+  "canDo": "I can say at last, with one's own eyes, unexpected, a jail and to appear.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C369-kanisiko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can say at last, with one's own eyes, unexpected, a jail and to appear.",
+    "assesses": [
+      "KA-LEX-C369-ANTHU369-03",
+      "KA-LEX-C369-ANTHU369-04",
+      "KA-LEX-C369-ANTHU369-05"
+    ]
+  }
+}

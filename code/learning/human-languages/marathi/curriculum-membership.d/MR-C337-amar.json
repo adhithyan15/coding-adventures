@@ -1,0 +1,11 @@
+{
+  "id": "MR-C337-amar",
+  "pathSegment": "MR-PATH-337-DANTKATHA337",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-337-DANTKATHA337",
+      "order": 2
+    }
+  ]
+}

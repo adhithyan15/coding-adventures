@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C378-intakhaba",
+    "language": "arabic",
+    "chapter": 378,
+    "sequence": 21430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f40fe1fc0b7605e6"
+  },
+  "findings": []
+}

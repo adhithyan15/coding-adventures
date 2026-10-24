@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C360-tupaki",
+    "language": "telugu",
+    "chapter": 360,
+    "sequence": 17780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eeba1c8dae903596"
+  },
+  "findings": []
+}

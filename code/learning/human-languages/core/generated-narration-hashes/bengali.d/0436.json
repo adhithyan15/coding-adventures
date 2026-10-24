@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:66df49a0bde92e6a",
+  "lessonIds": [
+    "BN-C436-ongkur",
+    "BN-C436-mukul",
+    "BN-C436-phota",
+    "BN-C436-gojano",
+    "BN-C436-pota"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch436.txt",
+  "json": "bengali/narration/ch436.json",
+  "textHash": "fnv1a64:05b27cb3569ff0e1",
+  "jsonHash": "fnv1a64:e988125c3f6d8f69",
+  "findings": []
+}

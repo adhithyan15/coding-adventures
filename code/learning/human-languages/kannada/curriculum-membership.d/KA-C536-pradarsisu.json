@@ -1,0 +1,11 @@
+{
+  "id": "KA-C536-pradarsisu",
+  "pathSegment": "KA-PATH-536-NATAKA536",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-536-NATAKA536",
+      "order": 3
+    }
+  ]
+}

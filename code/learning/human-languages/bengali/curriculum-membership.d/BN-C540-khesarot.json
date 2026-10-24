@@ -1,0 +1,11 @@
+{
+  "id": "BN-C540-khesarot",
+  "pathSegment": "BN-PATH-540-MASHUL540",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-540-MASHUL540",
+      "order": 1
+    }
+  ]
+}

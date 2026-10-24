@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:3933e0ead5df9139",
+  "lessonIds": [
+    "ML-C384-jananam",
+    "ML-C384-maranam",
+    "ML-C384-caramam",
+    "ML-C384-atmakatha",
+    "ML-C384-jivacaritram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch384.txt",
+  "json": "malayalam/narration/ch384.json",
+  "textHash": "fnv1a64:e10299aa53cb3f68",
+  "jsonHash": "fnv1a64:5e4181ceb7917401",
+  "findings": []
+}

@@ -1,0 +1,870 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 484,
+  "title": "Hair and Scalp",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9713b06c7612ea1d",
+  "lessons": [
+    {
+      "id": "TA-C484-potuku",
+      "sequence": 27680,
+      "title": "பொடுகு (poṭuku) — dandruff",
+      "headword": "பொடுகு",
+      "romanization": "poṭuku",
+      "gloss": "dandruff",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2021b28611bf3bf1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to scratch an itch, then the Tamil for a mole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பொடுகு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொடுகு — poṭuku — \"dandruff\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குளிர் காலத்தில் எனக்குப் பொடுகு அதிகமாகும். kuḷir kālattil eṉakkup poṭuku atikamākum. In winter my dandruff gets worse."
+            },
+            {
+              "kind": "speech",
+              "text": "A mass noun: no plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of பொடுகு (poṭuku) is not settled; we could not find it in DEDR."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭuku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭuku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭuku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷir kālattil eṉakkup poṭuku atikamākum. — In winter my dandruff gets worse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷir kālattil eṉakkup poṭuku atikamākum.* — In winter my dandruff gets worse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to scratch an itch, then the Tamil for a mole, then say poṭuku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to scratch an itch, then the Tamil for a mole, then say *poṭuku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பொடுகு (poṭuku) mean? (\"Dandruff\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C484-pen",
+      "sequence": 27690,
+      "title": "பேன் (pēṉ) — a louse",
+      "headword": "பேன்",
+      "romanization": "pēṉ",
+      "gloss": "a louse",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8d6f23fae77fccc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a mole, then the Tamil for dandruff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பேன்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பேன் — pēṉ — \"a louse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பள்ளியிலிருந்து வந்த குழந்தையின் தலையில் பேன் இருந்தது. paḷḷiyiliruntu vanta kuḻantaiyiṉ talaiyil pēṉ iruntatu. The child back from school had lice in her hair."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: பேன்கள், pēṉkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural பேன்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பேன் (pēṉ) is native Dravidian (DEDR 4449); Malayalam, Kota and Kannada have the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēṉ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēṉ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḷḷiyiliruntu vanta kuḻantaiyiṉ talaiyil pēṉ iruntatu. — The child back from school had lice in her hair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḷḷiyiliruntu vanta kuḻantaiyiṉ talaiyil pēṉ iruntatu.* — The child back from school had lice in her hair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a mole, then the Tamil for dandruff, then say pēṉ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a mole, then the Tamil for dandruff, then say *pēṉ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பேன் (pēṉ) mean? (\"A louse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C484-valukkai",
+      "sequence": 27700,
+      "title": "வழுக்கை (vaḻukkai) — baldness; a bald patch",
+      "headword": "வழுக்கை",
+      "romanization": "vaḻukkai",
+      "gloss": "baldness; a bald patch",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb51c5387f7d4b3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for dandruff, then the Tamil for a louse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வழுக்கை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வழுக்கை — vaḻukkai — \"baldness; a bald patch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாற்பது வயதில் அப்பாவுக்கு வழுக்கை விழுந்தது. nāṟpatu vayatil appāvukku vaḻukkai viḻuntatu. Father went bald at forty."
+            },
+            {
+              "kind": "speech",
+              "text": "வழுக்கை (vaḻukkai) விழு, to go bald."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of வழுக்கை (vaḻukkai) in this sense is not settled; DEDR lists the word only for the pulp of a tender coconut."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḻukkai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḻukkai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḻukkai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḻukkai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṟpatu vayatil appāvukku vaḻukkai viḻuntatu. — Father went bald at forty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṟpatu vayatil appāvukku vaḻukkai viḻuntatu.* — Father went bald at forty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for dandruff, then the Tamil for a louse, then say vaḻukkai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for dandruff, then the Tamil for a louse, then say *vaḻukkai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வழுக்கை (vaḻukkai) mean? (\"Baldness; a bald patch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C484-utir",
+      "sequence": 27710,
+      "title": "உதிர் (utir) — to fall out; to drop off",
+      "headword": "உதிர்",
+      "romanization": "utir",
+      "gloss": "to fall out; to drop off",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f4c51705a1f5a87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a louse, then the Tamil for baldness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உதிர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உதிர் — utir — \"to fall out; to drop off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கவலையால் அவருடைய முடி உதிர்ந்தது. kavalaiyāl avaruṭaiya muṭi utirntatu. His hair fell out from worry."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): உதிர்ந்தது, utirntatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of hair, leaves and petals: the subject is the thing that falls, so the past is உதிர்ந்தது."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உதிர் (utir) is native Dravidian (DEDR 615), for leaves, fruit, hair and tears."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kavalaiyāl avaruṭaiya muṭi utirntatu. — His hair fell out from worry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kavalaiyāl avaruṭaiya muṭi utirntatu.* — His hair fell out from worry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a louse, then the Tamil for baldness, then say utir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a louse, then the Tamil for baldness, then say *utir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உதிர் (utir) mean? (\"To fall out; to drop off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C484-narai",
+      "sequence": 27720,
+      "title": "நரை (narai) — to turn grey",
+      "headword": "நரை",
+      "romanization": "narai",
+      "gloss": "to turn grey",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bb6f86d4f4ae9dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for baldness, then the Tamil for to fall out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நரை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நரை — narai — \"to turn grey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஐம்பது வயதில் அம்மாவின் முடி நரைத்தது. aimpatu vayatil ammāviṉ muṭi naraittatu. At fifty mother’s hair turned grey."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): நரைத்தது, naraittatu."
+            },
+            {
+              "kind": "speech",
+              "text": "As a noun, grey hair: நரை (narai) முடி."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நரை (narai) is native Dravidian (DEDR 3609), both the grey hair and the greying."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aimpatu vayatil ammāviṉ muṭi naraittatu. — At fifty mother’s hair turned grey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aimpatu vayatil ammāviṉ muṭi naraittatu.* — At fifty mother’s hair turned grey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for baldness, then the Tamil for to fall out, then say narai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for baldness, then the Tamil for to fall out, then say *narai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நரை (narai) mean? (\"To turn grey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R484-review-477-484",
+      "sequence": 27730,
+      "title": "Looking back: from Serious Illness to Hair and Scalp",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Serious Illness to Hair and Scalp",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29252480b0d88c06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for a heart attack and cancer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a heart attack, cancer, a stroke, asthma, jaundice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a heart attack, cancer, a stroke, asthma, jaundice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an organ, a lung, the liver, a kidney, the intestines",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an organ, a lung, the liver, a kidney, the intestines]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a muscle, a nerve, the bosom, a rib, to throb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a muscle, a nerve, the bosom, a rib, to throb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the skull, the jaw, an eyebrow, an eyelid, to blink",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the skull, the jaw, an eyebrow, an eyelid, to blink]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a thigh, the heel, to limp, to trip, to falter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a thigh, the heel, to limp, to trip, to falter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sprain, to be dislocated, to get hurt, to snap, to ooze",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sprain, to be dislocated, to get hurt, to snap, to ooze]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sore, a blister, a pimple, to scratch an itch, a mole",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sore, a blister, a pimple, to scratch an itch, a mole]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dandruff, a louse, baldness, to fall out, to turn grey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dandruff, a louse, baldness, to fall out, to turn grey]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A heart attack? (மாரடைப்பு, māraṭaippu.) Cancer? (புற்றுநோய், puṟṟunōy.) A stroke? (பக்கவாதம், pakkavātam.) Asthma? (ஆஸ்துமா, āstumā.) Jaundice? (காமாலை, kāmālai.) An organ? (உறுப்பு, uṟuppu.) A lung? (நுரையீரல், nuraiyīral.) The liver? (கல்லீரல், kallīral.) A kidney? (சிறுநீரகம், ciṟunīrakam.) The intestines? (குடல், kuṭal.) A muscle? (தசை, tacai.) A nerve? (நரம்பு, narampu.) The bosom? (நெஞ்சு, neñcu.) A rib? (விலா, vilā.) To throb? (துடி, tuṭi.) The skull? (மண்டை, maṇṭai.) The jaw? (தாடை, tāṭai.) An eyebrow? (புருவம், puruvam.) An eyelid? (இமை, imai.) To blink? (சிமிட்டு, cimiṭṭu.) A thigh? (தொடை, toṭai.) The heel? (குதிகால், kutikāl.) To limp? (நொண்டு, noṇṭu.) To trip? (இடறு, iṭaṟu.) To falter? (தடுமாறு, taṭumāṟu.) A sprain? (சுளுக்கு, cuḷukku.) To be dislocated? (பிசகு, picaku.) To get hurt? (அடிபடு, aṭipaṭu.) To snap? (முறி, muṟi.) To ooze? (கசி, kaci.) A sore? (புண், puṇ.) A blister? (கொப்புளம், koppuḷam.) A pimple? (பரு, paru.) To scratch an itch? (சொறி, coṟi.) A mole? (மச்சம், maccam.) Dandruff? (பொடுகு, poṭuku.) A louse? (பேன், pēṉ.) Baldness? (வழுக்கை, vaḻukkai.) To fall out? (உதிர், utir.) To turn grey? (நரை, narai.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "A Crash on the Highway",
+  "label": "ch:ka-a-crash-on-the-highway",
+  "canDo": "I can say to collide, an eyewitness, damage, the deceased and a mishap.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C330-avaghada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can say to collide, an eyewitness, damage, the deceased and a mishap.",
+    "assesses": [
+      "KA-LEX-C330-DIKKI330-03",
+      "KA-LEX-C330-DIKKI330-04",
+      "KA-LEX-C330-DIKKI330-05"
+    ]
+  }
+}

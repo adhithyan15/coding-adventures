@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:38e579300c2b285f",
+  "lessonIds": [
+    "HI-C340-upanyas",
+    "HI-C340-nayak",
+    "HI-C340-patra",
+    "HI-C340-adhyay",
+    "HI-C340-anjam"
+  ],
+  "tex": "hindi/book/chapters/ch340-a-novel.tex"
+}

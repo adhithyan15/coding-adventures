@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C463-bachal",
+    "language": "bengali",
+    "chapter": 463,
+    "sequence": 28300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a65a502c006d8b63"
+  },
+  "findings": []
+}

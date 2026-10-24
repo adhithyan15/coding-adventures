@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C498-sravu",
+    "language": "malayalam",
+    "chapter": 498,
+    "sequence": 24920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3cc404fa796492c"
+  },
+  "findings": []
+}

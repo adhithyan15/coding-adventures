@@ -1,0 +1,11 @@
+{
+  "id": "KA-C515-kuruda",
+  "pathSegment": "KA-PATH-515-KURUDA515",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-515-KURUDA515",
+      "order": 0
+    }
+  ]
+}

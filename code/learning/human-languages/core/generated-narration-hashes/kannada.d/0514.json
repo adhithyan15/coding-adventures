@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:3430535d9bc5ce69",
+  "lessonIds": [
+    "KA-C514-pathya",
+    "KA-C514-jivasatva",
+    "KA-C514-soragu",
+    "KA-C514-dani",
+    "KA-C514-ayusya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch514.txt",
+  "json": "kannada/narration/ch514.json",
+  "textHash": "fnv1a64:c8b6de792c24dd1d",
+  "jsonHash": "fnv1a64:ea18b953894584a4",
+  "findings": []
+}

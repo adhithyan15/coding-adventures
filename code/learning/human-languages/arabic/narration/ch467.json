@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 467,
+  "title": "Protecting nature",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:81a82728a41fa4ba",
+  "lessons": [
+    {
+      "id": "AR-C467-mahmiyya",
+      "sequence": 26050,
+      "title": "محمية (maḥmiyya) — a nature reserve",
+      "headword": "محمية",
+      "romanization": "maḥmiyya",
+      "gloss": "a nature reserve",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:192efb943579febc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a sand dune, then the Arabic for to choke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: محمية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "محمية — maḥmiyya — \"a nature reserve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "زرنا محمية للطيور على الساحل. zurnā maḥmiyya li-ṭ-ṭuyūr ʿalā as-sāḥil. We visited a bird reserve on the coast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "محمية (maḥmiyya) is built on the native Arabic root ḥ-m-y, \"to protect, to defend\" (Lane). It is a passive participle: a protected place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḥmiyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḥmiyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḥmiyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḥmiyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zurnā maḥmiyya li-ṭ-ṭuyūr ʿalā as-sāḥil. — We visited a bird reserve on the coast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zurnā maḥmiyya li-ṭ-ṭuyūr ʿalā as-sāḥil.* — We visited a bird reserve on the coast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a sand dune, then the Arabic for to choke, then say maḥmiyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a sand dune, then the Arabic for to choke, then say *maḥmiyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does محمية (maḥmiyya) mean? (\"A nature reserve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C467-muhaddad",
+      "sequence": 26060,
+      "title": "مهدد (muhaddad) — endangered; threatened",
+      "headword": "مهدد",
+      "romanization": "muhaddad",
+      "gloss": "endangered; threatened",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2360d5bd85dfe32d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to choke, then the Arabic for a nature reserve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مهدد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مهدد — muhaddad — \"endangered; threatened\"."
+            },
+            {
+              "kind": "speech",
+              "text": "النمر حيوان مهدد في هذه المنطقة. an-namir ḥayawān muhaddad fī hādhihi al-minṭaqa. The tiger is an endangered animal in this area."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مهدد (muhaddad) is built on the native Arabic root h-d-d, \"to threaten; to pull down\" (Lane). It is the Form II passive participle, \"threatened\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muhaddad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muhaddad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muhaddad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muhaddad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an-namir ḥayawān muhaddad fī hādhihi al-minṭaqa. — The tiger is an endangered animal in this area.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *an-namir ḥayawān muhaddad fī hādhihi al-minṭaqa.* — The tiger is an endangered animal in this area.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to choke, then the Arabic for a nature reserve, then say muhaddad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to choke, then the Arabic for a nature reserve, then say *muhaddad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مهدد (muhaddad) mean? (\"Endangered; threatened\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C467-hafaza",
+      "sequence": 26070,
+      "title": "حافظ (ḥāfaẓa) — to protect; to preserve",
+      "headword": "حافظ",
+      "romanization": "ḥāfaẓa",
+      "gloss": "to protect; to preserve",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdfde33fd684d716",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a nature reserve, then the Arabic for endangered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حافظ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حافظ — ḥāfaẓa — \"to protect; to preserve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يحافظ الناس هنا على الغابة. yuḥāfiẓu an-nās hunā ʿalā al-ghāba. People here look after the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحافظ, yuḥāfiẓ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes ʿalā: ḥāfaẓa ʿalā, \"to take care of\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حافظ (ḥāfaẓa) is built on the native Arabic root ḥ-f-ẓ, \"to guard, to keep\" (Lane). It is Form III."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥāfaẓa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥāfaẓa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥāfaẓa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥāfaẓa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuḥāfiẓu an-nās hunā ʿalā al-ghāba. — People here look after the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuḥāfiẓu an-nās hunā ʿalā al-ghāba.* — People here look after the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a nature reserve, then the Arabic for endangered, then say ḥāfaẓa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a nature reserve, then the Arabic for endangered, then say *ḥāfaẓa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حافظ (ḥāfaẓa) mean? (\"To protect; to preserve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C467-inqarada",
+      "sequence": 26080,
+      "title": "انقرض (inqaraḍa) — to die out; to become extinct",
+      "headword": "انقرض",
+      "romanization": "inqaraḍa",
+      "gloss": "to die out; to become extinct",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4aed5e67904bb5ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for endangered, then the Arabic for to protect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انقرض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انقرض — inqaraḍa — \"to die out; to become extinct\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انقرض هذا الحيوان قبل قرون. inqaraḍa hādhā al-ḥayawān qabla qurūn. This animal died out centuries ago."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينقرض, yanqariḍ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انقرض (inqaraḍa) is built on the native Arabic root q-r-ḍ, \"to cut, to gnaw\" (Lane). It is Form VII, \"to be cut off\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inqaraḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inqaraḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inqaraḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inqaraḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inqaraḍa hādhā al-ḥayawān qabla qurūn. — This animal died out centuries ago.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inqaraḍa hādhā al-ḥayawān qabla qurūn.* — This animal died out centuries ago.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for endangered, then the Arabic for to protect, then say inqaraḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for endangered, then the Arabic for to protect, then say *inqaraḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انقرض (inqaraḍa) mean? (\"To die out; to become extinct\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C467-ahdara-waste",
+      "sequence": 26090,
+      "title": "أهدر (ahdara) — to squander; to waste",
+      "headword": "أهدر",
+      "romanization": "ahdara",
+      "gloss": "to squander; to waste",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:893f75f2c26dbd8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to protect, then the Arabic for to die out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أهدر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أهدر — ahdara — \"to squander; to waste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أهدر المصنع ماء كثيرا. ahdara al-maṣnaʿ māʾan kathīran. The factory wasted a lot of water."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يهدر, yuhdir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أهدر (ahdara) is built on the native Arabic root h-d-r, \"to be of no account\" (Lane). It is Form IV, \"to treat as worthless\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahdara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahdara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahdara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahdara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahdara al-maṣnaʿ māʾan kathīran. — The factory wasted a lot of water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahdara al-maṣnaʿ māʾan kathīran.* — The factory wasted a lot of water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to protect, then the Arabic for to die out, then say ahdara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to protect, then the Arabic for to die out, then say *ahdara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أهدر (ahdara) mean? (\"To squander; to waste\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

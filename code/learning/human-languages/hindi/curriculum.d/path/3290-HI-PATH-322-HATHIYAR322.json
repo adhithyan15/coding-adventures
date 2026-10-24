@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-322-HATHIYAR322",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "HI-EXT-322-HATHIYAR322"
+  ],
+  "after": []
+}

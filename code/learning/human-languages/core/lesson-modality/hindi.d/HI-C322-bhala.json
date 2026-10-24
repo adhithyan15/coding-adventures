@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C322-bhala",
+    "language": "hindi",
+    "chapter": 322,
+    "sequence": 17760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6aa3392cebbea230"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C454-ambiga",
+  "pathSegment": "KA-PATH-454-TEPPA454",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-454-TEPPA454",
+      "order": 1
+    }
+  ]
+}

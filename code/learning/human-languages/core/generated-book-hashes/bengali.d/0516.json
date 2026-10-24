@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:45686f47b2e9c786",
+  "lessonIds": [
+    "BN-C516-binodon",
+    "BN-C516-phursot",
+    "BN-C516-saikling",
+    "BN-C516-mogno",
+    "BN-C516-shoukhin"
+  ],
+  "tex": "bengali/book/chapters/ch516-free-time.tex"
+}

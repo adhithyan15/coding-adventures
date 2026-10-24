@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-279-STORY-ORDER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "MR-EXT-279-STORY-ORDER"
+  ],
+  "after": []
+}

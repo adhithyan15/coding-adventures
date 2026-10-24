@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:61032cd19a825471",
+  "lessonIds": [
+    "AR-C436-mirab",
+    "AR-C436-kushk",
+    "AR-C436-shubbak",
+    "AR-C436-hammal",
+    "AR-C436-tanaqqala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch436.txt",
+  "json": "arabic/narration/ch436.json",
+  "textHash": "fnv1a64:b8c628a7b8d1dfe2",
+  "jsonHash": "fnv1a64:6930cd17b9bd14b8",
+  "findings": []
+}

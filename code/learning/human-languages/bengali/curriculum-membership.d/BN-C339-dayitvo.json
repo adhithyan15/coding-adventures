@@ -1,0 +1,11 @@
+{
+  "id": "BN-C339-dayitvo",
+  "pathSegment": "BN-PATH-339-ODHIKAR339",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-339-ODHIKAR339",
+      "order": 1
+    }
+  ]
+}

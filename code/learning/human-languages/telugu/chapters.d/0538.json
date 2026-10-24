@@ -1,0 +1,19 @@
+{
+  "chapter": 538,
+  "title": "Music",
+  "label": "ch:te-music",
+  "canDo": "I can talk about notes, voices and the instruments people play.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C538-sannayi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can talk about notes, voices and the instruments people play.",
+    "assesses": [
+      "TE-LEX-C538-SANGITAM538-03",
+      "TE-LEX-C538-SANGITAM538-04",
+      "TE-LEX-C538-SANGITAM538-05"
+    ]
+  }
+}

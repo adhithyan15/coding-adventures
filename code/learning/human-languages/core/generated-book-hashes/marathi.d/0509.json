@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:377c4d6df294122d",
+  "lessonIds": [
+    "MR-C509-padonnati",
+    "MR-C509-pad",
+    "MR-C509-varistha",
+    "MR-C509-kanistha",
+    "MR-C509-jhatne"
+  ],
+  "tex": "marathi/book/chapters/ch509-moving-up.tex"
+}

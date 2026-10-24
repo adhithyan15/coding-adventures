@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C416-kisti",
+    "language": "bengali",
+    "chapter": 416,
+    "sequence": 25640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:036b6c0676ceeeea"
+  },
+  "findings": []
+}

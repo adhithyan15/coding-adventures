@@ -1,0 +1,11 @@
+{
+  "id": "TA-C319-alaippital",
+  "pathSegment": "TA-PATH-319-AANDU319",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-319-AANDU319",
+      "order": 4
+    }
+  ]
+}

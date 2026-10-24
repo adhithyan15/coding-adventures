@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "How It Began and Ended",
+  "label": "ch:te-how-it-began-and-ended",
+  "canDo": "I can say a response, a start, an ending, an episode and by chance.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C376-yadrcchikanga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can say a response, a start, an ending, an episode and by chance.",
+    "assesses": [
+      "TE-LEX-C376-SPANDANA376-03",
+      "TE-LEX-C376-SPANDANA376-04",
+      "TE-LEX-C376-SPANDANA376-05"
+    ]
+  }
+}

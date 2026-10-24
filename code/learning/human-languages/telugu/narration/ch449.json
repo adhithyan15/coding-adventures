@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 449,
+  "title": "Roads Blocked",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1454c89dcd6d0b42",
+  "lessons": [
+    {
+      "id": "TE-C449-addanki",
+      "sequence": 22560,
+      "title": "అడ్డంకి (aḍḍaṅki) — an obstacle; a hindrance",
+      "headword": "అడ్డంకి",
+      "romanization": "aḍḍaṅki",
+      "gloss": "an obstacle; a hindrance",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d0698e7b41eba26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to take a turn, then the Telugu for a shortcut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అడ్డంకి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అడ్డంకి — aḍḍaṅki — \"an obstacle; a hindrance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రోడ్డు మీద పడిన చెట్టు పెద్ద అడ్డంకి అయింది. rōḍḍu mīda paḍina ceṭṭu pedda aḍḍaṅki ayindi. The tree that fell on the road became a big obstacle."
+            },
+            {
+              "kind": "speech",
+              "text": "అడ్డు, a hindrance, + -ంకి. It goes with plans too: పనికి అడ్డంకి (aḍḍaṅki), an obstacle to the work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అడ్డంకి (aḍḍaṅki) is native Dravidian, built on అడ్డు, \"to hinder; a hindrance, a cross-bar\" (DEDR 83), with Tamil aṭai, \"to block\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḍḍaṅki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḍḍaṅki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḍḍaṅki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḍḍaṅki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rōḍḍu mīda paḍina ceṭṭu pedda aḍḍaṅki ayindi. — The tree that fell on the road became a big obstacle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rōḍḍu mīda paḍina ceṭṭu pedda aḍḍaṅki ayindi.* — The tree that fell on the road became a big obstacle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to take a turn, then the Telugu for a shortcut, then say aḍḍaṅki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to take a turn, then the Telugu for a shortcut, then say *aḍḍaṅki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అడ్డంకి (aḍḍaṅki) mean? (\"An obstacle; a hindrance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C449-mallimpu",
+      "sequence": 22570,
+      "title": "మళ్ళింపు (maḷḷimpu) — a diversion; a detour",
+      "headword": "మళ్ళింపు",
+      "romanization": "maḷḷimpu",
+      "gloss": "a diversion; a detour",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1fd9218a9e9f99a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a shortcut, then the Telugu for an obstacle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మళ్ళింపు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మళ్ళింపు — maḷḷimpu — \"a diversion; a detour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వంతెన పనుల వల్ల రోడ్డు మీద మళ్ళింపు ఉంది. vantena panula valla rōḍḍu mīda maḷḷimpu undi. There is a diversion on the road because of work on the bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of మళ్ళించు, to turn something aside. మళ్ళీ, again, comes from the same root: to turn back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మళ్ళింపు (maḷḷimpu) is native Dravidian, the noun of మళ్ళించు, \"to turn aside\", from మళ్ళు, \"to turn back, to return\" (DEDR 4761), the root of మళ్ళీ, \"again\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷḷimpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷḷimpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷḷimpu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷḷimpu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vantena panula valla rōḍḍu mīda maḷḷimpu undi. — There is a diversion on the road because of work on the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vantena panula valla rōḍḍu mīda maḷḷimpu undi.* — There is a diversion on the road because of work on the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a shortcut, then the Telugu for an obstacle, then say maḷḷimpu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a shortcut, then the Telugu for an obstacle, then say *maḷḷimpu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మళ్ళింపు (maḷḷimpu) mean? (\"A diversion; a detour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C449-nilicipovu",
+      "sequence": 22580,
+      "title": "నిలిచిపోవు (nilicipōvu) — to stop dead; to come to a halt",
+      "headword": "నిలిచిపోవు",
+      "romanization": "nilicipōvu",
+      "gloss": "to stop dead; to come to a halt",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ee67231c7d0bad1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an obstacle, then the Telugu for a diversion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిలిచిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిలిచిపోవు — nilicipōvu — \"to stop dead; to come to a halt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వరద వల్ల రైళ్ళు నిలిచిపోయాయి. varada valla raiḷḷu nilicipōyāyi. Because of the flood the trains stopped running."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): నిలిచిపోయాను, nilicipōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of traffic, a service or work that stops and stays stopped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిలిచిపోవు (nilicipōvu) is native Dravidian: నిలుచు, \"to stand, to stop, to stay\" (DEDR 3675), with పోవు, \"to go\" (DEDR 4572), which marks a change that has set in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilicipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilicipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilicipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilicipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varada valla raiḷḷu nilicipōyāyi. — Because of the flood the trains stopped running.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varada valla raiḷḷu nilicipōyāyi.* — Because of the flood the trains stopped running.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an obstacle, then the Telugu for a diversion, then say nilicipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an obstacle, then the Telugu for a diversion, then say *nilicipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిలిచిపోవు (nilicipōvu) mean? (\"To stop dead; to come to a halt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C449-stambhincu",
+      "sequence": 22590,
+      "title": "స్తంభించు (stambhiñcu) — to seize up; to come to a standstill",
+      "headword": "స్తంభించు",
+      "romanization": "stambhiñcu",
+      "gloss": "to seize up; to come to a standstill",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec00429f4793f931",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a diversion, then the Telugu for to stop dead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్తంభించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్తంభించు — stambhiñcu — \"to seize up; to come to a standstill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "భారీ వర్షంతో నగరంలో ట్రాఫిక్ స్తంభించింది. bhārī varṣantō nagaraṁlō ṭrāphik stambhiñcindi. With the heavy rain the traffic in the city came to a standstill."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): స్తంభించింది, stambhiñcindi."
+            },
+            {
+              "kind": "speech",
+              "text": "స్తంభం is a pillar: a road that stands still like a pillar. The news uses it of traffic and of normal life. Its subject is a thing, so the past shown is the third person: స్తంభించింది, it came to a standstill."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్తంభించు (stambhiñcu) is built from Sanskrit stambh, \"to become stiff, to be fixed\", whose noun stambha is \"a pillar, a post\" (CDIAL 13682), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stambhiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stambhiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stambhiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stambhiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhārī varṣantō nagaraṁlō ṭrāphik stambhiñcindi. — With the heavy rain the traffic in the city came to a standstill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhārī varṣantō nagaraṁlō ṭrāphik stambhiñcindi.* — With the heavy rain the traffic in the city came to a standstill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a diversion, then the Telugu for to stop dead, then say stambhiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a diversion, then the Telugu for to stop dead, then say *stambhiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్తంభించు (stambhiñcu) mean? (\"To seize up; to come to a standstill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C449-musukupovu",
+      "sequence": 22600,
+      "title": "మూసుకుపోవు (mūsukupōvu) — to get blocked; to close up",
+      "headword": "మూసుకుపోవు",
+      "romanization": "mūsukupōvu",
+      "gloss": "to get blocked; to close up",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4155ae2cda450145",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to stop dead, then the Telugu for to seize up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మూసుకుపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మూసుకుపోవు — mūsukupōvu — \"to get blocked; to close up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చెత్త వల్ల కాలువ మూసుకుపోయింది. cetta valla kāluva mūsukupōyindi. The canal got blocked with rubbish."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): మూసుకుపోయింది, mūsukupōyindi."
+            },
+            {
+              "kind": "speech",
+              "text": "మూయు, to close, + -కో + పోవు. Its subject is a thing, so the past shown is the third person: మూసుకుపోయింది, it got blocked. A blocked nose is ముక్కు మూసుకుపోయింది."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మూసుకుపోవు (mūsukupōvu) is native Dravidian: మూయు, \"to cover, to shut\" (DEDR 4915), with the self-directed -కో and పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūsukupōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūsukupōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūsukupōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūsukupōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cetta valla kāluva mūsukupōyindi. — The canal got blocked with rubbish.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cetta valla kāluva mūsukupōyindi.* — The canal got blocked with rubbish.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to stop dead, then the Telugu for to seize up, then say mūsukupōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to stop dead, then the Telugu for to seize up, then say *mūsukupōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మూసుకుపోవు (mūsukupōvu) mean? (\"To get blocked; to close up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

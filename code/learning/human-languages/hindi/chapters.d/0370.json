@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "The Village Meeting",
+  "label": "ch:hi-the-village-meeting",
+  "canDo": "I can say who decided what at a meeting.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C370-taykarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can say who decided what at a meeting.",
+    "assesses": [
+      "HI-LEX-C370-SABHA370-03",
+      "HI-LEX-C370-SABHA370-04",
+      "HI-LEX-C370-SABHA370-05"
+    ]
+  }
+}

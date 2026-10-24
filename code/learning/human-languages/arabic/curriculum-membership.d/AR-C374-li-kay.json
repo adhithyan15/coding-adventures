@@ -1,0 +1,11 @@
+{
+  "id": "AR-C374-li-kay",
+  "pathSegment": "AR-PATH-374-RABT374",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-374-RABT374",
+      "order": 4
+    }
+  ]
+}

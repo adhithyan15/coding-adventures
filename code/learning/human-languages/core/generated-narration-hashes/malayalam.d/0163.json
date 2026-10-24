@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 163,
-  "sourceHash": "fnv1a64:0302dda1027caafd",
+  "sourceHash": "fnv1a64:55fee87fdc139e6f",
   "lessonIds": [
     "ML-C163-purikam",
     "ML-C163-kaivella",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch163.txt",
   "json": "malayalam/narration/ch163.json",
   "textHash": "fnv1a64:6c43cc2bacca9037",
-  "jsonHash": "fnv1a64:248feae3312bf0f9",
+  "jsonHash": "fnv1a64:3dc45b361092d008",
   "findings": []
 }

@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 465,
+  "title": "Departures and Arrivals",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:69fc30df07594b37",
+  "lessons": [
+    {
+      "id": "ML-C465-purappetal",
+      "sequence": 23200,
+      "title": "പുറപ്പെടൽ (puṟappeṭal) — departure",
+      "headword": "പുറപ്പെടൽ",
+      "romanization": "puṟappeṭal",
+      "gloss": "departure",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6427230d05d27b78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an inspection, then the Malayalam for a foreigner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പുറപ്പെടൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുറപ്പെടൽ — puṟappeṭal — \"departure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വിമാനത്തിന്റെ പുറപ്പെടൽ രാത്രി പത്ത് മണിക്കാണ്. vimānattinṟe puṟappeṭal rātri pattŭ maṇikkāṇŭ. The flight's departure is at ten at night."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of പുറപ്പെടുക, to set out: the ending -അൽ turns a verb into a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുറപ്പെടൽ (puṟappeṭal) is native Malayalam, the verbal noun of പുറപ്പെടുക, to set out, which is built on പുറം, the outside (DEDR 4333), with the ending -അൽ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṟappeṭal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṟappeṭal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṟappeṭal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṟappeṭal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimānattinṟe puṟappeṭal rātri pattŭ maṇikkāṇŭ. — The flight's departure is at ten at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimānattinṟe puṟappeṭal rātri pattŭ maṇikkāṇŭ.* — The flight's departure is at ten at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an inspection, then the Malayalam for a foreigner, then say puṟappeṭal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an inspection, then the Malayalam for a foreigner, then say *puṟappeṭal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പുറപ്പെടൽ (puṟappeṭal) mean? (\"Departure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C465-varavu",
+      "sequence": 23210,
+      "title": "വരവ് (varavŭ) — arrival; coming",
+      "headword": "വരവ്",
+      "romanization": "varavŭ",
+      "gloss": "arrival; coming",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:810962c47acc7c7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a foreigner, then the Malayalam for departure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വരവ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വരവ് — varavŭ — \"arrival; coming\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അമ്മയുടെ വരവിനായി കുട്ടികൾ കാത്തിരുന്നു. ammayuṭe varavināyi kuṭṭikaḷ kāttirunnu. The children waited for their mother's arrival."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of വരുക, to come. Its opposite is പോക്ക്, a going."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വരവ് (varavŭ) is native Dravidian, the noun of വരുക, to come (DEDR 5270)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varavŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varavŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varavŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varavŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammayuṭe varavināyi kuṭṭikaḷ kāttirunnu. — The children waited for their mother's arrival.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammayuṭe varavināyi kuṭṭikaḷ kāttirunnu.* — The children waited for their mother's arrival.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a foreigner, then the Malayalam for departure, then say varavŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a foreigner, then the Malayalam for departure, then say *varavŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വരവ് (varavŭ) mean? (\"Arrival; coming\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C465-kalatamasam",
+      "sequence": 23220,
+      "title": "കാലതാമസം (kālatāmasaṁ) — a delay",
+      "headword": "കാലതാമസം",
+      "romanization": "kālatāmasaṁ",
+      "gloss": "a delay",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63ab3e260034c890",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for departure, then the Malayalam for arrival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കാലതാമസം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാലതാമസം — kālatāmasaṁ — \"a delay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴ കാരണം തീവണ്ടിക്ക് രണ്ട് മണിക്കൂർ കാലതാമസം ഉണ്ടായി. maḻa kāraṇaṁ tīvaṇṭikkŭ raṇṭŭ maṇikkūr kālatāmasaṁ uṇṭāyi. Because of the rain the train had a two-hour delay."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word, common in announcements; in speech people say വൈകി, it is late."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാലതാമസം (kālatāmasaṁ) is a Malayalam compound built from കാലം, time, and താമസം, delay, both borrowed from Sanskrit: kāla, time, and tāmasa, \"dark, sluggish\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālatāmasaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālatāmasaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālatāmasaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālatāmasaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻa kāraṇaṁ tīvaṇṭikkŭ raṇṭŭ maṇikkūr kālatāmasaṁ uṇṭāyi. — Because of the rain the train had a two-hour delay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻa kāraṇaṁ tīvaṇṭikkŭ raṇṭŭ maṇikkūr kālatāmasaṁ uṇṭāyi.* — Because of the rain the train had a two-hour delay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for departure, then the Malayalam for arrival, then say kālatāmasaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for departure, then the Malayalam for arrival, then say *kālatāmasaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കാലതാമസം (kālatāmasaṁ) mean? (\"A delay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C465-kattunilkkuka",
+      "sequence": 23230,
+      "title": "കാത്തുനിൽക്കുക (kāttunilkkuka) — to wait standing",
+      "headword": "കാത്തുനിൽക്കുക",
+      "romanization": "kāttunilkkuka",
+      "gloss": "to wait standing",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef92c50e288915ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for arrival, then the Malayalam for a delay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കാത്തുനിൽക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാത്തുനിൽക്കുക — kāttunilkkuka — \"to wait standing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴയത്ത് ഞങ്ങൾ ബസിനായി അര മണിക്കൂർ കാത്തുനിന്നു. maḻayattŭ ñaṅṅaḷ basināyi ara maṇikkūr kāttuninnu. We stood waiting for the bus in the rain for half an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കാത്തുനിന്നു, kāttuninnu."
+            },
+            {
+              "kind": "speech",
+              "text": "കാത്തിരിക്കുക is to wait in general, often sitting; കാത്തുനിൽക്കുക (kāttunilkkuka) is to wait on your feet, at a stop or a gate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാത്തുനിൽക്കുക (kāttunilkkuka) is a native Dravidian compound of കാക്കുക, to keep watch or wait (DEDR 1416), and നിൽക്കുക, to stand (DEDR 3675)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāttunilkkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāttunilkkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāttunilkkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāttunilkkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻayattŭ ñaṅṅaḷ basināyi ara maṇikkūr kāttuninnu. — We stood waiting for the bus in the rain for half an hour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻayattŭ ñaṅṅaḷ basināyi ara maṇikkūr kāttuninnu.* — We stood waiting for the bus in the rain for half an hour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for arrival, then the Malayalam for a delay, then say kāttunilkkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for arrival, then the Malayalam for a delay, then say *kāttunilkkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കാത്തുനിൽക്കുക (kāttunilkkuka) mean? (\"To wait standing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C465-otikkayaruka",
+      "sequence": 23240,
+      "title": "ഓടിക്കയറുക (ōṭikkayaṟuka) — to run and board",
+      "headword": "ഓടിക്കയറുക",
+      "romanization": "ōṭikkayaṟuka",
+      "gloss": "to run and board",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:014c4ff9a536d59e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a delay, then the Malayalam for to wait standing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഓടിക്കയറുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓടിക്കയറുക — ōṭikkayaṟuka — \"to run and board\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തീവണ്ടി നീങ്ങുന്നതിന് മുൻപ് അവൻ ഓടിക്കയറി. tīvaṇṭi nīṅṅunnatinŭ munpŭ avan ōṭikkayaṟi. He ran and got on before the train moved off."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഓടിക്കയറി, ōṭikkayaṟi."
+            },
+            {
+              "kind": "speech",
+              "text": "ഓടി, having run, plus കയറുക, to get in. The vehicle takes -ഇൽ: ബസിൽ ഓടിക്കയറി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓടിക്കയറുക (ōṭikkayaṟuka) is a native Dravidian compound of ഓടുക, to run (DEDR 1041), and കയറുക, to climb in (DEDR 1255)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōṭikkayaṟuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōṭikkayaṟuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōṭikkayaṟuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōṭikkayaṟuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīvaṇṭi nīṅṅunnatinŭ munpŭ avan ōṭikkayaṟi. — He ran and got on before the train moved off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīvaṇṭi nīṅṅunnatinŭ munpŭ avan ōṭikkayaṟi.* — He ran and got on before the train moved off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a delay, then the Malayalam for to wait standing, then say ōṭikkayaṟuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a delay, then the Malayalam for to wait standing, then say *ōṭikkayaṟuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഓടിക്കയറുക (ōṭikkayaṟuka) mean? (\"To run and board\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:926d3f0116d9a414",
+  "lessonIds": [
+    "MR-C306-kramasah",
+    "MR-C306-anekda",
+    "MR-C306-adhunmadhun",
+    "MR-C306-apoap",
+    "MR-C306-nuktac"
+  ],
+  "tex": "marathi/book/chapters/ch306-bit-by-bit.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:e5adcce7f8cdd896",
+  "lessonIds": [
+    "TA-C427-kalanilai",
+    "TA-C427-veppam",
+    "TA-C427-veppanilai",
+    "TA-C427-koluttu",
+    "TA-C427-pulunku"
+  ],
+  "tex": "tamil/book/chapters/ch427-climate-and-heat.tex"
+}

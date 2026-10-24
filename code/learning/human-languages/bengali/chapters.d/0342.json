@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "In Court",
+  "label": "ch:bn-in-court",
+  "canDo": "I can say who heard a case and what was decided.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C342-mimangsa-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can say who heard a case and what was decided.",
+    "assesses": [
+      "BN-LEX-C342-BICHAR342-03",
+      "BN-LEX-C342-BICHAR342-04",
+      "BN-LEX-C342-BICHAR342-05"
+    ]
+  }
+}

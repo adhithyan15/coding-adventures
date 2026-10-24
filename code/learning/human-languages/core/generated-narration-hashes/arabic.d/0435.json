@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:588c765532274dde",
+  "lessonIds": [
+    "AR-C435-masar",
+    "AR-C435-ujra",
+    "AR-C435-ishtirak",
+    "AR-C435-mamarr-mushah",
+    "AR-C435-istadara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch435.txt",
+  "json": "arabic/narration/ch435.json",
+  "textHash": "fnv1a64:2f4f338778f0e8a8",
+  "jsonHash": "fnv1a64:c5f7c5e4a7560aa1",
+  "findings": []
+}

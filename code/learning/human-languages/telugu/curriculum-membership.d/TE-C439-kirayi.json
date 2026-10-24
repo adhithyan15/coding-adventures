@@ -1,0 +1,11 @@
+{
+  "id": "TE-C439-kirayi",
+  "pathSegment": "TE-PATH-439-BOGI439",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-439-BOGI439",
+      "order": 4
+    }
+  ]
+}

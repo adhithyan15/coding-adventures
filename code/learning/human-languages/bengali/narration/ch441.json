@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 441,
+  "title": "A Sudden Fright",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9b9681bdc0c00bb9",
+  "lessons": [
+    {
+      "id": "BN-C441-atongko",
+      "sequence": 27150,
+      "title": "আতঙ্ক (ātôngkô) — terror; panic",
+      "headword": "আতঙ্ক",
+      "romanization": "ātôngkô",
+      "gloss": "terror; panic",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0814b11503a9f14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to be surprised, then the Bengali for to be startled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আতঙ্ক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আতঙ্ক — ātôngkô — \"terror; panic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আগুন দেখে গ্রামে আতঙ্ক ছড়াল। āgun dekhe grāme ātôngkô chhôṛālô. Seeing the fire, terror spread through the village."
+            },
+            {
+              "kind": "speech",
+              "text": "আতঙ্কে, in terror: আতঙ্কে কাঁপা, to shake with terror."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আতঙ্ক (ātôngkô) is a tatsama, Sanskrit ātaṅka, which Monier-Williams gives for sickness and pain and also for fear; Bengali keeps the fear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātôngkô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātôngkô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātôngkô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātôngkô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgun dekhe grāme ātôngkô chhôṛālô. — Seeing the fire, terror spread through the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgun dekhe grāme ātôngkô chhôṛālô.* — Seeing the fire, terror spread through the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to be surprised, then the Bengali for to be startled, then say ātôngkô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to be surprised, then the Bengali for to be startled, then say *ātôngkô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আতঙ্ক (ātôngkô) mean? (\"Terror; panic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C441-atke-otha",
+      "sequence": 27160,
+      "title": "আঁতকে ওঠা (ā̃tke oṭhā) — to recoil in fright; to gasp with alarm",
+      "headword": "আঁতকে ওঠা",
+      "romanization": "ā̃tke oṭhā",
+      "gloss": "to recoil in fright; to gasp with alarm",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1cd2ade5fb1e1835",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to be startled, then the Bengali for terror."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আঁতকে ওঠা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আঁতকে ওঠা — ā̃tke oṭhā — \"to recoil in fright; to gasp with alarm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সাপটা দেখে মীরা আঁতকে উঠল। sāpṭā dekhe mīrā ā̃tke uṭhlô. Mira recoiled in fright at the sight of the snake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি খবর শুনে আঁতকে উঠলেন, tini khôbôr shune ā̃tke uṭhlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আঁতকে ওঠা (ā̃tke oṭhā) is ā̃tke, the -এ form of a verb of sudden fright whose origin is not settled, with oṭhā, \"to rise\" (CDIAL 1793)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā̃tke oṭhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā̃tke oṭhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā̃tke oṭhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā̃tke oṭhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāpṭā dekhe mīrā ā̃tke uṭhlô. — Mira recoiled in fright at the sight of the snake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāpṭā dekhe mīrā ā̃tke uṭhlô.* — Mira recoiled in fright at the sight of the snake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to be startled, then the Bengali for terror, then say ā̃tke oṭhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to be startled, then the Bengali for terror, then say *ā̃tke oṭhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আঁতকে ওঠা (ā̃tke oṭhā) mean? (\"To recoil in fright; to gasp with alarm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C441-shiure-otha",
+      "sequence": 27170,
+      "title": "শিউরে ওঠা (shiure oṭhā) — to shudder",
+      "headword": "শিউরে ওঠা",
+      "romanization": "shiure oṭhā",
+      "gloss": "to shudder",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55afb4ae56232f18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for terror, then the Bengali for to recoil in fright."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শিউরে ওঠা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শিউরে ওঠা — shiure oṭhā — \"to shudder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গল্পটা শুনে আমি শিউরে উঠলাম। gôlpôṭā shune āmi shiure uṭhlām. I shuddered when I heard the story."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ছবিটা দেখে শিউরে উঠলেন, tini chhôbiṭā dekhe shiure uṭhlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শিউরে ওঠা (shiure oṭhā) is shiure, the -এ form of a verb that is probably a softened form of the Bengali siharā, of hair standing on end, which CDIAL files with siharāna, \"to startle\", under Sanskrit śikhara, \"a peak\", a word the lexicographers also use for bristling hair (CDIAL 12435), with oṭhā, \"to rise\" (CDIAL 1793)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiure oṭhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiure oṭhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiure oṭhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiure oṭhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôlpôṭā shune āmi shiure uṭhlām. — I shuddered when I heard the story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôlpôṭā shune āmi shiure uṭhlām.* — I shuddered when I heard the story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for terror, then the Bengali for to recoil in fright, then say shiure oṭhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for terror, then the Bengali for to recoil in fright, then say *shiure oṭhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শিউরে ওঠা (shiure oṭhā) mean? (\"To shudder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C441-ghabrano",
+      "sequence": 27180,
+      "title": "ঘাবড়ানো (ghābṛāno) — to get flustered; to lose one's nerve",
+      "headword": "ঘাবড়ানো",
+      "romanization": "ghābṛāno",
+      "gloss": "to get flustered; to lose one's nerve",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4edf1ceffe2555dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to recoil in fright, then the Bengali for to shudder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘাবড়ানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘাবড়ানো — ghābṛāno — \"to get flustered; to lose one's nerve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "প্রশ্নটা শুনে অরুণ ঘাবড়ে গেল। prôshnôṭā shune ôrun ghābṛe gelô. Arun got flustered when he heard the question."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ঘাবড়ালেন, tini ghābṛālen."
+            },
+            {
+              "kind": "speech",
+              "text": "Usually in its -এ form with যাওয়া: ঘাবড়ে যাওয়া."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘাবড়ানো (ghābṛāno) is listed by CDIAL for Bengali, as being confused and flustered, under a reconstructed ghabbhara, \"confused\" (CDIAL 4427), the entry where CDIAL also files the Hindi word for being startled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghābṛāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghābṛāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghābṛāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghābṛāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôshnôṭā shune ôrun ghābṛe gelô. — Arun got flustered when he heard the question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôshnôṭā shune ôrun ghābṛe gelô.* — Arun got flustered when he heard the question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to recoil in fright, then the Bengali for to shudder, then say ghābṛāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to recoil in fright, then the Bengali for to shudder, then say *ghābṛāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘাবড়ানো (ghābṛāno) mean? (\"To get flustered; to lose one's nerve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C441-dhorphor-kora",
+      "sequence": 27190,
+      "title": "ধড়ফড় করা (dhôṛphôṛ kôrā) — to pound; to flutter (of the heart)",
+      "headword": "ধড়ফড় করা",
+      "romanization": "dhôṛphôṛ kôrā",
+      "gloss": "to pound; to flutter (of the heart)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ab46311ac7b0593",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to shudder, then the Bengali for to get flustered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ধড়ফড় করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধড়ফড় করা — dhôṛphôṛ kôrā — \"to pound; to flutter (of the heart)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ভয়ে আমার বুক ধড়ফড় করছিল। bhôye āmār buk dhôṛphôṛ kôrchhilô. My heart was pounding with fear."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই রোগীর বুক ধড়ফড় করল, sei rogīr buk dhôṛphôṛ kôrlô."
+            },
+            {
+              "kind": "speech",
+              "text": "The heart is বুক (taught), the chest: বুক ধড়ফড় করা (dhôṛphôṛ kôrā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধড়ফড় করা (dhôṛphôṛ kôrā) is dhôṛphôṛ, an imitative word for a quick, fluttering beat, with kôrā, \"to do\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhôṛphôṛ kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhôṛphôṛ kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhôṛphôṛ kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhôṛphôṛ kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhôye āmār buk dhôṛphôṛ kôrchhilô. — My heart was pounding with fear.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhôye āmār buk dhôṛphôṛ kôrchhilô.* — My heart was pounding with fear.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to shudder, then the Bengali for to get flustered, then say dhôṛphôṛ kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to shudder, then the Bengali for to get flustered, then say *dhôṛphôṛ kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ধড়ফড় করা (dhôṛphôṛ kôrā) mean? (\"To pound; to flutter (of the heart)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,874 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 435,
+  "title": "Shortages",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:ee8618de18377c14",
+  "lessons": [
+    {
+      "id": "MR-C435-tancai",
+      "sequence": 24990,
+      "title": "टंचाई (ṭañcāī) — a shortage",
+      "headword": "टंचाई",
+      "romanization": "ṭañcāī",
+      "gloss": "a shortage",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3f924c71cdc5738",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to rush about, then the Marathi for to find a way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टंचाई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टंचाई — ṭañcāī — \"a shortage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उन्हाळ्यात गावात पाण्याची टंचाई असते. unhāḷyāt gāvāt pāṇyācī ṭañcāī aste. In summer the village is short of water."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "The thing in short supply takes -ची: पाण्याची टंचाई (ṭañcāī)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टंचाई (ṭañcāī) is a Marathi word for a shortage of water, food or money; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭañcāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭañcāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭañcāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭañcāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unhāḷyāt gāvāt pāṇyācī ṭañcāī aste. — In summer the village is short of water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unhāḷyāt gāvāt pāṇyācī ṭañcāī aste.* — In summer the village is short of water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to rush about, then the Marathi for to find a way, then say ṭañcāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to rush about, then the Marathi for to find a way, then say *ṭañcāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टंचाई (ṭañcāī) mean? (\"A shortage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C435-tutvada",
+      "sequence": 25000,
+      "title": "तुटवडा (tuṭvaḍā) — a scarcity",
+      "headword": "तुटवडा",
+      "romanization": "tuṭvaḍā",
+      "gloss": "a scarcity",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1039053afbb85c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to find a way, then the Marathi for a shortage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तुटवडा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुटवडा — tuṭvaḍā — \"a scarcity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बाजारात कांद्याचा तुटवडा आहे. bājārāt kāndyācā tuṭvaḍā āhe. There is a scarcity of onions in the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on तुट-, the stem of तुटणे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुटवडा (tuṭvaḍā) is built on the stem of तुटणे, \"to break, to fall short\" (CDIAL 6065), with a noun ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṭvaḍā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṭvaḍā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṭvaḍā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṭvaḍā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bājārāt kāndyācā tuṭvaḍā āhe. — There is a scarcity of onions in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bājārāt kāndyācā tuṭvaḍā āhe.* — There is a scarcity of onions in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to find a way, then the Marathi for a shortage, then say tuṭvaḍā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to find a way, then the Marathi for a shortage, then say *tuṭvaḍā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तुटवडा (tuṭvaḍā) mean? (\"A scarcity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C435-korda",
+      "sequence": 25010,
+      "title": "कोरडा (korḍā) — parched; dry",
+      "headword": "कोरडा",
+      "romanization": "korḍā",
+      "gloss": "parched; dry",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0aba254b72c255f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a shortage, then the Marathi for a scarcity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कोरडा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोरडा — korḍā — \"parched; dry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "या वर्षी विहीर कोरडी पडली. yā varṣī vihīr korḍī paḍlī. This year the well went dry."
+            },
+            {
+              "kind": "speech",
+              "text": "कोरडा (korḍā) पडणे, to go dry; कोरडी, कोरडं for the other genders."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोरडा (korḍā) is a Marathi adjective for land, wells or weather without water; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korḍā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korḍā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korḍā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korḍā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā varṣī vihīr korḍī paḍlī. — This year the well went dry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā varṣī vihīr korḍī paḍlī.* — This year the well went dry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a shortage, then the Marathi for a scarcity, then say korḍā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a shortage, then the Marathi for a scarcity, then say *korḍā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कोरडा (korḍā) mean? (\"Parched; dry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C435-atne",
+      "sequence": 25020,
+      "title": "आटणे (āṭṇe) — to dry up",
+      "headword": "आटणे",
+      "romanization": "āṭṇe",
+      "gloss": "to dry up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ba9e41edfaf4dad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a scarcity, then the Marathi for parched."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आटणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आटणे — āṭṇe — \"to dry up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उन्हाळ्यात नदी आटली. unhāḷyāt nadī āṭlī. In summer the river dried up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो आटला, to āṭlā."
+            },
+            {
+              "kind": "speech",
+              "text": "For water in a pot too: दूध आटलं, the milk boiled down."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आटणे (āṭṇe) is a Marathi verb for water drying away; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unhāḷyāt nadī āṭlī. — In summer the river dried up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unhāḷyāt nadī āṭlī.* — In summer the river dried up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a scarcity, then the Marathi for parched, then say āṭṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a scarcity, then the Marathi for parched, then say *āṭṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आटणे (āṭṇe) mean? (\"To dry up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C435-nasne",
+      "sequence": 25030,
+      "title": "नासणे (nāsṇe) — to go bad",
+      "headword": "नासणे",
+      "romanization": "nāsṇe",
+      "gloss": "to go bad",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43ea4559b9b586c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for parched, then the Marathi for to dry up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नासणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नासणे — nāsṇe — \"to go bad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उन्हामुळे दूध नासलं. unhāmuḷe dūdh nāslaṁ. The milk went bad in the heat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो नासला, to nāslā."
+            },
+            {
+              "kind": "speech",
+              "text": "Milk, fruit and cooked food नासतात."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नासणे (nāsṇe) is inherited: CDIAL lists Marathi nāsṇẽ, \"to be spoilt\", under Sanskrit naśyati, \"is lost, perishes\" (CDIAL 7027)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāsṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāsṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāsṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāsṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unhāmuḷe dūdh nāslaṁ. — The milk went bad in the heat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unhāmuḷe dūdh nāslaṁ.* — The milk went bad in the heat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for parched, then the Marathi for to dry up, then say nāsṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for parched, then the Marathi for to dry up, then say *nāsṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नासणे (nāsṇe) mean? (\"To go bad\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R435-review-428-435",
+      "sequence": 25040,
+      "title": "Looking back: from Spending and Saving to Shortages",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Spending and Saving to Shortages",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9458167c6f8305ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for to squander and a balance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to squander, a balance, an investment, what one can afford, economical",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to squander, a balance, an investment, what one can afford, economical]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an auction, collateral, to pawn, to recover money, a lease",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an auction, collateral, to pawn, to recover money, a lease]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a payment in return, a donation, a subscription, a share, to be left over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a payment in return, a donation, a subscription, a share, to be left over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a breakdown, out of action, to snap, to burst, to rip",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a breakdown, out of action, to snap, to burst, to rip]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hole, a small hole, a stain, to get messed up, to ooze",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hole, a small hole, a stain, to get messed up, to ooze]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scrape, a split, to rust, to get dented, to stop working",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scrape, a split, to rust, to get dented, to stop working]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inconvenience, missing each other, a fiasco, to rush about, to find a way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: inconvenience, missing each other, a fiasco, to rush about, to find a way]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a shortage, a scarcity, parched, to dry up, to go bad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a shortage, a scarcity, parched, to dry up, to go bad]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To squander? (उधळणे, udhaḷṇe.) A balance? (शिल्लक, śillak.) An investment? (गुंतवणूक, guntavṇūk.) What one can afford? (ऐपत, aipat.) Economical? (किफायतशीर, kiphāyatśīr.) An auction? (लिलाव, lilāv.) Collateral? (तारण, tāraṇ.) To pawn? (गहाण ठेवणे, gahāṇ ṭhevṇe.) To recover money? (वसूल करणे, vasūl karṇe.) A lease? (भाडेपट्टा, bhāḍepaṭṭā.) A payment in return? (मोबदला, mobadlā.) A donation? (देणगी, deṇgī.) A subscription? (वर्गणी, vargaṇī.) A share? (हिस्सा, hissā.) To be left over? (उरणे, urṇe.) A breakdown? (बिघाड, bighāḍ.) Out of action? (निकामी, nikāmī.) To snap? (तुटणे, tuṭṇe.) To burst? (फुटणे, phuṭṇe.) To rip? (फाटणे, phāṭṇe.) A hole? (भोक, bhok.) A small hole? (छिद्र, chidra.) A stain? (डाग, ḍāg.) To get messed up? (विस्कटणे, viskaṭṇe.) To ooze? (पाझरणे, pājharṇe.) A scrape? (ओरखडा, orakhḍā.) A split? (तडा, taḍā.) To rust? (गंजणे, gañjṇe.) To get dented? (चेपणे, cepṇe.) To stop working? (बंद पडणे, band paḍṇe.) Inconvenience? (गैरसोय, gairsoy.) Missing each other? (चुकामूक, cukāmūk.) A fiasco? (फजिती, phajitī.) To rush about? (धावपळ करणे, dhāvpaḷ karṇe.) To find a way? (मार्ग काढणे, mārga kāḍhṇe.) A shortage? (टंचाई, ṭañcāī.) A scarcity? (तुटवडा, tuṭvaḍā.) Parched? (कोरडा, korḍā.) To dry up? (आटणे, āṭṇe.) To go bad? (नासणे, nāsṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

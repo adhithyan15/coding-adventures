@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:d5e88b5327294168",
+  "lessonIds": [
+    "KA-C353-uyilu",
+    "KA-C353-varasudara",
+    "KA-C353-baluvali",
+    "KA-C353-parampare",
+    "KA-C353-pidisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch353.txt",
+  "json": "kannada/narration/ch353.json",
+  "textHash": "fnv1a64:e0a81508eca0c7d0",
+  "jsonHash": "fnv1a64:27ab48b94c280277",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:0050582e8bbb08ce",
+  "lessonIds": [
+    "ML-C532-laksanam",
+    "ML-C532-anubadha",
+    "ML-C532-sastrakriya",
+    "ML-C532-roganirnnayam",
+    "ML-C532-cikitsikkuka",
+    "ML-R532-review-525-532"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch532.txt",
+  "json": "malayalam/narration/ch532.json",
+  "textHash": "fnv1a64:f91a632a1d50ca50",
+  "jsonHash": "fnv1a64:299a9b7ab84f54d6",
+  "findings": []
+}

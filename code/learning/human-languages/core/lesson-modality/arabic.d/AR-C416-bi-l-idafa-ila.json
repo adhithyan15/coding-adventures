@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C416-bi-l-idafa-ila",
+    "language": "arabic",
+    "chapter": 416,
+    "sequence": 23390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93f5f413bc40799a"
+  },
+  "findings": []
+}

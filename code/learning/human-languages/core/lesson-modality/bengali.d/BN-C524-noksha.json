@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C524-noksha",
+    "language": "bengali",
+    "chapter": 524,
+    "sequence": 31660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8946d042e86d6fcb"
+  },
+  "findings": []
+}

@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 335,
+  "title": "A Crown for the King",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:09d564c65ad003c4",
+  "lessons": [
+    {
+      "id": "TE-C335-kiritam",
+      "sequence": 16460,
+      "title": "కిరీటం (kirīṭaṁ) — a crown",
+      "headword": "కిరీటం",
+      "romanization": "kirīṭaṁ",
+      "gloss": "a crown",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67b730ec9e4f9218",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to take birth, then the Telugu for to bless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కిరీటం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కిరీటం — kirīṭaṁ — \"a crown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రాజు తల మీద బంగారు కిరీటం ఉంది. rāju tala mīda baṅgāru kirīṭaṁ undi. There is a gold crown on the king's head."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: కిరీటాలు, kirīṭālu."
+            },
+            {
+              "kind": "speech",
+              "text": "A Sanskrit -a noun in -ం; its plural is కిరీటాలు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కిరీటం (kirīṭaṁ) is borrowed from Sanskrit kirīṭa, \"a diadem, a crest\" (CDIAL 3176)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirīṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirīṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirīṭaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirīṭaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāju tala mīda baṅgāru kirīṭaṁ undi. — There is a gold crown on the king's head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāju tala mīda baṅgāru kirīṭaṁ undi.* — There is a gold crown on the king's head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to take birth, then the Telugu for to bless, then say kirīṭaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to take birth, then the Telugu for to bless, then say *kirīṭaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కిరీటం (kirīṭaṁ) mean? (\"A crown\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C335-simhasanam",
+      "sequence": 16470,
+      "title": "సింహాసనం (siṁhāsanaṁ) — a throne",
+      "headword": "సింహాసనం",
+      "romanization": "siṁhāsanaṁ",
+      "gloss": "a throne",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c75645278e224f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to bless, then the Telugu for a crown."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సింహాసనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సింహాసనం — siṁhāsanaṁ — \"a throne\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రాజు సింహాసనం మీద కూర్చున్నాడు. rāju siṁhāsanaṁ mīda kūrcunnāḍu. The king sat on the throne."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally a lion's seat: సింహం, a lion, and ఆసనం, a seat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సింహాసనం (siṁhāsanaṁ) is borrowed from Sanskrit siṁhāsana, \"the lion's seat, a throne\" (Monier-Williams), from siṁha, \"a lion\", and āsana, \"a seat\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṁhāsanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṁhāsanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṁhāsanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṁhāsanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāju siṁhāsanaṁ mīda kūrcunnāḍu. — The king sat on the throne.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāju siṁhāsanaṁ mīda kūrcunnāḍu.* — The king sat on the throne.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to bless, then the Telugu for a crown, then say siṁhāsanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to bless, then the Telugu for a crown, then say *siṁhāsanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సింహాసనం (siṁhāsanaṁ) mean? (\"A throne\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C335-pattabhisekam",
+      "sequence": 16480,
+      "title": "పట్టాభిషేకం (paṭṭābhiṣēkaṁ) — a coronation",
+      "headword": "పట్టాభిషేకం",
+      "romanization": "paṭṭābhiṣēkaṁ",
+      "gloss": "a coronation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0340a2bebd7bb920",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a crown, then the Telugu for a throne."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పట్టాభిషేకం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టాభిషేకం — paṭṭābhiṣēkaṁ — \"a coronation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొత్త రాజు పట్టాభిషేకం నిన్న జరిగింది. kotta rāju paṭṭābhiṣēkaṁ ninna jarigindi. The new king's coronation took place yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "పట్టం, the royal band, and అభిషేకం, an anointing with water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టాభిషేకం (paṭṭābhiṣēkaṁ) is borrowed from Sanskrit: paṭṭa, \"a band, a diadem\" (CDIAL 7700), and abhiṣeka, \"anointing; the inauguration of a king\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭābhiṣēkaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭābhiṣēkaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭābhiṣēkaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭābhiṣēkaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotta rāju paṭṭābhiṣēkaṁ ninna jarigindi. — The new king's coronation took place yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotta rāju paṭṭābhiṣēkaṁ ninna jarigindi.* — The new king's coronation took place yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a crown, then the Telugu for a throne, then say paṭṭābhiṣēkaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a crown, then the Telugu for a throne, then say *paṭṭābhiṣēkaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పట్టాభిషేకం (paṭṭābhiṣēkaṁ) mean? (\"A coronation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C335-pattam-kattu",
+      "sequence": 16490,
+      "title": "పట్టం కట్టు (paṭṭaṁ kaṭṭu) — to enthrone; to crown",
+      "headword": "పట్టం కట్టు",
+      "romanization": "paṭṭaṁ kaṭṭu",
+      "gloss": "to enthrone; to crown",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:778b4af984bac74e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a throne, then the Telugu for a coronation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పట్టం కట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టం కట్టు — paṭṭaṁ kaṭṭu — \"to enthrone; to crown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రజలు కొత్త రాజుకు పట్టం కట్టారు. prajalu kotta rājuku paṭṭaṁ kaṭṭāru. The people crowned the new king."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పట్టం కట్టాను, paṭṭaṁ kaṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Who is crowned takes -కు: రాజుకు పట్టం కట్టు (paṭṭaṁ kaṭṭu). It also means to honour a winner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టం కట్టు (paṭṭaṁ kaṭṭu) is a Telugu phrase: paṭṭaṁ, from Sanskrit paṭṭa, \"a band, a diadem\" (CDIAL 7700), and native kaṭṭu, \"to tie\" (DEDR 1147): to tie the royal band on someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭaṁ kaṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭaṁ kaṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭaṁ kaṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭaṁ kaṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prajalu kotta rājuku paṭṭaṁ kaṭṭāru. — The people crowned the new king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prajalu kotta rājuku paṭṭaṁ kaṭṭāru.* — The people crowned the new king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a throne, then the Telugu for a coronation, then say paṭṭaṁ kaṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a throne, then the Telugu for a coronation, then say *paṭṭaṁ kaṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పట్టం కట్టు (paṭṭaṁ kaṭṭu) mean? (\"To enthrone; to crown\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C335-palana",
+      "sequence": 16500,
+      "title": "పాలన (pālana) — a reign; governance",
+      "headword": "పాలన",
+      "romanization": "pālana",
+      "gloss": "a reign; governance",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a688bb8e154f127c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a coronation, then the Telugu for to enthrone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పాలన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాలన — pālana — \"a reign; governance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ రాజు పాలనలో ప్రజలు సుఖంగా ఉండేవారు. ā rāju pālanalō prajalu sukhaṅgā uṇḍēvāru. Under that king's rule the people lived in comfort."
+            },
+            {
+              "kind": "speech",
+              "text": "పాలనలో, under the rule of: the locative -లో."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాలన (pālana) is borrowed from Sanskrit pālana, \"protecting, nourishing\" (CDIAL 8128): a good ruler protects."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pālana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pālana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pālana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pālana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rāju pālanalō prajalu sukhaṅgā uṇḍēvāru. — Under that king's rule the people lived in comfort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rāju pālanalō prajalu sukhaṅgā uṇḍēvāru.* — Under that king's rule the people lived in comfort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a coronation, then the Telugu for to enthrone, then say pālana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a coronation, then the Telugu for to enthrone, then say *pālana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పాలన (pālana) mean? (\"A reign; governance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

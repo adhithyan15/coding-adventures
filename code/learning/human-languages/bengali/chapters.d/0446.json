@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Comfort and Relief",
+  "label": "ch:bn-comfort-and-relief",
+  "canDo": "I can comfort someone and say that I feel relieved.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C446-samlano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can comfort someone and say that I feel relieved.",
+    "assesses": [
+      "BN-LEX-C446-SANTVONA446-03",
+      "BN-LEX-C446-SANTVONA446-04",
+      "BN-LEX-C446-SANTVONA446-05"
+    ]
+  }
+}

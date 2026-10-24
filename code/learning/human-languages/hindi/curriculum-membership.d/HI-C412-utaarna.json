@@ -1,0 +1,11 @@
+{
+  "id": "HI-C412-utaarna",
+  "pathSegment": "HI-PATH-412-VIDESH412",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-412-VIDESH412",
+      "order": 3
+    }
+  ]
+}

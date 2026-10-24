@@ -1,0 +1,11 @@
+{
+  "id": "TE-C401-rajyangam",
+  "pathSegment": "TE-PATH-401-PAURUDU401",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-401-PAURUDU401",
+      "order": 2
+    }
+  ]
+}

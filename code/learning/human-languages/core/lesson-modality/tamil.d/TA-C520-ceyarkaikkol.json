@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C520-ceyarkaikkol",
+    "language": "tamil",
+    "chapter": 520,
+    "sequence": 29810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c1dcc9603ef75a2"
+  },
+  "findings": []
+}

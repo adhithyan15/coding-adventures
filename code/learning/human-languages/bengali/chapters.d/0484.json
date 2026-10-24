@@ -1,0 +1,21 @@
+{
+  "chapter": 484,
+  "title": "Children and Lineage",
+  "label": "ch:bn-children-and-lineage",
+  "canDo": "I can talk about offspring, twins, generations and ancestors.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R484-review-478-484",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can talk about offspring, twins, generations and ancestors.",
+    "assesses": [
+      "BN-LEX-C484-SONTAN484-01",
+      "BN-LEX-C484-SONTAN484-02",
+      "BN-LEX-C484-SONTAN484-03",
+      "BN-LEX-C484-SONTAN484-04",
+      "BN-LEX-C484-SONTAN484-05"
+    ]
+  }
+}

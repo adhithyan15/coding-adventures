@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Making Things Better",
+  "label": "ch:hi-making-things-better",
+  "canDo": "I can say how a place or a person improved.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C368-nikhaarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can say how a place or a person improved.",
+    "assesses": [
+      "HI-LEX-C368-VIKAS368-03",
+      "HI-LEX-C368-VIKAS368-04",
+      "HI-LEX-C368-VIKAS368-05"
+    ]
+  }
+}

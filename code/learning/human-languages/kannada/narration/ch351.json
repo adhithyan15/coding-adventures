@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 351,
+  "title": "The Rescue Operation",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c332edf2b4fffcab",
+  "lessons": [
+    {
+      "id": "KA-C351-karyacarane",
+      "sequence": 17640,
+      "title": "ಕಾರ್ಯಾಚರಣೆ (kāryācaraṇe) — a mission; an operation",
+      "headword": "ಕಾರ್ಯಾಚರಣೆ",
+      "romanization": "kāryācaraṇe",
+      "gloss": "a mission; an operation",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1622f2a13b8e30c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for fame, then the Kannada for to inaugurate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಾರ್ಯಾಚರಣೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾರ್ಯಾಚರಣೆ — kāryācaraṇe — \"a mission; an operation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರವಾಹದಲ್ಲಿ ರಕ್ಷಣಾ ಕಾರ್ಯಾಚರಣೆ ಎರಡು ದಿನ ನಡೆಯಿತು. pravāhadalli rakṣaṇā kāryācaraṇe eraḍu dina naḍeyitu. The rescue operation in the flood went on for two days."
+            },
+            {
+              "kind": "speech",
+              "text": "Used of rescue, police and army work: ರಕ್ಷಣಾ ಕಾರ್ಯಾಚರಣೆ (kāryācaraṇe), a rescue operation. In a flood it brings food and ಔಷಧ, medicine, to people cut off by the water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾರ್ಯಾಚರಣೆ (kāryācaraṇe) is borrowed from Sanskrit, a modern compound of kārya, \"a thing to be done, business\" (CDIAL 3078), and ācaraṇa, \"undertaking, performing\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryācaraṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryācaraṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryācaraṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryācaraṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravāhadalli rakṣaṇā kāryācaraṇe eraḍu dina naḍeyitu. — The rescue operation in the flood went on for two days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravāhadalli rakṣaṇā kāryācaraṇe eraḍu dina naḍeyitu.* — The rescue operation in the flood went on for two days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for fame, then the Kannada for to inaugurate, then say kāryācaraṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for fame, then the Kannada for to inaugurate, then say *kāryācaraṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಾರ್ಯಾಚರಣೆ (kāryācaraṇe) mean? (\"A mission; an operation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C351-svayamsevaka",
+      "sequence": 17650,
+      "title": "ಸ್ವಯಂಸೇವಕ (svayaṃsēvaka) — a volunteer",
+      "headword": "ಸ್ವಯಂಸೇವಕ",
+      "romanization": "svayaṃsēvaka",
+      "gloss": "a volunteer",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd71658ad5bb3d7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to inaugurate, then the Kannada for a mission."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ವಯಂಸೇವಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಯಂಸೇವಕ — svayaṃsēvaka — \"a volunteer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೂರಾರು ಸ್ವಯಂಸೇವಕರು ಸಂತ್ರಸ್ತರಿಗೆ ಊಟ ತಂದರು. nūrāru svayaṃsēvakaru santrastarige ūṭa tandaru. Hundreds of volunteers brought food to the victims."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸ್ವಯಂಸೇವಕರು, svayaṃsēvakaru."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಯಂ, oneself, and ಸೇವಕ, one who serves: one who serves of his own will."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಯಂಸೇವಕ (svayaṃsēvaka) is borrowed from Sanskrit, a modern compound of svayam, \"self, spontaneously\" (CDIAL 13906), and sevaka, \"one who serves\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svayaṃsēvaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svayaṃsēvaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svayaṃsēvaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svayaṃsēvaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nūrāru svayaṃsēvakaru santrastarige ūṭa tandaru. — Hundreds of volunteers brought food to the victims.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nūrāru svayaṃsēvakaru santrastarige ūṭa tandaru.* — Hundreds of volunteers brought food to the victims.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to inaugurate, then the Kannada for a mission, then say svayaṃsēvaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to inaugurate, then the Kannada for a mission, then say *svayaṃsēvaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ವಯಂಸೇವಕ (svayaṃsēvaka) mean? (\"A volunteer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C351-appalisu",
+      "sequence": 17660,
+      "title": "ಅಪ್ಪಳಿಸು (appaḷisu) — to crash against; to strike",
+      "headword": "ಅಪ್ಪಳಿಸು",
+      "romanization": "appaḷisu",
+      "gloss": "to crash against; to strike",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddbc649b335a58d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a mission, then the Kannada for a volunteer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಪ್ಪಳಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಪ್ಪಳಿಸು — appaḷisu — \"to crash against; to strike\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ದೊಡ್ಡ ಅಲೆಗಳು ದಡಕ್ಕೆ ಅಪ್ಪಳಿಸಿದವು. doḍḍa alegaḷu daḍakke appaḷisidavu. Huge waves crashed against the shore."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಅಪ್ಪಳಿಸಿತು, appaḷisitu."
+            },
+            {
+              "kind": "speech",
+              "text": "What is hit takes -ಗೆ. Storms, waves and news ಅಪ್ಪಳಿಸು (appaḷisu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಪ್ಪಳಿಸು (appaḷisu) is native Dravidian: DEDR 157 lists Kannada appaḷisu, \"to strike against, to slap\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appaḷisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appaḷisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appaḷisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appaḷisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doḍḍa alegaḷu daḍakke appaḷisidavu. — Huge waves crashed against the shore.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doḍḍa alegaḷu daḍakke appaḷisidavu.* — Huge waves crashed against the shore.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a mission, then the Kannada for a volunteer, then say appaḷisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a mission, then the Kannada for a volunteer, then say *appaḷisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಪ್ಪಳಿಸು (appaḷisu) mean? (\"To crash against; to strike\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C351-avarisu",
+      "sequence": 17670,
+      "title": "ಆವರಿಸು (āvarisu) — to engulf; to cover",
+      "headword": "ಆವರಿಸು",
+      "romanization": "āvarisu",
+      "gloss": "to engulf; to cover",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7818a32730adfc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a volunteer, then the Kannada for to crash against."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆವರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆವರಿಸು — āvarisu — \"to engulf; to cover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೆಂಕಿಯ ಹೊಗೆ ಇಡೀ ಬೀದಿಯನ್ನು ಆವರಿಸಿತು. beṅkiya hoge iḍī bīdiyannu āvarisitu. Smoke from the fire covered the whole street."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಆವರಿಸಿತು, āvarisitu."
+            },
+            {
+              "kind": "speech",
+              "text": "Smoke, darkness, fear and silence ಆವರಿಸು (āvarisu): ಕತ್ತಲೆ ಆವರಿಸಿತು, darkness fell."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆವರಿಸು (āvarisu) is built on Sanskrit āvaraṇa, \"covering, obstruction\" (CDIAL 1413), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṅkiya hoge iḍī bīdiyannu āvarisitu. — Smoke from the fire covered the whole street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṅkiya hoge iḍī bīdiyannu āvarisitu.* — Smoke from the fire covered the whole street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a volunteer, then the Kannada for to crash against, then say āvarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a volunteer, then the Kannada for to crash against, then say *āvarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆವರಿಸು (āvarisu) mean? (\"To engulf; to cover\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C351-koccihogu",
+      "sequence": 17680,
+      "title": "ಕೊಚ್ಚಿಹೋಗು (koccihōgu) — to be washed away",
+      "headword": "ಕೊಚ್ಚಿಹೋಗು",
+      "romanization": "koccihōgu",
+      "gloss": "to be washed away",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36bcb8413c407f29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to crash against, then the Kannada for to engulf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೊಚ್ಚಿಹೋಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೊಚ್ಚಿಹೋಗು — koccihōgu — \"to be washed away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರವಾಹದಲ್ಲಿ ಹಳೆಯ ಸೇತುವೆ ಕೊಚ್ಚಿಹೋಯಿತು. pravāhadalli haḷeya sētuve koccihōyitu. The old bridge was washed away in the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಕೊಚ್ಚಿಹೋಯಿತು, koccihōyitu."
+            },
+            {
+              "kind": "speech",
+              "text": "Things carried off by water: ಮನೆಗಳು ಕೊಚ್ಚಿಹೋದವು, houses were swept away."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೊಚ್ಚಿಹೋಗು (koccihōgu) is a Kannada compound of ಕೊಚ್ಚಿ and hōgu, \"to go\" (DEDR 4572); DEDR 1859 lists a Kannada koccu, \"to cut away\", but whether ಕೊಚ್ಚಿ is that verb is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koccihōgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koccihōgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koccihōgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koccihōgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravāhadalli haḷeya sētuve koccihōyitu. — The old bridge was washed away in the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravāhadalli haḷeya sētuve koccihōyitu.* — The old bridge was washed away in the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to crash against, then the Kannada for to engulf, then say koccihōgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to crash against, then the Kannada for to engulf, then say *koccihōgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೊಚ್ಚಿಹೋಗು (koccihōgu) mean? (\"To be washed away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

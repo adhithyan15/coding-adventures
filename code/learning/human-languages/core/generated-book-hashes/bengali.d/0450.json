@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:3b598441f998ef37",
+  "lessonIds": [
+    "BN-C450-tuchchho",
+    "BN-C450-upohas",
+    "BN-C450-opoman-kora",
+    "BN-C450-khota-deoya",
+    "BN-C450-heyo-kora"
+  ],
+  "tex": "bengali/book/chapters/ch450-hurt-feelings.tex"
+}

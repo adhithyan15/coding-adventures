@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 318,
+  "title": "A New Baby",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:198e565f9867d38c",
+  "lessons": [
+    {
+      "id": "MR-C318-janma",
+      "sequence": 18530,
+      "title": "जन्म (janma) — birth",
+      "headword": "जन्म",
+      "romanization": "janma",
+      "gloss": "birth",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8878fa4f0f62dbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a shehnai, then the Marathi for a rhyming couplet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जन्म",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जन्म — janma — \"birth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझ्या भावाचा जन्म पुण्यात झाला. mājhyā bhāvācā janma puṇyāt jhālā. My brother was born in Pune."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "X-चा जन्म (janma) होणे, X is born."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जन्म (janma) is a tatsama, taken from Sanskrit janman, 'birth' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhyā bhāvācā janma puṇyāt jhālā. — My brother was born in Pune.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhyā bhāvācā janma puṇyāt jhālā.* — My brother was born in Pune.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a shehnai, then the Marathi for a rhyming couplet, then say janma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a shehnai, then the Marathi for a rhyming couplet, then say *janma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जन्म (janma) mean? (\"Birth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C318-barse",
+      "sequence": 18540,
+      "title": "बारसे (bārse) — a naming ceremony",
+      "headword": "बारसे",
+      "romanization": "bārse",
+      "gloss": "a naming ceremony",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a7a015664fd70a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a rhyming couplet, then the Marathi for birth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बारसे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बारसे — bārse — \"a naming ceremony\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बाळाचं बारसं बाराव्या दिवशी झालं. bāḷācaṁ bārsaṁ bārāvyā divśī jhālaṁ. The baby's naming ceremony was on the twelfth day."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, written बारसं in a sentence like मोठं; held on the twelfth day after a birth, from बारा, twelve."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बारसे (bārse) is built on bārā, 'twelve', the day the rite falls on; CDIAL lists Marathi bārāvā, 'twelfth', under Sanskrit dvādaśama (CDIAL 6660)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārse, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārse*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāḷācaṁ bārsaṁ bārāvyā divśī jhālaṁ. — The baby's naming ceremony was on the twelfth day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāḷācaṁ bārsaṁ bārāvyā divśī jhālaṁ.* — The baby's naming ceremony was on the twelfth day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a rhyming couplet, then the Marathi for birth, then say bārse again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a rhyming couplet, then the Marathi for birth, then say *bārse* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बारसे (bārse) mean? (\"A naming ceremony\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C318-vadhdivas",
+      "sequence": 18550,
+      "title": "वाढदिवस (vāḍhdivas) — a birthday",
+      "headword": "वाढदिवस",
+      "romanization": "vāḍhdivas",
+      "gloss": "a birthday",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5781128fdfc8a7bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for birth, then the Marathi for a naming ceremony."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वाढदिवस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाढदिवस — vāḍhdivas — \"a birthday\"."
+            },
+            {
+              "kind": "speech",
+              "text": "काल माझ्या मुलीचा पाचवा वाढदिवस होता. kāl mājhyā mulīcā pācvā vāḍhdivas hotā. Yesterday was my daughter's fifth birthday."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "वाढदिवसाच्या शुभेच्छा, happy birthday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाढदिवस (vāḍhdivas) is built from vāḍh, 'increase, growth', which CDIAL lists under Sanskrit vardha (CDIAL 11373), and divas, 'a day': the day one grows a year."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḍhdivas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḍhdivas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḍhdivas, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḍhdivas*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāl mājhyā mulīcā pācvā vāḍhdivas hotā. — Yesterday was my daughter's fifth birthday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāl mājhyā mulīcā pācvā vāḍhdivas hotā.* — Yesterday was my daughter's fifth birthday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for birth, then the Marathi for a naming ceremony, then say vāḍhdivas again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for birth, then the Marathi for a naming ceremony, then say *vāḍhdivas* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वाढदिवस (vāḍhdivas) mean? (\"A birthday\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C318-munj",
+      "sequence": 18560,
+      "title": "मुंज (muñj) — a thread ceremony",
+      "headword": "मुंज",
+      "romanization": "muñj",
+      "gloss": "a thread ceremony",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ce4dd2d228c4120",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a naming ceremony, then the Marathi for a birthday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मुंज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुंज — muñj — \"a thread ceremony\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझ्या भावाच्या मुलाची मुंज पुढच्या आठवड्यात आहे. mājhyā bhāvācyā mulācī muñj puḍhacyā āṭhvaḍyāt āhe. My brother's son's thread ceremony is next week."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "The Marathi name for the upanayana, the rite at which a boy is given the sacred thread; it is kept in some communities."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुंज (muñj) is a tadbhava: CDIAL lists Marathi mũjī, 'the sacred thread', under Sanskrit mauñjī, the cord of muñja grass worn by a Brahman (CDIAL 10367; muñja is CDIAL 10184). The rite is named after that cord."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muñj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muñj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muñj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muñj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhyā bhāvācyā mulācī muñj puḍhacyā āṭhvaḍyāt āhe. — My brother's son's thread ceremony is next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhyā bhāvācyā mulācī muñj puḍhacyā āṭhvaḍyāt āhe.* — My brother's son's thread ceremony is next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a naming ceremony, then the Marathi for a birthday, then say muñj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a naming ceremony, then the Marathi for a birthday, then say *muñj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मुंज (muñj) mean? (\"A thread ceremony\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C318-patrika",
+      "sequence": 18570,
+      "title": "पत्रिका (patrikā) — an invitation card",
+      "headword": "पत्रिका",
+      "romanization": "patrikā",
+      "gloss": "an invitation card",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:311818eaea7d2da7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a birthday, then the Marathi for a thread ceremony."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पत्रिका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पत्रिका — patrikā — \"an invitation card\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्यांनी लग्नाची पत्रिका घरी आणून दिली. tyānnī lagnācī patrikā gharī āṇūn dilī. They brought the wedding invitation card to our home."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "लग्नपत्रिका, a wedding card; also a small journal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पत्रिका (patrikā) is built on Sanskrit patra, 'a leaf, a letter' (Monier-Williams), with the small-thing ending -ikā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrikā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrikā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrikā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrikā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyānnī lagnācī patrikā gharī āṇūn dilī. — They brought the wedding invitation card to our home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyānnī lagnācī patrikā gharī āṇūn dilī.* — They brought the wedding invitation card to our home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a birthday, then the Marathi for a thread ceremony, then say patrikā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a birthday, then the Marathi for a thread ceremony, then say *patrikā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पत्रिका (patrikā) mean? (\"An invitation card\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

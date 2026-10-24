@@ -72,6 +72,46 @@ Two things shape this track.
   preposed short **ि**, spineless letters, virama, conjuncts, and finally whole
   words. They remain inline in the opening chapters rather than becoming a
   prerequisite alphabet drill.
+- **Chapters 276–287 — the B1 core** ([`lessons/`](./lessons/), `HI-C276-*`
+  to `HI-W287-six-lines`): 276–277 bridge the A2 past and future the track
+  had left empty — the perfective by gender and number (वह गया, वह गई), ने
+  with every pronoun and a name, the verb agreeing with the object (उसने रोटी
+  खाई, उसने खाना खाया) and the masculine default after को or with no object
+  (उसने कहा कि …), and the full future (जाऊँगा … जाएँगे, होगा). Then two
+  chapters for each of the five B1 spine nodes: narrating (-रहा था, -कर, के
+  बाद, पहले / फिर / उसके बाद, an eighty-nine-word reading), giving reasons
+  (मुझे लगता है कि, मेरी राय में, की वजह से, चाहिए, -ना पड़ता है, इसलिए, अतः),
+  travel (the way, a ticket, a lost bag, a missed train), experience
+  (feelings with को, बनना चाहना, से ज़्यादा, सबसे, दो साल से) and conditions
+  (अगर … तो, वरना, … पर निर्भर करता है, the -ता counterfactual), closing on a
+  six-line writing task. The letter lessons `HI-W280-letter-ai` and
+  `HI-W281-sign-visarga` sit right after their anchor words ऐसा and अतः and
+  quote the inventory's source-backed stroke order; two filmstrips are added.
+- **Chapters 288–559 — the B1 vocabulary** ([`lessons/`](./lessons/),
+  `HI-C288-*` to `HI-R559-*`): 1,360 headwords, 368 of them verbs (each shown
+  with its past and the right agreement, उसने बटुआ चुराया "he/she stole the
+  purse", वह थैले पर झपटा "he snatched at the bag"), one word per lesson,
+  with eight reviews in each of the five tranches:
+  - 288–342: narrating (theft and the police, accidents and fire,
+    earthquakes, storms and floods, rescue and relief, the news, kings and
+    wars, festivals, legends and books);
+  - 343–397: reasons and conditions (causes and consequences, argument and
+    proof, rights and the courts, government and citizens, research and
+    figures, then possibility, conditions, effort and success);
+  - 398–451: travel (trains and stations, roads and taxis, airports and
+    customs, a place to stay, finding the way, the town, money and the
+    market, the weather and nature, the farm);
+  - 452–505: experience (feelings and character, the body and health,
+    family from a new baby to mourning);
+  - 506–559: work and crafts, repairs and the kitchen, free time, music,
+    wrestling and sport, then plans, means, obstacles, luck and choices.
+
+  The first words of chapters 288–295 practise the core's last grammar
+  points again (… पर निर्भर करता है, the -ता counterfactual, अगर … तो with
+  the future and with the perfective), two words each, and the first words
+  of chapters 302 and 319 bring back ऐ, of 305 and 322 ः. With the core,
+  Hindi teaches 2,573 headwords at or below B1 and attains B1 on the level
+  gate.
 
 ---
 

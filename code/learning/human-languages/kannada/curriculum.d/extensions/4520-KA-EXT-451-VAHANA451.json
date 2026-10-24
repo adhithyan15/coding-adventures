@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-451-VAHANA451",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a lorry, a jeep, a taxi, a motorbike and a bullock cart.",
+  "prerequisites": []
+}

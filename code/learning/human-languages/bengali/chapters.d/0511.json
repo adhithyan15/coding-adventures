@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Pots and Pouring",
+  "label": "ch:bn-pots-and-pouring",
+  "canDo": "I can talk about pots and pans, pouring and dipping.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C511-dobano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about pots and pans, pouring and dipping.",
+    "assesses": [
+      "BN-LEX-C511-BASON511-03",
+      "BN-LEX-C511-BASON511-04",
+      "BN-LEX-C511-BASON511-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "On One Condition",
+  "label": "ch:ml-on-one-condition",
+  "canDo": "I can say a condition, a stipulation, a proviso, if not and otherwise.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C440-allattapaksam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can say a condition, a stipulation, a proviso, if not and otherwise.",
+    "assesses": [
+      "ML-LEX-C440-VYAVASTHA440-03",
+      "ML-LEX-C440-VYAVASTHA440-04",
+      "ML-LEX-C440-VYAVASTHA440-05"
+    ]
+  }
+}

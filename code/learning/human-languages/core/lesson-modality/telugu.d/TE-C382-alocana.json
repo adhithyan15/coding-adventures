@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C382-alocana",
+    "language": "telugu",
+    "chapter": 382,
+    "sequence": 19000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac893ebb7d69ff7a"
+  },
+  "findings": []
+}

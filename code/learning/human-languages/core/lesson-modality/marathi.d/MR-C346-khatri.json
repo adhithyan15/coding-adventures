@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C346-khatri",
+    "language": "marathi",
+    "chapter": 346,
+    "sequence": 20220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a020ef938983463"
+  },
+  "findings": []
+}

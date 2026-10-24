@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:4072a1fac18f6e0b",
+  "lessonIds": [
+    "MR-C488-rugna",
+    "MR-C488-paricarika",
+    "MR-C488-vaidya",
+    "MR-C488-nidan",
+    "MR-C488-upcar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch488.txt",
+  "json": "marathi/narration/ch488.json",
+  "textHash": "fnv1a64:5ec38aecbd31801f",
+  "jsonHash": "fnv1a64:aad0bd3cc6884a25",
+  "findings": []
+}

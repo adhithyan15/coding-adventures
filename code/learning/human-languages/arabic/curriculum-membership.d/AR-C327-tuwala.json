@@ -1,0 +1,11 @@
+{
+  "id": "AR-C327-tuwala",
+  "pathSegment": "AR-PATH-327-LAYLA327",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-327-LAYLA327",
+      "order": 4
+    }
+  ]
+}

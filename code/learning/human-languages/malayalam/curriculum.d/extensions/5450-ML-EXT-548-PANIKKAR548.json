@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-548-PANIKKAR548",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a mechanic, a merchant, a fisherman, a professional cook and a photographer.",
+  "prerequisites": []
+}

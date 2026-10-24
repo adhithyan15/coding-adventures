@@ -1,0 +1,11 @@
+{
+  "id": "AR-C402-bi-d-darura",
+  "pathSegment": "AR-PATH-402-HATMAN402",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-402-HATMAN402",
+      "order": 1
+    }
+  ]
+}

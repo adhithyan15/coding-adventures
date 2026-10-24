@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:5e98fcbb5b46b2cd",
+  "lessonIds": [
+    "AR-C486-taqallaba",
+    "AR-C486-tadahwara",
+    "AR-C486-tasaqata",
+    "AR-C486-munish",
+    "AR-C486-taarrada",
+    "AR-R486-review-479-486"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch486.txt",
+  "json": "arabic/narration/ch486.json",
+  "textHash": "fnv1a64:bc2ef02ff6c8fea8",
+  "jsonHash": "fnv1a64:4ea186099918df25",
+  "findings": []
+}

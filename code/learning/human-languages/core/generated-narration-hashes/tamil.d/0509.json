@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:b4541320335507a2",
+  "lessonIds": [
+    "TA-C509-patavi-uyarvu",
+    "TA-C509-latciyam",
+    "TA-C509-ulai",
+    "TA-C509-ukkuvi",
+    "TA-C509-nipunar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch509.txt",
+  "json": "tamil/narration/ch509.json",
+  "textHash": "fnv1a64:09406cac9d75298a",
+  "jsonHash": "fnv1a64:9e3b8ab058573000",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "Hurt Feelings",
+  "label": "ch:bn-hurt-feelings",
+  "canDo": "I can say that someone insulted, mocked or belittled me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C450-heyo-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can say that someone insulted, mocked or belittled me.",
+    "assesses": [
+      "BN-LEX-C450-OPOMAN450-03",
+      "BN-LEX-C450-OPOMAN450-04",
+      "BN-LEX-C450-OPOMAN450-05"
+    ]
+  }
+}

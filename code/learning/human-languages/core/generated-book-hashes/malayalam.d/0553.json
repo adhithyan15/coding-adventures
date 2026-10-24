@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:91fa470db5679cfe",
+  "lessonIds": [
+    "ML-C553-tottil",
+    "ML-C553-dattetukkuka",
+    "ML-C553-rantanamma",
+    "ML-C553-kutappirappu",
+    "ML-C553-sahodaran"
+  ],
+  "tex": "malayalam/book/chapters/ch553-orphans-steps-and-siblings.tex"
+}

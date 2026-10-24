@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-341-ONYAY341",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-341-ONYAY341"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:65e221a79ad78073",
+  "lessonIds": [
+    "KA-C325-vivaha",
+    "KA-C325-arataksate",
+    "KA-C325-varadaksine",
+    "KA-C325-harasu",
+    "KA-C325-dibbana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch325.txt",
+  "json": "kannada/narration/ch325.json",
+  "textHash": "fnv1a64:8026a855328350e6",
+  "jsonHash": "fnv1a64:68c466edadeff0f8",
+  "findings": []
+}

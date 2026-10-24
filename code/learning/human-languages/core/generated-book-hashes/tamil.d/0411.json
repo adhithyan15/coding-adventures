@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:1538bfdb28dd8d00",
+  "lessonIds": [
+    "TA-C411-kolaru",
+    "TA-C411-ceyalila",
+    "TA-C411-nacunku",
+    "TA-C411-uracu",
+    "TA-C411-muttu"
+  ],
+  "tex": "tamil/book/chapters/ch411-when-the-car-breaks-down.tex"
+}

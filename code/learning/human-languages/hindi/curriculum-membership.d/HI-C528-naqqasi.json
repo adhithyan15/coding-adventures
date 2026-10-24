@@ -1,0 +1,11 @@
+{
+  "id": "HI-C528-naqqasi",
+  "pathSegment": "HI-PATH-528-SHILP528",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-528-SHILP528",
+      "order": 1
+    }
+  ]
+}

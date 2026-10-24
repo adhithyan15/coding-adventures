@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Possible or Not",
+  "label": "ch:te-possible-or-not",
+  "canDo": "I can say what is possible, likely or unavoidable.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C418-vilaite",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can say what is possible, likely or unavoidable.",
+    "assesses": [
+      "TE-LEX-C418-SADHYAM418-03",
+      "TE-LEX-C418-SADHYAM418-04",
+      "TE-LEX-C418-SADHYAM418-05"
+    ]
+  }
+}

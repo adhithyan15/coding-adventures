@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C311-thasa",
+    "language": "bengali",
+    "chapter": 311,
+    "sequence": 19830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5198fd7c83c4c5d2"
+  },
+  "findings": []
+}

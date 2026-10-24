@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 379,
+  "title": "A Crash at the Junction",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e1c4464573fa2cbb",
+  "lessons": [
+    {
+      "id": "ML-C379-alkkuttam",
+      "sequence": 18530,
+      "title": "ആൾക്കൂട്ടം (āḷkkūṭṭaṁ) — a throng; a crowd of people",
+      "headword": "ആൾക്കൂട്ടം",
+      "romanization": "āḷkkūṭṭaṁ",
+      "gloss": "a throng; a crowd of people",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f781439bd3755fdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to flee, then the Malayalam for to seek."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആൾക്കൂട്ടം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആൾക്കൂട്ടം — āḷkkūṭṭaṁ — \"a throng; a crowd of people\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അപകടം നടന്ന സ്ഥലത്ത് വലിയ ആൾക്കൂട്ടം ഉണ്ടായിരുന്നു. apakaṭaṁ naṭanna sthalattŭ valiya āḷkkūṭṭaṁ uṇṭāyirunnu. There was a big crowd where the accident happened."
+            },
+            {
+              "kind": "speech",
+              "text": "ആൾ, a person, + കൂട്ടം, a group."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആൾക്കൂട്ടം (āḷkkūṭṭaṁ) is a native Dravidian compound of ആൾ (āḷ), \"a person\", and കൂട്ടം, \"a gathering, a group\", from the root of കൂടുക, \"to come together\" (DEDR 1882)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḷkkūṭṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḷkkūṭṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḷkkūṭṭaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḷkkūṭṭaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apakaṭaṁ naṭanna sthalattŭ valiya āḷkkūṭṭaṁ uṇṭāyirunnu. — There was a big crowd where the accident happened.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apakaṭaṁ naṭanna sthalattŭ valiya āḷkkūṭṭaṁ uṇṭāyirunnu.* — There was a big crowd where the accident happened.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to flee, then the Malayalam for to seek, then say āḷkkūṭṭaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to flee, then the Malayalam for to seek, then say *āḷkkūṭṭaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആൾക്കൂട്ടം (āḷkkūṭṭaṁ) mean? (\"A throng; a crowd of people\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C379-itikkuka",
+      "sequence": 18540,
+      "title": "ഇടിക്കുക (iṭikkuka) — to crash into; to hit",
+      "headword": "ഇടിക്കുക",
+      "romanization": "iṭikkuka",
+      "gloss": "to crash into; to hit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:268a36ff4f7ca81c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to seek, then the Malayalam for a throng."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇടിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇടിക്കുക — iṭikkuka — \"to crash into; to hit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒരു കാർ ബസിൽ ഇടിച്ചു. oru kār basil iṭiccu. A car crashed into a bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഇടിച്ചു, iṭiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "What is hit takes -ഇൽ: മരത്തിൽ ഇടിച്ചു, hit a tree."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇടിക്കുക (iṭikkuka) is native Dravidian: DEDR 443 lists Malayalam iṭikka, \"to beat, to bruise\", and iṭi, \"a stroke, a blow, a shock\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru kār basil iṭiccu. — A car crashed into a bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru kār basil iṭiccu.* — A car crashed into a bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to seek, then the Malayalam for a throng, then say iṭikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to seek, then the Malayalam for a throng, then say *iṭikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇടിക്കുക (iṭikkuka) mean? (\"To crash into; to hit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C379-kuttimuttuka",
+      "sequence": 18550,
+      "title": "കൂട്ടിമുട്ടുക (kūṭṭimuṭṭuka) — to collide",
+      "headword": "കൂട്ടിമുട്ടുക",
+      "romanization": "kūṭṭimuṭṭuka",
+      "gloss": "to collide",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:681cac7e1ad551bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a throng, then the Malayalam for to crash into."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൂട്ടിമുട്ടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂട്ടിമുട്ടുക — kūṭṭimuṭṭuka — \"to collide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കവലയിൽ രണ്ട് ബൈക്കുകൾ കൂട്ടിമുട്ടി. kavalayil raṇṭŭ baikkukaḷ kūṭṭimuṭṭi. Two motorbikes collided at the junction."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കൂട്ടിമുട്ടി, kūṭṭimuṭṭi."
+            },
+            {
+              "kind": "speech",
+              "text": "Both sides hit each other: കൂട്ടി, together, + മുട്ടുക, to knock."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂട്ടിമുട്ടുക (kūṭṭimuṭṭuka) is a native Dravidian compound of കൂട്ടി, \"together\", from കൂടുക (DEDR 1882), and മുട്ടുക (muṭṭuka), \"to dash against, to knock\" (DEDR 4932)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭṭimuṭṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭṭimuṭṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭṭimuṭṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭṭimuṭṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kavalayil raṇṭŭ baikkukaḷ kūṭṭimuṭṭi. — Two motorbikes collided at the junction.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kavalayil raṇṭŭ baikkukaḷ kūṭṭimuṭṭi.* — Two motorbikes collided at the junction.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a throng, then the Malayalam for to crash into, then say kūṭṭimuṭṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a throng, then the Malayalam for to crash into, then say *kūṭṭimuṭṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൂട്ടിമുട്ടുക (kūṭṭimuṭṭuka) mean? (\"To collide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C379-mariyuka",
+      "sequence": 18560,
+      "title": "മറിയുക (maṟiyuka) — to overturn; to tip over",
+      "headword": "മറിയുക",
+      "romanization": "maṟiyuka",
+      "gloss": "to overturn; to tip over",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b123b565b2a484a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to crash into, then the Malayalam for to collide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മറിയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മറിയുക — maṟiyuka — \"to overturn; to tip over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വളവിൽ ബസ് മറിഞ്ഞു. vaḷavil basŭ maṟiññu. The bus overturned on the bend."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മറിഞ്ഞു, maṟiññu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of vehicles, boats and pots."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മറിയുക (maṟiyuka) is native Dravidian: DEDR 4761 lists Malayalam maṟiyuka, \"to turn back, to turn over, to be upset\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṟiyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṟiyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṟiyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṟiyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷavil basŭ maṟiññu. — The bus overturned on the bend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷavil basŭ maṟiññu.* — The bus overturned on the bend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to crash into, then the Malayalam for to collide, then say maṟiyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to crash into, then the Malayalam for to collide, then say *maṟiyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മറിയുക (maṟiyuka) mean? (\"To overturn; to tip over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C379-tattiviluka",
+      "sequence": 18570,
+      "title": "തട്ടിവീഴുക (taṭṭivīḻuka) — to trip and fall",
+      "headword": "തട്ടിവീഴുക",
+      "romanization": "taṭṭivīḻuka",
+      "gloss": "to trip and fall",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9823ad8d639c5c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to collide, then the Malayalam for to overturn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തട്ടിവീഴുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തട്ടിവീഴുക — taṭṭivīḻuka — \"to trip and fall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അമ്മ പടിയിൽ തട്ടിവീണു. amma paṭiyil taṭṭivīṇu. Mother tripped on the step and fell."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: തട്ടിവീണു, taṭṭivīṇu."
+            },
+            {
+              "kind": "speech",
+              "text": "തട്ടുക, to knock against, + വീഴുക, to fall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തട്ടിവീഴുക (taṭṭivīḻuka) is a native Dravidian compound of തട്ടുക (taṭṭuka), \"to strike against, to knock\" (DEDR 3039), and വീഴുക (vīḻuka), \"to fall\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭṭivīḻuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭṭivīḻuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭṭivīḻuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭṭivīḻuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amma paṭiyil taṭṭivīṇu. — Mother tripped on the step and fell.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amma paṭiyil taṭṭivīṇu.* — Mother tripped on the step and fell.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to collide, then the Malayalam for to overturn, then say taṭṭivīḻuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to collide, then the Malayalam for to overturn, then say *taṭṭivīḻuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തട്ടിവീഴുക (taṭṭivīḻuka) mean? (\"To trip and fall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

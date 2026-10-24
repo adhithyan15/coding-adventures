@@ -1,0 +1,11 @@
+{
+  "id": "BN-C387-phirti",
+  "pathSegment": "BN-PATH-387-POTH387",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-387-POTH387",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:70b23bf0772482e3",
+  "lessonIds": [
+    "KA-C511-tagulu",
+    "KA-C511-mamparu",
+    "KA-C511-ulbanisu",
+    "KA-C511-rogalaksana",
+    "KA-C511-lasike",
+    "KA-R511-review-505-511"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch511.txt",
+  "json": "kannada/narration/ch511.json",
+  "textHash": "fnv1a64:60bcb0eb569380a3",
+  "jsonHash": "fnv1a64:98050f857c9c8d59",
+  "findings": []
+}

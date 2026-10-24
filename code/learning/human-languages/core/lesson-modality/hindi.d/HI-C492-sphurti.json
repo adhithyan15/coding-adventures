@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C492-sphurti",
+    "language": "hindi",
+    "chapter": 492,
+    "sequence": 27090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b9096fc67508aad"
+  },
+  "findings": []
+}

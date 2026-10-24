@@ -1,0 +1,11 @@
+{
+  "id": "BN-C503-daunlod-kora",
+  "pathSegment": "BN-PATH-503-ONLINE503",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-503-ONLINE503",
+      "order": 4
+    }
+  ]
+}

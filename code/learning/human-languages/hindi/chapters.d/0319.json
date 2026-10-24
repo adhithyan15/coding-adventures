@@ -1,0 +1,21 @@
+{
+  "chapter": 319,
+  "title": "A Fight in the Market",
+  "label": "ch:hi-a-fight-in-the-market",
+  "canDo": "I can tell who hit whom in a fight.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-R319-review-312-319",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can tell who hit whom in a fight.",
+    "assesses": [
+      "HI-LEX-C319-MARPEET319-01",
+      "HI-LEX-C319-MARPEET319-02",
+      "HI-LEX-C319-MARPEET319-03",
+      "HI-LEX-C319-MARPEET319-04",
+      "HI-LEX-C319-MARPEET319-05"
+    ]
+  }
+}

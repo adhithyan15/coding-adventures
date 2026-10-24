@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:358d1bc4214258e0",
+  "lessonIds": [
+    "TE-C388-sandeham",
+    "TE-C388-sandehincu",
+    "TE-C388-visvasincu",
+    "TE-C388-niscayam",
+    "TE-C388-anisciti"
+  ],
+  "tex": "telugu/book/chapters/ch388-doubt-and-certainty.tex"
+}

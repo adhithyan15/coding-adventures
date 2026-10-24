@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 504,
+  "title": "Growing Old",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cf8922f1303538d8",
+  "lessons": [
+    {
+      "id": "TA-C504-mutumai",
+      "sequence": 28710,
+      "title": "முதுமை (mutumai) — old age",
+      "headword": "முதுமை",
+      "romanization": "mutumai",
+      "gloss": "old age",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f59524c0c1a08921",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to host, then the Tamil for a farewell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முதுமை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதுமை — mutumai — \"old age\"."
+            },
+            {
+              "kind": "speech",
+              "text": "முதுமையில் தனிமை ஒரு பெரிய பிரச்சினை. mutumaiyil taṉimai oru periya piracciṉai. Loneliness is a big problem in old age."
+            },
+            {
+              "kind": "speech",
+              "text": "From முது \"old\"; முதுமையில், in old age."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதுமை (mutumai) is native Dravidian (DEDR 4954), the noun of முது mutu, \"old, ancient\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutumai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutumai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutumai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutumai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutumaiyil taṉimai oru periya piracciṉai. — Loneliness is a big problem in old age.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutumaiyil taṉimai oru periya piracciṉai.* — Loneliness is a big problem in old age.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to host, then the Tamil for a farewell, then say mutumai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to host, then the Tamil for a farewell, then say *mutumai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முதுமை (mutumai) mean? (\"Old age\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C504-mutiyavar",
+      "sequence": 28720,
+      "title": "முதியவர் (mutiyavar) — an elderly person",
+      "headword": "முதியவர்",
+      "romanization": "mutiyavar",
+      "gloss": "an elderly person",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e28960390627e33f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a farewell, then the Tamil for old age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முதியவர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதியவர் — mutiyavar — \"an elderly person\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பேருந்தில் நின்ற முதியவருக்கு நான் இடம் கொடுத்தேன். pēruntil niṉṟa mutiyavarukku nāṉ iṭam koṭuttēṉ. I gave my place on the bus to an elderly man who was standing."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: முதியவர்கள், mutiyavarkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Respectful -அர்; plural முதியவர்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதியவர் (mutiyavar) is native Dravidian, built on முது mutu, \"old\" (DEDR 4954), with the respectful -அவர்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutiyavar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutiyavar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutiyavar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutiyavar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēruntil niṉṟa mutiyavarukku nāṉ iṭam koṭuttēṉ. — I gave my place on the bus to an elderly man who was standing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēruntil niṉṟa mutiyavarukku nāṉ iṭam koṭuttēṉ.* — I gave my place on the bus to an elderly man who was standing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a farewell, then the Tamil for old age, then say mutiyavar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a farewell, then the Tamil for old age, then say *mutiyavar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முதியவர் (mutiyavar) mean? (\"An elderly person\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C504-napakam",
+      "sequence": 28730,
+      "title": "ஞாபகம் (ñāpakam) — memory; recollection",
+      "headword": "ஞாபகம்",
+      "romanization": "ñāpakam",
+      "gloss": "memory; recollection",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:798c1a62edcccbdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for old age, then the Tamil for an elderly person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஞாபகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஞாபகம் — ñāpakam — \"memory; recollection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தாத்தாவுக்கு இப்போது ஞாபகம் குறைந்துவிட்டது. tāttāvukku ippōtu ñāpakam kuṟaintuviṭṭatu. Grandfather’s memory has weakened now."
+            },
+            {
+              "kind": "speech",
+              "text": "ஞாபகம் (ñāpakam) இருக்கிறது, I remember."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஞாபகம் (ñāpakam) is borrowed from Sanskrit jñāpaka, \"causing to know, informing\" (Monier-Williams); Tamil writes jñ as ஞ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñāpakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñāpakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñāpakam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñāpakam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāttāvukku ippōtu ñāpakam kuṟaintuviṭṭatu. — Grandfather’s memory has weakened now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāttāvukku ippōtu ñāpakam kuṟaintuviṭṭatu.* — Grandfather’s memory has weakened now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for old age, then the Tamil for an elderly person, then say ñāpakam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for old age, then the Tamil for an elderly person, then say *ñāpakam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஞாபகம் (ñāpakam) mean? (\"Memory; recollection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C504-manku",
+      "sequence": 28740,
+      "title": "மங்கு (maṅku) — to fade; to grow dim",
+      "headword": "மங்கு",
+      "romanization": "maṅku",
+      "gloss": "to fade; to grow dim",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:896ab28b06629b7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an elderly person, then the Tamil for memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மங்கு — maṅku — \"to fade; to grow dim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வயதானதால் பாட்டியின் கண் பார்வை மங்கியது. vayatāṉatāl pāṭṭiyiṉ kaṇ pārvai maṅkiyatu. With age grandmother’s eyesight grew dim."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): மங்கியது, maṅkiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of light, colour and eyesight: the thing fades, so the past is மங்கியது."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மங்கு (maṅku) is native Dravidian (DEDR 4750), in the family of மழுங்கு maḻuṅku, \"to grow blunt or dim\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vayatāṉatāl pāṭṭiyiṉ kaṇ pārvai maṅkiyatu. — With age grandmother’s eyesight grew dim.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vayatāṉatāl pāṭṭiyiṉ kaṇ pārvai maṅkiyatu.* — With age grandmother’s eyesight grew dim.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an elderly person, then the Tamil for memory, then say maṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an elderly person, then the Tamil for memory, then say *maṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மங்கு (maṅku) mean? (\"To fade; to grow dim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C504-curunku",
+      "sequence": 28750,
+      "title": "சுருங்கு (curuṅku) — to shrink; to wrinkle",
+      "headword": "சுருங்கு",
+      "romanization": "curuṅku",
+      "gloss": "to shrink; to wrinkle",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf2072d968b3cd61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for memory, then the Tamil for to fade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சுருங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுருங்கு — curuṅku — \"to shrink; to wrinkle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வயதாக வயதாக அவருடைய முகத் தோல் சுருங்கியது. vayatāka vayatāka avaruṭaiya mukat tōl curuṅkiyatu. As he grew older, the skin of his face wrinkled."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): சுருங்கியது, curuṅkiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of cloth in the wash too: சட்டை சுருங்கியது, the shirt shrank."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுருங்கு (curuṅku) is native Dravidian (DEDR 2687), to shrink, shrivel and wrinkle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "curuṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *curuṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "curuṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *curuṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vayatāka vayatāka avaruṭaiya mukat tōl curuṅkiyatu. — As he grew older, the skin of his face wrinkled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vayatāka vayatāka avaruṭaiya mukat tōl curuṅkiyatu.* — As he grew older, the skin of his face wrinkled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for memory, then the Tamil for to fade, then say curuṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for memory, then the Tamil for to fade, then say *curuṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சுருங்கு (curuṅku) mean? (\"To shrink; to wrinkle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

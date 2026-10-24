@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "From Plan to Practice",
+  "label": "ch:ta-from-plan-to-practice",
+  "canDo": "I can say that a plan is put into practice and managed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C389-nirvaki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can say that a plan is put into practice and managed.",
+    "assesses": [
+      "TA-LEX-C389-CEYALPATUTTU389-03",
+      "TA-LEX-C389-CEYALPATUTTU389-04",
+      "TA-LEX-C389-CEYALPATUTTU389-05"
+    ]
+  }
+}

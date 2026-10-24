@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:ad991726850121c3",
+  "lessonIds": [
+    "TE-C451-riksa",
+    "TE-C451-edlabandi",
+    "TE-C451-topudubandi",
+    "TE-C451-kalinadaka",
+    "TE-C451-batasari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch451.txt",
+  "json": "telugu/narration/ch451.json",
+  "textHash": "fnv1a64:58730830db182efe",
+  "jsonHash": "fnv1a64:ae5f4931a6408b6c",
+  "findings": []
+}

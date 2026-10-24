@@ -1,0 +1,11 @@
+{
+  "id": "TA-C388-terivi",
+  "pathSegment": "TA-PATH-388-OPPUTAL388",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-388-OPPUTAL388",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C502-nirutsaham",
+  "pathSegment": "TE-PATH-502-NIRASA502",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-502-NIRASA502",
+      "order": 2
+    }
+  ]
+}

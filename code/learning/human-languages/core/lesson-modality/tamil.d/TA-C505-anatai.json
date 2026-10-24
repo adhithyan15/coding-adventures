@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C505-anatai",
+    "language": "tamil",
+    "chapter": 505,
+    "sequence": 28800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a2235000c594e13"
+  },
+  "findings": []
+}

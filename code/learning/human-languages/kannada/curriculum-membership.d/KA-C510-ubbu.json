@@ -1,0 +1,11 @@
+{
+  "id": "KA-C510-ubbu",
+  "pathSegment": "KA-PATH-510-NOVU510",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-510-NOVU510",
+      "order": 2
+    }
+  ]
+}

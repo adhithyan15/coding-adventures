@@ -1,0 +1,11 @@
+{
+  "id": "MR-C292-agnisaman-dal",
+  "pathSegment": "MR-PATH-292-AAG292",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-292-AAG292",
+      "order": 4
+    }
+  ]
+}

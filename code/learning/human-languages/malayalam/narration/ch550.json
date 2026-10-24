@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 550,
+  "title": "Managing and Consulting",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:032066ccebebfa01",
+  "lessons": [
+    {
+      "id": "ML-C550-jolisthalam",
+      "sequence": 27690,
+      "title": "ജോലിസ്ഥലം (jōlisthalaṁ) — a workplace",
+      "headword": "ജോലിസ്ഥലം",
+      "romanization": "jōlisthalaṁ",
+      "gloss": "a workplace",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b09dc7611685ef9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a pay rise, then the Malayalam for to bear a load."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ജോലിസ്ഥലം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ജോലിസ്ഥലം — jōlisthalaṁ — \"a workplace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവളുടെ ജോലിസ്ഥലം വീട്ടിൽ നിന്ന് ദൂരെയാണ്. avaḷuṭe jōlisthalaṁ vīṭṭil ninnŭ dūreyāṇŭ. Her workplace is far from home."
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലി work + സ്ഥലം a place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ജോലിസ്ഥലം (jōlisthalaṁ) is a Malayalam compound built from ജോലി, \"work\", and സ്ഥലം, from Sanskrit sthala, \"ground, a place\" (CDIAL 13744)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōlisthalaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōlisthalaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōlisthalaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōlisthalaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷuṭe jōlisthalaṁ vīṭṭil ninnŭ dūreyāṇŭ. — Her workplace is far from home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷuṭe jōlisthalaṁ vīṭṭil ninnŭ dūreyāṇŭ.* — Her workplace is far from home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a pay rise, then the Malayalam for to bear a load, then say jōlisthalaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a pay rise, then the Malayalam for to bear a load, then say *jōlisthalaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ജോലിസ്ഥലം (jōlisthalaṁ) mean? (\"A workplace\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C550-melnottam",
+      "sequence": 27700,
+      "title": "മേൽനോട്ടം (mēlnōṭṭaṁ) — supervision",
+      "headword": "മേൽനോട്ടം",
+      "romanization": "mēlnōṭṭaṁ",
+      "gloss": "supervision",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bb3daa16e5b0d47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to bear a load, then the Malayalam for a workplace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മേൽനോട്ടം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മേൽനോട്ടം — mēlnōṭṭaṁ — \"supervision\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പണിയുടെ മേൽനോട്ടം മേസ്തിരിക്കായിരുന്നു. paṇiyuṭe mēlnōṭṭaṁ mēstirikkāyirunnu. The mason was in charge of supervising the work."
+            },
+            {
+              "kind": "speech",
+              "text": "മേൽ above + നോട്ടം a look: watching from above."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മേൽനോട്ടം (mēlnōṭṭaṁ) is native Dravidian, a compound of മേൽ, \"above\" (DEDR 5086), and നോട്ടം, \"a look, an examination\" (DEDR 3794)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēlnōṭṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēlnōṭṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēlnōṭṭaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēlnōṭṭaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇiyuṭe mēlnōṭṭaṁ mēstirikkāyirunnu. — The mason was in charge of supervising the work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇiyuṭe mēlnōṭṭaṁ mēstirikkāyirunnu.* — The mason was in charge of supervising the work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to bear a load, then the Malayalam for a workplace, then say mēlnōṭṭaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to bear a load, then the Malayalam for a workplace, then say *mēlnōṭṭaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മേൽനോട്ടം (mēlnōṭṭaṁ) mean? (\"Supervision\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C550-ekopippikkuka",
+      "sequence": 27710,
+      "title": "ഏകോപിപ്പിക്കുക (ēkōpippikkuka) — to coordinate",
+      "headword": "ഏകോപിപ്പിക്കുക",
+      "romanization": "ēkōpippikkuka",
+      "gloss": "to coordinate",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05704c93097ea4ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a workplace, then the Malayalam for supervision."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഏകോപിപ്പിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഏകോപിപ്പിക്കുക — ēkōpippikkuka — \"to coordinate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പരിപാടിയുടെ എല്ലാ ജോലികളും അവൾ ഏകോപിപ്പിച്ചു. paripāṭiyuṭe ellā jōlikaḷuṁ avaḷ ēkōpippiccu. She coordinated all the work for the programme."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഏകോപിപ്പിച്ചു, ēkōpippiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ഏകോപനം, coordination: making many into one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഏകോപിപ്പിക്കുക (ēkōpippikkuka) is a learned verb built on Sanskrit eka, \"one\" (Monier-Williams), with the causative ending -ിപ്പിക്കുക; the exact model of the formation is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēkōpippikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēkōpippikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēkōpippikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēkōpippikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paripāṭiyuṭe ellā jōlikaḷuṁ avaḷ ēkōpippiccu. — She coordinated all the work for the programme.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paripāṭiyuṭe ellā jōlikaḷuṁ avaḷ ēkōpippiccu.* — She coordinated all the work for the programme.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a workplace, then the Malayalam for supervision, then say ēkōpippikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a workplace, then the Malayalam for supervision, then say *ēkōpippikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഏകോപിപ്പിക്കുക (ēkōpippikkuka) mean? (\"To coordinate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C550-kutiyalocikkuka",
+      "sequence": 27720,
+      "title": "കൂടിയാലോചിക്കുക (kūṭiyālōcikkuka) — to consult; to confer",
+      "headword": "കൂടിയാലോചിക്കുക",
+      "romanization": "kūṭiyālōcikkuka",
+      "gloss": "to consult; to confer",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40f360ef09965d99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for supervision, then the Malayalam for to coordinate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൂടിയാലോചിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂടിയാലോചിക്കുക — kūṭiyālōcikkuka — \"to consult; to confer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തീരുമാനം എടുക്കും മുൻപ് മാനേജർ ടീമുമായി കൂടിയാലോചിച്ചു. tīrumānaṁ eṭukkuṁ munpŭ mānējar ṭīmumāyi kūṭiyālōciccu. Before deciding, the manager consulted the team."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കൂടിയാലോചിച്ചു, kūṭiyālōciccu."
+            },
+            {
+              "kind": "speech",
+              "text": "കൂടി together + ആലോചിക്കുക to think over. കൂടിയാലോചന is the noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂടിയാലോചിക്കുക (kūṭiyālōcikkuka) is a Malayalam compound built from കൂടി, \"together\", which is native (DEDR 1882), and ആലോചിക്കുക, from Sanskrit ālocana, \"considering, reflection\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭiyālōcikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭiyālōcikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭiyālōcikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭiyālōcikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīrumānaṁ eṭukkuṁ munpŭ mānējar ṭīmumāyi kūṭiyālōciccu. — Before deciding, the manager consulted the team.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīrumānaṁ eṭukkuṁ munpŭ mānējar ṭīmumāyi kūṭiyālōciccu.* — Before deciding, the manager consulted the team.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for supervision, then the Malayalam for to coordinate, then say kūṭiyālōcikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for supervision, then the Malayalam for to coordinate, then say *kūṭiyālōcikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൂടിയാലോചിക്കുക (kūṭiyālōcikkuka) mean? (\"To consult; to confer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C550-itavela",
+      "sequence": 27730,
+      "title": "ഇടവേള (iṭavēḷa) — an interval; a break",
+      "headword": "ഇടവേള",
+      "romanization": "iṭavēḷa",
+      "gloss": "an interval; a break",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cb8c82ab6e76e8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to coordinate, then the Malayalam for to consult."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇടവേള",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇടവേള — iṭavēḷa — \"an interval; a break\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രണ്ട് മണിക്കൂർ ജോലിക്ക് ശേഷം പത്ത് മിനിറ്റ് ഇടവേള ഉണ്ട്. raṇṭŭ maṇikkūr jōlikkŭ śēṣaṁ pattŭ miniṟṟŭ iṭavēḷa uṇṭŭ. After two hours of work there is a ten-minute break."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇട a gap + വേള a time; at the cinema it is the interval."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇടവേള (iṭavēḷa) is a Malayalam compound built from ഇട, \"an interval\", which is native (DEDR 448), and വേള, from Sanskrit velā, \"a limit, a boundary\" and so a point of time (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭavēḷa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭavēḷa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭavēḷa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭavēḷa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭŭ maṇikkūr jōlikkŭ śēṣaṁ pattŭ miniṟṟŭ iṭavēḷa uṇṭŭ. — After two hours of work there is a ten-minute break.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭŭ maṇikkūr jōlikkŭ śēṣaṁ pattŭ miniṟṟŭ iṭavēḷa uṇṭŭ.* — After two hours of work there is a ten-minute break.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to coordinate, then the Malayalam for to consult, then say iṭavēḷa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to coordinate, then the Malayalam for to consult, then say *iṭavēḷa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇടവേള (iṭavēḷa) mean? (\"An interval; a break\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

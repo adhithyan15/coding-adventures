@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:5da55a82f6dc57d6",
+  "lessonIds": [
+    "TE-C480-muncettu",
+    "TE-C480-pongiporlu",
+    "TE-C480-tegipovu",
+    "TE-C480-kurukupovu",
+    "TE-C480-irukkupovu"
+  ],
+  "tex": "telugu/book/chapters/ch480-floodwater.tex"
+}

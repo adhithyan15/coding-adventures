@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C435-shakha",
+    "language": "bengali",
+    "chapter": 435,
+    "sequence": 26630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:078c78152f97d77c"
+  },
+  "findings": []
+}

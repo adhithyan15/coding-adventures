@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 379,
+  "title": "Keeping a Promise",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a4a102de5553fc1b",
+  "lessons": [
+    {
+      "id": "BN-C379-protishruti",
+      "sequence": 23510,
+      "title": "প্রতিশ্রুতি (prôtishruti) — a promise; a pledge",
+      "headword": "প্রতিশ্রুতি",
+      "romanization": "prôtishruti",
+      "gloss": "a promise; a pledge",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c22728e350f58f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to postpone, then the Bengali for to chase up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রতিশ্রুতি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিশ্রুতি — prôtishruti — \"a promise; a pledge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নেতা যদি প্রতিশ্রুতি না রাখেন, তাহলে আমরা ভোট দেব না। netā jôdi prôtishruti nā rākhen, tāhôle āmrā bhoṭ debô nā. If the leader doesn't keep his promise, we won't vote for him."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিশ্রুতি (prôtishruti) is Sanskrit pratiśruti, a promise (Monier-Williams), from prati-śru 'to listen to, to agree'. It is given with দেওয়া and kept with রাখা."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtishruti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtishruti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtishruti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtishruti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "netā jôdi prôtishruti nā rākhen, tāhôle āmrā bhoṭ debô nā. — If the leader doesn't keep his promise, we won't vote for him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *netā jôdi prôtishruti nā rākhen, tāhôle āmrā bhoṭ debô nā.* — If the leader doesn't keep his promise, we won't vote for him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to postpone, then the Bengali for to chase up, then say prôtishruti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to postpone, then the Bengali for to chase up, then say *prôtishruti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রতিশ্রুতি (prôtishruti) mean? (\"A promise; a pledge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C379-songkolpo",
+      "sequence": 23520,
+      "title": "সংকল্প (sôngkôlpô) — a resolve; a firm intention",
+      "headword": "সংকল্প",
+      "romanization": "sôngkôlpô",
+      "gloss": "a resolve; a firm intention",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14fa109b6e60f522",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to chase up, then the Bengali for a pledge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সংকল্প",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংকল্প — sôngkôlpô — \"a resolve; a firm intention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সংকল্প থাকলে কাজ শেষ হবেই। sôngkôlpô thākle kāj shesh hôbei. If you are determined, the work will get done."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংকল্প (sôngkôlpô) is Sanskrit saṃkalpa, a firm intention formed in the mind (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngkôlpô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngkôlpô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngkôlpô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngkôlpô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngkôlpô thākle kāj shesh hôbei. — If you are determined, the work will get done.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngkôlpô thākle kāj shesh hôbei.* — If you are determined, the work will get done.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to chase up, then the Bengali for a pledge, then say sôngkôlpô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to chase up, then the Bengali for a pledge, then say *sôngkôlpô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সংকল্প (sôngkôlpô) mean? (\"A resolve; a firm intention\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C379-drirho",
+      "sequence": 23530,
+      "title": "দৃঢ় (driṛhô) — firm; resolute",
+      "headword": "দৃঢ়",
+      "romanization": "driṛhô",
+      "gloss": "firm; resolute",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae737101a3e646a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a pledge, then the Bengali for a resolve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দৃঢ়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দৃঢ় — driṛhô — \"firm; resolute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তুমি দৃঢ় থাকলে কেউ তোমাকে থামাতে পারবে না। tumi driṛhô thākle keu tomāke thāmāte pārbe nā. If you stand firm, no one can stop you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দৃঢ় (driṛhô) is Sanskrit dṛḍha, fixed and firm (Monier-Williams); the ḍh between vowels is written ঢ় and said ṛh."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "driṛhô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *driṛhô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "driṛhô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *driṛhô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumi driṛhô thākle keu tomāke thāmāte pārbe nā. — If you stand firm, no one can stop you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumi driṛhô thākle keu tomāke thāmāte pārbe nā.* — If you stand firm, no one can stop you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a pledge, then the Bengali for a resolve, then say driṛhô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a pledge, then the Bengali for a resolve, then say *driṛhô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দৃঢ় (driṛhô) mean? (\"Firm; resolute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C379-bhonggo-kora",
+      "sequence": 23540,
+      "title": "ভঙ্গ করা (bhônggô kôrā) — to break a promise; to break (a rule)",
+      "headword": "ভঙ্গ করা",
+      "romanization": "bhônggô kôrā",
+      "gloss": "to break a promise; to break (a rule)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:176b065c05755efa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a resolve, then the Bengali for resolute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভঙ্গ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভঙ্গ করা — bhônggô kôrā — \"to break a promise; to break (a rule)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "প্রতিশ্রুতি ভঙ্গ করলে মানুষ আর বিশ্বাস করে না। prôtishruti bhônggô kôrle mānush ār bishvās kôre nā. If you break a promise, people stop trusting you."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি চুক্তি ভঙ্গ করলেন, tini chukti bhônggô kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভঙ্গ করা (bhônggô kôrā) is Sanskrit bhaṅga, breaking (Monier-Williams), with করা. It is the formal word for breaking a promise, a law or a silence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhônggô kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhônggô kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhônggô kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhônggô kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtishruti bhônggô kôrle mānush ār bishvās kôre nā. — If you break a promise, people stop trusting you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtishruti bhônggô kôrle mānush ār bishvās kôre nā.* — If you break a promise, people stop trusting you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a resolve, then the Bengali for resolute, then say bhônggô kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a resolve, then the Bengali for resolute, then say *bhônggô kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভঙ্গ করা (bhônggô kôrā) mean? (\"To break a promise; to break (a rule)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C379-protigya-kora",
+      "sequence": 23550,
+      "title": "প্রতিজ্ঞা করা (prôtigyā kôrā) — to vow; to swear (to do something)",
+      "headword": "প্রতিজ্ঞা করা",
+      "romanization": "prôtigyā kôrā",
+      "gloss": "to vow; to swear (to do something)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cab7d888e2685dd3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for resolute, then the Bengali for to break a promise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রতিজ্ঞা করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিজ্ঞা করা — prôtigyā kôrā — \"to vow; to swear (to do something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি প্রতিজ্ঞা করলাম যে কাজ শেষ না হলে আমি ছুটি নেব না। āmi prôtigyā kôrlām je kāj shesh nā hôle āmi chhuṭi nebô nā. I vowed that I would not take a holiday until the work was done."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি সত্যি বলার প্রতিজ্ঞা করলেন, tini sôtti bôlār prôtigyā kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিজ্ঞা করা (prôtigyā kôrā) is Sanskrit pratijñā, a vow (Monier-Williams), with করা; জ্ঞ is said gy. It is a solemn promise to yourself or others."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtigyā kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtigyā kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtigyā kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtigyā kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmi prôtigyā kôrlām je kāj shesh nā hôle āmi chhuṭi nebô nā. — I vowed that I would not take a holiday until the work was done.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmi prôtigyā kôrlām je kāj shesh nā hôle āmi chhuṭi nebô nā.* — I vowed that I would not take a holiday until the work was done.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for resolute, then the Bengali for to break a promise, then say prôtigyā kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for resolute, then the Bengali for to break a promise, then say *prôtigyā kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রতিজ্ঞা করা (prôtigyā kôrā) mean? (\"To vow; to swear (to do something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

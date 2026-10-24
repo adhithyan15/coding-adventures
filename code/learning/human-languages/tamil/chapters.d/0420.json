@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Laundry and Porters",
+  "label": "ch:ta-laundry-and-porters",
+  "canDo": "I can talk about laundry, a service, porters and their wages, and cleaning.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C420-tuppuravu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can talk about laundry, a service, porters and their wages, and cleaning.",
+    "assesses": [
+      "TA-LEX-C420-SEVAI420-03",
+      "TA-LEX-C420-SEVAI420-04",
+      "TA-LEX-C420-SEVAI420-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Passengers and Porters",
+  "label": "ch:hi-passengers-and-porters",
+  "canDo": "I can talk about passengers and porters, the loads they carry and a seat found for someone.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C398-bithana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about passengers and porters, the loads they carry and a seat found for someone.",
+    "assesses": [
+      "HI-LEX-C398-MUSAFIR398-03",
+      "HI-LEX-C398-MUSAFIR398-04",
+      "HI-LEX-C398-MUSAFIR398-05"
+    ]
+  }
+}

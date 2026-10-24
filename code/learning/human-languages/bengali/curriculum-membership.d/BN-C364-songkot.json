@@ -1,0 +1,11 @@
+{
+  "id": "BN-C364-songkot",
+  "pathSegment": "BN-PATH-364-SONGKOT364",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-364-SONGKOT364",
+      "order": 1
+    }
+  ]
+}

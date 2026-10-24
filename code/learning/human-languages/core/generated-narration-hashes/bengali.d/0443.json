@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:c2b3d6772abfebb3",
+  "lessonIds": [
+    "BN-C443-khobh",
+    "BN-C443-khitkhite",
+    "BN-C443-khepano",
+    "BN-C443-phuse-otha",
+    "BN-C443-gojgoj-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch443.txt",
+  "json": "bengali/narration/ch443.json",
+  "textHash": "fnv1a64:a81f651154ad4f38",
+  "jsonHash": "fnv1a64:e909da03277fa08e",
+  "findings": []
+}

@@ -61,6 +61,24 @@ let ast = parser.parse().unwrap();
 
 Produces generic AST nodes where each node has a rule name and a list of children (nested nodes or raw tokens).
 
+#### Token-adjacency predicates (F11)
+
+`@space_before`, `@no_space_before`, `@newline_before`, `@no_newline_before`,
+`@space_after_next` and `@no_space_after_next` are zero-width elements that
+test the gap in front of the next token, using the lexer's token flags:
+
+```text
+statement    = command_call | expression ;
+command_call = NAME @space_before MINUS @no_space_before NUMBER ;  # `f -1`
+expression   = NAME { MINUS NUMBER } ;                             # `f - 1`, `f-1`
+```
+
+They never move the cursor or add children, record no expectation in error
+messages, and work under `[ ]`, `{ }`, alternation and `&`/`!`. When newlines
+are insignificant, `NEWLINE` tokens in front of the next token count as a line
+break. Using them does not make a grammar newline-significant. They read only
+tokens at the cursor, so packrat memoization stays exact.
+
 #### Recursion-depth guard (opt-in)
 
 The grammar-driven parser is recursive descent: nested rule references recurse

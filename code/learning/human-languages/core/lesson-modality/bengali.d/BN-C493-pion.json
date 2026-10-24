@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C493-pion",
+    "language": "bengali",
+    "chapter": 493,
+    "sequence": 30080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee6cb16dd73ccf21"
+  },
+  "findings": []
+}

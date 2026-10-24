@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Wildlife",
+  "label": "ch:te-wildlife",
+  "canDo": "I can say a wild animal, a wildlife sanctuary, to hunt, to die out and to migrate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C472-valasapovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can say a wild animal, a wildlife sanctuary, to hunt, to die out and to migrate.",
+    "assesses": [
+      "TE-LEX-C472-VANYAPRANI472-03",
+      "TE-LEX-C472-VANYAPRANI472-04",
+      "TE-LEX-C472-VANYAPRANI472-05"
+    ]
+  }
+}

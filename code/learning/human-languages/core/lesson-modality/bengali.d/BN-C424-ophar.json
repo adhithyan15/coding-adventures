@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C424-ophar",
+    "language": "bengali",
+    "chapter": 424,
+    "sequence": 26060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d97bf346fc8a47d0"
+  },
+  "findings": []
+}

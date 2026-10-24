@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-265-FUTURE",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "BN-EXT-265-FUTURE"
+  ],
+  "after": []
+}

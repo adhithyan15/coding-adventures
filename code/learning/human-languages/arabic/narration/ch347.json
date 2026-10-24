@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 347,
+  "title": "A kidnapping",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:00bc7d4d8bc997c2",
+  "lessons": [
+    {
+      "id": "AR-C347-ikhtatafa",
+      "sequence": 19760,
+      "title": "اختطف (ikhtaṭafa) — to kidnap; to snatch",
+      "headword": "اختطف",
+      "romanization": "ikhtaṭafa",
+      "gloss": "to kidnap; to snatch",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b07b7ed2ce51991c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to sneak in, then the Arabic for to chase."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اختطف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اختطف — ikhtaṭafa — \"to kidnap; to snatch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اختطف رجلان ابن التاجر. ikhtaṭafa rajulān ibn at-tājir. Two men kidnapped the merchant’s son."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يختطف, yakhtaṭif."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اختطف (ikhtaṭafa) is built on the native Arabic root kh-ṭ-f (Lane), \"to snatch away quickly\", as a bird snatches its prey. It is Form VIII."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikhtaṭafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikhtaṭafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikhtaṭafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikhtaṭafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikhtaṭafa rajulān ibn at-tājir. — Two men kidnapped the merchant’s son.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikhtaṭafa rajulān ibn at-tājir.* — Two men kidnapped the merchant’s son.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to sneak in, then the Arabic for to chase, then say ikhtaṭafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to sneak in, then the Arabic for to chase, then say *ikhtaṭafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اختطف (ikhtaṭafa) mean? (\"To kidnap; to snatch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C347-lahiqa",
+      "sequence": 19770,
+      "title": "لحق (laḥiqa) — to catch up with",
+      "headword": "لحق",
+      "romanization": "laḥiqa",
+      "gloss": "to catch up with",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2179b6bfe7f385d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to chase, then the Arabic for to kidnap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لحق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لحق — laḥiqa — \"to catch up with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لحق الشرطي باللص في الشارع. laḥiqa ash-shurṭī bi-l-liṣṣ fī ash-shāriʿ. The policeman caught up with the thief in the street."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يلحق, yalḥaq."
+            },
+            {
+              "kind": "speech",
+              "text": "لحق (laḥiqa) بالقطار: he caught the train."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لحق (laḥiqa) is built on the native Arabic root l-ḥ-q (Lane), \"to overtake, to come up with\", the root of the taught lāḥiqan, later."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laḥiqa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laḥiqa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laḥiqa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laḥiqa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laḥiqa ash-shurṭī bi-l-liṣṣ fī ash-shāriʿ. — The policeman caught up with the thief in the street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laḥiqa ash-shurṭī bi-l-liṣṣ fī ash-shāriʿ.* — The policeman caught up with the thief in the street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to chase, then the Arabic for to kidnap, then say laḥiqa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to chase, then the Arabic for to kidnap, then say *laḥiqa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لحق (laḥiqa) mean? (\"To catch up with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C347-rahina",
+      "sequence": 19780,
+      "title": "رهينة (rahīna) — a hostage",
+      "headword": "رهينة",
+      "romanization": "rahīna",
+      "gloss": "a hostage",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d20533377b3ef6c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to kidnap, then the Arabic for to catch up with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رهينة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رهينة — rahīna — \"a hostage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بقيت الرهينة ثلاثة أيام في البيت. baqiyat ar-rahīna thalāthat ayyām fī al-bayt. The hostage stayed in the house for three days."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رهينة (rahīna) is built on the native Arabic root r-h-n (Lane), \"to give a thing as a pledge\"; rahn is a pawn. A rahīna is a person held as one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rahīna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rahīna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rahīna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rahīna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baqiyat ar-rahīna thalāthat ayyām fī al-bayt. — The hostage stayed in the house for three days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baqiyat ar-rahīna thalāthat ayyām fī al-bayt.* — The hostage stayed in the house for three days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to kidnap, then the Arabic for to catch up with, then say rahīna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to kidnap, then the Arabic for to catch up with, then say *rahīna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رهينة (rahīna) mean? (\"A hostage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C347-fidya",
+      "sequence": 19790,
+      "title": "فدية (fidya) — a ransom",
+      "headword": "فدية",
+      "romanization": "fidya",
+      "gloss": "a ransom",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:976b989cc92bf449",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to catch up with, then the Arabic for a hostage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فدية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فدية — fidya — \"a ransom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "طلبت العصابة فدية كبيرة. ṭalabat al-ʿiṣāba fidya kabīra. The gang demanded a large ransom."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فدية (fidya) is built on the native Arabic root f-d-y (Lane), \"to ransom, to give a thing for another\"; fidāʾ is the same."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fidya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fidya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fidya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fidya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭalabat al-ʿiṣāba fidya kabīra. — The gang demanded a large ransom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭalabat al-ʿiṣāba fidya kabīra.* — The gang demanded a large ransom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to catch up with, then the Arabic for a hostage, then say fidya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to catch up with, then the Arabic for a hostage, then say *fidya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فدية (fidya) mean? (\"A ransom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C347-khatif",
+      "sequence": 19800,
+      "title": "خاطف (khāṭif) — a kidnapper",
+      "headword": "خاطف",
+      "romanization": "khāṭif",
+      "gloss": "a kidnapper",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:034a6a9ba1057f24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a hostage, then the Arabic for a ransom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خاطف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خاطف — khāṭif — \"a kidnapper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هرب الخاطف بالسيارة. haraba al-khāṭif bi-s-sayyāra. The kidnapper got away in the car."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural خاطفون. As an adjective it is swift: زيارة خاطفة, a flying visit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خاطف (khāṭif) is built on the native Arabic root kh-ṭ-f (Lane), \"to snatch\". Khāṭif is the active participle, \"one who snatches\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṭif",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāṭif*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṭif, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāṭif*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haraba al-khāṭif bi-s-sayyāra. — The kidnapper got away in the car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haraba al-khāṭif bi-s-sayyāra.* — The kidnapper got away in the car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a hostage, then the Arabic for a ransom, then say khāṭif again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a hostage, then the Arabic for a ransom, then say *khāṭif* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خاطف (khāṭif) mean? (\"A kidnapper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

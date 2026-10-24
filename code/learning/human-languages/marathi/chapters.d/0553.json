@@ -1,0 +1,19 @@
+{
+  "chapter": 553,
+  "title": "Reaching the Goal",
+  "label": "ch:mr-reaching-the-goal",
+  "canDo": "I can talk about achieving aims, accuracy and being ready.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C553-tatpar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 553: I can talk about achieving aims, accuracy and being ready.",
+    "assesses": [
+      "MR-LEX-C553-DHYEY553-03",
+      "MR-LEX-C553-DHYEY553-04",
+      "MR-LEX-C553-DHYEY553-05"
+    ]
+  }
+}

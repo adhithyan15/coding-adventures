@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Limits",
+  "label": "ch:mr-limits",
+  "canDo": "I can talk about limits, minimums and maximums.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C379-jhepne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can talk about limits, minimums and maximums.",
+    "assesses": [
+      "MR-LEX-C379-MARYADA379-03",
+      "MR-LEX-C379-MARYADA379-04",
+      "MR-LEX-C379-MARYADA379-05"
+    ]
+  }
+}

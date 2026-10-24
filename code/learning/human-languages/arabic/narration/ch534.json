@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 534,
+  "title": "Obeying and forgiving",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ac6bfa59976d824a",
+  "lessons": [
+    {
+      "id": "AR-C534-ataa",
+      "sequence": 29550,
+      "title": "أطاع (aṭāʿa) — to obey",
+      "headword": "أطاع",
+      "romanization": "aṭāʿa",
+      "gloss": "to obey",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:094d6e1eb96d9a81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to stand by, then the Arabic for a loved one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أطاع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أطاع — aṭāʿa — \"to obey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أطاع الولد أباه وذهب إلى النوم. aṭāʿa al-walad abāhu wa-dhahaba ilā an-nawm. The boy obeyed his father and went to bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يطيع, yuṭīʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أطاع (aṭāʿa) is built on the native Arabic root ṭ-w-ʿ, \"to comply, to be willing\" (Lane). Istaṭāʿa, to be able, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭāʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭāʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭāʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭāʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭāʿa al-walad abāhu wa-dhahaba ilā an-nawm. — The boy obeyed his father and went to bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭāʿa al-walad abāhu wa-dhahaba ilā an-nawm.* — The boy obeyed his father and went to bed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to stand by, then the Arabic for a loved one, then say aṭāʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to stand by, then the Arabic for a loved one, then say *aṭāʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أطاع (aṭāʿa) mean? (\"To obey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C534-asa",
+      "sequence": 29560,
+      "title": "عصى (ʿaṣā) — to disobey",
+      "headword": "عصى",
+      "romanization": "ʿaṣā",
+      "gloss": "to disobey",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95af9ce7b6e089f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a loved one, then the Arabic for to obey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عصى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عصى — ʿaṣā — \"to disobey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عصت البنت أمها وخرجت في المطر. ʿaṣat al-bint ummahā wa-kharajat fī al-maṭar. The girl disobeyed her mother and went out in the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يعصي, yaʿṣī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عصى (ʿaṣā) is built on the native Arabic root ʿ-ṣ-y, \"to resist, to rebel\" (Lane). Its last root letter y shows as alif in the past and as ī in the present."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿaṣā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿaṣā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿaṣā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿaṣā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿaṣat al-bint ummahā wa-kharajat fī al-maṭar. — The girl disobeyed her mother and went out in the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿaṣat al-bint ummahā wa-kharajat fī al-maṭar.* — The girl disobeyed her mother and went out in the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a loved one, then the Arabic for to obey, then say ʿaṣā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a loved one, then the Arabic for to obey, then say *ʿaṣā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عصى (ʿaṣā) mean? (\"To disobey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C534-wabbakha",
+      "sequence": 29570,
+      "title": "وبخ (wabbakha) — to scold",
+      "headword": "وبخ",
+      "romanization": "wabbakha",
+      "gloss": "to scold",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44d6d17ebff49db8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to obey, then the Arabic for to disobey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وبخ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وبخ — wabbakha — \"to scold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وبخ المدرب اللاعبين بعد الخسارة. wabbakha al-mudarrib al-lāʿibīn baʿda al-khasāra. The coach scolded the players after the defeat."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يوبخ, yuwabbikh."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وبخ (wabbakha) is built on the native Arabic root w-b-kh, \"to blame, to rebuke\" (Lane). Form II wabbakha is to rebuke sharply."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wabbakha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wabbakha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wabbakha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wabbakha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wabbakha al-mudarrib al-lāʿibīn baʿda al-khasāra. — The coach scolded the players after the defeat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wabbakha al-mudarrib al-lāʿibīn baʿda al-khasāra.* — The coach scolded the players after the defeat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to obey, then the Arabic for to disobey, then say wabbakha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to obey, then the Arabic for to disobey, then say *wabbakha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وبخ (wabbakha) mean? (\"To scold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C534-ihtiram",
+      "sequence": 29580,
+      "title": "احترام (iḥtirām) — esteem, respect",
+      "headword": "احترام",
+      "romanization": "iḥtirām",
+      "gloss": "esteem, respect",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c86aef079543f9fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to disobey, then the Arabic for to scold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: احترام",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احترام — iḥtirām — \"esteem, respect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يتكلم الطلاب مع المعلم باحترام. yatakallamu aṭ-ṭullāb maʿa al-muʿallim bi-iḥtirām. The students speak to the teacher with respect."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb احترم, to respect, goes with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احترام (iḥtirām) is built on the native Arabic root ḥ-r-m, \"to be forbidden, to be sacred\" (Lane). Iḥtirām is the verbal noun of Form VIII: treating someone as not to be touched."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtirām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtirām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtirām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtirām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yatakallamu aṭ-ṭullāb maʿa al-muʿallim bi-iḥtirām. — The students speak to the teacher with respect.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yatakallamu aṭ-ṭullāb maʿa al-muʿallim bi-iḥtirām.* — The students speak to the teacher with respect.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to disobey, then the Arabic for to scold, then say iḥtirām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to disobey, then the Arabic for to scold, then say *iḥtirām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does احترام (iḥtirām) mean? (\"Esteem, respect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C534-afa",
+      "sequence": 29590,
+      "title": "عفا (ʿafā) — to pardon",
+      "headword": "عفا",
+      "romanization": "ʿafā",
+      "gloss": "to pardon",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2828fea3eb3ea996",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to scold, then the Arabic for esteem."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عفا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عفا — ʿafā — \"to pardon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عفا المعلم عن الطالب. ʿafā al-muʿallim ʿan aṭ-ṭālib. The teacher pardoned the student."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يعفو, yaʿfū."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes عن."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عفا (ʿafā) is built on the native Arabic root ʿ-f-w, \"to efface; to pardon; to give health\" (Lane). ʿAfwan, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿafā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿafā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿafā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿafā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿafā al-muʿallim ʿan aṭ-ṭālib. — The teacher pardoned the student.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿafā al-muʿallim ʿan aṭ-ṭālib.* — The teacher pardoned the student.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to scold, then the Arabic for esteem, then say ʿafā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to scold, then the Arabic for esteem, then say *ʿafā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عفا (ʿafā) mean? (\"To pardon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

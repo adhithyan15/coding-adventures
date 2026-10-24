@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Laws and Rules",
+  "label": "ch:te-laws-and-rules",
+  "canDo": "I can talk about laws, breaking them and punishment.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C398-nisedhincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about laws, breaking them and punishment.",
+    "assesses": [
+      "TE-LEX-C398-CATTAM398-03",
+      "TE-LEX-C398-CATTAM398-04",
+      "TE-LEX-C398-CATTAM398-05"
+    ]
+  }
+}

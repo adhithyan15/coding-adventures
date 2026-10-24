@@ -1,0 +1,11 @@
+{
+  "id": "TE-C497-mandipadu",
+  "pathSegment": "TE-PATH-497-KOPAM497",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-497-KOPAM497",
+      "order": 1
+    }
+  ]
+}

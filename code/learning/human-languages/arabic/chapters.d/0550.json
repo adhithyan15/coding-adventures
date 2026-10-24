@@ -1,0 +1,19 @@
+{
+  "chapter": 550,
+  "title": "Keeping the house",
+  "label": "ch:ar-keeping-the-house",
+  "canDo": "I can name a chandelier and a vase, and say that someone shook out a carpet, polished shoes or took care of a thing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C550-sana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 550: I can name a chandelier and a vase, and say that someone shook out a carpet, polished shoes or took care of a thing.",
+    "assesses": [
+      "AR-LEX-C550-SIYANA550-03",
+      "AR-LEX-C550-SIYANA550-04",
+      "AR-LEX-C550-SIYANA550-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:37f58b44efe4c269",
+  "lessonIds": [
+    "AR-C377-hukuma",
+    "AR-C377-wazir",
+    "AR-C377-wizara",
+    "AR-C377-barlaman",
+    "AR-C377-dustur"
+  ],
+  "tex": "arabic/book/chapters/ch377-government.tex"
+}

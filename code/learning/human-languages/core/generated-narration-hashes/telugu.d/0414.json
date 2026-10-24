@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:96414b9a940b3eb2",
+  "lessonIds": [
+    "TE-C414-prophesaru",
+    "TE-C414-upanyasam",
+    "TE-C414-pattabhadrudu",
+    "TE-C414-upakaravetanam",
+    "TE-C414-prasnincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch414.txt",
+  "json": "telugu/narration/ch414.json",
+  "textHash": "fnv1a64:447ac76197f1f2e3",
+  "jsonHash": "fnv1a64:fe74df8bf15207e2",
+  "findings": []
+}

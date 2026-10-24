@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-292-IF-REAL",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TA-EXT-292-IF-REAL"
+  ],
+  "after": []
+}

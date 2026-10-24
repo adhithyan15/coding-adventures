@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C395-anaga",
+    "language": "telugu",
+    "chapter": 395,
+    "sequence": 19690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:808345008d3d4192"
+  },
+  "findings": []
+}

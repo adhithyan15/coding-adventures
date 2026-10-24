@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Getting ready to go",
+  "label": "ch:ar-getting-ready-to-go",
+  "canDo": "I can say to get ready, to shorten, to run out, to have room for and to raise.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-R462-review-455-462",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can say to get ready, to shorten, to run out, to have room for and to raise.",
+    "assesses": [
+      "AR-LEX-C462-ISTIDAD462-03",
+      "AR-LEX-C462-ISTIDAD462-04",
+      "AR-LEX-C462-ISTIDAD462-05"
+    ]
+  }
+}

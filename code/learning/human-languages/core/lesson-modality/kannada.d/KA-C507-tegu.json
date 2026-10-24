@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C507-tegu",
+    "language": "kannada",
+    "chapter": 507,
+    "sequence": 25870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70aa92cf4eff1296"
+  },
+  "findings": []
+}

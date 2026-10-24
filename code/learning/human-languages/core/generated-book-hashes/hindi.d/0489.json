@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:7f3abfcfa6993c8a",
+  "lessonIds": [
+    "HI-C489-gholna",
+    "HI-C489-catana",
+    "HI-C489-khurak",
+    "HI-C489-marham",
+    "HI-C489-karha"
+  ],
+  "tex": "hindi/book/chapters/ch489-medicines.tex"
+}

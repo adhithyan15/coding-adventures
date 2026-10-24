@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:8616f05a41c25149",
+  "lessonIds": [
+    "BN-C467-thot",
+    "BN-C467-choyal",
+    "BN-C467-mari",
+    "BN-C467-kontho",
+    "BN-C467-kochkano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch467.txt",
+  "json": "bengali/narration/ch467.json",
+  "textHash": "fnv1a64:c809943cc953c97d",
+  "jsonHash": "fnv1a64:0cbec2885b87ac6e",
+  "findings": []
+}

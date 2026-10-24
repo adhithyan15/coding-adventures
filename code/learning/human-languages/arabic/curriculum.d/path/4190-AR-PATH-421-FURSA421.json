@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-421-FURSA421",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "AR-EXT-421-FURSA421"
+  ],
+  "after": []
+}

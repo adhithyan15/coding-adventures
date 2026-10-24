@@ -1,0 +1,11 @@
+{
+  "id": "TA-C482-kaci",
+  "pathSegment": "TA-PATH-482-KAYAM482",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-482-KAYAM482",
+      "order": 4
+    }
+  ]
+}

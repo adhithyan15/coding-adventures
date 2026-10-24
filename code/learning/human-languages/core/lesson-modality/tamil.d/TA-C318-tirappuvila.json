@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C318-tirappuvila",
+    "language": "tamil",
+    "chapter": 318,
+    "sequence": 18330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2210abddaa6e7d5"
+  },
+  "findings": []
+}

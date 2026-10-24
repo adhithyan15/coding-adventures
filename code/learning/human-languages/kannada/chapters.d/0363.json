@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Dusk Falls",
+  "label": "ch:ka-dusk-falls",
+  "canDo": "I can say dusk, to rise, to resound, to emerge and to become visible.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C363-gocarisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can say dusk, to rise, to resound, to emerge and to become visible.",
+    "assesses": [
+      "KA-LEX-C363-SANJE363-03",
+      "KA-LEX-C363-SANJE363-04",
+      "KA-LEX-C363-SANJE363-05"
+    ]
+  }
+}

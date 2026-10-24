@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:70f28887c0de3153",
+  "lessonIds": [
+    "TA-C418-vituti",
+    "TA-C418-varaverpalar",
+    "TA-C418-mintukki",
+    "TA-C418-patukkai",
+    "TA-C418-viri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch418.txt",
+  "json": "tamil/narration/ch418.json",
+  "textHash": "fnv1a64:dca0486ecf13708f",
+  "jsonHash": "fnv1a64:2133f963cc85e1cc",
+  "findings": []
+}

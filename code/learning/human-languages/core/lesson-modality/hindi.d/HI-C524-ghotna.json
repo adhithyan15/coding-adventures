@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C524-ghotna",
+    "language": "hindi",
+    "chapter": 524,
+    "sequence": 28940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd677ff2d05a7f3a"
+  },
+  "findings": []
+}

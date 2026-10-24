@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:cd21ba18c4713a1f",
+  "lessonIds": [
+    "TA-C421-valikatti",
+    "TA-C421-kaiyetu",
+    "TA-C421-currikkattu",
+    "TA-C421-parvaiyitu",
+    "TA-C421-valiyanuppu"
+  ],
+  "tex": "tamil/book/chapters/ch421-guides-and-guidebooks.tex"
+}

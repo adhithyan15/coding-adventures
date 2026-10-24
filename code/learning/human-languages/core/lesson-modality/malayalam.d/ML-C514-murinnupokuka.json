@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C514-murinnupokuka",
+    "language": "malayalam",
+    "chapter": 514,
+    "sequence": 25740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2adaa6bdefee7e4f"
+  },
+  "findings": []
+}

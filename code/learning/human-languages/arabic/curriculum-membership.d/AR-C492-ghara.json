@@ -1,0 +1,11 @@
+{
+  "id": "AR-C492-ghara",
+  "pathSegment": "AR-PATH-492-GHIRA492",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-492-GHIRA492",
+      "order": 4
+    }
+  ]
+}

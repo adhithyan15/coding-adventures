@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:5b2dc3c9fef52d04",
+  "lessonIds": [
+    "MR-C413-nivas",
+    "MR-C413-dharmasala",
+    "MR-C413-visramgrh",
+    "MR-C413-mukkam",
+    "MR-C413-khanaval"
+  ],
+  "tex": "marathi/book/chapters/ch413-a-place-to-stay.tex"
+}

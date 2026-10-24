@@ -1,0 +1,11 @@
+{
+  "id": "TE-C341-sampadakudu",
+  "pathSegment": "TE-PATH-341-SAMPADAKUDU341",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-341-SAMPADAKUDU341",
+      "order": 1
+    }
+  ]
+}

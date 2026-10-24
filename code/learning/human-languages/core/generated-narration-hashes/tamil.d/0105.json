@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 105,
-  "sourceHash": "fnv1a64:3596efb4f92596e2",
+  "sourceHash": "fnv1a64:664084cf3c269074",
   "lessonIds": [
     "TA-C105-signature",
     "TA-C105-occupation",
@@ -13,6 +13,6 @@
   "text": "tamil/narration/ch105.txt",
   "json": "tamil/narration/ch105.json",
   "textHash": "fnv1a64:d936ec2514d50730",
-  "jsonHash": "fnv1a64:6c40e6adb9b5700d",
+  "jsonHash": "fnv1a64:0a0f3416e35e41d8",
   "findings": []
 }

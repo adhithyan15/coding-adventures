@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:0d6efe39e74fd051",
+  "lessonIds": [
+    "HI-C290-sikayat",
+    "HI-C290-riport",
+    "HI-C290-likhvana",
+    "HI-C290-daroga",
+    "HI-C290-havalat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch290.txt",
+  "json": "hindi/narration/ch290.json",
+  "textHash": "fnv1a64:cf7ebc9f40c4c561",
+  "jsonHash": "fnv1a64:0de43b3dabdfcce6",
+  "findings": []
+}

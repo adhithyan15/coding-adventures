@@ -1,0 +1,11 @@
+{
+  "id": "AR-C411-aqarra",
+  "pathSegment": "AR-PATH-411-IJAZA411",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-411-IJAZA411",
+      "order": 4
+    }
+  ]
+}

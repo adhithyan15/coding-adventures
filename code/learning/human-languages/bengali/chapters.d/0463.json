@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Mischief and Wit",
+  "label": "ch:bn-mischief-and-wit",
+  "canDo": "I can say that someone is naughty, witty or talkative.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C463-katukutu-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can say that someone is naughty, witty or talkative.",
+    "assesses": [
+      "BN-LEX-C463-DUSHTU463-03",
+      "BN-LEX-C463-DUSHTU463-04",
+      "BN-LEX-C463-DUSHTU463-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C326-guptodhon",
+    "language": "bengali",
+    "chapter": 326,
+    "sequence": 20590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a901a84fd5aeca1f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-R287-asking-the-way",
+  "pathSegment": "AR-PATH-287-WAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-287-WAY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C545-cumatala",
+    "language": "malayalam",
+    "chapter": 545,
+    "sequence": 27440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec5908432f746c65"
+  },
+  "findings": []
+}

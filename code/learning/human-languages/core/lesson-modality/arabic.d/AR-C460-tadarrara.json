@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C460-tadarrara",
+    "language": "arabic",
+    "chapter": 460,
+    "sequence": 25730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:017abd240c12b2c8"
+  },
+  "findings": []
+}

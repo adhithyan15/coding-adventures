@@ -1,0 +1,11 @@
+{
+  "id": "TA-C388-niyami",
+  "pathSegment": "TA-PATH-388-OPPUTAL388",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-388-OPPUTAL388",
+      "order": 2
+    }
+  ]
+}

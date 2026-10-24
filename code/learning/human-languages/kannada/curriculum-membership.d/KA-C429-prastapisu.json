@@ -1,0 +1,11 @@
+{
+  "id": "KA-C429-prastapisu",
+  "pathSegment": "KA-PATH-429-ASHISU429",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-429-ASHISU429",
+      "order": 2
+    }
+  ]
+}

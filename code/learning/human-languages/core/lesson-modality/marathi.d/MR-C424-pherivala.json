@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C424-pherivala",
+    "language": "marathi",
+    "chapter": 424,
+    "sequence": 24440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09fdef6dff75b1fd"
+  },
+  "findings": []
+}

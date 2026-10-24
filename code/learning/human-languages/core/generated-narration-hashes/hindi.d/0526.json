@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:174bc57c4557ea28",
+  "lessonIds": [
+    "HI-C526-fursat",
+    "HI-C526-sangrah",
+    "HI-C526-kasida",
+    "HI-C526-ikka",
+    "HI-C526-satranj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch526.txt",
+  "json": "hindi/narration/ch526.json",
+  "textHash": "fnv1a64:dfd0b8911affa587",
+  "jsonHash": "fnv1a64:bd509b4ef367ac61",
+  "findings": []
+}

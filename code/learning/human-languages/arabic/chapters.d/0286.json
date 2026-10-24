@@ -1,0 +1,23 @@
+{
+  "chapter": 286,
+  "title": "Must, Should, Will, Because",
+  "label": "ch:ar-must-should-will-because",
+  "canDo": "I can say what I want, must or ought to do, give reasons for my opinions and plans, and say what I will and will not do.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-R286-advice-and-reasons",
+    "kind": "production",
+    "summary": "Complete AR-R286-advice-and-reasons: a plan and a piece of advice with the subjunctive, and the reasons for both.",
+    "assesses": [
+      "AR-GRAMMAR-C286-SUBJUNCTIVE-01",
+      "AR-GRAMMAR-C286-YAJIBU-01",
+      "AR-GRAMMAR-C286-YANBAGHI-01",
+      "AR-GRAMMAR-C286-BI-SABAB-01",
+      "AR-GRAMMAR-C286-AS-SABAB-HUWA-01",
+      "AR-GRAMMAR-C286-FUTURE-01",
+      "AR-GRAMMAR-C286-LAN-01"
+    ]
+  }
+}

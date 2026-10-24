@@ -1,0 +1,11 @@
+{
+  "id": "TE-C498-avamanam",
+  "pathSegment": "TE-PATH-498-SIGGU498",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-498-SIGGU498",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C472-emali",
+  "pathSegment": "TA-PATH-472-MANITAR472",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-472-MANITAR472",
+      "order": 2
+    }
+  ]
+}

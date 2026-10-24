@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:41cfbe3d7a3125aa",
+  "lessonIds": [
+    "BN-C485-gorbhoboti",
+    "BN-C485-prosob",
+    "BN-C485-jonmano",
+    "BN-C485-bachcha",
+    "BN-C485-dolna"
+  ],
+  "tex": "bengali/book/chapters/ch485-a-new-baby.tex"
+}

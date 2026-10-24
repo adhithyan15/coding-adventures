@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:c9953f173c699101",
+  "lessonIds": [
+    "AR-C382-ihtijaj",
+    "AR-C382-karama",
+    "AR-C382-tazahara",
+    "AR-C382-ihtajja",
+    "AR-C382-idrab"
+  ],
+  "tex": "arabic/book/chapters/ch382-protest.tex"
+}

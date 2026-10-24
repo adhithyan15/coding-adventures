@@ -1,0 +1,19 @@
+{
+  "chapter": 545,
+  "title": "Guessing the Future",
+  "label": "ch:mr-guessing-the-future",
+  "canDo": "I can talk about destiny, chances and forecasts.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C545-vartavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can talk about destiny, chances and forecasts.",
+    "assesses": [
+      "MR-LEX-C545-BHAVISHYA545-03",
+      "MR-LEX-C545-BHAVISHYA545-04",
+      "MR-LEX-C545-BHAVISHYA545-05"
+    ]
+  }
+}

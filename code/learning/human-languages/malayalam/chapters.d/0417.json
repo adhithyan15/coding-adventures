@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Rules and the Law",
+  "label": "ch:ml-rules-and-the-law",
+  "canDo": "I can say a rule, to abide by, to obey, legal and illegal.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C417-niyamaviruddhamaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can say a rule, to abide by, to obey, legal and illegal.",
+    "assesses": [
+      "ML-LEX-C417-CATTAM417-03",
+      "ML-LEX-C417-CATTAM417-04",
+      "ML-LEX-C417-CATTAM417-05"
+    ]
+  }
+}

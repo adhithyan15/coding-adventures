@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 459,
+  "title": "Spending wisely",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:12291010064a9fd2",
+  "lessons": [
+    {
+      "id": "AR-C459-mustahlik",
+      "sequence": 25640,
+      "title": "مستهلك (mustahlik) — a consumer",
+      "headword": "مستهلك",
+      "romanization": "mustahlik",
+      "gloss": "a consumer",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95389496c6a2cd77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to take back, then the Arabic for to barter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مستهلك",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مستهلك — mustahlik — \"a consumer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يحب المستهلك الأسعار الرخيصة. yuḥibbu al-mustahlik al-asʿār ar-rakhīṣa. The consumer likes cheap prices."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مستهلك (mustahlik) is built on the native Arabic root h-l-k, \"to perish\" (Lane). It is the Form X participle, \"one who uses things up\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustahlik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustahlik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustahlik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustahlik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuḥibbu al-mustahlik al-asʿār ar-rakhīṣa. — The consumer likes cheap prices.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuḥibbu al-mustahlik al-asʿār ar-rakhīṣa.* — The consumer likes cheap prices.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to take back, then the Arabic for to barter, then say mustahlik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to take back, then the Arabic for to barter, then say *mustahlik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مستهلك (mustahlik) mean? (\"A consumer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C459-mizaniyya",
+      "sequence": 25650,
+      "title": "ميزانية (mīzāniyya) — a budget",
+      "headword": "ميزانية",
+      "romanization": "mīzāniyya",
+      "gloss": "a budget",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5b1a764315f815f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to barter, then the Arabic for a consumer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ميزانية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ميزانية — mīzāniyya — \"a budget\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كانت ميزانية (mīzāniyya) الرحلة صغيرة. kānat mīzāniyyat ar-riḥla ṣaghīra. The budget for the trip was small."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ميزانية (mīzāniyya) is built on the native Arabic root w-z-n, \"to weigh\" (Lane). It is made from mīzān, \"scales\", with -iyya: money weighed out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīzāniyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīzāniyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīzāniyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīzāniyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānat mīzāniyyat ar-riḥla ṣaghīra. — The budget for the trip was small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānat mīzāniyyat ar-riḥla ṣaghīra.* — The budget for the trip was small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to barter, then the Arabic for a consumer, then say mīzāniyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to barter, then the Arabic for a consumer, then say *mīzāniyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ميزانية (mīzāniyya) mean? (\"A budget\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C459-masarif",
+      "sequence": 25660,
+      "title": "مصاريف (maṣārīf) — expenses",
+      "headword": "مصاريف",
+      "romanization": "maṣārīf",
+      "gloss": "expenses",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58e1cc0cbf8bd7b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a consumer, then the Arabic for a budget."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مصاريف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصاريف — maṣārīf — \"expenses\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كانت مصاريف الفندق كبيرة. kānat maṣārīf al-funduq kabīra. The hotel expenses were large."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصاريف (maṣārīf) is built on the native Arabic root ṣ-r-f, \"to turn away, to change\" (Lane). Expenses are money turned out of the purse."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṣārīf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṣārīf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṣārīf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṣārīf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānat maṣārīf al-funduq kabīra. — The hotel expenses were large.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānat maṣārīf al-funduq kabīra.* — The hotel expenses were large.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a consumer, then the Arabic for a budget, then say maṣārīf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a consumer, then the Arabic for a budget, then say *maṣārīf* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مصاريف (maṣārīf) mean? (\"Expenses\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C459-mushtarayat",
+      "sequence": 25670,
+      "title": "مشتريات (mushtarayāt) — purchases; the shopping",
+      "headword": "مشتريات",
+      "romanization": "mushtarayāt",
+      "gloss": "purchases; the shopping",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:351345bcb7a44677",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a budget, then the Arabic for expenses."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مشتريات",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مشتريات — mushtarayāt — \"purchases; the shopping\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وضعت المشتريات في السيارة. waḍaʿtu al-mushtarayāt fī as-sayyāra. I put the shopping in the car."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مشتريات (mushtarayāt) is built on the native Arabic root sh-r-y, \"to buy, to sell\" (Lane). It is a plural of the Form VIII passive participle: things bought."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mushtarayāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mushtarayāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mushtarayāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mushtarayāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waḍaʿtu al-mushtarayāt fī as-sayyāra. — I put the shopping in the car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waḍaʿtu al-mushtarayāt fī as-sayyāra.* — I put the shopping in the car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a budget, then the Arabic for expenses, then say mushtarayāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a budget, then the Arabic for expenses, then say *mushtarayāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مشتريات (mushtarayāt) mean? (\"Purchases; the shopping\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C459-iqtasada",
+      "sequence": 25680,
+      "title": "اقتصد (iqtaṣada) — to economise; to save",
+      "headword": "اقتصد",
+      "romanization": "iqtaṣada",
+      "gloss": "to economise; to save",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8562bdddf8f2d33c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for expenses, then the Arabic for purchases."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اقتصد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اقتصد — iqtaṣada — \"to economise; to save\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اقتصدنا في المصاريف هذا الشهر. iqtaṣadnā fī al-maṣārīf hādhā ash-shahr. We economised on expenses this month."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يقتصد, yaqtaṣid."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اقتصد (iqtaṣada) is built on the native Arabic root q-ṣ-d, \"to aim at; to keep to the middle\" (Lane). It is Form VIII, \"to be moderate\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iqtaṣada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iqtaṣada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iqtaṣada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iqtaṣada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iqtaṣadnā fī al-maṣārīf hādhā ash-shahr. — We economised on expenses this month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iqtaṣadnā fī al-maṣārīf hādhā ash-shahr.* — We economised on expenses this month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for expenses, then the Arabic for purchases, then say iqtaṣada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for expenses, then the Arabic for purchases, then say *iqtaṣada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اقتصد (iqtaṣada) mean? (\"To economise; to save\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:a9334829396207b3",
+  "lessonIds": [
+    "MR-C395-upyukta",
+    "MR-C395-avghad",
+    "MR-C395-thet",
+    "MR-C395-apratyaksa",
+    "MR-C395-aspasta",
+    "MR-R395-review-389-395",
+    "MR-R395-review-final-395"
+  ],
+  "tex": "marathi/book/chapters/ch395-useful-or-not.tex"
+}

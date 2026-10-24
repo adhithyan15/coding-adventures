@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-485-KAVATAM485",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-485-KAVATAM485"
+  ],
+  "after": []
+}

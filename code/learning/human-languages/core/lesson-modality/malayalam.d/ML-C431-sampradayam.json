@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C431-sampradayam",
+    "language": "malayalam",
+    "chapter": 431,
+    "sequence": 21370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:beb78a16d9b3b611"
+  },
+  "findings": []
+}

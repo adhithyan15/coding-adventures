@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:41edf3398bac5e80",
+  "lessonIds": [
+    "MR-C410-kinarpatti",
+    "MR-C410-khadi",
+    "MR-C410-dipgrh",
+    "MR-C410-dvipkalpa",
+    "MR-C410-caupati"
+  ],
+  "tex": "marathi/book/chapters/ch410-along-the-coast.tex"
+}

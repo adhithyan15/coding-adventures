@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C514-pighlana",
+    "language": "hindi",
+    "chapter": 514,
+    "sequence": 28450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f28cbfa2029b7a15"
+  },
+  "findings": []
+}

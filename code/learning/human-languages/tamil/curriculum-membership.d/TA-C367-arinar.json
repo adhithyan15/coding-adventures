@@ -1,0 +1,11 @@
+{
+  "id": "TA-C367-arinar",
+  "pathSegment": "TA-PATH-367-NANAM367",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-367-NANAM367",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 474,
+  "title": "Signs of Illness",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2048f7b7d8f1ec8b",
+  "lessons": [
+    {
+      "id": "TA-C474-arikuri",
+      "sequence": 27170,
+      "title": "அறிகுறி (aṟikuṟi) — a symptom; a sign",
+      "headword": "அறிகுறி",
+      "romanization": "aṟikuṟi",
+      "gloss": "a symptom; a sign",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b544a147d1fa6f02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for self-confidence, then the Tamil for to admire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அறிகுறி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அறிகுறி — aṟikuṟi — \"a symptom; a sign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "காய்ச்சல் இந்த நோயின் முதல் அறிகுறி. kāyccal inta nōyiṉ mutal aṟikuṟi. Fever is the first symptom of this illness."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: அறிகுறிகள், aṟikuṟikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "அறி \"to know\" + குறி \"a mark\": a mark that lets you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அறிகுறி (aṟikuṟi) is a native compound of அறி aṟi, \"to know\" (DEDR 314), and குறி kuṟi, \"a mark, a sign\" (DEDR 1847)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟikuṟi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟikuṟi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟikuṟi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟikuṟi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāyccal inta nōyiṉ mutal aṟikuṟi. — Fever is the first symptom of this illness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāyccal inta nōyiṉ mutal aṟikuṟi.* — Fever is the first symptom of this illness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for self-confidence, then the Tamil for to admire, then say aṟikuṟi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for self-confidence, then the Tamil for to admire, then say *aṟikuṟi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அறிகுறி (aṟikuṟi) mean? (\"A symptom; a sign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C474-kumattal",
+      "sequence": 27180,
+      "title": "குமட்டல் (kumaṭṭal) — nausea",
+      "headword": "குமட்டல்",
+      "romanization": "kumaṭṭal",
+      "gloss": "nausea",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fcfb22bc074fb23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to admire, then the Tamil for a symptom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குமட்டல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குமட்டல் — kumaṭṭal — \"nausea\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பேருந்தில் பயணம் செய்தபோது எனக்குக் குமட்டல் வந்தது. pēruntil payaṇam ceytapōtu eṉakkuk kumaṭṭal vantatu. I felt sick while travelling by bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Dative experiencer: எனக்குக் குமட்டல் (kumaṭṭal) வந்தது, I felt nauseous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குமட்டல் (kumaṭṭal) is native Dravidian, a noun from குமட்டு kumaṭṭu, \"to retch, to feel like vomiting\" (DEDR 1739)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumaṭṭal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumaṭṭal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumaṭṭal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumaṭṭal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēruntil payaṇam ceytapōtu eṉakkuk kumaṭṭal vantatu. — I felt sick while travelling by bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēruntil payaṇam ceytapōtu eṉakkuk kumaṭṭal vantatu.* — I felt sick while travelling by bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to admire, then the Tamil for a symptom, then say kumaṭṭal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to admire, then the Tamil for a symptom, then say *kumaṭṭal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குமட்டல் (kumaṭṭal) mean? (\"Nausea\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C474-patapatappu",
+      "sequence": 27190,
+      "title": "படபடப்பு (paṭapaṭappu) — palpitations; agitation",
+      "headword": "படபடப்பு",
+      "romanization": "paṭapaṭappu",
+      "gloss": "palpitations; agitation",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93d0ba998b417cf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a symptom, then the Tamil for nausea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: படபடப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "படபடப்பு — paṭapaṭappu — \"palpitations; agitation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மேடையில் பேசும்போது எனக்குப் படபடப்பாக இருந்தது. mēṭaiyil pēcumpōtu eṉakkup paṭapaṭappāka iruntatu. My heart was racing while I spoke on the stage."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a racing heart, or of nerves before an event."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "படபடப்பு (paṭapaṭappu) is native Dravidian (DEDR 3842), the noun of a doubled verb படபட paṭapaṭa, \"to be over-hasty\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭapaṭappu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭapaṭappu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭapaṭappu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭapaṭappu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēṭaiyil pēcumpōtu eṉakkup paṭapaṭappāka iruntatu. — My heart was racing while I spoke on the stage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēṭaiyil pēcumpōtu eṉakkup paṭapaṭappāka iruntatu.* — My heart was racing while I spoke on the stage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a symptom, then the Tamil for nausea, then say paṭapaṭappu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a symptom, then the Tamil for nausea, then say *paṭapaṭappu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does படபடப்பு (paṭapaṭappu) mean? (\"Palpitations; agitation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C474-vikku",
+      "sequence": 27200,
+      "title": "விக்கு (vikku) — to hiccup",
+      "headword": "விக்கு",
+      "romanization": "vikku",
+      "gloss": "to hiccup",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78f1ecca878d35a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for nausea, then the Tamil for palpitations."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விக்கு — vikku — \"to hiccup\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வேகமாகச் சாப்பிட்டதால் எனக்கு விக்கியது. vēkamākac cāppiṭṭatāl eṉakku vikkiyatu. I got hiccups because I ate fast."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): விக்கியது, vikkiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Dative experiencer, so the past is விக்கியது. விக்கல், a hiccup."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விக்கு (vikku) is native Dravidian (DEDR 5383); the entry gives விக்கல் vikkal, \"a hiccup\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vikku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vikku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vikku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vikku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēkamākac cāppiṭṭatāl eṉakku vikkiyatu. — I got hiccups because I ate fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēkamākac cāppiṭṭatāl eṉakku vikkiyatu.* — I got hiccups because I ate fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for nausea, then the Tamil for palpitations, then say vikku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for nausea, then the Tamil for palpitations, then say *vikku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விக்கு (vikku) mean? (\"To hiccup\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C474-uruttu-chafe",
+      "sequence": 27210,
+      "title": "உறுத்து (uṟuttu) — to chafe; to irritate",
+      "headword": "உறுத்து",
+      "romanization": "uṟuttu",
+      "gloss": "to chafe; to irritate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82b16c8c460a755a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for palpitations, then the Tamil for to hiccup."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உறுத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உறுத்து — uṟuttu — \"to chafe; to irritate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கண்ணில் தூசி விழுந்து உறுத்தியது. kaṇṇil tūci viḻuntu uṟuttiyatu. Dust got into my eye and irritated it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): உறுத்தியது, uṟuttiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of the conscience too: மனம் உறுத்தியது, my conscience troubled me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உறுத்து (uṟuttu) is native Dravidian: DEDR 712 lists உறுத்து with the sense of pressing hard upon the mind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟuttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟuttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟuttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṇil tūci viḻuntu uṟuttiyatu. — Dust got into my eye and irritated it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṇil tūci viḻuntu uṟuttiyatu.* — Dust got into my eye and irritated it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for palpitations, then the Tamil for to hiccup, then say uṟuttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for palpitations, then the Tamil for to hiccup, then say *uṟuttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உறுத்து (uṟuttu) mean? (\"To chafe; to irritate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

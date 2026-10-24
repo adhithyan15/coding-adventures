@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 510,
+  "title": "Habits of Mind",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0e9e790c1cd72bbb",
+  "lessons": [
+    {
+      "id": "TE-C510-svartham",
+      "sequence": 25820,
+      "title": "స్వార్థం (svārthaṁ) — selfishness",
+      "headword": "స్వార్థం",
+      "romanization": "svārthaṁ",
+      "gloss": "selfishness",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1940ba39a0172579",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for laziness, then the Telugu for high spirits."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్వార్థం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వార్థం — svārthaṁ — \"selfishness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను స్వార్థంతో అన్నీ తనకే తీసుకున్నాడు. atanu svārthantō annī tanakē tīsukunnāḍu. Out of selfishness he took everything for himself."
+            },
+            {
+              "kind": "speech",
+              "text": "స్వార్థపరుడు, a selfish man."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వార్థం (svārthaṁ) is borrowed from Sanskrit svārtha, \"one's own affair, self-interest\" (Monier-Williams), from sva, \"own\", and artha, \"aim, advantage\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svārthaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svārthaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svārthaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svārthaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu svārthantō annī tanakē tīsukunnāḍu. — Out of selfishness he took everything for himself.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu svārthantō annī tanakē tīsukunnāḍu.* — Out of selfishness he took everything for himself.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for laziness, then the Telugu for high spirits, then say svārthaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for laziness, then the Telugu for high spirits, then say *svārthaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్వార్థం (svārthaṁ) mean? (\"Selfishness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C510-nirlaksyam",
+      "sequence": 25830,
+      "title": "నిర్లక్ష్యం (nirlakṣyaṁ) — negligence; neglect",
+      "headword": "నిర్లక్ష్యం",
+      "romanization": "nirlakṣyaṁ",
+      "gloss": "negligence; neglect",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c60bc1f0b3957dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for high spirits, then the Telugu for selfishness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిర్లక్ష్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిర్లక్ష్యం — nirlakṣyaṁ — \"negligence; neglect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "డ్రైవరు నిర్లక్ష్యం వల్ల ప్రమాదం జరిగింది. ḍraivaru nirlakṣyaṁ valla pramādaṁ jarigindi. The accident happened because of the driver's negligence."
+            },
+            {
+              "kind": "speech",
+              "text": "నిర్లక్ష్యంగా, carelessly; -పట్ల నిర్లక్ష్యం (nirlakṣyaṁ), neglect of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిర్లక్ష్యం (nirlakṣyaṁ) is borrowed from Sanskrit nirlakṣya (Monier-Williams), from nir-, \"without\", and lakṣya, \"something to be noticed\"; Monier-Williams gives \"unnoticed\", and in Telugu it became the failure to notice: neglect."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirlakṣyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirlakṣyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirlakṣyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirlakṣyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍraivaru nirlakṣyaṁ valla pramādaṁ jarigindi. — The accident happened because of the driver's negligence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍraivaru nirlakṣyaṁ valla pramādaṁ jarigindi.* — The accident happened because of the driver's negligence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for high spirits, then the Telugu for selfishness, then say nirlakṣyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for high spirits, then the Telugu for selfishness, then say *nirlakṣyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిర్లక్ష్యం (nirlakṣyaṁ) mean? (\"Negligence; neglect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C510-kramasiksana",
+      "sequence": 25840,
+      "title": "క్రమశిక్షణ (kramaśikṣaṇa) — discipline",
+      "headword": "క్రమశిక్షణ",
+      "romanization": "kramaśikṣaṇa",
+      "gloss": "discipline",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b723cfb5c16ebc3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for selfishness, then the Telugu for negligence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: క్రమశిక్షణ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్రమశిక్షణ — kramaśikṣaṇa — \"discipline\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ బడిలో క్రమశిక్షణ చాలా ముఖ్యం. ā baḍilō kramaśikṣaṇa cālā mukhyaṁ. Discipline matters a great deal at that school."
+            },
+            {
+              "kind": "speech",
+              "text": "క్రమం, order or regularity, + a word for training."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్రమశిక్షణ (kramaśikṣaṇa) is a learned compound built from Sanskrit krama, \"step, series\" (CDIAL 3577), and śikṣaṇa, \"teaching\" (CDIAL 12429): training in order."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramaśikṣaṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramaśikṣaṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramaśikṣaṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramaśikṣaṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā baḍilō kramaśikṣaṇa cālā mukhyaṁ. — Discipline matters a great deal at that school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā baḍilō kramaśikṣaṇa cālā mukhyaṁ.* — Discipline matters a great deal at that school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for selfishness, then the Telugu for negligence, then say kramaśikṣaṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for selfishness, then the Telugu for negligence, then say *kramaśikṣaṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does క్రమశిక్షణ (kramaśikṣaṇa) mean? (\"Discipline\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C510-atmavisvasam",
+      "sequence": 25850,
+      "title": "ఆత్మవిశ్వాసం (ātmaviśvāsaṁ) — self-confidence",
+      "headword": "ఆత్మవిశ్వాసం",
+      "romanization": "ātmaviśvāsaṁ",
+      "gloss": "self-confidence",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c0247c4ce6db110",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for negligence, then the Telugu for discipline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆత్మవిశ్వాసం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆత్మవిశ్వాసం — ātmaviśvāsaṁ — \"self-confidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మంచి మార్కులు రావడంతో అతనికి ఆత్మవిశ్వాసం పెరిగింది. mañci mārkulu rāvaḍantō ataniki ātmaviśvāsaṁ perigindi. With good marks his self-confidence grew."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆత్మ, self, + విశ్వాసం, trust: trust in yourself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆత్మవిశ్వాసం (ātmaviśvāsaṁ) is a learned compound built from Sanskrit ātman, \"breath, self\" (CDIAL 1135), and viśvāsa, \"trust, confidence\" (CDIAL 11966)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmaviśvāsaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmaviśvāsaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmaviśvāsaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmaviśvāsaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañci mārkulu rāvaḍantō ataniki ātmaviśvāsaṁ perigindi. — With good marks his self-confidence grew.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañci mārkulu rāvaḍantō ataniki ātmaviśvāsaṁ perigindi.* — With good marks his self-confidence grew.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for negligence, then the Telugu for discipline, then say ātmaviśvāsaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for negligence, then the Telugu for discipline, then say *ātmaviśvāsaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆత్మవిశ్వాసం (ātmaviśvāsaṁ) mean? (\"Self-confidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C510-kutuhalam",
+      "sequence": 25860,
+      "title": "కుతూహలం (kutūhalaṁ) — curiosity",
+      "headword": "కుతూహలం",
+      "romanization": "kutūhalaṁ",
+      "gloss": "curiosity",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db89d082e2daa0c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for discipline, then the Telugu for self-confidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కుతూహలం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుతూహలం — kutūhalaṁ — \"curiosity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పిల్లలు కుతూహలంతో పెట్టె తెరిచారు. pillalu kutūhalantō peṭṭe tericāru. The children opened the box with curiosity."
+            },
+            {
+              "kind": "speech",
+              "text": "కుతూహలంగా, curiously, eagerly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుతూహలం (kutūhalaṁ) is borrowed from Sanskrit kutūhala, \"curiosity, interest in anything unusual\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kutūhalaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kutūhalaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kutūhalaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kutūhalaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pillalu kutūhalantō peṭṭe tericāru. — The children opened the box with curiosity.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pillalu kutūhalantō peṭṭe tericāru.* — The children opened the box with curiosity.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for discipline, then the Telugu for self-confidence, then say kutūhalaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for discipline, then the Telugu for self-confidence, then say *kutūhalaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కుతూహలం (kutūhalaṁ) mean? (\"Curiosity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C512-itamarram",
+  "pathSegment": "TA-PATH-512-VILAKAL512",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-512-VILAKAL512",
+      "order": 3
+    }
+  ]
+}

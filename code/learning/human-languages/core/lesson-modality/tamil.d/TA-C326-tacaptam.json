@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C326-tacaptam",
+    "language": "tamil",
+    "chapter": 326,
+    "sequence": 18780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9391161f4d4e6ee"
+  },
+  "findings": []
+}

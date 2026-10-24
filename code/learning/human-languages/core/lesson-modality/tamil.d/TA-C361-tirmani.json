@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C361-tirmani",
+    "language": "tamil",
+    "chapter": 361,
+    "sequence": 20810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6f638b00895475a"
+  },
+  "findings": []
+}

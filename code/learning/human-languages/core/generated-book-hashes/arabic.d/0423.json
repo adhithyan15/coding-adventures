@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:36c2e7c066683d0a",
+  "lessonIds": [
+    "AR-C423-bawwaba",
+    "AR-C423-maqad",
+    "AR-C423-hajaza",
+    "AR-C423-suud",
+    "AR-C423-madraj"
+  ],
+  "tex": "arabic/book/chapters/ch423-at-the-gate.tex"
+}

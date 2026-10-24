@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-363-TIRUGUBATU363",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-363-TIRUGUBATU363"
+  ],
+  "after": []
+}

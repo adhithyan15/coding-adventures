@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Pay Day",
+  "label": "ch:bn-pay-day",
+  "canDo": "I can talk about pay, bonuses and whether a job pays enough.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C495-poshano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can talk about pay, bonuses and whether a job pays enough.",
+    "assesses": [
+      "BN-LEX-C495-BETON495-03",
+      "BN-LEX-C495-BETON495-04",
+      "BN-LEX-C495-BETON495-05"
+    ]
+  }
+}

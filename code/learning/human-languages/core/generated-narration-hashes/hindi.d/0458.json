@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:e3eda8ce1ed0e82f",
+  "lessonIds": [
+    "HI-C458-tanav",
+    "HI-C458-fikr",
+    "HI-C458-bojh",
+    "HI-C458-tarapna",
+    "HI-C458-asvasan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch458.txt",
+  "json": "hindi/narration/ch458.json",
+  "textHash": "fnv1a64:5463fba03fc73e01",
+  "jsonHash": "fnv1a64:d7e06b85128456ab",
+  "findings": []
+}

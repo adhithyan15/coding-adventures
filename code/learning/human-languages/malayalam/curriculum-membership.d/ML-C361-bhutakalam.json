@@ -1,0 +1,11 @@
+{
+  "id": "ML-C361-bhutakalam",
+  "pathSegment": "ML-PATH-361-YUGAM361",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-361-YUGAM361",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 277,
+  "title": "Will, Going To, Will Not",
+  "label": "ch:mr-will-going-to-will-not",
+  "canDo": "I can say what will happen (jāīn, paḍel), what I am going to do (jāṇār āhe) and what I won't do (jāṇār nāhī).",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MR-R277-what-will-happen",
+    "kind": "production",
+    "summary": "Complete MR-R277-what-will-happen: say what will happen, what is planned and what won't happen.",
+    "assesses": [
+      "MR-GRAMMAR-C277-FUTURE-PERSON-01",
+      "MR-GRAMMAR-C277-FUTURE-STEMS-01",
+      "MR-GRAMMAR-C277-NAR-PLAN-01",
+      "MR-GRAMMAR-C277-NAR-NAHI-01"
+    ]
+  }
+}

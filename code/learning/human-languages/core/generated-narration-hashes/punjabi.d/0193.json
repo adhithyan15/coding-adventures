@@ -1,0 +1,22 @@
+{
+  "language": "punjabi",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:2bec10751d28c205",
+  "lessonIds": [
+    "PA-C193-ordinal-return",
+    "PA-C193-pahile",
+    "PA-C193-pahile-review",
+    "PA-C193-duje",
+    "PA-C193-duje-review",
+    "PA-C193-ordinal-contrast",
+    "PA-C193-ordinal-frames",
+    "PA-C193-payoff"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch193.txt",
+  "json": "punjabi/narration/ch193.json",
+  "textHash": "fnv1a64:0bddd1dc90c7fb9d",
+  "jsonHash": "fnv1a64:63718e2036b0ffef",
+  "findings": []
+}

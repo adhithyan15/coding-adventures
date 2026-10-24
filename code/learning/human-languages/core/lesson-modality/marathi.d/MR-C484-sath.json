@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C484-sath",
+    "language": "marathi",
+    "chapter": 484,
+    "sequence": 27780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:605e7bf8d1b9a7fb"
+  },
+  "findings": []
+}

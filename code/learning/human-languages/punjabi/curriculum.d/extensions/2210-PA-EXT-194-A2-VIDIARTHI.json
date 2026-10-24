@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-194-A2-VIDIARTHI",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise and use the familiar noun for a student in one bounded identity statement.",
+  "prerequisites": [
+    "PA-EXT-193-A2-ORDINAL-E"
+  ]
+}

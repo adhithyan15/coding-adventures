@@ -1,0 +1,11 @@
+{
+  "id": "TA-C438-kiri",
+  "pathSegment": "TA-PATH-438-PARAVAI438",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-438-PARAVAI438",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C303-perono",
+  "pathSegment": "BN-PATH-303-SEDIN303",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-303-SEDIN303",
+      "order": 2
+    }
+  ]
+}

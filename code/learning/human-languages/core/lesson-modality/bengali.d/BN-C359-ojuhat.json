@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C359-ojuhat",
+    "language": "bengali",
+    "chapter": 359,
+    "sequence": 22480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0a8babbb9580bc5"
+  },
+  "findings": []
+}

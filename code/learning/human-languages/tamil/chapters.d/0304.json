@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Shaken and Shattered",
+  "label": "ch:ta-shaken-and-shattered",
+  "canDo": "I can say how people and things were shaken.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C304-citai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can say how people and things were shaken.",
+    "assesses": [
+      "TA-LEX-C304-ATHIRCHI304-03",
+      "TA-LEX-C304-ATHIRCHI304-04",
+      "TA-LEX-C304-ATHIRCHI304-05"
+    ]
+  }
+}

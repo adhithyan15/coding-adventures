@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C542-niyamavali",
+    "language": "marathi",
+    "chapter": 542,
+    "sequence": 30940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2324eb0239359e95"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:07c9f4fe330c3c7b",
+  "lessonIds": [
+    "BN-C420-bikri",
+    "BN-C420-pherioyala",
+    "BN-C420-dalal",
+    "BN-C420-hat",
+    "BN-C420-bikono"
+  ],
+  "tex": "bengali/book/chapters/ch420-sales-hawkers-and-markets.tex"
+}

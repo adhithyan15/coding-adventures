@@ -11,7 +11,7 @@ Before the new one: say the Tamil for please forgive me, then the Tamil for don'
 
 You'll want to know: குழந்தைகள்.
 குழந்தைகள் (kuḻantaikaḷ) — "children".
--கள் is the plural. உங்களுக்குக் குழந்தைகள் (kuḻantaikaḷ) இருக்கிறார்களா? — "do you have children?".
+உங்களுக்குக் குழந்தைகள் (kuḻantaikaḷ) இருக்கிறார்களா? — "do you have children?". -கள் is the plural.
 
 The word, taken apart.
 குழந்தைகள் (kuḻantaikaḷ) is native Dravidian (DEDR 2149). It is kuḻandai, "child", with the plural -kaḷ. DEDR compares Sanskrit kuḍaka, "child".

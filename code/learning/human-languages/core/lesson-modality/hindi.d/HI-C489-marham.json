@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C489-marham",
+    "language": "hindi",
+    "chapter": 489,
+    "sequence": 26920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10b11af5f4a408dd"
+  },
+  "findings": []
+}

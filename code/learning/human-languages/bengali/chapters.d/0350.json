@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "What We Value",
+  "label": "ch:bn-what-we-value",
+  "canDo": "I can say what I value and why.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C350-nejyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can say what I value and why.",
+    "assesses": [
+      "BN-LEX-C350-ADORSHO350-03",
+      "BN-LEX-C350-ADORSHO350-04",
+      "BN-LEX-C350-ADORSHO350-05"
+    ]
+  }
+}

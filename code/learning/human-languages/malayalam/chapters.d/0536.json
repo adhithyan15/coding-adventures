@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Blood Tests and Muscles",
+  "label": "ch:ml-blood-tests-and-muscles",
+  "canDo": "I can say a blood test, a vein, a muscle, the lungs and to take a rest.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C536-visramikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can say a blood test, a vein, a muscle, the lungs and to take a rest.",
+    "assesses": [
+      "ML-LEX-C536-RAKTAM536-03",
+      "ML-LEX-C536-RAKTAM536-04",
+      "ML-LEX-C536-RAKTAM536-05"
+    ]
+  }
+}

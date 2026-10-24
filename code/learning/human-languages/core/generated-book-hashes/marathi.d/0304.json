@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:8b1828499843e1ea",
+  "lessonIds": [
+    "MR-C304-varnan-karne",
+    "MR-C304-prasang",
+    "MR-C304-ulgadne",
+    "MR-C304-gajne",
+    "MR-C304-pasarne"
+  ],
+  "tex": "marathi/book/chapters/ch304-telling-it-well.tex"
+}

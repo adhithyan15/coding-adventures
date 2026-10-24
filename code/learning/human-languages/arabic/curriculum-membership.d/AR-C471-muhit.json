@@ -1,0 +1,11 @@
+{
+  "id": "AR-C471-muhit",
+  "pathSegment": "AR-PATH-471-KHALIJ471",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-471-KHALIJ471",
+      "order": 1
+    }
+  ]
+}

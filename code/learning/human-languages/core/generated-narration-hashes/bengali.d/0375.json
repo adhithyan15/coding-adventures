@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:297310c36148f9e0",
+  "lessonIds": [
+    "BN-C375-badhyotamulok",
+    "BN-C375-onumoti",
+    "BN-C375-betikrom",
+    "BN-C375-chapano",
+    "BN-C375-shithil-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch375.txt",
+  "json": "bengali/narration/ch375.json",
+  "textHash": "fnv1a64:eb434e2f22dd2f3d",
+  "jsonHash": "fnv1a64:ec50d574ea61a125",
+  "findings": []
+}

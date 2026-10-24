@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:ffb196ebc3a052d1",
+  "lessonIds": [
+    "KA-C343-nirupisu",
+    "KA-C343-varnisu",
+    "KA-C343-sannivesa",
+    "KA-C343-prasanga",
+    "KA-C343-hinnele"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch343.txt",
+  "json": "kannada/narration/ch343.json",
+  "textHash": "fnv1a64:767853f5b92aa76c",
+  "jsonHash": "fnv1a64:68cd5220fd44cba7",
+  "findings": []
+}

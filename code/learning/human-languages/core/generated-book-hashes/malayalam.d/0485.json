@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:4816c61dd8264b52",
+  "lessonIds": [
+    "ML-C485-liphrru",
+    "ML-C485-konippati",
+    "ML-C485-kavatam",
+    "ML-C485-visramamuri",
+    "ML-C485-tattukata"
+  ],
+  "tex": "malayalam/book/chapters/ch485-ways-in-and-out.tex"
+}

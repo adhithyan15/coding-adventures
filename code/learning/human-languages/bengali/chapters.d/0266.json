@@ -1,0 +1,23 @@
+{
+  "chapter": 266,
+  "title": "What Was Going On",
+  "label": "ch:bn-what-was-going-on",
+  "canDo": "I can say what is going on and what was going on (pôṛchhi, pôṛchhilām), set a scene with jôkhon … tôkhon, say oṭhā, to get up, and read and write ঠ in ঠিক.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-R266-the-scene",
+    "kind": "production",
+    "summary": "Complete BN-R266-the-scene: say what was going on, and what broke into it.",
+    "assesses": [
+      "BN-GRAMMAR-C266-ONGOING-NOW-01",
+      "BN-GRAMMAR-C266-ONGOING-PAST-01",
+      "BN-GRAMMAR-C266-SCENE-EVENT-01",
+      "BN-GRAMMAR-C266-TOKHON-01",
+      "BN-LEX-C266-THIK-01",
+      "BN-SCRIPT-C266-TTHA-01",
+      "BN-LEX-C266-OTHA-01"
+    ]
+  }
+}

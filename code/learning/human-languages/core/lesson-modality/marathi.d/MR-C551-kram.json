@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C551-kram",
+    "language": "marathi",
+    "chapter": 551,
+    "sequence": 31430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24f331f112b057f9"
+  },
+  "findings": []
+}

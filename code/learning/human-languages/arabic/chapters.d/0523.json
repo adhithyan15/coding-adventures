@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Getting it done",
+  "label": "ch:ar-getting-it-done",
+  "canDo": "I can talk about an evaluation and production, and say that someone made plans, completed something or devoted themselves to it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C523-intaj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about an evaluation and production, and say that someone made plans, completed something or devoted themselves to it.",
+    "assesses": [
+      "AR-LEX-C523-INJAZ523-03",
+      "AR-LEX-C523-INJAZ523-04",
+      "AR-LEX-C523-INJAZ523-05"
+    ]
+  }
+}

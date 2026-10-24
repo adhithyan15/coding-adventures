@@ -1,0 +1,11 @@
+{
+  "id": "MR-C295-apatti",
+  "pathSegment": "MR-PATH-295-SANKAT295",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-295-SANKAT295",
+      "order": 2
+    }
+  ]
+}

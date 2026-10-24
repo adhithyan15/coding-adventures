@@ -1,0 +1,11 @@
+{
+  "id": "ML-C549-kariyar",
+  "pathSegment": "ML-PATH-549-PUROGATI549",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-549-PUROGATI549",
+      "order": 2
+    }
+  ]
+}

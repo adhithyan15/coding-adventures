@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:09f71864cb60a147",
+  "lessonIds": [
+    "HI-C380-diqqat",
+    "HI-C380-badha",
+    "HI-C380-hal",
+    "HI-C380-atakna",
+    "HI-C380-ubarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch380.txt",
+  "json": "hindi/narration/ch380.json",
+  "textHash": "fnv1a64:400498fc4ba73452",
+  "jsonHash": "fnv1a64:f8f419c37e5ee5a9",
+  "findings": []
+}

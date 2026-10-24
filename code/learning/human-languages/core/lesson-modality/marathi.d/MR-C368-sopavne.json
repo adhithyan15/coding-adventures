@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C368-sopavne",
+    "language": "marathi",
+    "chapter": 368,
+    "sequence": 21360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da4830f3ad32f97b"
+  },
+  "findings": []
+}

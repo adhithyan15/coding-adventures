@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:600313f16690d787",
+  "lessonIds": [
+    "ML-C381-iruttu",
+    "ML-C381-sabdam",
+    "ML-C381-nissabdata",
+    "ML-C381-mantrikkuka",
+    "ML-C381-apratyaksamakuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch381.txt",
+  "json": "malayalam/narration/ch381.json",
+  "textHash": "fnv1a64:108b771af2852d9a",
+  "jsonHash": "fnv1a64:cded5a50567d5857",
+  "findings": []
+}

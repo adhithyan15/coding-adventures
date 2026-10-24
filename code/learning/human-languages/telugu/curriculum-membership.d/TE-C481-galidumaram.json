@@ -1,0 +1,11 @@
+{
+  "id": "TE-C481-galidumaram",
+  "pathSegment": "TE-PATH-481-VADAGALI481",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-481-VADAGALI481",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-480-NASHRA480",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-480-NASHRA480"
+  ],
+  "after": []
+}

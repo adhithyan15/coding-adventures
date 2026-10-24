@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:4a20ff9986f09786",
+  "lessonIds": [
+    "HI-C403-staind",
+    "HI-C403-rahgir",
+    "HI-C403-futpath",
+    "HI-C403-tahalna",
+    "HI-C403-haphna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch403.txt",
+  "json": "hindi/narration/ch403.json",
+  "textHash": "fnv1a64:7a6f190779ea6cba",
+  "jsonHash": "fnv1a64:11a5ce760fa8131c",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C502-abola-dharne",
+    "language": "marathi",
+    "chapter": 502,
+    "sequence": 28700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb5581a9f2653047"
+  },
+  "findings": []
+}

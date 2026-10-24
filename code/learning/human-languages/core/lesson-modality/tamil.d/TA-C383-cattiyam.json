@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C383-cattiyam",
+    "language": "tamil",
+    "chapter": 383,
+    "sequence": 21940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14cd19e79a21dbf8"
+  },
+  "findings": []
+}

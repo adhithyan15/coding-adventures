@@ -1,0 +1,11 @@
+{
+  "id": "MR-C469-ugra",
+  "pathSegment": "MR-PATH-469-KATHOR469",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-469-KATHOR469",
+      "order": 3
+    }
+  ]
+}

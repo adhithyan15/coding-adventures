@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Projects fenced fallback as pre/code for used-style collection. HTML rendering delegates to the shared escaped renderer; full fence info is inert metadata.
+
+## Unreleased
+
 ### Fixed
 
 - Keep HTML5 element-ID resolution within the normal test deadline for deeply

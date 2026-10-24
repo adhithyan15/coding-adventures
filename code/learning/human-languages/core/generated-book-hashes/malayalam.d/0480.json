@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:e326989a75947e0d",
+  "lessonIds": [
+    "ML-C480-yatravivaranam",
+    "ML-C480-marannuvaykkuka",
+    "ML-C480-codiccariyuka",
+    "ML-C480-lokkar",
+    "ML-C480-karutivaykkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch480-keeping-things-safe.tex"
+}

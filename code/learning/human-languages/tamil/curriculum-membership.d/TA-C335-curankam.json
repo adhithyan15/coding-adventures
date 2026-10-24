@@ -1,0 +1,11 @@
+{
+  "id": "TA-C335-curankam",
+  "pathSegment": "TA-PATH-335-KOTTAI335",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-335-KOTTAI335",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Witnesses and oaths",
+  "label": "ch:ar-witnesses-and-oaths",
+  "canDo": "I can say to witness, to swear, to take an oath, to confess and to deny.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C325-ankara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can say to witness, to swear, to take an oath, to confess and to deny.",
+    "assesses": [
+      "AR-LEX-C325-SHAHID325-03",
+      "AR-LEX-C325-SHAHID325-04",
+      "AR-LEX-C325-SHAHID325-05"
+    ]
+  }
+}

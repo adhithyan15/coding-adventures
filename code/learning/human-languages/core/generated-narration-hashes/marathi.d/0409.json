@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:79a96437f7249930",
+  "lessonIds": [
+    "MR-C409-khalasi",
+    "MR-C409-ohoti",
+    "MR-C409-udhan",
+    "MR-C409-khavalne",
+    "MR-C409-hindkalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch409.txt",
+  "json": "marathi/narration/ch409.json",
+  "textHash": "fnv1a64:c95ad8d2b7a79988",
+  "jsonHash": "fnv1a64:8c1a8b1314ebf54a",
+  "findings": []
+}

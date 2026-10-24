@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:058cb24cf643f288",
+  "lessonIds": [
+    "TE-C478-alpapidanam",
+    "TE-C478-penugali",
+    "TE-C478-sudigali",
+    "TE-C478-galivana",
+    "TE-C478-balahinapadu"
+  ],
+  "tex": "telugu/book/chapters/ch478-storms.tex"
+}

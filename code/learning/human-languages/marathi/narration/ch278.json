@@ -1,0 +1,585 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 278,
+  "title": "Was Doing, While, Used To",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:2e8fc558349230a6",
+  "lessons": [
+    {
+      "id": "MR-C278-vacat-hoto",
+      "sequence": 16070,
+      "title": "मी वाचत होतो (mī vācat hoto) — what was going on",
+      "headword": "मी वाचत होतो",
+      "romanization": "mī vācat hoto",
+      "gloss": "I was reading — the past of what was going on",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff27e0883161e8a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I won't come tomorrow\". (mī udyā yeṇār nāhī.) Then \"I was at home\" and \"I read a book\". (mī gharī hoto, mī pustak vāclaṁ.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last is an event: it happened and it was over. A story also needs what was going on at the time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -त होतो, 'was doing'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काल रात्री नऊ वाजता मी पुस्तक वाचत होतो. kāl rātrī naū vājtā mī pustak vācat hoto. — \"At nine last night I was reading a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces. वाचत is the bare -त shape you know from आवडत नाही; होतो, \"I was\", carries the person and the gender:"
+            },
+            {
+              "kind": "speech",
+              "text": "ती वाचत होती (vācat hotī) — she was reading."
+            },
+            {
+              "kind": "speech",
+              "text": "तो काम करत होता (kām karat hotā) — he was working."
+            },
+            {
+              "kind": "speech",
+              "text": "आम्ही बोलत होतो (bolat hoto) — we were talking."
+            },
+            {
+              "kind": "speech",
+              "text": "पाऊस पडत होता (pāūs paḍat hotā) — it was raining."
+            },
+            {
+              "kind": "speech",
+              "text": "This past follows the doer even with an object: ती पुस्तक वाचत होती. No -ने here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the scene and the event",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी वाचत होतो. तेव्हा मीरा आली. mī vācat hoto. tevhā mīrā ālī. — \"I was reading. At that moment, Meera came.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The first sentence is the scene: it was going on. आली is the event: it happened once and cut into the scene. तेव्हा, the \"then\" of जेव्हा … तेव्हा, hooks one onto the other. A told story moves on this rhythm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She was reading\" — tī vācat hotī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She was reading\" — *tī vācat hotī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It was raining\" — pāūs paḍat hotā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It was raining\" — *pāūs paḍat hotā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I was reading. At that moment, Meera came.\" — mī vācat hoto. tevhā mīrā ālī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I was reading. At that moment, Meera came.\" — *mī vācat hoto. tevhā mīrā ālī.*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C278-vacat-hoto-r1",
+              "prompt": "Say that it was raining, then that you were reading when Meera came.",
+              "assesses": [
+                "MR-GRAMMAR-C278-ONGOING-PAST-01",
+                "MR-GRAMMAR-C278-SCENE-EVENT-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "pāūs paḍat hotā; mī vācat hoto. tevhā mīrā ālī",
+                "पाऊस पडत होता. मी वाचत होतो. तेव्हा मीरा आली."
+              ],
+              "feedback": {
+                "correct": "The scene in -t hoto, the event in the plain past.",
+                "incorrect": "Keep the -t shape and let hotā / hoto carry the person."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I was reading\"? (मी वाचत होतो (mī vācat hoto).) \"It was raining\"? (पाऊस पडत होता.) Which past is the scene? (-त होतो.) Which is the event? (The plain past: आली.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C278-astana",
+      "sequence": 16080,
+      "title": "असताना (astānā) — while it was going on",
+      "headword": "असताना",
+      "romanization": "astānā",
+      "gloss": "while — one word that holds the scene, and जेव्हा with the past",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63ab3438b796681d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was reading\". (mī vācat hoto.) Then the two-part \"when … then\" frame. (jevhā … tevhā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: असताना, 'while'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी वाचत असताना मीरा आली. mī vācat astānā mīrā ālī. — \"While I was reading, Meera came.\""
+            },
+            {
+              "kind": "speech",
+              "text": "असताना is असणे, \"to be\", with -ताना, \"while being\". Put it after the -त shape, and the scene needs no second clause: मी वाचत असताना. It follows a place or a state too: मी घरी असताना (mī gharī astānā), \"while I was at home\"; लहान असताना (lahān astānā), \"when (I was) small\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It does not change for person or gender. The event after it does: मीरा आली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: जेव्हा … तेव्हा with the past",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी घरी आलो, तेव्हा आई चहा करत होती. mī gharī ālo, tevhā āī cahā karat hotī. — \"When I came home, Mother was making tea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "जेव्हा can stay or go: with the past, the first clause alone sets the time, and तेव्हा picks it up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"While I was reading, Meera came\" — mī vācat astānā mīrā ālī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"While I was reading, Meera came\" — *mī vācat astānā mīrā ālī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"While I was at home, it was raining\" — mī gharī astānā pāūs paḍat hotā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"While I was at home, it was raining\" — *mī gharī astānā pāūs paḍat hotā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When I came home, Mother was making tea\" — mī gharī ālo, tevhā āī cahā karat hotī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When I came home, Mother was making tea\" — *mī gharī ālo, tevhā āī cahā karat hotī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C278-astana-r1",
+              "prompt": "Say that Meera came while you were reading.",
+              "assesses": [
+                "MR-GRAMMAR-C278-ASTANA-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "mī vācat astānā mīrā ālī",
+                "मी वाचत असताना मीरा आली."
+              ],
+              "feedback": {
+                "correct": "One word holds the scene: astānā.",
+                "incorrect": "vācat, then astānā, then the event."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"While I was reading\"? (मी वाचत असताना (astānā).) \"When (I was) small\"? (लहान असताना (astānā).) Does असताना (astānā) change for \"she\"? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C278-jayco",
+      "sequence": 16090,
+      "title": "मी जायचो (mī jāyco) — what used to happen",
+      "headword": "मी जायचो",
+      "romanization": "mī jāyco",
+      "gloss": "I used to go — the habit of the past",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0eecda01fbda6733",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"when (I was) small\". (lahān astānā.) Then \"formerly\". (pūrvī.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ायचो, 'used to'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लहान असताना मी रोज नदीवर जायचो. lahān astānā mī roj nadīvar jāyco. — \"When I was small, I used to go to the river every day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take -णे off and put -ायच- on, then the endings of गेलो:"
+            },
+            {
+              "kind": "speech",
+              "text": "मी जायचो (mī jāyco) (jāyco) — I used to go; a woman says जायचे (jāyce)."
+            },
+            {
+              "kind": "speech",
+              "text": "तो जायचा (jāycā), ती जायची (jāycī) — he, she used to go."
+            },
+            {
+              "kind": "speech",
+              "text": "आम्ही जायचो, ते जायचे — we, they used to go."
+            },
+            {
+              "kind": "speech",
+              "text": "करणे becomes करायचो (karāyco); राहणे becomes राहायचो (rāhāyco): पूर्वी मी पुण्यात राहायचो (pūrvī mī puṇyāt rāhāyco), \"I used to live in Pune\". With an object it follows the doer: मी पुस्तक वाचायचो (mī pustak vācāyco)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When I was small, I used to go to the river every day\" — lahān astānā mī roj nadīvar jāyco",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When I was small, I used to go to the river every day\" — *lahān astānā mī roj nadīvar jāyco*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Formerly she used to live in Pune\" — pūrvī tī puṇyāt rāhāycī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Formerly she used to live in Pune\" — *pūrvī tī puṇyāt rāhāycī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We used to read books\" — āmhī pustakaṁ vācāyco",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We used to read books\" — *āmhī pustakaṁ vācāyco*]"
+            },
+            {
+              "kind": "speech",
+              "text": "पुस्तकं (pustakaṁ, \"books\")."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C278-jayco-r1",
+              "prompt": "Say that you used to go to the river every day when you were small.",
+              "assesses": [
+                "MR-GRAMMAR-C278-HABITUAL-PAST-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "lahān astānā mī roj nadīvar jāyco",
+                "लहान असताना मी रोज नदीवर जायचो.",
+                "lahān astānā mī roj nadīvar jāyce"
+              ],
+              "feedback": {
+                "correct": "-āyc- with the ending of gelo.",
+                "incorrect": "jāṇe loses -ṇe: jā-yc-o."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I used to go\"? (जायचो, or जायचे.) \"She used to live\"? (राहायची.) Which past is a habit? (-ायचो.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R278-the-past-three-ways",
+      "sequence": 16100,
+      "title": "Review — the past three ways",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what happened, what was going on and what used to happen",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69bc3b2bcbb50e63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I am going to go\" and \"I won't go\". (mī jāṇār āhe, mī jāṇār nāhī.) Then \"he was not at home\" and \"she was reading\". (to gharī navhtā, tī vācat hotī.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "At nine last night I was reading a book.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: At nine last night I was reading a book.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "While I was reading, Meera came.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: While I was reading, Meera came.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "When I came home, Mother was making tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: When I came home, Mother was making tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "When I was small, I used to go to the river every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: When I was small, I used to go to the river every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one thing you were doing yesterday evening, and one thing that cut into it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one thing you were doing yesterday evening, and one thing that cut into it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which past is the event? (The plain past: आली.) Which is the scene? (-त होतो, or असताना (astānā).) Which is the habit? (-ायचो.) \"When I came home\"? (मी घरी आलो, तेव्हा …)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

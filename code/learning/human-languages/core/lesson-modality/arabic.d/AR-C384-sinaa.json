@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C384-sinaa",
+    "language": "arabic",
+    "chapter": 384,
+    "sequence": 21750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d01b9f1c0a7bbfca"
+  },
+  "findings": []
+}

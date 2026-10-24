@@ -1,0 +1,11 @@
+{
+  "id": "TE-C525-adayam",
+  "pathSegment": "TE-PATH-525-SAMPADANA525",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-525-SAMPADANA525",
+      "order": 2
+    }
+  ]
+}

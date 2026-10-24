@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:9cdacddbd3a2fe74",
+  "lessonIds": [
+    "MR-C426-rokad",
+    "MR-C426-dhanades",
+    "MR-C426-cillar",
+    "MR-C426-rakkam",
+    "MR-C426-jama-karne"
+  ],
+  "tex": "marathi/book/chapters/ch426-cash-and-cheques.tex"
+}

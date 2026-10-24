@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "A Heated Argument",
+  "label": "ch:hi-a-heated-argument",
+  "canDo": "I can say who argued, and what each side said.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C346-balki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can say who argued, and what each side said.",
+    "assesses": [
+      "HI-LEX-C346-BAHAS346-03",
+      "HI-LEX-C346-BAHAS346-04",
+      "HI-LEX-C346-BAHAS346-05"
+    ]
+  }
+}

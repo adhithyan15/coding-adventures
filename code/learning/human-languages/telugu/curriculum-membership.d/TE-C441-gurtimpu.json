@@ -1,0 +1,11 @@
+{
+  "id": "TE-C441-gurtimpu",
+  "pathSegment": "TE-PATH-441-PASPORTU441",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-441-PASPORTU441",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:522c8bbccd1c33e2",
+  "lessonIds": [
+    "TE-C365-vegu",
+    "TE-C365-droham",
+    "TE-C365-pratijna",
+    "TE-C365-adesincu",
+    "TE-C365-bahiskarincu",
+    "TE-R365-review-358-365"
+  ],
+  "tex": "telugu/book/chapters/ch365-spies-and-traitors.tex"
+}

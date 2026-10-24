@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Desert and jungle",
+  "label": "ch:ar-desert-and-jungle",
+  "canDo": "I can say an oasis, a mirage, a jungle, a swamp and barren.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C473-qahil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can say an oasis, a mirage, a jungle, a swamp and barren.",
+    "assesses": [
+      "AR-LEX-C473-WAHA473-03",
+      "AR-LEX-C473-WAHA473-04",
+      "AR-LEX-C473-WAHA473-05"
+    ]
+  }
+}

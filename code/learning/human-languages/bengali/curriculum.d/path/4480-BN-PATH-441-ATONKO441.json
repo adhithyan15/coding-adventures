@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-441-ATONKO441",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-441-ATONKO441"
+  ],
+  "after": []
+}

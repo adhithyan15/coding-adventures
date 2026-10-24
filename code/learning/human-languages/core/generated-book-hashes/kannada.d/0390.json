@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:bd08167e002d2bee",
+  "lessonIds": [
+    "KA-C390-kanunu",
+    "KA-C390-kayde",
+    "KA-C390-pariskarisu",
+    "KA-C390-adhikrta",
+    "KA-C390-hastaksepa",
+    "KA-R390-review-384-390"
+  ],
+  "tex": "kannada/book/chapters/ch390-the-law.tex"
+}

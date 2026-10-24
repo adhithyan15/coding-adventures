@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Medals and Records",
+  "label": "ch:bn-medals-and-records",
+  "canDo": "I can talk about medals, trophies, records and leading a team to victory.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C520-jetano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about medals, trophies, records and leading a team to victory.",
+    "assesses": [
+      "BN-LEX-C520-PODOK520-03",
+      "BN-LEX-C520-PODOK520-04",
+      "BN-LEX-C520-PODOK520-05"
+    ]
+  }
+}

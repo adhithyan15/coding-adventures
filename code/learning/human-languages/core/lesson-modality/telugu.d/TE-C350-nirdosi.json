@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C350-nirdosi",
+    "language": "telugu",
+    "chapter": 350,
+    "sequence": 17260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8c6c7880f4e3a5b"
+  },
+  "findings": []
+}

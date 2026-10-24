@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-346-VIVAHAM346",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-346-VIVAHAM346"
+  ],
+  "after": []
+}

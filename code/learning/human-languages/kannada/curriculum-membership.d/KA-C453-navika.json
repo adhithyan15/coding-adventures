@@ -1,0 +1,11 @@
+{
+  "id": "KA-C453-navika",
+  "pathSegment": "KA-PATH-453-HADAGU453",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-453-HADAGU453",
+      "order": 1
+    }
+  ]
+}

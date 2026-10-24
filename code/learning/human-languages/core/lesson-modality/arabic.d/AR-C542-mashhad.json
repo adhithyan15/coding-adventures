@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C542-mashhad",
+    "language": "arabic",
+    "chapter": 542,
+    "sequence": 29970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04a4219edcf556ae"
+  },
+  "findings": []
+}

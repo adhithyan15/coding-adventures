@@ -1,0 +1,874 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 372,
+  "title": "Fraud and Tricks",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:162be0a243c94301",
+  "lessons": [
+    {
+      "id": "ML-C372-tattippu",
+      "sequence": 18170,
+      "title": "തട്ടിപ്പ് (taṭṭippŭ) — a fraud; a scam",
+      "headword": "തട്ടിപ്പ്",
+      "romanization": "taṭṭippŭ",
+      "gloss": "a fraud; a scam",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:982c0e2b3ae635f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to release, then the Malayalam for to free."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തട്ടിപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തട്ടിപ്പ് — taṭṭippŭ — \"a fraud; a scam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഫോണിലൂടെയുള്ള തട്ടിപ്പ് ഇപ്പോൾ കൂടുതലാണ്. phōṇilūṭeyuḷḷa taṭṭippŭ ippōḷ kūṭutalāṇŭ. Fraud over the phone is more common now."
+            },
+            {
+              "kind": "speech",
+              "text": "A scam takes your money by a trick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തട്ടിപ്പ് (taṭṭippŭ) is native Dravidian, a noun built on തട്ടുക (taṭṭuka), \"to knock, to strike\" (DEDR 3039), which in everyday speech also means to cheat someone of money."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭṭippŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭṭippŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭṭippŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭṭippŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phōṇilūṭeyuḷḷa taṭṭippŭ ippōḷ kūṭutalāṇŭ. — Fraud over the phone is more common now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phōṇilūṭeyuḷḷa taṭṭippŭ ippōḷ kūṭutalāṇŭ.* — Fraud over the phone is more common now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to release, then the Malayalam for to free, then say taṭṭippŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to release, then the Malayalam for to free, then say *taṭṭippŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തട്ടിപ്പ് (taṭṭippŭ) mean? (\"A fraud; a scam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C372-tattippukaran",
+      "sequence": 18180,
+      "title": "തട്ടിപ്പുകാരൻ (taṭṭippukāran) — a swindler; a con man",
+      "headword": "തട്ടിപ്പുകാരൻ",
+      "romanization": "taṭṭippukāran",
+      "gloss": "a swindler; a con man",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ba86de1e0a14eb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to free, then the Malayalam for a fraud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തട്ടിപ്പുകാരൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തട്ടിപ്പുകാരൻ — taṭṭippukāran — \"a swindler; a con man\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ തട്ടിപ്പുകാരൻ ഒരുപാട് ആളുകളുടെ പണം കൊണ്ടുപോയി. ā taṭṭippukāran orupāṭŭ āḷukaḷuṭe paṇaṁ koṇṭupōyi. That swindler made off with many people's money."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: തട്ടിപ്പുകാർ, taṭṭippukār."
+            },
+            {
+              "kind": "speech",
+              "text": "തട്ടിപ്പ് (taṭṭippŭ) + -കാരൻ, one who does it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തട്ടിപ്പുകാരൻ (taṭṭippukāran) is native Dravidian: തട്ടിപ്പ് (taṭṭippŭ), \"a fraud\", from തട്ടുക (DEDR 3039), with the ending -കാരൻ, \"one who does it\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭṭippukāran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭṭippukāran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭṭippukāran, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭṭippukāran*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā taṭṭippukāran orupāṭŭ āḷukaḷuṭe paṇaṁ koṇṭupōyi. — That swindler made off with many people's money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā taṭṭippukāran orupāṭŭ āḷukaḷuṭe paṇaṁ koṇṭupōyi.* — That swindler made off with many people's money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to free, then the Malayalam for a fraud, then say taṭṭippukāran again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to free, then the Malayalam for a fraud, then say *taṭṭippukāran* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തട്ടിപ്പുകാരൻ (taṭṭippukāran) mean? (\"A swindler; a con man\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C372-vancikkuka",
+      "sequence": 18190,
+      "title": "വഞ്ചിക്കുക (vañcikkuka) — to deceive; to betray",
+      "headword": "വഞ്ചിക്കുക",
+      "romanization": "vañcikkuka",
+      "gloss": "to deceive; to betray",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ce97a8f9422c69a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a fraud, then the Malayalam for a swindler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വഞ്ചിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വഞ്ചിക്കുക — vañcikkuka — \"to deceive; to betray\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ സ്വന്തം സുഹൃത്തിനെ വഞ്ചിച്ചു. avan svantaṁ suhṛttine vañciccu. He deceived his own friend."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വഞ്ചിച്ചു, vañciccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The person deceived takes -എ: സുഹൃത്തിനെ വഞ്ചിച്ചു."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വഞ്ചിക്കുക (vañcikkuka) is built from Sanskrit vañcana, \"cheating, deception, fraud\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañcikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañcikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañcikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañcikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan svantaṁ suhṛttine vañciccu. — He deceived his own friend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan svantaṁ suhṛttine vañciccu.* — He deceived his own friend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a fraud, then the Malayalam for a swindler, then say vañcikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a fraud, then the Malayalam for a swindler, then say *vañcikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വഞ്ചിക്കുക (vañcikkuka) mean? (\"To deceive; to betray\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C372-parrikkuka",
+      "sequence": 18200,
+      "title": "പറ്റിക്കുക (paṟṟikkuka) — to trick; to con",
+      "headword": "പറ്റിക്കുക",
+      "romanization": "paṟṟikkuka",
+      "gloss": "to trick; to con",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:215aff9530134f2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a swindler, then the Malayalam for to deceive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പറ്റിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പറ്റിക്കുക — paṟṟikkuka — \"to trick; to con\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ കച്ചവടക്കാരൻ എന്നെ പറ്റിച്ചു. ā kaccavaṭakkāran enne paṟṟiccu. That trader conned me."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പറ്റിച്ചു, paṟṟiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday word; വഞ്ചിക്കുക (vañcikkuka) is stronger and more formal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പറ്റിക്കുക (paṟṟikkuka) is native Dravidian, usually traced to പറ്റുക (paṟṟuka), \"to stick to, to catch\" (DEDR 4034), the verb inside പറ്റില്ല, \"it is not possible\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṟṟikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṟṟikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṟṟikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṟṟikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kaccavaṭakkāran enne paṟṟiccu. — That trader conned me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kaccavaṭakkāran enne paṟṟiccu.* — That trader conned me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a swindler, then the Malayalam for to deceive, then say paṟṟikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a swindler, then the Malayalam for to deceive, then say *paṟṟikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പറ്റിക്കുക (paṟṟikkuka) mean? (\"To trick; to con\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C372-kabalippikkuka",
+      "sequence": 18210,
+      "title": "കബളിപ്പിക്കുക (kabaḷippikkuka) — to fool; to dupe",
+      "headword": "കബളിപ്പിക്കുക",
+      "romanization": "kabaḷippikkuka",
+      "gloss": "to fool; to dupe",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64b3d5ca36c9302e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to deceive, then the Malayalam for to trick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കബളിപ്പിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കബളിപ്പിക്കുക — kabaḷippikkuka — \"to fool; to dupe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ വ്യാജ സർട്ടിഫിക്കറ്റ് കാണിച്ച് എല്ലാവരെയും കബളിപ്പിച്ചു. avan vyāja sarṭṭiphikkaṟṟŭ kāṇiccŭ ellāvareyuṁ kabaḷippiccu. He fooled everyone by showing a fake certificate."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കബളിപ്പിച്ചു, kabaḷippiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; common in news reports of fraud."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of കബളിപ്പിക്കുക (kabaḷippikkuka) is not settled. It carries the Malayalam causative ending -ിപ്പിക്കുക: to make someone believe what is false."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kabaḷippikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kabaḷippikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kabaḷippikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kabaḷippikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan vyāja sarṭṭiphikkaṟṟŭ kāṇiccŭ ellāvareyuṁ kabaḷippiccu. — He fooled everyone by showing a fake certificate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan vyāja sarṭṭiphikkaṟṟŭ kāṇiccŭ ellāvareyuṁ kabaḷippiccu.* — He fooled everyone by showing a fake certificate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to deceive, then the Malayalam for to trick, then say kabaḷippikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to deceive, then the Malayalam for to trick, then say *kabaḷippikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കബളിപ്പിക്കുക (kabaḷippikkuka) mean? (\"To fool; to dupe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R372-review-365-372",
+      "sequence": 18220,
+      "title": "Words from chapters 365–372 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 365-372",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9266b457b30608e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for a complaint and a criminal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a complaint, a criminal, an investigation, to arrest, to seize",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a complaint, a criminal, an investigation, to arrest, to seize]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a clue, a mark, a footprint, a fingerprint, mysterious",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a clue, a mark, a footprint, a fingerprint, mysterious]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crime, a confession, to capture, to kidnap, to keep watch on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crime, a confession, to capture, to kidnap, to keep watch on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a court of law, a court case, a trial, a judge, the accused",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a court of law, a court case, a trial, a judge, the accused]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a verdict, the guilty one, bail, an innocent person, to pass sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a verdict, the guilty one, bail, an innocent person, to pass sentence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "testimony, an eyewitness, a lie, to testify, to swear an oath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: testimony, an eyewitness, a lie, to testify, to swear an oath]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a jail, imprisonment, a prisoner, to release, to free",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a jail, imprisonment, a prisoner, to release, to free]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fraud, a swindler, to deceive, to trick, to fool",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fraud, a swindler, to deceive, to trick, to fool]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A complaint? (പരാതി, parāti.) A criminal? (കുറ്റവാളി, kuṟṟavāḷi.) An investigation? (അന്വേഷണം, anvēṣaṇaṁ.) To arrest? (അറസ്റ്റ് ചെയ്യുക, aṟasṟṟŭ ceyyuka.) To seize? (പിടിച്ചെടുക്കുക, piṭicceṭukkuka.) A clue? (സൂചന, sūcana.) A mark? (അടയാളം, aṭayāḷaṁ.) A footprint? (കാൽപ്പാട്, kālppāṭŭ.) A fingerprint? (വിരലടയാളം, viralaṭayāḷaṁ.) Mysterious? (ദുരൂഹമായ, durūhamāya.) A crime? (കുറ്റകൃത്യം, kuṟṟakṛtyaṁ.) A confession? (കുറ്റസമ്മതം, kuṟṟasammataṁ.) To capture? (പിടികൂടുക, piṭikūṭuka.) To kidnap? (തട്ടിക്കൊണ്ടുപോകുക, taṭṭikkoṇṭupōkuka.) To keep watch on? (നിരീക്ഷിക്കുക, nirīkṣikkuka.) A court of law? (കോടതി, kōṭati.) A court case? (കേസ്, kēsŭ.) A trial? (വിചാരണ, vicāraṇa.) A judge? (ന്യായാധിപൻ, nyāyādhipan.) The accused? (പ്രതി, prati.) A verdict? (വിധി, vidhi.) The guilty one? (കുറ്റക്കാരൻ, kuṟṟakkāran.) Bail? (ജാമ്യം, jāmyaṁ.) An innocent person? (നിരപരാധി, niraparādhi.) To pass sentence? (വിധിക്കുക, vidhikkuka.) Testimony? (മൊഴി, moḻi.) An eyewitness? (ദൃക്സാക്ഷി, dṛksākṣi.) A lie? (കള്ളം, kaḷḷaṁ.) To testify? (മൊഴി നൽകുക, moḻi nalkuka.) To swear an oath? (സത്യം ചെയ്യുക, satyaṁ ceyyuka.) A jail? (ജയിൽ, jayil.) Imprisonment? (തടവ്, taṭavŭ.) A prisoner? (തടവുകാരൻ, taṭavukāran.) To release? (വിട്ടയയ്ക്കുക, viṭṭayaykkuka.) To free? (മോചിപ്പിക്കുക, mōcippikkuka.) A fraud? (തട്ടിപ്പ്, taṭṭippŭ.) A swindler? (തട്ടിപ്പുകാരൻ, taṭṭippukāran.) To deceive? (വഞ്ചിക്കുക, vañcikkuka.) To trick? (പറ്റിക്കുക, paṟṟikkuka.) To fool? (കബളിപ്പിക്കുക, kabaḷippikkuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

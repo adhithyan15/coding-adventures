@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:35e197be482c11ae",
+  "lessonIds": [
+    "KA-C431-tirmanisu",
+    "KA-C431-samalocisu",
+    "KA-C431-samvada",
+    "KA-C431-tharavu",
+    "KA-C431-olagollu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch431.txt",
+  "json": "kannada/narration/ch431.json",
+  "textHash": "fnv1a64:cb689cecd629cd24",
+  "jsonHash": "fnv1a64:6127ae5851e6309a",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C414-kanistha",
+  "pathSegment": "KA-PATH-414-GARISHTHA414",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-414-GARISHTHA414",
+      "order": 2
+    }
+  ]
+}

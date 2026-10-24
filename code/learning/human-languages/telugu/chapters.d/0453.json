@@ -1,0 +1,21 @@
+{
+  "chapter": 453,
+  "title": "On the Water",
+  "label": "ch:te-on-the-water",
+  "canDo": "I can say a riverbank, a rivulet, a raft, to float away and to be swept away.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-R453-review-446-453",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can say a riverbank, a rivulet, a raft, to float away and to be swept away.",
+    "assesses": [
+      "TE-LEX-C453-TEPPA453-01",
+      "TE-LEX-C453-TEPPA453-02",
+      "TE-LEX-C453-TEPPA453-03",
+      "TE-LEX-C453-TEPPA453-04",
+      "TE-LEX-C453-TEPPA453-05"
+    ]
+  }
+}

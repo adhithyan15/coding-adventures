@@ -1,0 +1,11 @@
+{
+  "id": "AR-C523-intaj",
+  "pathSegment": "AR-PATH-523-INJAZ523",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-523-INJAZ523",
+      "order": 4
+    }
+  ]
+}

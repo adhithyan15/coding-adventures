@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Fuel and Flat Tyres",
+  "label": "ch:bn-fuel-and-flat-tyres",
+  "canDo": "I can say we ran out of fuel, a tyre was flat and the engine would start.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C393-chalu-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can say we ran out of fuel, a tyre was flat and the engine would start.",
+    "assesses": [
+      "BN-LEX-C393-PANGCHAR393-03",
+      "BN-LEX-C393-PANGCHAR393-04",
+      "BN-LEX-C393-PANGCHAR393-05"
+    ]
+  }
+}

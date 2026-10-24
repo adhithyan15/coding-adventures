@@ -1,0 +1,11 @@
+{
+  "id": "TA-C396-porutpatuttu",
+  "pathSegment": "TA-PATH-396-TUNTU396",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-396-TUNTU396",
+      "order": 4
+    }
+  ]
+}

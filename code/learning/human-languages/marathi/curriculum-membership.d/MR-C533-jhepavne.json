@@ -1,0 +1,11 @@
+{
+  "id": "MR-C533-jhepavne",
+  "pathSegment": "MR-PATH-533-TANDURUSTI533",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-533-TANDURUSTI533",
+      "order": 4
+    }
+  ]
+}

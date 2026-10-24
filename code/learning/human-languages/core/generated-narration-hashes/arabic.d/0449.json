@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:7313cf486c12c4e3",
+  "lessonIds": [
+    "AR-C449-shakwa",
+    "AR-C449-tawid",
+    "AR-C449-awwada",
+    "AR-C449-tadhammara",
+    "AR-C449-istabdala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch449.txt",
+  "json": "arabic/narration/ch449.json",
+  "textHash": "fnv1a64:8519adc0fc89aa41",
+  "jsonHash": "fnv1a64:f16898a9580c7c6c",
+  "findings": []
+}

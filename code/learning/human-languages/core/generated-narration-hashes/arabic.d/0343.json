@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:79224ea733af25f8",
+  "lessonIds": [
+    "AR-C343-mughamara",
+    "AR-C343-majhul",
+    "AR-C343-mufajaa",
+    "AR-C343-sudfa",
+    "AR-C343-khatara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch343.txt",
+  "json": "arabic/narration/ch343.json",
+  "textHash": "fnv1a64:af1c73f5978f03f0",
+  "jsonHash": "fnv1a64:9a4395ef34770eac",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Promises and Intentions",
+  "label": "ch:te-promises-and-intentions",
+  "canDo": "I can talk about guarantees, intentions and keeping my word.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C422-niscayincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can talk about guarantees, intentions and keeping my word.",
+    "assesses": [
+      "TE-LEX-C422-HAMI422-03",
+      "TE-LEX-C422-HAMI422-04",
+      "TE-LEX-C422-HAMI422-05"
+    ]
+  }
+}

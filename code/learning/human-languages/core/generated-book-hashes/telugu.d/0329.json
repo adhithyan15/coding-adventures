@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:62db1ec33061fc98",
+  "lessonIds": [
+    "TE-C329-dongatanam",
+    "TE-C329-corabadu",
+    "TE-C329-baddalu-kottu",
+    "TE-C329-ettukupovu",
+    "TE-C329-pasigattu"
+  ],
+  "tex": "telugu/book/chapters/ch329-a-break-in.tex"
+}

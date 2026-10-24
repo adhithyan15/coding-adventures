@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C289-gunha",
+    "language": "marathi",
+    "chapter": 289,
+    "sequence": 17060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37f2f594917f4559"
+  },
+  "findings": []
+}

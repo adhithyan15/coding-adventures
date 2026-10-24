@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:496cc4287b875792",
+  "lessonIds": [
+    "KA-C535-vadya",
+    "KA-C535-vine",
+    "KA-C535-kolalu",
+    "KA-C535-pitilu",
+    "KA-C535-barisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch535.txt",
+  "json": "kannada/narration/ch535.json",
+  "textHash": "fnv1a64:92c47a2e3ca965c0",
+  "jsonHash": "fnv1a64:0b754b639252770a",
+  "findings": []
+}

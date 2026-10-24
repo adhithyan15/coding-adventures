@@ -1,0 +1,11 @@
+{
+  "id": "BN-W275-six-lines",
+  "pathSegment": "BN-PATH-275-DEPENDS-WOULD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-275-DEPENDS-WOULD",
+      "order": 4
+    }
+  ]
+}

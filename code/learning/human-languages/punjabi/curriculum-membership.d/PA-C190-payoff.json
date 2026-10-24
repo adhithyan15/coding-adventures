@@ -1,0 +1,11 @@
+{
+  "id": "PA-C190-payoff",
+  "pathSegment": "PA-PATH-190-A2-KITA-PERFECTIVE",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-190-A2-KITA-PERFECTIVE",
+      "order": 6
+    }
+  ]
+}

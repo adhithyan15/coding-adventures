@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 503,
+  "title": "Tempers and habits",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6e8c18999148938c",
+  "lessons": [
+    {
+      "id": "AR-C503-mutasamih",
+      "sequence": 27960,
+      "title": "متسامح (mutasāmiḥ) — tolerant, forgiving",
+      "headword": "متسامح",
+      "romanization": "mutasāmiḥ",
+      "gloss": "tolerant, forgiving",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1eca8181691b7399",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for affectionate, then the Arabic for friendly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: متسامح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متسامح — mutasāmiḥ — \"tolerant, forgiving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أبي رجل متسامح ولا يغضب كثيرا. abī rajul mutasāmiḥ wa-lā yaghḍabu kathīran. My father is a tolerant man and does not get angry often."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متسامح (mutasāmiḥ) is built on the native Arabic root s-m-ḥ, \"to be generous, to allow\" (Lane). Samaḥa, to allow, and sāmaḥa, to forgive, which you know, share the root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutasāmiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutasāmiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutasāmiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutasāmiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abī rajul mutasāmiḥ wa-lā yaghḍabu kathīran. — My father is a tolerant man and does not get angry often.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abī rajul mutasāmiḥ wa-lā yaghḍabu kathīran.* — My father is a tolerant man and does not get angry often.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for affectionate, then the Arabic for friendly, then say mutasāmiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for affectionate, then the Arabic for friendly, then say *mutasāmiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does متسامح (mutasāmiḥ) mean? (\"Tolerant, forgiving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C503-asabi",
+      "sequence": 27970,
+      "title": "عصبي (ʿaṣabī) — irritable, edgy",
+      "headword": "عصبي",
+      "romanization": "ʿaṣabī",
+      "gloss": "irritable, edgy",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa117eb2c7fe4687",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for friendly, then the Arabic for tolerant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عصبي",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عصبي — ʿaṣabī — \"irritable, edgy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يصبح المدير عصبيا قبل الاجتماع. yuṣbiḥu al-mudīr ʿaṣabiyyan qabla al-ijtimāʿ. The manager gets edgy before the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "It is built on ʿaṣab, a nerve: a nervy person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عصبي (ʿaṣabī) is built on the native Arabic root ʿ-ṣ-b, \"to bind, to tie tight\" (Lane). ʿAṣabī is the adjective of ʿaṣab, a nerve."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿaṣabī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿaṣabī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿaṣabī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿaṣabī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuṣbiḥu al-mudīr ʿaṣabiyyan qabla al-ijtimāʿ. — The manager gets edgy before the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuṣbiḥu al-mudīr ʿaṣabiyyan qabla al-ijtimāʿ.* — The manager gets edgy before the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for friendly, then the Arabic for tolerant, then say ʿaṣabī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for friendly, then the Arabic for tolerant, then say *ʿaṣabī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عصبي (ʿaṣabī) mean? (\"Irritable, edgy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C503-marih",
+      "sequence": 27980,
+      "title": "مرح (mariḥ) — cheerful, fun-loving",
+      "headword": "مرح",
+      "romanization": "mariḥ",
+      "gloss": "cheerful, fun-loving",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9120bfffa79e7e39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for tolerant, then the Arabic for irritable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مرح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرح — mariḥ — \"cheerful, fun-loving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خالي رجل مرح ويضحك كثيرا. khālī rajul mariḥ wa-yaḍḥaku kathīran. My uncle is a cheerful man and laughs a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun مرح (mariḥ), read maraḥ, is merriment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرح (mariḥ) is built on the native Arabic root m-r-ḥ, \"to be lively, merry\" (Lane). Mariḥ is the adjective; maraḥ, with the same letters, is the noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mariḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mariḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mariḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mariḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khālī rajul mariḥ wa-yaḍḥaku kathīran. — My uncle is a cheerful man and laughs a lot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khālī rajul mariḥ wa-yaḍḥaku kathīran.* — My uncle is a cheerful man and laughs a lot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for tolerant, then the Arabic for irritable, then say mariḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for tolerant, then the Arabic for irritable, then say *mariḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مرح (mariḥ) mean? (\"Cheerful, fun-loving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C503-munazzam",
+      "sequence": 27990,
+      "title": "منظم (munaẓẓam) — organized, tidy",
+      "headword": "منظم",
+      "romanization": "munaẓẓam",
+      "gloss": "organized, tidy",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ffbd4967209980e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for irritable, then the Arabic for cheerful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: منظم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منظم — munaẓẓam — \"organized, tidy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مكتب أختي منظم ونظيف. maktab ukhtī munaẓẓam wa-naẓīf. My sister's desk is tidy and clean."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منظم (munaẓẓam) is built on the native Arabic root n-ẓ-m, \"to string pearls in order\" (Lane). Munaẓẓam is the passive participle of Form II: set in order."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munaẓẓam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munaẓẓam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munaẓẓam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munaẓẓam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maktab ukhtī munaẓẓam wa-naẓīf. — My sister's desk is tidy and clean.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maktab ukhtī munaẓẓam wa-naẓīf.* — My sister's desk is tidy and clean.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for irritable, then the Arabic for cheerful, then say munaẓẓam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for irritable, then the Arabic for cheerful, then say *munaẓẓam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does منظم (munaẓẓam) mean? (\"Organized, tidy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C503-muhmil",
+      "sequence": 28000,
+      "title": "مهمل (muhmil) — careless",
+      "headword": "مهمل",
+      "romanization": "muhmil",
+      "gloss": "careless",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:196849e2f99bdd0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for cheerful, then the Arabic for organized."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مهمل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مهمل — muhmil — \"careless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كسر العامل المهمل الزجاج. kasara al-ʿāmil al-muhmil az-zujāj. The careless worker broke the glass."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مهمل (muhmil) is built on the native Arabic root h-m-l, \"to leave neglected\" (Lane). Muhmil is the participle of Form IV: one who leaves things neglected."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muhmil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muhmil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muhmil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muhmil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasara al-ʿāmil al-muhmil az-zujāj. — The careless worker broke the glass.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasara al-ʿāmil al-muhmil az-zujāj.* — The careless worker broke the glass.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for cheerful, then the Arabic for organized, then say muhmil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for cheerful, then the Arabic for organized, then say *muhmil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مهمل (muhmil) mean? (\"Careless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R503-review-496-503",
+      "sequence": 28010,
+      "title": "Words from chapters 496–503 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 496-503",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aeb0a0bc968959b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for excited and to get excited."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "excited, to get excited, relief, at ease, to feel relieved",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: excited, to get excited, relief, at ease, to feel relieved]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tense, to get flustered, agitated, hesitant, to hold back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tense, to get flustered, agitated, hesitant, to hold back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to make happy, to sadden, to make laugh, to make angry, to blame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to make happy, to sadden, to make laugh, to make angry, to blame]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "honest, upright, untruthful, loyal, faithful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: honest, upright, untruthful, loyal, faithful]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conceited, arrogant, selfish, cowardly, bold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: conceited, arrogant, selfish, cowardly, bold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wise, skilful, creative, sensible, confidence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wise, skilful, creative, sensible, confidence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talkative, reserved, nosy, affectionate, friendly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: talkative, reserved, nosy, affectionate, friendly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tolerant, irritable, cheerful, organized, careless",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tolerant, irritable, cheerful, organized, careless]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Excited? (متحمس, mutaḥammis.) To get excited? (تحمس, taḥammasa.) Relief? (ارتياح, irtiyāḥ.) At ease? (مرتاح, murtāḥ.) To feel relieved? (ارتاح, irtāḥa.) Tense? (متوتر, mutawattir.) To get flustered? (ارتبك, irtabaka.) Agitated? (مضطرب, muḍṭarib.) Hesitant? (متردد, mutaraddid.) To hold back? (كتم, katama.) To make happy? (أسعد, asʿada.) To sadden? (أحزن, aḥzana.) To make laugh? (أضحك, aḍḥaka.) To make angry? (أغضب, aghḍaba.) To blame? (لام, lāma.) Honest? (أمين, amīn.) Upright? (نزيه, nazīh.) Untruthful? (كاذب, kādhib.) Loyal? (مخلص, mukhliṣ.) Faithful? (وفي, wafī.) Conceited? (مغرور, maghrūr.) Arrogant? (متكبر, mutakabbir.) Selfish? (أناني, anānī.) Cowardly? (جبان, jabān.) Bold? (جريء, jarīʾ.) Wise? (حكيم, ḥakīm.) Skilful? (ماهر, māhir.) Creative? (مبدع, mubdiʿ.) Sensible? (عاقل, ʿāqil.) Confidence? (ثقة, thiqa.) Talkative? (ثرثار, tharthār.) Reserved? (متحفظ, mutaḥaffiẓ.) Nosy? (فضولي, fuḍūlī.) Affectionate? (حنون, ḥanūn.) Friendly? (ودود, wadūd.) Tolerant? (متسامح, mutasāmiḥ.) Irritable? (عصبي, ʿaṣabī.) Cheerful? (مرح, mariḥ.) Organized? (منظم, munaẓẓam.) Careless? (مهمل, muhmil.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

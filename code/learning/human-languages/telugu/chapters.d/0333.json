@@ -1,0 +1,21 @@
+{
+  "chapter": 333,
+  "title": "At the Police Station",
+  "label": "ch:te-at-the-police-station",
+  "canDo": "I can say a police station, a case, an investigation, a trace and a fingerprint.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-R333-review-326-333",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can say a police station, a case, an investigation, a trace and a fingerprint.",
+    "assesses": [
+      "TE-LEX-C333-KESU333-01",
+      "TE-LEX-C333-KESU333-02",
+      "TE-LEX-C333-KESU333-03",
+      "TE-LEX-C333-KESU333-04",
+      "TE-LEX-C333-KESU333-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C522-hoda",
+    "language": "telugu",
+    "chapter": 522,
+    "sequence": 26440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2dece4fd87f38d7f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "City buildings",
+  "label": "ch:ar-city-buildings",
+  "canDo": "I can say a block of flats, a skyscraper, a suburb, a swimming pool and a shopping centre.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-R454-review-447-454",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can say a block of flats, a skyscraper, a suburb, a swimming pool and a shopping centre.",
+    "assesses": [
+      "AR-LEX-C454-IMARA454-03",
+      "AR-LEX-C454-IMARA454-04",
+      "AR-LEX-C454-IMARA454-05"
+    ]
+  }
+}

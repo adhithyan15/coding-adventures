@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:afb1cf5c8e669cf2",
+  "lessonIds": [
+    "KA-C508-medulu",
+    "KA-C508-svasakosa",
+    "KA-C508-mutrapinda",
+    "KA-C508-karulu",
+    "KA-C508-snayu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch508.txt",
+  "json": "kannada/narration/ch508.json",
+  "textHash": "fnv1a64:2e4959149f40bf95",
+  "jsonHash": "fnv1a64:f4086b49ac3f2490",
+  "findings": []
+}

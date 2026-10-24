@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:005fcbae7b9c44e1",
+  "lessonIds": [
+    "ML-C525-narannuka",
+    "ML-C525-pottikkarayuka",
+    "ML-C525-paribhavam",
+    "ML-C525-potticcirikkuka",
+    "ML-C525-asayakkulappam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch525.txt",
+  "json": "malayalam/narration/ch525.json",
+  "textHash": "fnv1a64:6e38dc6ca8495e68",
+  "jsonHash": "fnv1a64:2a38c2da45079c38",
+  "findings": []
+}

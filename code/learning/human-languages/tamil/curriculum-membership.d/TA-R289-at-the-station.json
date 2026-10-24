@@ -1,0 +1,11 @@
+{
+  "id": "TA-R289-at-the-station",
+  "pathSegment": "TA-PATH-289-TICKETS-TROUBLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-289-TICKETS-TROUBLE",
+      "order": 3
+    }
+  ]
+}

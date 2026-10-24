@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C327-halama",
+    "language": "arabic",
+    "chapter": 327,
+    "sequence": 18760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:754e583a57bcc9ea"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C419-bikkattu",
+  "pathSegment": "KA-PATH-419-VIPHALA419",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-419-VIPHALA419",
+      "order": 3
+    }
+  ]
+}

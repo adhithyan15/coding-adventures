@@ -1,0 +1,11 @@
+{
+  "id": "TE-C391-prastavincu",
+  "pathSegment": "TE-PATH-391-PRAMUKHYATA391",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-391-PRAMUKHYATA391",
+      "order": 4
+    }
+  ]
+}

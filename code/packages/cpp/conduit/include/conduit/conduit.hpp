@@ -291,7 +291,8 @@ public:
     }
 
     Application& route(const std::string& method, const std::string& pattern, Handler h) {
-        conduit_app_add_route(app_, method.c_str(), pattern.c_str(), &conduit_cpp_handler_tramp,
+        ConduitApp* app = live();
+        conduit_app_add_route(app, method.c_str(), pattern.c_str(), &conduit_cpp_handler_tramp,
                               new Handler(std::move(h)), &conduit_cpp_free_handler);
         return *this;
     }
@@ -305,34 +306,39 @@ public:
     /// Before-filter: return a Response to short-circuit, std::nullopt to continue
     /// (halt(...) short-circuits too).
     Application& before(BeforeHandler h) {
-        conduit_app_add_before(app_, &conduit_cpp_before_tramp,
+        ConduitApp* app = live();
+        conduit_app_add_before(app, &conduit_cpp_before_tramp,
                                new BeforeHandler(std::move(h)), &conduit_cpp_free_before);
         return *this;
     }
     /// Transforming after-hook: receives the request and current response, returns
     /// the response to send (return it unchanged to merely observe).
     Application& after(AfterHandler h) {
-        conduit_app_add_after(app_, &conduit_cpp_after_tramp,
+        ConduitApp* app = live();
+        conduit_app_add_after(app, &conduit_cpp_after_tramp,
                               new AfterHandler(std::move(h)), &conduit_cpp_free_after);
         return *this;
     }
     Application& notFound(Handler h) {
-        conduit_app_set_not_found(app_, &conduit_cpp_handler_tramp,
+        ConduitApp* app = live();
+        conduit_app_set_not_found(app, &conduit_cpp_handler_tramp,
                                   new Handler(std::move(h)), &conduit_cpp_free_handler);
         return *this;
     }
     Application& onError(Handler h) {
-        conduit_app_set_error_handler(app_, &conduit_cpp_handler_tramp,
+        ConduitApp* app = live();
+        conduit_app_set_error_handler(app, &conduit_cpp_handler_tramp,
                                       new Handler(std::move(h)), &conduit_cpp_free_handler);
         return *this;
     }
 
     Application& set(const std::string& key, const std::string& value) {
-        conduit_app_set_setting(app_, key.c_str(), value.c_str());
+        ConduitApp* app = live();
+        conduit_app_set_setting(app, key.c_str(), value.c_str());
         return *this;
     }
     std::optional<std::string> getSetting(const std::string& key) {
-        char* v = conduit_app_get_setting(app_, key.c_str());
+        char* v = conduit_app_get_setting(live(), key.c_str());
         if (!v) return std::nullopt;
         std::string s(v);
         conduit_string_free(v);
@@ -342,8 +348,14 @@ public:
     /// Bind host:port and return a Server. Consumes the application (the native
     /// side moves it into the server), so call this last. Throws on bind failure.
     Server bind(const std::string& host = "127.0.0.1", uint16_t port = 3000) {
-        ConduitServer* s = conduit_server_bind(host.c_str(), port, app_);
-        consumed_ = true;  // bind frees the app on success AND failure
+        ConduitApp* app = live();
+        // conduit_server_bind takes the app on success AND on failure (it
+        // frees it, and every registered closure, when the bind fails), so
+        // forget the pointer *before* the call: from here on `app_` would
+        // dangle, and a later route()/set()/bind() would use freed memory.
+        app_ = nullptr;
+        consumed_ = true;
+        ConduitServer* s = conduit_server_bind(host.c_str(), port, app);
         if (!s) {
             throw std::runtime_error(std::string("conduit bind failed: ") + conduit_last_error());
         }
@@ -351,6 +363,21 @@ public:
     }
 
 private:
+    // The native app every registration writes into. Once bind() (or a move)
+    // has handed the app away there is nothing left to register into, so we
+    // throw instead of passing a dangling pointer across the C ABI. Callers
+    // call live() in its own statement, *before* allocating a closure with
+    // `new`: C++ leaves the order of function-argument evaluation unspecified,
+    // so `f(live(), new Handler(...))` could allocate first and leak it when
+    // live() throws.
+    ConduitApp* live() const {
+        if (!app_ || consumed_) {
+            throw std::logic_error(
+                "conduit: Application already bound or moved from; create a new Application");
+        }
+        return app_;
+    }
+
     ConduitApp* app_;
     bool consumed_ = false;
 };

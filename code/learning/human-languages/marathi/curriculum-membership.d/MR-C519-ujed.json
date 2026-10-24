@@ -1,0 +1,11 @@
+{
+  "id": "MR-C519-ujed",
+  "pathSegment": "MR-PATH-519-UJED519",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-519-UJED519",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C535-kalakar",
+  "pathSegment": "MR-PATH-535-CHITRA535",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-535-CHITRA535",
+      "order": 1
+    }
+  ]
+}

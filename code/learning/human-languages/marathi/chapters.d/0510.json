@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Leaving Work",
+  "label": "ch:mr-leaving-work",
+  "canDo": "I can talk about leave, strikes, resigning and retiring.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C510-badtarph-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about leave, strikes, resigning and retiring.",
+    "assesses": [
+      "MR-LEX-C510-SODNE510-03",
+      "MR-LEX-C510-SODNE510-04",
+      "MR-LEX-C510-SODNE510-05"
+    ]
+  }
+}

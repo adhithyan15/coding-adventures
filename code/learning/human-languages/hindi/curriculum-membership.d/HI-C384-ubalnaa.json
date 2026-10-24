@@ -1,0 +1,11 @@
+{
+  "id": "HI-C384-ubalnaa",
+  "pathSegment": "HI-PATH-384-BARF384",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-384-BARF384",
+      "order": 2
+    }
+  ]
+}

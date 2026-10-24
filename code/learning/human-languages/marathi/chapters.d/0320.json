@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Festival Days",
+  "label": "ch:mr-festival-days",
+  "canDo": "I can talk about festivals, decorations and auspicious times.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C320-muhurta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can talk about festivals, decorations and auspicious times.",
+    "assesses": [
+      "MR-LEX-C320-UTSAV320-03",
+      "MR-LEX-C320-UTSAV320-04",
+      "MR-LEX-C320-UTSAV320-05"
+    ]
+  }
+}

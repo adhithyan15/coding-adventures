@@ -1,0 +1,11 @@
+{
+  "id": "BN-C341-durniti",
+  "pathSegment": "BN-PATH-341-ONYAY341",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-341-ONYAY341",
+      "order": 3
+    }
+  ]
+}

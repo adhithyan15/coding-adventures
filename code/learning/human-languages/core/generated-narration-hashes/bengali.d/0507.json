@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:ed0d796be319ac63",
+  "lessonIds": [
+    "BN-C507-chhidro",
+    "BN-C507-plastar",
+    "BN-C507-atha",
+    "BN-C507-lepa",
+    "BN-C507-thoka",
+    "BN-R507-review-500-507"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch507.txt",
+  "json": "bengali/narration/ch507.json",
+  "textHash": "fnv1a64:2d34e03aef656be9",
+  "jsonHash": "fnv1a64:5defaaac938322cf",
+  "findings": []
+}

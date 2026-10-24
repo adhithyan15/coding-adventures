@@ -1,0 +1,11 @@
+{
+  "id": "MR-C450-sukh",
+  "pathSegment": "MR-PATH-450-MAN450",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-450-MAN450",
+      "order": 2
+    }
+  ]
+}

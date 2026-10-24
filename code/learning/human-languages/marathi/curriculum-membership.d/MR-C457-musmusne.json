@@ -1,0 +1,11 @@
+{
+  "id": "MR-C457-musmusne",
+  "pathSegment": "MR-PATH-457-KHED457",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-457-KHED457",
+      "order": 4
+    }
+  ]
+}

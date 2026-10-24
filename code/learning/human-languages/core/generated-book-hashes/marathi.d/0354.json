@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:aff6bcf616fcea85",
+  "lessonIds": [
+    "MR-C354-nagarik",
+    "MR-C354-janta",
+    "MR-C354-sarvasamanya",
+    "MR-C354-loksankhya",
+    "MR-C354-gramin"
+  ],
+  "tex": "marathi/book/chapters/ch354-citizens-and-the-public.tex"
+}

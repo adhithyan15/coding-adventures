@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-554-VARAIRUTHI554",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TA-EXT-554-VARAIRUTHI554"
+  ],
+  "after": []
+}

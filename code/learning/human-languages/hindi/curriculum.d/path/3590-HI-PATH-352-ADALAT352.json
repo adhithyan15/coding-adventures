@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-352-ADALAT352",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "HI-EXT-352-ADALAT352"
+  ],
+  "after": []
+}

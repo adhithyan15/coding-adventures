@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R290-feelings-and-hopes",
+    "language": "tamil",
+    "chapter": 290,
+    "sequence": 16370,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:90381655255bb6e2"
+  },
+  "findings": []
+}

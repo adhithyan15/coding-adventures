@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 284,
+  "title": "At the Police Station",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:54445d3ee9fdb21e",
+  "lessons": [
+    {
+      "id": "BN-C284-kobul-kora",
+      "sequence": 18410,
+      "title": "কবুল করা (kôbul kôrā) — to confess; to own up",
+      "headword": "কবুল করা",
+      "romanization": "kôbul kôrā",
+      "gloss": "to confess; to own up",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88669690aa999a52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an investigation, then the Bengali for a police inspector."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কবুল করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কবুল করা — kôbul kôrā — \"to confess; to own up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অনেক প্রশ্নের পরে চোর অপরাধ কবুল করল। ônek prôshner pôre chor ôpôrādh kôbul kôrlô. After many questions the thief confessed to the crime."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই চোর অপরাধ কবুল করল, sei chor ôpôrādh kôbul kôrlô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কবুল করা (kôbul kôrā) puts কবুল — usually traced through Persian to Arabic qabūl, 'acceptance' — before করা: to accept the charge as true, to confess."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôbul kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôbul kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôbul kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôbul kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônek prôshner pôre chor ôpôrādh kôbul kôrlô. — After many questions the thief confessed to the crime.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônek prôshner pôre chor ôpôrādh kôbul kôrlô.* — After many questions the thief confessed to the crime.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an investigation, then the Bengali for a police inspector, then say kôbul kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an investigation, then the Bengali for a police inspector, then say *kôbul kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কবুল করা (kôbul kôrā) mean? (\"To confess; to own up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C284-sutro",
+      "sequence": 18420,
+      "title": "সূত্র (sūtrô) — a clue; a lead",
+      "headword": "সূত্র",
+      "romanization": "sūtrô",
+      "gloss": "a clue; a lead",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a1974f84a5cc62f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a police inspector, then the Bengali for to confess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সূত্র",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সূত্র — sūtrô — \"a clue; a lead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পুলিশ জানালার কাছে একটা সূত্র পেল। pulish jānālār kāchhe ekṭā sūtrô pelô. The police found a clue near the window."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সূত্র (sūtrô) is Sanskrit sūtra, 'a thread, a line' (Monier-Williams); in a mystery it is the thread you follow. সুতো, thread, is the everyday word from the same source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūtrô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūtrô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūtrô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūtrô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulish jānālār kāchhe ekṭā sūtrô pelô. — The police found a clue near the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulish jānālār kāchhe ekṭā sūtrô pelô.* — The police found a clue near the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a police inspector, then the Bengali for to confess, then say sūtrô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a police inspector, then the Bengali for to confess, then say *sūtrô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সূত্র (sūtrô) mean? (\"A clue; a lead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C284-pahara-deoya",
+      "sequence": 18430,
+      "title": "পাহারা দেওয়া (pāhārā deoyā) — to guard; to keep watch",
+      "headword": "পাহারা দেওয়া",
+      "romanization": "pāhārā deoyā",
+      "gloss": "to guard; to keep watch",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:679892c7816f314e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to confess, then the Bengali for a clue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পাহারা দেওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাহারা দেওয়া — pāhārā deoyā — \"to guard; to keep watch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সারারাত পুলিশ বাড়িটা পাহারা দিল। sārārāt pulish bāṛiṭā pāhārā dilô. The police guarded the house all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই কুকুর বাড়ি পাহারা দিল, sei kukur bāṛi pāhārā dilô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাহারা দেওয়া (pāhārā deoyā) puts পাহারা — usually traced to Persian pahra, a watch or a guard — before দেওয়া: to give watch, to stand guard."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāhārā deoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāhārā deoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāhārā deoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāhārā deoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārārāt pulish bāṛiṭā pāhārā dilô. — The police guarded the house all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārārāt pulish bāṛiṭā pāhārā dilô.* — The police guarded the house all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to confess, then the Bengali for a clue, then say pāhārā deoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to confess, then the Bengali for a clue, then say *pāhārā deoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পাহারা দেওয়া (pāhārā deoyā) mean? (\"To guard; to keep watch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C284-koyedi",
+      "sequence": 18440,
+      "title": "কয়েদি (kôyedi) — a prisoner",
+      "headword": "কয়েদি",
+      "romanization": "kôyedi",
+      "gloss": "a prisoner",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:234e304133cb83df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a clue, then the Bengali for to guard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কয়েদি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কয়েদি — kôyedi — \"a prisoner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গতকাল রাতে জেল থেকে কয়েদিরা পালাল। gôtôkāl rāte jel theke kôyedirā pālālô. Last night prisoners escaped from the jail."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কয়েদি (kôyedi) is usually traced through Persian to Arabic qaidī, one held in fetters, from qaid, a fetter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôyedi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôyedi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôyedi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôyedi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôtôkāl rāte jel theke kôyedirā pālālô. — Last night prisoners escaped from the jail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôtôkāl rāte jel theke kôyedirā pālālô.* — Last night prisoners escaped from the jail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a clue, then the Bengali for to guard, then say kôyedi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a clue, then the Bengali for to guard, then say *kôyedi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কয়েদি (kôyedi) mean? (\"A prisoner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C284-jamin",
+      "sequence": 18450,
+      "title": "জামিন (jāmin) — bail",
+      "headword": "জামিন",
+      "romanization": "jāmin",
+      "gloss": "bail",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d0a8c0146a3f2f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to guard, then the Bengali for a prisoner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জামিন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জামিন — jāmin — \"bail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দুই দিন পরে আদালত তাকে জামিন দিল। dui din pôre ādālôt tāke jāmin dilô. Two days later the court granted him bail."
+            },
+            {
+              "kind": "speech",
+              "text": "জামিন (jāmin) দেওয়া, to grant bail; জামিন (jāmin) পাওয়া, to get bail."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জামিন (jāmin) is usually traced to Persian zāmin, 'a surety', a word Persian took from Arabic; it is the guarantee that lets a prisoner go home until the trial."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dui din pôre ādālôt tāke jāmin dilô. — Two days later the court granted him bail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dui din pôre ādālôt tāke jāmin dilô.* — Two days later the court granted him bail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to guard, then the Bengali for a prisoner, then say jāmin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to guard, then the Bengali for a prisoner, then say *jāmin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জামিন (jāmin) mean? (\"Bail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

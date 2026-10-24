@@ -1,0 +1,11 @@
+{
+  "id": "MR-C538-nartak",
+  "pathSegment": "MR-PATH-538-NRUTYA538",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-538-NRUTYA538",
+      "order": 1
+    }
+  ]
+}

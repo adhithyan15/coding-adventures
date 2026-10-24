@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:2c71a45c0c0abcb1",
+  "lessonIds": [
+    "ML-C388-paritosikam",
+    "ML-C388-anugrahikkuka",
+    "ML-C388-asamsikkuka",
+    "ML-C388-abhinandikkuka",
+    "ML-C388-sammanikkuka",
+    "ML-R388-review-381-388"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch388.txt",
+  "json": "malayalam/narration/ch388.json",
+  "textHash": "fnv1a64:922481caab208c41",
+  "jsonHash": "fnv1a64:751f2514ad3a0abb",
+  "findings": []
+}

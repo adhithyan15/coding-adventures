@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 455,
+  "title": "Patience and Eagerness",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4db373f84a47bb3d",
+  "lessons": [
+    {
+      "id": "BN-C455-dhoirjo",
+      "sequence": 27870,
+      "title": "ধৈর্য (dhoirjô) — patience",
+      "headword": "ধৈর্য",
+      "romanization": "dhoirjô",
+      "gloss": "patience",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:957f44b3273354ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for huddled up, then the Bengali for to hesitate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ধৈর্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধৈর্য — dhoirjô — \"patience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শিশুদের পড়াতে ধৈর্য লাগে। shishuder pôṛāte dhoirjô lāge. Teaching children takes patience."
+            },
+            {
+              "kind": "speech",
+              "text": "ধৈর্য (dhoirjô) ধরা, to be patient; ধৈর্য (dhoirjô) হারানো, to lose patience."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধৈর্য (dhoirjô) is a tatsama, Sanskrit dhairya, \"firmness, constancy, calmness, patience\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhoirjô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhoirjô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhoirjô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhoirjô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shishuder pôṛāte dhoirjô lāge. — Teaching children takes patience.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shishuder pôṛāte dhoirjô lāge.* — Teaching children takes patience.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for huddled up, then the Bengali for to hesitate, then say dhoirjô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for huddled up, then the Bengali for to hesitate, then say *dhoirjô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ধৈর্য (dhoirjô) mean? (\"Patience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C455-utsaho",
+      "sequence": 27880,
+      "title": "উৎসাহ (utsāhô) — enthusiasm; encouragement",
+      "headword": "উৎসাহ",
+      "romanization": "utsāhô",
+      "gloss": "enthusiasm; encouragement",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bee2af7ff426cb0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to hesitate, then the Bengali for patience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উৎসাহ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উৎসাহ — utsāhô — \"enthusiasm; encouragement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাবার উৎসাহে মীরা গান শিখল। bābār utsāhe mīrā gān shikhlô. With her father's encouragement Mira learned to sing."
+            },
+            {
+              "kind": "speech",
+              "text": "উৎসাহ (utsāhô) দেওয়া, to encourage."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উৎসাহ (utsāhô) is a tatsama, Sanskrit utsāha, \"power; strength of will, resolution\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsāhô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsāhô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsāhô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsāhô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bābār utsāhe mīrā gān shikhlô. — With her father's encouragement Mira learned to sing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bābār utsāhe mīrā gān shikhlô.* — With her father's encouragement Mira learned to sing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to hesitate, then the Bengali for patience, then say utsāhô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to hesitate, then the Bengali for patience, then say *utsāhô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উৎসাহ (utsāhô) mean? (\"Enthusiasm; encouragement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C455-agroho",
+      "sequence": 27890,
+      "title": "আগ্রহ (āgrôhô) — keen interest; eagerness",
+      "headword": "আগ্রহ",
+      "romanization": "āgrôhô",
+      "gloss": "keen interest; eagerness",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0604379c5024958",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for patience, then the Bengali for enthusiasm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আগ্রহ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আগ্রহ — āgrôhô — \"keen interest; eagerness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ইতিহাসে অরুণের আগ্রহ আছে। itihāse ôruner āgrôhô āchhe. Arun has a keen interest in history."
+            },
+            {
+              "kind": "speech",
+              "text": "আগ্রহী, keen, interested."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আগ্রহ (āgrôhô) is a tatsama, Sanskrit āgraha, \"insisting on, strong inclination\" (Monier-Williams); Bengali softened the insistence to keen interest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgrôhô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgrôhô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgrôhô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgrôhô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itihāse ôruner āgrôhô āchhe. — Arun has a keen interest in history.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itihāse ôruner āgrôhô āchhe.* — Arun has a keen interest in history.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for patience, then the Bengali for enthusiasm, then say āgrôhô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for patience, then the Bengali for enthusiasm, then say *āgrôhô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আগ্রহ (āgrôhô) mean? (\"Keen interest; eagerness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C455-utsuk",
+      "sequence": 27900,
+      "title": "উৎসুক (utsuk) — eager; curious to know",
+      "headword": "উৎসুক",
+      "romanization": "utsuk",
+      "gloss": "eager; curious to know",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57b6b2f90d899fd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for enthusiasm, then the Bengali for keen interest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উৎসুক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উৎসুক — utsuk — \"eager; curious to know\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ফলাফল জানার জন্য ছাত্ররা উৎসুক হয়ে ছিল। phôlāphôl jānār jônyô chhātrôrā utsuk hôye chhilô. The students were eager to know the results."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উৎসুক (utsuk) is a tatsama, Sanskrit utsuka, \"restless, uneasy\" and \"anxiously eager\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsuk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsuk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsuk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsuk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phôlāphôl jānār jônyô chhātrôrā utsuk hôye chhilô. — The students were eager to know the results.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phôlāphôl jānār jônyô chhātrôrā utsuk hôye chhilô.* — The students were eager to know the results.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for enthusiasm, then the Bengali for keen interest, then say utsuk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for enthusiasm, then the Bengali for keen interest, then say *utsuk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উৎসুক (utsuk) mean? (\"Eager; curious to know\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C455-tor-sooya",
+      "sequence": 27910,
+      "title": "তর সওয়া (tôr sôoyā) — to be able to wait (mostly with not: can't wait)",
+      "headword": "তর সওয়া",
+      "romanization": "tôr sôoyā",
+      "gloss": "to be able to wait (mostly with not: can't wait)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf5f6630582fb882",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for keen interest, then the Bengali for eager."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তর সওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তর সওয়া — tôr sôoyā — \"to be able to wait (mostly with not: can't wait)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ছুটি আসছে, মীরার আর তর সইছে না। chhuṭi āschhe, mīrār ār tôr sôichhe nā. The holidays are coming and Mira can't wait any longer."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই ছেলের তর সইল না, sei chheler tôr sôilô nā."
+            },
+            {
+              "kind": "speech",
+              "text": "The one who waits is in the genitive: আমার তর সইছে না, I can't wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তর সওয়া (tôr sôoyā) is tôr, \"waiting\", whose origin is not settled, with sôoyā, \"to bear, to put up with\" (CDIAL 13304)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tôr sôoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tôr sôoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tôr sôoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tôr sôoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhuṭi āschhe, mīrār ār tôr sôichhe nā. — The holidays are coming and Mira can't wait any longer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhuṭi āschhe, mīrār ār tôr sôichhe nā.* — The holidays are coming and Mira can't wait any longer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for keen interest, then the Bengali for eager, then say tôr sôoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for keen interest, then the Bengali for eager, then say *tôr sôoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does তর সওয়া (tôr sôoyā) mean? (\"To be able to wait (mostly with not: can't wait)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

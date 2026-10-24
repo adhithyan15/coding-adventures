@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C565-nirmmikkuka",
+    "language": "malayalam",
+    "chapter": 565,
+    "sequence": 28500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8a8518c099ea7e2"
+  },
+  "findings": []
+}

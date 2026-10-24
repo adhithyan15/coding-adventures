@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-403-PRETHAM403",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a ghost, a magician, a treasure, a curse and to curse.",
+  "prerequisites": []
+}

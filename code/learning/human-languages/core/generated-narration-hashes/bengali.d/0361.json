@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:d2c037c844e67854",
+  "lessonIds": [
+    "BN-C361-shikkha",
+    "BN-C361-bidya",
+    "BN-C361-odhyapok",
+    "BN-C361-digri",
+    "BN-C361-porano-teach",
+    "BN-R361-review-354-361"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch361.txt",
+  "json": "bengali/narration/ch361.json",
+  "textHash": "fnv1a64:c65d3e0284019c71",
+  "jsonHash": "fnv1a64:99845199a1fd9bf8",
+  "findings": []
+}

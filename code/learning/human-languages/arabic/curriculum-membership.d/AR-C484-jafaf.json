@@ -1,0 +1,11 @@
+{
+  "id": "AR-C484-jafaf",
+  "pathSegment": "AR-PATH-484-HARR484",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-484-HARR484",
+      "order": 3
+    }
+  ]
+}

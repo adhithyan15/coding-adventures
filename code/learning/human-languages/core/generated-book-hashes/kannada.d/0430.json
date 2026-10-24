@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:21b3d5923c8a5a5a",
+  "lessonIds": [
+    "KA-C430-paristhiti",
+    "KA-C430-sandarbha",
+    "KA-C430-udbhavisu",
+    "KA-C430-nibandhane",
+    "KA-C430-avasyakate"
+  ],
+  "tex": "kannada/book/chapters/ch430-situations-and-requirements.tex"
+}

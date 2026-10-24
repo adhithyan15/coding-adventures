@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:6b34372f57a67bd8",
+  "lessonIds": [
+    "TA-C322-manamuti",
+    "TA-C322-tali",
+    "TA-C322-mukurttam",
+    "TA-C322-manametai",
+    "TA-C322-pantal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch322.txt",
+  "json": "tamil/narration/ch322.json",
+  "textHash": "fnv1a64:8ee5824ea452e5d8",
+  "jsonHash": "fnv1a64:2fff7847acd0c39d",
+  "findings": []
+}

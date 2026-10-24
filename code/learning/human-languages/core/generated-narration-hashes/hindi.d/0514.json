@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:5a4757f3839d3af7",
+  "lessonIds": [
+    "HI-C514-thappa",
+    "HI-C514-retna",
+    "HI-C514-jarna",
+    "HI-C514-camkana",
+    "HI-C514-pighlana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch514.txt",
+  "json": "hindi/narration/ch514.json",
+  "textHash": "fnv1a64:2b3ee1ce4a3d90ca",
+  "jsonHash": "fnv1a64:40a4837552678abb",
+  "findings": []
+}

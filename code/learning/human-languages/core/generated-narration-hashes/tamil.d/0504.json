@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:cf8922f1303538d8",
+  "lessonIds": [
+    "TA-C504-mutumai",
+    "TA-C504-mutiyavar",
+    "TA-C504-napakam",
+    "TA-C504-manku",
+    "TA-C504-curunku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch504.txt",
+  "json": "tamil/narration/ch504.json",
+  "textHash": "fnv1a64:468b67b20b2b4fdf",
+  "jsonHash": "fnv1a64:0699fa4de00b68f0",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "A Rumour Spreads",
+  "label": "ch:hi-a-rumour-spreads",
+  "canDo": "I can say how a rumour spread and how people reacted.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C314-sansani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can say how a rumour spread and how people reacted.",
+    "assesses": [
+      "HI-LEX-C314-AFVAH314-03",
+      "HI-LEX-C314-AFVAH314-04",
+      "HI-LEX-C314-AFVAH314-05"
+    ]
+  }
+}

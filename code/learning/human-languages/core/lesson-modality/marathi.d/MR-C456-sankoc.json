@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C456-sankoc",
+    "language": "marathi",
+    "chapter": 456,
+    "sequence": 26310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d1d0f0a36528d76"
+  },
+  "findings": []
+}

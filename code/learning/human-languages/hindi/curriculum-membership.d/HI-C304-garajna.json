@@ -1,0 +1,11 @@
+{
+  "id": "HI-C304-garajna",
+  "pathSegment": "HI-PATH-304-TOOFAN304",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-304-TOOFAN304",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C372-tanti",
+  "pathSegment": "TA-PATH-372-CATTAM372",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-372-CATTAM372",
+      "order": 3
+    }
+  ]
+}

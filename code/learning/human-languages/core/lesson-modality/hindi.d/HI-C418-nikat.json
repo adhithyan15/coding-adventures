@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C418-nikat",
+    "language": "hindi",
+    "chapter": 418,
+    "sequence": 23030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac515bbeff10640a"
+  },
+  "findings": []
+}

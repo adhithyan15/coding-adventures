@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "The Mouth",
+  "label": "ch:hi-the-mouth",
+  "canDo": "I can talk about chewing, swallowing and the mouth.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C479-thukna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about chewing, swallowing and the mouth.",
+    "assesses": [
+      "HI-LEX-C479-MUNH479-03",
+      "HI-LEX-C479-MUNH479-04",
+      "HI-LEX-C479-MUNH479-05"
+    ]
+  }
+}

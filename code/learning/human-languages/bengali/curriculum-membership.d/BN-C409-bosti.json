@@ -1,0 +1,11 @@
+{
+  "id": "BN-C409-bosti",
+  "pathSegment": "BN-PATH-409-ELAKA409",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-409-ELAKA409",
+      "order": 1
+    }
+  ]
+}

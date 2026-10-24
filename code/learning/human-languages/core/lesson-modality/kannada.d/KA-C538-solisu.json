@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C538-solisu",
+    "language": "kannada",
+    "chapter": 538,
+    "sequence": 27500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6f30e2ac4399c6d"
+  },
+  "findings": []
+}

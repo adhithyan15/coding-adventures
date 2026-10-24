@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:439f13635821241c",
+  "lessonIds": [
+    "TE-C450-parkingu",
+    "TE-C450-nilupu",
+    "TE-C450-ekkincu",
+    "TE-C450-dincu",
+    "TE-C450-digabettu"
+  ],
+  "tex": "telugu/book/chapters/ch450-parking-and-dropping-off.tex"
+}

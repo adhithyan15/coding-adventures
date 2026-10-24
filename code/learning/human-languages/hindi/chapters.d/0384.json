@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Heat and Cold",
+  "label": "ch:hi-heat-and-cold",
+  "canDo": "I can say what heat or cold will do to things.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C384-madhyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can say what heat or cold will do to things.",
+    "assesses": [
+      "HI-LEX-C384-BARF384-03",
+      "HI-LEX-C384-BARF384-04",
+      "HI-LEX-C384-BARF384-05"
+    ]
+  }
+}

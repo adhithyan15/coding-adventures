@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 409,
+  "title": "Sailors and Tides",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:79a96437f7249930",
+  "lessons": [
+    {
+      "id": "MR-C409-khalasi",
+      "sequence": 23660,
+      "title": "खलाशी (khalāśī) — a sailor",
+      "headword": "खलाशी",
+      "romanization": "khalāśī",
+      "gloss": "a sailor",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:330a172776bcd6e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to toss about, then the Marathi for an anchor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खलाशी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खलाशी — khalāśī — \"a sailor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जहाजावर वीस खलाशी काम करतात. jahājāvar vīs khalāśī kām kartāt. Twenty sailors work on the ship."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural is the same in the direct case: एक खलाशी (khalāśī), वीस खलाशी (khalāśī)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खलाशी (khalāśī) is a loan from Persian, usually traced to khalāṣī, a word for a ship's hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khalāśī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khalāśī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khalāśī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khalāśī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jahājāvar vīs khalāśī kām kartāt. — Twenty sailors work on the ship.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jahājāvar vīs khalāśī kām kartāt.* — Twenty sailors work on the ship.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to toss about, then the Marathi for an anchor, then say khalāśī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to toss about, then the Marathi for an anchor, then say *khalāśī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खलाशी (khalāśī) mean? (\"A sailor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C409-ohoti",
+      "sequence": 23670,
+      "title": "ओहोटी (ohoṭī) — low tide; an ebb",
+      "headword": "ओहोटी",
+      "romanization": "ohoṭī",
+      "gloss": "low tide; an ebb",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:456b298b4418460a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an anchor, then the Marathi for a sailor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओहोटी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओहोटी — ohoṭī — \"low tide; an ebb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ओहोटीला वाळूवर खेकडे दिसतात. ohoṭīlā vāḷūvar khekaḍe distāt. At low tide you can see crabs on the sand."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Time words take -ला: ओहोटीला, at low tide."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओहोटी (ohoṭī) is inherited, from the family of avaghaṭṭati, \"decreases, recedes\", where CDIAL lists Marathi ohaṭṇẽ, \"to abate, ebb\" (CDIAL 748)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ohoṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ohoṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ohoṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ohoṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ohoṭīlā vāḷūvar khekaḍe distāt. — At low tide you can see crabs on the sand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ohoṭīlā vāḷūvar khekaḍe distāt.* — At low tide you can see crabs on the sand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an anchor, then the Marathi for a sailor, then say ohoṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an anchor, then the Marathi for a sailor, then say *ohoṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ओहोटी (ohoṭī) mean? (\"Low tide; an ebb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C409-udhan",
+      "sequence": 23680,
+      "title": "उधाण (udhāṇ) — a sea surge; a spring tide",
+      "headword": "उधाण",
+      "romanization": "udhāṇ",
+      "gloss": "a sea surge; a spring tide",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80776575cb3dd8ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a sailor, then the Marathi for low tide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उधाण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उधाण — udhāṇ — \"a sea surge; a spring tide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज समुद्राला मोठं उधाण आलं. āj samudrālā moṭhaṁ udhāṇ ālaṁ. Today the sea surged high."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "उधाण (udhāṇ) येणे, a surge comes; it also names a rush of joy: आनंदाला उधाण (udhāṇ) आलं."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उधाण (udhāṇ) is inherited: CDIAL lists Marathi udhāṇ, \"spring-tide\", under uddhāna, \"rising up\" (CDIAL 2015)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udhāṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udhāṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udhāṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udhāṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj samudrālā moṭhaṁ udhāṇ ālaṁ. — Today the sea surged high.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj samudrālā moṭhaṁ udhāṇ ālaṁ.* — Today the sea surged high.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a sailor, then the Marathi for low tide, then say udhāṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a sailor, then the Marathi for low tide, then say *udhāṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उधाण (udhāṇ) mean? (\"A sea surge; a spring tide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C409-khavalne",
+      "sequence": 23690,
+      "title": "खवळणे (khavaḷṇe) — to grow rough",
+      "headword": "खवळणे",
+      "romanization": "khavaḷṇe",
+      "gloss": "to grow rough",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a54523b6b6fd9d70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for low tide, then the Marathi for a sea surge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खवळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खवळणे — khavaḷṇe — \"to grow rough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संध्याकाळी समुद्र अचानक खवळला. sandhyākāḷī samudra acānak khavaḷlā. In the evening the sea suddenly grew rough."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो खवळला, to khavaḷlā."
+            },
+            {
+              "kind": "speech",
+              "text": "For the sea and for people: तो खवळला, he flared up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खवळणे (khavaḷṇe) is a Marathi verb for the sea, or a temper, becoming wild; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khavaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khavaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khavaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khavaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhyākāḷī samudra acānak khavaḷlā. — In the evening the sea suddenly grew rough.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhyākāḷī samudra acānak khavaḷlā.* — In the evening the sea suddenly grew rough.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for low tide, then the Marathi for a sea surge, then say khavaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for low tide, then the Marathi for a sea surge, then say *khavaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खवळणे (khavaḷṇe) mean? (\"To grow rough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C409-hindkalne",
+      "sequence": 23700,
+      "title": "हिंदकळणे (hindkaḷṇe) — to slosh about; to rock",
+      "headword": "हिंदकळणे",
+      "romanization": "hindkaḷṇe",
+      "gloss": "to slosh about; to rock",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7acee3b5d5aed67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a sea surge, then the Marathi for to grow rough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हिंदकळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिंदकळणे — hindkaḷṇe — \"to slosh about; to rock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लाटांवर होडी हिंदकळत होती. lāṭāṁvar hoḍī hindkaḷat hotī. The boat was rocking on the waves."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो हिंदकळला, to hindkaḷlā."
+            },
+            {
+              "kind": "speech",
+              "text": "For water moving in a pot or a tank, and for a boat on waves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिंदकळणे (hindkaḷṇe) may belong with Sanskrit hindolayati, \"swings\", where CDIAL lists Marathi hĩḍaḷṇẽ, \"to jog, shake\" (CDIAL 14095); the link is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hindkaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hindkaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hindkaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hindkaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāṭāṁvar hoḍī hindkaḷat hotī. — The boat was rocking on the waves.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāṭāṁvar hoḍī hindkaḷat hotī.* — The boat was rocking on the waves.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a sea surge, then the Marathi for to grow rough, then say hindkaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a sea surge, then the Marathi for to grow rough, then say *hindkaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हिंदकळणे (hindkaḷṇe) mean? (\"To slosh about; to rock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C532-eri-throw",
+  "pathSegment": "TA-PATH-532-SANDAI532",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-532-SANDAI532",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:61cc75bc4cf309e9",
+  "lessonIds": [
+    "AR-C487-ghamara",
+    "AR-C487-jarafa",
+    "AR-C487-ihtama",
+    "AR-C487-lajaa",
+    "AR-C487-malja",
+    "AR-R487-review-487-487",
+    "AR-R487-review-final-487"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch487.txt",
+  "json": "arabic/narration/ch487.json",
+  "textHash": "fnv1a64:e4c8c80be747d215",
+  "jsonHash": "fnv1a64:ed9d6800284cf340",
+  "findings": []
+}

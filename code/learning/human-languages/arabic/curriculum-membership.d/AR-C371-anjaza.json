@@ -1,0 +1,11 @@
+{
+  "id": "AR-C371-anjaza",
+  "pathSegment": "AR-PATH-371-WASILA371",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-371-WASILA371",
+      "order": 2
+    }
+  ]
+}

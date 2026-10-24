@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "What Counts",
+  "label": "ch:mr-what-counts",
+  "canDo": "I can say what is included, what is left out and what convinced me.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C387-patne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can say what is included, what is left out and what convinced me.",
+    "assesses": [
+      "MR-LEX-C387-GANANA387-03",
+      "MR-LEX-C387-GANANA387-04",
+      "MR-LEX-C387-GANANA387-05"
+    ]
+  }
+}

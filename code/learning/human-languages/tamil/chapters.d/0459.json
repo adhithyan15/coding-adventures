@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Joy and High Spirits",
+  "label": "ch:ta-joy-and-high-spirits",
+  "canDo": "I can talk about bliss, delight and high spirits.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C459-ullacam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can talk about bliss, delight and high spirits.",
+    "assesses": [
+      "TA-LEX-C459-MAKIZHCCI459-03",
+      "TA-LEX-C459-MAKIZHCCI459-04",
+      "TA-LEX-C459-MAKIZHCCI459-05"
+    ]
+  }
+}

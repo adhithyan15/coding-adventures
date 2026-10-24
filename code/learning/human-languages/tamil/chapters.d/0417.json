@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Sailors and Anchors",
+  "label": "ch:ta-sailors-and-anchors",
+  "canDo": "I can talk about sailors, anchors, rafts and the shore, and a boat floundering.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C417-karai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can talk about sailors, anchors, rafts and the shore, and a boat floundering.",
+    "assesses": [
+      "TA-LEX-C417-MALUMI417-03",
+      "TA-LEX-C417-MALUMI417-04",
+      "TA-LEX-C417-MALUMI417-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-288-STATION",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-288-STATION"
+  ],
+  "after": []
+}

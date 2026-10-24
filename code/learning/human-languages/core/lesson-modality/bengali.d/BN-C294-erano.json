@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C294-erano",
+    "language": "bengali",
+    "chapter": 294,
+    "sequence": 18960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ff1e78f29339241"
+  },
+  "findings": []
+}

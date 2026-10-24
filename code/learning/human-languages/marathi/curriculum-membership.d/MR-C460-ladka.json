@@ -1,0 +1,11 @@
+{
+  "id": "MR-C460-ladka",
+  "pathSegment": "MR-PATH-460-MAYA460",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-460-MAYA460",
+      "order": 4
+    }
+  ]
+}

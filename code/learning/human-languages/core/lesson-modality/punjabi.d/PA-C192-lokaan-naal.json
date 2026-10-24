@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C192-lokaan-naal",
+    "language": "punjabi",
+    "chapter": 192,
+    "sequence": 10430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dab75e4dde5f4ed"
+  },
+  "findings": []
+}

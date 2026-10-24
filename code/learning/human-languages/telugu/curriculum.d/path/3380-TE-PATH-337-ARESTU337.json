@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-337-ARESTU337",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-337-ARESTU337"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C378-gayaparacu",
+    "language": "telugu",
+    "chapter": 378,
+    "sequence": 18680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4c6a996f91fa787"
+  },
+  "findings": []
+}

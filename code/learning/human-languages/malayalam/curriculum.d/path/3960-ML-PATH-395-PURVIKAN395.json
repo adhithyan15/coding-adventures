@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-395-PURVIKAN395",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-395-PURVIKAN395"
+  ],
+  "after": []
+}

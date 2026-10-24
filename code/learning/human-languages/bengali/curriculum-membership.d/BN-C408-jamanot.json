@@ -1,0 +1,11 @@
+{
+  "id": "BN-C408-jamanot",
+  "pathSegment": "BN-PATH-408-BASA408",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-408-BASA408",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:3eaef5cea971c086",
+  "lessonIds": [
+    "BN-C299-somprochar",
+    "BN-C299-chenel",
+    "BN-C299-uposthapok",
+    "BN-C299-sorasori",
+    "BN-C299-dorshok",
+    "BN-R299-review-292-299"
+  ],
+  "tex": "bengali/book/chapters/ch299-on-the-air.tex"
+}

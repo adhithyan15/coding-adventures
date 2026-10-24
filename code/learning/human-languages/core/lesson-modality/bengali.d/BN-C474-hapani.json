@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C474-hapani",
+    "language": "bengali",
+    "chapter": 474,
+    "sequence": 28840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24141f9d56ecc7fd"
+  },
+  "findings": []
+}

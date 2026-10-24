@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-362-MONOJOG362",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-362-MONOJOG362"
+  ],
+  "after": []
+}

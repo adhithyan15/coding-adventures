@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:b7ee7499fc12a66d",
+  "lessonIds": [
+    "KA-C543-varanda",
+    "KA-C543-landra",
+    "KA-C543-mette",
+    "KA-C543-pithopakarana",
+    "KA-C543-oragu"
+  ],
+  "tex": "kannada/book/chapters/ch543-a-new-home.tex"
+}

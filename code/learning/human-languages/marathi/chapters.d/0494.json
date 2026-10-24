@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Family Ties",
+  "label": "ch:mr-family-ties",
+  "canDo": "I can talk about a relationship, relatives, a household and an orphan.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C494-sakkha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about a relationship, relatives, a household and an orphan.",
+    "assesses": [
+      "MR-LEX-C494-NATE494-03",
+      "MR-LEX-C494-NATE494-04",
+      "MR-LEX-C494-NATE494-05"
+    ]
+  }
+}

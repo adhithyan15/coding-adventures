@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-568-KAYIKAM568",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-568-KAYIKAM568"
+  ],
+  "after": []
+}

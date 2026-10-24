@@ -1,0 +1,11 @@
+{
+  "id": "AR-C285-ataqidu-anna",
+  "pathSegment": "AR-PATH-285-OPINION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-285-OPINION",
+      "order": 1
+    }
+  ]
+}

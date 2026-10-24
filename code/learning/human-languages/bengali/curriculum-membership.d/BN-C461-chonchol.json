@@ -1,0 +1,11 @@
+{
+  "id": "BN-C461-chonchol",
+  "pathSegment": "BN-PATH-461-JEDI461",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-461-JEDI461",
+      "order": 2
+    }
+  ]
+}

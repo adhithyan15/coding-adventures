@@ -1,10 +1,12 @@
 //! # Bounded RFC 5280 certificate path-length policy
 //!
 //! This crate applies only the path-length state transition to caller-ordered
-//! intermediate issuing-CA role evidence. It can also derive that role for the
-//! exact certificate bound into caller-policy self-issued evidence. It does
-//! not supply Name equality, construct or authenticate a path, process a trust
-//! anchor, or grant trust.
+//! intermediate issuing-CA evidence. Its strongest entry point consumes the
+//! complete exact-certificate intermediate-policy boundary so traversal cannot
+//! discard prerequisite critical-extension, algorithm, self-issued, or
+//! validity checks. Lower-level entry points remain available for callers that
+//! already own equivalent bindings. This crate does not supply Name equality,
+//! construct or authenticate a path, process a trust anchor, or grant trust.
 
 #![deny(unsafe_code)]
 
@@ -15,6 +17,7 @@ use x509_certificate_policy::{
     validate_certificate_role_extensions, ClassifiedCertificateSelfIssued,
     ValidatedCertificateRoleExtensions, X509CertificateRole,
 };
+use x509_intermediate_certificate_policy::ValidatedX509IntermediateCertificatePolicy;
 
 /// Stable path-length failure categories. No category retains input data.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -71,6 +74,24 @@ impl X509CertificatePathLengthState {
 
     pub const fn remaining_non_self_issued_intermediate_cas(&self) -> u64 {
         self.remaining_non_self_issued_intermediate_cas
+    }
+
+    /// Advance across one completely policy-validated intermediate CA.
+    ///
+    /// The consumed evidence already binds critical-extension recognition,
+    /// issuing-CA role semantics, caller-selected algorithm policy,
+    /// caller-owned self-issued classification, and explicit-time validity to
+    /// one exact decoded certificate. This transition derives its only two
+    /// inputs from that boundary rather than revalidating or accepting them
+    /// separately.
+    pub fn advance_validated_intermediate_ca(
+        self,
+        intermediate: &ValidatedX509IntermediateCertificatePolicy<'_, '_>,
+    ) -> Result<Self, X509CertificatePathLengthError> {
+        self.advance_intermediate_ca(
+            intermediate.role_policy().role_extensions(),
+            intermediate.self_issued_classification().is_self_issued(),
+        )
     }
 
     /// Advance across one evidence-bound intermediate CA.

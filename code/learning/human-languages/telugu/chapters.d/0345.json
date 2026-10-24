@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Remembering",
+  "label": "ch:te-remembering",
+  "canDo": "I can say a cremation ground, a grave, a tribute, a death anniversary and a will.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C345-vilunama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can say a cremation ground, a grave, a tribute, a death anniversary and a will.",
+    "assesses": [
+      "TE-LEX-C345-SMRTI345-03",
+      "TE-LEX-C345-SMRTI345-04",
+      "TE-LEX-C345-SMRTI345-05"
+    ]
+  }
+}

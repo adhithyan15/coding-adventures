@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C478-mincuhulu",
+    "language": "kannada",
+    "chapter": 478,
+    "sequence": 24330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:646bde616aeec832"
+  },
+  "findings": []
+}

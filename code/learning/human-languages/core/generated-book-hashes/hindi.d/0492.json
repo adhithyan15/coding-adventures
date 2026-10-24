@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:b05d341e30dfd8b7",
+  "lessonIds": [
+    "HI-C492-malis",
+    "HI-C492-svasth",
+    "HI-C492-canga",
+    "HI-C492-ayurved",
+    "HI-C492-sphurti"
+  ],
+  "tex": "hindi/book/chapters/ch492-getting-better.tex"
+}

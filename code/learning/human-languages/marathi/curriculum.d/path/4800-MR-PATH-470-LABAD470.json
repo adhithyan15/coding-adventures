@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-470-LABAD470",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-470-LABAD470"
+  ],
+  "after": []
+}

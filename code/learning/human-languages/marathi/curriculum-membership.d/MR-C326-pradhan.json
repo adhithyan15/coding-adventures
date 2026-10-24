@@ -1,0 +1,11 @@
+{
+  "id": "MR-C326-pradhan",
+  "pathSegment": "MR-PATH-326-SAMRAT326",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-326-SAMRAT326",
+      "order": 4
+    }
+  ]
+}

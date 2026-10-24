@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C387-phirti",
+    "language": "bengali",
+    "chapter": 387,
+    "sequence": 24190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49e4b995838b0fd2"
+  },
+  "findings": []
+}

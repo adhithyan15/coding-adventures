@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C435-birudadanam",
+    "language": "malayalam",
+    "chapter": 435,
+    "sequence": 21550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:094d935345196ae7"
+  },
+  "findings": []
+}

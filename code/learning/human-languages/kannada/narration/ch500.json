@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 500,
+  "title": "What Someone Is Like",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a22c2d769c5e0711",
+  "lessons": [
+    {
+      "id": "KA-C500-svabhava",
+      "sequence": 25510,
+      "title": "ಸ್ವಭಾವ (svabhāva) — temperament; nature",
+      "headword": "ಸ್ವಭಾವ",
+      "romanization": "svabhāva",
+      "gloss": "temperament; nature",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a4be15963d73e1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for envy, then the Kannada for self-confidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ವಭಾವ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಭಾವ — svabhāva — \"temperament; nature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ತಮ್ಮನ ಸ್ವಭಾವ ತುಂಬಾ ಶಾಂತ. nanna tammana svabhāva tumbā śānta. My younger brother's nature is very calm."
+            },
+            {
+              "kind": "speech",
+              "text": "A person's own way of being: ಸ್ವ, own, joined to the Sanskrit word for being."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಭಾವ (svabhāva) is borrowed from Sanskrit svabhāva, \"one's own way of being, natural disposition\" (Monier-Williams): sva, \"own\", and bhāva, \"being\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svabhāva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svabhāva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svabhāva, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svabhāva*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna tammana svabhāva tumbā śānta. — My younger brother's nature is very calm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna tammana svabhāva tumbā śānta.* — My younger brother's nature is very calm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for envy, then the Kannada for self-confidence, then say svabhāva again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for envy, then the Kannada for self-confidence, then say *svabhāva* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ವಭಾವ (svabhāva) mean? (\"Temperament; nature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C500-vyaktitva",
+      "sequence": 25520,
+      "title": "ವ್ಯಕ್ತಿತ್ವ (vyaktitva) — personality",
+      "headword": "ವ್ಯಕ್ತಿತ್ವ",
+      "romanization": "vyaktitva",
+      "gloss": "personality",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddfa12453e7c3cc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for self-confidence, then the Kannada for temperament."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವ್ಯಕ್ತಿತ್ವ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವ್ಯಕ್ತಿತ್ವ — vyaktitva — \"personality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರ ವ್ಯಕ್ತಿತ್ವ ಎಲ್ಲರಿಗೂ ಇಷ್ಟ. avara vyaktitva ellarigū iṣṭa. Everyone likes his personality."
+            },
+            {
+              "kind": "speech",
+              "text": "ವ್ಯಕ್ತಿ, a person + -ತ್ವ, the Sanskrit ending for \"-ness\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವ್ಯಕ್ತಿತ್ವ (vyaktitva) is borrowed from Sanskrit vyaktitva, \"distinctness, individuality, personality\" (Monier-Williams), built on vyakti, \"an individual\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyaktitva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyaktitva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyaktitva, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyaktitva*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avara vyaktitva ellarigū iṣṭa. — Everyone likes his personality.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avara vyaktitva ellarigū iṣṭa.* — Everyone likes his personality.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for self-confidence, then the Kannada for temperament, then say vyaktitva again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for self-confidence, then the Kannada for temperament, then say *vyaktitva* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವ್ಯಕ್ತಿತ್ವ (vyaktitva) mean? (\"Personality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C500-nadate",
+      "sequence": 25530,
+      "title": "ನಡತೆ (naḍate) — conduct; behaviour",
+      "headword": "ನಡತೆ",
+      "romanization": "naḍate",
+      "gloss": "conduct; behaviour",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98852cf8aba2b66d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for temperament, then the Kannada for personality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಡತೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಡತೆ — naḍate — \"conduct; behaviour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಶಾಲೆಯಲ್ಲಿ ಅವನ ನಡತೆ ಚೆನ್ನಾಗಿದೆ. śāleyalli avana naḍate cennāgide. His conduct at school is good."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ನಡೆ, to walk: the way you walk through life."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಡತೆ (naḍate) is native Dravidian: DEDR 3582 lists Kannada naḍe, \"to walk, go, happen\", and naḍate, \"conduct, behaviour\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naḍate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naḍate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naḍate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naḍate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāleyalli avana naḍate cennāgide. — His conduct at school is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāleyalli avana naḍate cennāgide.* — His conduct at school is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for temperament, then the Kannada for personality, then say naḍate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for temperament, then the Kannada for personality, then say *naḍate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಡತೆ (naḍate) mean? (\"Conduct; behaviour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C500-vartane",
+      "sequence": 25540,
+      "title": "ವರ್ತನೆ (vartane) — attitude; way of behaving",
+      "headword": "ವರ್ತನೆ",
+      "romanization": "vartane",
+      "gloss": "attitude; way of behaving",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90dac835dbbb32d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for personality, then the Kannada for conduct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವರ್ತನೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವರ್ತನೆ — vartane — \"attitude; way of behaving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅತಿಥಿಗಳ ಮುಂದೆ ಮಗುವಿನ ವರ್ತನೆ ವಿಚಿತ್ರವಾಗಿತ್ತು. atithigaḷa munde maguvina vartane vicitravāgittu. The child's behaviour in front of the guests was strange."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is ವರ್ತಿಸು, to behave."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವರ್ತನೆ (vartane) is borrowed from Sanskrit vartana, \"turning, rolling\" (CDIAL 11354), from the root vṛt, \"to turn, to be\"; in Kannada it is the way a person carries on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vartane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vartane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vartane, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vartane*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atithigaḷa munde maguvina vartane vicitravāgittu. — The child's behaviour in front of the guests was strange.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atithigaḷa munde maguvina vartane vicitravāgittu.* — The child's behaviour in front of the guests was strange.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for personality, then the Kannada for conduct, then say vartane again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for personality, then the Kannada for conduct, then say *vartane* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವರ್ತನೆ (vartane) mean? (\"Attitude; way of behaving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C500-anukarisu",
+      "sequence": 25550,
+      "title": "ಅನುಕರಿಸು (anukarisu) — to imitate",
+      "headword": "ಅನುಕರಿಸು",
+      "romanization": "anukarisu",
+      "gloss": "to imitate",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2e8aa9a6c69af86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for conduct, then the Kannada for attitude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅನುಕರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನುಕರಿಸು — anukarisu — \"to imitate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಕ್ಕಳು ದೊಡ್ಡವರನ್ನು ಅನುಕರಿಸುತ್ತಾರೆ. makkaḷu doḍḍavarannu anukarisuttāre. Children imitate grown-ups."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಅನುಕರಿಸಿದೆ, anukariside."
+            },
+            {
+              "kind": "speech",
+              "text": "The one imitated takes -ಅನ್ನು. ಅನುಕರಣೆ is imitation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನುಕರಿಸು (anukarisu) is built on Sanskrit anukaraṇa, \"the act of imitation\" (Monier-Williams): anu, \"after\", and kṛ, \"to do\", with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anukarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anukarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anukarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anukarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkaḷu doḍḍavarannu anukarisuttāre. — Children imitate grown-ups.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkaḷu doḍḍavarannu anukarisuttāre.* — Children imitate grown-ups.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for conduct, then the Kannada for attitude, then say anukarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for conduct, then the Kannada for attitude, then say *anukarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅನುಕರಿಸು (anukarisu) mean? (\"To imitate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

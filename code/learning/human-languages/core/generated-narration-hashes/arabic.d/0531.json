@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:cf385cdcb21f9899",
+  "lessonIds": [
+    "AR-C531-murahiq",
+    "AR-C531-kabira",
+    "AR-C531-nadija",
+    "AR-C531-shaykhukha",
+    "AR-C531-murabbiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch531.txt",
+  "json": "arabic/narration/ch531.json",
+  "textHash": "fnv1a64:879e8d5eec64ba49",
+  "jsonHash": "fnv1a64:a361c34fd139217b",
+  "findings": []
+}

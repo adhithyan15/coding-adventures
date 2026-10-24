@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:1edf0c680de5c155",
+  "lessonIds": [
+    "TA-C384-avaciyam",
+    "TA-C384-kattayam",
+    "TA-C384-varampu",
+    "TA-C384-kuraintapatcam",
+    "TA-C384-anaiyitu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch384.txt",
+  "json": "tamil/narration/ch384.json",
+  "textHash": "fnv1a64:8de945d943aaf4b9",
+  "jsonHash": "fnv1a64:92d8060cf30c8bc0",
+  "findings": []
+}

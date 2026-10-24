@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Regret and pity",
+  "label": "ch:ar-regret-and-pity",
+  "canDo": "I can say that someone regretted something or gently reproached someone, and talk about pity and despair.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C493-yas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can say that someone regretted something or gently reproached someone, and talk about pity and despair.",
+    "assesses": [
+      "AR-LEX-C493-NADAM493-03",
+      "AR-LEX-C493-NADAM493-04",
+      "AR-LEX-C493-NADAM493-05"
+    ]
+  }
+}

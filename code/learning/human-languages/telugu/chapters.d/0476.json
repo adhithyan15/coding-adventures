@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Talking About the Climate",
+  "label": "ch:te-talking-about-the-climate",
+  "canDo": "I can say the climate, temperature, humidity, muggy heat and to heat up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C476-vedekku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can say the climate, temperature, humidity, muggy heat and to heat up.",
+    "assesses": [
+      "TE-LEX-C476-USHNOGRATA476-03",
+      "TE-LEX-C476-USHNOGRATA476-04",
+      "TE-LEX-C476-USHNOGRATA476-05"
+    ]
+  }
+}

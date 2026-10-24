@@ -1,0 +1,11 @@
+{
+  "id": "TE-C375-mudrana",
+  "pathSegment": "TE-PATH-375-PATRIKEYUDU375",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-375-PATRIKEYUDU375",
+      "order": 1
+    }
+  ]
+}

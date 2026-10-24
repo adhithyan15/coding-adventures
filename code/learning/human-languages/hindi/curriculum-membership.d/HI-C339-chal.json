@@ -1,0 +1,11 @@
+{
+  "id": "HI-C339-chal",
+  "pathSegment": "HI-PATH-339-RAJKUMAR339",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-339-RAJKUMAR339",
+      "order": 3
+    }
+  ]
+}

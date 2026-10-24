@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 514,
+  "title": "Unions and Warehouses",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fb79e093c0747d11",
+  "lessons": [
+    {
+      "id": "TA-C514-tolircankam",
+      "sequence": 29510,
+      "title": "தொழிற்சங்கம் (toḻiṟcaṅkam) — a trade union",
+      "headword": "தொழிற்சங்கம்",
+      "romanization": "toḻiṟcaṅkam",
+      "gloss": "a trade union",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ede2bd8e4bb6ae4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a weaver, then the Tamil for a maid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தொழிற்சங்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொழிற்சங்கம் — toḻiṟcaṅkam — \"a trade union\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தொழிற்சங்கம் சம்பள உயர்வு கேட்டது. toḻiṟcaṅkam campaḷa uyarvu kēṭṭatu. The trade union asked for a pay rise."
+            },
+            {
+              "kind": "speech",
+              "text": "Before ச the final -ல் of தொழில் becomes -ற்: தொழில் + சங்கம் = தொழிற்சங்கம் (toḻiṟcaṅkam)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொழிற்சங்கம் (toḻiṟcaṅkam) joins the native தொழில் (toḻil), \"a trade\" (DEDR 3524), and சங்கம் (caṅkam), \"an association\", from Sanskrit saṅgha (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻiṟcaṅkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻiṟcaṅkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻiṟcaṅkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻiṟcaṅkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻiṟcaṅkam campaḷa uyarvu kēṭṭatu. — The trade union asked for a pay rise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻiṟcaṅkam campaḷa uyarvu kēṭṭatu.* — The trade union asked for a pay rise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a weaver, then the Tamil for a maid, then say toḻiṟcaṅkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a weaver, then the Tamil for a maid, then say *toḻiṟcaṅkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தொழிற்சங்கம் (toḻiṟcaṅkam) mean? (\"A trade union\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C514-velainiruttam",
+      "sequence": 29520,
+      "title": "வேலைநிறுத்தம் (vēlainiṟuttam) — a strike",
+      "headword": "வேலைநிறுத்தம்",
+      "romanization": "vēlainiṟuttam",
+      "gloss": "a strike",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65073927b45ce153",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a maid, then the Tamil for a trade union."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வேலைநிறுத்தம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேலைநிறுத்தம் — vēlainiṟuttam — \"a strike\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வேலைநிறுத்தத்தால் இன்று பேருந்துகள் ஓடவில்லை. vēlainiṟuttattāl iṉṟu pēruntukaḷ ōṭavillai. Because of the strike the buses did not run today."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"a stopping of work\": வேலை + நிறுத்தம், from நிறுத்து (niṟuttu), to stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேலைநிறுத்தம் (vēlainiṟuttam) is a native compound: வேலை (vēlai), \"work\" (DEDR 5540), and நிறுத்தம் (niṟuttam), \"a stopping\", from நில் (nil), \"to stand, to stop\" (DEDR 3675)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēlainiṟuttam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēlainiṟuttam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēlainiṟuttam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēlainiṟuttam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēlainiṟuttattāl iṉṟu pēruntukaḷ ōṭavillai. — Because of the strike the buses did not run today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēlainiṟuttattāl iṉṟu pēruntukaḷ ōṭavillai.* — Because of the strike the buses did not run today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a maid, then the Tamil for a trade union, then say vēlainiṟuttam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a maid, then the Tamil for a trade union, then say *vēlainiṟuttam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வேலைநிறுத்தம் (vēlainiṟuttam) mean? (\"A strike\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C514-panimanai",
+      "sequence": 29530,
+      "title": "பணிமனை (paṇimaṉai) — a workshop; a depot",
+      "headword": "பணிமனை",
+      "romanization": "paṇimaṉai",
+      "gloss": "a workshop; a depot",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ae991eec650d967",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a trade union, then the Tamil for a strike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பணிமனை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பணிமனை — paṇimaṉai — \"a workshop; a depot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பழுதான பேருந்தைப் பணிமனைக்குக் கொண்டு போனார்கள். paḻutāṉa pēruntaip paṇimaṉaikkuk koṇṭu pōṉārkaḷ. They took the broken-down bus to the depot."
+            },
+            {
+              "kind": "speech",
+              "text": "பணி \"work\" + மனை \"a building, a house site\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பணிமனை (paṇimaṉai) is a native compound: பணி (paṇi), \"work\" (DEDR 3884), and மனை (maṉai), \"a house, a building site\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇimaṉai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇimaṉai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇimaṉai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇimaṉai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻutāṉa pēruntaip paṇimaṉaikkuk koṇṭu pōṉārkaḷ. — They took the broken-down bus to the depot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻutāṉa pēruntaip paṇimaṉaikkuk koṇṭu pōṉārkaḷ.* — They took the broken-down bus to the depot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a trade union, then the Tamil for a strike, then say paṇimaṉai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a trade union, then the Tamil for a strike, then say *paṇimaṉai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பணிமனை (paṇimaṉai) mean? (\"A workshop; a depot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C514-kitanku",
+      "sequence": 29540,
+      "title": "கிடங்கு (kiṭaṅku) — a warehouse; a storeroom",
+      "headword": "கிடங்கு",
+      "romanization": "kiṭaṅku",
+      "gloss": "a warehouse; a storeroom",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c07c81425bb78e4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a strike, then the Tamil for a workshop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கிடங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கிடங்கு — kiṭaṅku — \"a warehouse; a storeroom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அரிசி மூட்டைகள் கிடங்கில் இருக்கின்றன. arici mūṭṭaikaḷ kiṭaṅkil irukkiṉṟaṉa. The sacks of rice are in the warehouse."
+            },
+            {
+              "kind": "speech",
+              "text": "Where something is kept takes -இல்: கிடங்கில் வை, to keep in the warehouse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கிடங்கு (kiṭaṅku) is native Dravidian: DEDR 1525 gives கிடங்கு (kiṭaṅku) for a storehouse."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiṭaṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiṭaṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiṭaṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiṭaṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arici mūṭṭaikaḷ kiṭaṅkil irukkiṉṟaṉa. — The sacks of rice are in the warehouse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arici mūṭṭaikaḷ kiṭaṅkil irukkiṉṟaṉa.* — The sacks of rice are in the warehouse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a strike, then the Tamil for a workshop, then say kiṭaṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a strike, then the Tamil for a workshop, then say *kiṭaṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கிடங்கு (kiṭaṅku) mean? (\"A warehouse; a storeroom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C514-perunar",
+      "sequence": 29550,
+      "title": "பெறுநர் (peṟunar) — a recipient; an addressee",
+      "headword": "பெறுநர்",
+      "romanization": "peṟunar",
+      "gloss": "a recipient; an addressee",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b05d2b07098ca15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a workshop, then the Tamil for a warehouse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பெறுநர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பெறுநர் — peṟunar — \"a recipient; an addressee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பொட்டலத்தில் பெறுநரின் முகவரி தெளிவாக இல்லை. poṭṭalattil peṟunariṉ mukavari teḷivāka illai. The recipient's address on the parcel is not clear."
+            },
+            {
+              "kind": "speech",
+              "text": "From பெறு (peṟu), to receive, with -நர் \"one who …\"; compare ஓட்டுநர் (ōṭṭunar)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பெறுநர் (peṟunar) is native Dravidian: பெறு (peṟu), \"to get, to receive\" (DEDR 4422), with -நர், \"one who does it\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṟunar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṟunar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṟunar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṟunar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭṭalattil peṟunariṉ mukavari teḷivāka illai. — The recipient's address on the parcel is not clear.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭṭalattil peṟunariṉ mukavari teḷivāka illai.* — The recipient's address on the parcel is not clear.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a workshop, then the Tamil for a warehouse, then say peṟunar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a workshop, then the Tamil for a warehouse, then say *peṟunar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பெறுநர் (peṟunar) mean? (\"A recipient; an addressee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

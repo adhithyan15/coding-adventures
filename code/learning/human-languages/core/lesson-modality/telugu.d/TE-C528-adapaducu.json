@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C528-adapaducu",
+    "language": "telugu",
+    "chapter": 528,
+    "sequence": 26770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8eba53e813e220eb"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 543,
+  "title": "At a Performance",
+  "label": "ch:te-at-a-performance",
+  "canDo": "I can talk about a concert, the applause and the folk dances.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C543-kolatam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 543: I can talk about a concert, the applause and the folk dances.",
+    "assesses": [
+      "TE-LEX-C543-KACERI543-03",
+      "TE-LEX-C543-KACERI543-04",
+      "TE-LEX-C543-KACERI543-05"
+    ]
+  }
+}

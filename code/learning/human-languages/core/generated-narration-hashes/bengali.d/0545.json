@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:dc5ed2fb8f4bea45",
+  "lessonIds": [
+    "BN-C545-onyotom",
+    "BN-C545-ogradhikar",
+    "BN-C545-sadhyo",
+    "BN-C545-mitobyoyi",
+    "BN-C545-thaorano",
+    "BN-R545-review-539-545",
+    "BN-R545-review-final-545"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch545.txt",
+  "json": "bengali/narration/ch545.json",
+  "textHash": "fnv1a64:392e6bc28b3117b1",
+  "jsonHash": "fnv1a64:5017460c3571dcfd",
+  "findings": []
+}

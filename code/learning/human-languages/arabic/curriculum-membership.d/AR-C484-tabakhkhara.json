@@ -1,0 +1,11 @@
+{
+  "id": "AR-C484-tabakhkhara",
+  "pathSegment": "AR-PATH-484-HARR484",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-484-HARR484",
+      "order": 4
+    }
+  ]
+}

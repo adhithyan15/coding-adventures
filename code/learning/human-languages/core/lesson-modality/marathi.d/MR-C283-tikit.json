@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C283-tikit",
+    "language": "marathi",
+    "chapter": 283,
+    "sequence": 16280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d5d73c431011801"
+  },
+  "findings": []
+}

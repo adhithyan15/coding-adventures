@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C492-malis",
+    "language": "hindi",
+    "chapter": 492,
+    "sequence": 27050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e55ce5d37cb8b2a1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C365-adesincu",
+  "pathSegment": "TE-PATH-365-DROHAM365",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-365-DROHAM365",
+      "order": 3
+    }
+  ]
+}

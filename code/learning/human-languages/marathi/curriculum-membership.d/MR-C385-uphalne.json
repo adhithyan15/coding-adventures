@@ -1,0 +1,11 @@
+{
+  "id": "MR-C385-uphalne",
+  "pathSegment": "MR-PATH-385-CHIGHALNE385",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-385-CHIGHALNE385",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Headlines and Editions",
+  "label": "ch:ml-headlines-and-editions",
+  "canDo": "I can say a headline, an editor, an edition, a reader and to print.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C350-accatikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can say a headline, an editor, an edition, a reader and to print.",
+    "assesses": [
+      "ML-LEX-C350-PATRAM350-03",
+      "ML-LEX-C350-PATRAM350-04",
+      "ML-LEX-C350-PATRAM350-05"
+    ]
+  }
+}

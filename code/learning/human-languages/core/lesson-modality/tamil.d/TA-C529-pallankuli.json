@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C529-pallankuli",
+    "language": "tamil",
+    "chapter": 529,
+    "sequence": 30310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8efac7bf38facb6"
+  },
+  "findings": []
+}

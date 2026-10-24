@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C323-thane",
+    "language": "kannada",
+    "chapter": 323,
+    "sequence": 16220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:572488d3b3d08057"
+  },
+  "findings": []
+}

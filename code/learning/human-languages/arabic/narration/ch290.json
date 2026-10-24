@@ -1,0 +1,470 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 290,
+  "title": "Bigger, Better, For How Long",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:1a01d2e512ad9a2b",
+  "lessons": [
+    {
+      "id": "AR-C290-akbar-min",
+      "sequence": 16740,
+      "title": "أكبر من (akbar min) — bigger than",
+      "headword": "أكبر من",
+      "romanization": "akbar min",
+      "gloss": "bigger than — the comparative shape aCCaC with min, the same shape with al- or before a noun for 'the biggest', and afḍal, better",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e64ca3298a58594",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it was a new experience\", then \"I hope to travel\". (Kānat tajribatan jadīda, atamannā an usāfira.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To describe an experience well, you set it beside another: the city or the village, the train or the bus."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the shape aCCaC, and min",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the three root letters of a describing word and pour them into the shape a-C-C-a-C: kabīr, big, becomes أكبر akbar, bigger; ṣaghīr becomes aṣghar; sarīʿ, fast, becomes asraʿ. من — min, \"from\" — is the \"than\":"
+            },
+            {
+              "kind": "speech",
+              "text": "المدينة أكبر من القرية. — al-madīna akbar min al-qarya — The city is bigger than the village."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape does not change for a feminine noun: al-madīna akbar, al-qiṭār asraʿ min ad-darrāja. You have owned two of these since chapter one hundred and seventy-six: akthar, more, is the shape of kathīr, many, and aqall, less, of qalīl, few."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the biggest, and better",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put al- on it for \"the biggest\": al-akbar. Or set it before a noun with no article: أكبر مدينة akbar madīna, the biggest city."
+            },
+            {
+              "kind": "speech",
+              "text": "\"Better\" has a shape of its own: أفضل afḍal, from the root of faḍḍala, to prefer, and of min faḍlik."
+            },
+            {
+              "kind": "speech",
+              "text": "القطار أفضل من الحافلة. — al-qiṭār afḍal min al-ḥāfila — The train is better than the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Al-afḍal is \"the best\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kabīr … akbar; ṣaghīr … aṣghar; sarīʿ … asraʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kabīr* … *akbar*; *ṣaghīr* … *aṣghar*; *sarīʿ* … *asraʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The city is bigger than the village\" — al-madīna akbar min al-qarya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The city is bigger than the village\" — *al-madīna akbar min al-qarya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The train is faster than the bicycle\" — al-qiṭār asraʿ min ad-darrāja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The train is faster than the bicycle\" — *al-qiṭār asraʿ min ad-darrāja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"the biggest city\" — akbar madīna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"the biggest city\" — *akbar madīna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think the train is faster\" — aʿtaqidu anna al-qiṭāra asraʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think the train is faster\" — *aʿtaqidu anna al-qiṭāra asraʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The train is better than the bus\" — al-qiṭār afḍal min al-ḥāfila",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The train is better than the bus\" — *al-qiṭār afḍal min al-ḥāfila*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Bigger than\"? (Akbar min.) \"Smaller\"? (Aṣghar.) \"The best\"? (Al-afḍal.) Which two words were in this shape all along? (Akthar and aqall.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C290-mundhu",
+      "sequence": 16750,
+      "title": "منذ ثلاث سنوات (mundhu thalāth sanawāt) — for three years",
+      "headword": "منذ ثلاث سنوات",
+      "romanization": "mundhu thalāth sanawāt",
+      "gloss": "for three years, three years ago — mundhu with the present for what is still going on, and qabla with a span for 'ago'",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca9844bc5e9658c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the city is bigger than the village\", then \"the biggest city\". (Al-madīna akbar min al-qarya, akbar madīna.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An experience also has a length. Mundhu, from chapter two hundred and thirty-three, measures it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: mundhu and the present",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For something that began in the past and is still going on, Arabic keeps the present and adds mundhu with the span:"
+            },
+            {
+              "kind": "speech",
+              "text": "أعمل هنا منذ ثلاث سنوات. — aʿmalu hunā mundhu thalāth sanawāt — I have been working here for three years."
+            },
+            {
+              "kind": "speech",
+              "text": "English says \"have been working\"; Arabic says \"I work, since three years\". With a point in time instead of a span, mundhu is \"since\": anā hunā mundhu aṣ-ṣabāḥ, I've been here since the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Counting takes care. Sana, a year, ends in ة, and three to ten take the opposite ending to their noun: thalāth sanawāt, three years, but thalāthat ashhur, three months. For two, the noun takes -ayn: sanatayn, two years; usbūʿayn, two weeks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: ago",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For a finished event, use the past and قبل — qabla, \"before\" — with the span:"
+            },
+            {
+              "kind": "speech",
+              "text": "وصلت قبل أسبوع. — waṣaltu qabla usbūʿ — I arrived a week ago."
+            },
+            {
+              "kind": "speech",
+              "text": "Mundhu with a past verb can say \"ago\" too: waṣaltu mundhu usbūʿ. With the present it can only mean \"for\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have been working here for three years\" — aʿmalu hunā mundhu thalāth sanawāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have been working here for three years\" — *aʿmalu hunā mundhu thalāth sanawāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"for three months\", then \"for two weeks\" — mundhu thalāthat ashhur, mundhu usbūʿayn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"for three months\", then \"for two weeks\" — *mundhu thalāthat ashhur*, *mundhu usbūʿayn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I arrived a week ago\" — waṣaltu qabla usbūʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I arrived a week ago\" — *waṣaltu qabla usbūʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have known my friend for two years\" — aʿrifu ṣadīqī mundhu sanatayn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have known my friend for two years\" — *aʿrifu ṣadīqī mundhu sanatayn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how long you have lived where you live — askunu hunā mundhu …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how long you have lived where you live — *askunu hunā mundhu …*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"For three years\", with a present? (Mundhu thalāth sanawāt.) \"A week ago\"? (Qabla usbūʿ.) \"Two years\"? (Sanatayn.) Which tense goes with mundhu for \"for\"? (The present.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R290-comparing-and-time",
+      "sequence": 16760,
+      "title": "Review — bigger, better, and for how long",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "an experience set beside another and measured — akbar min, al-afḍal, mundhu with the present, qabla for 'ago'",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc6ced4be43d456b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was happy\" and \"I felt afraid\". (Kuntu saʿīdan, shaʿartu bi-l-khawf.) Then \"I want to become an engineer\". (Urīdu an uṣbiḥa muhandisan.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and an experience can be weighed and measured. Weighed with the shape aCCaC and min: akbar min, asraʿ min, afḍal min; with al- or before a noun for the most: al-afḍal, akbar madīna. Measured with mundhu and the present, for what is still going on, and qabla with the past, for \"ago\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Both in one breath:"
+            },
+            {
+              "kind": "speech",
+              "text": "سافرت بالطائرة قبل سنة، وكانت أفضل تجربة. — sāfartu bi-ṭ-ṭāʾira qabla sana, wa-kānat afḍala tajriba — I travelled by plane a year ago, and it was the best experience."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The plane is faster than the train\" — aṭ-ṭāʾira asraʿ min al-qiṭār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The plane is faster than the train\" — *aṭ-ṭāʾira asraʿ min al-qiṭār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The pencil case is smaller\" — al-miqlama aṣghar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The pencil case is smaller\" — *al-miqlama aṣghar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have been waiting for the information since the morning\" — antaẓiru al-maʿlūmāt mundhu aṣ-ṣabāḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have been waiting for the information since the morning\" — *antaẓiru al-maʿlūmāt mundhu aṣ-ṣabāḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "something you did a year ago, and how long you have done something else",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: something you did a year ago, and how long you have done something else]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Better than\"? (Afḍal min.) \"The best experience\"? (Afḍal tajriba.) \"For two years\", with a present? (Mundhu sanatayn.) \"A year ago\"? (Qabla sana.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

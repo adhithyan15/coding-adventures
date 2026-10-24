@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 393,
+  "title": "Gains and Losses",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8f85874e7db086e3",
+  "lessons": [
+    {
+      "id": "TE-C393-prayojanam",
+      "sequence": 19560,
+      "title": "ప్రయోజనం (prayōjanaṁ) — a benefit; a purpose",
+      "headword": "ప్రయోజనం",
+      "romanization": "prayōjanaṁ",
+      "gloss": "a benefit; a purpose",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6566e9236465137e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to arise, then the Telugu for to crop up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రయోజనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రయోజనం — prayōjanaṁ — \"a benefit; a purpose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ కొత్త రోడ్డు వల్ల ఎవరికి ప్రయోజనం? ā kotta rōḍḍu valla evariki prayōjanaṁ? Who benefits from that new road?"
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ప్రయోజనాలు, prayōjanālu."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రయోజనం (prayōjanaṁ) లేదు, it is no use."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రయోజనం (prayōjanaṁ) is borrowed from Sanskrit prayojana, \"occasion, motive, purpose, aim\" (Monier-Williams); in Telugu it is also the good a thing does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayōjanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayōjanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayōjanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayōjanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kotta rōḍḍu valla evariki prayōjanaṁ? — Who benefits from that new road?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kotta rōḍḍu valla evariki prayōjanaṁ?* — Who benefits from that new road?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to arise, then the Telugu for to crop up, then say prayōjanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to arise, then the Telugu for to crop up, then say *prayōjanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రయోజనం (prayōjanaṁ) mean? (\"A benefit; a purpose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C393-labhapadu",
+      "sequence": 19570,
+      "title": "లాభపడు (lābhapaḍu) — to benefit; to gain",
+      "headword": "లాభపడు",
+      "romanization": "lābhapaḍu",
+      "gloss": "to benefit; to gain",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da3ce2fc2a1e92c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to crop up, then the Telugu for a benefit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: లాభపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లాభపడు — lābhapaḍu — \"to benefit; to gain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ వ్యాపారంలో మా మామయ్య బాగా లాభపడ్డాడు. ā vyāpāraṁlō mā māmayya bāgā lābhapaḍḍāḍu. My uncle gained a lot from that business."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): లాభపడ్డాను, lābhapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "లాభం, profit, which you know, + పడు: to come into profit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లాభపడు (lābhapaḍu) is built from లాభం, from Sanskrit lābha, \"gain\" (CDIAL 11018), and the native verb paḍu, \"to feel, to undergo\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lābhapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lābhapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lābhapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lābhapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā vyāpāraṁlō mā māmayya bāgā lābhapaḍḍāḍu. — My uncle gained a lot from that business.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā vyāpāraṁlō mā māmayya bāgā lābhapaḍḍāḍu.* — My uncle gained a lot from that business.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to crop up, then the Telugu for a benefit, then say lābhapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to crop up, then the Telugu for a benefit, then say *lābhapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does లాభపడు (lābhapaḍu) mean? (\"To benefit; to gain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C393-nastapovu",
+      "sequence": 19580,
+      "title": "నష్టపోవు (naṣṭapōvu) — to suffer a loss",
+      "headword": "నష్టపోవు",
+      "romanization": "naṣṭapōvu",
+      "gloss": "to suffer a loss",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae5e8752ade94e15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a benefit, then the Telugu for to benefit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నష్టపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నష్టపోవు — naṣṭapōvu — \"to suffer a loss\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వర్షాల వల్ల రైతులు చాలా నష్టపోయారు. varṣāla valla raitulu cālā naṣṭapōyāru. The farmers lost a great deal because of the rains."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): నష్టపోయాను, naṣṭapōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "నష్టం, a loss, which you know, + పోవు, to go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నష్టపోవు (naṣṭapōvu) is built from నష్టం, from Sanskrit naṣṭa, \"lost, destroyed\" (CDIAL 7027), and the native verb pōvu, \"to go, to be lost\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṣṭapōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṣṭapōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṣṭapōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṣṭapōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṣāla valla raitulu cālā naṣṭapōyāru. — The farmers lost a great deal because of the rains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṣāla valla raitulu cālā naṣṭapōyāru.* — The farmers lost a great deal because of the rains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a benefit, then the Telugu for to benefit, then say naṣṭapōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a benefit, then the Telugu for to benefit, then say *naṣṭapōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నష్టపోవు (naṣṭapōvu) mean? (\"To suffer a loss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C393-hanikaramaina",
+      "sequence": 19590,
+      "title": "హానికరమైన (hānikaramaina) — harmful",
+      "headword": "హానికరమైన",
+      "romanization": "hānikaramaina",
+      "gloss": "harmful",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d13e6d2ed82dfac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to benefit, then the Telugu for to suffer a loss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: హానికరమైన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హానికరమైన — hānikaramaina — \"harmful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పొగ తాగడం ఆరోగ్యానికి హానికరమైన అలవాటు. poga tāgaḍaṁ ārōgyāniki hānikaramaina alavāṭu. Smoking is a habit that harms your health."
+            },
+            {
+              "kind": "speech",
+              "text": "హాని, harm, + -కర, causing, + -మైన."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హానికరమైన (hānikaramaina) is built on Sanskrit hānikara, \"injurious, detrimental\" (Monier-Williams), from hāni, \"loss, decrease\", with Telugu -మైన for an adjective."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hānikaramaina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hānikaramaina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hānikaramaina, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hānikaramaina*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poga tāgaḍaṁ ārōgyāniki hānikaramaina alavāṭu. — Smoking is a habit that harms your health.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poga tāgaḍaṁ ārōgyāniki hānikaramaina alavāṭu.* — Smoking is a habit that harms your health.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to benefit, then the Telugu for to suffer a loss, then say hānikaramaina again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to benefit, then the Telugu for to suffer a loss, then say *hānikaramaina* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does హానికరమైన (hānikaramaina) mean? (\"Harmful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C393-upayogapadu",
+      "sequence": 19600,
+      "title": "ఉపయోగపడు (upayōgapaḍu) — to be useful; to come in handy",
+      "headword": "ఉపయోగపడు",
+      "romanization": "upayōgapaḍu",
+      "gloss": "to be useful; to come in handy",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bef9a382d6cc136",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to suffer a loss, then the Telugu for harmful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉపయోగపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉపయోగపడు — upayōgapaḍu — \"to be useful; to come in handy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మీ సలహా నాకు చాలా ఉపయోగపడింది. mī salahā nāku cālā upayōgapaḍindi. Your advice was very useful to me."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ఉపయోగపడింది, upayōgapaḍindi."
+            },
+            {
+              "kind": "speech",
+              "text": "The person helped takes -కి, and the thing that helps is the subject: its past is shown as ఉపయోగపడింది, it came in handy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉపయోగపడు (upayōgapaḍu) is built from Sanskrit upayoga, \"use, application\" (Monier-Williams), the word in ఉపయోగించు, and the native verb paḍu (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upayōgapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upayōgapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upayōgapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upayōgapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī salahā nāku cālā upayōgapaḍindi. — Your advice was very useful to me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī salahā nāku cālā upayōgapaḍindi.* — Your advice was very useful to me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to suffer a loss, then the Telugu for harmful, then say upayōgapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to suffer a loss, then the Telugu for harmful, then say *upayōgapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉపయోగపడు (upayōgapaḍu) mean? (\"To be useful; to come in handy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

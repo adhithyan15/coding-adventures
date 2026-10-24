@@ -1,0 +1,11 @@
+{
+  "id": "TE-C467-nelamaliga",
+  "pathSegment": "TE-PATH-467-ANTASTU467",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-467-ANTASTU467",
+      "order": 1
+    }
+  ]
+}

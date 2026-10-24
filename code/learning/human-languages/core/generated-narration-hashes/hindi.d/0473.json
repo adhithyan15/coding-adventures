@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:395fbde0af3bc002",
+  "lessonIds": [
+    "HI-C473-batuni",
+    "HI-C473-cup",
+    "HI-C473-gap",
+    "HI-C473-barbarana",
+    "HI-C473-maun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch473.txt",
+  "json": "hindi/narration/ch473.json",
+  "textHash": "fnv1a64:021b118fcdc0b500",
+  "jsonHash": "fnv1a64:1d619de089df3ca8",
+  "findings": []
+}

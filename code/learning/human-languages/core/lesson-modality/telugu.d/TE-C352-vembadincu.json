@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C352-vembadincu",
+    "language": "telugu",
+    "chapter": 352,
+    "sequence": 17330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50625b65d2352dce"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C362-campal",
+    "language": "malayalam",
+    "chapter": 362,
+    "sequence": 17680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9202c68b8157c05e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C388-qarib",
+  "pathSegment": "HI-PATH-388-PARYAPT388",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-388-PARYAPT388",
+      "order": 4
+    }
+  ]
+}

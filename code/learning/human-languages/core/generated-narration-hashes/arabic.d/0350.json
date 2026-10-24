@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:a1a43c3399d60b78",
+  "lessonIds": [
+    "AR-C350-nashir",
+    "AR-C350-taba",
+    "AR-C350-nuskha",
+    "AR-C350-manshur",
+    "AR-C350-mulhaq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch350.txt",
+  "json": "arabic/narration/ch350.json",
+  "textHash": "fnv1a64:c99fb5bd8243188d",
+  "jsonHash": "fnv1a64:2bb3a05bfa661dd6",
+  "findings": []
+}

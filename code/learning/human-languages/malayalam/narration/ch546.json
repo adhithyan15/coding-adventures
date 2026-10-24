@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 546,
+  "title": "Industry and Stress",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ed7d8aa5b273c855",
+  "lessons": [
+    {
+      "id": "ML-C546-kulippani",
+      "sequence": 27480,
+      "title": "കൂലിപ്പണി (kūlippaṇi) — manual labour",
+      "headword": "കൂലിപ്പണി",
+      "romanization": "kūlippaṇi",
+      "gloss": "manual labour",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c5817a25e4c3c10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for planning, then the Malayalam for to cooperate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൂലിപ്പണി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂലിപ്പണി — kūlippaṇi — \"manual labour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലി കിട്ടുന്നതുവരെ അവൻ കൂലിപ്പണി ചെയ്തു. jōli kiṭṭunnatuvare avan kūlippaṇi ceytu. Until he found a job, he did daily-wage labour."
+            },
+            {
+              "kind": "speech",
+              "text": "കൂലി a daily wage + പണി work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂലിപ്പണി (kūlippaṇi) is native Dravidian, a compound of കൂലി, \"hire, daily wages\" (DEDR 1905), and പണി, \"work\" (DEDR 3884)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūlippaṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūlippaṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūlippaṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūlippaṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōli kiṭṭunnatuvare avan kūlippaṇi ceytu. — Until he found a job, he did daily-wage labour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōli kiṭṭunnatuvare avan kūlippaṇi ceytu.* — Until he found a job, he did daily-wage labour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for planning, then the Malayalam for to cooperate, then say kūlippaṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for planning, then the Malayalam for to cooperate, then say *kūlippaṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൂലിപ്പണി (kūlippaṇi) mean? (\"Manual labour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C546-upajivanam",
+      "sequence": 27490,
+      "title": "ഉപജീവനം (upajīvanaṁ) — a livelihood",
+      "headword": "ഉപജീവനം",
+      "romanization": "upajīvanaṁ",
+      "gloss": "a livelihood",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28fcd41808c2bd25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to cooperate, then the Malayalam for manual labour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉപജീവനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉപജീവനം — upajīvanaṁ — \"a livelihood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മീൻപിടിത്തമാണ് അവരുടെ ഉപജീവനം. mīnpiṭittamāṇŭ avaruṭe upajīvanaṁ. Fishing is their livelihood."
+            },
+            {
+              "kind": "speech",
+              "text": "ഉപജീവനമാർഗ്ഗം, a means of living."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉപജീവനം (upajīvanaṁ) is borrowed from Sanskrit upajīvana, \"livelihood, subsistence\" (Monier-Williams), from upa-jīv, \"to live on\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upajīvanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upajīvanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upajīvanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upajīvanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīnpiṭittamāṇŭ avaruṭe upajīvanaṁ. — Fishing is their livelihood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīnpiṭittamāṇŭ avaruṭe upajīvanaṁ.* — Fishing is their livelihood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to cooperate, then the Malayalam for manual labour, then say upajīvanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to cooperate, then the Malayalam for manual labour, then say *upajīvanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉപജീവനം (upajīvanaṁ) mean? (\"A livelihood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C546-jolibharam",
+      "sequence": 27500,
+      "title": "ജോലിഭാരം (jōlibhāraṁ) — a workload",
+      "headword": "ജോലിഭാരം",
+      "romanization": "jōlibhāraṁ",
+      "gloss": "a workload",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:969a2e623592f86c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for manual labour, then the Malayalam for a livelihood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ജോലിഭാരം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ജോലിഭാരം — jōlibhāraṁ — \"a workload\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മാസാവസാനം ഓഫീസിൽ ജോലിഭാരം കൂടും. māsāvasānaṁ ōphīsil jōlibhāraṁ kūṭuṁ. At the end of the month the workload at the office goes up."
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലി work + ഭാരം weight; ഭാരമുള്ള, heavy, is already familiar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ജോലിഭാരം (jōlibhāraṁ) is a Malayalam compound built from ജോലി, \"work\", and ഭാരം, from Sanskrit bhāra, \"a burden, a weight\" (CDIAL 9459)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōlibhāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōlibhāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōlibhāraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōlibhāraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māsāvasānaṁ ōphīsil jōlibhāraṁ kūṭuṁ. — At the end of the month the workload at the office goes up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māsāvasānaṁ ōphīsil jōlibhāraṁ kūṭuṁ.* — At the end of the month the workload at the office goes up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for manual labour, then the Malayalam for a livelihood, then say jōlibhāraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for manual labour, then the Malayalam for a livelihood, then say *jōlibhāraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ജോലിഭാരം (jōlibhāraṁ) mean? (\"A workload\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C546-pravrttiparicayam",
+      "sequence": 27510,
+      "title": "പ്രവൃത്തിപരിചയം (pravṛttiparicayaṁ) — work experience",
+      "headword": "പ്രവൃത്തിപരിചയം",
+      "romanization": "pravṛttiparicayaṁ",
+      "gloss": "work experience",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e815b8bdd1ac83d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a livelihood, then the Malayalam for a workload."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രവൃത്തിപരിചയം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രവൃത്തിപരിചയം — pravṛttiparicayaṁ — \"work experience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ജോലിക്ക് മൂന്ന് വർഷത്തെ പ്രവൃത്തിപരിചയം വേണം. ā jōlikkŭ mūnnŭ varṣatte pravṛttiparicayaṁ vēṇaṁ. That job needs three years of work experience."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രവൃത്തി work + പരിചയം experience, already familiar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രവൃത്തിപരിചയം (pravṛttiparicayaṁ) is a learned compound built from Sanskrit pravṛtti, \"moving onwards, activity\" (Monier-Williams), and paricaya, \"acquaintance, practice\" (CDIAL 7807)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravṛttiparicayaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravṛttiparicayaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravṛttiparicayaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravṛttiparicayaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā jōlikkŭ mūnnŭ varṣatte pravṛttiparicayaṁ vēṇaṁ. — That job needs three years of work experience.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā jōlikkŭ mūnnŭ varṣatte pravṛttiparicayaṁ vēṇaṁ.* — That job needs three years of work experience.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a livelihood, then the Malayalam for a workload, then say pravṛttiparicayaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a livelihood, then the Malayalam for a workload, then say *pravṛttiparicayaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രവൃത്തിപരിചയം (pravṛttiparicayaṁ) mean? (\"Work experience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C546-nayikkuka",
+      "sequence": 27520,
+      "title": "നയിക്കുക (nayikkuka) — to lead; to guide",
+      "headword": "നയിക്കുക",
+      "romanization": "nayikkuka",
+      "gloss": "to lead; to guide",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc84215b07b88e7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a workload, then the Malayalam for work experience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നയിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നയിക്കുക — nayikkuka — \"to lead; to guide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പരിചയമുള്ള ആ മാനേജർ ടീമിനെ നന്നായി നയിച്ചു. paricayamuḷḷa ā mānējar ṭīmine nannāyi nayiccu. That experienced manager led the team well."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നയിച്ചു, nayiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "A leader is നേതാവ്, from the same Sanskrit root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നയിക്കുക (nayikkuka) is built from Sanskrit naya, from nayati, \"leads\" (CDIAL 6966), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nayikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nayikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nayikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nayikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricayamuḷḷa ā mānējar ṭīmine nannāyi nayiccu. — That experienced manager led the team well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricayamuḷḷa ā mānējar ṭīmine nannāyi nayiccu.* — That experienced manager led the team well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a workload, then the Malayalam for work experience, then say nayikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a workload, then the Malayalam for work experience, then say *nayikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നയിക്കുക (nayikkuka) mean? (\"To lead; to guide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

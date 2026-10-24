@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Tests and treatment",
+  "label": "ch:ar-tests-and-treatment",
+  "canDo": "I can talk about a diagnosis, a lab test and X-rays, and say that a doctor treated or cured someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C510-dawa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about a diagnosis, a lab test and X-rays, and say that a doctor treated or cured someone.",
+    "assesses": [
+      "AR-LEX-C510-TASHKHIS510-03",
+      "AR-LEX-C510-TASHKHIS510-04",
+      "AR-LEX-C510-TASHKHIS510-05"
+    ]
+  }
+}

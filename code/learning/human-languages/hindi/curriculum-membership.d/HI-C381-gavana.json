@@ -1,0 +1,11 @@
+{
+  "id": "HI-C381-gavana",
+  "pathSegment": "HI-PATH-381-KASH381",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-381-KASH381",
+      "order": 3
+    }
+  ]
+}

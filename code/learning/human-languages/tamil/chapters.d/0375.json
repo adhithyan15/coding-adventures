@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Parties and Power",
+  "label": "ch:ta-parties-and-power",
+  "canDo": "I can talk about parties, alliances and influence.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C375-kavar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can talk about parties, alliances and influence.",
+    "assesses": [
+      "TA-LEX-C375-KATCI375-03",
+      "TA-LEX-C375-KATCI375-04",
+      "TA-LEX-C375-KATCI375-05"
+    ]
+  }
+}

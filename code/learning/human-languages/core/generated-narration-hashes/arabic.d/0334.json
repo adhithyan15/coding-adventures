@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:8b1aec9c3373bdb7",
+  "lessonIds": [
+    "AR-C334-muhakama",
+    "AR-C334-jalsa",
+    "AR-C334-difa",
+    "AR-C334-adana",
+    "AR-C334-baraa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch334.txt",
+  "json": "arabic/narration/ch334.json",
+  "textHash": "fnv1a64:635c207231c96986",
+  "jsonHash": "fnv1a64:fb10600318c31254",
+  "findings": []
+}

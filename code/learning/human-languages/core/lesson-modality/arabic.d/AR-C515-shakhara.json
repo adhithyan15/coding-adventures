@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C515-shakhara",
+    "language": "arabic",
+    "chapter": 515,
+    "sequence": 28580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95ebed06974b69f7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C419-viphalavagu",
+    "language": "kannada",
+    "chapter": 419,
+    "sequence": 21210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c07cd1f964a7be8"
+  },
+  "findings": []
+}

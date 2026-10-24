@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-472-PHURTI472",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether someone gets things done.",
+  "prerequisites": []
+}

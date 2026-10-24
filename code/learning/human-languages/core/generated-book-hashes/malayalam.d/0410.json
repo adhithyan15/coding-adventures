@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:c3116d87c002fbe7",
+  "lessonIds": [
+    "ML-C410-sucippikkuka",
+    "ML-C410-unnipparayuka",
+    "ML-C410-cuntikkanikkuka",
+    "ML-C410-prasaktamaya",
+    "ML-C410-aprasaktamaya"
+  ],
+  "tex": "malayalam/book/chapters/ch410-making-a-point.tex"
+}

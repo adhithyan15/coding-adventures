@@ -1,0 +1,11 @@
+{
+  "id": "TA-C485-tailam",
+  "pathSegment": "TA-PATH-485-MARUNTU485",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-485-MARUNTU485",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:68c290de1d2bc189",
+  "lessonIds": [
+    "AR-C405-istithna",
+    "AR-C405-istathna",
+    "AR-C405-shamila",
+    "AR-C405-tadammana",
+    "AR-C405-taallaqa",
+    "AR-R405-review-398-405"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch405.txt",
+  "json": "arabic/narration/ch405.json",
+  "textHash": "fnv1a64:6ed5aa4713a7464a",
+  "jsonHash": "fnv1a64:968c71ed1ba63bef",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:dc2fbdc5579d4541",
+  "lessonIds": [
+    "ML-C482-vatakaykketukkuka",
+    "ML-C482-niksepam",
+    "ML-C482-oliyuka",
+    "ML-C482-tiriccunalkuka",
+    "ML-C482-erppatu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch482.txt",
+  "json": "malayalam/narration/ch482.json",
+  "textHash": "fnv1a64:1e8f0625bea3df02",
+  "jsonHash": "fnv1a64:ab0d5541449d86bc",
+  "findings": []
+}

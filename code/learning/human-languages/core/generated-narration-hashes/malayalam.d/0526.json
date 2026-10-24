@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:9bf482809851ab46",
+  "lessonIds": [
+    "ML-C526-kulannuka",
+    "ML-C526-ksobhikkuka",
+    "ML-C526-korittarikkuka",
+    "ML-C526-rasikkuka",
+    "ML-C526-musiyuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch526.txt",
+  "json": "malayalam/narration/ch526.json",
+  "textHash": "fnv1a64:8d85352bbf1931a5",
+  "jsonHash": "fnv1a64:51cabffbb789ee86",
+  "findings": []
+}

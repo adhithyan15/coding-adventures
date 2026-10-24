@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Mercy and Concern",
+  "label": "ch:ta-mercy-and-concern",
+  "canDo": "I can talk about compassion, sympathy and concern for others.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C457-akkarai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can talk about compassion, sympathy and concern for others.",
+    "assesses": [
+      "TA-LEX-C457-KARUNAI457-03",
+      "TA-LEX-C457-KARUNAI457-04",
+      "TA-LEX-C457-KARUNAI457-05"
+    ]
+  }
+}

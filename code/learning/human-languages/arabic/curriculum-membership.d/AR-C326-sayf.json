@@ -1,0 +1,11 @@
+{
+  "id": "AR-C326-sayf",
+  "pathSegment": "AR-PATH-326-SILAH326",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-326-SILAH326",
+      "order": 1
+    }
+  ]
+}

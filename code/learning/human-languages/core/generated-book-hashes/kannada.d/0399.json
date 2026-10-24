@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:73d7638226d64813",
+  "lessonIds": [
+    "KA-C399-badatana",
+    "KA-C399-karmika",
+    "KA-C399-savalattu",
+    "KA-C399-vitarisu",
+    "KA-C399-gramina"
+  ],
+  "tex": "kannada/book/chapters/ch399-poverty-and-need.tex"
+}

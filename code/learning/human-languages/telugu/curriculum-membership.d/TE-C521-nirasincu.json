@@ -1,0 +1,11 @@
+{
+  "id": "TE-C521-nirasincu",
+  "pathSegment": "TE-PATH-521-BALAM521",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-521-BALAM521",
+      "order": 1
+    }
+  ]
+}

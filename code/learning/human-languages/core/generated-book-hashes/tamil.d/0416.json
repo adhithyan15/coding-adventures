@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:2a9eb80105c62069",
+  "lessonIds": [
+    "TA-C416-patakotti",
+    "TA-C416-tutuppu",
+    "TA-C416-toni",
+    "TA-C416-kattumaram",
+    "TA-C416-valai"
+  ],
+  "tex": "tamil/book/chapters/ch416-boats-and-oars.tex"
+}

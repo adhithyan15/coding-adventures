@@ -1,0 +1,11 @@
+{
+  "id": "KA-C427-vargikarisu",
+  "pathSegment": "KA-PATH-427-ANUPATA427",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-427-ANUPATA427",
+      "order": 2
+    }
+  ]
+}

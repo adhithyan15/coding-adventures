@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:062adb7dbd8b8870",
+  "lessonIds": [
+    "TE-C344-santapam",
+    "TE-C344-maranam",
+    "TE-C344-tudisvasa",
+    "TE-C344-antimayatra",
+    "TE-C344-antyakriyalu"
+  ],
+  "tex": "telugu/book/chapters/ch344-saying-goodbye.tex"
+}

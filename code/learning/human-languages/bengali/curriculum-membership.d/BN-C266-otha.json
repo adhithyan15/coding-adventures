@@ -1,0 +1,11 @@
+{
+  "id": "BN-C266-otha",
+  "pathSegment": "BN-PATH-266-PAST-SCENE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-266-PAST-SCENE",
+      "order": 4
+    }
+  ]
+}

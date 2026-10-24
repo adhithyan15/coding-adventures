@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 334,
+  "title": "A Baby in the Family",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ea1ef6f18b03cc03",
+  "lessons": [
+    {
+      "id": "KA-C334-bananti",
+      "sequence": 16770,
+      "title": "ಬಾಣಂತಿ (bāṇanti) — a new mother",
+      "headword": "ಬಾಣಂತಿ",
+      "romanization": "bāṇanti",
+      "gloss": "a new mother",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dddcb3fce122496f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to set up, then the Kannada for an invitation card."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಾಣಂತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಣಂತಿ — bāṇanti — \"a new mother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಾಣಂತಿ ಮೂರು ತಿಂಗಳು ಅಮ್ಮನ ಮನೆಯಲ್ಲಿ ಇದ್ದಳು. bāṇanti mūru tiṅgaḷu ammana maneyalli iddaḷu. The new mother stayed three months at her mother's house."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman in the weeks after giving birth, looked after with rest, warm food and the home-made ಔಷಧ, medicine, that the elders prepare."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಣಂತಿ (bāṇanti) is native Dravidian: DEDR 5347 lists Kannada bāṇanti, \"a woman recently delivered\", beside Malayalam vaṇṇa."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṇanti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṇanti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṇanti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṇanti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṇanti mūru tiṅgaḷu ammana maneyalli iddaḷu. — The new mother stayed three months at her mother's house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṇanti mūru tiṅgaḷu ammana maneyalli iddaḷu.* — The new mother stayed three months at her mother's house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to set up, then the Kannada for an invitation card, then say bāṇanti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to set up, then the Kannada for an invitation card, then say *bāṇanti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಾಣಂತಿ (bāṇanti) mean? (\"A new mother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C334-janana",
+      "sequence": 16780,
+      "title": "ಜನನ (janana) — a birth",
+      "headword": "ಜನನ",
+      "romanization": "janana",
+      "gloss": "a birth",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7730d035460bac5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an invitation card, then the Kannada for a new mother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಜನನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜನನ — janana — \"a birth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಗುವಿನ ಜನನ ಆಸ್ಪತ್ರೆಯಲ್ಲಿ ಆಯಿತು. maguvina janana āspatreyalli āyitu. The baby was born in the hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word: ಜನನ (janana) ಪ್ರಮಾಣಪತ್ರ, a birth certificate. At home people say ಹುಟ್ಟು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜನನ (janana) is borrowed from Sanskrit janana, \"birth\" (CDIAL 5099), from the root jan, \"to be born\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maguvina janana āspatreyalli āyitu. — The baby was born in the hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maguvina janana āspatreyalli āyitu.* — The baby was born in the hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an invitation card, then the Kannada for a new mother, then say janana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an invitation card, then the Kannada for a new mother, then say *janana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಜನನ (janana) mean? (\"A birth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C334-namakarana",
+      "sequence": 16790,
+      "title": "ನಾಮಕರಣ (nāmakaraṇa) — a naming ceremony",
+      "headword": "ನಾಮಕರಣ",
+      "romanization": "nāmakaraṇa",
+      "gloss": "a naming ceremony",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a99639b2b289b3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a new mother, then the Kannada for a birth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಾಮಕರಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಮಕರಣ — nāmakaraṇa — \"a naming ceremony\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಗುವಿನ ನಾಮಕರಣ ಹನ್ನೊಂದನೆಯ ದಿನ ನಡೆಯಿತು. maguvina nāmakaraṇa hannondaneya dina naḍeyitu. The baby's naming ceremony took place on the eleventh day."
+            },
+            {
+              "kind": "speech",
+              "text": "The day a baby gets its name, often with the baby in a cradle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಮಕರಣ (nāmakaraṇa) is borrowed from Sanskrit nāmakaraṇa, \"the ceremony of naming after birth\" (CDIAL 7066), from nāman \"a name\" and karaṇa \"making\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāmakaraṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāmakaraṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāmakaraṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāmakaraṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maguvina nāmakaraṇa hannondaneya dina naḍeyitu. — The baby's naming ceremony took place on the eleventh day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maguvina nāmakaraṇa hannondaneya dina naḍeyitu.* — The baby's naming ceremony took place on the eleventh day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a new mother, then the Kannada for a birth, then say nāmakaraṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a new mother, then the Kannada for a birth, then say *nāmakaraṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಾಮಕರಣ (nāmakaraṇa) mean? (\"A naming ceremony\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C334-simanta",
+      "sequence": 16800,
+      "title": "ಸೀಮಂತ (sīmanta) — a baby shower",
+      "headword": "ಸೀಮಂತ",
+      "romanization": "sīmanta",
+      "gloss": "a baby shower",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec1d97501e434a0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a birth, then the Kannada for a naming ceremony."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸೀಮಂತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೀಮಂತ — sīmanta — \"a baby shower\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಕ್ಕನ ಸೀಮಂತಕ್ಕೆ ತುಂಬಾ ಹೆಂಗಸರು ಬಂದರು. akkana sīmantakke tumbā heṅgasaru bandaru. Many women came to my elder sister's baby shower."
+            },
+            {
+              "kind": "speech",
+              "text": "A ceremony for a woman expecting her first child, with bangles, flowers and sweets."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೀಮಂತ (sīmanta) is borrowed from Sanskrit sīmanta, \"the parting of the hair\" (CDIAL 13436): the old rite for a pregnant woman began with parting her hair."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīmanta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīmanta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīmanta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīmanta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akkana sīmantakke tumbā heṅgasaru bandaru. — Many women came to my elder sister's baby shower.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akkana sīmantakke tumbā heṅgasaru bandaru.* — Many women came to my elder sister's baby shower.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a birth, then the Kannada for a naming ceremony, then say sīmanta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a birth, then the Kannada for a naming ceremony, then say *sīmanta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸೀಮಂತ (sīmanta) mean? (\"A baby shower\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C334-uttaradhikari",
+      "sequence": 16810,
+      "title": "ಉತ್ತರಾಧಿಕಾರಿ (uttarādhikāri) — a successor",
+      "headword": "ಉತ್ತರಾಧಿಕಾರಿ",
+      "romanization": "uttarādhikāri",
+      "gloss": "a successor",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e969095eb4babc0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a naming ceremony, then the Kannada for a baby shower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉತ್ತರಾಧಿಕಾರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉತ್ತರಾಧಿಕಾರಿ — uttarādhikāri — \"a successor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಮಗು ರಾಜನ ಉತ್ತರಾಧಿಕಾರಿ ಆಯಿತು. ā magu rājana uttarādhikāri āyitu. That child became the king's successor."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಉತ್ತರಾಧಿಕಾರಿಗಳು, uttarādhikārigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "The one who takes over a throne, a post or property after someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉತ್ತರಾಧಿಕಾರಿ (uttarādhikāri) is borrowed from Sanskrit uttarādhikārin, \"an heir or claimant after the death of the owner\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttarādhikāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttarādhikāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttarādhikāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttarādhikāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā magu rājana uttarādhikāri āyitu. — That child became the king's successor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā magu rājana uttarādhikāri āyitu.* — That child became the king's successor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a naming ceremony, then the Kannada for a baby shower, then say uttarādhikāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a naming ceremony, then the Kannada for a baby shower, then say *uttarādhikāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉತ್ತರಾಧಿಕಾರಿ (uttarādhikāri) mean? (\"A successor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

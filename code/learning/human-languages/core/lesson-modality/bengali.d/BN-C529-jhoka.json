@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C529-jhoka",
+    "language": "bengali",
+    "chapter": 529,
+    "sequence": 31920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2dd2a053ecc8938d"
+  },
+  "findings": []
+}

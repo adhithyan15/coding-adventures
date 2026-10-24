@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 515,
+  "title": "Computers",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a073ef10a00d3667",
+  "lessons": [
+    {
+      "id": "TA-C515-tolilnutpam",
+      "sequence": 29560,
+      "title": "தொழில்நுட்பம் (toḻilnuṭpam) — technology",
+      "headword": "தொழில்நுட்பம்",
+      "romanization": "toḻilnuṭpam",
+      "gloss": "technology",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8ba3881433858b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a warehouse, then the Tamil for a recipient."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தொழில்நுட்பம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொழில்நுட்பம் — toḻilnuṭpam — \"technology\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புதிய தொழில்நுட்பம் விவசாயிகளுக்கு உதவுகிறது. putiya toḻilnuṭpam vivacāyikaḷukku utavukiṟatu. New technology helps farmers."
+            },
+            {
+              "kind": "speech",
+              "text": "A -அம் noun: தொழில்நுட்பத்தை, தொழில்நுட்பத்தில்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொழில்நுட்பம் (toḻilnuṭpam) is a modern compound: the native தொழில் (toḻil), \"work, a craft\" (DEDR 3524), and நுட்பம் (nuṭpam), \"fineness, subtle skill\", which DEDR 3700 lists under நுண் (nuṇ), \"minute, fine\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilnuṭpam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilnuṭpam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilnuṭpam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilnuṭpam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya toḻilnuṭpam vivacāyikaḷukku utavukiṟatu. — New technology helps farmers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya toḻilnuṭpam vivacāyikaḷukku utavukiṟatu.* — New technology helps farmers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a warehouse, then the Tamil for a recipient, then say toḻilnuṭpam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a warehouse, then the Tamil for a recipient, then say *toḻilnuṭpam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தொழில்நுட்பம் (toḻilnuṭpam) mean? (\"Technology\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C515-menporul",
+      "sequence": 29570,
+      "title": "மென்பொருள் (meṉporuḷ) — software",
+      "headword": "மென்பொருள்",
+      "romanization": "meṉporuḷ",
+      "gloss": "software",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9e9c99356cd3a54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a recipient, then the Tamil for technology."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மென்பொருள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மென்பொருள் — meṉporuḷ — \"software\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நான் கணினியில் ஒரு புதிய மென்பொருளைப் போட்டேன். nāṉ kaṇiṉiyil oru putiya meṉporuḷaip pōṭṭēṉ. I put a new piece of software on the computer."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"soft thing\": மென் \"soft\" + பொருள் (poruḷ) \"a thing\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மென்பொருள் (meṉporuḷ) is built from native parts to match English software: மென் (meṉ), \"soft\" (DEDR 5078), and பொருள் (poruḷ), \"a thing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meṉporuḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meṉporuḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meṉporuḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meṉporuḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṉ kaṇiṉiyil oru putiya meṉporuḷaip pōṭṭēṉ. — I put a new piece of software on the computer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṉ kaṇiṉiyil oru putiya meṉporuḷaip pōṭṭēṉ.* — I put a new piece of software on the computer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a recipient, then the Tamil for technology, then say meṉporuḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a recipient, then the Tamil for technology, then say *meṉporuḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மென்பொருள் (meṉporuḷ) mean? (\"Software\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C515-vanporul",
+      "sequence": 29580,
+      "title": "வன்பொருள் (vaṉporuḷ) — hardware",
+      "headword": "வன்பொருள்",
+      "romanization": "vaṉporuḷ",
+      "gloss": "hardware",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d53cb118a120295",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for technology, then the Tamil for software."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வன்பொருள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வன்பொருள் — vaṉporuḷ — \"hardware\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பிரச்சினை மென்பொருளில் இல்லை, வன்பொருளில் இருக்கிறது. piracciṉai meṉporuḷil illai, vaṉporuḷil irukkiṟatu. The problem is not in the software, it is in the hardware."
+            },
+            {
+              "kind": "speech",
+              "text": "The pair of மென்பொருள் (meṉporuḷ): வன் \"hard\" + பொருள் \"a thing\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வன்பொருள் (vaṉporuḷ) is built from native parts to match English hardware: வன் (vaṉ), \"hard, strong\" (DEDR 5276), and பொருள் (poruḷ), \"a thing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṉporuḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṉporuḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṉporuḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṉporuḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piracciṉai meṉporuḷil illai, vaṉporuḷil irukkiṟatu. — The problem is not in the software, it is in the hardware.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piracciṉai meṉporuḷil illai, vaṉporuḷil irukkiṟatu.* — The problem is not in the software, it is in the hardware.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for technology, then the Tamil for software, then say vaṉporuḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for technology, then the Tamil for software, then say *vaṉporuḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வன்பொருள் (vaṉporuḷ) mean? (\"Hardware\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C515-matikkanini",
+      "sequence": 29590,
+      "title": "மடிக்கணினி (maṭikkaṇiṉi) — a laptop",
+      "headword": "மடிக்கணினி",
+      "romanization": "maṭikkaṇiṉi",
+      "gloss": "a laptop",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc6ca21214a97b7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for software, then the Tamil for hardware."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மடிக்கணினி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மடிக்கணினி — maṭikkaṇiṉi — \"a laptop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் பயணத்தில் மடிக்கணினியைக் கொண்டு போனான். avaṉ payaṇattil maṭikkaṇiṉiyaik koṇṭu pōṉāṉ. He took his laptop on the journey."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"lap computer\": மடி \"a lap\" + கணினி (kaṇiṉi)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மடிக்கணினி (maṭikkaṇiṉi) is built from native Tamil parts to match English laptop: மடி (maṭi), \"a lap\", and கணினி (kaṇiṉi), \"a computer\"; மடி is usually traced to the native verb மடி, \"to fold, to be lapped in\" (DEDR 4645)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṭikkaṇiṉi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṭikkaṇiṉi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṭikkaṇiṉi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṭikkaṇiṉi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ payaṇattil maṭikkaṇiṉiyaik koṇṭu pōṉāṉ. — He took his laptop on the journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ payaṇattil maṭikkaṇiṉiyaik koṇṭu pōṉāṉ.* — He took his laptop on the journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for software, then the Tamil for hardware, then say maṭikkaṇiṉi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for software, then the Tamil for hardware, then say *maṭikkaṇiṉi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மடிக்கணினி (maṭikkaṇiṉi) mean? (\"A laptop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C515-minnul",
+      "sequence": 29600,
+      "title": "மின்னூல் (miṉṉūl) — an e-book",
+      "headword": "மின்னூல்",
+      "romanization": "miṉṉūl",
+      "gloss": "an e-book",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6295d52cedc3cdb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for hardware, then the Tamil for a laptop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மின்னூல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மின்னூல் — miṉṉūl — \"an e-book\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நான் இப்போது மின்னூல்களைக் கைப்பேசியில் படிக்கிறேன். nāṉ ippōtu miṉṉūlkaḷaik kaippēciyil paṭikkiṟēṉ. These days I read e-books on my phone."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: மின்னூல்கள், miṉṉūlkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "மின் \"electric\" + நூல் \"a book\" (a literary word for புத்தகம்)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மின்னூல் (miṉṉūl) is built from native parts: மின் (miṉ), \"a flash, lightning\", now \"electric\" (DEDR 4876), and நூல் (nūl), \"a book\"; after ன் the ந of நூல் is written ன: மின் + நூல் = மின்னூல்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṉṉūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṉṉūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṉṉūl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṉṉūl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṉ ippōtu miṉṉūlkaḷaik kaippēciyil paṭikkiṟēṉ. — These days I read e-books on my phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṉ ippōtu miṉṉūlkaḷaik kaippēciyil paṭikkiṟēṉ.* — These days I read e-books on my phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for hardware, then the Tamil for a laptop, then say miṉṉūl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for hardware, then the Tamil for a laptop, then say *miṉṉūl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மின்னூல் (miṉṉūl) mean? (\"An e-book\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

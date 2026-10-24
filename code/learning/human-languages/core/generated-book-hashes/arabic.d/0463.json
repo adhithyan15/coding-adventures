@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:f551211c36587ac1",
+  "lessonIds": [
+    "AR-C463-munakh",
+    "AR-C463-ihtibas-harari",
+    "AR-C463-ghilaf-jawwi",
+    "AR-C463-inbiath",
+    "AR-C463-karbun"
+  ],
+  "tex": "arabic/book/chapters/ch463-the-climate.tex"
+}

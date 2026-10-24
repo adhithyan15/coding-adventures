@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C404-protsahisu",
+    "language": "kannada",
+    "chapter": 404,
+    "sequence": 20450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11ac880490270f7f"
+  },
+  "findings": []
+}

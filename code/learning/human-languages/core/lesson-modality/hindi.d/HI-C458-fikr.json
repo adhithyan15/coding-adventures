@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C458-fikr",
+    "language": "hindi",
+    "chapter": 458,
+    "sequence": 25310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3b2419f1fc029d9"
+  },
+  "findings": []
+}

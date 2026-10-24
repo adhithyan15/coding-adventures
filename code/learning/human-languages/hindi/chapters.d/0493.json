@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Long Illnesses",
+  "label": "ch:hi-long-illnesses",
+  "canDo": "I can talk about an illness that lasts.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C493-jakarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can talk about an illness that lasts.",
+    "assesses": [
+      "HI-LEX-C493-DAMA493-03",
+      "HI-LEX-C493-DAMA493-04",
+      "HI-LEX-C493-DAMA493-05"
+    ]
+  }
+}

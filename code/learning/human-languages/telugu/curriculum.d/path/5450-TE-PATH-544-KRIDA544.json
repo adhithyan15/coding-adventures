@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-544-KRIDA544",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-544-KRIDA544"
+  ],
+  "after": []
+}

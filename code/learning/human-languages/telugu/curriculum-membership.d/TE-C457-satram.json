@@ -1,0 +1,11 @@
+{
+  "id": "TE-C457-satram",
+  "pathSegment": "TE-PATH-457-VASATI457",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-457-VASATI457",
+      "order": 1
+    }
+  ]
+}

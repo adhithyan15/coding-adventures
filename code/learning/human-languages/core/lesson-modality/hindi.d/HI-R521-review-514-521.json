@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R521-review-514-521",
+    "language": "hindi",
+    "chapter": 521,
+    "sequence": 28810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16cf12919b504fd0"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C313-suraana-ma",
+    "language": "arabic",
+    "chapter": 313,
+    "sequence": 18030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f6517a64354e470"
+  },
+  "findings": []
+}

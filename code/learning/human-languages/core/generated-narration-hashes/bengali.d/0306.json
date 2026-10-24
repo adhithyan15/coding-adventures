@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:b829705167f5e73b",
+  "lessonIds": [
+    "BN-C306-otithi",
+    "BN-C306-nimontron-kora",
+    "BN-C306-bhoj",
+    "BN-C306-upohar",
+    "BN-C306-apyayon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch306.txt",
+  "json": "bengali/narration/ch306.json",
+  "textHash": "fnv1a64:e68bda6a5bce3c31",
+  "jsonHash": "fnv1a64:52b9f4a82db00a15",
+  "findings": []
+}

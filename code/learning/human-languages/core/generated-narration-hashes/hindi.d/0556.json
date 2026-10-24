@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 556,
+  "sourceHash": "fnv1a64:23b6264fa0f741d2",
+  "lessonIds": [
+    "HI-C556-sandeh",
+    "HI-C556-yaqinan",
+    "HI-C556-hargiz",
+    "HI-C556-vaham",
+    "HI-C556-niscay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch556.txt",
+  "json": "hindi/narration/ch556.json",
+  "textHash": "fnv1a64:45df98a8360d919f",
+  "jsonHash": "fnv1a64:d5556583e00e51aa",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:c24ac187873d8e90",
+  "lessonIds": [
+    "BN-C458-sot",
+    "BN-C458-kopot",
+    "BN-C458-bishvosto",
+    "BN-C458-dhurto",
+    "BN-C458-thokano"
+  ],
+  "tex": "bengali/book/chapters/ch458-honest-and-deceitful.tex"
+}

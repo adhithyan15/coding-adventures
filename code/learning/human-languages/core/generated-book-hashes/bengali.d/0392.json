@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:61fb4aee03bf0399",
+  "lessonIds": [
+    "BN-C392-traphik",
+    "BN-C392-pothchari",
+    "BN-C392-phlaiobhar",
+    "BN-C392-sainbord",
+    "BN-C392-ghesha"
+  ],
+  "tex": "bengali/book/chapters/ch392-traffic-and-crossings.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C430-urne",
+  "pathSegment": "MR-PATH-430-MOBADLA430",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-430-MOBADLA430",
+      "order": 4
+    }
+  ]
+}

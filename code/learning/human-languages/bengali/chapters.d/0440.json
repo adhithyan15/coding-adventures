@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Surprise and Wonder",
+  "label": "ch:bn-surprise-and-wonder",
+  "canDo": "I can say that something surprised or amazed me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C440-chomkano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can say that something surprised or amazed me.",
+    "assesses": [
+      "BN-LEX-C440-BISMOY440-03",
+      "BN-LEX-C440-BISMOY440-04",
+      "BN-LEX-C440-BISMOY440-05"
+    ]
+  }
+}

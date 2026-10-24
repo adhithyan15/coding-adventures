@@ -1,0 +1,11 @@
+{
+  "id": "KA-C487-abbarisu",
+  "pathSegment": "KA-PATH-487-CANDAMARUTA487",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-487-CANDAMARUTA487",
+      "order": 2
+    }
+  ]
+}

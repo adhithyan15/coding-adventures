@@ -1,0 +1,11 @@
+{
+  "id": "MR-C440-osarne",
+  "pathSegment": "MR-PATH-440-DUSHKAL440",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-440-DUSHKAL440",
+      "order": 4
+    }
+  ]
+}

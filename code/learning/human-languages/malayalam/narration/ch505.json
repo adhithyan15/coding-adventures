@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 505,
+  "title": "Saving Resources",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:58fb8c6aa49edd67",
+  "lessons": [
+    {
+      "id": "ML-C505-urjjam",
+      "sequence": 25250,
+      "title": "ഊർജ്ജം (ūrjjaṁ) — energy",
+      "headword": "ഊർജ്ജം",
+      "romanization": "ūrjjaṁ",
+      "gloss": "energy",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1be444c370fa6cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to be ruined, then the Malayalam for to reuse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഊർജ്ജം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊർജ്ജം — ūrjjaṁ — \"energy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സൂര്യനിൽ നിന്ന് നമുക്ക് ഊർജ്ജം കിട്ടും. sūryanil ninnŭ namukkŭ ūrjjaṁ kiṭṭuṁ. We can get energy from the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Written with a doubled ജ്ജ after ർ, the way ഓർമ്മ doubles its മ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊർജ്ജം (ūrjjaṁ) is borrowed from Sanskrit ūrja, \"strong, powerful\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrjjaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrjjaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrjjaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrjjaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūryanil ninnŭ namukkŭ ūrjjaṁ kiṭṭuṁ. — We can get energy from the sun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūryanil ninnŭ namukkŭ ūrjjaṁ kiṭṭuṁ.* — We can get energy from the sun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to be ruined, then the Malayalam for to reuse, then say ūrjjaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to be ruined, then the Malayalam for to reuse, then say *ūrjjaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഊർജ്ജം (ūrjjaṁ) mean? (\"Energy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C505-ksamam",
+      "sequence": 25260,
+      "title": "ക്ഷാമം (kṣāmaṁ) — a shortage; a scarcity",
+      "headword": "ക്ഷാമം",
+      "romanization": "kṣāmaṁ",
+      "gloss": "a shortage; a scarcity",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4de011315831bda7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to reuse, then the Malayalam for energy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ക്ഷാമം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷാമം — kṣāmaṁ — \"a shortage; a scarcity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വേനലിൽ ഗ്രാമത്തിൽ കുടിവെള്ളത്തിന് ക്ഷാമമുണ്ട്. vēnalil grāmattil kuṭiveḷḷattinŭ kṣāmamuṇṭŭ. In the dry season the village is short of drinking water."
+            },
+            {
+              "kind": "speech",
+              "text": "What is short takes -ന് / -ക്ക്: വെള്ളത്തിന് ക്ഷാമം (kṣāmaṁ), a shortage of water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷാമം (kṣāmaṁ) is borrowed from Sanskrit kṣāma, \"scorched, emaciated\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣāmaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣāmaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣāmaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣāmaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēnalil grāmattil kuṭiveḷḷattinŭ kṣāmamuṇṭŭ. — In the dry season the village is short of drinking water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēnalil grāmattil kuṭiveḷḷattinŭ kṣāmamuṇṭŭ.* — In the dry season the village is short of drinking water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to reuse, then the Malayalam for energy, then say kṣāmaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to reuse, then the Malayalam for energy, then say *kṣāmaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്ഷാമം (kṣāmaṁ) mean? (\"A shortage; a scarcity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C505-bhugarbhajalam",
+      "sequence": 25270,
+      "title": "ഭൂഗർഭജലം (bhūgarbhajalaṁ) — groundwater",
+      "headword": "ഭൂഗർഭജലം",
+      "romanization": "bhūgarbhajalaṁ",
+      "gloss": "groundwater",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90a08a1337457a79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for energy, then the Malayalam for a shortage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഭൂഗർഭജലം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭൂഗർഭജലം — bhūgarbhajalaṁ — \"groundwater\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വേനലിൽ ഭൂഗർഭജലം താഴുന്നു. vēnalil bhūgarbhajalaṁ tāḻunnu. In the dry season the groundwater level falls."
+            },
+            {
+              "kind": "speech",
+              "text": "ഭൂ-, the earth, plus ഗർഭം, the womb, plus ജലം, water: water in the belly of the earth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭൂഗർഭജലം (bhūgarbhajalaṁ) is a Malayalam compound built from three Sanskrit words, bhū, \"the earth\", garbha, \"the womb, the inside\", and jala, \"water\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūgarbhajalaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūgarbhajalaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūgarbhajalaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūgarbhajalaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēnalil bhūgarbhajalaṁ tāḻunnu. — In the dry season the groundwater level falls.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēnalil bhūgarbhajalaṁ tāḻunnu.* — In the dry season the groundwater level falls.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for energy, then the Malayalam for a shortage, then say bhūgarbhajalaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for energy, then the Malayalam for a shortage, then say *bhūgarbhajalaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഭൂഗർഭജലം (bhūgarbhajalaṁ) mean? (\"Groundwater\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C505-agolatapanam",
+      "sequence": 25280,
+      "title": "ആഗോളതാപനം (āgōḷatāpanaṁ) — global warming",
+      "headword": "ആഗോളതാപനം",
+      "romanization": "āgōḷatāpanaṁ",
+      "gloss": "global warming",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:317c3b9a168f5c82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a shortage, then the Malayalam for groundwater."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആഗോളതാപനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആഗോളതാപനം — āgōḷatāpanaṁ — \"global warming\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആഗോളതാപനം കാരണം കടലിലെ വെള്ളം ഉയരുന്നു. āgōḷatāpanaṁ kāraṇaṁ kaṭalile veḷḷaṁ uyarunnu. Because of global warming the sea is rising."
+            },
+            {
+              "kind": "speech",
+              "text": "ആഗോള, global, from ഗോളം, a globe, plus താപനം, heating."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആഗോളതാപനം (āgōḷatāpanaṁ) is a modern Malayalam compound built from Sanskrit gola, \"a ball, a globe\", and tāpana, \"burning\" (Monier-Williams), which Malayalam uses for heating."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgōḷatāpanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgōḷatāpanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgōḷatāpanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgōḷatāpanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgōḷatāpanaṁ kāraṇaṁ kaṭalile veḷḷaṁ uyarunnu. — Because of global warming the sea is rising.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgōḷatāpanaṁ kāraṇaṁ kaṭalile veḷḷaṁ uyarunnu.* — Because of global warming the sea is rising.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a shortage, then the Malayalam for groundwater, then say āgōḷatāpanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a shortage, then the Malayalam for groundwater, then say *āgōḷatāpanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആഗോളതാപനം (āgōḷatāpanaṁ) mean? (\"Global warming\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C505-malakkuli",
+      "sequence": 25290,
+      "title": "മഴക്കുഴി (maḻakkuḻi) — a rain pit",
+      "headword": "മഴക്കുഴി",
+      "romanization": "maḻakkuḻi",
+      "gloss": "a rain pit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e55bda23994a7cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for groundwater, then the Malayalam for global warming."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മഴക്കുഴി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മഴക്കുഴി — maḻakkuḻi — \"a rain pit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വീടിന്റെ പിന്നിൽ ഞങ്ങൾ ഒരു മഴക്കുഴി കുഴിച്ചു. vīṭinṟe pinnil ñaṅṅaḷ oru maḻakkuḻi kuḻiccu. We dug a rain pit behind the house."
+            },
+            {
+              "kind": "speech",
+              "text": "A pit dug to catch rainwater so that it sinks into the ground and fills the wells."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മഴക്കുഴി (maḻakkuḻi) is a native Dravidian compound of മഴ, rain (DEDR 4753), and കുഴി, a pit (DEDR 1818)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻakkuḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻakkuḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻakkuḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻakkuḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīṭinṟe pinnil ñaṅṅaḷ oru maḻakkuḻi kuḻiccu. — We dug a rain pit behind the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīṭinṟe pinnil ñaṅṅaḷ oru maḻakkuḻi kuḻiccu.* — We dug a rain pit behind the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for groundwater, then the Malayalam for global warming, then say maḻakkuḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for groundwater, then the Malayalam for global warming, then say *maḻakkuḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മഴക്കുഴി (maḻakkuḻi) mean? (\"A rain pit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

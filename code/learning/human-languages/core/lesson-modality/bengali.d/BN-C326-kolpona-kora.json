@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C326-kolpona-kora",
+    "language": "bengali",
+    "chapter": 326,
+    "sequence": 20580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1274f5d4e4f9736"
+  },
+  "findings": []
+}

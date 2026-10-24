@@ -1,0 +1,11 @@
+{
+  "id": "BN-C310-pobitro",
+  "pathSegment": "BN-PATH-310-SHONKHO310",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-310-SHONKHO310",
+      "order": 4
+    }
+  ]
+}

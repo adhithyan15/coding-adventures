@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C437-pailat",
+    "language": "kannada",
+    "chapter": 437,
+    "sequence": 22240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5541731b81b2f98f"
+  },
+  "findings": []
+}

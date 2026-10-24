@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Courage and Sacrifice",
+  "label": "ch:mr-courage-and-sacrifice",
+  "canDo": "I can talk about heroes, their deeds and surrender.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C332-saran-jane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can talk about heroes, their deeds and surrender.",
+    "assesses": [
+      "MR-LEX-C332-SHAURYA332-03",
+      "MR-LEX-C332-SHAURYA332-04",
+      "MR-LEX-C332-SHAURYA332-05"
+    ]
+  }
+}

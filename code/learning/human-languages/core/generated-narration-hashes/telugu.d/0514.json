@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:102f9c6f8921f63f",
+  "lessonIds": [
+    "TE-C514-cevipotu",
+    "TE-C514-pantinoppi",
+    "TE-C514-vennunoppi",
+    "TE-C514-mulugu",
+    "TE-C514-murchapovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch514.txt",
+  "json": "telugu/narration/ch514.json",
+  "textHash": "fnv1a64:00e149ff18c15c66",
+  "jsonHash": "fnv1a64:afcf7dec4d802c65",
+  "findings": []
+}

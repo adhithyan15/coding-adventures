@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R320-asking-the-way",
+    "language": "telugu",
+    "chapter": 320,
+    "sequence": 15430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9867966f0e44d4f8"
+  },
+  "findings": []
+}

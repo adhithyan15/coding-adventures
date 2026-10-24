@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Cables and Power",
+  "label": "ch:ta-cables-and-power",
+  "canDo": "I can talk about charging, connecting and cutting off.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C517-olir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about charging, connecting and cutting off.",
+    "assesses": [
+      "TA-LEX-C517-MIN517-03",
+      "TA-LEX-C517-MIN517-04",
+      "TA-LEX-C517-MIN517-05"
+    ]
+  }
+}

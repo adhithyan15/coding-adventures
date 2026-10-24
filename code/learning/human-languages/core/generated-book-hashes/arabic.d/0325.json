@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:cf104bfe761634ad",
+  "lessonIds": [
+    "AR-C325-shahida",
+    "AR-C325-aqsama",
+    "AR-C325-halafa",
+    "AR-C325-itarafa",
+    "AR-C325-ankara"
+  ],
+  "tex": "arabic/book/chapters/ch325-witnesses-and-oaths.tex"
+}

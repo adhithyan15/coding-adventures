@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:ba08419173c381e1",
+  "lessonIds": [
+    "KA-C375-sibira",
+    "KA-C375-nirasrita",
+    "KA-C375-santapa",
+    "KA-C375-hastantarisu",
+    "KA-C375-dhavisu",
+    "KA-R375-review-369-375",
+    "KA-R375-review-final-375"
+  ],
+  "tex": "kannada/book/chapters/ch375-the-relief-camp.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:1cf08eafa31cf38a",
+  "lessonIds": [
+    "KA-C521-dudi",
+    "KA-C521-ustuvari",
+    "KA-C521-ottayisu",
+    "KA-C521-parisrama",
+    "KA-C521-paipoti"
+  ],
+  "tex": "kannada/book/chapters/ch521-hard-work.tex"
+}

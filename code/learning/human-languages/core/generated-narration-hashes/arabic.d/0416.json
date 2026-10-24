@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:6f95d59b9e363d61",
+  "lessonIds": [
+    "AR-C416-tabanna",
+    "AR-C416-badalan-min",
+    "AR-C416-bi-l-idafa-ila",
+    "AR-C416-tamin",
+    "AR-C416-siwa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch416.txt",
+  "json": "arabic/narration/ch416.json",
+  "textHash": "fnv1a64:17977716d336bf96",
+  "jsonHash": "fnv1a64:4a304a4712a14831",
+  "findings": []
+}

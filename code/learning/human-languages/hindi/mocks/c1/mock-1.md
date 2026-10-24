@@ -316,6 +316,12 @@ Natural overlap, hesitation, self-correction, and regional features are allowed,
 but no answer may depend on unfamiliar accent alone. Learners may take notes and
 must not see transcripts.
 
+Recording plan: cast one documented regional Hindi voice in the unscripted
+discussion and a different documented regional Hindi voice in the interview.
+The examiner production record must identify each speaker, regional variety,
+consent, and part. This script alone does not establish a recorded or reviewed
+form.
+
 ### Unscripted discussion — items 1–7
 
 Orienting preview: *A planner, disability advocate, shopkeeper, and outreach

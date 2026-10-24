@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:65ad9e9d17fb3f3c",
+  "lessonIds": [
+    "TA-C359-tiri",
+    "TA-C359-mikaippatuttu",
+    "TA-C359-muranpatu",
+    "TA-C359-aiyam",
+    "TA-C359-nirakari"
+  ],
+  "tex": "tamil/book/chapters/ch359-twisting-the-truth.tex"
+}

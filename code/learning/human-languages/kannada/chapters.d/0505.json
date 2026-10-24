@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Effort and Neglect",
+  "label": "ch:ka-effort-and-neglect",
+  "canDo": "I can say dedication, neglect, an addiction, to strive and to beg.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C505-bedu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can say dedication, neglect, an addiction, to strive and to beg.",
+    "assesses": [
+      "KA-LEX-C505-SHRADDHE505-03",
+      "KA-LEX-C505-SHRADDHE505-04",
+      "KA-LEX-C505-SHRADDHE505-05"
+    ]
+  }
+}

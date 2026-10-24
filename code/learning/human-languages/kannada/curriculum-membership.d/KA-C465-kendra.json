@@ -1,0 +1,11 @@
+{
+  "id": "KA-C465-kendra",
+  "pathSegment": "KA-PATH-465-PATTANA465",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-465-PATTANA465",
+      "order": 4
+    }
+  ]
+}

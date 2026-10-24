@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:24cf41d62166d1cc",
+  "lessonIds": [
+    "AR-C445-tram",
+    "AR-C445-shahina",
+    "AR-C445-miqwad",
+    "AR-C445-tamahhala",
+    "AR-C445-arqala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch445.txt",
+  "json": "arabic/narration/ch445.json",
+  "textHash": "fnv1a64:58cfbfaf04c66d81",
+  "jsonHash": "fnv1a64:08c05e04355129f9",
+  "findings": []
+}

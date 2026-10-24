@@ -1,0 +1,6 @@
+oracle: host perl v5.38.2 (x86_64-linux-gnu-thread-multi)
+command: perl zero_and_negation.pl
+result: exit 0; stdout is exactly <name>.expect without its final LF
+releases: 5.38.2 directly; 5.38.0, 5.44.0 and 5.45.3 (profile perl_iv) through IIR identity (release_classes.csv)
+historical: profile perl_nv (1.000 to 5.004_05) computes -0 as the C double -0.0 and prints it as 0 or -0 depending on constant folding and the platform (profiles.rs), so the case is refused there: see zero_and_negation.reject@perl_nv
+note: Integer `-0` prints `0`; a negated parenthesised difference.

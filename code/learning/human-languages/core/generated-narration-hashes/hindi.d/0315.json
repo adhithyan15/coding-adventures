@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:4fce51ac876888e5",
+  "lessonIds": [
+    "HI-C315-dava",
+    "HI-C315-janta",
+    "HI-C315-ghosna",
+    "HI-C315-jankari",
+    "HI-C315-ttaalna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch315.txt",
+  "json": "hindi/narration/ch315.json",
+  "textHash": "fnv1a64:4b6ff4aba2abcba2",
+  "jsonHash": "fnv1a64:d1ad5ba52fb64d61",
+  "findings": []
+}

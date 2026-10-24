@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:2369a82285d724d3",
+  "lessonIds": [
+    "BN-C403-ghor",
+    "BN-C403-buking",
+    "BN-C403-lipht",
+    "BN-C403-risepshon",
+    "BN-C403-bondobosto-kora"
+  ],
+  "tex": "bengali/book/chapters/ch403-checking-in.tex"
+}

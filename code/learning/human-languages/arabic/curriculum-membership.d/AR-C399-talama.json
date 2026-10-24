@@ -1,0 +1,11 @@
+{
+  "id": "AR-C399-talama",
+  "pathSegment": "AR-PATH-399-SHART399",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-399-SHART399",
+      "order": 3
+    }
+  ]
+}

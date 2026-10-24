@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Wages and Earnings",
+  "label": "ch:mr-wages-and-earnings",
+  "canDo": "I can talk about pay, wages and earning a living.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C508-kamavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can talk about pay, wages and earning a living.",
+    "assesses": [
+      "MR-LEX-C508-PAGAR508-03",
+      "MR-LEX-C508-PAGAR508-04",
+      "MR-LEX-C508-PAGAR508-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:f7c379df37f713d5",
+  "lessonIds": [
+    "AR-C458-daman",
+    "AR-C458-sir",
+    "AR-C458-silaa",
+    "AR-C458-arjaa",
+    "AR-C458-qayada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch458.txt",
+  "json": "arabic/narration/ch458.json",
+  "textHash": "fnv1a64:f4c0c6a7feb9b078",
+  "jsonHash": "fnv1a64:e091af86e7aa63d3",
+  "findings": []
+}

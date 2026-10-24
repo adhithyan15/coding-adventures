@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 390,
+  "title": "Highways and Bends",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:607b083e3a193b3f",
+  "lessons": [
+    {
+      "id": "BN-C390-sorok",
+      "sequence": 24300,
+      "title": "সড়ক (sôṛôk) — a highway; a main road",
+      "headword": "সড়ক",
+      "romanization": "sôṛôk",
+      "gloss": "a highway; a main road",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28735d3e735790ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to signal, then the Bengali for to call out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সড়ক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সড়ক — sôṛôk — \"a highway; a main road\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নতুন সড়কে বাস দ্রুত চলে। nôtun sôṛôke bās drutô chôle. Buses go fast on the new highway."
+            },
+            {
+              "kind": "speech",
+              "text": "রাস্তা is any road; সড়ক (sôṛôk) is a main road between towns, the word on maps: জাতীয় সড়ক (sôṛôk), a national highway."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সড়ক (sôṛôk) probably belongs with Sanskrit sṛtí, \"a road, a path\", the entry where CDIAL sets Bengali saṛak, \"a road\" (CDIAL 13577); the Hindi word is filed under a second entry as well (CDIAL 12269), so the link is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôṛôk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôṛôk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôṛôk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôṛôk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôtun sôṛôke bās drutô chôle. — Buses go fast on the new highway.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôtun sôṛôke bās drutô chôle.* — Buses go fast on the new highway.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to signal, then the Bengali for to call out, then say sôṛôk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to signal, then the Bengali for to call out, then say *sôṛôk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সড়ক (sôṛôk) mean? (\"A highway; a main road\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C390-bak",
+      "sequence": 24310,
+      "title": "বাঁক (bā̃k) — a bend; a turn (in a road or river)",
+      "headword": "বাঁক",
+      "romanization": "bā̃k",
+      "gloss": "a bend; a turn (in a road or river)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68cdae4d2939d969",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to call out, then the Bengali for a highway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বাঁক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাঁক — bā̃k — \"a bend; a turn (in a road or river)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সামনের বাঁকে বাসটা ধীরে চলল। sāmner bā̃ke bāsṭā dhīre chôllô. At the bend ahead the bus slowed down."
+            },
+            {
+              "kind": "speech",
+              "text": "বাঁকা, crooked, is the same root as an adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাঁক (bā̃k) is inherited: CDIAL gives vaṅka, \"bent, crooked\", with the sense \"a bend of a river\", and lists Bengali bā̃kā, \"crooked\", under it (CDIAL 11191); the nasal of vaṅ survives as the ঁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃k",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃k*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃k, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃k*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāmner bā̃ke bāsṭā dhīre chôllô. — At the bend ahead the bus slowed down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāmner bā̃ke bāsṭā dhīre chôllô.* — At the bend ahead the bus slowed down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to call out, then the Bengali for a highway, then say bā̃k again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to call out, then the Bengali for a highway, then say *bā̃k* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বাঁক (bā̃k) mean? (\"A bend; a turn (in a road or river)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C390-gorto",
+      "sequence": 24320,
+      "title": "গর্ত (gôrtô) — a hole; a pothole",
+      "headword": "গর্ত",
+      "romanization": "gôrtô",
+      "gloss": "a hole; a pothole",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2329b83affe4c759",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a highway, then the Bengali for a bend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গর্ত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গর্ত — gôrtô — \"a hole; a pothole\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গাড়িটা একটা গর্তে পড়ল। gāṛiṭā ekṭā gôrte pôṛlô. The car went into a pothole."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গর্ত (gôrtô) is Sanskrit garta, \"a hollow, a hole, a pit\" (Monier-Williams), taken over whole as a tatsama."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôrtô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôrtô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôrtô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôrtô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṛiṭā ekṭā gôrte pôṛlô. — The car went into a pothole.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṛiṭā ekṭā gôrte pôṛlô.* — The car went into a pothole.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a highway, then the Bengali for a bend, then say gôrtô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a highway, then the Bengali for a bend, then say *gôrtô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গর্ত (gôrtô) mean? (\"A hole; a pothole\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C390-pich",
+      "sequence": 24330,
+      "title": "পিচ (pich) — tar (on a road)",
+      "headword": "পিচ",
+      "romanization": "pich",
+      "gloss": "tar (on a road)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78d8e5f0e4e58e3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a bend, then the Bengali for a pothole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পিচ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পিচ — pich — \"tar (on a road)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গরমে রাস্তার পিচ নরম হয়ে গেল। gôrôme rāstār pich nôrôm hôye gelô. In the heat the tar on the road went soft."
+            },
+            {
+              "kind": "speech",
+              "text": "পিচের রাস্তা, a tarred road; a কাঁচা রাস্তা is a dirt road."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পিচ (pich) is borrowed from English pitch, the black tar that roads are sealed with."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pich",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pich*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pich, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pich*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôrôme rāstār pich nôrôm hôye gelô. — In the heat the tar on the road went soft.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôrôme rāstār pich nôrôm hôye gelô.* — In the heat the tar on the road went soft.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a bend, then the Bengali for a pothole, then say pich again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a bend, then the Bengali for a pothole, then say *pich* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পিচ (pich) mean? (\"Tar (on a road)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C390-gorano",
+      "sequence": 24340,
+      "title": "গড়ানো (gôṛāno) — to roll; to roll down",
+      "headword": "গড়ানো",
+      "romanization": "gôṛāno",
+      "gloss": "to roll; to roll down",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdf17b74ad6f1498",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a pothole, then the Bengali for tar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গড়ানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গড়ানো — gôṛāno — \"to roll; to roll down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পাথরটা পাহাড় থেকে গড়িয়ে পড়ল। pāthôrṭā pāhāṛ theke gôṛiye pôṛlô. The stone rolled down the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই পাথর গড়াল, sei pāthôr gôṛālô."
+            },
+            {
+              "kind": "speech",
+              "text": "Not গড়া, to build: a different verb that sounds close."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গড়ানো (gôṛāno) is inherited: CDIAL lists Bengali gaṛāna, \"to make slide or roll\", under Sanskrit gáḍati, \"drops, runs as a liquid\" (CDIAL 3973)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôṛāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôṛāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôṛāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôṛāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāthôrṭā pāhāṛ theke gôṛiye pôṛlô. — The stone rolled down the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāthôrṭā pāhāṛ theke gôṛiye pôṛlô.* — The stone rolled down the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a pothole, then the Bengali for tar, then say gôṛāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a pothole, then the Bengali for tar, then say *gôṛāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গড়ানো (gôṛāno) mean? (\"To roll; to roll down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

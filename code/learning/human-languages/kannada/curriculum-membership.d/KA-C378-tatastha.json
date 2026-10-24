@@ -1,0 +1,11 @@
+{
+  "id": "KA-C378-tatastha",
+  "pathSegment": "KA-PATH-378-NILUVU378",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-378-NILUVU378",
+      "order": 2
+    }
+  ]
+}

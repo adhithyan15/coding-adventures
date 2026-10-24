@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C502-nerunku",
+    "language": "tamil",
+    "chapter": 502,
+    "sequence": 28620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f7ba304c42dc7c7"
+  },
+  "findings": []
+}

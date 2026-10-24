@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Keeping It Up",
+  "label": "ch:bn-keeping-it-up",
+  "canDo": "I can say what it takes to keep going and finish what I start.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C382-songshodhon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can say what it takes to keep going and finish what I start.",
+    "assesses": [
+      "BN-LEX-C382-NISHTHA382-03",
+      "BN-LEX-C382-NISHTHA382-04",
+      "BN-LEX-C382-NISHTHA382-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:f1c884bf6484576e",
+  "lessonIds": [
+    "MR-C403-khadda",
+    "MR-C403-gatirodhak",
+    "MR-C403-khadbadit",
+    "MR-C403-kalandne",
+    "MR-C403-apatne",
+    "MR-R403-review-396-403"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch403.txt",
+  "json": "marathi/narration/ch403.json",
+  "textHash": "fnv1a64:9326da503db1249a",
+  "jsonHash": "fnv1a64:d7c01934b4018682",
+  "findings": []
+}

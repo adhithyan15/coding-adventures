@@ -1,0 +1,11 @@
+{
+  "id": "TA-C519-accuppori",
+  "pathSegment": "TA-PATH-519-OLI519",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-519-OLI519",
+      "order": 3
+    }
+  ]
+}

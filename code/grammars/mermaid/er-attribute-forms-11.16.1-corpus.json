@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER generic, array, nullable, and limited attribute type vertical slice",
+  "fixtures": [
+    {
+      "name": "attribute-type-forms-with-keys-and-comments",
+      "source": "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK \"Readers\"\n  character(10) isbn PK, FK\n  string? alias UK \"Optional display name\"\n}"
+    }
+  ]
+}

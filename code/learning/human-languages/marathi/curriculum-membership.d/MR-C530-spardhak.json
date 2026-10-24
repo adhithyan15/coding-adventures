@@ -1,0 +1,11 @@
+{
+  "id": "MR-C530-spardhak",
+  "pathSegment": "MR-PATH-530-PADAK530",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-530-PADAK530",
+      "order": 3
+    }
+  ]
+}

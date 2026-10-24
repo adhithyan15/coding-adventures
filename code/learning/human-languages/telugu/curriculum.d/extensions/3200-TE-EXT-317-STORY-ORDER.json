@@ -1,0 +1,10 @@
+{
+  "id": "TE-EXT-317-STORY-ORDER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can tell a short story in order with modaṭa, ā taruvāta, the -i form and civariki, and read one of about eighty words.",
+  "prerequisites": [
+    "TE-EXT-316-PAST-SCENE"
+  ]
+}

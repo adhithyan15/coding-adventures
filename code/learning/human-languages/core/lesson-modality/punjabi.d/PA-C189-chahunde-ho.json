@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C189-chahunde-ho",
+    "language": "punjabi",
+    "chapter": 189,
+    "sequence": 10230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:909e76242148f91b"
+  },
+  "findings": []
+}

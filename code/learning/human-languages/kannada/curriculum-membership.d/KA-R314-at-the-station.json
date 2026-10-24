@@ -1,0 +1,11 @@
+{
+  "id": "KA-R314-at-the-station",
+  "pathSegment": "KA-PATH-314-TICKETS-TROUBLE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-314-TICKETS-TROUBLE",
+      "order": 5
+    }
+  ]
+}

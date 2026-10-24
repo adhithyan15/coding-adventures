@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C319-alaippital",
+    "language": "tamil",
+    "chapter": 319,
+    "sequence": 18420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e1dbf8877692e3b"
+  },
+  "findings": []
+}

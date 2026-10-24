@@ -1,0 +1,11 @@
+{
+  "id": "AR-C504-ama",
+  "pathSegment": "AR-PATH-504-BATN504",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-504-BATN504",
+      "order": 3
+    }
+  ]
+}

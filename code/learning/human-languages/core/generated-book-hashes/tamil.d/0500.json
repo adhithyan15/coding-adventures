@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:22828b3f74ee3a67",
+  "lessonIds": [
+    "TA-C500-tunai",
+    "TA-C500-illattaraci",
+    "TA-C500-pukunta-vitu",
+    "TA-C500-tanikkutittanam",
+    "TA-C500-ottuppo"
+  ],
+  "tex": "tamil/book/chapters/ch500-running-a-home.tex"
+}

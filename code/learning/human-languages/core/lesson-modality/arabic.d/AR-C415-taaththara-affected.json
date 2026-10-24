@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C415-taaththara-affected",
+    "language": "arabic",
+    "chapter": 415,
+    "sequence": 23330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e531ccaa3598a3ad"
+  },
+  "findings": []
+}

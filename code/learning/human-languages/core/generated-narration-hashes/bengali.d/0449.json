@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:9aa544503ae494d3",
+  "lessonIds": [
+    "BN-C449-sneh",
+    "BN-C449-maya",
+    "BN-C449-ador",
+    "BN-C449-prem",
+    "BN-C449-bhokti-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch449.txt",
+  "json": "bengali/narration/ch449.json",
+  "textHash": "fnv1a64:30e0702aa256109b",
+  "jsonHash": "fnv1a64:6f45516bf87b094d",
+  "findings": []
+}

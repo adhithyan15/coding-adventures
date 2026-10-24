@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:7e142947ba050328",
+  "lessonIds": [
+    "BN-C527-moncho",
+    "BN-C527-obhinoy-kora",
+    "BN-C527-obhineta",
+    "BN-C527-riharsal",
+    "BN-C527-hattali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch527.txt",
+  "json": "bengali/narration/ch527.json",
+  "textHash": "fnv1a64:c32d3c8c19cfe5e1",
+  "jsonHash": "fnv1a64:f0dc307885de2c01",
+  "findings": []
+}

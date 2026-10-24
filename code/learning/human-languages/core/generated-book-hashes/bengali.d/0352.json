@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:a2c086d96c8a83ec",
+  "lessonIds": [
+    "BN-C352-boishomyo",
+    "BN-C352-morjada",
+    "BN-C352-sohanubhuti",
+    "BN-C352-bonchito",
+    "BN-C352-ontorbhukto-kora"
+  ],
+  "tex": "bengali/book/chapters/ch352-fair-for-everyone.tex"
+}

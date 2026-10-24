@@ -1,0 +1,11 @@
+{
+  "id": "HI-C330-jhaki",
+  "pathSegment": "HI-PATH-330-MELA330",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-330-MELA330",
+      "order": 1
+    }
+  ]
+}

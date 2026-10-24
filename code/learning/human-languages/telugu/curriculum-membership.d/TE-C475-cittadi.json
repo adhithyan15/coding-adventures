@@ -1,0 +1,11 @@
+{
+  "id": "TE-C475-cittadi",
+  "pathSegment": "TE-PATH-475-ANAKATTA475",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-475-ANAKATTA475",
+      "order": 4
+    }
+  ]
+}

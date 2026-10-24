@@ -1,0 +1,11 @@
+{
+  "id": "AR-C549-miqbad",
+  "pathSegment": "AR-PATH-549-BAB549",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-549-BAB549",
+      "order": 2
+    }
+  ]
+}

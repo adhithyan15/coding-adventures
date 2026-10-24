@@ -1,0 +1,22 @@
+{
+  "chapter": 284,
+  "title": "A Story, In Order",
+  "label": "ch:ar-a-story-in-order",
+  "canDo": "I can tell a short story about something that happened, in order, and read one of about eighty words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R284-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete AR-R284-a-story-in-order: a short story told aloud in order, with awwalan, thumma, ʿindamā and fī an-nihāya.",
+    "assesses": [
+      "AR-GRAMMAR-C284-STORY-STEPS-01",
+      "AR-GRAMMAR-C284-FI-AN-NIHAYA-01",
+      "AR-LEX-C284-QISSA284-01",
+      "AR-GRAMMAR-C284-INDAMA-01",
+      "AR-GRAMMAR-C284-BADA-AN-01",
+      "AR-SKILL-C284-READ-NARRATIVE-01"
+    ]
+  }
+}

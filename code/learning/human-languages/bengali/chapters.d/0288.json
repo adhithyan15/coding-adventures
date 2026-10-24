@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "The Cyclone",
+  "label": "ch:bn-the-cyclone",
+  "canDo": "I can say how a cyclone came in from the sea and what it did.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C288-bidyut",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can say how a cyclone came in from the sea and what it did.",
+    "assesses": [
+      "BN-LEX-C288-GHURNIJHOR288-03",
+      "BN-LEX-C288-GHURNIJHOR288-04",
+      "BN-LEX-C288-GHURNIJHOR288-05"
+    ]
+  }
+}

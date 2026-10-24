@@ -1,0 +1,11 @@
+{
+  "id": "BN-C442-osthir",
+  "pathSegment": "BN-PATH-442-UDBEG442",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-442-UDBEG442",
+      "order": 2
+    }
+  ]
+}

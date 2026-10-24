@@ -1,0 +1,11 @@
+{
+  "id": "HI-C333-dubona",
+  "pathSegment": "HI-PATH-333-GHAT333",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-333-GHAT333",
+      "order": 2
+    }
+  ]
+}

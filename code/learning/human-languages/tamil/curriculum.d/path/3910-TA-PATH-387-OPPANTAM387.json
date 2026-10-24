@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-387-OPPANTAM387",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TA-EXT-387-OPPANTAM387"
+  ],
+  "after": []
+}

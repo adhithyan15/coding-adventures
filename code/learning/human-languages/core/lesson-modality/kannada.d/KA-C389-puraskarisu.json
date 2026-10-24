@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C389-puraskarisu",
+    "language": "kannada",
+    "chapter": 389,
+    "sequence": 19670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:671550722fa1a69c"
+  },
+  "findings": []
+}

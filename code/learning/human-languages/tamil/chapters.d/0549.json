@@ -1,0 +1,19 @@
+{
+  "chapter": 549,
+  "title": "Planning a Function",
+  "label": "ch:ta-planning-a-function",
+  "canDo": "I can talk about booking a hall and planning an event.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C549-naluvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 549: I can talk about booking a hall and planning an event.",
+    "assesses": [
+      "TA-LEX-C549-VIZHA549-03",
+      "TA-LEX-C549-VIZHA549-04",
+      "TA-LEX-C549-VIZHA549-05"
+    ]
+  }
+}

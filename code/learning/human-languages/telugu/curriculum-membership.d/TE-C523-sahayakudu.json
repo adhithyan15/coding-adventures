@@ -1,0 +1,11 @@
+{
+  "id": "TE-C523-sahayakudu",
+  "pathSegment": "TE-PATH-523-PANIVARU523",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-523-PANIVARU523",
+      "order": 3
+    }
+  ]
+}

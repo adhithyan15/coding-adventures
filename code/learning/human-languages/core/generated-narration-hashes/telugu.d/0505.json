@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:255205c687ac4425",
+  "lessonIds": [
+    "TE-C505-jali",
+    "TE-C505-karuna",
+    "TE-C505-adarincu",
+    "TE-C505-aduko",
+    "TE-C505-samudayincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch505.txt",
+  "json": "telugu/narration/ch505.json",
+  "textHash": "fnv1a64:b4499bcaa0ed50bf",
+  "jsonHash": "fnv1a64:70fe259f16285026",
+  "findings": []
+}

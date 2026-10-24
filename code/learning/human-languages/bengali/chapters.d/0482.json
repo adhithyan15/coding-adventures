@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "More Relatives",
+  "label": "ch:bn-more-relatives",
+  "canDo": "I can name more uncles, nephews, nieces and new relations.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C482-beyai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can name more uncles, nephews, nieces and new relations.",
+    "assesses": [
+      "BN-LEX-C482-JETHA482-03",
+      "BN-LEX-C482-JETHA482-04",
+      "BN-LEX-C482-JETHA482-05"
+    ]
+  }
+}

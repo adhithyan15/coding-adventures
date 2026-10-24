@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:b641262949bac0f6",
+  "lessonIds": [
+    "KA-C482-tore",
+    "KA-C482-dhumuku",
+    "KA-C482-more",
+    "KA-C482-cimmu",
+    "KA-C482-jinugu",
+    "KA-R482-review-476-482"
+  ],
+  "tex": "kannada/book/chapters/ch482-streams-and-waterfalls.tex"
+}

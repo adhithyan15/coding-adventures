@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Getting Ready",
+  "label": "ch:hi-getting-ready",
+  "canDo": "I can talk about washing and grooming.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C484-ustara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can talk about washing and grooming.",
+    "assesses": [
+      "HI-LEX-C484-SANVARNA484-03",
+      "HI-LEX-C484-SANVARNA484-04",
+      "HI-LEX-C484-SANVARNA484-05"
+    ]
+  }
+}

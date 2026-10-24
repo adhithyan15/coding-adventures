@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Free Time",
+  "label": "ch:ka-free-time",
+  "canDo": "I can say a pause, entertainment, a chat, to savour and to be absorbed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C530-maimare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can say a pause, entertainment, a chat, to savour and to be absorbed.",
+    "assesses": [
+      "KA-LEX-C530-BIDUVU530-03",
+      "KA-LEX-C530-BIDUVU530-04",
+      "KA-LEX-C530-BIDUVU530-05"
+    ]
+  }
+}

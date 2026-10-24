@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:331c9756e4bdb942",
+  "lessonIds": [
+    "BN-C362-monojog",
+    "BN-C362-bibhranto",
+    "BN-C362-upolobdhi-kora",
+    "BN-C362-bodh-kora",
+    "BN-C362-sposhto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch362.txt",
+  "json": "bengali/narration/ch362.json",
+  "textHash": "fnv1a64:dd4958a141d403d9",
+  "jsonHash": "fnv1a64:cf6722d2fb6dd966",
+  "findings": []
+}

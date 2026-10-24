@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Systems and Situations",
+  "label": "ch:te-systems-and-situations",
+  "canDo": "I can talk about systems, policies, states of affairs and occasions.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C434-erpadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can talk about systems, policies, states of affairs and occasions.",
+    "assesses": [
+      "TE-LEX-C434-VYAVASTHA434-03",
+      "TE-LEX-C434-VYAVASTHA434-04",
+      "TE-LEX-C434-VYAVASTHA434-05"
+    ]
+  }
+}

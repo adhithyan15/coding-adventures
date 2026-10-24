@@ -1,0 +1,21 @@
+{
+  "chapter": 287,
+  "title": "It Depends, and What Would Be",
+  "label": "ch:hi-it-depends-and-what-would-be",
+  "canDo": "I can say what something depends on (… par nirbhar kartā hai), say what would happen if things were different (agar samay hotā, to maiṁ ātā), and write six connected lines.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-R287-depends-and-would",
+    "kind": "production",
+    "summary": "Complete HI-R287-depends-and-would: say what it depends on and what would have been.",
+    "assesses": [
+      "HI-LEX-C287-NIRBHARKARNA-01",
+      "HI-GRAMMAR-C287-DEPENDS-ON-01",
+      "HI-GRAMMAR-C287-DEPENDS-KI-01",
+      "HI-GRAMMAR-C287-COUNTERFACTUAL-01",
+      "HI-GRAMMAR-C287-UNREAL-PAST-01"
+    ]
+  }
+}

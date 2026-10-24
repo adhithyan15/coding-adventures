@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 323,
+  "title": "A Funeral",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fbe906c12f14c33d",
+  "lessons": [
+    {
+      "id": "TA-C323-iruticcatanku",
+      "sequence": 18580,
+      "title": "இறுதிச்சடங்கு (iṟuticcaṭaṅku) — a funeral",
+      "headword": "இறுதிச்சடங்கு",
+      "romanization": "iṟuticcaṭaṅku",
+      "gloss": "a funeral",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f38959a7f15b3aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a wedding dais, then the Tamil for a pandal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இறுதிச்சடங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இறுதிச்சடங்கு — iṟuticcaṭaṅku — \"a funeral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவருடைய இறுதிச்சடங்கில் ஊரே கலந்துகொண்டது. avaruṭaiya iṟuticcaṭaṅkil ūrē kalantukoṇṭatu. The whole village attended his funeral."
+            },
+            {
+              "kind": "speech",
+              "text": "இறுதி, end + சடங்கு, rite."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இறுதிச்சடங்கு (iṟuticcaṭaṅku) is a Tamil compound built from இறுதி, \"end, death\" (DEDR 514), and சடங்கு, \"a rite\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṟuticcaṭaṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṟuticcaṭaṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṟuticcaṭaṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṟuticcaṭaṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaruṭaiya iṟuticcaṭaṅkil ūrē kalantukoṇṭatu. — The whole village attended his funeral.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaruṭaiya iṟuticcaṭaṅkil ūrē kalantukoṇṭatu.* — The whole village attended his funeral.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a wedding dais, then the Tamil for a pandal, then say iṟuticcaṭaṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a wedding dais, then the Tamil for a pandal, then say *iṟuticcaṭaṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இறுதிச்சடங்கு (iṟuticcaṭaṅku) mean? (\"A funeral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C323-urvalam",
+      "sequence": 18590,
+      "title": "ஊர்வலம் (ūrvalam) — a procession",
+      "headword": "ஊர்வலம்",
+      "romanization": "ūrvalam",
+      "gloss": "a procession",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e565ae871e8b1dab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a pandal, then the Tamil for a funeral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஊர்வலம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஊர்வலம் — ūrvalam — \"a procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இறுதி ஊர்வலம் மெதுவாகச் சென்றது. iṟuti ūrvalam metuvākac ceṉṟatu. The funeral procession moved slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "Also for festivals and weddings: ஊர், town + வலம், going round."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஊர்வலம் (ūrvalam) is a Tamil compound built from ஊர், \"town\" (DEDR 752), and வலம், \"the right side\", as in going round to the right (DEDR 5276)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrvalam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrvalam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrvalam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrvalam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṟuti ūrvalam metuvākac ceṉṟatu. — The funeral procession moved slowly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṟuti ūrvalam metuvākac ceṉṟatu.* — The funeral procession moved slowly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a pandal, then the Tamil for a funeral, then say ūrvalam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a pandal, then the Tamil for a funeral, then say *ūrvalam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஊர்வலம் (ūrvalam) mean? (\"A procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C323-malarvalaiyam",
+      "sequence": 18600,
+      "title": "மலர்வளையம் (malarvaḷaiyam) — a wreath",
+      "headword": "மலர்வளையம்",
+      "romanization": "malarvaḷaiyam",
+      "gloss": "a wreath",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aae11e3a9eed9fd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a funeral, then the Tamil for a procession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மலர்வளையம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மலர்வளையம் — malarvaḷaiyam — \"a wreath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நண்பர்கள் ஒரு மலர்வளையம் வைத்தார்கள். naṇparkaḷ oru malarvaḷaiyam vaittārkaḷ. Friends laid a wreath."
+            },
+            {
+              "kind": "speech",
+              "text": "மலர்வளையம் (malarvaḷaiyam) வை, to lay a wreath."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மலர்வளையம் (malarvaḷaiyam) is a Tamil compound built from மலர், \"flower\" (DEDR 4739), and வளையம், \"ring, circle\" (DEDR 5313)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malarvaḷaiyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malarvaḷaiyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malarvaḷaiyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malarvaḷaiyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṇparkaḷ oru malarvaḷaiyam vaittārkaḷ. — Friends laid a wreath.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṇparkaḷ oru malarvaḷaiyam vaittārkaḷ.* — Friends laid a wreath.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a funeral, then the Tamil for a procession, then say malarvaḷaiyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a funeral, then the Tamil for a procession, then say *malarvaḷaiyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மலர்வளையம் (malarvaḷaiyam) mean? (\"A wreath\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C323-putai",
+      "sequence": 18610,
+      "title": "புதை (putai) — to bury",
+      "headword": "புதை",
+      "romanization": "putai",
+      "gloss": "to bury",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3da2722eae8ed54d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a procession, then the Tamil for a wreath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புதை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புதை — putai — \"to bury\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர்கள் இறந்த நாயைத் தோட்டத்தில் புதைத்தார்கள். avarkaḷ iṟanta nāyait tōṭṭattil putaittārkaḷ. They buried the dead dog in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): புதைத்தேன், putaittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Without an object: புதைந்தது, it was buried or sank in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புதை (putai) is native Dravidian (DEDR 4509): to be buried, hidden, and with -த்த- to bury."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avarkaḷ iṟanta nāyait tōṭṭattil putaittārkaḷ. — They buried the dead dog in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avarkaḷ iṟanta nāyait tōṭṭattil putaittārkaḷ.* — They buried the dead dog in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a procession, then the Tamil for a wreath, then say putai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a procession, then the Tamil for a wreath, then say *putai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புதை (putai) mean? (\"To bury\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C323-kallarai",
+      "sequence": 18620,
+      "title": "கல்லறை (kallaṟai) — a grave; a tomb",
+      "headword": "கல்லறை",
+      "romanization": "kallaṟai",
+      "gloss": "a grave; a tomb",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59352dcae6ab9f14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a wreath, then the Tamil for to bury."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கல்லறை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கல்லறை — kallaṟai — \"a grave; a tomb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவருடைய கல்லறை ஊருக்கு வெளியே இருக்கிறது. avaruṭaiya kallaṟai ūrukku veḷiyē irukkiṟatu. His grave is outside the village."
+            },
+            {
+              "kind": "speech",
+              "text": "கல், stone + அறை, chamber."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கல்லறை (kallaṟai) is a Tamil compound built from கல், \"stone\" (DEDR 1298), and அறை, \"a room, a chamber\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kallaṟai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kallaṟai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kallaṟai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kallaṟai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaruṭaiya kallaṟai ūrukku veḷiyē irukkiṟatu. — His grave is outside the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaruṭaiya kallaṟai ūrukku veḷiyē irukkiṟatu.* — His grave is outside the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a wreath, then the Tamil for to bury, then say kallaṟai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a wreath, then the Tamil for to bury, then say *kallaṟai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கல்லறை (kallaṟai) mean? (\"A grave; a tomb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C345-nitikkatai",
+    "language": "tamil",
+    "chapter": 345,
+    "sequence": 19720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50974df705e94cb7"
+  },
+  "findings": []
+}

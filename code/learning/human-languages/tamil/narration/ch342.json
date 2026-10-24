@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 342,
+  "title": "Old Things Made New",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:43f065b95a61b85b",
+  "lessons": [
+    {
+      "id": "TA-C342-punaramai",
+      "sequence": 19560,
+      "title": "புனரமை (puṉaramai) — to restore; to renovate",
+      "headword": "புனரமை",
+      "romanization": "puṉaramai",
+      "gloss": "to restore; to renovate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a605373933ede07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to dig out, then the Tamil for to come upon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புனரமை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புனரமை — puṉaramai — \"to restore; to renovate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அரசு அந்தப் பழைய கோட்டையைப் புனரமைத்தது. aracu antap paḻaiya kōṭṭaiyaip puṉaramaittatu. The government restored that old fort."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): புனரமைத்தேன், puṉaramaittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "புனர், again + அமை, to build."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புனரமை (puṉaramai) joins Sanskrit punar, \"back, again\" (CDIAL 8273), with native அமை, \"to be settled, built\" (DEDR 161)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṉaramai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṉaramai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṉaramai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṉaramai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aracu antap paḻaiya kōṭṭaiyaip puṉaramaittatu. — The government restored that old fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aracu antap paḻaiya kōṭṭaiyaip puṉaramaittatu.* — The government restored that old fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to dig out, then the Tamil for to come upon, then say puṉaramai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to dig out, then the Tamil for to come upon, then say *puṉaramai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புனரமை (puṉaramai) mean? (\"To restore; to renovate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C342-pori-engrave",
+      "sequence": 19570,
+      "title": "பொறி (poṟi) — to engrave; to inscribe",
+      "headword": "பொறி",
+      "romanization": "poṟi",
+      "gloss": "to engrave; to inscribe",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74c633d71f8e86ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to come upon, then the Tamil for to restore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பொறி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொறி — poṟi — \"to engrave; to inscribe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர்கள் கல்லில் மன்னரின் பெயரைப் பொறித்தார்கள். avarkaḷ kallil maṉṉariṉ peyaraip poṟittārkaḷ. They engraved the king's name on the stone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பொறித்தேன், poṟittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The place takes -இல்: கல்லில் பொறி (poṟi)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொறி (poṟi) is native Dravidian (DEDR 4564): to impress, stamp, inscribe."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṟi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṟi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṟi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṟi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avarkaḷ kallil maṉṉariṉ peyaraip poṟittārkaḷ. — They engraved the king's name on the stone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avarkaḷ kallil maṉṉariṉ peyaraip poṟittārkaḷ.* — They engraved the king's name on the stone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to come upon, then the Tamil for to restore, then say poṟi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to come upon, then the Tamil for to restore, then say *poṟi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பொறி (poṟi) mean? (\"To engrave; to inscribe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C342-pantaiya",
+      "sequence": 19580,
+      "title": "பண்டைய (paṇṭaiya) — ancient",
+      "headword": "பண்டைய",
+      "romanization": "paṇṭaiya",
+      "gloss": "ancient",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:208ce7a5b4cfbf33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to restore, then the Tamil for to engrave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பண்டைய",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பண்டைய — paṇṭaiya — \"ancient\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இது ஒரு பண்டைய நகரம். itu oru paṇṭaiya nakaram. This is an ancient city."
+            },
+            {
+              "kind": "speech",
+              "text": "Only before a noun; from பண்டு, former times."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பண்டைய (paṇṭaiya) is native Dravidian: from பண்டை, பண்டு, \"antiquity, former time\" (DEDR 3999)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇṭaiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇṭaiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇṭaiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇṭaiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itu oru paṇṭaiya nakaram. — This is an ancient city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itu oru paṇṭaiya nakaram.* — This is an ancient city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to restore, then the Tamil for to engrave, then say paṇṭaiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to restore, then the Tamil for to engrave, then say *paṇṭaiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பண்டைய (paṇṭaiya) mean? (\"Ancient\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C342-yukam",
+      "sequence": 19590,
+      "title": "யுகம் (yukam) — an age; an era",
+      "headword": "யுகம்",
+      "romanization": "yukam",
+      "gloss": "an age; an era",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a529819923f79fb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to engrave, then the Tamil for ancient."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: யுகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "யுகம் — yukam — \"an age; an era\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இது கணினி யுகம். itu kaṇiṉi yukam. This is the computer age."
+            },
+            {
+              "kind": "speech",
+              "text": "Also one of the long ages of Indian tradition."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "யுகம் (yukam) is borrowed from Sanskrit yuga, \"yoke, a pair\" (CDIAL 10482), which also came to mean an age of the world."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itu kaṇiṉi yukam. — This is the computer age.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itu kaṇiṉi yukam.* — This is the computer age.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to engrave, then the Tamil for ancient, then say yukam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to engrave, then the Tamil for ancient, then say *yukam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does யுகம் (yukam) mean? (\"An age; an era\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C342-tolliyal",
+      "sequence": 19600,
+      "title": "தொல்லியல் (tolliyal) — archaeology",
+      "headword": "தொல்லியல்",
+      "romanization": "tolliyal",
+      "gloss": "archaeology",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2638d8982c7f9ae5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for ancient, then the Tamil for an age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தொல்லியல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொல்லியல் — tolliyal — \"archaeology\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவள் பல்கலைக்கழகத்தில் தொல்லியல் படிக்கிறாள். avaḷ palkalaikkaḻakattil tolliyal paṭikkiṟāḷ. She studies archaeology at university."
+            },
+            {
+              "kind": "speech",
+              "text": "தொல், ancient + இயல், a field of study."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொல்லியல் (tolliyal) is a Tamil compound built from தொல், \"old, ancient\" (DEDR 3516), and இயல், \"nature, a branch of learning\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tolliyal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tolliyal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tolliyal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tolliyal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ palkalaikkaḻakattil tolliyal paṭikkiṟāḷ. — She studies archaeology at university.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ palkalaikkaḻakattil tolliyal paṭikkiṟāḷ.* — She studies archaeology at university.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for ancient, then the Tamil for an age, then say tolliyal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for ancient, then the Tamil for an age, then say *tolliyal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தொல்லியல் (tolliyal) mean? (\"Archaeology\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

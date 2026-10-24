@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Rails and Carriages",
+  "label": "ch:bn-rails-and-carriages",
+  "canDo": "I can talk about the railway, a compartment and a berth, and the whistle as a train leaves.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C384-huisol-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can talk about the railway, a compartment and a berth, and the whistle as a train leaves.",
+    "assesses": [
+      "BN-LEX-C384-REL384-03",
+      "BN-LEX-C384-REL384-04",
+      "BN-LEX-C384-REL384-05"
+    ]
+  }
+}

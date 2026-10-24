@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:8e961372167550bc",
+  "lessonIds": [
+    "AR-C475-dabu",
+    "AR-C475-fahd",
+    "AR-C475-qunfudh",
+    "AR-C475-sinjab",
+    "AR-C475-khuffash"
+  ],
+  "tex": "arabic/book/chapters/ch475-wild-animals.tex"
+}

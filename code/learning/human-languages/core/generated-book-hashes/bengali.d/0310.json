@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:104b8ffb7a8e8451",
+  "lessonIds": [
+    "BN-C310-shongkho",
+    "BN-C310-prarthona-kora",
+    "BN-C310-bhokto",
+    "BN-C310-debi",
+    "BN-C310-pobitro"
+  ],
+  "tex": "bengali/book/chapters/ch310-conch-shells-and-prayers.tex"
+}

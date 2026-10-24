@@ -1,0 +1,11 @@
+{
+  "id": "ML-C487-kalaktar",
+  "pathSegment": "ML-PATH-487-NAGARAM487",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-487-NAGARAM487",
+      "order": 3
+    }
+  ]
+}

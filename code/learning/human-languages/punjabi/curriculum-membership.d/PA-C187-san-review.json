@@ -1,0 +1,11 @@
+{
+  "id": "PA-C187-san-review",
+  "pathSegment": "PA-PATH-187-A2-PAST-COPULA",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "PA-EXT-187-A2-PAST-COPULA",
+      "order": 7
+    }
+  ]
+}

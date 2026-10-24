@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C499-roptani-kora",
+    "language": "bengali",
+    "chapter": 499,
+    "sequence": 30370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4827b00f66a80b6a"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-476-DOM476",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I am out of breath, have hiccups or am groaning.",
+  "prerequisites": []
+}

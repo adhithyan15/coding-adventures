@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "Why Things Happen",
+  "label": "ch:mr-why-things-happen",
+  "canDo": "I can talk about motives, purposes and results.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C342-nirman-hone",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can talk about motives, purposes and results.",
+    "assesses": [
+      "MR-LEX-C342-HETU342-03",
+      "MR-LEX-C342-HETU342-04",
+      "MR-LEX-C342-HETU342-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C430-avasyakate",
+  "pathSegment": "KA-PATH-430-SANDARBHA430",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-430-SANDARBHA430",
+      "order": 4
+    }
+  ]
+}

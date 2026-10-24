@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C479-tuti",
+    "language": "tamil",
+    "chapter": 479,
+    "sequence": 27470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4059f4641390e9ef"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C196-payoff",
+  "pathSegment": "PA-PATH-196-A2-SHURU",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-196-A2-SHURU",
+      "order": 4
+    }
+  ]
+}

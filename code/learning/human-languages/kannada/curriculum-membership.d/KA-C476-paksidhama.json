@@ -1,0 +1,11 @@
+{
+  "id": "KA-C476-paksidhama",
+  "pathSegment": "KA-PATH-476-VANYAJIVI476",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-476-VANYAJIVI476",
+      "order": 2
+    }
+  ]
+}

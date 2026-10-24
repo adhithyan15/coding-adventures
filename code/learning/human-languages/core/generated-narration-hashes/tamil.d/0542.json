@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:c5e8f2a0e898851b",
+  "lessonIds": [
+    "TA-C542-uttaravatam",
+    "TA-C542-cellupati",
+    "TA-C542-muttirai",
+    "TA-C542-cattiyam-cey",
+    "TA-C542-ali-grant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch542.txt",
+  "json": "tamil/narration/ch542.json",
+  "textHash": "fnv1a64:ffc406b5b4a34b53",
+  "jsonHash": "fnv1a64:8edd89f903c07aa5",
+  "findings": []
+}

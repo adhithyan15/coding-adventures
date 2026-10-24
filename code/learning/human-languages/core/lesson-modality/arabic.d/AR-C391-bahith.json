@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C391-bahith",
+    "language": "arabic",
+    "chapter": 391,
+    "sequence": 22090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9840a1a82e6cd976"
+  },
+  "findings": []
+}

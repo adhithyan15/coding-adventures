@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "On stage",
+  "label": "ch:ar-on-stage",
+  "canDo": "I can talk about a stage play, a scene, applause and acting, and say that people applauded.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C542-tamthil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can talk about a stage play, a scene, applause and acting, and say that people applauded.",
+    "assesses": [
+      "AR-LEX-C542-MASRAH542-03",
+      "AR-LEX-C542-MASRAH542-04",
+      "AR-LEX-C542-MASRAH542-05"
+    ]
+  }
+}

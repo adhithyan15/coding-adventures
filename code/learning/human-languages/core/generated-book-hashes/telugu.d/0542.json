@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:b6ff2cdac0f2ee42",
+  "lessonIds": [
+    "TE-C542-citralekhanam",
+    "TE-C542-citrincu",
+    "TE-C542-silpam",
+    "TE-C542-silpi",
+    "TE-C542-kalakhandam"
+  ],
+  "tex": "telugu/book/chapters/ch542-painting-and-sculpture.tex"
+}

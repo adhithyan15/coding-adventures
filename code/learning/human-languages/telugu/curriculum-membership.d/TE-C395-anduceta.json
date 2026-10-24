@@ -1,0 +1,11 @@
+{
+  "id": "TE-C395-anduceta",
+  "pathSegment": "TE-PATH-395-KANUKA395",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-395-KANUKA395",
+      "order": 1
+    }
+  ]
+}

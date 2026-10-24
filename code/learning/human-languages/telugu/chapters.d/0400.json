@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Elections",
+  "label": "ch:te-elections",
+  "canDo": "I can talk about elections, candidates and campaigns.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C400-mejariti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can talk about elections, candidates and campaigns.",
+    "assesses": [
+      "TE-LEX-C400-ENNIKA400-03",
+      "TE-LEX-C400-ENNIKA400-04",
+      "TE-LEX-C400-ENNIKA400-05"
+    ]
+  }
+}

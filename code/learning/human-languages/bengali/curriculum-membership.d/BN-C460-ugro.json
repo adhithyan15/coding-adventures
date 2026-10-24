@@ -1,0 +1,11 @@
+{
+  "id": "BN-C460-ugro",
+  "pathSegment": "BN-PATH-460-NISHTHUR460",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-460-NISHTHUR460",
+      "order": 2
+    }
+  ]
+}

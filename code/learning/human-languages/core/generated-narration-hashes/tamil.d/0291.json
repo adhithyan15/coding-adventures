@@ -1,0 +1,17 @@
+{
+  "language": "tamil",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:bcb39239bcd22bb9",
+  "lessonIds": [
+    "TA-C291-aivita",
+    "TA-C291-matamaka",
+    "TA-R291-comparing-and-time"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch291.txt",
+  "json": "tamil/narration/ch291.json",
+  "textHash": "fnv1a64:d9715ca10bd4b60a",
+  "jsonHash": "fnv1a64:464815ef71669ec3",
+  "findings": []
+}

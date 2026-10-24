@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:c27458f3c978907c",
+  "lessonIds": [
+    "TE-C458-sarduko",
+    "TE-C458-alavatupadu",
+    "TE-C458-domatera",
+    "TE-C458-marugudoddi",
+    "TE-C458-taguniru"
+  ],
+  "tex": "telugu/book/chapters/ch458-settling-in.tex"
+}

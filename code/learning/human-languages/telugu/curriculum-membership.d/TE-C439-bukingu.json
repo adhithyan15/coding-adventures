@@ -1,0 +1,11 @@
+{
+  "id": "TE-C439-bukingu",
+  "pathSegment": "TE-PATH-439-BOGI439",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-439-BOGI439",
+      "order": 1
+    }
+  ]
+}

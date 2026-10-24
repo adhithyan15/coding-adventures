@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:f410ed9a0e60dddd",
+  "lessonIds": [
+    "MR-C494-nate",
+    "MR-C494-natevaik",
+    "MR-C494-parivar",
+    "MR-C494-anath",
+    "MR-C494-sakkha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch494.txt",
+  "json": "marathi/narration/ch494.json",
+  "textHash": "fnv1a64:1870fb00e726511f",
+  "jsonHash": "fnv1a64:efe3a3f2f60687bd",
+  "findings": []
+}

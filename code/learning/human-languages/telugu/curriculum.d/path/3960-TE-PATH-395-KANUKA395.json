@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-395-KANUKA395",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TE-EXT-395-KANUKA395"
+  ],
+  "after": []
+}

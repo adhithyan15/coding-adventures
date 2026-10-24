@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "By boat",
+  "label": "ch:ar-by-boat",
+  "canDo": "I can say a captain, a boat, a ferry, to sail and to dock.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C429-rasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can say a captain, a boat, a ferry, to sail and to dock.",
+    "assesses": [
+      "AR-LEX-C429-QARIB429-03",
+      "AR-LEX-C429-QARIB429-04",
+      "AR-LEX-C429-QARIB429-05"
+    ]
+  }
+}

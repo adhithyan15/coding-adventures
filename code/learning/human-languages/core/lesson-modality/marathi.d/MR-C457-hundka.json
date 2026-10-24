@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C457-hundka",
+    "language": "marathi",
+    "chapter": 457,
+    "sequence": 26370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f4230000f1b5aa1"
+  },
+  "findings": []
+}

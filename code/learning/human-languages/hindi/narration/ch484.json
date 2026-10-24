@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 484,
+  "title": "Getting Ready",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f3e75be5713face4",
+  "lessons": [
+    {
+      "id": "HI-C484-datun",
+      "sequence": 26640,
+      "title": "दातुन (dātun) — a twig toothbrush",
+      "headword": "दातुन",
+      "romanization": "dātun",
+      "gloss": "a twig toothbrush",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b89b09e3b67f518",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for force, then the Hindi for to tire someone out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दातुन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दातुन — dātun — \"a twig toothbrush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गाँव में दादा आज भी दातुन से दाँत साफ़ करते हैं। gā̃v meṁ dādā āj bhī dātun se dā̃t sāf karte haiṁ. In the village my grandfather still cleans his teeth with a twig."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दातुन (dātun) is a tadbhava: CDIAL lists Hindi dātun, \"tooth stick\", under Sanskrit dantapavana, \"tooth-cleaning\" (CDIAL 6157): a twig, often of neem, chewed at one end."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dātun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dātun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dātun, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dātun*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gā̃v meṁ dādā āj bhī dātun se dā̃t sāf karte haiṁ. — In the village my grandfather still cleans his teeth with a twig.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gā̃v meṁ dādā āj bhī dātun se dā̃t sāf karte haiṁ.* — In the village my grandfather still cleans his teeth with a twig.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for force, then the Hindi for to tire someone out, then say dātun again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for force, then the Hindi for to tire someone out, then say *dātun* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दातुन (dātun) mean? (\"A twig toothbrush\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C484-katvana",
+      "sequence": 26650,
+      "title": "कटवाना (kaṭvānā) — to have (something) cut",
+      "headword": "कटवाना",
+      "romanization": "kaṭvānā",
+      "gloss": "to have (something) cut",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f292c23d55019c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to tire someone out, then the Hindi for a twig toothbrush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कटवाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कटवाना — kaṭvānā — \"to have (something) cut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शादी से पहले अरुण ने नाई से बाल कटवाए। śādī se pahle Aruṇ ne nāī se bāl kaṭvāe. Before the wedding Arun had his hair cut at the barber's."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बाल कटवाए, usne bāl kaṭvāe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कटवाना (kaṭvānā) is the causative of kāṭnā, \"to cut\", which CDIAL lists under Sanskrit kártati, \"cuts\" (CDIAL 2854): with -vā-, someone else does the cutting for you. The person who does it takes se: nāī se."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭvānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭvānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭvānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭvānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śādī se pahle Aruṇ ne nāī se bāl kaṭvāe. — Before the wedding Arun had his hair cut at the barber's.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śādī se pahle Aruṇ ne nāī se bāl kaṭvāe.* — Before the wedding Arun had his hair cut at the barber's.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to tire someone out, then the Hindi for a twig toothbrush, then say kaṭvānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to tire someone out, then the Hindi for a twig toothbrush, then say *kaṭvānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कटवाना (kaṭvānā) mean? (\"To have (something) cut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C484-nahlana",
+      "sequence": 26660,
+      "title": "नहलाना (nahlānā) — to bathe someone",
+      "headword": "नहलाना",
+      "romanization": "nahlānā",
+      "gloss": "to bathe someone",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b01ea7bef1b9bb7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a twig toothbrush, then the Hindi for to have (something) cut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नहलाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नहलाना — nahlānā — \"to bathe someone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माँ रोज़ सुबह बच्चे को नहलाती है। māṁ roz subah bacce ko nahlātī hai. Mother bathes the baby every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बच्चे को नहलाया, usne bacce ko nahlāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नहलाना (nahlānā) is the causative partner of nahānā, \"to bathe\", which CDIAL lists under Sanskrit snāti, \"bathes\" (CDIAL 13786): to give someone else a bath."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nahlānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nahlānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nahlānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nahlānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṁ roz subah bacce ko nahlātī hai. — Mother bathes the baby every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṁ roz subah bacce ko nahlātī hai.* — Mother bathes the baby every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a twig toothbrush, then the Hindi for to have (something) cut, then say nahlānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a twig toothbrush, then the Hindi for to have (something) cut, then say *nahlānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नहलाना (nahlānā) mean? (\"To bathe someone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C484-malna",
+      "sequence": 26670,
+      "title": "मलना (malnā) — to rub in; to massage",
+      "headword": "मलना",
+      "romanization": "malnā",
+      "gloss": "to rub in; to massage",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc5e4c14ccfdff30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to have (something) cut, then the Hindi for to bathe someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मलना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मलना — malnā — \"to rub in; to massage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नहाने से पहले दादी ने बच्चे के पैरों पर तेल मला। nahāne se pahle dādī ne bacce ke pairoṁ par tel malā. Before the bath, my grandmother rubbed oil into the baby's legs."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने हाथों पर तेल मला, usne hāthoṁ par tel malā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मलना (malnā) is a tadbhava: CDIAL lists Hindi malnā, \"to rub, shampoo\", under marati, a form it reconstructs (CDIAL 9870). An oil massage for a baby is māliś, and the verb for it is malnā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nahāne se pahle dādī ne bacce ke pairoṁ par tel malā. — Before the bath, my grandmother rubbed oil into the baby's legs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nahāne se pahle dādī ne bacce ke pairoṁ par tel malā.* — Before the bath, my grandmother rubbed oil into the baby's legs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to have (something) cut, then the Hindi for to bathe someone, then say malnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to have (something) cut, then the Hindi for to bathe someone, then say *malnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मलना (malnā) mean? (\"To rub in; to massage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C484-ustara",
+      "sequence": 26680,
+      "title": "उस्तरा (ustarā) — a razor",
+      "headword": "उस्तरा",
+      "romanization": "ustarā",
+      "gloss": "a razor",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f7e6f297d182d82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to bathe someone, then the Hindi for to rub in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उस्तरा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उस्तरा — ustarā — \"a razor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नाई ने उस्तरे से दाढ़ी बनाई। nāī ne ustare se dāṛhī banāī. The barber shaved the beard with a razor."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उस्तरा (ustarā) is usually traced to Persian ustura, \"razor\". dāṛhī banānā, \"to make the beard\", is how Hindi says to shave."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ustarā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ustarā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ustarā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ustarā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāī ne ustare se dāṛhī banāī. — The barber shaved the beard with a razor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāī ne ustare se dāṛhī banāī.* — The barber shaved the beard with a razor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to bathe someone, then the Hindi for to rub in, then say ustarā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to bathe someone, then the Hindi for to rub in, then say *ustarā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उस्तरा (ustarā) mean? (\"A razor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

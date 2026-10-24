@@ -1,0 +1,11 @@
+{
+  "id": "TA-C369-makkaltokai",
+  "pathSegment": "TA-PATH-369-CAMUKAM369",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-369-CAMUKAM369",
+      "order": 2
+    }
+  ]
+}

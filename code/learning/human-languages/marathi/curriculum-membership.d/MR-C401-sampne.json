@@ -1,0 +1,11 @@
+{
+  "id": "MR-C401-sampne",
+  "pathSegment": "MR-PATH-401-INDHAN401",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-401-INDHAN401",
+      "order": 4
+    }
+  ]
+}

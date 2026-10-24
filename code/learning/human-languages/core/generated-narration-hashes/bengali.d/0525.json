@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:c94f7e25b3e8947d",
+  "lessonIds": [
+    "BN-C525-sur",
+    "BN-C525-tal",
+    "BN-C525-svorlipi",
+    "BN-C525-gomgom-kora",
+    "BN-C525-shis-deoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch525.txt",
+  "json": "bengali/narration/ch525.json",
+  "textHash": "fnv1a64:36ca008255294816",
+  "jsonHash": "fnv1a64:b5aecffb5387844b",
+  "findings": []
+}

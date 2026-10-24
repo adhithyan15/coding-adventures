@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:b9648451ae501f15",
+  "lessonIds": [
+    "ML-C403-pretam",
+    "ML-C403-mantrikan",
+    "ML-C403-nidhi",
+    "ML-C403-sapam",
+    "ML-C403-sapikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch403.txt",
+  "json": "malayalam/narration/ch403.json",
+  "textHash": "fnv1a64:b06a94b21c7676df",
+  "jsonHash": "fnv1a64:972108f7c8185480",
+  "findings": []
+}

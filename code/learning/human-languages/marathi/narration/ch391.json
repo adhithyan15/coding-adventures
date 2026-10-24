@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 391,
+  "title": "Rising and Falling",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:02085913e31baa08",
+  "lessons": [
+    {
+      "id": "MR-C391-ghatne",
+      "sequence": 22510,
+      "title": "घटणे (ghaṭṇe) — to decline; to decrease",
+      "headword": "घटणे",
+      "romanization": "ghaṭṇe",
+      "gloss": "to decline; to decrease",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13f5a393b8dc5173",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for particular, then the Marathi for apart from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घटणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घटणे — ghaṭṇe — \"to decline; to decrease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "थंडीत भाज्यांचे दर घटले. thaṇḍīt bhājyāñce dar ghaṭle. Vegetable prices fell in the cold season."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो घटला, to ghaṭlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Intransitive: what decreases is the subject."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घटणे (ghaṭṇe) is inherited: CDIAL lists Marathi ghaṭṇẽ, \"to decrease\", under ghaṭṭati, \"decreases, is wanting\" (CDIAL 4415)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaṭṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaṭṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaṭṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaṭṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thaṇḍīt bhājyāñce dar ghaṭle. — Vegetable prices fell in the cold season.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thaṇḍīt bhājyāñce dar ghaṭle.* — Vegetable prices fell in the cold season.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for particular, then the Marathi for apart from, then say ghaṭṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for particular, then the Marathi for apart from, then say *ghaṭṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घटणे (ghaṭṇe) mean? (\"To decline; to decrease\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C391-tikne",
+      "sequence": 22520,
+      "title": "टिकणे (ṭikṇe) — to hold up; to last; to survive",
+      "headword": "टिकणे",
+      "romanization": "ṭikṇe",
+      "gloss": "to hold up; to last; to survive",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:feb89c6ab584c7a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for apart from, then the Marathi for to decline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टिकणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टिकणे — ṭikṇe — \"to hold up; to last; to survive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ही चप्पल दोन वर्षं टिकली. hī cappal don varṣaṁ ṭiklī. These sandals lasted two years."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो टिकला, to ṭiklā."
+            },
+            {
+              "kind": "speech",
+              "text": "टिकाऊ, durable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टिकणे (ṭikṇe) is inherited: CDIAL lists Marathi ṭikṇẽ, \"to stay\", under ṭakk- / ṭikk-, \"remain, stop\" (CDIAL 5420)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭikṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭikṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭikṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭikṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hī cappal don varṣaṁ ṭiklī. — These sandals lasted two years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hī cappal don varṣaṁ ṭiklī.* — These sandals lasted two years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for apart from, then the Marathi for to decline, then say ṭikṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for apart from, then the Marathi for to decline, then say *ṭikṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टिकणे (ṭikṇe) mean? (\"To hold up; to last; to survive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C391-takka",
+      "sequence": 22530,
+      "title": "टक्का (ṭakkā) — a percent",
+      "headword": "टक्का",
+      "romanization": "ṭakkā",
+      "gloss": "a percent",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5392199a04781d81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to decline, then the Marathi for to hold up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टक्का",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टक्का — ṭakkā — \"a percent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "या वर्षी परीक्षेत नव्वद टक्के मुलं उत्तीर्ण झाली. yā varṣī parīkṣet navvad ṭakke mulaṁ uttīrṇa jhālī. This year ninety percent of the children passed the exam."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Plural: टक्के, ṭakke."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural टक्के: पाच टक्के, five percent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टक्का (ṭakkā) is usually traced to Sanskrit ṭaṅka, \"a stamped coin\", under which CDIAL lists Marathi ṭakā, \"a two-paisa coin\" (CDIAL 5426); the sense one in a hundred came later, and Gujarati ṭako has it too."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭakkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭakkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭakkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭakkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā varṣī parīkṣet navvad ṭakke mulaṁ uttīrṇa jhālī. — This year ninety percent of the children passed the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā varṣī parīkṣet navvad ṭakke mulaṁ uttīrṇa jhālī.* — This year ninety percent of the children passed the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to decline, then the Marathi for to hold up, then say ṭakkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to decline, then the Marathi for to hold up, then say *ṭakkā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टक्का (ṭakkā) mean? (\"A percent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C391-praman",
+      "sequence": 22540,
+      "title": "प्रमाण (pramāṇ) — a proportion; a rate",
+      "headword": "प्रमाण",
+      "romanization": "pramāṇ",
+      "gloss": "a proportion; a rate",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe374d5ae09c689b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to hold up, then the Marathi for a percent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रमाण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रमाण — pramāṇ — \"a proportion; a rate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शहरात अपघातांचं प्रमाण वाढलं आहे. śahrāt apghātāñcaṁ pramāṇ vāḍhlaṁ āhe. The rate of accidents in the city has gone up."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a standard: प्रमाणभाषा, the standard language."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रमाण (pramāṇ) is a tatsama, taken from Sanskrit pramāṇa, \"measure, standard, proof\" (CDIAL 8723)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramāṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramāṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramāṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramāṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śahrāt apghātāñcaṁ pramāṇ vāḍhlaṁ āhe. — The rate of accidents in the city has gone up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śahrāt apghātāñcaṁ pramāṇ vāḍhlaṁ āhe.* — The rate of accidents in the city has gone up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to hold up, then the Marathi for a percent, then say pramāṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to hold up, then the Marathi for a percent, then say *pramāṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रमाण (pramāṇ) mean? (\"A proportion; a rate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C391-star",
+      "sequence": 22550,
+      "title": "स्तर (star) — a level",
+      "headword": "स्तर",
+      "romanization": "star",
+      "gloss": "a level",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae7a429c6f9f0286",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a percent, then the Marathi for a proportion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्तर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्तर — star — \"a level\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नदीतील पाण्याचा स्तर वाढला. nadītīl pāṇyācā star vāḍhlā. The water level in the river rose."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a layer, a tier: समाजाचे स्तर (star)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्तर (star) is a tatsama, taken from Sanskrit stara, \"layer\" (CDIAL 13685); the same entry lists an inherited Marathi thar, \"layer\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "star",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *star*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "star, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *star*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadītīl pāṇyācā star vāḍhlā. — The water level in the river rose.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadītīl pāṇyācā star vāḍhlā.* — The water level in the river rose.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a percent, then the Marathi for a proportion, then say star again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a percent, then the Marathi for a proportion, then say *star* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्तर (star) mean? (\"A level\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

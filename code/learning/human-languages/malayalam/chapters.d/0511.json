@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Forecasts and Storms",
+  "label": "ch:ml-forecasts-and-storms",
+  "canDo": "I can say a forecast, vigilance, a heatwave, a cyclone and to snap and fall.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C511-pottiviluka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can say a forecast, vigilance, a heatwave, a cyclone and to snap and fall.",
+    "assesses": [
+      "ML-LEX-C511-PRAVACANAM511-03",
+      "ML-LEX-C511-PRAVACANAM511-04",
+      "ML-LEX-C511-PRAVACANAM511-05"
+    ]
+  }
+}

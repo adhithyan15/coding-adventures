@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C462-manjuru-ceyu",
+    "language": "telugu",
+    "chapter": 462,
+    "sequence": 23270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1279abd80d6cbab9"
+  },
+  "findings": []
+}

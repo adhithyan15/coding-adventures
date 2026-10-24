@@ -1,0 +1,11 @@
+{
+  "id": "BN-C478-tharmomitar",
+  "pathSegment": "BN-PATH-478-JOTNO478",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-478-JOTNO478",
+      "order": 2
+    }
+  ]
+}

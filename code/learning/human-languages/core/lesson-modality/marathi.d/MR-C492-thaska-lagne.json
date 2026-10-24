@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C492-thaska-lagne",
+    "language": "marathi",
+    "chapter": 492,
+    "sequence": 28190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce64ce80f6b4ab97"
+  },
+  "findings": []
+}

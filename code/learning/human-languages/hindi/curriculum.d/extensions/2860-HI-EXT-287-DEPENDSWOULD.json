@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-287-DEPENDSWOULD",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what something depends on (… par nirbhar kartā hai), say what would happen if things were different (agar samay hotā, to maiṁ ātā), and write six connected lines.",
+  "prerequisites": []
+}

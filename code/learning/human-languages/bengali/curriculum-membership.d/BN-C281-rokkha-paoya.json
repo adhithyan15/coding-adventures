@@ -1,0 +1,11 @@
+{
+  "id": "BN-C281-rokkha-paoya",
+  "pathSegment": "BN-PATH-281-BHAGYO281",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-281-BHAGYO281",
+      "order": 2
+    }
+  ]
+}

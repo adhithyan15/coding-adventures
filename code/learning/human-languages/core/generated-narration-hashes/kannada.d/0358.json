@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:b46b793baccbae64",
+  "lessonIds": [
+    "KA-C358-vicarane",
+    "KA-C358-mokaddame",
+    "KA-C358-prakarana",
+    "KA-C358-jaminu",
+    "KA-C358-tappoppiko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch358.txt",
+  "json": "kannada/narration/ch358.json",
+  "textHash": "fnv1a64:9be15b1767905786",
+  "jsonHash": "fnv1a64:b7380f5dd7c43e75",
+  "findings": []
+}

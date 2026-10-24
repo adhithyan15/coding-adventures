@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:1ce01a3122f9ae6e",
+  "lessonIds": [
+    "HI-C538-sajona",
+    "HI-C538-taiyar",
+    "HI-C538-prabandh",
+    "HI-C538-sajna",
+    "HI-C538-binna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch538.txt",
+  "json": "hindi/narration/ch538.json",
+  "textHash": "fnv1a64:f9ca83466ef5bac2",
+  "jsonHash": "fnv1a64:ffc65287706b4ed0",
+  "findings": []
+}

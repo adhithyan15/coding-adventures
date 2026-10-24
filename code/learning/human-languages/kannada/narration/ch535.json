@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 535,
+  "title": "Instruments",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:496cc4287b875792",
+  "lessons": [
+    {
+      "id": "KA-C535-vadya",
+      "sequence": 27310,
+      "title": "ವಾದ್ಯ (vādya) — a musical instrument",
+      "headword": "ವಾದ್ಯ",
+      "romanization": "vādya",
+      "gloss": "a musical instrument",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2a8999db3e8837a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to hum a tune, then the Kannada for to play an instrument."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಾದ್ಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಾದ್ಯ — vādya — \"a musical instrument\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮದುವೆಯಲ್ಲಿ ವಾದ್ಯಗಳ ಸದ್ದು ಜೋರಾಗಿತ್ತು. maduveyalli vādyagaḷa saddu jōrāgittu. At the wedding the instruments were loud."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ವಾದ್ಯಗಳು, vādyagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಾದ್ಯಗಾರ, a player."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಾದ್ಯ (vādya) is borrowed from Sanskrit vādya, \"to be played; music, a musical instrument\" (CDIAL 11511)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vādya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vādya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vādya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vādya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maduveyalli vādyagaḷa saddu jōrāgittu. — At the wedding the instruments were loud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maduveyalli vādyagaḷa saddu jōrāgittu.* — At the wedding the instruments were loud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to hum a tune, then the Kannada for to play an instrument, then say vādya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to hum a tune, then the Kannada for to play an instrument, then say *vādya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಾದ್ಯ (vādya) mean? (\"A musical instrument\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C535-vine",
+      "sequence": 27320,
+      "title": "ವೀಣೆ (vīṇe) — a veena",
+      "headword": "ವೀಣೆ",
+      "romanization": "vīṇe",
+      "gloss": "a veena",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6367e4318ce8c493",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to play an instrument, then the Kannada for a musical instrument."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವೀಣೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವೀಣೆ — vīṇe — \"a veena\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವೀಣೆಯ ನಾದ ತುಂಬಾ ಮಧುರ. vīṇeya nāda tumbā madhura. The sound of the veena is very sweet."
+            },
+            {
+              "kind": "speech",
+              "text": "A long-necked string instrument of the south."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವೀಣೆ (vīṇe) is borrowed from Sanskrit vīṇā, \"a lute\" (CDIAL 12048); the final -ā became -ೆ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīṇeya nāda tumbā madhura. — The sound of the veena is very sweet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīṇeya nāda tumbā madhura.* — The sound of the veena is very sweet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to play an instrument, then the Kannada for a musical instrument, then say vīṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to play an instrument, then the Kannada for a musical instrument, then say *vīṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವೀಣೆ (vīṇe) mean? (\"A veena\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C535-kolalu",
+      "sequence": 27330,
+      "title": "ಕೊಳಲು (koḷalu) — a flute",
+      "headword": "ಕೊಳಲು",
+      "romanization": "koḷalu",
+      "gloss": "a flute",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa397f20fb69bb97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a musical instrument, then the Kannada for a veena."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೊಳಲು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೊಳಲು — koḷalu — \"a flute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ದನ ಕಾಯುವ ಹುಡುಗ ಕೊಳಲು ನುಡಿಸುತ್ತಿದ್ದನು. dana kāyuva huḍuga koḷalu nuḍisuttiddanu. The boy minding the cattle was playing a flute."
+            },
+            {
+              "kind": "speech",
+              "text": "Made of bamboo, ಬಿದಿರು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೊಳಲು (koḷalu) is native Dravidian: DEDR 1818 lists the Kannada word for a flute, a fife, beside a word for a tube, a blow-pipe; ಕೊಳವೆ, a pipe, is that second word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḷalu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḷalu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḷalu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḷalu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dana kāyuva huḍuga koḷalu nuḍisuttiddanu. — The boy minding the cattle was playing a flute.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dana kāyuva huḍuga koḷalu nuḍisuttiddanu.* — The boy minding the cattle was playing a flute.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a musical instrument, then the Kannada for a veena, then say koḷalu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a musical instrument, then the Kannada for a veena, then say *koḷalu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೊಳಲು (koḷalu) mean? (\"A flute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C535-pitilu",
+      "sequence": 27340,
+      "title": "ಪಿಟೀಲು (piṭīlu) — a violin",
+      "headword": "ಪಿಟೀಲು",
+      "romanization": "piṭīlu",
+      "gloss": "a violin",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07d1c43eb944db6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a veena, then the Kannada for a flute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಿಟೀಲು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಿಟೀಲು — piṭīlu — \"a violin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂಗೀತ ಕಚೇರಿಯಲ್ಲಿ ಅವರು ಪಿಟೀಲು ನುಡಿಸಿದರು. saṅgīta kacēriyalli avaru piṭīlu nuḍisidaru. He played the violin at the concert."
+            },
+            {
+              "kind": "speech",
+              "text": "In southern concerts it follows the singer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಿಟೀಲು (piṭīlu) is the Kannada name of the violin, which came to south India from Europe; the origin of the word is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṭīlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṭīlu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṭīlu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṭīlu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgīta kacēriyalli avaru piṭīlu nuḍisidaru. — He played the violin at the concert.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgīta kacēriyalli avaru piṭīlu nuḍisidaru.* — He played the violin at the concert.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a veena, then the Kannada for a flute, then say piṭīlu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a veena, then the Kannada for a flute, then say *piṭīlu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಿಟೀಲು (piṭīlu) mean? (\"A violin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C535-barisu",
+      "sequence": 27350,
+      "title": "ಬಾರಿಸು (bārisu) — to beat a drum; to ring",
+      "headword": "ಬಾರಿಸು",
+      "romanization": "bārisu",
+      "gloss": "to beat a drum; to ring",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0654c64a63c42528",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a flute, then the Kannada for a violin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಾರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾರಿಸು — bārisu — \"to beat a drum; to ring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ದೇವಸ್ಥಾನದಲ್ಲಿ ಒಬ್ಬರು ಗಂಟೆ ಬಾರಿಸಿದರು. dēvasthānadalli obbaru gaṇṭe bārisidaru. Someone rang the bell at the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಬಾರಿಸಿದೆ, bāriside."
+            },
+            {
+              "kind": "speech",
+              "text": "Drums and bells take ಬಾರಿಸು (bārisu); strings and flutes take ನುಡಿಸು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾರಿಸು (bārisu) is native Dravidian: DEDR 5380 lists Kannada bāṟisu, \"to strike or beat with a whip\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēvasthānadalli obbaru gaṇṭe bārisidaru. — Someone rang the bell at the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēvasthānadalli obbaru gaṇṭe bārisidaru.* — Someone rang the bell at the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a flute, then the Kannada for a violin, then say bārisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a flute, then the Kannada for a violin, then say *bārisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಾರಿಸು (bārisu) mean? (\"To beat a drum; to ring\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

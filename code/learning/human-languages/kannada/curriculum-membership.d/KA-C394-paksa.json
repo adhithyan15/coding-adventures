@@ -1,0 +1,11 @@
+{
+  "id": "KA-C394-paksa",
+  "pathSegment": "KA-PATH-394-RAJAKIYA394",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-394-RAJAKIYA394",
+      "order": 2
+    }
+  ]
+}

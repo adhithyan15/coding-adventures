@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 391,
+  "title": "Public Money",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:90dabfc3942923d0",
+  "lessons": [
+    {
+      "id": "TA-C391-porulataram",
+      "sequence": 22350,
+      "title": "பொருளாதாரம் (poruḷātāram) — the economy",
+      "headword": "பொருளாதாரம்",
+      "romanization": "poruḷātāram",
+      "gloss": "the economy",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f3328b4726351b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to restructure, then the Tamil for to strengthen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பொருளாதாரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொருளாதாரம் — poruḷātāram — \"the economy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழை பெய்யாவிட்டால் நாட்டின் பொருளாதாரம் பாதிக்கப்படும். maḻai peyyāviṭṭāl nāṭṭiṉ poruḷātāram pātikkappaṭum. If it does not rain, the country's economy will suffer."
+            },
+            {
+              "kind": "speech",
+              "text": "பொருளாதார, economic, before a noun: பொருளாதார வளர்ச்சி, economic growth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொருளாதாரம் (poruḷātāram) is built from native poruḷ, \"thing, wealth\" (DEDR 4544), and ātāram, \"support, basis\", borrowed from Sanskrit ādhāra (CDIAL 1165): what wealth rests on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poruḷātāram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poruḷātāram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poruḷātāram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poruḷātāram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻai peyyāviṭṭāl nāṭṭiṉ poruḷātāram pātikkappaṭum. — If it does not rain, the country's economy will suffer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻai peyyāviṭṭāl nāṭṭiṉ poruḷātāram pātikkappaṭum.* — If it does not rain, the country's economy will suffer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to restructure, then the Tamil for to strengthen, then say poruḷātāram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to restructure, then the Tamil for to strengthen, then say *poruḷātāram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பொருளாதாரம் (poruḷātāram) mean? (\"The economy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C391-maniyam",
+      "sequence": 22360,
+      "title": "மானியம் (māṉiyam) — a subsidy; a grant",
+      "headword": "மானியம்",
+      "romanization": "māṉiyam",
+      "gloss": "a subsidy; a grant",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9d76444e36e14b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to strengthen, then the Tamil for the economy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மானியம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மானியம் — māṉiyam — \"a subsidy; a grant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அரசு மானியம் கொடுத்தால் விவசாயிகள் பயன்பெறுவார்கள். aracu māṉiyam koṭuttāl vivacāyikaḷ payaṉpeṟuvārkaḷ. If the government gives a subsidy, the farmers will benefit."
+            },
+            {
+              "kind": "speech",
+              "text": "In older usage, land granted free of rent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மானியம் (māṉiyam) is listed in DEDR 4674 with Tamil maṇiyam, the office of a village headman, and māṉiyam, the rent-free land or payment he held: a grant from the state. Whether the word is native is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṉiyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṉiyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṉiyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṉiyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aracu māṉiyam koṭuttāl vivacāyikaḷ payaṉpeṟuvārkaḷ. — If the government gives a subsidy, the farmers will benefit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aracu māṉiyam koṭuttāl vivacāyikaḷ payaṉpeṟuvārkaḷ.* — If the government gives a subsidy, the farmers will benefit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to strengthen, then the Tamil for the economy, then say māṉiyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to strengthen, then the Tamil for the economy, then say *māṉiyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மானியம் (māṉiyam) mean? (\"A subsidy; a grant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C391-parrakkurai",
+      "sequence": 22370,
+      "title": "பற்றாக்குறை (paṟṟākkuṟai) — a deficit; a shortage",
+      "headword": "பற்றாக்குறை",
+      "romanization": "paṟṟākkuṟai",
+      "gloss": "a deficit; a shortage",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c33aded4d71c0002",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the economy, then the Tamil for a subsidy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பற்றாக்குறை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பற்றாக்குறை — paṟṟākkuṟai — \"a deficit; a shortage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழை இல்லாவிட்டால் தண்ணீர்ப் பற்றாக்குறை ஏற்படும். maḻai illāviṭṭāl taṇṇīrp paṟṟākkuṟai ēṟpaṭum. If there is no rain, there will be a water shortage."
+            },
+            {
+              "kind": "speech",
+              "text": "பற்றா, not enough + குறை, a lack."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பற்றாக்குறை (paṟṟākkuṟai) is native: paṟṟā, \"not sufficing\", the negative of paṟṟu (DEDR 4034), and kuṟai, \"deficiency, lack\" (DEDR 1851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṟṟākkuṟai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṟṟākkuṟai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṟṟākkuṟai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṟṟākkuṟai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻai illāviṭṭāl taṇṇīrp paṟṟākkuṟai ēṟpaṭum. — If there is no rain, there will be a water shortage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻai illāviṭṭāl taṇṇīrp paṟṟākkuṟai ēṟpaṭum.* — If there is no rain, there will be a water shortage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the economy, then the Tamil for a subsidy, then say paṟṟākkuṟai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the economy, then the Tamil for a subsidy, then say *paṟṟākkuṟai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பற்றாக்குறை (paṟṟākkuṟai) mean? (\"A deficit; a shortage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C391-viniyoki",
+      "sequence": 22380,
+      "title": "விநியோகி (viniyōki) — to distribute; to supply",
+      "headword": "விநியோகி",
+      "romanization": "viniyōki",
+      "gloss": "to distribute; to supply",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b19d1b6af4e914b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a subsidy, then the Tamil for a deficit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விநியோகி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விநியோகி — viniyōki — \"to distribute; to supply\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அரசு வெள்ளம் வந்த ஊர்களுக்கு உணவு விநியோகித்தது. aracu veḷḷam vanta ūrkaḷukku uṇavu viniyōkittatu. The government distributed food to the flooded towns."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): விநியோகித்தேன், viniyōkittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "To whom: -க்கு. The noun is விநியோகம், supply."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விநியோகி (viniyōki) is a verb built on Sanskrit viniyoga, \"apportionment, distribution, division\" (Monier-Williams), with the loan-verb ending -இ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viniyōki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viniyōki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viniyōki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viniyōki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aracu veḷḷam vanta ūrkaḷukku uṇavu viniyōkittatu. — The government distributed food to the flooded towns.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aracu veḷḷam vanta ūrkaḷukku uṇavu viniyōkittatu.* — The government distributed food to the flooded towns.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a subsidy, then the Tamil for a deficit, then say viniyōki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a subsidy, then the Tamil for a deficit, then say *viniyōki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விநியோகி (viniyōki) mean? (\"To distribute; to supply\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C391-nirnayi",
+      "sequence": 22390,
+      "title": "நிர்ணயி (nirṇayi) — to fix; to set",
+      "headword": "நிர்ணயி",
+      "romanization": "nirṇayi",
+      "gloss": "to fix; to set",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bd422c3a4f74c0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a deficit, then the Tamil for to distribute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிர்ணயி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிர்ணயி — nirṇayi — \"to fix; to set\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அரசு அரிசியின் விலையை நிர்ணயித்தது. aracu ariciyiṉ vilaiyai nirṇayittatu. The government fixed the price of rice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): நிர்ணயித்தேன், nirṇayittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is fixed takes -ஐ: விலையை நிர்ணயி (nirṇayi). The noun is நிர்ணயம்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிர்ணயி (nirṇayi) is a verb built on Sanskrit nirṇaya, \"complete ascertainment, decision, settlement\" (Monier-Williams), with the loan-verb ending -இ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirṇayi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirṇayi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirṇayi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirṇayi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aracu ariciyiṉ vilaiyai nirṇayittatu. — The government fixed the price of rice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aracu ariciyiṉ vilaiyai nirṇayittatu.* — The government fixed the price of rice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a deficit, then the Tamil for to distribute, then say nirṇayi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a deficit, then the Tamil for to distribute, then say *nirṇayi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிர்ணயி (nirṇayi) mean? (\"To fix; to set\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

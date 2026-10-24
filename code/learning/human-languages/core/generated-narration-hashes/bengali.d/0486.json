@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:3059fd88fe0e5ad8",
+  "lessonIds": [
+    "BN-C486-lalonpalon",
+    "BN-C486-proshroy-deoya",
+    "BN-C486-chosha",
+    "BN-C486-ghum-parano",
+    "BN-C486-hamaguri-deoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch486.txt",
+  "json": "bengali/narration/ch486.json",
+  "textHash": "fnv1a64:0e77996fe7554025",
+  "jsonHash": "fnv1a64:8511b595fdaa9061",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:604c2999ba108878",
+  "lessonIds": [
+    "TA-C422-mukam",
+    "TA-C422-tarc",
+    "TA-C422-kutuvai",
+    "TA-C422-tolainokki",
+    "TA-C422-avil"
+  ],
+  "tex": "tamil/book/chapters/ch422-camping-gear.tex"
+}

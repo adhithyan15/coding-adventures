@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:5972a1b96de2ca09",
+  "lessonIds": [
+    "TA-C331-aracanai",
+    "TA-C331-ceppetu",
+    "TA-C331-vallal",
+    "TA-C331-kotai",
+    "TA-C331-celi"
+  ],
+  "tex": "tamil/book/chapters/ch331-decrees-and-patrons.tex"
+}

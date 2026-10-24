@@ -1,0 +1,11 @@
+{
+  "id": "MR-C300-siksa",
+  "pathSegment": "MR-PATH-300-LACH300",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-300-LACH300",
+      "order": 2
+    }
+  ]
+}

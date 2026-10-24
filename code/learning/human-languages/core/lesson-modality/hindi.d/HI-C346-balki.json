@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C346-balki",
+    "language": "hindi",
+    "chapter": 346,
+    "sequence": 19190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6acfe8cd5d2ec52f"
+  },
+  "findings": []
+}

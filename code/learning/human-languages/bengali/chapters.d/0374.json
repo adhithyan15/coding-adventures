@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Keeping Danger Away",
+  "label": "ch:bn-keeping-danger-away",
+  "canDo": "I can warn about a danger and say how to stop it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C374-nojor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can warn about a danger and say how to stop it.",
+    "assesses": [
+      "BN-LEX-C374-PROTIRODH374-03",
+      "BN-LEX-C374-PROTIRODH374-04",
+      "BN-LEX-C374-PROTIRODH374-05"
+    ]
+  }
+}

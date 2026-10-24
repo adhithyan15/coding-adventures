@@ -1,0 +1,11 @@
+{
+  "id": "TA-C291-matamaka",
+  "pathSegment": "TA-PATH-291-COMPARE-DURATION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-291-COMPARE-DURATION",
+      "order": 1
+    }
+  ]
+}

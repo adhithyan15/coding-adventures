@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:a4ed8a733713426d",
+  "lessonIds": [
+    "KA-C443-sancara",
+    "KA-C443-signal",
+    "KA-C443-padacari",
+    "KA-C443-dattane",
+    "KA-C443-niyantrisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch443.txt",
+  "json": "kannada/narration/ch443.json",
+  "textHash": "fnv1a64:48c65ecef8730a41",
+  "jsonHash": "fnv1a64:a69043250c233954",
+  "findings": []
+}

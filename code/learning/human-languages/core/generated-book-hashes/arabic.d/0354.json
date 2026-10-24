@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:2159d9258c80c7e5",
+  "lessonIds": [
+    "AR-C354-hutam",
+    "AR-C354-ramad",
+    "AR-C354-sharara",
+    "AR-C354-lahab",
+    "AR-C354-tasarraba"
+  ],
+  "tex": "arabic/book/chapters/ch354-after-the-blast.tex"
+}

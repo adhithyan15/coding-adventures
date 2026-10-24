@@ -1,0 +1,11 @@
+{
+  "id": "BN-C336-mul",
+  "pathSegment": "BN-PATH-336-GURUTTO336",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-336-GURUTTO336",
+      "order": 2
+    }
+  ]
+}

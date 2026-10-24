@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:5508b608e7330e0f",
+  "lessonIds": [
+    "KA-C420-aluku",
+    "KA-C420-eccettuko",
+    "KA-C420-balavanta",
+    "KA-C420-aniscita",
+    "KA-C420-apattu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch420.txt",
+  "json": "kannada/narration/ch420.json",
+  "textHash": "fnv1a64:66ad34269afbe6fa",
+  "jsonHash": "fnv1a64:d37ea722d1f5466c",
+  "findings": []
+}

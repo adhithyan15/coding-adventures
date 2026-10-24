@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-384-PARISTHITI384",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "MR-EXT-384-PARISTHITI384"
+  ],
+  "after": []
+}

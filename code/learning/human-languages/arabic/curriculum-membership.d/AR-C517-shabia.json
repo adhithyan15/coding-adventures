@@ -1,0 +1,11 @@
+{
+  "id": "AR-C517-shabia",
+  "pathSegment": "AR-PATH-517-ADAT517",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-517-ADAT517",
+      "order": 4
+    }
+  ]
+}

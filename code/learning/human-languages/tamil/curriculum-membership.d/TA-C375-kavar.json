@@ -1,0 +1,11 @@
+{
+  "id": "TA-C375-kavar",
+  "pathSegment": "TA-PATH-375-KATCI375",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-375-KATCI375",
+      "order": 4
+    }
+  ]
+}

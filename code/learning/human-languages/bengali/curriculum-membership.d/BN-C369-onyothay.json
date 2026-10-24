@@ -1,0 +1,11 @@
+{
+  "id": "BN-C369-onyothay",
+  "pathSegment": "BN-PATH-369-KINA369",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-369-KINA369",
+      "order": 2
+    }
+  ]
+}

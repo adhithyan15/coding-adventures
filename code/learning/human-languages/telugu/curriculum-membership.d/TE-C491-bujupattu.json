@@ -1,0 +1,11 @@
+{
+  "id": "TE-C491-bujupattu",
+  "pathSegment": "TE-PATH-491-TUPPU491",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-491-TUPPU491",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:362e4347013aeeb5",
+  "lessonIds": [
+    "KA-C435-bart",
+    "KA-C435-asana",
+    "KA-C435-kaitappu",
+    "KA-C435-inuku",
+    "KA-C435-dara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch435.txt",
+  "json": "kannada/narration/ch435.json",
+  "textHash": "fnv1a64:f7becbc90d9b9be1",
+  "jsonHash": "fnv1a64:de6809b1549be8b2",
+  "findings": []
+}

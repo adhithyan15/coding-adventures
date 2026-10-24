@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 432,
+  "title": "Ideals and Standing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8a4df621b42c24d8",
+  "lessons": [
+    {
+      "id": "TE-C432-niti",
+      "sequence": 21560,
+      "title": "నీతి (nīti) — ethics; a moral",
+      "headword": "నీతి",
+      "romanization": "nīti",
+      "gloss": "ethics; a moral",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65954c2310e15404",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for effective, then the Telugu for to test out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నీతి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నీతి — nīti — \"ethics; a moral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ కథలో మంచి నీతి ఉంది. ā kathalō mañci nīti undi. That story has a good moral."
+            },
+            {
+              "kind": "speech",
+              "text": "నీతి (nīti) కథ, a fable with a moral; నీతిగా, honestly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నీతి (nīti) is borrowed from Sanskrit nīti, \"conduct\" (CDIAL 7546), and especially \"right or wise conduct\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kathalō mañci nīti undi. — That story has a good moral.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kathalō mañci nīti undi.* — That story has a good moral.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for effective, then the Telugu for to test out, then say nīti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for effective, then the Telugu for to test out, then say *nīti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నీతి (nīti) mean? (\"Ethics; a moral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C432-adarsam",
+      "sequence": 21570,
+      "title": "ఆదర్శం (ādarśaṁ) — an ideal; a model",
+      "headword": "ఆదర్శం",
+      "romanization": "ādarśaṁ",
+      "gloss": "an ideal; a model",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd740d6a2c24f73f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to test out, then the Telugu for ethics."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆదర్శం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆదర్శం — ādarśaṁ — \"an ideal; a model\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా అమ్మే నాకు ఆదర్శం. mā ammē nāku ādarśaṁ. My mother is my role model."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a noun, ఆదర్శ: ఆదర్శ గ్రామం, a model village."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆదర్శం (ādarśaṁ) is borrowed from Sanskrit ādarśa, \"a mirror\" (CDIAL 1143); Telugu uses it for a model to follow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādarśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādarśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādarśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādarśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā ammē nāku ādarśaṁ. — My mother is my role model.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā ammē nāku ādarśaṁ.* — My mother is my role model.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to test out, then the Telugu for ethics, then say ādarśaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to test out, then the Telugu for ethics, then say *ādarśaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆదర్శం (ādarśaṁ) mean? (\"An ideal; a model\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C432-pratistha",
+      "sequence": 21580,
+      "title": "ప్రతిష్ఠ (pratiṣṭha) — prestige; reputation",
+      "headword": "ప్రతిష్ఠ",
+      "romanization": "pratiṣṭha",
+      "gloss": "prestige; reputation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a576115228c34556",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for ethics, then the Telugu for an ideal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రతిష్ఠ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రతిష్ఠ — pratiṣṭha — \"prestige; reputation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పని వల్ల కుటుంబ ప్రతిష్ఠ పెరిగింది. ā pani valla kuṭumba pratiṣṭha perigindi. That deed raised the family’s standing."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రతిష్ఠాత్మకమైన, prestigious."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రతిష్ఠ (pratiṣṭha) is borrowed from Sanskrit pratiṣṭhā, \"foundation, prop\" (CDIAL 8608), and \"standing still, stability\" (Monier-Williams); Telugu uses it for standing in people’s eyes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiṣṭha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiṣṭha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiṣṭha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiṣṭha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pani valla kuṭumba pratiṣṭha perigindi. — That deed raised the family’s standing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pani valla kuṭumba pratiṣṭha perigindi.* — That deed raised the family’s standing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for ethics, then the Telugu for an ideal, then say pratiṣṭha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for ethics, then the Telugu for an ideal, then say *pratiṣṭha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రతిష్ఠ (pratiṣṭha) mean? (\"Prestige; reputation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C432-visvasaniyata",
+      "sequence": 21590,
+      "title": "విశ్వసనీయత (viśvasanīyata) — credibility; reliability",
+      "headword": "విశ్వసనీయత",
+      "romanization": "viśvasanīyata",
+      "gloss": "credibility; reliability",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7c7390746760cf6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an ideal, then the Telugu for prestige."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విశ్వసనీయత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విశ్వసనీయత — viśvasanīyata — \"credibility; reliability\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పత్రిక విశ్వసనీయత తగ్గింది. ā patrika viśvasanīyata taggindi. That paper’s credibility has fallen."
+            },
+            {
+              "kind": "speech",
+              "text": "విశ్వసనీయమైన, reliable, trustworthy; of the same family as విశ్వసించు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విశ్వసనీయత (viśvasanīyata) is built on Sanskrit viśvasanīya, \"to be trusted or relied on, reliable, credible\" (Monier-Williams), with the abstract ending -త."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśvasanīyata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśvasanīyata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśvasanīyata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśvasanīyata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā patrika viśvasanīyata taggindi. — That paper’s credibility has fallen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā patrika viśvasanīyata taggindi.* — That paper’s credibility has fallen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an ideal, then the Telugu for prestige, then say viśvasanīyata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an ideal, then the Telugu for prestige, then say *viśvasanīyata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విశ్వసనీయత (viśvasanīyata) mean? (\"Credibility; reliability\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C432-avagahana",
+      "sequence": 21600,
+      "title": "అవగాహన (avagāhana) — awareness; understanding",
+      "headword": "అవగాహన",
+      "romanization": "avagāhana",
+      "gloss": "awareness; understanding",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2173784fcdc815d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for prestige, then the Telugu for credibility."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అవగాహన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అవగాహన — avagāhana — \"awareness; understanding\"."
+            },
+            {
+              "kind": "speech",
+              "text": "జనంలో ఆరోగ్యం మీద అవగాహన పెరిగింది. janaṁlō ārōgyaṁ mīda avagāhana perigindi. People’s awareness of health has grown."
+            },
+            {
+              "kind": "speech",
+              "text": "అవగాహన (avagāhana) కల్పించు, to raise awareness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అవగాహన (avagāhana) is borrowed from Sanskrit avagāhana, \"immersion, bathing\" (Monier-Williams); Telugu uses it for being steeped in a subject, understanding."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avagāhana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avagāhana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avagāhana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avagāhana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janaṁlō ārōgyaṁ mīda avagāhana perigindi. — People’s awareness of health has grown.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janaṁlō ārōgyaṁ mīda avagāhana perigindi.* — People’s awareness of health has grown.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for prestige, then the Telugu for credibility, then say avagāhana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for prestige, then the Telugu for credibility, then say *avagāhana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అవగాహన (avagāhana) mean? (\"Awareness; understanding\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

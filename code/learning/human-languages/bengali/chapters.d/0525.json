@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Making Music",
+  "label": "ch:bn-making-music",
+  "canDo": "I can talk about tunes, rhythm, notation and practising singing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C525-shis-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can talk about tunes, rhythm, notation and practising singing.",
+    "assesses": [
+      "BN-LEX-C525-SUR525-03",
+      "BN-LEX-C525-SUR525-04",
+      "BN-LEX-C525-SUR525-05"
+    ]
+  }
+}

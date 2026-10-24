@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:6c3c577d2adf7e47",
+  "lessonIds": [
+    "TE-C317-iloga",
+    "TE-S174-letter-ii",
+    "TE-C317-a-taruvata",
+    "TE-C317-vacci",
+    "TE-C317-ammamma-gramam",
+    "TE-R317-a-story-in-order"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch317.txt",
+  "json": "telugu/narration/ch317.json",
+  "textHash": "fnv1a64:994abbdb2b2307aa",
+  "jsonHash": "fnv1a64:e42f2c990340888e",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C385-latarna",
+  "pathSegment": "HI-PATH-385-BIKHAR385",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-385-BIKHAR385",
+      "order": 2
+    }
+  ]
+}

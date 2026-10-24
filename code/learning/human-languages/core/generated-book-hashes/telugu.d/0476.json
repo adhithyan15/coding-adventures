@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:9c5a200d66d7c011",
+  "lessonIds": [
+    "TE-C476-sitosnasthiti",
+    "TE-C476-usnograta",
+    "TE-C476-tema",
+    "TE-C476-ukkapota",
+    "TE-C476-vedekku"
+  ],
+  "tex": "telugu/book/chapters/ch476-talking-about-the-climate.tex"
+}

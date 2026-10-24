@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:f05fca59ea799c63",
+  "lessonIds": [
+    "BN-C502-kompiutar",
+    "BN-C502-mobail",
+    "BN-C502-selphi",
+    "BN-C502-ghata",
+    "BN-C502-charj-deoya"
+  ],
+  "tex": "bengali/book/chapters/ch502-screens-and-phones.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Nature and the Environment",
+  "label": "ch:bn-nature-and-the-environment",
+  "canDo": "I can talk about nature, pollution and what we must protect.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C434-songrokkhon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can talk about nature, pollution and what we must protect.",
+    "assesses": [
+      "BN-LEX-C434-PROKRITI434-03",
+      "BN-LEX-C434-PROKRITI434-04",
+      "BN-LEX-C434-PROKRITI434-05"
+    ]
+  }
+}

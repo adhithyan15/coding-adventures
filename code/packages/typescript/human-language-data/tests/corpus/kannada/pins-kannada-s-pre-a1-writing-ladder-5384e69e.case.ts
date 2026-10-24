@@ -41,6 +41,11 @@ it("pins Kannada's writing ladder through its first A2 connected composition", (
     ["KA-W77-gotta-controlled-question", "controlled-composition"],
     ["KA-W77-a1-timed-production", "timed-assessment-production"],
     ["KA-W308-a2-connected-composition", "connected-composition"],
+    // `KA-W318-six-lines`, the B1 core's writing task, repeats that last rung:
+    // six connected lines about a trip, with a scene, events in order, a
+    // reason, a feeling and an unreal condition, later in sequence than the A2
+    // message.
+    ["KA-W318-six-lines", "connected-composition"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({

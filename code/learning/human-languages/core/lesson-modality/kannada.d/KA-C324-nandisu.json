@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C324-nandisu",
+    "language": "kannada",
+    "chapter": 324,
+    "sequence": 16280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68678c7be4363f32"
+  },
+  "findings": []
+}

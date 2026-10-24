@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C531-pagade",
+    "language": "kannada",
+    "chapter": 531,
+    "sequence": 27100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91794918f3aec27b"
+  },
+  "findings": []
+}

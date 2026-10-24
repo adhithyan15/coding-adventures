@@ -1,0 +1,11 @@
+{
+  "id": "MR-C347-pathimba-dene",
+  "pathSegment": "MR-PATH-347-VIRODH347",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-347-VIRODH347",
+      "order": 1
+    }
+  ]
+}

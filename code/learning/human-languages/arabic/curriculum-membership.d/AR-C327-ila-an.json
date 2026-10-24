@@ -1,0 +1,11 @@
+{
+  "id": "AR-C327-ila-an",
+  "pathSegment": "AR-PATH-327-LAYLA327",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-327-LAYLA327",
+      "order": 3
+    }
+  ]
+}

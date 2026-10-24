@@ -1,0 +1,11 @@
+{
+  "id": "TA-C332-takku",
+  "pathSegment": "TA-PATH-332-POR332",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-332-POR332",
+      "order": 3
+    }
+  ]
+}

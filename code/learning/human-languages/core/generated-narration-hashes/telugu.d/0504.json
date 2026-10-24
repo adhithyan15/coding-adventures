@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:26f3e33aa73d9b51",
+  "lessonIds": [
+    "TE-C504-aradhincu",
+    "TE-C504-abhimanincu",
+    "TE-C504-abhimani",
+    "TE-C504-meccuko",
+    "TE-C504-prasamsa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch504.txt",
+  "json": "telugu/narration/ch504.json",
+  "textHash": "fnv1a64:701d38453970396e",
+  "jsonHash": "fnv1a64:53d23f892485d98c",
+  "findings": []
+}

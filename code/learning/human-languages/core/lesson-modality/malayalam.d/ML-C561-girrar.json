@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C561-girrar",
+    "language": "malayalam",
+    "chapter": 561,
+    "sequence": 28280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6dba9eeeb3fea60"
+  },
+  "findings": []
+}

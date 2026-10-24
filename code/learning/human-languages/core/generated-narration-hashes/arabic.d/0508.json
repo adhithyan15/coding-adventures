@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:5151c2708ba8467f",
+  "lessonIds": [
+    "AR-C508-tafh-jildi",
+    "AR-C508-hikka",
+    "AR-C508-hakka",
+    "AR-C508-iltihab",
+    "AR-C508-tawarrama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch508.txt",
+  "json": "arabic/narration/ch508.json",
+  "textHash": "fnv1a64:567521132a51d564",
+  "jsonHash": "fnv1a64:c15973a87e55760c",
+  "findings": []
+}

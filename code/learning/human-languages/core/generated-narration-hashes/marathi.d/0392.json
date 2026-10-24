@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:72709f209a6f3404",
+  "lessonIds": [
+    "MR-C392-kalam",
+    "MR-C392-vatap-karne",
+    "MR-C392-davalne",
+    "MR-C392-anusarne",
+    "MR-C392-angikarne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch392.txt",
+  "json": "marathi/narration/ch392.json",
+  "textHash": "fnv1a64:ee34a5190a786347",
+  "jsonHash": "fnv1a64:10a39c6492dbf6c1",
+  "findings": []
+}

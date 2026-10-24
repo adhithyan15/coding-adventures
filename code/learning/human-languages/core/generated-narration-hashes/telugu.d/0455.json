@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:77bf3bea38634aa8",
+  "lessonIds": [
+    "TE-C455-paryatakudu",
+    "TE-C455-paryatana",
+    "TE-C455-gaidu",
+    "TE-C455-pravesam",
+    "TE-C455-viharayatra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch455.txt",
+  "json": "telugu/narration/ch455.json",
+  "textHash": "fnv1a64:45da1517aef8817c",
+  "jsonHash": "fnv1a64:02e230f14d165b43",
+  "findings": []
+}

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- LANG84 phase 4c: regenerated for the corrected `perl5.38.2` pair (now a
+  copy of `perl5.38.0`, so it shares that parser table) and for the bounded
+  `INT` of `perl5.44.0`/`perl5.45.3`. The release probe that checked the
+  250/251-digit boundary now reads each release's bound: 250 for 5.003_97i
+  through 5.004_72, 5.38.0 and 5.38.2; 1018 for 5.44.0 and 5.45.3, which it
+  checks as 1018 accepted and 1019 rejected.
+
 - LANG84 phase 2b: the tests read `releases.csv` by header name through the
   new `inventory_rows` helper. The 18 per-release checks that matched a
   `,partial` row ending now call `assert_partial_row`, which requires

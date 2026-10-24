@@ -1,0 +1,11 @@
+{
+  "id": "MR-C445-komejne",
+  "pathSegment": "MR-PATH-445-ANKUR445",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-445-ANKUR445",
+      "order": 4
+    }
+  ]
+}

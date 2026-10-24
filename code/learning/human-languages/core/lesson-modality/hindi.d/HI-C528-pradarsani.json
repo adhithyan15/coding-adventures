@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C528-pradarsani",
+    "language": "hindi",
+    "chapter": 528,
+    "sequence": 29160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e87d423f6715f115"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Porters and Trolleys",
+  "label": "ch:ka-porters-and-trolleys",
+  "canDo": "I can say a porter, a trolley, to load, hand luggage and to fill up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C436-bhartiyagu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can say a porter, a trolley, to load, hand luggage and to fill up.",
+    "assesses": [
+      "KA-LEX-C436-HAMALI436-03",
+      "KA-LEX-C436-HAMALI436-04",
+      "KA-LEX-C436-HAMALI436-05"
+    ]
+  }
+}

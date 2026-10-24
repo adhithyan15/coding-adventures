@@ -1,0 +1,11 @@
+{
+  "id": "AR-C383-istathmara",
+  "pathSegment": "AR-PATH-383-IQTISAD383",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-383-IQTISAD383",
+      "order": 4
+    }
+  ]
+}

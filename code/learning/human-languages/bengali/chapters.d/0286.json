@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Strange Sights",
+  "label": "ch:bn-strange-sights",
+  "canDo": "I can say what someone saw, showed or watched.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C286-lokkho-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can say what someone saw, showed or watched.",
+    "assesses": [
+      "BN-LEX-C286-DEKHA286-03",
+      "BN-LEX-C286-DEKHA286-04",
+      "BN-LEX-C286-DEKHA286-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C346-tark",
+  "pathSegment": "HI-PATH-346-BAHAS346",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-346-BAHAS346",
+      "order": 1
+    }
+  ]
+}

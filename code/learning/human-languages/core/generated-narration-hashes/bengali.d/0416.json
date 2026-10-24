@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:72b1b35b39450a18",
+  "lessonIds": [
+    "BN-C416-kisti",
+    "BN-C416-dena",
+    "BN-C416-paona",
+    "BN-C416-shodh-kora",
+    "BN-C416-metano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch416.txt",
+  "json": "bengali/narration/ch416.json",
+  "textHash": "fnv1a64:0799bac6ddf6d6a4",
+  "jsonHash": "fnv1a64:3b812396c001d7b9",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:56d3d9cc231483b9",
+  "lessonIds": [
+    "TE-C495-bhayapadu",
+    "TE-C495-bhayapettu",
+    "TE-C495-ulikkipadu",
+    "TE-C495-pidakala",
+    "TE-C495-talladillu"
+  ],
+  "tex": "telugu/book/chapters/ch495-fear-and-fright.tex"
+}

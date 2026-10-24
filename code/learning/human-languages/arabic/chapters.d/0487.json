@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Floods and shelter",
+  "label": "ch:ar-floods-and-shelter",
+  "canDo": "I can say to submerge, to sweep away, to take shelter, to seek refuge and a shelter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-R487-review-final-487",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can say to submerge, to sweep away, to take shelter, to seek refuge and a shelter.",
+    "assesses": [
+      "AR-LEX-C487-MALJA487-03",
+      "AR-LEX-C487-MALJA487-04",
+      "AR-LEX-C487-MALJA487-05"
+    ]
+  }
+}

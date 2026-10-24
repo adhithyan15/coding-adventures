@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:386d9a98de42327c",
+  "lessonIds": [
+    "AR-C333-ghariqa",
+    "AR-C333-bahhar",
+    "AR-C333-ustul",
+    "AR-C333-qursan",
+    "AR-C333-asara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch333.txt",
+  "json": "arabic/narration/ch333.json",
+  "textHash": "fnv1a64:65c7a7be153cf95b",
+  "jsonHash": "fnv1a64:20a94dcdd29cd49e",
+  "findings": []
+}

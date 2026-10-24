@@ -1,0 +1,11 @@
+{
+  "id": "BN-C411-ophis",
+  "pathSegment": "BN-PATH-411-DAKGHOR411",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-411-DAKGHOR411",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:2b4b19e289ff5a68",
+  "lessonIds": [
+    "KA-C380-manavolisu",
+    "KA-C380-prerepisu",
+    "KA-C380-manadattu-madu",
+    "KA-C380-amisa",
+    "KA-C380-akarsisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch380.txt",
+  "json": "kannada/narration/ch380.json",
+  "textHash": "fnv1a64:db3b2fe01fcd48a4",
+  "jsonHash": "fnv1a64:8706c64907b3f640",
+  "findings": []
+}

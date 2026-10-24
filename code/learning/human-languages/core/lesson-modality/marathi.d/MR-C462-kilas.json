@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C462-kilas",
+    "language": "marathi",
+    "chapter": 462,
+    "sequence": 26630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adcd36cf2e924dd6"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-483-TAQAT483",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how strong or out of breath someone is.",
+  "prerequisites": []
+}

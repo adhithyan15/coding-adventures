@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Conditions and Exceptions",
+  "label": "ch:mr-conditions-and-exceptions",
+  "canDo": "I can talk about conditions, exceptions and criteria.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C378-purtata-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can talk about conditions, exceptions and criteria.",
+    "assesses": [
+      "MR-LEX-C378-ATI378-03",
+      "MR-LEX-C378-ATI378-04",
+      "MR-LEX-C378-ATI378-05"
+    ]
+  }
+}

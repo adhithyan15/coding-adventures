@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:41e7d88da41cda74",
+  "lessonIds": [
+    "AR-C469-turba",
+    "AR-C469-samad",
+    "AR-C469-mahsul",
+    "AR-C469-khasib",
+    "AR-C469-iqtalaa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch469.txt",
+  "json": "arabic/narration/ch469.json",
+  "textHash": "fnv1a64:7754773519096907",
+  "jsonHash": "fnv1a64:d6d58862709b60c1",
+  "findings": []
+}

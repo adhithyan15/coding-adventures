@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:cdc4037771047654",
+  "lessonIds": [
+    "ML-C554-sahodari",
+    "ML-C554-matapitakkal",
+    "ML-C554-aliyan",
+    "ML-C554-nattun",
+    "ML-C554-kutumbamgam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch554.txt",
+  "json": "malayalam/narration/ch554.json",
+  "textHash": "fnv1a64:b43fcccefeeb7700",
+  "jsonHash": "fnv1a64:9d2452c2fc481329",
+  "findings": []
+}

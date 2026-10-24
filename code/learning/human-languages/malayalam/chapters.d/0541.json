@@ -1,0 +1,19 @@
+{
+  "chapter": 541,
+  "title": "Getting Worse, Getting Better",
+  "label": "ch:ml-getting-worse-getting-better",
+  "canDo": "I can say to subside, to get worse, to spread by contact, to go without food and to be digested.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C541-dahikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can say to subside, to get worse, to spread by contact, to go without food and to be digested.",
+    "assesses": [
+      "ML-LEX-C541-DAHANAM541-03",
+      "ML-LEX-C541-DAHANAM541-04",
+      "ML-LEX-C541-DAHANAM541-05"
+    ]
+  }
+}

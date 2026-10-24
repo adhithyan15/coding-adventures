@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Citizens and the State",
+  "label": "ch:te-citizens-and-the-state",
+  "canDo": "I can talk about citizens, democracy and the constitution.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C401-rajakiyalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can talk about citizens, democracy and the constitution.",
+    "assesses": [
+      "TE-LEX-C401-PAURUDU401-03",
+      "TE-LEX-C401-PAURUDU401-04",
+      "TE-LEX-C401-PAURUDU401-05"
+    ]
+  }
+}

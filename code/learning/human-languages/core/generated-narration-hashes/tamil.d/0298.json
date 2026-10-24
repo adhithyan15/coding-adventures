@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:30e79a732cf0ab2b",
+  "lessonIds": [
+    "TA-C298-vipattu",
+    "TA-C298-patukayamatai",
+    "TA-C298-urukkulai",
+    "TA-C298-uyirtappu",
+    "TA-C298-mutalutavi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch298.txt",
+  "json": "tamil/narration/ch298.json",
+  "textHash": "fnv1a64:4b39309915ff1a84",
+  "jsonHash": "fnv1a64:95f4b9d59a7a3a6f",
+  "findings": []
+}

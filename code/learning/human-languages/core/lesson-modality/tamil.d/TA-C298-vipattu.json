@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C298-vipattu",
+    "language": "tamil",
+    "chapter": 298,
+    "sequence": 17300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19bd03ab02402686"
+  },
+  "findings": []
+}

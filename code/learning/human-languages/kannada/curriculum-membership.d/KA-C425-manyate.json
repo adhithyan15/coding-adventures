@@ -1,0 +1,11 @@
+{
+  "id": "KA-C425-manyate",
+  "pathSegment": "KA-PATH-425-SVIKARISU425",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-425-SVIKARISU425",
+      "order": 4
+    }
+  ]
+}

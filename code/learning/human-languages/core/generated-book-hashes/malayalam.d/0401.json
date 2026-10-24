@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:d6c4368ab12ef5cc",
+  "lessonIds": [
+    "ML-C401-atima",
+    "ML-C401-viplavam",
+    "ML-C401-adhinivesam",
+    "ML-C401-poratuka",
+    "ML-C401-ceruttunilkkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch401-invasion-and-revolt.tex"
+}

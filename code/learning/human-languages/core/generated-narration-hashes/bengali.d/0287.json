@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:17321bf8d1d473d7",
+  "lessonIds": [
+    "BN-C287-muhurto",
+    "BN-C287-chokite",
+    "BN-C287-akre-dhora",
+    "BN-C287-totkkhonat",
+    "BN-C287-achhre-pora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch287.txt",
+  "json": "bengali/narration/ch287.json",
+  "textHash": "fnv1a64:d1d2e907b8b61cea",
+  "jsonHash": "fnv1a64:c5c01f27568d8d31",
+  "findings": []
+}

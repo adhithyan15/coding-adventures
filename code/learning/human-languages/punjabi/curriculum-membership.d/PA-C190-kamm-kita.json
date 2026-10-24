@@ -1,0 +1,11 @@
+{
+  "id": "PA-C190-kamm-kita",
+  "pathSegment": "PA-PATH-190-A2-KITA-PERFECTIVE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-190-A2-KITA-PERFECTIVE",
+      "order": 3
+    }
+  ]
+}

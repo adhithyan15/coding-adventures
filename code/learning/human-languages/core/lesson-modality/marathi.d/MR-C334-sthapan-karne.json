@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C334-sthapan-karne",
+    "language": "marathi",
+    "chapter": 334,
+    "sequence": 19360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24cf96fa1fd08044"
+  },
+  "findings": []
+}

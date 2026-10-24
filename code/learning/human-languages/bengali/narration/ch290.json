@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 290,
+  "title": "Waves and Wreckage",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1ad7d91eb43e5c13",
+  "lessons": [
+    {
+      "id": "BN-C290-dheu",
+      "sequence": 18710,
+      "title": "ঢেউ (ḍheu) — a wave",
+      "headword": "ঢেউ",
+      "romanization": "ḍheu",
+      "gloss": "a wave",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d13304826d1f27b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a raft, then the Bengali for to be flooded."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঢেউ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঢেউ — ḍheu — \"a wave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বড় একটা ঢেউ এসে নৌকাটা উল্টে দিল। bôṛo ekṭā ḍheu ese noukāṭā ulṭe dilô. A big wave came and overturned the boat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঢেউ (ḍheu) is filed in CDIAL 5580 under a Middle Indo-Aryan ḍhappa-, 'lump', where a Bengali ḍheu, 'a swelling', appears; how it became a wave is not set out there. It opens with ঢ, the breathy ḍh."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍheu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍheu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍheu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍheu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôṛo ekṭā ḍheu ese noukāṭā ulṭe dilô. — A big wave came and overturned the boat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôṛo ekṭā ḍheu ese noukāṭā ulṭe dilô.* — A big wave came and overturned the boat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a raft, then the Bengali for to be flooded, then say ḍheu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a raft, then the Bengali for to be flooded, then say *ḍheu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঢেউ (ḍheu) mean? (\"A wave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C290-tir",
+      "sequence": 18720,
+      "title": "তীর (tīr) — a riverbank; a shore",
+      "headword": "তীর",
+      "romanization": "tīr",
+      "gloss": "a riverbank; a shore",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db188652b421a1a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to be flooded, then the Bengali for a wave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তীর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তীর — tīr — \"a riverbank; a shore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ঢেউ নৌকাটাকে তীরে নিয়ে এল। ḍheu noukāṭāke tīre niye elô. The waves carried the boat to the shore."
+            },
+            {
+              "kind": "speech",
+              "text": "A second তীর (tīr), an arrow, is a different word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তীর (tīr) is Sanskrit tīra, 'a shore, a bank' (Monier-Williams), unchanged. নদীর তীরে, on the riverbank."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍheu noukāṭāke tīre niye elô. — The waves carried the boat to the shore.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍheu noukāṭāke tīre niye elô.* — The waves carried the boat to the shore.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to be flooded, then the Bengali for a wave, then say tīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to be flooded, then the Bengali for a wave, then say *tīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does তীর (tīr) mean? (\"A riverbank; a shore\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C290-bhangon",
+      "sequence": 18730,
+      "title": "ভাঙন (bhāngôn) — the eating away of a riverbank; erosion",
+      "headword": "ভাঙন",
+      "romanization": "bhāngôn",
+      "gloss": "the eating away of a riverbank; erosion",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cefc7e5558be2b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a wave, then the Bengali for a riverbank."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভাঙন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাঙন — bhāngôn — \"the eating away of a riverbank; erosion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নদীর ভাঙনে গ্রামের স্কুলটা নদীতে চলে গেল। nôdīr bhāngône grāmer skulṭā nôdīte chôle gelô. The river ate away its bank and the village school went into the water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাঙন (bhāngôn) is ভাঙা, to break — CDIAL 9353, Sanskrit bhaṅga — with the -ন ending that names the act: the breaking away of a riverbank, a word the river delta needs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāngôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāngôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāngôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāngôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôdīr bhāngône grāmer skulṭā nôdīte chôle gelô. — The river ate away its bank and the village school went into the water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôdīr bhāngône grāmer skulṭā nôdīte chôle gelô.* — The river ate away its bank and the village school went into the water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a wave, then the Bengali for a riverbank, then say bhāngôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a wave, then the Bengali for a riverbank, then say *bhāngôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভাঙন (bhāngôn) mean? (\"The eating away of a riverbank; erosion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C290-grihohin",
+      "sequence": 18740,
+      "title": "গৃহহীন (grihôhīn) — homeless",
+      "headword": "গৃহহীন",
+      "romanization": "grihôhīn",
+      "gloss": "homeless",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f122f7daa98d989",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a riverbank, then the Bengali for erosion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গৃহহীন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গৃহহীন — grihôhīn — \"homeless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বন্যার পরে অনেক পরিবার গৃহহীন হল। bônyār pôre ônek pôribār grihôhīn hôlô. After the flood many families were left homeless."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গৃহহীন (grihôhīn) joins Sanskrit gṛha, 'a house, a home', to hīna, 'left, deprived of' (Monier-Williams): without a house. It is a word of the news more than of talk."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grihôhīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grihôhīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grihôhīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grihôhīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bônyār pôre ônek pôribār grihôhīn hôlô. — After the flood many families were left homeless.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bônyār pôre ônek pôribār grihôhīn hôlô.* — After the flood many families were left homeless.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a riverbank, then the Bengali for erosion, then say grihôhīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a riverbank, then the Bengali for erosion, then say *grihôhīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গৃহহীন (grihôhīn) mean? (\"Homeless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C290-helikoptar",
+      "sequence": 18750,
+      "title": "হেলিকপ্টার (helikôpṭār) — a helicopter",
+      "headword": "হেলিকপ্টার",
+      "romanization": "helikôpṭār",
+      "gloss": "a helicopter",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be7b1358035ae156",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for erosion, then the Bengali for homeless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হেলিকপ্টার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হেলিকপ্টার — helikôpṭār — \"a helicopter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সেনাবাহিনীর হেলিকপ্টার ছাদ থেকে মানুষ তুলল। senābāhinīr helikôpṭār chhād theke mānush tullô. Army helicopters lifted people off the rooftops."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হেলিকপ্টার (helikôpṭār) is English helicopter, built in the nineteenth century from Greek words for 'spiral' and 'wing'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "helikôpṭār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *helikôpṭār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "helikôpṭār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *helikôpṭār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senābāhinīr helikôpṭār chhād theke mānush tullô. — Army helicopters lifted people off the rooftops.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senābāhinīr helikôpṭār chhād theke mānush tullô.* — Army helicopters lifted people off the rooftops.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for erosion, then the Bengali for homeless, then say helikôpṭār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for erosion, then the Bengali for homeless, then say *helikôpṭār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হেলিকপ্টার (helikôpṭār) mean? (\"A helicopter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

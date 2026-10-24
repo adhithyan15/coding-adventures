@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:6afe8d7e63fb61a3",
+  "lessonIds": [
+    "ML-C387-salkkaram",
+    "ML-C387-virunnukaran",
+    "ML-C387-catannu",
+    "ML-C387-aniyuka",
+    "ML-C387-orukkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch387.txt",
+  "json": "malayalam/narration/ch387.json",
+  "textHash": "fnv1a64:bc93e10324e4708e",
+  "jsonHash": "fnv1a64:368455dc4ccea67a",
+  "findings": []
+}

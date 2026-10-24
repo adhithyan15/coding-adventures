@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:2f03b568700baf0f",
+  "lessonIds": [
+    "MR-C384-paristhiti",
+    "MR-C384-sthiti",
+    "MR-C384-avastha",
+    "MR-C384-pec",
+    "MR-C384-kasoti"
+  ],
+  "tex": "marathi/book/chapters/ch384-situations.tex"
+}

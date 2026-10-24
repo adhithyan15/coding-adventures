@@ -1,0 +1,11 @@
+{
+  "id": "MR-C532-phasa",
+  "pathSegment": "MR-PATH-532-BAITHE532",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-532-BAITHE532",
+      "order": 2
+    }
+  ]
+}

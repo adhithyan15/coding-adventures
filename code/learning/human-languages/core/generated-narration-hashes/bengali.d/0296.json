@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:a920f39b843f39f9",
+  "lessonIds": [
+    "BN-C296-songbadpotro",
+    "BN-C296-shironam",
+    "BN-C296-protibedon",
+    "BN-C296-prokash-kora",
+    "BN-C296-sompadok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch296.txt",
+  "json": "bengali/narration/ch296.json",
+  "textHash": "fnv1a64:96a1afe2d3c4e427",
+  "jsonHash": "fnv1a64:1d70e86a22d1cc5a",
+  "findings": []
+}

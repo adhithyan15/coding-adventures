@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Babies and Heirs",
+  "label": "ch:te-babies-and-heirs",
+  "canDo": "I can talk about babies, children, heirs and lullabies.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C531-jolapata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can talk about babies, children, heirs and lullabies.",
+    "assesses": [
+      "TE-LEX-C531-SANTANAM531-03",
+      "TE-LEX-C531-SANTANAM531-04",
+      "TE-LEX-C531-SANTANAM531-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C285-vantu",
+  "pathSegment": "TA-PATH-285-STORY-ORDER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-285-STORY-ORDER",
+      "order": 3
+    }
+  ]
+}

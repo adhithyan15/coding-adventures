@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:31ec83e1a8208892",
+  "lessonIds": [
+    "TA-C406-eriporul",
+    "TA-C406-petrol",
+    "TA-C406-tayar",
+    "TA-C406-tir",
+    "TA-C406-tey"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch406.txt",
+  "json": "tamil/narration/ch406.json",
+  "textHash": "fnv1a64:9cd077cf8d470c42",
+  "jsonHash": "fnv1a64:199a241b8f108ace",
+  "findings": []
+}

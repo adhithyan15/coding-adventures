@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Home Remedies",
+  "label": "ch:ta-home-remedies",
+  "canDo": "I can talk about decoctions, dry ginger, gruel, balms and ointments.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C485-kalimpu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can talk about decoctions, dry ginger, gruel, balms and ointments.",
+    "assesses": [
+      "TA-LEX-C485-MARUNTU485-03",
+      "TA-LEX-C485-MARUNTU485-04",
+      "TA-LEX-C485-MARUNTU485-05"
+    ]
+  }
+}

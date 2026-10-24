@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:280882af083dab13",
+  "lessonIds": [
+    "AR-C337-wasiyya",
+    "AR-C337-mirath",
+    "AR-C337-waritha",
+    "AR-C337-warith",
+    "AR-C337-armala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch337.txt",
+  "json": "arabic/narration/ch337.json",
+  "textHash": "fnv1a64:c419d9dcadfd4c43",
+  "jsonHash": "fnv1a64:5f908caf4df84eee",
+  "findings": []
+}

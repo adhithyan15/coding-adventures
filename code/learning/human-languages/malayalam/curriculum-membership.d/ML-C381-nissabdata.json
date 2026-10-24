@@ -1,0 +1,11 @@
+{
+  "id": "ML-C381-nissabdata",
+  "pathSegment": "ML-PATH-381-IRUTTU381",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-381-IRUTTU381",
+      "order": 2
+    }
+  ]
+}

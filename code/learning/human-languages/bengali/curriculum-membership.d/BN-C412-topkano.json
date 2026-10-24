@@ -1,0 +1,11 @@
+{
+  "id": "BN-C412-topkano",
+  "pathSegment": "BN-PATH-412-PANCHIL412",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-412-PANCHIL412",
+      "order": 4
+    }
+  ]
+}

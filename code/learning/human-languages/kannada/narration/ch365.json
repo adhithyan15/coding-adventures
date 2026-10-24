@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 365,
+  "title": "A Fight Breaks Out",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:780de2c32ec0b290",
+  "lessons": [
+    {
+      "id": "KA-C365-hodedata",
+      "sequence": 18360,
+      "title": "ಹೊಡೆದಾಟ (hoḍedāṭa) — a fistfight; a brawl",
+      "headword": "ಹೊಡೆದಾಟ",
+      "romanization": "hoḍedāṭa",
+      "gloss": "a fistfight; a brawl",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98329582e3f4aed2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a preface, then the Kannada for the gist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೊಡೆದಾಟ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊಡೆದಾಟ — hoḍedāṭa — \"a fistfight; a brawl\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪಂದ್ಯದ ನಂತರ ಎರಡು ಗುಂಪುಗಳ ನಡುವೆ ಹೊಡೆದಾಟ ಆಯಿತು. pandyada nantara eraḍu gumpugaḷa naḍuve hoḍedāṭa āyitu. After the match there was a fight between two groups."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಡೆದು, having hit, and ಆಟ, play: hitting back and forth. The verb is ಹೊಡೆದಾಡು, to come to blows."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊಡೆದಾಟ (hoḍedāṭa) is a native Dravidian compound: ಹೊಡೆದು, \"having struck\", from hoḍe, \"to strike, to beat\" (DEDR 4252), and ಆಟ, \"play\", from āḍu (DEDR 347)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoḍedāṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoḍedāṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoḍedāṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoḍedāṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pandyada nantara eraḍu gumpugaḷa naḍuve hoḍedāṭa āyitu. — After the match there was a fight between two groups.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pandyada nantara eraḍu gumpugaḷa naḍuve hoḍedāṭa āyitu.* — After the match there was a fight between two groups.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a preface, then the Kannada for the gist, then say hoḍedāṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a preface, then the Kannada for the gist, then say *hoḍedāṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೊಡೆದಾಟ (hoḍedāṭa) mean? (\"A fistfight; a brawl\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C365-himse",
+      "sequence": 18370,
+      "title": "ಹಿಂಸೆ (hiṃse) — violence; cruelty",
+      "headword": "ಹಿಂಸೆ",
+      "romanization": "hiṃse",
+      "gloss": "violence; cruelty",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66ddf46c9802fdd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for the gist, then the Kannada for a fistfight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಿಂಸೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಿಂಸೆ — hiṃse — \"violence; cruelty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗಲಭೆಯಲ್ಲಿ ತುಂಬಾ ಹಿಂಸೆ ನಡೆಯಿತು. galabheyalli tumbā hiṃse naḍeyitu. There was a lot of violence in the riot."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಿಂಸೆ (hiṃse) ಕೊಡು is to torment; ಅಹಿಂಸೆ is non-violence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಿಂಸೆ (hiṃse) is borrowed from Sanskrit hiṃsā, \"injury, harm, hurt\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiṃse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiṃse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiṃse, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiṃse*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galabheyalli tumbā hiṃse naḍeyitu. — There was a lot of violence in the riot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galabheyalli tumbā hiṃse naḍeyitu.* — There was a lot of violence in the riot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for the gist, then the Kannada for a fistfight, then say hiṃse again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for the gist, then the Kannada for a fistfight, then say *hiṃse* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಿಂಸೆ (hiṃse) mean? (\"Violence; cruelty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C365-kaidi",
+      "sequence": 18380,
+      "title": "ಕೈದಿ (kaidi) — a prisoner",
+      "headword": "ಕೈದಿ",
+      "romanization": "kaidi",
+      "gloss": "a prisoner",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e60ec2f4d9171ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a fistfight, then the Kannada for violence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೈದಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೈದಿ — kaidi — \"a prisoner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಾತ್ರಿ ಒಬ್ಬ ಕೈದಿ ಸೆರೆಮನೆಯಿಂದ ತಪ್ಪಿಸಿಕೊಂಡನು. rātri obba kaidi seremaneyinda tappisikoṇḍanu. At night a prisoner escaped from the prison."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಕೈದಿಗಳು, kaidigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A prisoner is held in a ಸೆರೆಮನೆ, a prison; ಕೈದಿ (kaidi) ಸಂಖ್ಯೆ is his number."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೈದಿ (kaidi) is a loan from Arabic qaidī, \"a captive, a prisoner\", which came through Persian and Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaidi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaidi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaidi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaidi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātri obba kaidi seremaneyinda tappisikoṇḍanu. — At night a prisoner escaped from the prison.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātri obba kaidi seremaneyinda tappisikoṇḍanu.* — At night a prisoner escaped from the prison.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a fistfight, then the Kannada for violence, then say kaidi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a fistfight, then the Kannada for violence, then say *kaidi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೈದಿ (kaidi) mean? (\"A prisoner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C365-nuku",
+      "sequence": 18390,
+      "title": "ನೂಕು (nūku) — to shove; to push",
+      "headword": "ನೂಕು",
+      "romanization": "nūku",
+      "gloss": "to shove; to push",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1ba1ca22f775c9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for violence, then the Kannada for a prisoner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನೂಕು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೂಕು — nūku — \"to shove; to push\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜನಸಂದಣಿಯಲ್ಲಿ ಯಾರೋ ನನ್ನನ್ನು ನೂಕಿದರು. janasandaṇiyalli yārō nannannu nūkidaru. Someone shoved me in the crowd."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ನೂಕಿದೆ, nūkide."
+            },
+            {
+              "kind": "speech",
+              "text": "Who is pushed takes -ಅನ್ನು. ನೂಕುನುಗ್ಗಲು is a crush of people pushing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೂಕು (nūku) is native Dravidian: DEDR 3722 lists Kannada nūku, \"to shove, to push, to thrust aside\", beside Telugu nūku."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nūku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nūku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nūku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nūku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janasandaṇiyalli yārō nannannu nūkidaru. — Someone shoved me in the crowd.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janasandaṇiyalli yārō nannannu nūkidaru.* — Someone shoved me in the crowd.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for violence, then the Kannada for a prisoner, then say nūku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for violence, then the Kannada for a prisoner, then say *nūku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನೂಕು (nūku) mean? (\"To shove; to push\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C365-gastu",
+      "sequence": 18400,
+      "title": "ಗಸ್ತು (gastu) — a patrol; a beat",
+      "headword": "ಗಸ್ತು",
+      "romanization": "gastu",
+      "gloss": "a patrol; a beat",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81a4370b6992145d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a prisoner, then the Kannada for to shove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗಸ್ತು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಸ್ತು — gastu — \"a patrol; a beat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಾತ್ರಿ ಪೊಲೀಸರು ಬೀದಿಗಳಲ್ಲಿ ಗಸ್ತು ತಿರುಗುತ್ತಾರೆ. rātri polīsaru bīdigaḷalli gastu tiruguttāre. At night the police patrol the streets."
+            },
+            {
+              "kind": "speech",
+              "text": "Police on their round are ಗಸ್ತಿನಲ್ಲಿ, on patrol."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಸ್ತು (gastu) is a loan from Persian gašt, \"a walk, a round, a patrol\", which came through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gastu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gastu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gastu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gastu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātri polīsaru bīdigaḷalli gastu tiruguttāre. — At night the police patrol the streets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātri polīsaru bīdigaḷalli gastu tiruguttāre.* — At night the police patrol the streets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a prisoner, then the Kannada for to shove, then say gastu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a prisoner, then the Kannada for to shove, then say *gastu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗಸ್ತು (gastu) mean? (\"A patrol; a beat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

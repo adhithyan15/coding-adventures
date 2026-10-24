@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C437-ganitam",
+    "language": "malayalam",
+    "chapter": 437,
+    "sequence": 21640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cba7731e1e3b0bdc"
+  },
+  "findings": []
+}

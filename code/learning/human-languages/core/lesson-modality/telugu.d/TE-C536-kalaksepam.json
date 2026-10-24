@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C536-kalaksepam",
+    "language": "telugu",
+    "chapter": 536,
+    "sequence": 27160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:158dfc8cd54b20ca"
+  },
+  "findings": []
+}

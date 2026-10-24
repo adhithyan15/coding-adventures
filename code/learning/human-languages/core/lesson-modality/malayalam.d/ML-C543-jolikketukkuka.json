@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C543-jolikketukkuka",
+    "language": "malayalam",
+    "chapter": 543,
+    "sequence": 27350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a342cd726926ff9"
+  },
+  "findings": []
+}

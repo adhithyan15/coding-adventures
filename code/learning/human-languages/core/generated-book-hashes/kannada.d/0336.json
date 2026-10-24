@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:3a0e056757573ccc",
+  "lessonIds": [
+    "KA-C336-sainya",
+    "KA-C336-senapati",
+    "KA-C336-yodha",
+    "KA-C336-horadu",
+    "KA-C336-himmettu"
+  ],
+  "tex": "kannada/book/chapters/ch336-the-army-marches.tex"
+}

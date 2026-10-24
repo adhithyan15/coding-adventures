@@ -1,0 +1,11 @@
+{
+  "id": "MR-C295-durghatna",
+  "pathSegment": "MR-PATH-295-SANKAT295",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-295-SANKAT295",
+      "order": 1
+    }
+  ]
+}

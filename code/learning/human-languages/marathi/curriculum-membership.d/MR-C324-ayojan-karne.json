@@ -1,0 +1,11 @@
+{
+  "id": "MR-C324-ayojan-karne",
+  "pathSegment": "MR-PATH-324-SHRADDHA324",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-324-SHRADDHA324",
+      "order": 2
+    }
+  ]
+}

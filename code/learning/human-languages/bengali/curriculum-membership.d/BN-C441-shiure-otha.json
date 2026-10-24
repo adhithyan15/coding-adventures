@@ -1,0 +1,11 @@
+{
+  "id": "BN-C441-shiure-otha",
+  "pathSegment": "BN-PATH-441-ATONKO441",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-441-ATONKO441",
+      "order": 2
+    }
+  ]
+}

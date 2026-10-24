@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Advantages and Drawbacks",
+  "label": "ch:ta-advantages-and-drawbacks",
+  "canDo": "I can weigh the good and the bad side of a choice.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C353-palan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can weigh the good and the bad side of a choice.",
+    "assesses": [
+      "TA-LEX-C353-CATAKAM353-03",
+      "TA-LEX-C353-CATAKAM353-04",
+      "TA-LEX-C353-CATAKAM353-05"
+    ]
+  }
+}

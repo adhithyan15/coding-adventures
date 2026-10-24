@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "At the Railway Station",
+  "label": "ch:ka-at-the-railway-station",
+  "canDo": "I can say a passenger, a railway platform, a railway coach, a rail track and to reach.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C433-talupu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can say a passenger, a railway platform, a railway coach, a rail track and to reach.",
+    "assesses": [
+      "KA-LEX-C433-RAIL433-03",
+      "KA-LEX-C433-RAIL433-04",
+      "KA-LEX-C433-RAIL433-05"
+    ]
+  }
+}

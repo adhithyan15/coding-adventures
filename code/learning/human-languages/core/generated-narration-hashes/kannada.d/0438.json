@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:a437ef75c22b0783",
+  "lessonIds": [
+    "KA-C438-tugu",
+    "KA-C438-miti",
+    "KA-C438-miru",
+    "KA-C438-vimanayana",
+    "KA-C438-helikaptar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch438.txt",
+  "json": "kannada/narration/ch438.json",
+  "textHash": "fnv1a64:6316b5dec8382967",
+  "jsonHash": "fnv1a64:aba1a9929ee0f5b5",
+  "findings": []
+}

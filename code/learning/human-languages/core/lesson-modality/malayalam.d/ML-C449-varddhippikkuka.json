@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C449-varddhippikkuka",
+    "language": "malayalam",
+    "chapter": 449,
+    "sequence": 22270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3964e8082c07f86b"
+  },
+  "findings": []
+}

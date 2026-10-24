@@ -1,0 +1,11 @@
+{
+  "id": "AR-C351-zawwara",
+  "pathSegment": "AR-PATH-351-KHIDA351",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-351-KHIDA351",
+      "order": 3
+    }
+  ]
+}

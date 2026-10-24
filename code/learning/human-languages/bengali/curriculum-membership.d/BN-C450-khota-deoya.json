@@ -1,0 +1,11 @@
+{
+  "id": "BN-C450-khota-deoya",
+  "pathSegment": "BN-PATH-450-OPOMAN450",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-450-OPOMAN450",
+      "order": 3
+    }
+  ]
+}

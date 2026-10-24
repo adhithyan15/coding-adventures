@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:08ccfeaed60416b6",
+  "lessonIds": [
+    "ML-C401-atima",
+    "ML-C401-viplavam",
+    "ML-C401-adhinivesam",
+    "ML-C401-poratuka",
+    "ML-C401-ceruttunilkkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch401.txt",
+  "json": "malayalam/narration/ch401.json",
+  "textHash": "fnv1a64:0b57ff8418a5c4cc",
+  "jsonHash": "fnv1a64:44a129e286c0d72d",
+  "findings": []
+}

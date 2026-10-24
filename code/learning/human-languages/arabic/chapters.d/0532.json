@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "A life and its end",
+  "label": "ch:ar-a-life-and-its-end",
+  "canDo": "I can talk about a parent, a stepson and kinship, and say that someone lived a life or died.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C532-mata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about a parent, a stepson and kinship, and say that someone lived a life or died.",
+    "assesses": [
+      "AR-LEX-C532-HAYAT532-03",
+      "AR-LEX-C532-HAYAT532-04",
+      "AR-LEX-C532-HAYAT532-05"
+    ]
+  }
+}

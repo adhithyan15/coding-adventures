@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:c3ca9eb94d701647",
+  "lessonIds": [
+    "TE-C452-revu",
+    "TE-C452-nauka",
+    "TE-C452-navikudu",
+    "TE-C452-langaru",
+    "TE-C452-dipastambham"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch452.txt",
+  "json": "telugu/narration/ch452.json",
+  "textHash": "fnv1a64:e3bb5738d79fb983",
+  "jsonHash": "fnv1a64:14402b495b486d92",
+  "findings": []
+}

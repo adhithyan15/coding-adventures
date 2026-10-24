@@ -1,0 +1,11 @@
+{
+  "id": "TE-S178-sign-visarga",
+  "pathSegment": "TE-PATH-322-FEELINGS-HOPES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-322-FEELINGS-HOPES",
+      "order": 1
+    }
+  ]
+}

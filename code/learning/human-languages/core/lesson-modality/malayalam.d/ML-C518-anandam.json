@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C518-anandam",
+    "language": "malayalam",
+    "chapter": 518,
+    "sequence": 26090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e651ff6bb8e3c09"
+  },
+  "findings": []
+}

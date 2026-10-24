@@ -1,0 +1,11 @@
+{
+  "id": "AR-C384-sinaa",
+  "pathSegment": "AR-PATH-384-TANMIYA384",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-384-TANMIYA384",
+      "order": 2
+    }
+  ]
+}

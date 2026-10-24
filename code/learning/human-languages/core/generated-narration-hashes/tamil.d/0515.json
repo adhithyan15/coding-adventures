@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:a073ef10a00d3667",
+  "lessonIds": [
+    "TA-C515-tolilnutpam",
+    "TA-C515-menporul",
+    "TA-C515-vanporul",
+    "TA-C515-matikkanini",
+    "TA-C515-minnul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch515.txt",
+  "json": "tamil/narration/ch515.json",
+  "textHash": "fnv1a64:2f99af459bb5ed51",
+  "jsonHash": "fnv1a64:93bc3c0dfa0fe1cb",
+  "findings": []
+}

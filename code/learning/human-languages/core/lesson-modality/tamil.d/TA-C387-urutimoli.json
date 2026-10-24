@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C387-urutimoli",
+    "language": "tamil",
+    "chapter": 387,
+    "sequence": 22180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f2f3fe01777ebe1"
+  },
+  "findings": []
+}

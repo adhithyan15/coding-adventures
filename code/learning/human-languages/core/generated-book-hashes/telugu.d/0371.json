@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:732b4b502f87298e",
+  "lessonIds": [
+    "TE-C371-mantrikudu",
+    "TE-C371-maya",
+    "TE-C371-deyyam",
+    "TE-C371-varam",
+    "TE-C371-sapam"
+  ],
+  "tex": "telugu/book/chapters/ch371-magic-and-ghosts.tex"
+}

@@ -151,6 +151,7 @@ function blockKind(block: BlockNode): { readonly kind: DefaultBlockKind | null; 
     case "paragraph": return { kind: "paragraph", label: "Paragraph" };
     case "heading": return { kind: "heading", label: "Heading" };
     case "list": return { kind: "list", label: "List" };
+    case "fenced_block":
     case "code_block": return { kind: "code_block", label: "Code block" };
     case "blockquote": return { kind: "blockquote", label: "Blockquote" };
     case "table": return { kind: "table", label: "Table" };
@@ -257,11 +258,23 @@ function blockForm(
         event.preventDefault();
         const language = formValue(event.currentTarget, "language");
         let value = formValue(event.currentTarget, "code");
-        if (!value.endsWith("\n")) value += "\n";
-        save({ type: "code_block", language: language === "" ? null : language, value }, "Code block saved.");
+        // Textareas normalize CR/CRLF to LF. An unchanged submission retains
+        // the canonical AST string, including a single blank payload line.
+        if (block.type === "fenced_block" && value === block.value.replace(/\r\n?/g, "\n")) value = block.value;
+        if (!value.endsWith("\n") && (value !== "" || block.type !== "fenced_block")) value += "\n";
+        if (block.type === "fenced_block") {
+          // This form edits already-decoded AST metadata, not raw Markdown.
+          const originalInfo = block.info ?? "";
+          const info = language === originalInfo.replace(/\r\n?/g, "\n") ? block.info : language.trim() || null;
+          save({ type: "fenced_block", info, name: info?.split(/\s+/)[0] ?? null, value }, "Code block saved.");
+        } else {
+          save({ type: "code_block", language: language === "" ? null : language, value }, "Code block saved.");
+        }
       }}>
-        <label>Code language<input name="language" defaultValue={block.type === "code_block" ? block.language ?? "" : ""} /></label>
-        <label>Code<textarea name="code" defaultValue={block.type === "code_block" ? block.value.replace(/\n$/, "") : ""} /></label>
+        {block.type === "fenced_block"
+          ? <label>Fence info<textarea name="language" defaultValue={block.info ?? ""} /></label>
+          : <label>Code language<input name="language" defaultValue={block.type === "code_block" ? block.language ?? "" : ""} /></label>}
+        <label>Code<textarea name="code" defaultValue={block.type === "fenced_block" ? block.value : block.type === "code_block" ? block.value.replace(/\n$/, "") : ""} /></label>
         <button disabled={disabled}>Save code block</button>
       </form>;
     case "blockquote":

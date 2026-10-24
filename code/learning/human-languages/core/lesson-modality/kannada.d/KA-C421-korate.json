@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C421-korate",
+    "language": "kannada",
+    "chapter": 421,
+    "sequence": 21330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca27bdebd440ff9a"
+  },
+  "findings": []
+}

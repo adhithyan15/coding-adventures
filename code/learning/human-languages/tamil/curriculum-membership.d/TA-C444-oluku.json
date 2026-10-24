@@ -1,0 +1,11 @@
+{
+  "id": "TA-C444-oluku",
+  "pathSegment": "TA-PATH-444-KARAI444",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-444-KARAI444",
+      "order": 4
+    }
+  ]
+}

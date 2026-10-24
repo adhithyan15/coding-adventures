@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C422-ahata",
+    "language": "hindi",
+    "chapter": 422,
+    "sequence": 23260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa94837930625e5b"
+  },
+  "findings": []
+}

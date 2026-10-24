@@ -1,0 +1,11 @@
+{
+  "id": "MR-C340-tatparya",
+  "pathSegment": "MR-PATH-340-RAHASYA340",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-340-RAHASYA340",
+      "order": 1
+    }
+  ]
+}

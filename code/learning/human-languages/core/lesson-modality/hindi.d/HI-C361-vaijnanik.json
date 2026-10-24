@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C361-vaijnanik",
+    "language": "hindi",
+    "chapter": 361,
+    "sequence": 19940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fae0428fc1b9fbd3"
+  },
+  "findings": []
+}

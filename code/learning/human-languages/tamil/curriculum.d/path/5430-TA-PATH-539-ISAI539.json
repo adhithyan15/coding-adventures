@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-539-ISAI539",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-539-ISAI539"
+  ],
+  "after": []
+}

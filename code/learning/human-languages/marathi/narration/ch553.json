@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 553,
+  "title": "Reaching the Goal",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2e6f882cf090421c",
+  "lessons": [
+    {
+      "id": "MR-C553-sadhya-karne",
+      "sequence": 31510,
+      "title": "साध्य करणे (sādhya karṇe) — to achieve",
+      "headword": "साध्य करणे",
+      "romanization": "sādhya karṇe",
+      "gloss": "to achieve",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee00e703bc189dc7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to break down, then the Marathi for to come loose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: साध्य करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साध्य करणे — sādhya karṇe — \"to achieve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खूप कष्ट करून तिने तिचं ध्येय साध्य केलं. khūp kaṣṭa karūn tine ticaṁ dhyey sādhya kelaṁ. With much hard work she achieved her goal."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने ध्येय साध्य केलं, tyāne dhyey sādhya kelaṁ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साध्य करणे (sādhya karṇe) is the tatsama साध्य, from Sanskrit sādhya, \"to be accomplished\" (Monier-Williams), with करणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhya karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhya karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhya karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhya karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khūp kaṣṭa karūn tine ticaṁ dhyey sādhya kelaṁ. — With much hard work she achieved her goal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khūp kaṣṭa karūn tine ticaṁ dhyey sādhya kelaṁ.* — With much hard work she achieved her goal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to break down, then the Marathi for to come loose, then say sādhya karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to break down, then the Marathi for to come loose, then say *sādhya karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does साध्य करणे (sādhya karṇe) mean? (\"To achieve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C553-hulkavni-dene",
+      "sequence": 31520,
+      "title": "हुलकावणी देणे (hulkāvṇī deṇe) — to elude; to give the slip",
+      "headword": "हुलकावणी देणे",
+      "romanization": "hulkāvṇī deṇe",
+      "gloss": "to elude; to give the slip",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6270826b50ac000d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to come loose, then the Marathi for to achieve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हुलकावणी देणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हुलकावणी देणे — hulkāvṇī deṇe — \"to elude; to give the slip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यशाने त्याला दोनदा हुलकावणी दिली. yaśāne tyālā dondā hulkāvṇī dilī. Success eluded him twice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने हुलकावणी दिली, tyāne hulkāvṇī dilī."
+            },
+            {
+              "kind": "speech",
+              "text": "The one dodged takes -ला: त्याला हुलकावणी दिली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हुलकावणी देणे (hulkāvṇī deṇe) is हुलकावणी, \"a dodge, a feint\", with देणे; the origin of हुलकावणी is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hulkāvṇī deṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hulkāvṇī deṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hulkāvṇī deṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hulkāvṇī deṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaśāne tyālā dondā hulkāvṇī dilī. — Success eluded him twice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaśāne tyālā dondā hulkāvṇī dilī.* — Success eluded him twice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to come loose, then the Marathi for to achieve, then say hulkāvṇī deṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to come loose, then the Marathi for to achieve, then say *hulkāvṇī deṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हुलकावणी देणे (hulkāvṇī deṇe) mean? (\"To elude; to give the slip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C553-acuk",
+      "sequence": 31530,
+      "title": "अचूक (acūk) — accurate; unerring",
+      "headword": "अचूक",
+      "romanization": "acūk",
+      "gloss": "accurate; unerring",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf1ef45872b2e33e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to achieve, then the Marathi for to elude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अचूक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अचूक — acūk — \"accurate; unerring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याचं उत्तर अगदी अचूक होतं. tyācaṁ uttar agdī acūk hotaṁ. His answer was quite accurate."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on चूक, a mistake: without a mistake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अचूक (acūk) is built on चूक, \"a mistake\", with a-, \"without\"; CDIAL lists Marathi cukṇẽ, \"to blunder\", under cukk (CDIAL 4848)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acūk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acūk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acūk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acūk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyācaṁ uttar agdī acūk hotaṁ. — His answer was quite accurate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyācaṁ uttar agdī acūk hotaṁ.* — His answer was quite accurate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to achieve, then the Marathi for to elude, then say acūk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to achieve, then the Marathi for to elude, then say *acūk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अचूक (acūk) mean? (\"Accurate; unerring\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C553-hamkhas",
+      "sequence": 31540,
+      "title": "हमखास (hamkhās) — without fail; surely",
+      "headword": "हमखास",
+      "romanization": "hamkhās",
+      "gloss": "without fail; surely",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa055a5e641aac02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to elude, then the Marathi for accurate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हमखास",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हमखास — hamkhās — \"without fail; surely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तो दर रविवारी हमखास आईला फोन करतो. to dar ravivārī hamkhās āīlā phon karto. He calls his mother every Sunday without fail."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हमखास (hamkhās) is a loan from Persian, built from ham, \"also\", and Arabic khāṣṣ, \"special\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamkhās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamkhās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamkhās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamkhās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dar ravivārī hamkhās āīlā phon karto. — He calls his mother every Sunday without fail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *to dar ravivārī hamkhās āīlā phon karto.* — He calls his mother every Sunday without fail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to elude, then the Marathi for accurate, then say hamkhās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to elude, then the Marathi for accurate, then say *hamkhās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हमखास (hamkhās) mean? (\"Without fail; surely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C553-tatpar",
+      "sequence": 31550,
+      "title": "तत्पर (tatpar) — prompt; ready to act",
+      "headword": "तत्पर",
+      "romanization": "tatpar",
+      "gloss": "prompt; ready to act",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ae7163bb7942ae0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for accurate, then the Marathi for without fail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तत्पर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तत्पर — tatpar — \"prompt; ready to act\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हा दुकानदार ग्राहकांच्या सेवेसाठी नेहमी तत्पर असतो. hā dukāndār grāhkāñcyā sevesāṭhī nehmī tatpar asto. This shopkeeper is always ready to serve his customers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तत्पर (tatpar) is a tatsama, taken from Sanskrit tatpara, \"intent on that\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatpar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatpar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatpar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatpar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā dukāndār grāhkāñcyā sevesāṭhī nehmī tatpar asto. — This shopkeeper is always ready to serve his customers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā dukāndār grāhkāñcyā sevesāṭhī nehmī tatpar asto.* — This shopkeeper is always ready to serve his customers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for accurate, then the Marathi for without fail, then say tatpar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for accurate, then the Marathi for without fail, then say *tatpar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तत्पर (tatpar) mean? (\"Prompt; ready to act\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

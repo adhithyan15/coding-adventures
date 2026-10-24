@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C481-radhadh",
+    "language": "arabic",
+    "chapter": 481,
+    "sequence": 26780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1b411a76569b1e8"
+  },
+  "findings": []
+}

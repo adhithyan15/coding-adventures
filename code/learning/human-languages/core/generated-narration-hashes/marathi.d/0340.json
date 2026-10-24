@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:3d4988f2c4c4ffda",
+  "lessonIds": [
+    "MR-C340-rahasya",
+    "MR-C340-tatparya",
+    "MR-C340-vilaksan",
+    "MR-C340-thararak",
+    "MR-C340-jhagadne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch340.txt",
+  "json": "marathi/narration/ch340.json",
+  "textHash": "fnv1a64:b1b883842e929e4b",
+  "jsonHash": "fnv1a64:696a476125d2c209",
+  "findings": []
+}

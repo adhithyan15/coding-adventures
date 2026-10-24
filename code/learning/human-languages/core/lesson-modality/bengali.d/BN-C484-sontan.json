@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C484-sontan",
+    "language": "bengali",
+    "chapter": 484,
+    "sequence": 29350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5c7d5a99934c988"
+  },
+  "findings": []
+}

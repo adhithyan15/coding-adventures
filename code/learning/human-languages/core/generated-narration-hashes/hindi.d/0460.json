@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:2a1d0d9806596a87",
+  "lessonIds": [
+    "HI-C460-virah",
+    "HI-C460-cimatna",
+    "HI-C460-akulana",
+    "HI-C460-suna",
+    "HI-C460-lalsa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch460.txt",
+  "json": "hindi/narration/ch460.json",
+  "textHash": "fnv1a64:341efad42e10abf6",
+  "jsonHash": "fnv1a64:853f792484a97247",
+  "findings": []
+}

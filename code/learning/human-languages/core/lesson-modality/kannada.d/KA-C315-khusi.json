@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C315-khusi",
+    "language": "kannada",
+    "chapter": 315,
+    "sequence": 15250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:159681eda338197c"
+  },
+  "findings": []
+}

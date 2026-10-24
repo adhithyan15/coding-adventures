@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:db8912b11fedd3af",
+  "lessonIds": [
+    "MR-C361-mahsul",
+    "MR-C361-arthasankalpa",
+    "MR-C361-nidhi",
+    "MR-C361-anudan",
+    "MR-C361-arthik"
+  ],
+  "tex": "marathi/book/chapters/ch361-money-and-the-state.tex"
+}

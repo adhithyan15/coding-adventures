@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C547-neritu",
+    "language": "tamil",
+    "chapter": 547,
+    "sequence": 31210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:057f857aa905feb1"
+  },
+  "findings": []
+}

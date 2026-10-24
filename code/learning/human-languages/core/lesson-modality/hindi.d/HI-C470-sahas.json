@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C470-sahas",
+    "language": "hindi",
+    "chapter": 470,
+    "sequence": 25920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bba07149a051e900"
+  },
+  "findings": []
+}

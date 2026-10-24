@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:c712387e12b34bc8",
+  "lessonIds": [
+    "ML-C373-akramanam",
+    "ML-C373-bhisani",
+    "ML-C373-akramikkuka",
+    "ML-C373-kollayatikkuka",
+    "ML-C373-takarkkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch373.txt",
+  "json": "malayalam/narration/ch373.json",
+  "textHash": "fnv1a64:5fb259c66b3b1d44",
+  "jsonHash": "fnv1a64:a9f883a4fc221342",
+  "findings": []
+}

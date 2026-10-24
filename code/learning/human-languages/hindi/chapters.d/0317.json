@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "The Truth Comes Out",
+  "label": "ch:hi-the-truth-comes-out",
+  "canDo": "I can say what turned out to be true.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C317-hairan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can say what turned out to be true.",
+    "assesses": [
+      "HI-LEX-C317-RAHASYA317-03",
+      "HI-LEX-C317-RAHASYA317-04",
+      "HI-LEX-C317-RAHASYA317-05"
+    ]
+  }
+}

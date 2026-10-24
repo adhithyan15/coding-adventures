@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 471,
+  "title": "At the Garage",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e5f12b95eb14f8b5",
+  "lessons": [
+    {
+      "id": "ML-C471-encin",
+      "sequence": 23510,
+      "title": "എഞ്ചിൻ (eñcin) — an engine",
+      "headword": "എഞ്ചിൻ",
+      "romanization": "eñcin",
+      "gloss": "an engine",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5095ed12040bbd8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a brake, then the Malayalam for to get a puncture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: എഞ്ചിൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എഞ്ചിൻ — eñcin — \"an engine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വണ്ടിയുടെ എഞ്ചിൻ വളരെ പഴയതാണ്. vaṇṭiyuṭe eñcin vaḷare paḻayatāṇŭ. The vehicle's engine is very old."
+            },
+            {
+              "kind": "speech",
+              "text": "A train engine is also an എഞ്ചിൻ (eñcin)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എഞ്ചിൻ (eñcin) was borrowed from English engine, the machine that drives a vehicle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eñcin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eñcin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eñcin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eñcin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṇṭiyuṭe eñcin vaḷare paḻayatāṇŭ. — The vehicle's engine is very old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṇṭiyuṭe eñcin vaḷare paḻayatāṇŭ.* — The vehicle's engine is very old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a brake, then the Malayalam for to get a puncture, then say eñcin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a brake, then the Malayalam for to get a puncture, then say *eñcin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does എഞ്ചിൻ (eñcin) mean? (\"An engine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C471-cakram",
+      "sequence": 23520,
+      "title": "ചക്രം (cakraṁ) — a wheel",
+      "headword": "ചക്രം",
+      "romanization": "cakraṁ",
+      "gloss": "a wheel",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65dddcdf9ef681bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to get a puncture, then the Malayalam for an engine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചക്രം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചക്രം — cakraṁ — \"a wheel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ബസിന്റെ ഒരു ചക്രം ചെളിയിൽ താഴ്ന്നു. basinṟe oru cakraṁ ceḷiyil tāḻnnu. One of the bus's wheels sank into the mud."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ചക്രങ്ങൾ, cakraṅṅaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "A two-wheeler, a scooter or a motorbike, is an ഇരുചക്രവാഹനം, a two-wheeled vehicle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചക്രം (cakraṁ) is borrowed from Sanskrit cakra, \"a wheel; a circle\" (CDIAL 4538)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basinṟe oru cakraṁ ceḷiyil tāḻnnu. — One of the bus's wheels sank into the mud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *basinṟe oru cakraṁ ceḷiyil tāḻnnu.* — One of the bus's wheels sank into the mud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to get a puncture, then the Malayalam for an engine, then say cakraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to get a puncture, then the Malayalam for an engine, then say *cakraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചക്രം (cakraṁ) mean? (\"A wheel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C471-takararu",
+      "sequence": 23530,
+      "title": "തകരാറ് (takarāṟŭ) — a fault; a breakdown",
+      "headword": "തകരാറ്",
+      "romanization": "takarāṟŭ",
+      "gloss": "a fault; a breakdown",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:994c2d2b4504c656",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an engine, then the Malayalam for a wheel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തകരാറ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തകരാറ് — takarāṟŭ — \"a fault; a breakdown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എഞ്ചിന് എന്തോ തകരാറുണ്ട്. eñcinŭ entō takarāṟuṇṭŭ. There is some fault in the engine."
+            },
+            {
+              "kind": "speech",
+              "text": "The thing with the fault takes -ന് / -ക്ക്: വണ്ടിക്ക് തകരാറുണ്ട്, the vehicle has a fault."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തകരാറ് (takarāṟŭ) is usually traced to Arabic takrār, \"repetition, dispute\", which came south through Hindustani; in Malayalam it names a fault in a machine."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takarāṟŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takarāṟŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takarāṟŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takarāṟŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eñcinŭ entō takarāṟuṇṭŭ. — There is some fault in the engine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eñcinŭ entō takarāṟuṇṭŭ.* — There is some fault in the engine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an engine, then the Malayalam for a wheel, then say takarāṟŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an engine, then the Malayalam for a wheel, then say *takarāṟŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തകരാറ് (takarāṟŭ) mean? (\"A fault; a breakdown\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C471-hon",
+      "sequence": 23540,
+      "title": "ഹോൺ (hōṇ) — a horn",
+      "headword": "ഹോൺ",
+      "romanization": "hōṇ",
+      "gloss": "a horn",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efac36a51c6bae1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a wheel, then the Malayalam for a fault."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഹോൺ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹോൺ — hōṇ — \"a horn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പിന്നിലെ കാർ ഉറക്കെ ഹോൺ അടിച്ചു. pinnile kār uṟakke hōṇ aṭiccu. The car behind honked loudly."
+            },
+            {
+              "kind": "speech",
+              "text": "To sound a horn is ഹോൺ (hōṇ) അടിക്കുക, to hit the horn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹോൺ (hōṇ) was borrowed from English horn, the device a vehicle sounds as a warning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pinnile kār uṟakke hōṇ aṭiccu. — The car behind honked loudly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pinnile kār uṟakke hōṇ aṭiccu.* — The car behind honked loudly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a wheel, then the Malayalam for a fault, then say hōṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a wheel, then the Malayalam for a fault, then say *hōṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഹോൺ (hōṇ) mean? (\"A horn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C471-calunnuka",
+      "sequence": 23550,
+      "title": "ചളുങ്ങുക (caḷuṅṅuka) — to get dented",
+      "headword": "ചളുങ്ങുക",
+      "romanization": "caḷuṅṅuka",
+      "gloss": "to get dented",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b56361090dded3df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a fault, then the Malayalam for a horn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചളുങ്ങുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചളുങ്ങുക — caḷuṅṅuka — \"to get dented\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ചെറിയ അപകടത്തിൽ കാറിന്റെ വാതിൽ ചളുങ്ങി. ceṟiya apakaṭattil kāṟinṟe vātil caḷuṅṅi. In the small accident the car's door got dented."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചളുങ്ങി, caḷuṅṅi."
+            },
+            {
+              "kind": "speech",
+              "text": "Metal and tin things get dented: a pot, a car, a bucket."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചളുങ്ങുക (caḷuṅṅuka) is a Malayalam verb whose origin is not settled: DEDR 2407 lists a native caḷuṅṅuka, \"to shake, to be frightened\", but whether the sense of being dented comes from that word is unclear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caḷuṅṅuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caḷuṅṅuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caḷuṅṅuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caḷuṅṅuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceṟiya apakaṭattil kāṟinṟe vātil caḷuṅṅi. — In the small accident the car's door got dented.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceṟiya apakaṭattil kāṟinṟe vātil caḷuṅṅi.* — In the small accident the car's door got dented.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a fault, then the Malayalam for a horn, then say caḷuṅṅuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a fault, then the Malayalam for a horn, then say *caḷuṅṅuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചളുങ്ങുക (caḷuṅṅuka) mean? (\"To get dented\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "A noisy night",
+  "label": "ch:ar-a-noisy-night",
+  "canDo": "I can say noise, to disturb, to wake someone up, to calm down and to complain.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C448-ishtaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can say noise, to disturb, to wake someone up, to calm down and to complain.",
+    "assesses": [
+      "AR-LEX-C448-DAJIJ448-03",
+      "AR-LEX-C448-DAJIJ448-04",
+      "AR-LEX-C448-DAJIJ448-05"
+    ]
+  }
+}

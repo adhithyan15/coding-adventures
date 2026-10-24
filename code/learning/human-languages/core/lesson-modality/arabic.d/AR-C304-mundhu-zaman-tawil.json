@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C304-mundhu-zaman-tawil",
+    "language": "arabic",
+    "chapter": 304,
+    "sequence": 17570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a6a06e5b2a629e0"
+  },
+  "findings": []
+}

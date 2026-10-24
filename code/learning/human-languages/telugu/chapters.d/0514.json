@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Aches",
+  "label": "ch:te-aches",
+  "canDo": "I can say where it hurts and that someone groaned or fainted.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C514-murchapovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can say where it hurts and that someone groaned or fainted.",
+    "assesses": [
+      "TE-LEX-C514-NOPPI514-03",
+      "TE-LEX-C514-NOPPI514-04",
+      "TE-LEX-C514-NOPPI514-05"
+    ]
+  }
+}

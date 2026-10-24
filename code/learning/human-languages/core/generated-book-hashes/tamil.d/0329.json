@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:dc0a7075aef6083a",
+  "lessonIds": [
+    "TA-C329-aracavai",
+    "TA-C329-makutam",
+    "TA-C329-muticuttu",
+    "TA-C329-atci",
+    "TA-C329-tutar"
+  ],
+  "tex": "tamil/book/chapters/ch329-the-royal-court.tex"
+}

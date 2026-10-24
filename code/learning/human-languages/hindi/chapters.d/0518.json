@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Wires and Switches",
+  "label": "ch:hi-wires-and-switches",
+  "canDo": "I can talk about wires, bulbs and switches.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C518-tagna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about wires, bulbs and switches.",
+    "assesses": [
+      "HI-LEX-C518-TAAR518-03",
+      "HI-LEX-C518-TAAR518-04",
+      "HI-LEX-C518-TAAR518-05"
+    ]
+  }
+}

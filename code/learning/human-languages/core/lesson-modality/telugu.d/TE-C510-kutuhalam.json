@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C510-kutuhalam",
+    "language": "telugu",
+    "chapter": 510,
+    "sequence": 25860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db89d082e2daa0c5"
+  },
+  "findings": []
+}

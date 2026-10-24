@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C476-darhi",
+    "language": "hindi",
+    "chapter": 476,
+    "sequence": 26260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:208c4883223129db"
+  },
+  "findings": []
+}

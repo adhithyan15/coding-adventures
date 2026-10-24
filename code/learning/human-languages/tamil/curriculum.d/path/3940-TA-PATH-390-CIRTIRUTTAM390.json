@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-390-CIRTIRUTTAM390",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TA-EXT-390-CIRTIRUTTAM390"
+  ],
+  "after": []
+}

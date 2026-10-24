@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 548,
+  "sourceHash": "fnv1a64:09a1f088c7d9df7e",
+  "lessonIds": [
+    "ML-C548-mekkanikku",
+    "ML-C548-vyapari",
+    "ML-C548-matsyattolilali",
+    "ML-C548-pacakakkaran",
+    "ML-C548-phottographar",
+    "ML-R548-review-541-548"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch548.txt",
+  "json": "malayalam/narration/ch548.json",
+  "textHash": "fnv1a64:2093e569081533e0",
+  "jsonHash": "fnv1a64:fdb4542039e079cc",
+  "findings": []
+}

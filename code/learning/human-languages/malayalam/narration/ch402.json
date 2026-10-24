@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 402,
+  "title": "Myths, Fables and Heroes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:aa6efc37554916c5",
+  "lessons": [
+    {
+      "id": "ML-C402-puranam",
+      "sequence": 19710,
+      "title": "പുരാണം (purāṇaṁ) — a myth; an ancient legend",
+      "headword": "പുരാണം",
+      "romanization": "purāṇaṁ",
+      "gloss": "a myth; an ancient legend",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34bd13ac4403533d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to fight, then the Malayalam for to resist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പുരാണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുരാണം — purāṇaṁ — \"a myth; an ancient legend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മുത്തശ്ശി ഞങ്ങൾക്ക് പുരാണങ്ങളിലെ കഥകൾ പറഞ്ഞുതന്നു. muttaśśi ñaṅṅaḷkkŭ purāṇaṅṅaḷile kathakaḷ paṟaññutannu. Grandmother told us stories from the old legends."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: പുരാണങ്ങൾ, purāṇaṅṅaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the great old books of tales."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുരാണം (purāṇaṁ) is borrowed from Sanskrit purāṇa, \"ancient, belonging to olden times\" (CDIAL 8283): a tale from long ago."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purāṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purāṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purāṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purāṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttaśśi ñaṅṅaḷkkŭ purāṇaṅṅaḷile kathakaḷ paṟaññutannu. — Grandmother told us stories from the old legends.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttaśśi ñaṅṅaḷkkŭ purāṇaṅṅaḷile kathakaḷ paṟaññutannu.* — Grandmother told us stories from the old legends.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to fight, then the Malayalam for to resist, then say purāṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to fight, then the Malayalam for to resist, then say *purāṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പുരാണം (purāṇaṁ) mean? (\"A myth; an ancient legend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C402-kettukatha",
+      "sequence": 19720,
+      "title": "കെട്ടുകഥ (keṭṭukatha) — a fable; a made-up story",
+      "headword": "കെട്ടുകഥ",
+      "romanization": "keṭṭukatha",
+      "gloss": "a fable; a made-up story",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:254ececc80d4ca2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to resist, then the Malayalam for a myth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കെട്ടുകഥ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കെട്ടുകഥ — keṭṭukatha — \"a fable; a made-up story\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അത് സത്യമല്ല, ഒരു കെട്ടുകഥ ആണ്. atŭ satyamalla, oru keṭṭukatha āṇŭ. That is not true, it is a made-up story."
+            },
+            {
+              "kind": "speech",
+              "text": "കെട്ട്, a tying, + കഥ, a story: a story tied together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കെട്ടുകഥ (keṭṭukatha) joins the native കെട്ട്, \"a tying, a bundle\" (DEDR 1147), and കഥ (katha), \"a story\", borrowed from Sanskrit kathā (CDIAL 2704)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keṭṭukatha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keṭṭukatha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keṭṭukatha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keṭṭukatha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atŭ satyamalla, oru keṭṭukatha āṇŭ. — That is not true, it is a made-up story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atŭ satyamalla, oru keṭṭukatha āṇŭ.* — That is not true, it is a made-up story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to resist, then the Malayalam for a myth, then say keṭṭukatha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to resist, then the Malayalam for a myth, then say *keṭṭukatha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കെട്ടുകഥ (keṭṭukatha) mean? (\"A fable; a made-up story\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C402-natotikkatha",
+      "sequence": 19730,
+      "title": "നാടോടിക്കഥ (nāṭōṭikkatha) — a folk tale",
+      "headword": "നാടോടിക്കഥ",
+      "romanization": "nāṭōṭikkatha",
+      "gloss": "a folk tale",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af93527b7b9ffc20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a myth, then the Malayalam for a fable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നാടോടിക്കഥ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നാടോടിക്കഥ — nāṭōṭikkatha — \"a folk tale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഓരോ ഗ്രാമത്തിനും സ്വന്തം നാടോടിക്കഥകൾ ഉണ്ട്. ōrō grāmattinuṁ svantaṁ nāṭōṭikkathakaḷ uṇṭŭ. Every village has its own folk tales."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: നാടോടിക്കഥകൾ, nāṭōṭikkathakaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "നാടോടി, of the folk, roaming the land, + കഥ, a story."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നാടോടിക്കഥ (nāṭōṭikkatha) is built from the native നാട്, \"the country\" (DEDR 3638), ഓടി, \"running\", from ഓടുക (DEDR 1041), and കഥ (katha), \"a story\": a tale that runs through the land."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭōṭikkatha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭōṭikkatha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭōṭikkatha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭōṭikkatha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōrō grāmattinuṁ svantaṁ nāṭōṭikkathakaḷ uṇṭŭ. — Every village has its own folk tales.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōrō grāmattinuṁ svantaṁ nāṭōṭikkathakaḷ uṇṭŭ.* — Every village has its own folk tales.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a myth, then the Malayalam for a fable, then say nāṭōṭikkatha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a myth, then the Malayalam for a fable, then say *nāṭōṭikkatha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നാടോടിക്കഥ (nāṭōṭikkatha) mean? (\"A folk tale\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C402-nayakan",
+      "sequence": 19740,
+      "title": "നായകൻ (nāyakan) — a hero; a leader",
+      "headword": "നായകൻ",
+      "romanization": "nāyakan",
+      "gloss": "a hero; a leader",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:540154259f4966ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a fable, then the Malayalam for a folk tale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നായകൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നായകൻ — nāyakan — \"a hero; a leader\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കഥയിലെ നായകൻ ഒരു പാവം കർഷകൻ ആണ്. kathayile nāyakan oru pāvaṁ karṣakan āṇŭ. The hero of the story is a poor farmer."
+            },
+            {
+              "kind": "speech",
+              "text": "A heroine is നായിക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നായകൻ (nāyakan) is borrowed from Sanskrit nāyaka, \"a guide, a leader, a chief\" (Monier-Williams), with the Malayalam masculine ending -ൻ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāyakan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāyakan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāyakan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāyakan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathayile nāyakan oru pāvaṁ karṣakan āṇŭ. — The hero of the story is a poor farmer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathayile nāyakan oru pāvaṁ karṣakan āṇŭ.* — The hero of the story is a poor farmer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a fable, then the Malayalam for a folk tale, then say nāyakan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a fable, then the Malayalam for a folk tale, then say *nāyakan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നായകൻ (nāyakan) mean? (\"A hero; a leader\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C402-gunapatham",
+      "sequence": 19750,
+      "title": "ഗുണപാഠം (guṇapāṭhaṁ) — a moral",
+      "headword": "ഗുണപാഠം",
+      "romanization": "guṇapāṭhaṁ",
+      "gloss": "a moral",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:528286612b121fef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a folk tale, then the Malayalam for a hero."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഗുണപാഠം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഗുണപാഠം — guṇapāṭhaṁ — \"a moral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ കഥയുടെ ഗുണപാഠം എന്താണ്? ā kathayuṭe guṇapāṭhaṁ entāṇŭ? What is the moral of that story?"
+            },
+            {
+              "kind": "speech",
+              "text": "ഗുണം, a virtue, + പാഠം, a lesson: the good lesson a story teaches."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഗുണപാഠം (guṇapāṭhaṁ) is built from two Sanskrit words, guṇa, \"a quality, a good quality\" (CDIAL 4190), and pāṭha, \"study, a text\" (CDIAL 8035), the source of പാഠം (pāṭhaṁ), \"a lesson\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guṇapāṭhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guṇapāṭhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guṇapāṭhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guṇapāṭhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kathayuṭe guṇapāṭhaṁ entāṇŭ? — What is the moral of that story?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kathayuṭe guṇapāṭhaṁ entāṇŭ?* — What is the moral of that story?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a folk tale, then the Malayalam for a hero, then say guṇapāṭhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a folk tale, then the Malayalam for a hero, then say *guṇapāṭhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഗുണപാഠം (guṇapāṭhaṁ) mean? (\"A moral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

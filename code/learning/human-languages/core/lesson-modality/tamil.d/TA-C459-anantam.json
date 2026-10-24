@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C459-anantam",
+    "language": "tamil",
+    "chapter": 459,
+    "sequence": 26400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c9f35c5306f5204"
+  },
+  "findings": []
+}

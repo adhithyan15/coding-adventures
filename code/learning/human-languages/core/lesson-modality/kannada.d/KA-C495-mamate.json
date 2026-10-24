@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C495-mamate",
+    "language": "kannada",
+    "chapter": 495,
+    "sequence": 25280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1813fbeb9221009f"
+  },
+  "findings": []
+}

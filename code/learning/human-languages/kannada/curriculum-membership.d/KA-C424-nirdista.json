@@ -1,0 +1,11 @@
+{
+  "id": "KA-C424-nirdista",
+  "pathSegment": "KA-PATH-424-AVALOKISU424",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-424-AVALOKISU424",
+      "order": 3
+    }
+  ]
+}

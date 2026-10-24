@@ -1,0 +1,11 @@
+{
+  "id": "HI-C418-nazdik",
+  "pathSegment": "HI-PATH-418-NAZDIK418",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-418-NAZDIK418",
+      "order": 0
+    }
+  ]
+}

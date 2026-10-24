@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C330-jhaki",
+    "language": "hindi",
+    "chapter": 330,
+    "sequence": 18160,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b7691ecb75c7f7a8"
+  },
+  "findings": []
+}

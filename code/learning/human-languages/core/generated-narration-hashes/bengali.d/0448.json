@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:6e62e76d94d6c296",
+  "lessonIds": [
+    "BN-C448-biroho",
+    "BN-C448-akangkha",
+    "BN-C448-udas",
+    "BN-C448-bekul",
+    "BN-C448-hahakar-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch448.txt",
+  "json": "bengali/narration/ch448.json",
+  "textHash": "fnv1a64:2ee3924c705bf559",
+  "jsonHash": "fnv1a64:c7dbd742cef045dd",
+  "findings": []
+}

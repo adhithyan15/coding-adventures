@@ -1,0 +1,11 @@
+{
+  "id": "ML-C400-yoddhavu",
+  "pathSegment": "ML-PATH-400-SATRU400",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-400-SATRU400",
+      "order": 1
+    }
+  ]
+}

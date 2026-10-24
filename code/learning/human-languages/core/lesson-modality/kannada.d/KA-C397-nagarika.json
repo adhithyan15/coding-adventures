@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C397-nagarika",
+    "language": "kannada",
+    "chapter": 397,
+    "sequence": 20070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b016d56dc4d29db"
+  },
+  "findings": []
+}

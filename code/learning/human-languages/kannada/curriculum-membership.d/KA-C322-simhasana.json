@@ -1,0 +1,11 @@
+{
+  "id": "KA-C322-simhasana",
+  "pathSegment": "KA-PATH-322-RAJA322",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-322-RAJA322",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-548-ADTHALA548",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "MR-EXT-548-ADTHALA548"
+  ],
+  "after": []
+}

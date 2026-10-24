@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-417-NOT417",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can take out money, check a balance, send money and give to a collection.",
+  "prerequisites": []
+}

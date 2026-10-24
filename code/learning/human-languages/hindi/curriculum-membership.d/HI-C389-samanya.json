@@ -1,0 +1,11 @@
+{
+  "id": "HI-C389-samanya",
+  "pathSegment": "HI-PATH-389-BEHTAR389",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-389-BEHTAR389",
+      "order": 3
+    }
+  ]
+}

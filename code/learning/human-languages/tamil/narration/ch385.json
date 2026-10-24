@@ -1,0 +1,853 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 385,
+  "title": "Handling a Situation",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:26849752070e2960",
+  "lessons": [
+    {
+      "id": "TA-C385-culnilai",
+      "sequence": 22040,
+      "title": "சூழ்நிலை (cūḻnilai) — circumstances; the setting",
+      "headword": "சூழ்நிலை",
+      "romanization": "cūḻnilai",
+      "gloss": "circumstances; the setting",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a1b8cc09d72aa82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for at least, then the Tamil for to command."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சூழ்நிலை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சூழ்நிலை — cūḻnilai — \"circumstances; the setting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தச் சூழ்நிலையில் நான் என்ன செய்வது? intac cūḻnilaiyil nāṉ eṉṉa ceyvatu? What am I to do in these circumstances?"
+            },
+            {
+              "kind": "speech",
+              "text": "எந்தச் சூழ்நிலையிலும், in any circumstances."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சூழ்நிலை (cūḻnilai) is native: cūḻ, \"to surround, encompass\" (DEDR 2698), and nilai, \"a standing, a state\" (DEDR 3675): the state of what surrounds us."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūḻnilai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūḻnilai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūḻnilai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūḻnilai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intac cūḻnilaiyil nāṉ eṉṉa ceyvatu? — What am I to do in these circumstances?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intac cūḻnilaiyil nāṉ eṉṉa ceyvatu?* — What am I to do in these circumstances?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for at least, then the Tamil for to command, then say cūḻnilai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for at least, then the Tamil for to command, then say *cūḻnilai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சூழ்நிலை (cūḻnilai) mean? (\"Circumstances; the setting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C385-nilaimai",
+      "sequence": 22050,
+      "title": "நிலைமை (nilaimai) — the situation; the state of things",
+      "headword": "நிலைமை",
+      "romanization": "nilaimai",
+      "gloss": "the situation; the state of things",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6739e56f7f8ca9ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to command, then the Tamil for circumstances."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிலைமை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிலைமை — nilaimai — \"the situation; the state of things\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழை நின்றால் நிலைமை சரியாகும். maḻai niṉṟāl nilaimai cariyākum. If the rain stops, the situation will improve."
+            },
+            {
+              "kind": "speech",
+              "text": "நிலைமை (nilaimai) மோசமாக இருக்கிறது, the situation is bad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிலைமை (nilaimai) is native Dravidian: DEDR 3675 lists Tamil nil, \"to stand, stay\", and nilaimai, \"state, condition\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilaimai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilaimai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilaimai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilaimai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻai niṉṟāl nilaimai cariyākum. — If the rain stops, the situation will improve.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻai niṉṟāl nilaimai cariyākum.* — If the rain stops, the situation will improve.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to command, then the Tamil for circumstances, then say nilaimai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to command, then the Tamil for circumstances, then say *nilaimai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிலைமை (nilaimai) mean? (\"The situation; the state of things\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C385-pinnani",
+      "sequence": 22060,
+      "title": "பின்னணி (piṉṉaṇi) — a background",
+      "headword": "பின்னணி",
+      "romanization": "piṉṉaṇi",
+      "gloss": "a background",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a65731aea17dac82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for circumstances, then the Tamil for the situation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பின்னணி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பின்னணி — piṉṉaṇi — \"a background\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தக் கதையின் பின்னணி ஒரு சிறிய கிராமம். intak kataiyiṉ piṉṉaṇi oru ciṟiya kirāmam. The background of this story is a small village."
+            },
+            {
+              "kind": "speech",
+              "text": "Also background music in a film: பின்னணி (piṉṉaṇi) இசை."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பின்னணி (piṉṉaṇi) is native: piṉ, \"behind, after\" (DEDR 4205), and aṇi, \"array, row\" (DEDR 117): the rank at the back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṉṉaṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṉṉaṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṉṉaṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṉṉaṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intak kataiyiṉ piṉṉaṇi oru ciṟiya kirāmam. — The background of this story is a small village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intak kataiyiṉ piṉṉaṇi oru ciṟiya kirāmam.* — The background of this story is a small village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for circumstances, then the Tamil for the situation, then say piṉṉaṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for circumstances, then the Tamil for the situation, then say *piṉṉaṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பின்னணி (piṉṉaṇi) mean? (\"A background\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C385-cikkal",
+      "sequence": 22070,
+      "title": "சிக்கல் (cikkal) — a complication; a snag",
+      "headword": "சிக்கல்",
+      "romanization": "cikkal",
+      "gloss": "a complication; a snag",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06ae82e0228b1f14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the situation, then the Tamil for a background."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிக்கல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிக்கல் — cikkal — \"a complication; a snag\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆவணங்கள் இல்லாவிட்டால் சிக்கல் வரும். āvaṇaṅkaḷ illāviṭṭāl cikkal varum. If the documents are missing, there will be complications."
+            },
+            {
+              "kind": "speech",
+              "text": "சிக்கலான, complicated: சிக்கலான கேள்வி, a tricky question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிக்கல் (cikkal) is native Dravidian: DEDR 2498 lists Tamil cikku, \"to become entangled, complicated, be caught; a tangle\"; cikkal is its noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikkal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikkal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikkal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikkal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvaṇaṅkaḷ illāviṭṭāl cikkal varum. — If the documents are missing, there will be complications.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvaṇaṅkaḷ illāviṭṭāl cikkal varum.* — If the documents are missing, there will be complications.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the situation, then the Tamil for a background, then say cikkal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the situation, then the Tamil for a background, then say *cikkal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிக்கல் (cikkal) mean? (\"A complication; a snag\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C385-kaiyal",
+      "sequence": 22080,
+      "title": "கையாள் (kaiyāḷ) — to handle; to deal with",
+      "headword": "கையாள்",
+      "romanization": "kaiyāḷ",
+      "gloss": "to handle; to deal with",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f17ab5cb9137761",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a background, then the Tamil for a complication."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கையாள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கையாள் — kaiyāḷ — \"to handle; to deal with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் இந்தச் சிக்கலை அமைதியாகக் கையாண்டார். avar intac cikkalai amaitiyākak kaiyāṇṭār. He handled this complication calmly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கையாண்டேன், kaiyāṇṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is handled takes -ஐ. The past கையாண்டேன் is like ஆண்டேன் from ஆள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கையாள் (kaiyāḷ) is native: kai, \"hand\" (DEDR 2023), and āḷ, \"to rule, manage, use\" (DEDR 5157): to manage with the hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaiyāḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaiyāḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaiyāḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaiyāḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar intac cikkalai amaitiyākak kaiyāṇṭār. — He handled this complication calmly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar intac cikkalai amaitiyākak kaiyāṇṭār.* — He handled this complication calmly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a background, then the Tamil for a complication, then say kaiyāḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a background, then the Tamil for a complication, then say *kaiyāḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கையாள் (kaiyāḷ) mean? (\"To handle; to deal with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R385-review-379-385",
+      "sequence": 22090,
+      "title": "Looking back: from Helping Others to Handling a Situation",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Helping Others to Handling a Situation",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48bbabfac0d2ab73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for a volunteer and a beneficiary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a volunteer, a beneficiary, funds, to muster, welfare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a volunteer, a beneficiary, funds, to muster, welfare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "responsibility, an obligation, to dedicate, to contribute, to cooperate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: responsibility, an obligation, to dedicate, to contribute, to cooperate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nation, a refugee, a symbol, to unite, a representative",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a nation, a refugee, a symbol, to unite, a representative]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a condition, to be subject to, eligibility, an exception, if need be",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a condition, to be subject to, eligibility, an exception, if need be]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a possibility, probability, probably, an occasion, or else",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a possibility, probability, probably, an occasion, or else]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "necessity, compulsion, a limit, at least, to command",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: necessity, compulsion, a limit, at least, to command]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "circumstances, the situation, a background, a complication, to handle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: circumstances, the situation, a background, a complication, to handle]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A volunteer? (தன்னார்வலர், taṉṉārvalar.) A beneficiary? (பயனாளி, payaṉāḷi.) Funds? (நிதி, niti.) To muster? (திரட்டு, tiraṭṭu.) Welfare? (நலன், nalaṉ.) Responsibility? (பொறுப்பு, poṟuppu.) An obligation? (கடப்பாடு, kaṭappāṭu.) To dedicate? (அர்ப்பணி, arppaṇi.) To contribute? (பங்களி, paṅkaḷi.) To cooperate? (ஒத்துழை, ottuḻai.) A nation? (தேசம், tēcam.) A refugee? (அகதி, akati.) A symbol? (சின்னம், ciṉṉam.) To unite? (ஒன்றிணை, oṉṟiṇai.) A representative? (பிரதிநிதி, piratiniti.) A condition? (நிபந்தனை, nipantaṉai.) To be subject to? (உட்படு, uṭpaṭu.) Eligibility? (தகுதி, takuti.) An exception? (விதிவிலக்கு, vitivilakku.) If need be? (வேண்டுமானால், vēṇṭumāṉāl.) A possibility? (சாத்தியம், cāttiyam.) Probability? (நிகழ்தகவு, nikaḻtakavu.) Probably? (அநேகமாக, anēkamāka.) An occasion? (சந்தர்ப்பம், cantarppam.) Or else? (இல்லையேல், illaiyēl.) Necessity? (அவசியம், avaciyam.) Compulsion? (கட்டாயம், kaṭṭāyam.) A limit? (வரம்பு, varampu.) At least? (குறைந்தபட்சம், kuṟaintapaṭcam.) To command? (ஆணையிடு, āṇaiyiṭu.) Circumstances? (சூழ்நிலை, cūḻnilai.) The situation? (நிலைமை, nilaimai.) A background? (பின்னணி, piṉṉaṇi.) A complication? (சிக்கல், cikkal.) To handle? (கையாள், kaiyāḷ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

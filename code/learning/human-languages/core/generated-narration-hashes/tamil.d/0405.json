@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:4d5496dabfaa6d25",
+  "lessonIds": [
+    "TA-C405-taksi",
+    "TA-C405-metro",
+    "TA-C405-inai",
+    "TA-C405-oyvarai",
+    "TA-C405-itaivelai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch405.txt",
+  "json": "tamil/narration/ch405.json",
+  "textHash": "fnv1a64:38e98978a86b1642",
+  "jsonHash": "fnv1a64:fb172279614eb764",
+  "findings": []
+}

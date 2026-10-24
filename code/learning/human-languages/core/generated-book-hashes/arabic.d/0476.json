@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:16d3ada72a044006",
+  "lessonIds": [
+    "AR-C476-aqrab",
+    "AR-C476-jarada",
+    "AR-C476-tuhlub",
+    "AR-C476-mikhlab",
+    "AR-C476-iftarasa"
+  ],
+  "tex": "arabic/book/chapters/ch476-small-creatures.tex"
+}

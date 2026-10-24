@@ -1,0 +1,11 @@
+{
+  "id": "TA-C552-cilintar",
+  "pathSegment": "TA-PATH-552-PATHUKAPPU552",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-552-PATHUKAPPU552",
+      "order": 1
+    }
+  ]
+}

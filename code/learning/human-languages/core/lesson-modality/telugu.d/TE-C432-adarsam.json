@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C432-adarsam",
+    "language": "telugu",
+    "chapter": 432,
+    "sequence": 21570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd740d6a2c24f73f"
+  },
+  "findings": []
+}

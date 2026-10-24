@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-360-BOKTRITA360",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-360-BOKTRITA360"
+  ],
+  "after": []
+}

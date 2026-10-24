@@ -1,0 +1,11 @@
+{
+  "id": "KA-C343-sannivesa",
+  "pathSegment": "KA-PATH-343-NIRUPANE343",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-343-NIRUPANE343",
+      "order": 2
+    }
+  ]
+}

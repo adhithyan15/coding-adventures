@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:f0bd4a58e0bcf563",
+  "lessonIds": [
+    "HI-C299-angara",
+    "HI-C299-sulagna",
+    "HI-C299-sola",
+    "HI-C299-bharakna",
+    "HI-C299-phus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch299.txt",
+  "json": "hindi/narration/ch299.json",
+  "textHash": "fnv1a64:6572aaea08748edc",
+  "jsonHash": "fnv1a64:87e60053964d1e35",
+  "findings": []
+}

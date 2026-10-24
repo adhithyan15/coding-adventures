@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "Uncles and Aunts",
+  "label": "ch:te-uncles-and-aunts",
+  "canDo": "I can name my uncles, aunts and nieces.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C529-menakodalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can name my uncles, aunts and nieces.",
+    "assesses": [
+      "TE-LEX-C529-MENAMAMA529-03",
+      "TE-LEX-C529-MENAMAMA529-04",
+      "TE-LEX-C529-MENAMAMA529-05"
+    ]
+  }
+}

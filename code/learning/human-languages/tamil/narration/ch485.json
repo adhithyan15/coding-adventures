@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 485,
+  "title": "Home Remedies",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:41c125c4c172f091",
+  "lessons": [
+    {
+      "id": "TA-C485-kasayam",
+      "sequence": 27740,
+      "title": "கஷாயம் (kaṣāyam) — a herbal decoction",
+      "headword": "கஷாயம்",
+      "romanization": "kaṣāyam",
+      "gloss": "a herbal decoction",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:954682055736f8ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to fall out, then the Tamil for to turn grey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கஷாயம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கஷாயம் — kaṣāyam — \"a herbal decoction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சளிக்குப் பாட்டி கஷாயம் செய்து கொடுத்தாள். caḷikkup pāṭṭi kaṣāyam ceytu koṭuttāḷ. Grandmother made a decoction for the cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Written with the grantha ஷ, as Tamil writes it today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கஷாயம் (kaṣāyam) is borrowed from Sanskrit kaṣāya, \"astringent; an astringent juice\" (CDIAL 2974)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṣāyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṣāyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṣāyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṣāyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caḷikkup pāṭṭi kaṣāyam ceytu koṭuttāḷ. — Grandmother made a decoction for the cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caḷikkup pāṭṭi kaṣāyam ceytu koṭuttāḷ.* — Grandmother made a decoction for the cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to fall out, then the Tamil for to turn grey, then say kaṣāyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to fall out, then the Tamil for to turn grey, then say *kaṣāyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கஷாயம் (kaṣāyam) mean? (\"A herbal decoction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C485-cukku",
+      "sequence": 27750,
+      "title": "சுக்கு (cukku) — dry ginger",
+      "headword": "சுக்கு",
+      "romanization": "cukku",
+      "gloss": "dry ginger",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:020fa4736321ea87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to turn grey, then the Tamil for a herbal decoction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சுக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுக்கு — cukku — \"dry ginger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சுக்கு போட்ட காபி தொண்டைக்கு நல்லது. cukku pōṭṭa kāpi toṇṭaikku nallatu. Coffee with dry ginger is good for the throat."
+            },
+            {
+              "kind": "speech",
+              "text": "Fresh ginger is இஞ்சி; dried, it is சுக்கு (cukku)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of சுக்கு (cukku) is not settled; it is sometimes compared with Sanskrit śuṇṭhī, \"dry ginger\" (CDIAL 12515), but the link is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cukku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cukku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cukku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cukku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cukku pōṭṭa kāpi toṇṭaikku nallatu. — Coffee with dry ginger is good for the throat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cukku pōṭṭa kāpi toṇṭaikku nallatu.* — Coffee with dry ginger is good for the throat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to turn grey, then the Tamil for a herbal decoction, then say cukku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to turn grey, then the Tamil for a herbal decoction, then say *cukku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சுக்கு (cukku) mean? (\"Dry ginger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C485-kanci",
+      "sequence": 27760,
+      "title": "கஞ்சி (kañci) — rice gruel; starch",
+      "headword": "கஞ்சி",
+      "romanization": "kañci",
+      "gloss": "rice gruel; starch",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55e4a4d3adc1b744",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a herbal decoction, then the Tamil for dry ginger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கஞ்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கஞ்சி — kañci — \"rice gruel; starch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "காய்ச்சலின்போது அம்மா எனக்குக் கஞ்சி கொடுத்தாள். kāyccaliṉpōtu ammā eṉakkuk kañci koṭuttāḷ. When I had a fever, mother gave me rice gruel."
+            },
+            {
+              "kind": "speech",
+              "text": "Also starch for clothes: கஞ்சி (kañci) போட்ட சட்டை, a starched shirt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கஞ்சி (kañci) is native Dravidian (DEDR 1107), the water poured off rice and the gruel made from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kañci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kañci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kañci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kañci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāyccaliṉpōtu ammā eṉakkuk kañci koṭuttāḷ. — When I had a fever, mother gave me rice gruel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāyccaliṉpōtu ammā eṉakkuk kañci koṭuttāḷ.* — When I had a fever, mother gave me rice gruel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a herbal decoction, then the Tamil for dry ginger, then say kañci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a herbal decoction, then the Tamil for dry ginger, then say *kañci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கஞ்சி (kañci) mean? (\"Rice gruel; starch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C485-tailam",
+      "sequence": 27770,
+      "title": "தைலம் (tailam) — a medicated oil; a balm",
+      "headword": "தைலம்",
+      "romanization": "tailam",
+      "gloss": "a medicated oil; a balm",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1c0686b2e70b3aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for dry ginger, then the Tamil for rice gruel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தைலம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தைலம் — tailam — \"a medicated oil; a balm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தலைவலிக்கு அவள் நெற்றியில் தைலம் பூசினாள். talaivalikku avaḷ neṟṟiyil tailam pūciṉāḷ. For her headache she rubbed balm on her forehead."
+            },
+            {
+              "kind": "speech",
+              "text": "தைலம் (tailam) பூசு, to rub on balm."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தைலம் (tailam) is borrowed from Sanskrit taila, \"sesame oil, oil\" (CDIAL 5958)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tailam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tailam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tailam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tailam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talaivalikku avaḷ neṟṟiyil tailam pūciṉāḷ. — For her headache she rubbed balm on her forehead.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talaivalikku avaḷ neṟṟiyil tailam pūciṉāḷ.* — For her headache she rubbed balm on her forehead.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for dry ginger, then the Tamil for rice gruel, then say tailam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for dry ginger, then the Tamil for rice gruel, then say *tailam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தைலம் (tailam) mean? (\"A medicated oil; a balm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C485-kalimpu",
+      "sequence": 27780,
+      "title": "களிம்பு (kaḷimpu) — an ointment",
+      "headword": "களிம்பு",
+      "romanization": "kaḷimpu",
+      "gloss": "an ointment",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53ba476b24401123",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for rice gruel, then the Tamil for a medicated oil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: களிம்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "களிம்பு — kaḷimpu — \"an ointment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மருத்துவர் புண்ணுக்கு ஒரு களிம்பு கொடுத்தார். maruttuvar puṇṇukku oru kaḷimpu koṭuttār. The doctor gave an ointment for the sore."
+            },
+            {
+              "kind": "speech",
+              "text": "Its older sense is verdigris, the green rust on copper."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "களிம்பு (kaḷimpu) is native Dravidian (DEDR 1586), where it means verdigris and rust; the sense of ointment is the modern one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷimpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷimpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷimpu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷimpu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maruttuvar puṇṇukku oru kaḷimpu koṭuttār. — The doctor gave an ointment for the sore.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maruttuvar puṇṇukku oru kaḷimpu koṭuttār.* — The doctor gave an ointment for the sore.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for rice gruel, then the Tamil for a medicated oil, then say kaḷimpu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for rice gruel, then the Tamil for a medicated oil, then say *kaḷimpu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does களிம்பு (kaḷimpu) mean? (\"An ointment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

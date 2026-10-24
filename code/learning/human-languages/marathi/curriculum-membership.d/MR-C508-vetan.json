@@ -1,0 +1,11 @@
+{
+  "id": "MR-C508-vetan",
+  "pathSegment": "MR-PATH-508-PAGAR508",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-508-PAGAR508",
+      "order": 0
+    }
+  ]
+}

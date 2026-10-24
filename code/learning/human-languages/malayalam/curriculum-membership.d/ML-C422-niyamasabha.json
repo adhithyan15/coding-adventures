@@ -1,0 +1,11 @@
+{
+  "id": "ML-C422-niyamasabha",
+  "pathSegment": "ML-PATH-422-SABHA422",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-422-SABHA422",
+      "order": 0
+    }
+  ]
+}

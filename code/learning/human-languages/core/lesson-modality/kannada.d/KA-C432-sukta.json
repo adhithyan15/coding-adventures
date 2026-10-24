@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C432-sukta",
+    "language": "kannada",
+    "chapter": 432,
+    "sequence": 21910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:022463579ab9f75b"
+  },
+  "findings": []
+}

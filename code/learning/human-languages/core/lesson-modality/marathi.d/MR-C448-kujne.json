@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C448-kujne",
+    "language": "marathi",
+    "chapter": 448,
+    "sequence": 25690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a07247bea4e4b9d1"
+  },
+  "findings": []
+}

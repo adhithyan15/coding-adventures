@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:50cb96d169be1b48",
+  "lessonIds": [
+    "AR-C321-sariq",
+    "AR-C321-nashshal",
+    "AR-C321-isaba",
+    "AR-C321-salaba",
+    "AR-C321-nahaba"
+  ],
+  "tex": "arabic/book/chapters/ch321-robbers-and-gangs.tex"
+}

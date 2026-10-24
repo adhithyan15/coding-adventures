@@ -11,7 +11,7 @@ romanization: "talai kai"
 concept_tag: TA-BODY-BASIC
 prerequisites: [TA-C12-kudumbam]
 sounds: [tamil-vowel-sign-ai]
-roots: [dravidian-talai-kai]
+roots: [dravidian-talai-head, dravidian-kai-hand]
 etymology_hook: "தலை talai (head) and கை kai (hand) are Tamil's OWN native words — unlike Hindi's sir/hāth, which both descend from Sanskrit"
 duration:
   max_seconds: 240

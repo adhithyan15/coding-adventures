@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C288-cori",
+    "language": "marathi",
+    "chapter": 288,
+    "sequence": 17020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:792f807b2a74322e"
+  },
+  "findings": []
+}

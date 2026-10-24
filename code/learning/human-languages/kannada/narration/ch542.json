@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 542,
+  "title": "Rooms of a House",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1b7d71fe2ff70d5e",
+  "lessons": [
+    {
+      "id": "KA-C542-malige",
+      "sequence": 27670,
+      "title": "ಮಾಳಿಗೆ (māḷige) — an upper storey; a flat roof",
+      "headword": "ಮಾಳಿಗೆ",
+      "romanization": "māḷige",
+      "gloss": "an upper storey; a flat roof",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fe9cc8fa9ff6133",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for archery, then the Kannada for to cheer on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಾಳಿಗೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾಳಿಗೆ — māḷige — \"an upper storey; a flat roof\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಕ್ಕಳು ಮಾಳಿಗೆಯ ಮೇಲೆ ಗಾಳಿಪಟ ಹಾರಿಸಿದರು. makkaḷu māḷigeya mēle gāḷipaṭa hārisidaru. The children flew kites on the roof."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಾಳಿಗೆ (māḷige) ಮನೆ, a house with an upper floor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾಳಿಗೆ (māḷige) is native Dravidian: DEDR 4796 lists Kannada māḍa, māḷa and māḷige, \"a large building, an upstair house\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māḷige",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māḷige*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māḷige, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māḷige*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkaḷu māḷigeya mēle gāḷipaṭa hārisidaru. — The children flew kites on the roof.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkaḷu māḷigeya mēle gāḷipaṭa hārisidaru.* — The children flew kites on the roof.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for archery, then the Kannada for to cheer on, then say māḷige again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for archery, then the Kannada for to cheer on, then say *māḷige* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಾಳಿಗೆ (māḷige) mean? (\"An upper storey; a flat roof\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C542-hostilu",
+      "sequence": 27680,
+      "title": "ಹೊಸ್ತಿಲು (hostilu) — a threshold; a doorstep",
+      "headword": "ಹೊಸ್ತಿಲು",
+      "romanization": "hostilu",
+      "gloss": "a threshold; a doorstep",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6739b792b9bfac87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to cheer on, then the Kannada for an upper storey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೊಸ್ತಿಲು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊಸ್ತಿಲು — hostilu — \"a threshold; a doorstep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅತಿಥಿ ಹೊಸ್ತಿಲು ದಾಟಿ ಒಳಗೆ ಬಂದರು. atithi hostilu dāṭi oḷage bandaru. The guest stepped over the threshold and came in."
+            },
+            {
+              "kind": "speech",
+              "text": "In many homes a rangoli is drawn before it each morning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊಸ್ತಿಲು (hostilu) is a native Kannada word for the threshold of a door; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hostilu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hostilu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hostilu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hostilu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atithi hostilu dāṭi oḷage bandaru. — The guest stepped over the threshold and came in.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atithi hostilu dāṭi oḷage bandaru.* — The guest stepped over the threshold and came in.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to cheer on, then the Kannada for an upper storey, then say hostilu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to cheer on, then the Kannada for an upper storey, then say *hostilu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೊಸ್ತಿಲು (hostilu) mean? (\"A threshold; a doorstep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C542-hajara",
+      "sequence": 27690,
+      "title": "ಹಜಾರ (hajāra) — a hall; a central room",
+      "headword": "ಹಜಾರ",
+      "romanization": "hajāra",
+      "gloss": "a hall; a central room",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58a2f50b1e87fdb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an upper storey, then the Kannada for a threshold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಜಾರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಜಾರ — hajāra — \"a hall; a central room\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮನೆಯ ಹಜಾರದಲ್ಲಿ ಎಲ್ಲರೂ ಕುಳಿತು ಮಾತಾಡಿದರು. maneya hajāradalli ellarū kuḷitu mātāḍidaru. Everyone sat and talked in the hall of the house."
+            },
+            {
+              "kind": "speech",
+              "text": "The open room inside the front door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಜಾರ (hajāra) is a Kannada word for the hall of a house; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hajāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hajāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hajāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hajāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maneya hajāradalli ellarū kuḷitu mātāḍidaru. — Everyone sat and talked in the hall of the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maneya hajāradalli ellarū kuḷitu mātāḍidaru.* — Everyone sat and talked in the hall of the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an upper storey, then the Kannada for a threshold, then say hajāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an upper storey, then the Kannada for a threshold, then say *hajāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಜಾರ (hajāra) mean? (\"A hall; a central room\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C542-nelamalige",
+      "sequence": 27700,
+      "title": "ನೆಲಮಾಳಿಗೆ (nelamāḷige) — a basement; a cellar",
+      "headword": "ನೆಲಮಾಳಿಗೆ",
+      "romanization": "nelamāḷige",
+      "gloss": "a basement; a cellar",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:302e2c8eceafc7e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a threshold, then the Kannada for a hall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನೆಲಮಾಳಿಗೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೆಲಮಾಳಿಗೆ — nelamāḷige — \"a basement; a cellar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಳೆಯ ಸಾಮಾನುಗಳು ನೆಲಮಾಳಿಗೆಯಲ್ಲಿ ಇವೆ. haḷeya sāmānugaḷu nelamāḷigeyalli ive. The old things are in the basement."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೆಲ, the ground + ಮಾಳಿಗೆ (māḷige), a storey: the storey under the ground."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೆಲಮಾಳಿಗೆ (nelamāḷige) is a native Kannada compound: nela, \"the ground\", and māḷige, \"a storey\" (DEDR 4796)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nelamāḷige",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nelamāḷige*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nelamāḷige, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nelamāḷige*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḷeya sāmānugaḷu nelamāḷigeyalli ive. — The old things are in the basement.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḷeya sāmānugaḷu nelamāḷigeyalli ive.* — The old things are in the basement.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a threshold, then the Kannada for a hall, then say nelamāḷige again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a threshold, then the Kannada for a hall, then say *nelamāḷige* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನೆಲಮಾಳಿಗೆ (nelamāḷige) mean? (\"A basement; a cellar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C542-kapatu",
+      "sequence": 27710,
+      "title": "ಕಪಾಟು (kapāṭu) — a cabinet; a shelved cupboard",
+      "headword": "ಕಪಾಟು",
+      "romanization": "kapāṭu",
+      "gloss": "a cabinet; a shelved cupboard",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67298c366625af52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a hall, then the Kannada for a basement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಪಾಟು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಪಾಟು — kapāṭu — \"a cabinet; a shelved cupboard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪುಸ್ತಕಗಳು ಗಾಜಿನ ಕಪಾಟಿನಲ್ಲಿ ಇವೆ. pustakagaḷu gājina kapāṭinalli ive. The books are in the glass cabinet."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೀರು is a big wardrobe; a ಕಪಾಟು (kapāṭu) is often set into the wall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಪಾಟು (kapāṭu) is usually traced to Sanskrit kapāṭa, \"a door, the panel of a door\" (Monier-Williams): a cupboard is what has the doors. The path is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapāṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapāṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapāṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapāṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustakagaḷu gājina kapāṭinalli ive. — The books are in the glass cabinet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustakagaḷu gājina kapāṭinalli ive.* — The books are in the glass cabinet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a hall, then the Kannada for a basement, then say kapāṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a hall, then the Kannada for a basement, then say *kapāṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಪಾಟು (kapāṭu) mean? (\"A cabinet; a shelved cupboard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:0444710926bc3f1c",
+  "lessonIds": [
+    "PA-C196-work-command-return",
+    "PA-C196-shuru",
+    "PA-C196-shuru-review",
+    "PA-C196-start-work-frame",
+    "PA-C196-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch196.txt",
+  "json": "punjabi/narration/ch196.json",
+  "textHash": "fnv1a64:a2a5e8105b123665",
+  "jsonHash": "fnv1a64:928eb0d78b6c64fe",
+  "findings": []
+}

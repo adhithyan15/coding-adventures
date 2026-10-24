@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C354-amcam",
+    "language": "tamil",
+    "chapter": 354,
+    "sequence": 20470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd60b15cbd2c641e"
+  },
+  "findings": []
+}

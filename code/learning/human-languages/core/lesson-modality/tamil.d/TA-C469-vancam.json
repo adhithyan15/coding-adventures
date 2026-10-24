@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C469-vancam",
+    "language": "tamil",
+    "chapter": 469,
+    "sequence": 26940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88de925858fc8332"
+  },
+  "findings": []
+}

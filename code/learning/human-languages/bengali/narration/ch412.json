@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 412,
+  "title": "Walls and Gates",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8dfceae244dc814a",
+  "lessons": [
+    {
+      "id": "BN-C412-pachil",
+      "sequence": 25430,
+      "title": "পাঁচিল (pā̃chil) — a boundary wall",
+      "headword": "পাঁচিল",
+      "romanization": "pā̃chil",
+      "gloss": "a boundary wall",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a07150cdd8d32f0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a postman, then the Bengali for to send."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পাঁচিল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাঁচিল — pā̃chil — \"a boundary wall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাগানের চারপাশে উঁচু পাঁচিল। bāgāner chārpāshe ũchu pā̃chil. There is a high wall all round the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "The outer wall round a yard or garden; দেয়াল is any wall, inside or out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাঁচিল (pā̃chil) is inherited: CDIAL lists Bengali pā̃cil, \"a rampart\", under Sanskrit prācīra, \"an enclosure, a wall\" (CDIAL 8921); প্রাচীর, the same word taken whole, is the grander city wall."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pā̃chil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pā̃chil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pā̃chil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pā̃chil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāgāner chārpāshe ũchu pā̃chil. — There is a high wall all round the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāgāner chārpāshe ũchu pā̃chil.* — There is a high wall all round the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a postman, then the Bengali for to send, then say pā̃chil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a postman, then the Bengali for to send, then say *pā̃chil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পাঁচিল (pā̃chil) mean? (\"A boundary wall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C412-get",
+      "sequence": 25440,
+      "title": "গেট (geṭ) — a gate",
+      "headword": "গেট",
+      "romanization": "geṭ",
+      "gloss": "a gate",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:562a7cead73ae660",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to send, then the Bengali for a boundary wall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গেট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গেট — geṭ — \"a gate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দারোয়ান রাতে গেট বন্ধ করেন। dāroyān rāte geṭ bôndhô kôren. The gatekeeper shuts the gate at night."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গেট (geṭ) is borrowed from English gate, with the final t said as ট."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "geṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *geṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "geṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *geṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāroyān rāte geṭ bôndhô kôren. — The gatekeeper shuts the gate at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāroyān rāte geṭ bôndhô kôren.* — The gatekeeper shuts the gate at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to send, then the Bengali for a boundary wall, then say geṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to send, then the Bengali for a boundary wall, then say *geṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গেট (geṭ) mean? (\"A gate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C412-dalan",
+      "sequence": 25450,
+      "title": "দালান (dālān) — a brick building; a hall",
+      "headword": "দালান",
+      "romanization": "dālān",
+      "gloss": "a brick building; a hall",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f784ae843514d5f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a boundary wall, then the Bengali for a gate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দালান",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দালান — dālān — \"a brick building; a hall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাস্তার পাশে একটা পুরনো দালান আছে। rāstār pāshe ekṭā purôno dālān āchhe. There is an old brick building by the road."
+            },
+            {
+              "kind": "speech",
+              "text": "In a village, the one house built of brick rather than mud and thatch."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দালান (dālān) is usually traced to Persian dālān, \"a hall, a covered porch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dālān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dālān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dālān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dālān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāstār pāshe ekṭā purôno dālān āchhe. — There is an old brick building by the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāstār pāshe ekṭā purôno dālān āchhe.* — There is an old brick building by the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a boundary wall, then the Bengali for a gate, then say dālān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a boundary wall, then the Bengali for a gate, then say *dālān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দালান (dālān) mean? (\"A brick building; a hall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C412-lemppost",
+      "sequence": 25460,
+      "title": "ল্যাম্পপোস্ট (læmpposṭ) — a lamp post",
+      "headword": "ল্যাম্পপোস্ট",
+      "romanization": "læmpposṭ",
+      "gloss": "a lamp post",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e2acd7f3a532b91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a gate, then the Bengali for a brick building."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ল্যাম্পপোস্ট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ল্যাম্পপোস্ট — læmpposṭ — \"a lamp post\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গলির মোড়ে একটা ল্যাম্পপোস্ট আছে। gôlir moṛe ekṭā læmpposṭ āchhe. There is a lamp post at the corner of the lane."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ল্যাম্পপোস্ট (læmpposṭ) is borrowed from English lamp post, written as one word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "læmpposṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *læmpposṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "læmpposṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *læmpposṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôlir moṛe ekṭā læmpposṭ āchhe. — There is a lamp post at the corner of the lane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôlir moṛe ekṭā læmpposṭ āchhe.* — There is a lamp post at the corner of the lane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a gate, then the Bengali for a brick building, then say læmpposṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a gate, then the Bengali for a brick building, then say *læmpposṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ল্যাম্পপোস্ট (læmpposṭ) mean? (\"A lamp post\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C412-topkano",
+      "sequence": 25470,
+      "title": "টপকানো (ṭôpkāno) — to climb over; to jump over",
+      "headword": "টপকানো",
+      "romanization": "ṭôpkāno",
+      "gloss": "to climb over; to jump over",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:971373517dad954a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a brick building, then the Bengali for a lamp post."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: টপকানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "টপকানো — ṭôpkāno — \"to climb over; to jump over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "চোর পাঁচিল টপকে পালাল। chor pā̃chil ṭôpke pālālô. The thief climbed over the wall and ran away."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি পাঁচিল টপকালেন, tini pā̃chil ṭôpkālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "টপকানো (ṭôpkāno) is inherited: CDIAL lists Bengali ṭapkāna, \"to leap over\", under the reconstructed tarpati, \"jumps\" (CDIAL 5727)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭôpkāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭôpkāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭôpkāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭôpkāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chor pā̃chil ṭôpke pālālô. — The thief climbed over the wall and ran away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chor pā̃chil ṭôpke pālālô.* — The thief climbed over the wall and ran away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a brick building, then the Bengali for a lamp post, then say ṭôpkāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a brick building, then the Bengali for a lamp post, then say *ṭôpkāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does টপকানো (ṭôpkāno) mean? (\"To climb over; to jump over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

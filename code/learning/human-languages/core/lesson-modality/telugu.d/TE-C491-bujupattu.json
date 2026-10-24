@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C491-bujupattu",
+    "language": "telugu",
+    "chapter": 491,
+    "sequence": 24720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc8c5c2acf0d8211"
+  },
+  "findings": []
+}

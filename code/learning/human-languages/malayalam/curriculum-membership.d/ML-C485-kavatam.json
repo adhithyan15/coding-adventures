@@ -1,0 +1,11 @@
+{
+  "id": "ML-C485-kavatam",
+  "pathSegment": "ML-PATH-485-KAVATAM485",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-485-KAVATAM485",
+      "order": 2
+    }
+  ]
+}

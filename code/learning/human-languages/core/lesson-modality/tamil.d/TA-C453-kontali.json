@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C453-kontali",
+    "language": "tamil",
+    "chapter": 453,
+    "sequence": 26130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8c95c068685968b"
+  },
+  "findings": []
+}

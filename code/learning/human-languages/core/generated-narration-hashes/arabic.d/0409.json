@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:c3f0833e15910b5c",
+  "lessonIds": [
+    "AR-C409-qanun",
+    "AR-C409-tashri",
+    "AR-C409-band",
+    "AR-C409-nassa",
+    "AR-C409-sharraa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch409.txt",
+  "json": "arabic/narration/ch409.json",
+  "textHash": "fnv1a64:1ec81b10f5290f66",
+  "jsonHash": "fnv1a64:eff8297fec553e1d",
+  "findings": []
+}

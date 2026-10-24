@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:3e6ad6b4d7a09f95",
+  "lessonIds": [
+    "BN-C336-gurutvo",
+    "BN-C336-bishesh",
+    "BN-C336-mul",
+    "BN-C336-bekhya-kora",
+    "BN-C336-songkkhepe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch336.txt",
+  "json": "bengali/narration/ch336.json",
+  "textHash": "fnv1a64:03ab8969324c5b26",
+  "jsonHash": "fnv1a64:9819520916fb4aac",
+  "findings": []
+}

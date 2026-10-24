@@ -1,0 +1,11 @@
+{
+  "id": "TE-C431-samarthavantamaina",
+  "pathSegment": "TE-PATH-431-PRAMANAM431",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-431-PRAMANAM431",
+      "order": 3
+    }
+  ]
+}

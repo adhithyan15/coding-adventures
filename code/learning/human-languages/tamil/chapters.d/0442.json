@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Keeping It Green",
+  "label": "ch:ta-keeping-it-green",
+  "canDo": "I can talk about protecting nature, destruction and greenery, and floods surrounding a village.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C442-ucalatu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can talk about protecting nature, destruction and greenery, and floods surrounding a village.",
+    "assesses": [
+      "TA-LEX-C442-PASUMAI442-03",
+      "TA-LEX-C442-PASUMAI442-04",
+      "TA-LEX-C442-PASUMAI442-05"
+    ]
+  }
+}

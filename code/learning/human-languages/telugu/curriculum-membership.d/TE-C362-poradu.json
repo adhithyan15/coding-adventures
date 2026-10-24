@@ -1,0 +1,11 @@
+{
+  "id": "TE-C362-poradu",
+  "pathSegment": "TE-PATH-362-SANDHI362",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-362-SANDHI362",
+      "order": 0
+    }
+  ]
+}

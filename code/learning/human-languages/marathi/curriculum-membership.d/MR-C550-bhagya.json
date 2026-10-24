@@ -1,0 +1,11 @@
+{
+  "id": "MR-C550-bhagya",
+  "pathSegment": "MR-PATH-550-NASHIB550",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-550-NASHIB550",
+      "order": 2
+    }
+  ]
+}

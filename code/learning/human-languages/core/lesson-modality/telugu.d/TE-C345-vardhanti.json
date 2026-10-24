@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C345-vardhanti",
+    "language": "telugu",
+    "chapter": 345,
+    "sequence": 17000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d2e1549d84956e8"
+  },
+  "findings": []
+}

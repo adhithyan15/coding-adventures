@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C449-tayar",
+    "language": "kannada",
+    "chapter": 449,
+    "sequence": 22830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38fcd683263c8edd"
+  },
+  "findings": []
+}

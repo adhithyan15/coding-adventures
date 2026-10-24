@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Journalists and Crowds",
+  "label": "ch:ml-journalists-and-crowds",
+  "canDo": "I can say a journalist, an allegation, to reveal, to gather and to boo.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C355-kuvuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can say a journalist, an allegation, to reveal, to gather and to boo.",
+    "assesses": [
+      "ML-LEX-C355-PATRAPRAVARTTAKAN355-03",
+      "ML-LEX-C355-PATRAPRAVARTTAKAN355-04",
+      "ML-LEX-C355-PATRAPRAVARTTAKAN355-05"
+    ]
+  }
+}

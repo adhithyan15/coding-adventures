@@ -1,0 +1,11 @@
+{
+  "id": "KA-C310-adara-nantara",
+  "pathSegment": "KA-PATH-310-STORY-ORDER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-310-STORY-ORDER",
+      "order": 2
+    }
+  ]
+}

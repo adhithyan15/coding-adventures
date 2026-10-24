@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 436,
+  "title": "Porters and Trolleys",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5bc22589e995b97b",
+  "lessons": [
+    {
+      "id": "KA-C436-hamali",
+      "sequence": 22150,
+      "title": "ಹಮಾಲಿ (hamāli) — a porter",
+      "headword": "ಹಮಾಲಿ",
+      "romanization": "hamāli",
+      "gloss": "a porter",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:349866ebe10e191c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to peep, then the Kannada for a fare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಮಾಲಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಮಾಲಿ — hamāli — \"a porter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಮಾಲಿ ನನ್ನ ಎರಡು ಸೂಟ್ಕೇಸ್ಗಳನ್ನು ಹೊತ್ತನು. hamāli nanna eraḍu sūṭkēsgaḷannu hottanu. The porter carried my two suitcases."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಹಮಾಲಿಗಳು, hamāligaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "At stations porters wear a red shirt and a numbered badge; ಕೂಲಿ also names them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಮಾಲಿ (hamāli) is usually traced to Arabic ḥammāl, \"a carrier, a porter\", which reached Kannada through Hindustani or Marathi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamāli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamāli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamāli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamāli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamāli nanna eraḍu sūṭkēsgaḷannu hottanu. — The porter carried my two suitcases.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamāli nanna eraḍu sūṭkēsgaḷannu hottanu.* — The porter carried my two suitcases.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to peep, then the Kannada for a fare, then say hamāli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to peep, then the Kannada for a fare, then say *hamāli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಮಾಲಿ (hamāli) mean? (\"A porter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C436-trali",
+      "sequence": 22160,
+      "title": "ಟ್ರಾಲಿ (ṭrāli) — a trolley",
+      "headword": "ಟ್ರಾಲಿ",
+      "romanization": "ṭrāli",
+      "gloss": "a trolley",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7a297650af14f8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a fare, then the Kannada for a porter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಟ್ರಾಲಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಟ್ರಾಲಿ — ṭrāli — \"a trolley\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿಮಾನ ನಿಲ್ದಾಣದಲ್ಲಿ ಟ್ರಾಲಿ ಉಚಿತ. vimāna nildāṇadalli ṭrāli ucita. At the airport the trolley is free."
+            },
+            {
+              "kind": "speech",
+              "text": "A luggage trolley at a station, or a hand cart in a shop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಟ್ರಾಲಿ (ṭrāli) is a loan from English trolley, a small cart pushed by hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭrāli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭrāli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭrāli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭrāli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimāna nildāṇadalli ṭrāli ucita. — At the airport the trolley is free.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimāna nildāṇadalli ṭrāli ucita.* — At the airport the trolley is free.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a fare, then the Kannada for a porter, then say ṭrāli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a fare, then the Kannada for a porter, then say *ṭrāli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಟ್ರಾಲಿ (ṭrāli) mean? (\"A trolley\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C436-heru",
+      "sequence": 22170,
+      "title": "ಹೇರು (hēru) — to load; to impose",
+      "headword": "ಹೇರು",
+      "romanization": "hēru",
+      "gloss": "to load; to impose",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ab3f80b67dfedef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a porter, then the Kannada for a trolley."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೇರು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೇರು — hēru — \"to load; to impose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರು ವಾಹನದ ಮೇಲೆ ಸಾಮಾನು ಹೇರಿದರು. avaru vāhanada mēle sāmānu hēridaru. They loaded the luggage on top of the vehicle."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಹೇರಿದೆ, hēride."
+            },
+            {
+              "kind": "speech",
+              "text": "What is loaded takes -ಅನ್ನು or no ending; figuratively, ತೆರಿಗೆ ಹೇರು (hēru), to impose a tax."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೇರು (hēru) is native Dravidian: DEDR 4446 lists Kannada pēṟu, \"to lift up and put on, to load; a load\", the older form with the p- that modern Kannada turns into h-. The same article holds Telugu pērcu, to pile up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hēru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hēru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hēru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hēru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaru vāhanada mēle sāmānu hēridaru. — They loaded the luggage on top of the vehicle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaru vāhanada mēle sāmānu hēridaru.* — They loaded the luggage on top of the vehicle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a porter, then the Kannada for a trolley, then say hēru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a porter, then the Kannada for a trolley, then say *hēru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೇರು (hēru) mean? (\"To load; to impose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C436-kaisamanu",
+      "sequence": 22180,
+      "title": "ಕೈಸಾಮಾನು (kaisāmānu) — hand luggage",
+      "headword": "ಕೈಸಾಮಾನು",
+      "romanization": "kaisāmānu",
+      "gloss": "hand luggage",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c2f67c45ed60e36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a trolley, then the Kannada for to load."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೈಸಾಮಾನು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೈಸಾಮಾನು — kaisāmānu — \"hand luggage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೈಸಾಮಾನು ಏಳು ಕಿಲೋಗಿಂತ ಹೆಚ್ಚು ಇರಬಾರದು. kaisāmānu ēḷu kilōginta heccu irabāradu. Hand luggage must not weigh more than seven kilos."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೈ, hand, plus ಸಾಮಾನು, luggage: the bag you keep with you on a plane or a bus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೈಸಾಮಾನು (kaisāmānu) is a Kannada compound of native kai, \"hand\", and ಸಾಮಾನು, \"luggage, things\", which is usually traced to Persian sāmān, \"goods, equipment\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaisāmānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaisāmānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaisāmānu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaisāmānu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaisāmānu ēḷu kilōginta heccu irabāradu. — Hand luggage must not weigh more than seven kilos.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaisāmānu ēḷu kilōginta heccu irabāradu.* — Hand luggage must not weigh more than seven kilos.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a trolley, then the Kannada for to load, then say kaisāmānu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a trolley, then the Kannada for to load, then say *kaisāmānu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೈಸಾಮಾನು (kaisāmānu) mean? (\"Hand luggage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C436-bhartiyagu",
+      "sequence": 22190,
+      "title": "ಭರ್ತಿಯಾಗು (bhartiyāgu) — to fill up; to be full",
+      "headword": "ಭರ್ತಿಯಾಗು",
+      "romanization": "bhartiyāgu",
+      "gloss": "to fill up; to be full",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39aa61718cbf749a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to load, then the Kannada for hand luggage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಭರ್ತಿಯಾಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭರ್ತಿಯಾಗು — bhartiyāgu — \"to fill up; to be full\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಬ್ಬದ ಕಾರಣ ಎಲ್ಲಾ ಬಸ್ಸುಗಳು ಭರ್ತಿಯಾದವು. habbada kāraṇa ellā bassugaḷu bhartiyādavu. Because of the festival all the buses filled up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಭರ್ತಿಯಾಯಿತು, bhartiyāyitu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಭರ್ತಿ alone means full or filled; ಭರ್ತಿ ಮಾಡು is to fill in, as a form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭರ್ತಿಯಾಗು (bhartiyāgu) joins bharti, \"full, filled\", usually traced to Hindustani bhartī, \"filling, recruitment\", and the native verb ಆಗು, to become."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhartiyāgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhartiyāgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhartiyāgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhartiyāgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "habbada kāraṇa ellā bassugaḷu bhartiyādavu. — Because of the festival all the buses filled up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *habbada kāraṇa ellā bassugaḷu bhartiyādavu.* — Because of the festival all the buses filled up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to load, then the Kannada for hand luggage, then say bhartiyāgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to load, then the Kannada for hand luggage, then say *bhartiyāgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಭರ್ತಿಯಾಗು (bhartiyāgu) mean? (\"To fill up; to be full\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

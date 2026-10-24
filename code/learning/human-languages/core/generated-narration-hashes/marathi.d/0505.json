@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:ce818366787c2d1c",
+  "lessonIds": [
+    "MR-C505-kumbhar",
+    "MR-C505-lohar",
+    "MR-C505-sonar",
+    "MR-C505-vinkar",
+    "MR-C505-thatne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch505.txt",
+  "json": "marathi/narration/ch505.json",
+  "textHash": "fnv1a64:d5f410a24dea2d1a",
+  "jsonHash": "fnv1a64:6b59237471b9b08c",
+  "findings": []
+}

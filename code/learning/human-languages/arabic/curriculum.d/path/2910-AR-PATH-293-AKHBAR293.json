@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-293-AKHBAR293",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-293-AKHBAR293"
+  ],
+  "after": []
+}

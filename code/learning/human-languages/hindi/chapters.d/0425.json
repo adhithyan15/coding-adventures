@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Commotion and Drains",
+  "label": "ch:hi-commotion-and-drains",
+  "canDo": "I can describe a commotion in the lane, monkeys chased off, a blocked drain and a leak.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C425-risna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can describe a commotion in the lane, monkeys chased off, a blocked drain and a leak.",
+    "assesses": [
+      "HI-LEX-C425-HALLA425-03",
+      "HI-LEX-C425-HALLA425-04",
+      "HI-LEX-C425-HALLA425-05"
+    ]
+  }
+}

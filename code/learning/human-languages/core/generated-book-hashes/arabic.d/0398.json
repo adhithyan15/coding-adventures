@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:933334c0239d7aba",
+  "lessonIds": [
+    "AR-C398-talim",
+    "AR-C398-tarbiya",
+    "AR-C398-rawda",
+    "AR-C398-mahw-al-ummiyya",
+    "AR-C398-hudur"
+  ],
+  "tex": "arabic/book/chapters/ch398-schooling.tex"
+}

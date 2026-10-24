@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C303-perono",
+    "language": "bengali",
+    "chapter": 303,
+    "sequence": 19400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d87ae8b338980d33"
+  },
+  "findings": []
+}

@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "TA-S141-letter-ii",
+    "language": "tamil",
+    "chapter": 285,
+    "sequence": 16150,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1ff938d8294c3336",
+    "detachableSegments": [
+      "Script you'll notice: ஈ",
+      "Writing: ஈ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

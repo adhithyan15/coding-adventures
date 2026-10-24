@@ -1,0 +1,11 @@
+{
+  "id": "TE-C328-toluta",
+  "pathSegment": "TE-PATH-328-KRAMAM328",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-328-KRAMAM328",
+      "order": 0
+    }
+  ]
+}

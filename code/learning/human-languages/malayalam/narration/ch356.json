@@ -1,0 +1,870 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 356,
+  "title": "Telling It Again",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:bb77d0cb46fd0ec7",
+  "lessons": [
+    {
+      "id": "ML-C356-sambhasanam",
+      "sequence": 17350,
+      "title": "സംഭാഷണം (sambhāṣaṇaṁ) — a conversation; dialogue",
+      "headword": "സംഭാഷണം",
+      "romanization": "sambhāṣaṇaṁ",
+      "gloss": "a conversation; dialogue",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04293b282144255f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to gather, then the Malayalam for to boo."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സംഭാഷണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംഭാഷണം — sambhāṣaṇaṁ — \"a conversation; dialogue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ സിനിമയിലെ സംഭാഷണം വളരെ രസകരമായിരുന്നു. ā sinimayile sambhāṣaṇaṁ vaḷare rasakaramāyirunnu. The dialogue in that film was very interesting."
+            },
+            {
+              "kind": "speech",
+              "text": "The written word for a conversation, and the dialogue of a film or a play."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംഭാഷണം (sambhāṣaṇaṁ) is borrowed from Sanskrit sambhāṣaṇa, \"conversation, discourse with someone\" (Monier-Williams), built on bhāṣ, \"to speak\", the root of ഭാഷ (bhāṣa), \"language\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāṣaṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāṣaṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāṣaṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāṣaṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā sinimayile sambhāṣaṇaṁ vaḷare rasakaramāyirunnu. — The dialogue in that film was very interesting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā sinimayile sambhāṣaṇaṁ vaḷare rasakaramāyirunnu.* — The dialogue in that film was very interesting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to gather, then the Malayalam for to boo, then say sambhāṣaṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to gather, then the Malayalam for to boo, then say *sambhāṣaṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സംഭാഷണം (sambhāṣaṇaṁ) mean? (\"A conversation; dialogue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C356-vivaranam",
+      "sequence": 17360,
+      "title": "വിവരണം (vivaraṇaṁ) — a description; an account",
+      "headword": "വിവരണം",
+      "romanization": "vivaraṇaṁ",
+      "gloss": "a description; an account",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89e3513d552ef647",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to boo, then the Malayalam for a conversation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിവരണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിവരണം — vivaraṇaṁ — \"a description; an account\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സാക്ഷി സംഭവത്തിന്റെ വിവരണം പോലീസിനോട് പറഞ്ഞു. sākṣi sambhavattinṟe vivaraṇaṁ pōlīsinōṭŭ paṟaññu. The witness gave the police an account of the incident."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of വിവരിക്കുക, to describe: what you give when you describe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിവരണം (vivaraṇaṁ) is borrowed from Sanskrit vivaraṇa, \"uncovering, laying open; explanation\" (Monier-Williams). It is the noun beside വിവരിക്കുക (vivarikkuka), \"to describe\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivaraṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivaraṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivaraṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivaraṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākṣi sambhavattinṟe vivaraṇaṁ pōlīsinōṭŭ paṟaññu. — The witness gave the police an account of the incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākṣi sambhavattinṟe vivaraṇaṁ pōlīsinōṭŭ paṟaññu.* — The witness gave the police an account of the incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to boo, then the Malayalam for a conversation, then say vivaraṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to boo, then the Malayalam for a conversation, then say *vivaraṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിവരണം (vivaraṇaṁ) mean? (\"A description; an account\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C356-drsyam",
+      "sequence": 17370,
+      "title": "ദൃശ്യം (dṛśyaṁ) — footage; a scene",
+      "headword": "ദൃശ്യം",
+      "romanization": "dṛśyaṁ",
+      "gloss": "footage; a scene",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf14d5634498bfe9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a conversation, then the Malayalam for a description."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ദൃശ്യം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദൃശ്യം — dṛśyaṁ — \"footage; a scene\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അപകടത്തിന്റെ ദൃശ്യം ടിവിയിൽ വന്നു. apakaṭattinṟe dṛśyaṁ ṭiviyil vannu. Footage of the accident came on TV."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ദൃശ്യങ്ങൾ, dṛśyaṅṅaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural ദൃശ്യങ്ങൾ: the pictures or footage of an event."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദൃശ്യം (dṛśyaṁ) is borrowed from Sanskrit dṛśya, \"visible, worth seeing\" (Monier-Williams), from dṛś, \"to see\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dṛśyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dṛśyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dṛśyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dṛśyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apakaṭattinṟe dṛśyaṁ ṭiviyil vannu. — Footage of the accident came on TV.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apakaṭattinṟe dṛśyaṁ ṭiviyil vannu.* — Footage of the accident came on TV.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a conversation, then the Malayalam for a description, then say dṛśyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a conversation, then the Malayalam for a description, then say *dṛśyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ദൃശ്യം (dṛśyaṁ) mean? (\"Footage; a scene\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C356-kettariyuka",
+      "sequence": 17380,
+      "title": "കേട്ടറിയുക (kēṭṭaṟiyuka) — to learn by hearsay; to hear of",
+      "headword": "കേട്ടറിയുക",
+      "romanization": "kēṭṭaṟiyuka",
+      "gloss": "to learn by hearsay; to hear of",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a42a658064346404",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a description, then the Malayalam for footage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കേട്ടറിയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കേട്ടറിയുക — kēṭṭaṟiyuka — \"to learn by hearsay; to hear of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ സംഭവം ഞാൻ കേട്ടറിഞ്ഞു. ā sambhavaṁ ñān kēṭṭaṟiññu. I heard about that incident from others."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കേട്ടറിഞ്ഞു, kēṭṭaṟiññu."
+            },
+            {
+              "kind": "speech",
+              "text": "Joined from കേട്ട്, having heard, and അറിയുക, to know: to know something only because you heard it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കേട്ടറിയുക (kēṭṭaṟiyuka) is a native Dravidian compound of കേട്ട് (kēṭṭŭ), \"having heard\", from കേൾക്കുക (DEDR 2017), and അറിയുക (aṟiyuka), \"to know\" (DEDR 314). What you know this way, you did not see yourself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēṭṭaṟiyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēṭṭaṟiyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēṭṭaṟiyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēṭṭaṟiyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā sambhavaṁ ñān kēṭṭaṟiññu. — I heard about that incident from others.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā sambhavaṁ ñān kēṭṭaṟiññu.* — I heard about that incident from others.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a description, then the Malayalam for footage, then say kēṭṭaṟiyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a description, then the Malayalam for footage, then say *kēṭṭaṟiyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കേട്ടറിയുക (kēṭṭaṟiyuka) mean? (\"To learn by hearsay; to hear of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C356-ketticcamaykkuka",
+      "sequence": 17390,
+      "title": "കെട്ടിച്ചമയ്ക്കുക (keṭṭiccamaykkuka) — to fabricate; to make up",
+      "headword": "കെട്ടിച്ചമയ്ക്കുക",
+      "romanization": "keṭṭiccamaykkuka",
+      "gloss": "to fabricate; to make up",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81dac277c4250e66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for footage, then the Malayalam for to learn by hearsay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കെട്ടിച്ചമയ്ക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കെട്ടിച്ചമയ്ക്കുക — keṭṭiccamaykkuka — \"to fabricate; to make up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ ആ കഥ മുഴുവൻ കെട്ടിച്ചമച്ചു. avan ā katha muḻuvan keṭṭiccamaccu. He made up the whole story."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കെട്ടിച്ചമച്ചു, keṭṭiccamaccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of false stories and false evidence: കെട്ടിച്ചമച്ച കഥ, a made-up story."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കെട്ടിച്ചമയ്ക്കുക (keṭṭiccamaykkuka) is a native Dravidian compound of കെട്ടുക (keṭṭuka), \"to tie, to build\" (DEDR 1147), and ചമയ്ക്കുക (camaykkuka), \"to make, to put together\" (DEDR 2342): a made-up story is tied and built out of nothing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keṭṭiccamaykkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keṭṭiccamaykkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keṭṭiccamaykkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keṭṭiccamaykkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan ā katha muḻuvan keṭṭiccamaccu. — He made up the whole story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan ā katha muḻuvan keṭṭiccamaccu.* — He made up the whole story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for footage, then the Malayalam for to learn by hearsay, then say keṭṭiccamaykkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for footage, then the Malayalam for to learn by hearsay, then say *keṭṭiccamaykkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കെട്ടിച്ചമയ്ക്കുക (keṭṭiccamaykkuka) mean? (\"To fabricate; to make up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R356-review-349-356",
+      "sequence": 17400,
+      "title": "Words for telling what happened",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 349-356",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb851624e3987d0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for a witness and a war."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a witness, a war, a correspondent, to happen, to announce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a witness, a war, a correspondent, to happen, to announce]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a headline, an editor, an edition, a reader, to print",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a headline, an editor, an edition, a reader, to print]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a broadcast, a listener, a reporter, to depict, to broadcast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a broadcast, a listener, a reporter, to depict, to broadcast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a press conference, a statement, the real facts, to exaggerate, to say sorry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a press conference, a statement, the real facts, to exaggerate, to say sorry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rumour, speculation, fake, to circulate, to spread around",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rumour, speculation, fake, to circulate, to spread around]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a speech, a medium, to give a speech, to applaud, to mention",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a speech, a medium, to give a speech, to applaud, to mention]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a journalist, an allegation, to reveal, to gather, to boo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a journalist, an allegation, to reveal, to gather, to boo]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a conversation, a description, footage, to learn by hearsay, to fabricate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a conversation, a description, footage, to learn by hearsay, to fabricate]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A witness? (സാക്ഷി, sākṣi.) A war? (യുദ്ധം, yuddhaṁ.) A correspondent? (ലേഖകൻ, lēkhakan.) To happen? (സംഭവിക്കുക, sambhavikkuka.) To announce? (പ്രഖ്യാപിക്കുക, prakhyāpikkuka.) A headline? (തലക്കെട്ട്, talakkeṭṭŭ.) An editor? (പത്രാധിപർ, patrādhipar.) An edition? (പതിപ്പ്, patippŭ.) A reader? (വായനക്കാരൻ, vāyanakkāran.) To print? (അച്ചടിക്കുക, accaṭikkuka.) A broadcast? (സംപ്രേഷണം, samprēṣaṇaṁ.) A listener? (ശ്രോതാവ്, śrōtāvŭ.) A reporter? (റിപ്പോർട്ടർ, ṟippōrṭṭar.) To depict? (ചിത്രീകരിക്കുക, citrīkarikkuka.) To broadcast? (സംപ്രേഷണം ചെയ്യുക, samprēṣaṇaṁ ceyyuka.) A press conference? (പത്രസമ്മേളനം, patrasammēḷanaṁ.) A statement? (പ്രസ്താവന, prastāvana.) The real facts? (സത്യാവസ്ഥ, satyāvastha.) To exaggerate? (പെരുപ്പിക്കുക, peruppikkuka.) To say sorry? (മാപ്പ് പറയുക, māppŭ paṟayuka.) A rumour? (കിംവദന്തി, kiṁvadanti.) Speculation? (അഭ്യൂഹം, abhyūhaṁ.) Fake? (വ്യാജ, vyāja.) To circulate? (പ്രചരിക്കുക, pracarikkuka.) To spread around? (പ്രചരിപ്പിക്കുക, pracarippikkuka.) A speech? (പ്രസംഗം, prasaṁgaṁ.) A medium? (മാധ്യമം, mādhyamaṁ.) To give a speech? (പ്രസംഗിക്കുക, prasaṁgikkuka.) To applaud? (കയ്യടിക്കുക, kayyaṭikkuka.) To mention? (പരാമർശിക്കുക, parāmarśikkuka.) A journalist? (പത്രപ്രവർത്തകൻ, patrapravarttakan.) An allegation? (ആരോപണം, ārōpaṇaṁ.) To reveal? (വെളിപ്പെടുത്തുക, veḷippeṭuttuka.) To gather? (ഒത്തുകൂടുക, ottukūṭuka.) To boo? (കൂവുക, kūvuka.) A conversation? (സംഭാഷണം, sambhāṣaṇaṁ.) A description? (വിവരണം, vivaraṇaṁ.) Footage? (ദൃശ്യം, dṛśyaṁ.) To learn by hearsay? (കേട്ടറിയുക, kēṭṭaṟiyuka.) To fabricate? (കെട്ടിച്ചമയ്ക്കുക, keṭṭiccamaykkuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

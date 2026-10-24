@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C297-kallanottu",
+    "language": "tamil",
+    "chapter": 297,
+    "sequence": 17270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61c0c21e156b5a5b"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:5db2becbcb9f4212",
+  "lessonIds": [
+    "MR-C323-nirop",
+    "MR-C323-nivrtti",
+    "MR-C323-grhapraves",
+    "MR-C323-vardhapandin",
+    "MR-C323-samarop"
+  ],
+  "tex": "marathi/book/chapters/ch323-farewells-and-anniversaries.tex"
+}

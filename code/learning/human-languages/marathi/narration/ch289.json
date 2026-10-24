@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 289,
+  "title": "Crimes and Witnesses",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e22a6093b8c45560",
+  "lessons": [
+    {
+      "id": "MR-C289-saksidar",
+      "sequence": 17050,
+      "title": "साक्षीदार (sākṣīdār) — a witness",
+      "headword": "साक्षीदार",
+      "romanization": "sākṣīdār",
+      "gloss": "a witness",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b845975be8072d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to sink, then the Marathi for minor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: साक्षीदार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साक्षीदार — sākṣīdār — \"a witness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्या साक्षीदाराने सगळं पाहिलं असतं तर त्याने पोलिसांना सांगितलं असतं. tyā sākṣīdārāne sagḷaṁ pāhilaṁ astaṁ tar tyāne polisānnā sāṅgitlaṁ astaṁ. If that witness had seen everything, he would have told the police."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "साक्षीदाराने, by the witness; a past form with असतं says what would have happened."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साक्षीदार (sākṣīdār) is built from Sanskrit sākṣin, 'an eyewitness' (Monier-Williams), and the Persian suffix -dār, 'one who holds': the one who holds the testimony."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākṣīdār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākṣīdār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākṣīdār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākṣīdār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyā sākṣīdārāne sagḷaṁ pāhilaṁ astaṁ tar tyāne polisānnā sāṅgitlaṁ astaṁ. — If that witness had seen everything, he would have told the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyā sākṣīdārāne sagḷaṁ pāhilaṁ astaṁ tar tyāne polisānnā sāṅgitlaṁ astaṁ.* — If that witness had seen everything, he would have told the police.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to sink, then the Marathi for minor, then say sākṣīdār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to sink, then the Marathi for minor, then say *sākṣīdār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does साक्षीदार (sākṣīdār) mean? (\"A witness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C289-gunha",
+      "sequence": 17060,
+      "title": "गुन्हा (gunhā) — a crime; an offence",
+      "headword": "गुन्हा",
+      "romanization": "gunhā",
+      "gloss": "a crime; an offence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37f2f594917f4559",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for minor, then the Marathi for a witness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गुन्हा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुन्हा — gunhā — \"a crime; an offence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खोटी सही करणं हा मोठा गुन्हा आहे. khoṭī sahī karṇaṁ hā moṭhā gunhā āhe. Forging a signature is a serious crime."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The oblique is गुन्ह्या-: गुन्ह्यात, in the crime."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुन्हा (gunhā) is a loan from Persian gunāh, 'a sin, a fault'; in Marathi it became the everyday and the legal word for an offence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gunhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gunhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gunhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gunhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoṭī sahī karṇaṁ hā moṭhā gunhā āhe. — Forging a signature is a serious crime.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoṭī sahī karṇaṁ hā moṭhā gunhā āhe.* — Forging a signature is a serious crime.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for minor, then the Marathi for a witness, then say gunhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for minor, then the Marathi for a witness, then say *gunhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गुन्हा (gunhā) mean? (\"A crime; an offence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C289-daroda",
+      "sequence": 17070,
+      "title": "दरोडा (daroḍā) — a robbery; a gang raid",
+      "headword": "दरोडा",
+      "romanization": "daroḍā",
+      "gloss": "a robbery; a gang raid",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d2c86f0f61cda17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a witness, then the Marathi for a crime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दरोडा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरोडा — daroḍā — \"a robbery; a gang raid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात्री चार माणसांनी दुकानावर दरोडा टाकला. rātrī cār māṇsānnī dukānāvar daroḍā ṭāklā. At night four men raided the shop."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "दरोडा (daroḍā) पडणे, a robbery takes place; दरोडा (daroḍā) टाकणे, to carry one out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरोडा (daroḍā) is inherited: CDIAL lists Marathi daroḍā, 'an attack by a band of robbers', under daḍavaḍa, 'an onrush' (CDIAL 6127)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daroḍā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daroḍā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daroḍā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daroḍā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātrī cār māṇsānnī dukānāvar daroḍā ṭāklā. — At night four men raided the shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātrī cār māṇsānnī dukānāvar daroḍā ṭāklā.* — At night four men raided the shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a witness, then the Marathi for a crime, then say daroḍā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a witness, then the Marathi for a crime, then say *daroḍā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दरोडा (daroḍā) mean? (\"A robbery; a gang raid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C289-pakitmar",
+      "sequence": 17080,
+      "title": "पाकीटमार (pākīṭmār) — a pickpocket",
+      "headword": "पाकीटमार",
+      "romanization": "pākīṭmār",
+      "gloss": "a pickpocket",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a4eceea3926b731",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a crime, then the Marathi for a robbery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाकीटमार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाकीटमार — pākīṭmār — \"a pickpocket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गर्दीत एका पाकीटमाराने माझं पाकीट मारलं. gardīt ekā pākīṭmārāne mājhaṁ pākīṭ mārlaṁ. In the crowd a pickpocket stole my wallet."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Built from पाकीट, a wallet, and मार-, from मारणे: पाकीट मारणे, to pick a pocket."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाकीटमार (pākīṭmār) is a Marathi compound built from pākīṭ, 'a wallet', a loan from English packet, and mār-, the stem of mārṇe, 'to strike' (CDIAL 10066)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pākīṭmār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pākīṭmār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pākīṭmār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pākīṭmār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gardīt ekā pākīṭmārāne mājhaṁ pākīṭ mārlaṁ. — In the crowd a pickpocket stole my wallet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gardīt ekā pākīṭmārāne mājhaṁ pākīṭ mārlaṁ.* — In the crowd a pickpocket stole my wallet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a crime, then the Marathi for a robbery, then say pākīṭmār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a crime, then the Marathi for a robbery, then say *pākīṭmār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पाकीटमार (pākīṭmār) mean? (\"A pickpocket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C289-phasavne",
+      "sequence": 17090,
+      "title": "फसवणे (phasavṇe) — to cheat; to deceive",
+      "headword": "फसवणे",
+      "romanization": "phasavṇe",
+      "gloss": "to cheat; to deceive",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d0684f6c06fa67f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a robbery, then the Marathi for a pickpocket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फसवणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फसवणे — phasavṇe — \"to cheat; to deceive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्या दुकानदाराने आम्हाला फसवलं. tyā dukāndārāne āmhālā phasavlaṁ. That shopkeeper cheated us."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने फसवलं, tyāne phasavlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The one cheated takes -ला: लोकांना फसवणे (phasavṇe), to cheat people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फसवणे (phasavṇe) is inherited: CDIAL lists Marathi phasavṇe, 'to deceive', under Sanskrit spāśayati, 'causes to be bound or stopped' (CDIAL 13814). To cheat is to snare."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phasavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phasavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phasavṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phasavṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyā dukāndārāne āmhālā phasavlaṁ. — That shopkeeper cheated us.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyā dukāndārāne āmhālā phasavlaṁ.* — That shopkeeper cheated us.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a robbery, then the Marathi for a pickpocket, then say phasavṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a robbery, then the Marathi for a pickpocket, then say *phasavṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फसवणे (phasavṇe) mean? (\"To cheat; to deceive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

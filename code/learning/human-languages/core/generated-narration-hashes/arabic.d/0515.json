@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:681fa19195ba4713",
+  "lessonIds": [
+    "AR-C515-shakhara",
+    "AR-C515-istarkha",
+    "AR-C515-istalqa",
+    "AR-C515-nahada",
+    "AR-C515-ighma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch515.txt",
+  "json": "arabic/narration/ch515.json",
+  "textHash": "fnv1a64:f89bddfa114f160b",
+  "jsonHash": "fnv1a64:a2f8d531d008235f",
+  "findings": []
+}

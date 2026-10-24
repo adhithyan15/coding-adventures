@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:0246a2cd91be42ec",
+  "lessonIds": [
+    "BN-C393-dijel",
+    "BN-C393-haoya",
+    "BN-C393-pangchar",
+    "BN-C393-phurano",
+    "BN-C393-chalu-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch393.txt",
+  "json": "bengali/narration/ch393.json",
+  "textHash": "fnv1a64:4817a2c9abca54fb",
+  "jsonHash": "fnv1a64:0a8fa129924e9ce6",
+  "findings": []
+}

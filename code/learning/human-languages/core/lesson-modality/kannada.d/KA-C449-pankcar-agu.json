@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C449-pankcar-agu",
+    "language": "kannada",
+    "chapter": 449,
+    "sequence": 22850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01afc44aaf899298"
+  },
+  "findings": []
+}

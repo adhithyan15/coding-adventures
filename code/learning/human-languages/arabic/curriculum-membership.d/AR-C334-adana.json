@@ -1,0 +1,11 @@
+{
+  "id": "AR-C334-adana",
+  "pathSegment": "AR-PATH-334-MUHAKAMA334",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-334-MUHAKAMA334",
+      "order": 3
+    }
+  ]
+}

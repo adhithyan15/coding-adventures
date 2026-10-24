@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 517,
+  "title": "Habits good and bad",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:714239c2a90cc5e1",
+  "lessons": [
+    {
+      "id": "AR-C517-dakhkhana",
+      "sequence": 28680,
+      "title": "دخن (dakhkhana) — to smoke tobacco",
+      "headword": "دخن",
+      "romanization": "dakhkhana",
+      "gloss": "to smoke tobacco",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6976871033de064",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to have a cough, then the Arabic for a sprain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دخن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دخن — dakhkhana — \"to smoke tobacco\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لا يدخن أبي في البيت. lā yudakhkhinu abī fī al-bayt. My father does not smoke at home."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يدخن, yudakhkhin."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun تدخين is smoking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دخن (dakhkhana) is built on the native Arabic root d-kh-n, \"smoke\" (Lane). Midkhana, a chimney, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dakhkhana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dakhkhana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dakhkhana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dakhkhana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lā yudakhkhinu abī fī al-bayt. — My father does not smoke at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lā yudakhkhinu abī fī al-bayt.* — My father does not smoke at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to have a cough, then the Arabic for a sprain, then say dakhkhana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to have a cough, then the Arabic for a sprain, then say *dakhkhana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دخن (dakhkhana) mean? (\"To smoke tobacco\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C517-ishtaha",
+      "sequence": 28690,
+      "title": "اشتهى (ishtahā) — to crave",
+      "headword": "اشتهى",
+      "romanization": "ishtahā",
+      "gloss": "to crave",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25e9401f753b4517",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a sprain, then the Arabic for to smoke tobacco."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اشتهى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اشتهى — ishtahā — \"to crave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اشتهت أختي الشوكولاتة في الليل. ishtahat ukhtī ash-shūkūlāta fī al-layl. My sister craved chocolate in the night."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يشتهي, yashtahī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اشتهى (ishtahā) is built on the native Arabic root sh-h-w, \"to desire, to long for\" (Lane). Form VIII ishtahā is to long for a thing, often food."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtahā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtahā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtahā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtahā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtahat ukhtī ash-shūkūlāta fī al-layl. — My sister craved chocolate in the night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtahat ukhtī ash-shūkūlāta fī al-layl.* — My sister craved chocolate in the night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a sprain, then the Arabic for to smoke tobacco, then say ishtahā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a sprain, then the Arabic for to smoke tobacco, then say *ishtahā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اشتهى (ishtahā) mean? (\"To crave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C517-admana",
+      "sequence": 28700,
+      "title": "أدمن (admana) — to become addicted",
+      "headword": "أدمن",
+      "romanization": "admana",
+      "gloss": "to become addicted",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0a0afaeac75904a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to smoke tobacco, then the Arabic for to crave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أدمن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أدمن — admana — \"to become addicted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أدمن الشاب ألعاب الفيديو. admana ash-shābb alʿāb al-fīdiyū. The young man became addicted to video games."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يدمن, yudmin."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes a direct object, or على."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أدمن (admana) is built on the native Arabic root d-m-n, \"to keep to a thing\" (Lane). Form IV admana is to keep at a thing without stopping."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "admana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *admana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "admana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *admana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "admana ash-shābb alʿāb al-fīdiyū. — The young man became addicted to video games.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *admana ash-shābb alʿāb al-fīdiyū.* — The young man became addicted to video games.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to smoke tobacco, then the Arabic for to crave, then say admana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to smoke tobacco, then the Arabic for to crave, then say *admana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أدمن (admana) mean? (\"To become addicted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C517-jaa",
+      "sequence": 28710,
+      "title": "جاع (jāʿa) — to get hungry",
+      "headword": "جاع",
+      "romanization": "jāʿa",
+      "gloss": "to get hungry",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91b8c627cba6795e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to crave, then the Arabic for to become addicted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جاع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جاع — jāʿa — \"to get hungry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جاع الأطفال في الطريق. jāʿa al-aṭfāl fī aṭ-ṭarīq. The children got hungry on the way."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يجوع, yajūʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جاع (jāʿa) is built on the native Arabic root j-w-ʿ, \"hunger\" (Lane). Jūʿ, hunger, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāʿa al-aṭfāl fī aṭ-ṭarīq. — The children got hungry on the way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāʿa al-aṭfāl fī aṭ-ṭarīq.* — The children got hungry on the way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to crave, then the Arabic for to become addicted, then say jāʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to crave, then the Arabic for to become addicted, then say *jāʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جاع (jāʿa) mean? (\"To get hungry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C517-shabia",
+      "sequence": 28720,
+      "title": "شبع (shabiʿa) — to be full (from eating)",
+      "headword": "شبع",
+      "romanization": "shabiʿa",
+      "gloss": "to be full (from eating)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30506bdf778290bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to become addicted, then the Arabic for to get hungry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شبع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شبع — shabiʿa — \"to be full (from eating)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أكلت كثيرا وشبعت. akaltu kathīran wa-shabiʿtu. I ate a lot and was full."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يشبع, yashbaʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شبع (shabiʿa) is built on the native Arabic root sh-b-ʿ, \"to be satisfied with food\" (Lane). Shabiʿa is the opposite of jāʿa, to get hungry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shabiʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shabiʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shabiʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shabiʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akaltu kathīran wa-shabiʿtu. — I ate a lot and was full.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akaltu kathīran wa-shabiʿtu.* — I ate a lot and was full.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to become addicted, then the Arabic for to get hungry, then say shabiʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to become addicted, then the Arabic for to get hungry, then say *shabiʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شبع (shabiʿa) mean? (\"To be full (from eating)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

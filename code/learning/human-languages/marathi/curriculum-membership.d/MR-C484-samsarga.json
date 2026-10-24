@@ -1,0 +1,11 @@
+{
+  "id": "MR-C484-samsarga",
+  "pathSegment": "MR-PATH-484-ROG484",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-484-ROG484",
+      "order": 1
+    }
+  ]
+}

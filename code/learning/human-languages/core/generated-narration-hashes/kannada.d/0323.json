@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:10a52bfbdd5c7514",
+  "lessonIds": [
+    "KA-C323-aparadha",
+    "KA-C323-bandhisu",
+    "KA-C323-thane",
+    "KA-C323-tanikhe",
+    "KA-C323-sankisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch323.txt",
+  "json": "kannada/narration/ch323.json",
+  "textHash": "fnv1a64:4450d98e3baf7ceb",
+  "jsonHash": "fnv1a64:8d634aa51b429555",
+  "findings": []
+}

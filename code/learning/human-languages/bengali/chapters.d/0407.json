@@ -1,0 +1,21 @@
+{
+  "chapter": 407,
+  "title": "Bells, Menus and Tips",
+  "label": "ch:bn-bells-menus-and-tips",
+  "canDo": "I can hear the bell, read the menu, tip the bearer and send clothes to the laundry.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-R407-review-400-407",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can hear the bell, read the menu, tip the bearer and send clothes to the laundry.",
+    "assesses": [
+      "BN-LEX-C407-BOKSHISH407-01",
+      "BN-LEX-C407-BOKSHISH407-02",
+      "BN-LEX-C407-BOKSHISH407-03",
+      "BN-LEX-C407-BOKSHISH407-04",
+      "BN-LEX-C407-BOKSHISH407-05"
+    ]
+  }
+}

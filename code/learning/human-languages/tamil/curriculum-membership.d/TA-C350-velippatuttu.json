@@ -1,0 +1,11 @@
+{
+  "id": "TA-C350-velippatuttu",
+  "pathSegment": "TA-PATH-350-KANNOTTAM350",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-350-KANNOTTAM350",
+      "order": 4
+    }
+  ]
+}

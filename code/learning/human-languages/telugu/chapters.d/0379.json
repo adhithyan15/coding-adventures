@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Crowds and Cries",
+  "label": "ch:te-crowds-and-cries",
+  "canDo": "I can say to throng, to fall down, a victim, to petition and to beg.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C379-veduko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can say to throng, to fall down, a victim, to petition and to beg.",
+    "assesses": [
+      "TE-LEX-C379-BADHITUDU379-03",
+      "TE-LEX-C379-BADHITUDU379-04",
+      "TE-LEX-C379-BADHITUDU379-05"
+    ]
+  }
+}

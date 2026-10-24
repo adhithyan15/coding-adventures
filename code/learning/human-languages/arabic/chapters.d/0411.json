@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Rules and wrongs",
+  "label": "ch:ar-rules-and-wrongs",
+  "canDo": "I can say that someone authorized, was subject to, wronged, struggled against or formally approved something.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C411-aqarra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can say that someone authorized, was subject to, wronged, struggled against or formally approved something.",
+    "assesses": [
+      "AR-LEX-C411-IJAZA411-03",
+      "AR-LEX-C411-IJAZA411-04",
+      "AR-LEX-C411-IJAZA411-05"
+    ]
+  }
+}

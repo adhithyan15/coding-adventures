@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 435,
+  "title": "Routes and fares",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:588c765532274dde",
+  "lessons": [
+    {
+      "id": "AR-C435-masar",
+      "sequence": 24410,
+      "title": "مسار (masār) — a route; a lane",
+      "headword": "مسار",
+      "romanization": "masār",
+      "gloss": "a route; a lane",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8e60d353ac44cab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to issue, then the Arabic for to overtake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مسار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسار — masār — \"a route; a lane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غيرت الحافلة مسارها بسبب الثلج. ghayyarat al-ḥāfila masārahā bi-sabab ath-thalj. The bus changed its route because of the snow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسار (masār) is built on the native Arabic root s-y-r, \"to go, to travel\" (Lane). The pattern mafʿal makes it the place of going."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghayyarat al-ḥāfila masārahā bi-sabab ath-thalj. — The bus changed its route because of the snow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghayyarat al-ḥāfila masārahā bi-sabab ath-thalj.* — The bus changed its route because of the snow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to issue, then the Arabic for to overtake, then say masār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to issue, then the Arabic for to overtake, then say *masār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مسار (masār) mean? (\"A route; a lane\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C435-ujra",
+      "sequence": 24420,
+      "title": "أجرة (ujra) — a fare; a wage",
+      "headword": "أجرة",
+      "romanization": "ujra",
+      "gloss": "a fare; a wage",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de9f08b8630aa785",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to overtake, then the Arabic for a route."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أجرة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أجرة — ujra — \"a fare; a wage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كانت أجرة (ujra) التاكسي رخيصة. kānat ujrat at-tāksī rakhīṣa. The taxi fare was cheap."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أجرة (ujra) is built on the native Arabic root ʾ-j-r, \"a wage, a reward\" (Lane). A fare is the wage paid for the ride."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānat ujrat at-tāksī rakhīṣa. — The taxi fare was cheap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānat ujrat at-tāksī rakhīṣa.* — The taxi fare was cheap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to overtake, then the Arabic for a route, then say ujra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to overtake, then the Arabic for a route, then say *ujra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أجرة (ujra) mean? (\"A fare; a wage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C435-ishtirak",
+      "sequence": 24430,
+      "title": "اشتراك (ishtirāk) — a subscription; a travel pass",
+      "headword": "اشتراك",
+      "romanization": "ishtirāk",
+      "gloss": "a subscription; a travel pass",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6bcce6d887d9875",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a route, then the Arabic for a fare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اشتراك",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اشتراك — ishtirāk — \"a subscription; a travel pass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اشترى أخي اشتراكا شهريا للمترو. ishtarā akhī ishtirākan shahriyyan li-l-mitrū. My brother bought a monthly pass for the metro."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اشتراك (ishtirāk) is built on the native Arabic root sh-r-k, \"to share\" (Lane). It is the verbal noun of Form VIII, \"taking a share in something\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtirāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtirāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtirāk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtirāk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtarā akhī ishtirākan shahriyyan li-l-mitrū. — My brother bought a monthly pass for the metro.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtarā akhī ishtirākan shahriyyan li-l-mitrū.* — My brother bought a monthly pass for the metro.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a route, then the Arabic for a fare, then say ishtirāk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a route, then the Arabic for a fare, then say *ishtirāk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اشتراك (ishtirāk) mean? (\"A subscription; a travel pass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C435-mamarr-mushah",
+      "sequence": 24440,
+      "title": "ممر مشاة (mamarr mushāh) — a pedestrian crossing",
+      "headword": "ممر مشاة",
+      "romanization": "mamarr mushāh",
+      "gloss": "a pedestrian crossing",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b07f4fdb26559f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a fare, then the Arabic for a subscription."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ممر مشاة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ممر مشاة — mamarr mushāh — \"a pedestrian crossing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عبر الأطفال الشارع من ممر المشاة. ʿabara al-aṭfāl ash-shāriʿ min mamarr al-mushāh. The children crossed the street at the pedestrian crossing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ممر مشاة (mamarr mushāh) is built from two native Arabic words: mamarr, \"a passage\", on the root m-r-r, \"to pass\" (Lane), and mushāh, \"walkers\", on the root m-sh-y, \"to walk\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mamarr mushāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mamarr mushāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mamarr mushāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mamarr mushāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿabara al-aṭfāl ash-shāriʿ min mamarr al-mushāh. — The children crossed the street at the pedestrian crossing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿabara al-aṭfāl ash-shāriʿ min mamarr al-mushāh.* — The children crossed the street at the pedestrian crossing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a fare, then the Arabic for a subscription, then say mamarr mushāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a fare, then the Arabic for a subscription, then say *mamarr mushāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ممر مشاة (mamarr mushāh) mean? (\"A pedestrian crossing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C435-istadara",
+      "sequence": 24450,
+      "title": "استدار (istadāra) — to turn around",
+      "headword": "استدار",
+      "romanization": "istadāra",
+      "gloss": "to turn around",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6ff581e1beacb0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a subscription, then the Arabic for a pedestrian crossing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استدار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استدار — istadāra — \"to turn around\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استدار الولد عندما سمع اسمه. istadāra al-walad ʿindamā samiʿa ismahu. The boy turned around when he heard his name."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستدير, yastadīr."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استدار (istadāra) is built on the native Arabic root d-w-r, \"to turn, to go round\" (Lane). It is Form X."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istadāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istadāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istadāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istadāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istadāra al-walad ʿindamā samiʿa ismahu. — The boy turned around when he heard his name.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istadāra al-walad ʿindamā samiʿa ismahu.* — The boy turned around when he heard his name.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a subscription, then the Arabic for a pedestrian crossing, then say istadāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a subscription, then the Arabic for a pedestrian crossing, then say *istadāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استدار (istadāra) mean? (\"To turn around\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

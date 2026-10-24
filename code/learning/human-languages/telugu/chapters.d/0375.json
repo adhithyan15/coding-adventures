@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "The Press",
+  "label": "ch:te-the-press",
+  "canDo": "I can say a journalist, printing, a sensation, to submit a report and to respond.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C375-spandincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say a journalist, printing, a sensation, to submit a report and to respond.",
+    "assesses": [
+      "TE-LEX-C375-PATRIKEYUDU375-03",
+      "TE-LEX-C375-PATRIKEYUDU375-04",
+      "TE-LEX-C375-PATRIKEYUDU375-05"
+    ]
+  }
+}

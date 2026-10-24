@@ -1,0 +1,11 @@
+{
+  "id": "MR-C374-tappa",
+  "pathSegment": "MR-PATH-374-PRAKRIYA374",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-374-PRAKRIYA374",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C187-si",
+  "pathSegment": "PA-PATH-187-A2-PAST-COPULA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-187-A2-PAST-COPULA",
+      "order": 1
+    }
+  ]
+}

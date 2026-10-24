@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C371-perumpanmai",
+    "language": "tamil",
+    "chapter": 371,
+    "sequence": 21360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c4daf7e919b1c6b"
+  },
+  "findings": []
+}

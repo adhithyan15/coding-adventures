@@ -1,0 +1,11 @@
+{
+  "id": "HI-C471-cirhana",
+  "pathSegment": "HI-PATH-471-VINAMRA471",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-471-VINAMRA471",
+      "order": 4
+    }
+  ]
+}

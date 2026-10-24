@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:735de8c5a1457844",
+  "lessonIds": [
+    "BN-C514-photano",
+    "BN-C514-tatano",
+    "BN-C514-seka",
+    "BN-C514-bhapano",
+    "BN-C514-satlano"
+  ],
+  "tex": "bengali/book/chapters/ch514-at-the-stove.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:79edc40f74422dea",
+  "lessonIds": [
+    "AR-C502-tharthar",
+    "AR-C502-mutahaffiz",
+    "AR-C502-fuduli",
+    "AR-C502-hanun",
+    "AR-C502-wadud"
+  ],
+  "tex": "arabic/book/chapters/ch502-talkers-and-the-curious.tex"
+}

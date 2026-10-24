@@ -1,0 +1,21 @@
+{
+  "chapter": 449,
+  "title": "Keeping Nature Green",
+  "label": "ch:mr-keeping-nature-green",
+  "canDo": "I can talk about nature, conservation, tree planting and deforestation, and say a species died out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-R449-review-final-449",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can talk about nature, conservation, tree planting and deforestation, and say a species died out.",
+    "assesses": [
+      "MR-LEX-C449-NISARGA449-01",
+      "MR-LEX-C449-NISARGA449-02",
+      "MR-LEX-C449-NISARGA449-03",
+      "MR-LEX-C449-NISARGA449-04",
+      "MR-LEX-C449-NISARGA449-05"
+    ]
+  }
+}

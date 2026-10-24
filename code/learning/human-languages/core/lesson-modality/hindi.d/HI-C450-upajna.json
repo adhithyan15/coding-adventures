@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C450-upajna",
+    "language": "hindi",
+    "chapter": 450,
+    "sequence": 24690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:315a60e9b2323b27"
+  },
+  "findings": []
+}

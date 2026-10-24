@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:c94ed910e5c30bed",
+  "lessonIds": [
+    "AR-C551-sharshaf",
+    "AR-C551-mikhadda",
+    "AR-C551-hawd",
+    "AR-C551-mimsaha",
+    "AR-C551-kanaba",
+    "AR-R551-review-544-551"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch551.txt",
+  "json": "arabic/narration/ch551.json",
+  "textHash": "fnv1a64:0af005df4b10eba5",
+  "jsonHash": "fnv1a64:189a87f8ec1ec1b3",
+  "findings": []
+}

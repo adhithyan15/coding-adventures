@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Town and Capital",
+  "label": "ch:ka-town-and-capital",
+  "canDo": "I can say a small town, a capital city, a region, a place and a centre.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C465-kendra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can say a small town, a capital city, a region, a place and a centre.",
+    "assesses": [
+      "KA-LEX-C465-PATTANA465-03",
+      "KA-LEX-C465-PATTANA465-04",
+      "KA-LEX-C465-PATTANA465-05"
+    ]
+  }
+}

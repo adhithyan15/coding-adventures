@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:53ffe2a3e24f24f5",
+  "lessonIds": [
+    "HI-C479-muh",
+    "HI-C479-masura",
+    "HI-C479-cusna",
+    "HI-C479-cabana",
+    "HI-C479-thukna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch479.txt",
+  "json": "hindi/narration/ch479.json",
+  "textHash": "fnv1a64:34fbb1aa3eb78fa4",
+  "jsonHash": "fnv1a64:26e2472c8c3cf67c",
+  "findings": []
+}

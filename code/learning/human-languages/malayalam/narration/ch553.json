@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 553,
+  "title": "Orphans, Steps and Siblings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:694c826af3d70615",
+  "lessons": [
+    {
+      "id": "ML-C553-tottil",
+      "sequence": 27840,
+      "title": "തൊട്ടിൽ (toṭṭil) — a cradle",
+      "headword": "തൊട്ടിൽ",
+      "romanization": "toṭṭil",
+      "gloss": "a cradle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1d40e1dfad15783",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a boyfriend, then the Malayalam for to be in love."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തൊട്ടിൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തൊട്ടിൽ — toṭṭil — \"a cradle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അമ്മ കുഞ്ഞിനെ തൊട്ടിലിൽ കിടത്തി. amma kuññine toṭṭilil kiṭatti. Mother laid the baby in the cradle."
+            },
+            {
+              "kind": "speech",
+              "text": "Often a cloth cradle hung from a beam; തൊട്ടിൽ (toṭṭil) ആട്ടുക, to rock it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തൊട്ടിൽ (toṭṭil) is native Dravidian: DEDR 3486 gives it as a cradle (DEDR 3486)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṭṭil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṭṭil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṭṭil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṭṭil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amma kuññine toṭṭilil kiṭatti. — Mother laid the baby in the cradle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amma kuññine toṭṭilil kiṭatti.* — Mother laid the baby in the cradle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a boyfriend, then the Malayalam for to be in love, then say toṭṭil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a boyfriend, then the Malayalam for to be in love, then say *toṭṭil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തൊട്ടിൽ (toṭṭil) mean? (\"A cradle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C553-dattetukkuka",
+      "sequence": 27850,
+      "title": "ദത്തെടുക്കുക (datteṭukkuka) — to adopt",
+      "headword": "ദത്തെടുക്കുക",
+      "romanization": "datteṭukkuka",
+      "gloss": "to adopt",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f509563ff58a6eef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to be in love, then the Malayalam for a cradle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ദത്തെടുക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദത്തെടുക്കുക — datteṭukkuka — \"to adopt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ദമ്പതികൾ ഒരു കുഞ്ഞിനെ ദത്തെടുത്തു. ā dampatikaḷ oru kuññine datteṭuttu. That couple adopted a baby."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ദത്തെടുത്തു, datteṭuttu."
+            },
+            {
+              "kind": "speech",
+              "text": "ദത്ത് given + എടുക്കുക to take: to take a child as given."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദത്തെടുക്കുക (datteṭukkuka) is a Malayalam compound built from ദത്ത്, from Sanskrit datta, \"given\" (CDIAL 6140), and എടുക്കുക, \"to take up\", which is native (DEDR 851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "datteṭukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *datteṭukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "datteṭukkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *datteṭukkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā dampatikaḷ oru kuññine datteṭuttu. — That couple adopted a baby.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā dampatikaḷ oru kuññine datteṭuttu.* — That couple adopted a baby.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to be in love, then the Malayalam for a cradle, then say datteṭukkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to be in love, then the Malayalam for a cradle, then say *datteṭukkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ദത്തെടുക്കുക (datteṭukkuka) mean? (\"To adopt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C553-rantanamma",
+      "sequence": 27860,
+      "title": "രണ്ടാനമ്മ (raṇṭānamma) — a stepmother",
+      "headword": "രണ്ടാനമ്മ",
+      "romanization": "raṇṭānamma",
+      "gloss": "a stepmother",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d531f5234291474",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a cradle, then the Malayalam for to adopt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: രണ്ടാനമ്മ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രണ്ടാനമ്മ — raṇṭānamma — \"a stepmother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രണ്ടാനമ്മ അവനെ സ്വന്തം മകനെപ്പോലെ സ്നേഹിച്ചു. raṇṭānamma avane svantaṁ makaneppōle snēhiccu. His stepmother loved him like her own son."
+            },
+            {
+              "kind": "speech",
+              "text": "രണ്ടാം second + അമ്മ; a stepfather is രണ്ടാനച്ഛൻ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രണ്ടാനമ്മ (raṇṭānamma) is native Dravidian, a compound of രണ്ടാം, \"second\" (DEDR 474), and അമ്മ, \"mother\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭānamma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭānamma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭānamma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭānamma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭānamma avane svantaṁ makaneppōle snēhiccu. — His stepmother loved him like her own son.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭānamma avane svantaṁ makaneppōle snēhiccu.* — His stepmother loved him like her own son.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a cradle, then the Malayalam for to adopt, then say raṇṭānamma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a cradle, then the Malayalam for to adopt, then say *raṇṭānamma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does രണ്ടാനമ്മ (raṇṭānamma) mean? (\"A stepmother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C553-kutappirappu",
+      "sequence": 27870,
+      "title": "കൂടപ്പിറപ്പ് (kūṭappiṟappŭ) — a sibling",
+      "headword": "കൂടപ്പിറപ്പ്",
+      "romanization": "kūṭappiṟappŭ",
+      "gloss": "a sibling",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:911f9e89821e8039",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to adopt, then the Malayalam for a stepmother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൂടപ്പിറപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂടപ്പിറപ്പ് — kūṭappiṟappŭ — \"a sibling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് മൂന്ന് കൂടപ്പിറപ്പുകൾ ഉണ്ട്. enikkŭ mūnnŭ kūṭappiṟappukaḷ uṇṭŭ. I have three siblings."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: കൂടപ്പിറപ്പുകൾ, kūṭappiṟappukaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "കൂട with + പിറപ്പ് a birth: one born with you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂടപ്പിറപ്പ് (kūṭappiṟappŭ) is native Dravidian, a compound of കൂട, \"along with\" (DEDR 1882), and പിറപ്പ്, \"a birth\" (DEDR 4422)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭappiṟappŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭappiṟappŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭappiṟappŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭappiṟappŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enikkŭ mūnnŭ kūṭappiṟappukaḷ uṇṭŭ. — I have three siblings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enikkŭ mūnnŭ kūṭappiṟappukaḷ uṇṭŭ.* — I have three siblings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to adopt, then the Malayalam for a stepmother, then say kūṭappiṟappŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to adopt, then the Malayalam for a stepmother, then say *kūṭappiṟappŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൂടപ്പിറപ്പ് (kūṭappiṟappŭ) mean? (\"A sibling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C553-sahodaran",
+      "sequence": 27880,
+      "title": "സഹോദരൻ (sahōdaran) — a brother",
+      "headword": "സഹോദരൻ",
+      "romanization": "sahōdaran",
+      "gloss": "a brother",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c99996681905e66c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a stepmother, then the Malayalam for a sibling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സഹോദരൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഹോദരൻ — sahōdaran — \"a brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എന്റെ സഹോദരൻ വിദേശത്ത് ജോലി ചെയ്യുന്നു. enṟe sahōdaran vidēśattŭ jōli ceyyunnu. My brother works abroad."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal or written; at home one says ചേട്ടൻ or അനിയൻ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഹോദരൻ (sahōdaran) is borrowed from Sanskrit sahodara, \"born of the same womb\" (Monier-Williams), with the masculine ending -ൻ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahōdaran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahōdaran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahōdaran, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahōdaran*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enṟe sahōdaran vidēśattŭ jōli ceyyunnu. — My brother works abroad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enṟe sahōdaran vidēśattŭ jōli ceyyunnu.* — My brother works abroad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a stepmother, then the Malayalam for a sibling, then say sahōdaran again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a stepmother, then the Malayalam for a sibling, then say *sahōdaran* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സഹോദരൻ (sahōdaran) mean? (\"A brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

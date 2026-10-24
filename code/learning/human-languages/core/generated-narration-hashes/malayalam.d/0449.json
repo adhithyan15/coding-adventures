@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:3cc6ba937c244254",
+  "lessonIds": [
+    "ML-C449-niyantrikkuka",
+    "ML-C449-varddhikkuka",
+    "ML-C449-varddhippikkuka",
+    "ML-C449-uyaruka",
+    "ML-C449-uyarttuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch449.txt",
+  "json": "malayalam/narration/ch449.json",
+  "textHash": "fnv1a64:f68283cb99bc8d88",
+  "jsonHash": "fnv1a64:2311568b7e67fc63",
+  "findings": []
+}

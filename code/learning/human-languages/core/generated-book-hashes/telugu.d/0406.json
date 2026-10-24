@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:a63103d8c1eef295",
+  "lessonIds": [
+    "TE-C406-aviniti",
+    "TE-C406-lancam",
+    "TE-C406-paradarsakata",
+    "TE-C406-aropana",
+    "TE-C406-aropincu"
+  ],
+  "tex": "telugu/book/chapters/ch406-corruption-and-accountability.tex"
+}

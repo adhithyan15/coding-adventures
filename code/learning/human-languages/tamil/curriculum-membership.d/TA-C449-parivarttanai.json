@@ -1,0 +1,11 @@
+{
+  "id": "TA-C449-parivarttanai",
+  "pathSegment": "TA-PATH-449-ELAM449",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-449-ELAM449",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C547-araveyu",
+  "pathSegment": "TE-PATH-547-INTIPANI547",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-547-INTIPANI547",
+      "order": 2
+    }
+  ]
+}

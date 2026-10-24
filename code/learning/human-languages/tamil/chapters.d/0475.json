@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "At the Doctor",
+  "label": "ch:ta-at-the-doctor",
+  "canDo": "I can talk about treatment, check-ups, the pulse, scans and diets.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C475-pattiyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about treatment, check-ups, the pulse, scans and diets.",
+    "assesses": [
+      "TA-LEX-C475-MARUTTUVAR475-03",
+      "TA-LEX-C475-MARUTTUVAR475-04",
+      "TA-LEX-C475-MARUTTUVAR475-05"
+    ]
+  }
+}

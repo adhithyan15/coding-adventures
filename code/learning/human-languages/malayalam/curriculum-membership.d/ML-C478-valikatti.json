@@ -1,0 +1,11 @@
+{
+  "id": "ML-C478-valikatti",
+  "pathSegment": "ML-PATH-478-SANCARI478",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-478-SANCARI478",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:2912a698279a5122",
+  "lessonIds": [
+    "ML-C521-samtrpti",
+    "ML-C521-visadam",
+    "ML-C521-puncirikkuka",
+    "ML-C521-grhaturatvam",
+    "ML-C521-netuvirppituka"
+  ],
+  "tex": "malayalam/book/chapters/ch521-smiles-and-sighs.tex"
+}

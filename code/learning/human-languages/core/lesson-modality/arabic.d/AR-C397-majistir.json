@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C397-majistir",
+    "language": "arabic",
+    "chapter": 397,
+    "sequence": 22400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da16202d707eea81"
+  },
+  "findings": []
+}

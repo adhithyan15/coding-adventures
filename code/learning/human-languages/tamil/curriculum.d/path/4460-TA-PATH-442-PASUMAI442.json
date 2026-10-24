@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-442-PASUMAI442",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-442-PASUMAI442"
+  ],
+  "after": []
+}

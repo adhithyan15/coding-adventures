@@ -1,0 +1,11 @@
+{
+  "id": "KA-C534-tala",
+  "pathSegment": "KA-PATH-534-SANGITA534",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-534-SANGITA534",
+      "order": 1
+    }
+  ]
+}

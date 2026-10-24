@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 351,
+  "title": "Tricks and lies",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cba62a044f3f2127",
+  "lessons": [
+    {
+      "id": "AR-C351-khadaa-trick",
+      "sequence": 19970,
+      "title": "خدع (khadaʿa) — to deceive, to trick",
+      "headword": "خدع",
+      "romanization": "khadaʿa",
+      "gloss": "to deceive, to trick",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72980449f3888a1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a leaflet, then the Arabic for a supplement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خدع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خدع — khadaʿa — \"to deceive, to trick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خدع الثعلب الغراب في الحكاية. khadaʿa ath-thaʿlab al-ghurāb fī al-ḥikāya. The fox tricked the crow in the tale."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يخدع, yakhdaʿ."
+            },
+            {
+              "kind": "speech",
+              "text": "A trick is خدعة."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خدع (khadaʿa) is built on the native Arabic root kh-d-ʿ (Lane), \"to hide a thing; to deceive\"; khidʿa is a ruse."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khadaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khadaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khadaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khadaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khadaʿa ath-thaʿlab al-ghurāb fī al-ḥikāya. — The fox tricked the crow in the tale.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khadaʿa ath-thaʿlab al-ghurāb fī al-ḥikāya.* — The fox tricked the crow in the tale.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a leaflet, then the Arabic for a supplement, then say khadaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a leaflet, then the Arabic for a supplement, then say *khadaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خدع (khadaʿa) mean? (\"To deceive, to trick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C351-ghashsha",
+      "sequence": 19980,
+      "title": "غش (ghashsha) — to cheat",
+      "headword": "غش",
+      "romanization": "ghashsha",
+      "gloss": "to cheat",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a9dce09f0848b88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a supplement, then the Arabic for to deceive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غش — ghashsha — \"to cheat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غش الطالب في الامتحان. ghashsha aṭ-ṭālib fī al-imtiḥān. The student cheated in the exam."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يغش, yaghushsh."
+            },
+            {
+              "kind": "speech",
+              "text": "Cheating is غش (ghashsha)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غش (ghashsha) is built on the native Arabic root gh-sh-sh (Lane), \"to be insincere towards someone\", to show what one does not mean."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghashsha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghashsha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghashsha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghashsha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghashsha aṭ-ṭālib fī al-imtiḥān. — The student cheated in the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghashsha aṭ-ṭālib fī al-imtiḥān.* — The student cheated in the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a supplement, then the Arabic for to deceive, then say ghashsha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a supplement, then the Arabic for to deceive, then say *ghashsha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غش (ghashsha) mean? (\"To cheat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C351-ihtala",
+      "sequence": 19990,
+      "title": "احتال (iḥtāla) — to swindle",
+      "headword": "احتال",
+      "romanization": "iḥtāla",
+      "gloss": "to swindle",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be2b2edcdb13c65a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to deceive, then the Arabic for to cheat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: احتال",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احتال — iḥtāla — \"to swindle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "احتال رجل على السياح في السوق. iḥtāla rajul ʿalā as-suyyāḥ fī as-sūq. A man swindled the tourists in the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحتال, yaḥtāl."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على. A swindler is محتال."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احتال (iḥtāla) is built on the native Arabic root ḥ-w-l (Lane), \"to change, to shift\", where ḥīla is a shift or wile. It is Form VIII, \"to use a wile\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtāla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtāla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtāla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtāla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtāla rajul ʿalā as-suyyāḥ fī as-sūq. — A man swindled the tourists in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtāla rajul ʿalā as-suyyāḥ fī as-sūq.* — A man swindled the tourists in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to deceive, then the Arabic for to cheat, then say iḥtāla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to deceive, then the Arabic for to cheat, then say *iḥtāla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does احتال (iḥtāla) mean? (\"To swindle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C351-zawwara",
+      "sequence": 20000,
+      "title": "زور (zawwara) — to forge, to falsify",
+      "headword": "زور",
+      "romanization": "zawwara",
+      "gloss": "to forge, to falsify",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2aa47077bbba1e96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to cheat, then the Arabic for to swindle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: زور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زور — zawwara — \"to forge, to falsify\"."
+            },
+            {
+              "kind": "speech",
+              "text": "زور الرجل جواز سفر. zawwara ar-rajul jawāz safar. The man forged a passport."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يزور, yuzawwir."
+            },
+            {
+              "kind": "speech",
+              "text": "Lane files the taught زار, to visit, under the same letters z-w-r; the two verbs differ in form and sense."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زور (zawwara) is built on the native Arabic root z-w-r (Lane), where zūr is falsehood. It is Form II, \"to make a false thing look true\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zawwara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zawwara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zawwara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zawwara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zawwara ar-rajul jawāz safar. — The man forged a passport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zawwara ar-rajul jawāz safar.* — The man forged a passport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to cheat, then the Arabic for to swindle, then say zawwara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to cheat, then the Arabic for to swindle, then say *zawwara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does زور (zawwara) mean? (\"To forge, to falsify\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C351-akhfa",
+      "sequence": 20010,
+      "title": "أخفى (akhfā) — to conceal, to hide",
+      "headword": "أخفى",
+      "romanization": "akhfā",
+      "gloss": "to conceal, to hide",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c26b934c7506b8d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to swindle, then the Arabic for to forge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أخفى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أخفى — akhfā — \"to conceal, to hide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أخفت البنت الهدية تحت السرير. akhfat al-bint al-hadiyya taḥta as-sarīr. The girl hid the present under the bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يخفي, yukhfī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أخفى (akhfā) is built on the native Arabic root kh-f-y (Lane), \"to be hidden\", the root of the taught ikhtafā, to disappear. It is Form IV, \"to hide a thing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhfā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhfā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhfā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhfā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhfat al-bint al-hadiyya taḥta as-sarīr. — The girl hid the present under the bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhfat al-bint al-hadiyya taḥta as-sarīr.* — The girl hid the present under the bed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to swindle, then the Arabic for to forge, then say akhfā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to swindle, then the Arabic for to forge, then say *akhfā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أخفى (akhfā) mean? (\"To conceal, to hide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

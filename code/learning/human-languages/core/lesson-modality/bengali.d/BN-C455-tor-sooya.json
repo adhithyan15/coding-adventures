@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C455-tor-sooya",
+    "language": "bengali",
+    "chapter": 455,
+    "sequence": 27910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf5f6630582fb882"
+  },
+  "findings": []
+}

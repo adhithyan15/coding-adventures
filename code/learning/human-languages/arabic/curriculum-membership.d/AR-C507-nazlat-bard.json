@@ -1,0 +1,11 @@
+{
+  "id": "AR-C507-nazlat-bard",
+  "pathSegment": "AR-PATH-507-MARAD507",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-507-MARAD507",
+      "order": 1
+    }
+  ]
+}

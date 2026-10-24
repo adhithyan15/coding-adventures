@@ -1,0 +1,11 @@
+{
+  "id": "MR-C547-suraksaraksak",
+  "pathSegment": "MR-PATH-547-ANIBANI547",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-547-ANIBANI547",
+      "order": 3
+    }
+  ]
+}

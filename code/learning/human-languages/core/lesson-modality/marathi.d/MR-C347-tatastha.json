@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C347-tatastha",
+    "language": "marathi",
+    "chapter": 347,
+    "sequence": 20280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:073fb0286137abc0"
+  },
+  "findings": []
+}

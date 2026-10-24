@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-502-DURAVA502",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-502-DURAVA502"
+  ],
+  "after": []
+}

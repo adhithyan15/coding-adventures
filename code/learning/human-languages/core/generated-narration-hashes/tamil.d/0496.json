@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:8fcac73f0c4bb709",
+  "lessonIds": [
+    "TA-C496-karppam",
+    "TA-C496-piracavam",
+    "TA-C496-pira",
+    "TA-C496-pillai",
+    "TA-C496-tattetu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch496.txt",
+  "json": "tamil/narration/ch496.json",
+  "textHash": "fnv1a64:5322057f32436a39",
+  "jsonHash": "fnv1a64:a063c03534641f09",
+  "findings": []
+}

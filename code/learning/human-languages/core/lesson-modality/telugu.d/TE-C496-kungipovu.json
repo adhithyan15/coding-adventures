@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C496-kungipovu",
+    "language": "telugu",
+    "chapter": 496,
+    "sequence": 25120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78e05559eb0b3107"
+  },
+  "findings": []
+}

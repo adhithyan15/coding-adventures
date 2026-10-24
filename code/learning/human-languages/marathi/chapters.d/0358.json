@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Making Laws",
+  "label": "ch:mr-making-laws",
+  "canDo": "I can talk about laws and policies being made, changed or cancelled.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C358-bahal-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about laws and policies being made, changed or cancelled.",
+    "assesses": [
+      "MR-LEX-C358-SANVIDHAN358-03",
+      "MR-LEX-C358-SANVIDHAN358-04",
+      "MR-LEX-C358-SANVIDHAN358-05"
+    ]
+  }
+}

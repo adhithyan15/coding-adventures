@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Grave and Easygoing",
+  "label": "ch:bn-grave-and-easygoing",
+  "canDo": "I can say whether someone is serious, simple, fussy or indifferent.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C464-maniye-neoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can say whether someone is serious, simple, fussy or indifferent.",
+    "assesses": [
+      "BN-LEX-C464-GOMBHIR464-03",
+      "BN-LEX-C464-GOMBHIR464-04",
+      "BN-LEX-C464-GOMBHIR464-05"
+    ]
+  }
+}

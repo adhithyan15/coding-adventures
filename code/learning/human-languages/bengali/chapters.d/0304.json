@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Festival Time",
+  "label": "ch:bn-festival-time",
+  "canDo": "I can talk about a festival, its images and its pandals.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C304-udjapon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can talk about a festival, its images and its pandals.",
+    "assesses": [
+      "BN-LEX-C304-UTSOB304-03",
+      "BN-LEX-C304-UTSOB304-04",
+      "BN-LEX-C304-UTSOB304-05"
+    ]
+  }
+}

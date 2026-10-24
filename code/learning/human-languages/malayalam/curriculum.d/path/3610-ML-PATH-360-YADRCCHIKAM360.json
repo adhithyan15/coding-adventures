@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-360-YADRCCHIKAM360",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-360-YADRCCHIKAM360"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:ccf059d64f544666",
+  "lessonIds": [
+    "TA-C363-pullivivaram",
+    "TA-C363-catavitam",
+    "TA-C363-caracari",
+    "TA-C363-vikitam",
+    "TA-C363-kani"
+  ],
+  "tex": "tamil/book/chapters/ch363-numbers-in-an-argument.tex"
+}

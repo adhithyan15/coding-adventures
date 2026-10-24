@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C400-trak",
+    "language": "marathi",
+    "chapter": 400,
+    "sequence": 23230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:828570a78653f80b"
+  },
+  "findings": []
+}

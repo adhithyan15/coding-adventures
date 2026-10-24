@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C495-panjoba",
+    "language": "marathi",
+    "chapter": 495,
+    "sequence": 28330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81aa370fe208a65b"
+  },
+  "findings": []
+}

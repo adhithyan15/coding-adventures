@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Bathrooms and Comfort",
+  "label": "ch:hi-bathrooms-and-comfort",
+  "canDo": "I can ask for the bathroom and hot water, say a bed is comfortable and ask to be woken.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C414-jagana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can ask for the bathroom and hot water, say a bed is comfortable and ask to be woken.",
+    "assesses": [
+      "HI-LEX-C414-GUSALKHANA414-03",
+      "HI-LEX-C414-GUSALKHANA414-04",
+      "HI-LEX-C414-GUSALKHANA414-05"
+    ]
+  }
+}

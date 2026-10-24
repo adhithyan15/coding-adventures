@@ -1,0 +1,11 @@
+{
+  "id": "MR-C406-padcari",
+  "pathSegment": "MR-PATH-406-PADPATH406",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-406-PADPATH406",
+      "order": 1
+    }
+  ]
+}

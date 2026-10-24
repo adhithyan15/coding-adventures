@@ -1,0 +1,22 @@
+{
+  "chapter": 315,
+  "title": "Feelings and Hopes",
+  "label": "ch:ka-feelings-and-hopes",
+  "canDo": "I can say how I felt with nanage … āyitu, how I am with -āgiddēne, name a goal with guri, and say what I would love to do or become with -bēku anta āse ide.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-R315-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: say how you felt and how you are, and what you hope to do or become.",
+    "assesses": [
+      "KA-LEX-C315-KHUSI-01",
+      "KA-GRAMMAR-C315-FEELING-DATIVE-01",
+      "KA-GRAMMAR-C315-FEELING-STATE-01",
+      "KA-LEX-C315-GURI-01",
+      "KA-GRAMMAR-C315-WISH-BEKU-ANTA-01",
+      "KA-GRAMMAR-C315-BECOME-01"
+    ]
+  }
+}

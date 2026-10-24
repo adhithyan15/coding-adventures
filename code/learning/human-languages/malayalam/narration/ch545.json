@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 545,
+  "title": "Duties at Work",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6ed5dc81bb2c6079",
+  "lessons": [
+    {
+      "id": "ML-C545-meludyogasthan",
+      "sequence": 27430,
+      "title": "മേലുദ്യോഗസ്ഥൻ (mēludyōgasthan) — a superior; a senior officer",
+      "headword": "മേലുദ്യോഗസ്ഥൻ",
+      "romanization": "mēludyōgasthan",
+      "gloss": "a superior; a senior officer",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f25b2bcd2512ed8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a work shift, then the Malayalam for to be interrupted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മേലുദ്യോഗസ്ഥൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മേലുദ്യോഗസ്ഥൻ — mēludyōgasthan — \"a superior; a senior officer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മേലുദ്യോഗസ്ഥൻ എന്റെ റിപ്പോർട്ട് പരിശോധിച്ചു. mēludyōgasthan enṟe ṟippōrṭṭŭ pariśōdhiccu. My superior checked my report."
+            },
+            {
+              "kind": "speech",
+              "text": "മേൽ above + ഉദ്യോഗസ്ഥൻ an official."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മേലുദ്യോഗസ്ഥൻ (mēludyōgasthan) is a Malayalam compound built from മേൽ, \"above\", which is native (DEDR 5086), and ഉദ്യോഗസ്ഥൻ, \"an official\", from Sanskrit udyoga (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēludyōgasthan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēludyōgasthan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēludyōgasthan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēludyōgasthan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēludyōgasthan enṟe ṟippōrṭṭŭ pariśōdhiccu. — My superior checked my report.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēludyōgasthan enṟe ṟippōrṭṭŭ pariśōdhiccu.* — My superior checked my report.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a work shift, then the Malayalam for to be interrupted, then say mēludyōgasthan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a work shift, then the Malayalam for to be interrupted, then say *mēludyōgasthan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മേലുദ്യോഗസ്ഥൻ (mēludyōgasthan) mean? (\"A superior; a senior officer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C545-cumatala",
+      "sequence": 27440,
+      "title": "ചുമതല (cumatala) — being in charge; a duty",
+      "headword": "ചുമതല",
+      "romanization": "cumatala",
+      "gloss": "being in charge; a duty",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec5908432f746c65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to be interrupted, then the Malayalam for a superior."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചുമതല",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചുമതല — cumatala — \"being in charge; a duty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഓഫീസിലെ പുതിയ പദ്ധതിയുടെ ചുമതല എനിക്കാണ്. ōphīsile putiya paddhatiyuṭe cumatala enikkāṇŭ. I am in charge of the office's new project."
+            },
+            {
+              "kind": "speech",
+              "text": "ചുമതല (cumatala) ഏൽക്കുക, to take charge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചുമതല (cumatala) is native Dravidian: DEDR 2677 lists it beside ചുമ, \"a load\", and ചുമക്കുക, \"to carry\": a duty is a load one carries (DEDR 2677)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cumatala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cumatala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cumatala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cumatala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōphīsile putiya paddhatiyuṭe cumatala enikkāṇŭ. — I am in charge of the office's new project.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōphīsile putiya paddhatiyuṭe cumatala enikkāṇŭ.* — I am in charge of the office's new project.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to be interrupted, then the Malayalam for a superior, then say cumatala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to be interrupted, then the Malayalam for a superior, then say *cumatala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചുമതല (cumatala) mean? (\"Being in charge; a duty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C545-sthalammarram",
+      "sequence": 27450,
+      "title": "സ്ഥലംമാറ്റം (sthalaṁmāṟṟaṁ) — a job transfer",
+      "headword": "സ്ഥലംമാറ്റം",
+      "romanization": "sthalaṁmāṟṟaṁ",
+      "gloss": "a job transfer",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29e3bf1df78150f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a superior, then the Malayalam for being in charge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സ്ഥലംമാറ്റം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്ഥലംമാറ്റം — sthalaṁmāṟṟaṁ — \"a job transfer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അച്ഛന് വടക്കൻ ജില്ലയിലേക്ക് സ്ഥലംമാറ്റം കിട്ടി. acchanŭ vaṭakkan jillayilēkkŭ sthalaṁmāṟṟaṁ kiṭṭi. Father got a transfer to a northern district."
+            },
+            {
+              "kind": "speech",
+              "text": "സ്ഥലം a place + മാറ്റം a change; common for government staff."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്ഥലംമാറ്റം (sthalaṁmāṟṟaṁ) is a Malayalam compound built from സ്ഥലം, from Sanskrit sthala, \"ground, a place\" (CDIAL 13744), and മാറ്റം, \"a change\", which is native (DEDR 4834)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthalaṁmāṟṟaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthalaṁmāṟṟaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthalaṁmāṟṟaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthalaṁmāṟṟaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acchanŭ vaṭakkan jillayilēkkŭ sthalaṁmāṟṟaṁ kiṭṭi. — Father got a transfer to a northern district.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acchanŭ vaṭakkan jillayilēkkŭ sthalaṁmāṟṟaṁ kiṭṭi.* — Father got a transfer to a northern district.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a superior, then the Malayalam for being in charge, then say sthalaṁmāṟṟaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a superior, then the Malayalam for being in charge, then say *sthalaṁmāṟṟaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സ്ഥലംമാറ്റം (sthalaṁmāṟṟaṁ) mean? (\"A job transfer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C545-asutranam",
+      "sequence": 27460,
+      "title": "ആസൂത്രണം (āsūtraṇaṁ) — planning",
+      "headword": "ആസൂത്രണം",
+      "romanization": "āsūtraṇaṁ",
+      "gloss": "planning",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe1e4fc939b3e359",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for being in charge, then the Malayalam for a job transfer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആസൂത്രണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആസൂത്രണം — āsūtraṇaṁ — \"planning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നല്ല ആസൂത്രണം ഉണ്ടെങ്കിൽ ജോലി എളുപ്പമാകും. nalla āsūtraṇaṁ uṇṭeṅkil jōli eḷuppamākuṁ. With good planning the work becomes easy."
+            },
+            {
+              "kind": "speech",
+              "text": "ആസൂത്രണം (āsūtraṇaṁ) ചെയ്യുക is to plan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആസൂത്രണം (āsūtraṇaṁ) is a learned word built on Sanskrit sūtra, \"a thread, a cord\" (CDIAL 13561); the exact model of the formation is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsūtraṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsūtraṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsūtraṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsūtraṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nalla āsūtraṇaṁ uṇṭeṅkil jōli eḷuppamākuṁ. — With good planning the work becomes easy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nalla āsūtraṇaṁ uṇṭeṅkil jōli eḷuppamākuṁ.* — With good planning the work becomes easy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for being in charge, then the Malayalam for a job transfer, then say āsūtraṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for being in charge, then the Malayalam for a job transfer, then say *āsūtraṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആസൂത്രണം (āsūtraṇaṁ) mean? (\"Planning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C545-sahakarikkuka",
+      "sequence": 27470,
+      "title": "സഹകരിക്കുക (sahakarikkuka) — to cooperate",
+      "headword": "സഹകരിക്കുക",
+      "romanization": "sahakarikkuka",
+      "gloss": "to cooperate",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f162fdf8eb118f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a job transfer, then the Malayalam for planning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സഹകരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഹകരിക്കുക — sahakarikkuka — \"to cooperate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എല്ലാവരും സഹകരിച്ചതുകൊണ്ട് പരിപാടി വിജയിച്ചു. ellāvaruṁ sahakariccatukoṇṭŭ paripāṭi vijayiccu. The programme succeeded because everyone cooperated."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സഹകരിച്ചു, sahakariccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is സഹകരണം, cooperation; the partner takes -ഓട്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഹകരിക്കുക (sahakarikkuka) is built from Sanskrit sahakāra, \"assistance\", saha \"with\" and kāra \"doing\" (CDIAL 13299), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahakarikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahakarikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahakarikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahakarikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellāvaruṁ sahakariccatukoṇṭŭ paripāṭi vijayiccu. — The programme succeeded because everyone cooperated.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellāvaruṁ sahakariccatukoṇṭŭ paripāṭi vijayiccu.* — The programme succeeded because everyone cooperated.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a job transfer, then the Malayalam for planning, then say sahakarikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a job transfer, then the Malayalam for planning, then say *sahakarikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സഹകരിക്കുക (sahakarikkuka) mean? (\"To cooperate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R287-asking-the-way",
+    "language": "arabic",
+    "chapter": 287,
+    "sequence": 16630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4572e41476d4587"
+  },
+  "findings": []
+}

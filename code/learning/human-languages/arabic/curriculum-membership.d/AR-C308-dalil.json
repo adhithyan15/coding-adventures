@@ -1,0 +1,11 @@
+{
+  "id": "AR-C308-dalil",
+  "pathSegment": "AR-PATH-308-TAHQIQ308",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-308-TAHQIQ308",
+      "order": 3
+    }
+  ]
+}

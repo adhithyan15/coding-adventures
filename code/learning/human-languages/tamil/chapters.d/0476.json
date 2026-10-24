@@ -1,0 +1,21 @@
+{
+  "chapter": 476,
+  "title": "Germs and Hygiene",
+  "label": "ch:ta-germs-and-hygiene",
+  "canDo": "I can talk about germs, vaccines, masks, hygiene and falling ill.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R476-review-469-476",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can talk about germs, vaccines, masks, hygiene and falling ill.",
+    "assesses": [
+      "TA-LEX-C476-KIRUMI476-01",
+      "TA-LEX-C476-KIRUMI476-02",
+      "TA-LEX-C476-KIRUMI476-03",
+      "TA-LEX-C476-KIRUMI476-04",
+      "TA-LEX-C476-KIRUMI476-05"
+    ]
+  }
+}

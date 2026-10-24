@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C367-satru",
+    "language": "kannada",
+    "chapter": 367,
+    "sequence": 18480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:beda1bb26ed1f90e"
+  },
+  "findings": []
+}

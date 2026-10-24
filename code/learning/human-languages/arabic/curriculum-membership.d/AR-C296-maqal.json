@@ -1,0 +1,11 @@
+{
+  "id": "AR-C296-maqal",
+  "pathSegment": "AR-PATH-296-SAHAFA296",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-296-SAHAFA296",
+      "order": 2
+    }
+  ]
+}

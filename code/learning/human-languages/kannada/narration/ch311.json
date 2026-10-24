@@ -1,0 +1,428 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 311,
+  "title": "What I Think, and So",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:3c61fbe8ce6e5b2d",
+  "lessons": [
+    {
+      "id": "KA-C311-anta-anisuttade",
+      "sequence": 15100,
+      "title": "ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ (anta nanage anisuttade) — what I think",
+      "headword": "ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ",
+      "romanization": "anta nanage anisuttade",
+      "gloss": "I think (that) … — literally 'it seems to me that …'",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d082af5d64756fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to seem, to feel (that)\" (anisu) and the word that closes a quotation (anta). Then \"clean\" (svaccha). Which letter sits small inside it? (ಛ, cha.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: … ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಈ ಪುಸ್ತಕ ಚೆನ್ನಾಗಿದೆ ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ. ī pustaka cennāgide anta nanage anisuttade. — \"I think this book is good.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The thought comes first, whole: ಈ ಪುಸ್ತಕ ಚೆನ್ನಾಗಿದೆ (ī pustaka cennāgide, \"this book is good\"). ಅಂತ closes it like a pair of quotation marks. Then ನನಗೆ ಅನಿಸುತ್ತದೆ: \"it seems to me\". Kannada does not say \"I think\" here. The thought comes to you, so \"me\" takes the ನನಗೆ of ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು."
+            },
+            {
+              "kind": "speech",
+              "text": "To ask for someone's view:"
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿಮಗೆ ಏನು ಅನಿಸುತ್ತದೆ? nimage ēnu anisuttade? — \"What do you think?\""
+            },
+            {
+              "kind": "speech",
+              "text": "For what you thought then, the \"it\" past: ಅನಿಸಿತು, \"it seemed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅದು ಕಷ್ಟ ಅಂತ ನನಗೆ ಅನಿಸಿತು. adu kaṣṭa anta nanage anisitu. — \"I felt that it was difficult.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: ನನ್ನ ಅಭಿಪ್ರಾಯದಲ್ಲಿ, in my opinion",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಅಭಿಪ್ರಾಯದಲ್ಲಿ ಈ ಹೋಟೆಲ್ ಒಳ್ಳೆಯದು. nanna abhiprāyadalli ī hōṭel oḷḷeyadu. — \"In my opinion this hotel is good.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಭಿಪ್ರಾಯದಲ್ಲಿ is ಅಭಿಪ್ರಾಯ, \"an opinion\", with -ದಲ್ಲಿ, \"in\". ಒಳ್ಳೆಯದು (oḷḷeyadu, \"a good one; (it is) good\"): ಒಳ್ಳೆಯ goes in front of a noun, and at the end of a sentence it takes -ದು."
+            },
+            {
+              "kind": "speech",
+              "text": "In talk you will also hear ನನ್ನ ಪ್ರಕಾರ (nanna prakāra, \"according to me\"). ಯೋಚಿಸು stays the verb for thinking something over; for a view given in passing, ಅನಿಸುತ್ತದೆ is the everyday one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think this book is good\" — ī pustaka cennāgide anta nanage anisuttade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think this book is good\" — *ī pustaka cennāgide anta nanage anisuttade*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What do you think?\" — nimage ēnu anisuttade?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What do you think?\" — *nimage ēnu anisuttade?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I felt that it was difficult\" — adu kaṣṭa anta nanage anisitu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I felt that it was difficult\" — *adu kaṣṭa anta nanage anisitu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In my opinion this hotel is good\" — nanna abhiprāyadalli ī hōṭel oḷḷeyadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In my opinion this hotel is good\" — *nanna abhiprāyadalli ī hōṭel oḷḷeyadu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the thought go? (First, closed by ಅಂತ.) Who takes ನನಗೆ? (The one the thought comes to: me.) \"What do you think?\" (ನಿಮಗೆ ಏನು ಅನಿಸುತ್ತದೆ?) \"In my opinion\"? (ನನ್ನ ಅಭಿಪ್ರಾಯದಲ್ಲಿ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C311-hagagi",
+      "sequence": 15110,
+      "title": "ಹಾಗಾಗಿ (hāgāgi) — so",
+      "headword": "ಹಾಗಾಗಿ",
+      "romanization": "hāgāgi",
+      "gloss": "so, and so — the result after the reason",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a51cabea261d5ccf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think this book is good\". (ī pustaka cennāgide anta nanage anisuttade.) Then \"that is why\" and \"therefore\". (adakkē, ādudarinda.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಾಗಾಗಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿನ್ನೆ ಮಳೆ ಬಂತು. ಹಾಗಾಗಿ ನಾನು ಮನೆಯಲ್ಲೇ ಇದ್ದೆ. ninne maḷe bantu. hāgāgi nānu maneyallē idde. — \"Yesterday it rained. So I stayed at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The reason comes first, then ಹಾಗಾಗಿ (hāgāgi), then the result. Taken apart, it is ಹಾಗೆ, \"that way\", and ಆಗಿ, the -ಇ form of ಆಗು: \"that having happened\". ಮನೆಯಲ್ಲೇ (maneyallē, \"at home, nowhere else\") is ಮನೆಯಲ್ಲಿ, \"at home\", with -ಏ, which leans on the word: that very place."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಜ್ವರ ಇತ್ತು. ಹಾಗಾಗಿ ನಾನು ಶಾಲೆಗೆ ಹೋಗಲಿಲ್ಲ. nanage jvara ittu. hāgāgi nānu śālege hōgalilla. — \"I had a fever. So I did not go to school.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: three words for 'so'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಾಗಾಗಿ (hāgāgi) — the everyday \"so\", in talk and in writing."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅದಕ್ಕೇ — \"that is why\", with weight on the reason: \"that is exactly why\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆದುದರಿಂದ — \"therefore\", in careful writing and in speeches."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಸ್ ಬರಲಿಲ್ಲ. ಅದಕ್ಕೇ ನಾನು ತಡವಾಗಿ ಬಂದೆ. bas baralilla. adakkē nānu taḍavāgi bande. — \"The bus didn't come. That's why I came late.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ತಡವಾಗಿ (taḍavāgi, \"late\"). ಆದುದರಿಂದ is built from ಆಗು as well: \"from what happened\". All three stand at the start of the result, never in front of the reason."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Yesterday it rained. So I stayed at home.\" — ninne maḷe bantu. hāgāgi nānu maneyallē idde.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Yesterday it rained. So I stayed at home.\" — *ninne maḷe bantu. hāgāgi nānu maneyallē idde.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I had a fever. So I did not go to school.\" — nanage jvara ittu. hāgāgi nānu śālege hōgalilla.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I had a fever. So I did not go to school.\" — *nanage jvara ittu. hāgāgi nānu śālege hōgalilla.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The bus didn't come. That's why I came late.\" — bas baralilla. adakkē nānu taḍavāgi bande.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The bus didn't come. That's why I came late.\" — *bas baralilla. adakkē nānu taḍavāgi bande.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"So\", in talk? (ಹಾಗಾಗಿ (hāgāgi).) \"That is why\"? (ಅದಕ್ಕೇ.) \"Therefore\", in writing? (ಆದುದರಿಂದ.) Which comes first, the reason or the result? (The reason.) What is ಹಾಗಾಗಿ (hāgāgi) taken apart? (ಹಾಗೆ + ಆಗಿ: \"that having happened\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R311-opinion-and-result",
+      "sequence": 15120,
+      "title": "Review — a view and its result",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "giving a view with ಅನಿಸುತ್ತದೆ, and its result with ಹಾಗಾಗಿ",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:2f2da7f107e8e828",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ಸ್ವಚ್ಛ aloud. (svaccha.) Which letter sits small under ಚ? (ಛ.) Then \"What do you think?\" (nimage ēnu anisuttade?)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the story of the day the guests came, once more, aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the story of the day the guests came, once more, aloud]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I think this hotel is good. In my opinion it is clean.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I think this hotel is good. In my opinion it is clean.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I felt that the book was difficult.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I felt that the book was difficult.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "There was no bus. So I walked home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: There was no bus. So I walked home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I had a fever yesterday. That's why I did not come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I had a fever yesterday. That's why I did not come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one thing you think about your town, and one result, with … ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ (anta nanage anisuttade) and ಹಾಗಾಗಿ (hāgāgi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one thing you think about your town, and one result, with … ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ and ಹಾಗಾಗಿ]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think that …\"? (… ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ (anta nanage anisuttade).) \"In my opinion\"? (ನನ್ನ ಅಭಿಪ್ರಾಯದಲ್ಲಿ.) \"So\"? (ಹಾಗಾಗಿ (hāgāgi).) \"That is why\"? (ಅದಕ್ಕೇ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

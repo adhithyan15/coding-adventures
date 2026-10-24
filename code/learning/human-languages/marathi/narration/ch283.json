@@ -1,0 +1,527 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 283,
+  "title": "Tickets, Times and Trouble",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:c8096599895a6445",
+  "lessons": [
+    {
+      "id": "MR-C283-tikit",
+      "sequence": 16280,
+      "title": "तिकीट (tikīṭ) — a ticket",
+      "headword": "तिकीट",
+      "romanization": "tikīṭ",
+      "gloss": "a ticket",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d5d73c431011801",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"the station is opposite the temple\" (sṭeśan mandirācyā samor āhe), then \"a bus\" and \"a train\". (bas, gāḍī.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तिकीट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिकीट — tikīṭ — \"a ticket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मला पुण्याचं एक तिकीट हवं आहे. malā puṇyācaṁ ek tikīṭ havaṁ āhe. — \"I want a ticket to Pune.\""
+            },
+            {
+              "kind": "speech",
+              "text": "तिकीट is neuter, so हवं. Two tickets: दोन तिकिटं (don tikiṭaṁ). Marathi buys a ticket with काढणे, \"to take out\": मी तिकीट काढलं (mī tikīṭ kāḍhlaṁ), \"I bought a ticket\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिकीट (tikīṭ) is a loan from English ticket, reshaped to Marathi sounds: a long ī and a retroflex ṭ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tikīṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tikīṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want a ticket to Pune\" — malā puṇyācaṁ ek tikīṭ havaṁ āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want a ticket to Pune\" — *malā puṇyācaṁ ek tikīṭ havaṁ āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I bought a ticket\" — mī tikīṭ kāḍhlaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I bought a ticket\" — *mī tikīṭ kāḍhlaṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तिकीट (tikīṭ) mean? (\"A ticket\".) \"Two tickets\"? (दोन तिकिटं.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C283-tikit-dya",
+      "sequence": 16290,
+      "title": "एक तिकीट द्या (ek tikīṭ dyā) — at the counter",
+      "headword": "एक तिकीट द्या",
+      "romanization": "ek tikīṭ dyā",
+      "gloss": "a ticket, please — buying one, and asking when the train leaves",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23724494ed7536c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask how far the station is from here. (ithūn sṭeśan kitī lāmb āhe?) Then say \"I want a ticket to Pune\". (malā puṇyācaṁ ek tikīṭ havaṁ āhe.) The polite \"please give\" is द्या."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: buying a ticket",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुण्याचं एक तिकीट द्या. puṇyācaṁ ek tikīṭ dyā. — \"One ticket to Pune, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "पुण्याचं is \"of Pune\": the ticket belongs to where it goes. A return: परतीचं तिकीट (partīcaṁ tikīṭ), with the परत, \"back\", of परतणे. Then the price: किती पैसे झाले? (kitī paise jhāle?), \"How much is it?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: when it leaves",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुण्याची गाडी किती वाजता निघते? puṇyācī gāḍī kitī vājtā nighte? — \"What time does the Pune train leave?\""
+            },
+            {
+              "kind": "speech",
+              "text": "निघते, \"sets out\", is the present of निघणे, said of the train. The answers come as times: सात वाजता (sāt vājtā). And the other end: गाडी किती वाजता पोहोचते? (gāḍī kitī vājtā pohocte?), \"What time does it arrive?\" For the platform, ask with कोणत्या (koṇtyā, \"which\"): कोणत्या फलाटावर? (koṇtyā phalāṭāvar?)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"One ticket to Pune, please\" — puṇyācaṁ ek tikīṭ dyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"One ticket to Pune, please\" — *puṇyācaṁ ek tikīṭ dyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"A return ticket, please\" — partīcaṁ tikīṭ dyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"A return ticket, please\" — *partīcaṁ tikīṭ dyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What time does the Pune train leave?\" — puṇyācī gāḍī kitī vājtā nighte?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What time does the Pune train leave?\" — *puṇyācī gāḍī kitī vājtā nighte?*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C283-tikit-dya-r1",
+              "prompt": "Ask for one ticket to Pune, then ask what time the train leaves.",
+              "assesses": [
+                "MR-GRAMMAR-C283-BUY-TICKET-01",
+                "MR-GRAMMAR-C283-WHEN-LEAVES-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "puṇyācaṁ ek tikīṭ dyā; gāḍī kitī vājtā nighte?",
+                "पुण्याचं एक तिकीट द्या. गाडी किती वाजता निघते?"
+              ],
+              "feedback": {
+                "correct": "-caṁ on the place, dyā for please give.",
+                "incorrect": "puṇe bends to puṇyā-, then -caṁ: puṇyācaṁ."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A ticket to Pune, please\"? (पुण्याचं एक तिकीट द्या (ek tikīṭ dyā).) \"A return ticket\"? (परतीचं तिकीट.) \"What time does it leave?\" (किती वाजता निघते?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C283-haravli",
+      "sequence": 16300,
+      "title": "माझी पिशवी हरवली (mājhī piśvī haravlī) — when something goes wrong",
+      "headword": "माझी पिशवी हरवली",
+      "romanization": "mājhī piśvī haravlī",
+      "gloss": "my bag is lost — saying what went wrong",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a768ab877f6c3a41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a bag\" and \"to lose\". (piśvī, haravṇe.) Then \"she came\". (tī ālī.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lost",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माझी पिशवी हरवली. mājhī piśvī haravlī. — \"My bag is lost.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The bag is what got lost, so the past agrees with it, as ती आली agrees with her: पिशवी हरवली, पुस्तक हरवलं (pustak haravlaṁ). No -ने here. Then the report: मी पोलिसांकडे तक्रार केली (mī polisāṅkaḍe takrār kelī), \"I complained to the police\", with तक्रार feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: missed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माझी गाडी चुकली. mājhī gāḍī cuklī. — \"I missed my train.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"my train went wrong\": with चुकणे the train is the subject. The cause comes first: मला उशीर झाला, म्हणून माझी गाडी चुकली (malā uśīr jhālā, mhaṇūn mājhī gāḍī cuklī), \"I was late, so I missed my train\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My bag is lost\" — mājhī piśvī haravlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My bag is lost\" — *mājhī piśvī haravlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I complained to the police\" — mī polisāṅkaḍe takrār kelī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I complained to the police\" — *mī polisāṅkaḍe takrār kelī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I was late, so I missed my train\" — malā uśīr jhālā, mhaṇūn mājhī gāḍī cuklī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I was late, so I missed my train\" — *malā uśīr jhālā, mhaṇūn mājhī gāḍī cuklī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C283-haravli-r1",
+              "prompt": "Say that your bag is lost, then that you missed your train.",
+              "assesses": [
+                "MR-GRAMMAR-C283-LOST-REPORT-01",
+                "MR-GRAMMAR-C283-MISSED-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "mājhī piśvī haravlī; mājhī gāḍī cuklī",
+                "माझी पिशवी हरवली. माझी गाडी चुकली."
+              ],
+              "feedback": {
+                "correct": "The bag and the train are the subjects.",
+                "incorrect": "Let the thing agree: piśvī haravlī, gāḍī cuklī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"My bag is lost\"? (माझी पिशवी हरवली (mājhī piśvī haravlī).) \"My book is lost\"? (माझं पुस्तक हरवलं.) \"I missed my train\"? (माझी गाडी चुकली.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R283-at-the-station",
+      "sequence": 16310,
+      "title": "Review — at the station",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "at the station: a ticket, a time, and something gone wrong",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db42311f4bb63b3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask the way to the station and how far it is, then give it: straight, then right, opposite the temple. (sṭeśanlā kasaṁ jāycaṁ? ithūn kitī lāmb āhe? saraḷ jā, mag ujvīkaḍe vaḷā. sṭeśan mandirācyā samor āhe.) Then say ऋतू and ज्ञान, and name the letters ऋ and ञ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "One ticket to Pune, please. A return ticket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: One ticket to Pune, please. A return ticket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What time does the train leave? Which platform?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What time does the train leave? Which platform?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My bag is lost. I complained to the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My bag is lost. I complained to the police.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I was late, so I missed my train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I was late, so I missed my train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what went wrong on a trip of yours, in two sentences",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what went wrong on a trip of yours, in two sentences]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A ticket? (तिकीट (tikīṭ).) \"When does it leave?\" (किती वाजता निघते?) \"Lost\"? (हरवली.) \"Missed\"? (चुकली.) Which letters hide in ज्ञान and start ऋतू? (ञ, ऋ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

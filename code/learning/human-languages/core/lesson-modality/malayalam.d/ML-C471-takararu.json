@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C471-takararu",
+    "language": "malayalam",
+    "chapter": 471,
+    "sequence": 23530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:994c2d2b4504c656"
+  },
+  "findings": []
+}

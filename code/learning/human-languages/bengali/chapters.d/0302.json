@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "Telling It Well",
+  "label": "ch:bn-telling-it-well",
+  "canDo": "I can tell a story and say how it slowly unfolded.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C302-kromosh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can tell a story and say how it slowly unfolded.",
+    "assesses": [
+      "BN-LEX-C302-KAHINI302-03",
+      "BN-LEX-C302-KAHINI302-04",
+      "BN-LEX-C302-KAHINI302-05"
+    ]
+  }
+}

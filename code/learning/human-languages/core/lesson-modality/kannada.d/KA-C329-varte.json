@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C329-varte",
+    "language": "kannada",
+    "chapter": 329,
+    "sequence": 16530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d577201f61f1675d"
+  },
+  "findings": []
+}

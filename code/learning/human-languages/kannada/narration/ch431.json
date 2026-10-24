@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 431,
+  "title": "Reaching a Decision",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:35e197be482c11ae",
+  "lessons": [
+    {
+      "id": "KA-C431-tirmanisu",
+      "sequence": 21820,
+      "title": "ತೀರ್ಮಾನಿಸು (tīrmānisu) — to conclude; to resolve",
+      "headword": "ತೀರ್ಮಾನಿಸು",
+      "romanization": "tīrmānisu",
+      "gloss": "to conclude; to resolve",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1927ca8abb9bcef0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a stipulation, then the Kannada for a requirement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತೀರ್ಮಾನಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೀರ್ಮಾನಿಸು — tīrmānisu — \"to conclude; to resolve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೊನೆಗೆ ನಾನು ಊರಿಗೆ ಹಿಂತಿರುಗಲು ತೀರ್ಮಾನಿಸಿದೆ. konege nānu ūrige hintirugalu tīrmāniside. In the end I resolved to go back to my town."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತೀರ್ಮಾನಿಸಿದೆ, tīrmāniside."
+            },
+            {
+              "kind": "speech",
+              "text": "ತೀರ್ಮಾನ, a decision or a conclusion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೀರ್ಮಾನಿಸು (tīrmānisu) is built on tīrmāna, \"a settlement, a conclusion\", from native tīr, \"to be finished, to be settled\" (DEDR 3278)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīrmānisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīrmānisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīrmānisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīrmānisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konege nānu ūrige hintirugalu tīrmāniside. — In the end I resolved to go back to my town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konege nānu ūrige hintirugalu tīrmāniside.* — In the end I resolved to go back to my town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a stipulation, then the Kannada for a requirement, then say tīrmānisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a stipulation, then the Kannada for a requirement, then say *tīrmānisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತೀರ್ಮಾನಿಸು (tīrmānisu) mean? (\"To conclude; to resolve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C431-samalocisu",
+      "sequence": 21830,
+      "title": "ಸಮಾಲೋಚಿಸು (samālōcisu) — to confer; to consult",
+      "headword": "ಸಮಾಲೋಚಿಸು",
+      "romanization": "samālōcisu",
+      "gloss": "to confer; to consult",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46dac1890b3d366c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a requirement, then the Kannada for to conclude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಮಾಲೋಚಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಾಲೋಚಿಸು — samālōcisu — \"to confer; to consult\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿರ್ಧಾರ ತೆಗೆದುಕೊಳ್ಳುವ ಮೊದಲು ನಾನು ಅಪ್ಪನ ಜೊತೆ ಸಮಾಲೋಚಿಸಿದೆ. nirdhāra tegedukoḷḷuva modalu nānu appana jote samālōciside. Before deciding I conferred with Father."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಸಮಾಲೋಚಿಸಿದೆ, samālōciside."
+            },
+            {
+              "kind": "speech",
+              "text": "With whom: -ಜೊತೆ. ಸಮಾಲೋಚನೆ, a consultation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಾಲೋಚಿಸು (samālōcisu) is built on Sanskrit sam-, \"together\", and ālocana, \"seeing, considering\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samālōcisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samālōcisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samālōcisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samālōcisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirdhāra tegedukoḷḷuva modalu nānu appana jote samālōciside. — Before deciding I conferred with Father.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirdhāra tegedukoḷḷuva modalu nānu appana jote samālōciside.* — Before deciding I conferred with Father.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a requirement, then the Kannada for to conclude, then say samālōcisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a requirement, then the Kannada for to conclude, then say *samālōcisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಮಾಲೋಚಿಸು (samālōcisu) mean? (\"To confer; to consult\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C431-samvada",
+      "sequence": 21840,
+      "title": "ಸಂವಾದ (saṃvāda) — a dialogue; a discussion",
+      "headword": "ಸಂವಾದ",
+      "romanization": "saṃvāda",
+      "gloss": "a dialogue; a discussion",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7775bb5c808550a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to conclude, then the Kannada for to confer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂವಾದ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂವಾದ — saṃvāda — \"a dialogue; a discussion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿದ್ಯಾರ್ಥಿಗಳು ಲೇಖಕರ ಜೊತೆ ಸಂವಾದ ನಡೆಸಿದರು. vidyārthigaḷu lēkhakara jote saṃvāda naḍesidaru. The students held a discussion with the author."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂವಾದ (saṃvāda) ನಡೆಸು, to hold a dialogue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂವಾದ (saṃvāda) is borrowed from Sanskrit saṃvāda, \"speaking together, conversation\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃvāda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃvāda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃvāda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃvāda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidyārthigaḷu lēkhakara jote saṃvāda naḍesidaru. — The students held a discussion with the author.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidyārthigaḷu lēkhakara jote saṃvāda naḍesidaru.* — The students held a discussion with the author.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to conclude, then the Kannada for to confer, then say saṃvāda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to conclude, then the Kannada for to confer, then say *saṃvāda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂವಾದ (saṃvāda) mean? (\"A dialogue; a discussion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C431-tharavu",
+      "sequence": 21850,
+      "title": "ಠರಾವು (ṭharāvu) — a formal resolution",
+      "headword": "ಠರಾವು",
+      "romanization": "ṭharāvu",
+      "gloss": "a formal resolution",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ede2333a68098879",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to confer, then the Kannada for a dialogue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಠರಾವು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಠರಾವು — ṭharāvu — \"a formal resolution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಭೆ ಹೊಸ ಶಾಲೆಯ ಪರವಾಗಿ ಠರಾವು ಮಾಡಿತು. sabhe hosa śāleya paravāgi ṭharāvu māḍitu. The meeting passed a resolution in favour of a new school."
+            },
+            {
+              "kind": "speech",
+              "text": "ಠರಾವು (ṭharāvu) ಮಾಡು / ಅಂಗೀಕರಿಸು, to pass a resolution."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಠರಾವು (ṭharāvu) is usually traced to Hindustani or Marathi ṭharāv, \"a fixing, a resolution\"; DEDR and CDIAL do not list the Kannada form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭharāvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭharāvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭharāvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭharāvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabhe hosa śāleya paravāgi ṭharāvu māḍitu. — The meeting passed a resolution in favour of a new school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabhe hosa śāleya paravāgi ṭharāvu māḍitu.* — The meeting passed a resolution in favour of a new school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to confer, then the Kannada for a dialogue, then say ṭharāvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to confer, then the Kannada for a dialogue, then say *ṭharāvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಠರಾವು (ṭharāvu) mean? (\"A formal resolution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C431-olagollu",
+      "sequence": 21860,
+      "title": "ಒಳಗೊಳ್ಳು (oḷagoḷḷu) — to include",
+      "headword": "ಒಳಗೊಳ್ಳು",
+      "romanization": "oḷagoḷḷu",
+      "gloss": "to include",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0436aa9fd23b1d4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a dialogue, then the Kannada for a formal resolution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒಳಗೊಳ್ಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಳಗೊಳ್ಳು — oḷagoḷḷu — \"to include\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರವಾಸದ ಬೆಲೆ ಊಟವನ್ನೂ ಒಳಗೊಂಡಿತ್ತು. pravāsada bele ūṭavannū oḷagoṇḍittu. The price of the trip included meals."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಒಳಗೊಂಡಿತು, oḷagoṇḍitu."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly of things: ಒಳಗೊಂಡಿದೆ, it includes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಳಗೊಳ್ಳು (oḷagoḷḷu) is native Dravidian, built from oḷ, \"the inside\" (DEDR 698), and koḷ, \"to take\" (DEDR 2151): to take inside."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷagoḷḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷagoḷḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷagoḷḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷagoḷḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravāsada bele ūṭavannū oḷagoṇḍittu. — The price of the trip included meals.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravāsada bele ūṭavannū oḷagoṇḍittu.* — The price of the trip included meals.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a dialogue, then the Kannada for a formal resolution, then say oḷagoḷḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a dialogue, then the Kannada for a formal resolution, then say *oḷagoḷḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒಳಗೊಳ್ಳು (oḷagoḷḷu) mean? (\"To include\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

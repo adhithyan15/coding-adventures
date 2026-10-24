@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C491-ghorne",
+    "language": "marathi",
+    "chapter": 491,
+    "sequence": 28110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8efd9c87615a57f"
+  },
+  "findings": []
+}

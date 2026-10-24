@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-340-BOIDHO340",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-340-BOIDHO340"
+  ],
+  "after": []
+}

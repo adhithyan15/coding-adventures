@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Airports and Flights",
+  "label": "ch:hi-airports-and-flights",
+  "canDo": "I can talk about the airport, the plane and the pilot, and read the arrivals board.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C409-agaman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can talk about the airport, the plane and the pilot, and read the arrivals board.",
+    "assesses": [
+      "HI-LEX-C409-UDAN409-03",
+      "HI-LEX-C409-UDAN409-04",
+      "HI-LEX-C409-UDAN409-05"
+    ]
+  }
+}

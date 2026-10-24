@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C460-akulana",
+    "language": "hindi",
+    "chapter": 460,
+    "sequence": 25430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62eda420445e8ac4"
+  },
+  "findings": []
+}

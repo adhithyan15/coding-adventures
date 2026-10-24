@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:ae47ef94c3668f74",
+  "lessonIds": [
+    "HI-C327-purvaj",
+    "HI-C327-basna",
+    "HI-C327-vams",
+    "HI-C327-yug",
+    "HI-C327-ujarna",
+    "HI-R327-review-320-327"
+  ],
+  "tex": "hindi/book/chapters/ch327-ancestors.tex"
+}

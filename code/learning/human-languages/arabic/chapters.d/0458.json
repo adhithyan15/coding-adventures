@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Guarantees and swaps",
+  "label": "ch:ar-guarantees-and-swaps",
+  "canDo": "I can say a guarantee, a rate, a commodity, to take back and to barter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C458-qayada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can say a guarantee, a rate, a commodity, to take back and to barter.",
+    "assesses": [
+      "AR-LEX-C458-DAMAN458-03",
+      "AR-LEX-C458-DAMAN458-04",
+      "AR-LEX-C458-DAMAN458-05"
+    ]
+  }
+}

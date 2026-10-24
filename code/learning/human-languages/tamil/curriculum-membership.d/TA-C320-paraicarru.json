@@ -1,0 +1,11 @@
+{
+  "id": "TA-C320-paraicarru",
+  "pathSegment": "TA-PATH-320-KODI320",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-320-KODI320",
+      "order": 4
+    }
+  ]
+}

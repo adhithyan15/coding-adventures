@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 522,
+  "title": "Keeping Fit",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5c72ece63da2fde5",
+  "lessons": [
+    {
+      "id": "BN-C522-jogbyayam",
+      "sequence": 31530,
+      "title": "যোগব্যায়াম (jogbyāyām) — yoga (as exercise)",
+      "headword": "যোগব্যায়াম",
+      "romanization": "jogbyāyām",
+      "gloss": "yoga (as exercise)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b05d1cb07e0ab1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a catch in cricket, then the Bengali for to hit hard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: যোগব্যায়াম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যোগব্যায়াম — jogbyāyām — \"yoga (as exercise)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দাদু রোজ সকালে যোগব্যায়াম করেন। Dādu roj sôkāle jogbyāyām kôren. My grandfather does yoga every morning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যোগব্যায়াম (jogbyāyām) joins Sanskrit yoga, \"joining, discipline\", and vyāyāma, \"exertion, struggle\" (Monier-Williams); ব্যায়াম on its own is exercise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jogbyāyām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jogbyāyām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jogbyāyām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jogbyāyām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dādu roj sôkāle jogbyāyām kôren. — My grandfather does yoga every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dādu roj sôkāle jogbyāyām kôren.* — My grandfather does yoga every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a catch in cricket, then the Bengali for to hit hard, then say jogbyāyām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a catch in cricket, then the Bengali for to hit hard, then say *jogbyāyām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does যোগব্যায়াম (jogbyāyām) mean? (\"Yoga (as exercise)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C522-paloyan",
+      "sequence": 31540,
+      "title": "পালোয়ান (pāloyān) — a strongman; a wrestler (in the old style)",
+      "headword": "পালোয়ান",
+      "romanization": "pāloyān",
+      "gloss": "a strongman; a wrestler (in the old style)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e962b9c2c033455",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to hit hard, then the Bengali for yoga."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পালোয়ান",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পালোয়ান — pāloyān — \"a strongman; a wrestler (in the old style)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গ্রামের পালোয়ান একাই একটা ভারী পাথর তুলল। Grāmer pāloyān ekāi ekṭā bhārī pāthôr tullô. The village strongman lifted a heavy stone all by himself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পালোয়ান (pāloyān) is usually traced to Persian pahlavān, \"a champion, a hero\", worn down in everyday speech."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāloyān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāloyān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāloyān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāloyān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Grāmer pāloyān ekāi ekṭā bhārī pāthôr tullô. — The village strongman lifted a heavy stone all by himself.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Grāmer pāloyān ekāi ekṭā bhārī pāthôr tullô.* — The village strongman lifted a heavy stone all by himself.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to hit hard, then the Bengali for yoga, then say pāloyān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to hit hard, then the Bengali for yoga, then say *pāloyān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পালোয়ান (pāloyān) mean? (\"A strongman; a wrestler (in the old style)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C522-phit",
+      "sequence": 31550,
+      "title": "ফিট (phiṭ) — fit (in good shape)",
+      "headword": "ফিট",
+      "romanization": "phiṭ",
+      "gloss": "fit (in good shape)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54deb20b24be9125",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for yoga, then the Bengali for a strongman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফিট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফিট — phiṭ — \"fit (in good shape)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রোজ হাঁটলে তুমি ফিট থাকবে। Roj hā̃ṭle tumi phiṭ thākbe. If you walk every day, you'll stay fit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফিট (phiṭ) is borrowed from English fit, used of health."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phiṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phiṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phiṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phiṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Roj hā̃ṭle tumi phiṭ thākbe. — If you walk every day, you'll stay fit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Roj hā̃ṭle tumi phiṭ thākbe.* — If you walk every day, you'll stay fit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for yoga, then the Bengali for a strongman, then say phiṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for yoga, then the Bengali for a strongman, then say *phiṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফিট (phiṭ) mean? (\"Fit (in good shape)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C522-bakano",
+      "sequence": 31560,
+      "title": "বাঁকানো (bā̃kāno) — to bend",
+      "headword": "বাঁকানো",
+      "romanization": "bā̃kāno",
+      "gloss": "to bend",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26bc4d40b8e07c55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a strongman, then the Bengali for in good shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বাঁকানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাঁকানো — bā̃kāno — \"to bend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ব্যায়ামের সময় আমি হাঁটু বাঁকালাম। Bæyāmer sômôy āmi hā̃ṭu bā̃kālām. I bent my knees during the exercise."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি হাঁটু বাঁকালেন, tini hā̃ṭu bā̃kālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাঁকানো (bā̃kāno) is the verb of বাঁকা, \"crooked\", from Sanskrit vaṅka, \"bent\" (CDIAL 11191): to make something crooked."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃kāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃kāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃kāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃kāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bæyāmer sômôy āmi hā̃ṭu bā̃kālām. — I bent my knees during the exercise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Bæyāmer sômôy āmi hā̃ṭu bā̃kālām.* — I bent my knees during the exercise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a strongman, then the Bengali for in good shape, then say bā̃kāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a strongman, then the Bengali for in good shape, then say *bā̃kāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বাঁকানো (bā̃kāno) mean? (\"To bend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C522-kusti",
+      "sequence": 31570,
+      "title": "কুস্তি (kusti) — wrestling",
+      "headword": "কুস্তি",
+      "romanization": "kusti",
+      "gloss": "wrestling",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7136d63fc78c458a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for in good shape, then the Bengali for to bend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কুস্তি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কুস্তি — kusti — \"wrestling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গ্রামের মেলায় কুস্তির প্রতিযোগিতা হল। Grāmer melāy kustir prôtijogitā hôlô. There was a wrestling competition at the village fair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কুস্তি (kusti) is usually traced to Persian kushtī, \"wrestling\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kusti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kusti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kusti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kusti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Grāmer melāy kustir prôtijogitā hôlô. — There was a wrestling competition at the village fair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Grāmer melāy kustir prôtijogitā hôlô.* — There was a wrestling competition at the village fair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for in good shape, then the Bengali for to bend, then say kusti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for in good shape, then the Bengali for to bend, then say *kusti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কুস্তি (kusti) mean? (\"Wrestling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

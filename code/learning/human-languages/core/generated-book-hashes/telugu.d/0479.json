@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:8555b2ecbd3ddd45",
+  "lessonIds": [
+    "TE-C479-pidugu",
+    "TE-C479-kundapota",
+    "TE-C479-kammu",
+    "TE-C479-masakabaru",
+    "TE-C479-tumpara"
+  ],
+  "tex": "telugu/book/chapters/ch479-thunder-and-downpours.tex"
+}

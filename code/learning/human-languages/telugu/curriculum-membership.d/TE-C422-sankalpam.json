@@ -1,0 +1,11 @@
+{
+  "id": "TE-C422-sankalpam",
+  "pathSegment": "TE-PATH-422-HAMI422",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-422-HAMI422",
+      "order": 3
+    }
+  ]
+}

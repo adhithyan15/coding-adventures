@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:17f9622aacfbff34",
+  "lessonIds": [
+    "MR-C317-aher",
+    "MR-C317-asirvad",
+    "MR-C317-aksata",
+    "MR-C317-sanai",
+    "MR-C317-ukhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch317.txt",
+  "json": "marathi/narration/ch317.json",
+  "textHash": "fnv1a64:3ce5521224e53a39",
+  "jsonHash": "fnv1a64:9e7c9957bbc2b3fa",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C471-lihaz",
+  "pathSegment": "HI-PATH-471-VINAMRA471",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-471-VINAMRA471",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Free Time",
+  "label": "ch:ta-free-time",
+  "canDo": "I can talk about fun, chatting and clubs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C527-atari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about fun, chatting and clubs.",
+    "assesses": [
+      "TA-LEX-C527-OYVUNERAM527-03",
+      "TA-LEX-C527-OYVUNERAM527-04",
+      "TA-LEX-C527-OYVUNERAM527-05"
+    ]
+  }
+}

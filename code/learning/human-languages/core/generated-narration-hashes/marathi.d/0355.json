@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:af66e37c76dd8705",
+  "lessonIds": [
+    "MR-C355-matdan",
+    "MR-C355-pratinidhi",
+    "MR-C355-umedvar",
+    "MR-C355-pracar",
+    "MR-C355-nivdun-yene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch355.txt",
+  "json": "marathi/narration/ch355.json",
+  "textHash": "fnv1a64:52ce851add947b76",
+  "jsonHash": "fnv1a64:f783b689e2a859ff",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Property and Inheritance",
+  "label": "ch:ml-property-and-inheritance",
+  "canDo": "I can say property, an heir, a will, a widow and heritage.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C394-paitrkam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can say property, an heir, a will, a widow and heritage.",
+    "assesses": [
+      "ML-LEX-C394-SVATHTHU394-03",
+      "ML-LEX-C394-SVATHTHU394-04",
+      "ML-LEX-C394-SVATHTHU394-05"
+    ]
+  }
+}

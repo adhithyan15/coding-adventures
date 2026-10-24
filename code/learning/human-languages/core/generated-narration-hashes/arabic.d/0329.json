@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:5f9626495e36aa81",
+  "lessonIds": [
+    "AR-C329-thawra",
+    "AR-C329-thara",
+    "AR-C329-istaqalla",
+    "AR-C329-istiqlal",
+    "AR-C329-shab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch329.txt",
+  "json": "arabic/narration/ch329.json",
+  "textHash": "fnv1a64:a5346ee7bb3c5941",
+  "jsonHash": "fnv1a64:08347cfb749d0b1a",
+  "findings": []
+}

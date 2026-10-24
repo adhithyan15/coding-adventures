@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:ed17f6ba2c49c397",
+  "lessonIds": [
+    "AR-C427-masafa",
+    "AR-C427-taakkada",
+    "AR-C427-addala",
+    "AR-C427-istajara",
+    "AR-C427-haqibat-zahr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch427.txt",
+  "json": "arabic/narration/ch427.json",
+  "textHash": "fnv1a64:9ab9db2253800b03",
+  "jsonHash": "fnv1a64:1035c6a75811e606",
+  "findings": []
+}

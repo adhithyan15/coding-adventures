@@ -1,0 +1,11 @@
+{
+  "id": "MR-C427-thakbaki",
+  "pathSegment": "MR-PATH-427-VYAJ427",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-427-VYAJ427",
+      "order": 1
+    }
+  ]
+}

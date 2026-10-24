@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C538-vayincu",
+    "language": "telugu",
+    "chapter": 538,
+    "sequence": 27270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:588e49b512b1e420"
+  },
+  "findings": []
+}

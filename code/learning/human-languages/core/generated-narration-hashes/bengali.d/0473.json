@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:cf99f04235789c78",
+  "lessonIds": [
+    "BN-C473-songkromon",
+    "BN-C473-jibanu",
+    "BN-C473-chhoyache",
+    "BN-C473-mohamari",
+    "BN-C473-akranto-hooya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch473.txt",
+  "json": "bengali/narration/ch473.json",
+  "textHash": "fnv1a64:644cdebf63722217",
+  "jsonHash": "fnv1a64:c7eda9da28e26f43",
+  "findings": []
+}

@@ -14,7 +14,7 @@ romanization: "kaippēci"
 concept_tag: TA-THINGS134-KAIPPECI
 prerequisites: [TA-C134-mettai, TA-C134-tolaikkatci]
 sounds: []
-roots: [dravidian-talai-kai, pesu-speak-dravidian]
+roots: [dravidian-kai-hand, pesu-speak-dravidian]
 etymology_hook: "கைப்பேசி — a coinage: kai 'hand' (DEDR 2023) + pēci 'speaker', from pēsu (DEDR 4430)"
 duration:
   max_seconds: 200

@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:e2977a0cadce0d2b",
+  "lessonIds": [
+    "TA-C301-mitpu",
+    "TA-C301-itipatu",
+    "TA-C301-vituvi",
+    "TA-C301-uyir-pilai",
+    "TA-C301-mittetu",
+    "TA-R301-review-294-301"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch301.txt",
+  "json": "tamil/narration/ch301.json",
+  "textHash": "fnv1a64:83a3e1bc8c2872cc",
+  "jsonHash": "fnv1a64:694155e1d4590a90",
+  "findings": []
+}

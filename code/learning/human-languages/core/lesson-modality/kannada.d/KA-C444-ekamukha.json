@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C444-ekamukha",
+    "language": "kannada",
+    "chapter": 444,
+    "sequence": 22600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:362a74dd02fc04c2"
+  },
+  "findings": []
+}

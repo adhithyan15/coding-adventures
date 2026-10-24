@@ -1,0 +1,11 @@
+{
+  "id": "ML-C401-ceruttunilkkuka",
+  "pathSegment": "ML-PATH-401-VIPLAVAM401",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-401-VIPLAVAM401",
+      "order": 4
+    }
+  ]
+}

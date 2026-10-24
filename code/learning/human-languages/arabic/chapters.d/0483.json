@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Cold",
+  "label": "ch:ar-cold",
+  "canDo": "I can say coldness, chilly, biting, frost and to get cold.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C483-barada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can say coldness, chilly, biting, frost and to get cold.",
+    "assesses": [
+      "AR-LEX-C483-BARD483-03",
+      "AR-LEX-C483-BARD483-04",
+      "AR-LEX-C483-BARD483-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C512-khunti",
+  "pathSegment": "BN-PATH-512-UNUN512",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-512-UNUN512",
+      "order": 1
+    }
+  ]
+}

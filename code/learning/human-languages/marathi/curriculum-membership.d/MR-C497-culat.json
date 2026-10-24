@@ -1,0 +1,11 @@
+{
+  "id": "MR-C497-culat",
+  "pathSegment": "MR-PATH-497-THORLA497",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-497-THORLA497",
+      "order": 3
+    }
+  ]
+}

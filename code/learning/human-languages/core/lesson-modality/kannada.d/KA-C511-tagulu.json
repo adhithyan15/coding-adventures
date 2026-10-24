@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C511-tagulu",
+    "language": "kannada",
+    "chapter": 511,
+    "sequence": 26070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb0c0469bf11b4ae"
+  },
+  "findings": []
+}

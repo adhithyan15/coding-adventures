@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "Good Sense and Bad Habits",
+  "label": "ch:ml-good-sense-and-bad-habits",
+  "canDo": "I can say good sense, self-assurance, guileless, a bad habit and tolerance.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C529-sahisnuta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can say good sense, self-assurance, guileless, a bad habit and tolerance.",
+    "assesses": [
+      "ML-LEX-C529-VIVEKAM529-03",
+      "ML-LEX-C529-VIVEKAM529-04",
+      "ML-LEX-C529-VIVEKAM529-05"
+    ]
+  }
+}

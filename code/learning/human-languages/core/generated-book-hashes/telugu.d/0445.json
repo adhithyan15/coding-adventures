@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:ae53555add4c98ec",
+  "lessonIds": [
+    "TE-C445-rahadari",
+    "TE-C445-lari",
+    "TE-C445-dusukupovu",
+    "TE-C445-nemmadincu",
+    "TE-C445-adupu-tappu",
+    "TE-R445-review-438-445"
+  ],
+  "tex": "telugu/book/chapters/ch445-on-the-highway.tex"
+}

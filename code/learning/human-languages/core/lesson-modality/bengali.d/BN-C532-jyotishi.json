@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C532-jyotishi",
+    "language": "bengali",
+    "chapter": 532,
+    "sequence": 32090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:308852398f34e869"
+  },
+  "findings": []
+}

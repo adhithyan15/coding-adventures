@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:865806a63cca1eca",
+  "lessonIds": [
+    "BN-C533-doibat",
+    "BN-C533-kaktaliyo",
+    "BN-C533-mooka",
+    "BN-C533-phoskano",
+    "BN-C533-lotari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch533.txt",
+  "json": "bengali/narration/ch533.json",
+  "textHash": "fnv1a64:54edb5e45149f187",
+  "jsonHash": "fnv1a64:7ed66ef239fd8d0d",
+  "findings": []
+}

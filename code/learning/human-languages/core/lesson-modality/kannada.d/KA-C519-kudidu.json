@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C519-kudidu",
+    "language": "kannada",
+    "chapter": 519,
+    "sequence": 26530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8f50497db9c582d"
+  },
+  "findings": []
+}

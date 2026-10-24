@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Happiness and Hardship",
+  "label": "ch:bn-happiness-and-hardship",
+  "canDo": "I can talk about happiness, hardship and enjoying something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C439-mete-otha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can talk about happiness, hardship and enjoying something.",
+    "assesses": [
+      "BN-LEX-C439-SUKH439-03",
+      "BN-LEX-C439-SUKH439-04",
+      "BN-LEX-C439-SUKH439-05"
+    ]
+  }
+}

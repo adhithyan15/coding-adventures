@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Parties and campaigns",
+  "label": "ch:ar-parties-and-campaigns",
+  "canDo": "I can talk about a party, a campaign, an activist and democracy, and say that someone ran for office.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C379-dimuqratiyya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can talk about a party, a campaign, an activist and democracy, and say that someone ran for office.",
+    "assesses": [
+      "AR-LEX-C379-HIZB379-03",
+      "AR-LEX-C379-HIZB379-04",
+      "AR-LEX-C379-HIZB379-05"
+    ]
+  }
+}

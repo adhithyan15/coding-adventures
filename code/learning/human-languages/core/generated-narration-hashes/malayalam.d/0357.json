@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:6d63ca2f115d4259",
+  "lessonIds": [
+    "ML-C357-pinnitu",
+    "ML-C357-kramena",
+    "ML-C357-atuvare",
+    "ML-C357-annumutal",
+    "ML-C357-potunnane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch357.txt",
+  "json": "malayalam/narration/ch357.json",
+  "textHash": "fnv1a64:41888def008c9145",
+  "jsonHash": "fnv1a64:dcf9ead3778b171b",
+  "findings": []
+}

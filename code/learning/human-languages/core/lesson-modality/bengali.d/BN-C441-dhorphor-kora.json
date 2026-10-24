@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C441-dhorphor-kora",
+    "language": "bengali",
+    "chapter": 441,
+    "sequence": 27190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ab46311ac7b0593"
+  },
+  "findings": []
+}

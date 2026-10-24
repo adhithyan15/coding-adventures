@@ -1,0 +1,11 @@
+{
+  "id": "KA-C373-gatakala",
+  "pathSegment": "KA-PATH-373-UDAYA373",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-373-UDAYA373",
+      "order": 2
+    }
+  ]
+}

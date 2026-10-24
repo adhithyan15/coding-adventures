@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C322-gaurav",
+    "language": "marathi",
+    "chapter": 322,
+    "sequence": 18760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bf761407f3378dc"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C367-andaj-kora",
+    "language": "bengali",
+    "chapter": 367,
+    "sequence": 22900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d40e0bfd8066155"
+  },
+  "findings": []
+}

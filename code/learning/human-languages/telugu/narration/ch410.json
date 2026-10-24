@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 410,
+  "title": "Giving and Serving",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cac4fe7cadd4bf79",
+  "lessons": [
+    {
+      "id": "TE-C410-seva",
+      "sequence": 20430,
+      "title": "సేవ (sēva) — service; selfless work",
+      "headword": "సేవ",
+      "romanization": "sēva",
+      "gloss": "service; selfless work",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02043bdebc7d3e9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for solidarity, then the Telugu for to put into practice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సేవ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సేవ — sēva — \"service; selfless work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె పేదవాళ్ళకు సేవ చేస్తుంది. āme pēdavāḷḷaku sēva cēstundi. She serves the poor."
+            },
+            {
+              "kind": "speech",
+              "text": "సేవ (sēva) చేయు, to serve; ప్రజా సేవ (sēva), public service."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సేవ (sēva) is borrowed from Sanskrit sevā, \"going to; service, attendance; devotion\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sēva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sēva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sēva, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sēva*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme pēdavāḷḷaku sēva cēstundi. — She serves the poor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme pēdavāḷḷaku sēva cēstundi.* — She serves the poor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for solidarity, then the Telugu for to put into practice, then say sēva again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for solidarity, then the Telugu for to put into practice, then say *sēva* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సేవ (sēva) mean? (\"Service; selfless work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C410-viralam",
+      "sequence": 20440,
+      "title": "విరాళం (virāḷaṁ) — a donation",
+      "headword": "విరాళం",
+      "romanization": "virāḷaṁ",
+      "gloss": "a donation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17671a97992b76a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to put into practice, then the Telugu for service."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విరాళం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విరాళం — virāḷaṁ — \"a donation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను ఆసుపత్రికి పెద్ద విరాళం ఇచ్చాడు. atanu āsupatriki pedda virāḷaṁ iccāḍu. He gave a big donation to the hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: విరాళాలు, virāḷālu."
+            },
+            {
+              "kind": "speech",
+              "text": "విరాళం (virāḷaṁ) ఇచ్చు, to donate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విరాళం (virāḷaṁ) is a Telugu word whose origin is not settled; neither DEDR nor CDIAL lists it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virāḷaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virāḷaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virāḷaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virāḷaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu āsupatriki pedda virāḷaṁ iccāḍu. — He gave a big donation to the hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu āsupatriki pedda virāḷaṁ iccāḍu.* — He gave a big donation to the hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to put into practice, then the Telugu for service, then say virāḷaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to put into practice, then the Telugu for service, then say *virāḷaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విరాళం (virāḷaṁ) mean? (\"A donation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C410-svacchanda",
+      "sequence": 20450,
+      "title": "స్వచ్ఛంద (svacchanda) — voluntary",
+      "headword": "స్వచ్ఛంద",
+      "romanization": "svacchanda",
+      "gloss": "voluntary",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d5bb36cc412f81c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for service, then the Telugu for a donation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్వచ్ఛంద",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వచ్ఛంద — svacchanda — \"voluntary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె ఒక స్వచ్ఛంద సంస్థలో పని చేస్తుంది. āme oka svacchanda saṁsthalō pani cēstundi. She works for a voluntary organisation."
+            },
+            {
+              "kind": "speech",
+              "text": "స్వచ్ఛంద (svacchanda) సంస్థ, a voluntary organisation; స్వచ్ఛందంగా, of one’s own will."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వచ్ఛంద (svacchanda) is borrowed from Sanskrit svacchanda, \"one’s own free will; acting at pleasure, independent\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svacchanda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svacchanda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svacchanda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svacchanda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme oka svacchanda saṁsthalō pani cēstundi. — She works for a voluntary organisation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme oka svacchanda saṁsthalō pani cēstundi.* — She works for a voluntary organisation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for service, then the Telugu for a donation, then say svacchanda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for service, then the Telugu for a donation, then say *svacchanda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్వచ్ఛంద (svacchanda) mean? (\"Voluntary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C410-karyakarta",
+      "sequence": 20460,
+      "title": "కార్యకర్త (kāryakarta) — an activist; a volunteer",
+      "headword": "కార్యకర్త",
+      "romanization": "kāryakarta",
+      "gloss": "an activist; a volunteer",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1c0c5b37076b74f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a donation, then the Telugu for voluntary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కార్యకర్త",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కార్యకర్త — kāryakarta — \"an activist; a volunteer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కార్యకర్తలు ఇంటింటికీ వెళ్ళి సహాయం చేశారు. kāryakartalu iṇṭiṇṭikī veḷḷi sahāyaṁ cēśāru. The volunteers went from house to house and helped."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: కార్యకర్తలు, kāryakartalu."
+            },
+            {
+              "kind": "speech",
+              "text": "A party worker or a volunteer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కార్యకర్త (kāryakarta) is built from Sanskrit kārya, \"to be done; business\" (CDIAL 3078), and kartṛ, \"a doer, an agent\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryakarta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryakarta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryakarta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryakarta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryakartalu iṇṭiṇṭikī veḷḷi sahāyaṁ cēśāru. — The volunteers went from house to house and helped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryakartalu iṇṭiṇṭikī veḷḷi sahāyaṁ cēśāru.* — The volunteers went from house to house and helped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a donation, then the Telugu for voluntary, then say kāryakarta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a donation, then the Telugu for voluntary, then say *kāryakarta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కార్యకర్త (kāryakarta) mean? (\"An activist; a volunteer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C410-data",
+      "sequence": 20470,
+      "title": "దాత (dāta) — a donor",
+      "headword": "దాత",
+      "romanization": "dāta",
+      "gloss": "a donor",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af9e1731b6f7ce76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for voluntary, then the Telugu for an activist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దాత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దాత — dāta — \"a donor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఒక దాత పాఠశాలకు పుస్తకాలు ఇచ్చాడు. oka dāta pāṭhaśālaku pustakālu iccāḍu. A donor gave books to the school."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: దాతలు, dātalu."
+            },
+            {
+              "kind": "speech",
+              "text": "రక్తదాత, a blood donor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దాత (dāta) is borrowed from Sanskrit dātṛ, \"a giver\" (Monier-Williams), from dā, \"to give\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oka dāta pāṭhaśālaku pustakālu iccāḍu. — A donor gave books to the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oka dāta pāṭhaśālaku pustakālu iccāḍu.* — A donor gave books to the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for voluntary, then the Telugu for an activist, then say dāta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for voluntary, then the Telugu for an activist, then say *dāta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దాత (dāta) mean? (\"A donor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

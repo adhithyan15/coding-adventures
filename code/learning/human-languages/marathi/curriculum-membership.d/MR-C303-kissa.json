@@ -1,0 +1,11 @@
+{
+  "id": "MR-C303-kissa",
+  "pathSegment": "MR-PATH-303-KATHA303",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-303-KATHA303",
+      "order": 3
+    }
+  ]
+}

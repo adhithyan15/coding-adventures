@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:7bef40282618de72",
+  "lessonIds": [
+    "AR-C489-dhur",
+    "AR-C489-rub",
+    "AR-C489-hudu",
+    "AR-C489-irtaasha",
+    "AR-C489-akhafa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch489.txt",
+  "json": "arabic/narration/ch489.json",
+  "textHash": "fnv1a64:6277616d761e47b6",
+  "jsonHash": "fnv1a64:8e9e8f987c5f8cc2",
+  "findings": []
+}

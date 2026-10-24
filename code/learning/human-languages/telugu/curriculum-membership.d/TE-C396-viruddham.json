@@ -1,0 +1,11 @@
+{
+  "id": "TE-C396-viruddham",
+  "pathSegment": "TE-PATH-396-VIRUDDHAM396",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-396-VIRUDDHAM396",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C497-veliyerram",
+    "language": "malayalam",
+    "chapter": 497,
+    "sequence": 24860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ecf58c3f862c48c"
+  },
+  "findings": []
+}

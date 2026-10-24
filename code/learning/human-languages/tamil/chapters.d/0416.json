@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Boats and Oars",
+  "label": "ch:ta-boats-and-oars",
+  "canDo": "I can talk about a boatman, oars, small boats, a catamaran and a fishing net.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C416-valai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can talk about a boatman, oars, small boats, a catamaran and a fishing net.",
+    "assesses": [
+      "TA-LEX-C416-PATAKU416-03",
+      "TA-LEX-C416-PATAKU416-04",
+      "TA-LEX-C416-PATAKU416-05"
+    ]
+  }
+}

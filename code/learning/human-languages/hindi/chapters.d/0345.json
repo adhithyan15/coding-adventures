@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "What It Is For",
+  "label": "ch:hi-what-it-is-for",
+  "canDo": "I can say what something is for and what someone means to do.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C345-irada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can say what something is for and what someone means to do.",
+    "assesses": [
+      "HI-LEX-C345-UDDESHYA345-03",
+      "HI-LEX-C345-UDDESHYA345-04",
+      "HI-LEX-C345-UDDESHYA345-05"
+    ]
+  }
+}

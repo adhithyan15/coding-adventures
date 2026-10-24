@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C442-pacumai",
+    "language": "tamil",
+    "chapter": 442,
+    "sequence": 25270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20f7aa970e5c5723"
+  },
+  "findings": []
+}

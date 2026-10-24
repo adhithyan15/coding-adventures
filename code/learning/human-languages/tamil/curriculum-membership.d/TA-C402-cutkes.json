@@ -1,0 +1,11 @@
+{
+  "id": "TA-C402-cutkes",
+  "pathSegment": "TA-PATH-402-SUMAI402",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-402-SUMAI402",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C442-melsetuve",
+    "language": "kannada",
+    "chapter": 442,
+    "sequence": 22480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:294737e2c8e0014f"
+  },
+  "findings": []
+}

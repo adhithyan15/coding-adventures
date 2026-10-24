@@ -1,0 +1,11 @@
+{
+  "id": "TE-C319-otu",
+  "pathSegment": "TE-PATH-319-MUST-BECAUSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-319-MUST-BECAUSE",
+      "order": 1
+    }
+  ]
+}

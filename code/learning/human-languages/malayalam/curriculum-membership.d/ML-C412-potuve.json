@@ -1,0 +1,11 @@
+{
+  "id": "ML-C412-potuve",
+  "pathSegment": "ML-PATH-412-CURUKKAM412",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-412-CURUKKAM412",
+      "order": 3
+    }
+  ]
+}

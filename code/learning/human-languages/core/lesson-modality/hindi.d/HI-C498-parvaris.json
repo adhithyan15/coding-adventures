@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C498-parvaris",
+    "language": "hindi",
+    "chapter": 498,
+    "sequence": 27350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f53aeca1a2cda955"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-317-AHER317",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "MR-EXT-317-AHER317"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-384-TANMIYA384",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "AR-EXT-384-TANMIYA384"
+  ],
+  "after": []
+}

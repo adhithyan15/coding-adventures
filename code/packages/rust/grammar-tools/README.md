@@ -50,6 +50,26 @@ let issues = cross_validate(&tokens, &grammar);
 assert!(issues.is_empty());
 ```
 
+### Token-adjacency predicates (F11)
+
+A `.grammar` can test the *gap* in front of the next token with zero-width
+`@` predicates. They read flags the lexer records on each token, consume
+nothing and add nothing to the tree:
+
+```text
+return_statement = "return" [ @no_newline_before expression ] SEMICOLON ;  # ECMAScript
+command_arg      = @space_before MINUS @no_space_before primary ;          # Ruby `f -1`
+```
+
+The six predicates are `@space_before`, `@no_space_before`,
+`@newline_before`, `@no_newline_before`, `@space_after_next` and
+`@no_space_after_next` (`!@p` equals `@no_p`). They parse to
+`GrammarElement::AdjacencyPredicate`, compile to a fully qualified
+`AdjacencyPredicate::…` path (so grammars without predicates regenerate
+byte-identically), and validation rejects a repetition built only from
+zero-width elements. Unknown names and `@asi(...)` (not yet implemented) are
+parse errors. See `code/specs/F11-grammar-token-adjacency-predicates.md`.
+
 ## Modules
 
 - **`token_grammar`** — Parse `.tokens` files into `TokenGrammar` structs. Includes validation for duplicate names, invalid regex, and naming conventions.

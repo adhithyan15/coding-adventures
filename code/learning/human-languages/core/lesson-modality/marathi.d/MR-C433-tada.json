@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C433-tada",
+    "language": "marathi",
+    "chapter": 433,
+    "sequence": 24900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9ae5c87d5908a8e"
+  },
+  "findings": []
+}

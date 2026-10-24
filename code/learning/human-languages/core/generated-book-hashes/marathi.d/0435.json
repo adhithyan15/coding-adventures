@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:6f553fcab1866183",
+  "lessonIds": [
+    "MR-C435-tancai",
+    "MR-C435-tutvada",
+    "MR-C435-korda",
+    "MR-C435-atne",
+    "MR-C435-nasne",
+    "MR-R435-review-428-435"
+  ],
+  "tex": "marathi/book/chapters/ch435-shortages.tex"
+}

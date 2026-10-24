@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C426-jagaruka",
+    "language": "kannada",
+    "chapter": 426,
+    "sequence": 21590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf6b3ddddd056567"
+  },
+  "findings": []
+}

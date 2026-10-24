@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Drawing Close",
+  "label": "ch:ta-drawing-close",
+  "canDo": "I can talk about adjusting to others, drawing near, embracing, caressing and family bonds.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C502-pantam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can talk about adjusting to others, drawing near, embracing, caressing and family bonds.",
+    "assesses": [
+      "TA-LEX-C502-NERUKKAM502-03",
+      "TA-LEX-C502-NERUKKAM502-04",
+      "TA-LEX-C502-NERUKKAM502-05"
+    ]
+  }
+}

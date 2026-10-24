@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C502-charj-deoya",
+    "language": "bengali",
+    "chapter": 502,
+    "sequence": 30550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:778f8aa0129cea8b"
+  },
+  "findings": []
+}

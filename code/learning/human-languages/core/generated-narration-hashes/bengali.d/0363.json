@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:ba37e6ce94a71341",
+  "lessonIds": [
+    "BN-C363-somosya",
+    "BN-C363-upay",
+    "BN-C363-bikolpo",
+    "BN-C363-uttor",
+    "BN-C363-utre-jaoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch363.txt",
+  "json": "bengali/narration/ch363.json",
+  "textHash": "fnv1a64:5c01d8830c793283",
+  "jsonHash": "fnv1a64:a99b420212f30aa2",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "When the Car Breaks Down",
+  "label": "ch:ta-when-the-car-breaks-down",
+  "canDo": "I can talk about a fault and an engine that stops working, and dents, scrapes and bumps.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C411-muttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can talk about a fault and an engine that stops working, and dents, scrapes and bumps.",
+    "assesses": [
+      "TA-LEX-C411-KOLARU411-03",
+      "TA-LEX-C411-KOLARU411-04",
+      "TA-LEX-C411-KOLARU411-05"
+    ]
+  }
+}

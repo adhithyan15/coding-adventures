@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:a89ed7809586f918",
+  "lessonIds": [
+    "HI-C344-parinam",
+    "HI-C344-prabhav",
+    "HI-C344-barhna",
+    "HI-C344-bigaarna",
+    "HI-C344-srot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch344.txt",
+  "json": "hindi/narration/ch344.json",
+  "textHash": "fnv1a64:4add5ca52d61cd99",
+  "jsonHash": "fnv1a64:39a66f29856f7191",
+  "findings": []
+}

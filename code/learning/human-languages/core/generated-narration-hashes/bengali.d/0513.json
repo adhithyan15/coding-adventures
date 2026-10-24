@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:33c312864399346c",
+  "lessonIds": [
+    "BN-C513-kota",
+    "BN-C513-khosa",
+    "BN-C513-kora-grate",
+    "BN-C513-makha",
+    "BN-C513-kuchono"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch513.txt",
+  "json": "bengali/narration/ch513.json",
+  "textHash": "fnv1a64:fe4cb80fef959c38",
+  "jsonHash": "fnv1a64:885cb16e862addbb",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:06d15c32fe9665d1",
+  "lessonIds": [
+    "MR-C508-vetan",
+    "MR-C508-majuri",
+    "MR-C508-mandhan",
+    "MR-C508-pagarvadh",
+    "MR-C508-kamavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch508.txt",
+  "json": "marathi/narration/ch508.json",
+  "textHash": "fnv1a64:e999c1ccbc0f0c51",
+  "jsonHash": "fnv1a64:86e3cfc036e7dadc",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-310-STORY-ORDER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-310-STORY-ORDER"
+  ],
+  "after": []
+}

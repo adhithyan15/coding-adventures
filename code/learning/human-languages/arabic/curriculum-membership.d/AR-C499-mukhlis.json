@@ -1,0 +1,11 @@
+{
+  "id": "AR-C499-mukhlis",
+  "pathSegment": "AR-PATH-499-AMANA499",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-499-AMANA499",
+      "order": 3
+    }
+  ]
+}

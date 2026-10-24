@@ -1,0 +1,11 @@
+{
+  "id": "ML-C483-kotukuvala",
+  "pathSegment": "ML-PATH-483-SEVANAM483",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-483-SEVANAM483",
+      "order": 1
+    }
+  ]
+}

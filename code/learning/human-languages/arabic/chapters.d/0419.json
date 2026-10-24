@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Positive and negative",
+  "label": "ch:ar-positive-and-negative",
+  "canDo": "I can say positive, negative, basic, secondary and comprehensive.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C419-shamil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can say positive, negative, basic, secondary and comprehensive.",
+    "assesses": [
+      "AR-LEX-C419-IJABI419-03",
+      "AR-LEX-C419-IJABI419-04",
+      "AR-LEX-C419-IJABI419-05"
+    ]
+  }
+}

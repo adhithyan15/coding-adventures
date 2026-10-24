@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-422-KOTHI422",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "HI-EXT-422-KOTHI422"
+  ],
+  "after": []
+}

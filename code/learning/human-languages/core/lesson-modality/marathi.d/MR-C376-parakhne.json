@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C376-parakhne",
+    "language": "marathi",
+    "chapter": 376,
+    "sequence": 21750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f6c9b3612be0b21"
+  },
+  "findings": []
+}

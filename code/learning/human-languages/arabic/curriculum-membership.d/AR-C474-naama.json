@@ -1,0 +1,11 @@
+{
+  "id": "AR-C474-naama",
+  "pathSegment": "AR-PATH-474-SAQR474",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-474-SAQR474",
+      "order": 1
+    }
+  ]
+}

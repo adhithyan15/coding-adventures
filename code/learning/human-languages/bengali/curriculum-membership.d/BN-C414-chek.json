@@ -1,0 +1,11 @@
+{
+  "id": "BN-C414-chek",
+  "pathSegment": "BN-PATH-414-BANK414",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-414-BANK414",
+      "order": 3
+    }
+  ]
+}

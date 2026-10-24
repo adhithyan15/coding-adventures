@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C289-uchu",
+    "language": "bengali",
+    "chapter": 289,
+    "sequence": 18680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6f191c1f2edf931"
+  },
+  "findings": []
+}

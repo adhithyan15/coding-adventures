@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:18157a492c7a9399",
+  "lessonIds": [
+    "KA-C468-gatra",
+    "KA-C468-asali",
+    "KA-C468-gunamatta",
+    "KA-C468-khatari",
+    "KA-C468-masu",
+    "KA-R468-review-462-468"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch468.txt",
+  "json": "kannada/narration/ch468.json",
+  "textHash": "fnv1a64:4daa002f1c6e1db0",
+  "jsonHash": "fnv1a64:6678808cce60d81b",
+  "findings": []
+}

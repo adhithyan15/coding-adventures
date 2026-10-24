@@ -1,0 +1,11 @@
+{
+  "id": "BN-C338-khondon-kora",
+  "pathSegment": "BN-PATH-338-DOLIL338",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-338-DOLIL338",
+      "order": 4
+    }
+  ]
+}

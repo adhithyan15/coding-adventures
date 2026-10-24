@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Getting Along",
+  "label": "ch:hi-getting-along",
+  "canDo": "I can say how family members get on.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C501-sulah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can say how family members get on.",
+    "assesses": [
+      "HI-LEX-C501-NATA501-03",
+      "HI-LEX-C501-NATA501-04",
+      "HI-LEX-C501-NATA501-05"
+    ]
+  }
+}

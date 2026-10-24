@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C530-curucurukku",
+    "language": "malayalam",
+    "chapter": 530,
+    "sequence": 26670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f820d919538fd66"
+  },
+  "findings": []
+}

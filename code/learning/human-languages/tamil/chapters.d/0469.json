@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Enemies and Grudges",
+  "label": "ch:ta-enemies-and-grudges",
+  "canDo": "I can talk about enmity, grudges and revenge.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C469-palivanku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can talk about enmity, grudges and revenge.",
+    "assesses": [
+      "TA-LEX-C469-PAKAI469-03",
+      "TA-LEX-C469-PAKAI469-04",
+      "TA-LEX-C469-PAKAI469-05"
+    ]
+  }
+}

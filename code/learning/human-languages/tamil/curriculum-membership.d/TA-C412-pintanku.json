@@ -1,0 +1,11 @@
+{
+  "id": "TA-C412-pintanku",
+  "pathSegment": "TA-PATH-412-VAZHI412",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-412-VAZHI412",
+      "order": 2
+    }
+  ]
+}

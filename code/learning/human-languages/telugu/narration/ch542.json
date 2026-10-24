@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 542,
+  "title": "Painting and Sculpture",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e8eb2162c00205d1",
+  "lessons": [
+    {
+      "id": "TE-C542-citralekhanam",
+      "sequence": 27460,
+      "title": "చిత్రలేఖనం (citralēkhanaṁ) — the art of painting",
+      "headword": "చిత్రలేఖనం",
+      "romanization": "citralēkhanaṁ",
+      "gloss": "the art of painting",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0f4667758be5cee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a comedian, then the Telugu for spectators."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చిత్రలేఖనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చిత్రలేఖనం — citralēkhanaṁ — \"the art of painting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నా చెల్లెలు చిత్రలేఖనం నేర్చుకుంటోంది. nā cellelu citralēkhanaṁ nērcukuṇṭōndi. My younger sister is learning to paint."
+            },
+            {
+              "kind": "speech",
+              "text": "చిత్రం, picture, + లేఖనం, drawing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చిత్రలేఖనం (citralēkhanaṁ) is a learned compound built from Sanskrit citra, \"bright, variegated\" (CDIAL 4803), and lēkhana, \"scraping\", the noun of the root of writing (CDIAL 11103)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citralēkhanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citralēkhanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citralēkhanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citralēkhanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nā cellelu citralēkhanaṁ nērcukuṇṭōndi. — My younger sister is learning to paint.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nā cellelu citralēkhanaṁ nērcukuṇṭōndi.* — My younger sister is learning to paint.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a comedian, then the Telugu for spectators, then say citralēkhanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a comedian, then the Telugu for spectators, then say *citralēkhanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చిత్రలేఖనం (citralēkhanaṁ) mean? (\"The art of painting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C542-citrincu",
+      "sequence": 27470,
+      "title": "చిత్రించు (citriñcu) — to portray; to paint",
+      "headword": "చిత్రించు",
+      "romanization": "citriñcu",
+      "gloss": "to portray; to paint",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d68540b0c7ca23b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for spectators, then the Telugu for the art of painting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చిత్రించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చిత్రించు — citriñcu — \"to portray; to paint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ కళాకారుడు పల్లె జీవితాన్ని చిత్రించాడు. ā kaḷākāruḍu palle jīvitānni citriñcāḍu. That artist portrayed village life."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): చిత్రించాను, citriñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "In paint or in words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చిత్రించు (citriñcu) is built on Sanskrit citra, \"bright, variegated\", the source of చిత్రం, \"a picture\" (CDIAL 4803), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citriñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citriñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citriñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citriñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kaḷākāruḍu palle jīvitānni citriñcāḍu. — That artist portrayed village life.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kaḷākāruḍu palle jīvitānni citriñcāḍu.* — That artist portrayed village life.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for spectators, then the Telugu for the art of painting, then say citriñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for spectators, then the Telugu for the art of painting, then say *citriñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చిత్రించు (citriñcu) mean? (\"To portray; to paint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C542-silpam",
+      "sequence": 27480,
+      "title": "శిల్పం (śilpaṁ) — a sculpture; a carving",
+      "headword": "శిల్పం",
+      "romanization": "śilpaṁ",
+      "gloss": "a sculpture; a carving",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:973ad42bdf05fdb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for the art of painting, then the Telugu for to portray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శిల్పం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శిల్పం — śilpaṁ — \"a sculpture; a carving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ గుడిలో అందమైన శిల్పాలు ఉన్నాయి. ā guḍilō andamaina śilpālu unnāyi. There are beautiful sculptures in that temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: శిల్పాలు, śilpālu."
+            },
+            {
+              "kind": "speech",
+              "text": "శిల్పకళ, the art of sculpture."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శిల్పం (śilpaṁ) is borrowed from Sanskrit śilpa, \"artistic work; manual craft\" (CDIAL 12470)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilpaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilpaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilpaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilpaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā guḍilō andamaina śilpālu unnāyi. — There are beautiful sculptures in that temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā guḍilō andamaina śilpālu unnāyi.* — There are beautiful sculptures in that temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for the art of painting, then the Telugu for to portray, then say śilpaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for the art of painting, then the Telugu for to portray, then say *śilpaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శిల్పం (śilpaṁ) mean? (\"A sculpture; a carving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C542-silpi",
+      "sequence": 27490,
+      "title": "శిల్పి (śilpi) — a sculptor",
+      "headword": "శిల్పి",
+      "romanization": "śilpi",
+      "gloss": "a sculptor",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa729a8a20b417c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to portray, then the Telugu for a sculpture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శిల్పి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శిల్పి — śilpi — \"a sculptor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ శిల్పి రాతితో బొమ్మలు చెక్కుతాడు. ā śilpi rātitō bommalu cekkutāḍu. That sculptor carves figures from stone."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural శిల్పులు. చెక్కు, to carve."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శిల్పి (śilpi) is borrowed from Sanskrit śilpin, \"skilled in art; an artificer\" (CDIAL 12471)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilpi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilpi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilpi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilpi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā śilpi rātitō bommalu cekkutāḍu. — That sculptor carves figures from stone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā śilpi rātitō bommalu cekkutāḍu.* — That sculptor carves figures from stone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to portray, then the Telugu for a sculpture, then say śilpi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to portray, then the Telugu for a sculpture, then say *śilpi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శిల్పి (śilpi) mean? (\"A sculptor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C542-kalakhandam",
+      "sequence": 27500,
+      "title": "కళాఖండం (kaḷākhaṇḍaṁ) — a masterpiece",
+      "headword": "కళాఖండం",
+      "romanization": "kaḷākhaṇḍaṁ",
+      "gloss": "a masterpiece",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dfe4f21e81ff321",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a sculpture, then the Telugu for a sculptor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కళాఖండం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కళాఖండం — kaḷākhaṇḍaṁ — \"a masterpiece\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పాత ఆలయం ఒక కళాఖండం. ā pāta ālayaṁ oka kaḷākhaṇḍaṁ. That old temple is a masterpiece."
+            },
+            {
+              "kind": "speech",
+              "text": "కళ, art, + ఖండం, piece."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కళాఖండం (kaḷākhaṇḍaṁ) is a learned compound built from Sanskrit kalā, \"any practical art\" (CDIAL 2927), and khaṇḍa, \"a piece, a fragment\" (CDIAL 3792)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷākhaṇḍaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷākhaṇḍaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷākhaṇḍaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷākhaṇḍaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pāta ālayaṁ oka kaḷākhaṇḍaṁ. — That old temple is a masterpiece.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pāta ālayaṁ oka kaḷākhaṇḍaṁ.* — That old temple is a masterpiece.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a sculpture, then the Telugu for a sculptor, then say kaḷākhaṇḍaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a sculpture, then the Telugu for a sculptor, then say *kaḷākhaṇḍaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కళాఖండం (kaḷākhaṇḍaṁ) mean? (\"A masterpiece\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

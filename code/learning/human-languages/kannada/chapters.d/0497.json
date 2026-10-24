@@ -1,0 +1,21 @@
+{
+  "chapter": 497,
+  "title": "Pride and Modesty",
+  "label": "ch:ka-pride-and-modesty",
+  "canDo": "I can say to praise, pride, arrogance, modesty and self-respect.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-R497-review-490-497",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can say to praise, pride, arrogance, modesty and self-respect.",
+    "assesses": [
+      "KA-LEX-C497-ABHIMANA497-01",
+      "KA-LEX-C497-ABHIMANA497-02",
+      "KA-LEX-C497-ABHIMANA497-03",
+      "KA-LEX-C497-ABHIMANA497-04",
+      "KA-LEX-C497-ABHIMANA497-05"
+    ]
+  }
+}

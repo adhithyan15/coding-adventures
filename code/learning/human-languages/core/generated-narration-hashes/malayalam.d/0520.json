@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:8f2814723c7f6937",
+  "lessonIds": [
+    "ML-C520-anukampa",
+    "ML-C520-sahatapam",
+    "ML-C520-vinnuka",
+    "ML-C520-asvasthata",
+    "ML-C520-vitumpuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch520.txt",
+  "json": "malayalam/narration/ch520.json",
+  "textHash": "fnv1a64:3443e0e06a4987f0",
+  "jsonHash": "fnv1a64:d7e1ebfc0325f343",
+  "findings": []
+}

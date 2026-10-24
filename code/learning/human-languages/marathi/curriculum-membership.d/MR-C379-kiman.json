@@ -1,0 +1,11 @@
+{
+  "id": "MR-C379-kiman",
+  "pathSegment": "MR-PATH-379-MARYADA379",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-379-MARYADA379",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C395-taammala",
+  "pathSegment": "AR-PATH-395-MARJI395",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-395-MARJI395",
+      "order": 4
+    }
+  ]
+}

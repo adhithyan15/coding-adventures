@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:4dc42dbed04f2eed",
+  "lessonIds": [
+    "KA-C395-adalita",
+    "KA-C395-sacivalaya",
+    "KA-C395-pancayiti",
+    "KA-C395-jarigolisu",
+    "KA-C395-samiti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch395.txt",
+  "json": "kannada/narration/ch395.json",
+  "textHash": "fnv1a64:b14817d9fc8d0d58",
+  "jsonHash": "fnv1a64:a7b4064df8ebd778",
+  "findings": []
+}

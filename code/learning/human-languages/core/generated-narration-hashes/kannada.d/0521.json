@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:f6cd01bb89848f6b",
+  "lessonIds": [
+    "KA-C521-dudi",
+    "KA-C521-ustuvari",
+    "KA-C521-ottayisu",
+    "KA-C521-parisrama",
+    "KA-C521-paipoti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch521.txt",
+  "json": "kannada/narration/ch521.json",
+  "textHash": "fnv1a64:6e88124459131651",
+  "jsonHash": "fnv1a64:8860afee9f50ead2",
+  "findings": []
+}

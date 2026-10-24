@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-268-OPINION-REASON",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-268-OPINION-REASON"
+  ],
+  "after": []
+}

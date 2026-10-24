@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:aaf40ea5f7050716",
+  "lessonIds": [
+    "AR-C495-inziaj",
+    "AR-C495-munzaij",
+    "AR-C495-musta",
+    "AR-C495-tahammala",
+    "AR-C495-dajira",
+    "AR-R495-review-488-495"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch495.txt",
+  "json": "arabic/narration/ch495.json",
+  "textHash": "fnv1a64:39b48e16d665128c",
+  "jsonHash": "fnv1a64:9b8ebf4e485dc1f4",
+  "findings": []
+}

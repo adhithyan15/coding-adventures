@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Notes and Transfers",
+  "label": "ch:bn-notes-and-transfers",
+  "canDo": "I can take out money, check a balance, send money and give to a collection.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C417-chada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can take out money, check a balance, send money and give to a collection.",
+    "assesses": [
+      "BN-LEX-C417-NOT417-03",
+      "BN-LEX-C417-NOT417-04",
+      "BN-LEX-C417-NOT417-05"
+    ]
+  }
+}

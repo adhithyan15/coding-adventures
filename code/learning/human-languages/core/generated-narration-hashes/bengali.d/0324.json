@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:ca9b0cab60e9a81c",
+  "lessonIds": [
+    "BN-C324-dhadha",
+    "BN-C324-koushol",
+    "BN-C324-phad",
+    "BN-C324-bholano",
+    "BN-C324-par-paoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch324.txt",
+  "json": "bengali/narration/ch324.json",
+  "textHash": "fnv1a64:790ac5d50bc57c7f",
+  "jsonHash": "fnv1a64:725df04b038ed78f",
+  "findings": []
+}

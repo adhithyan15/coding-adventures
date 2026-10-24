@@ -1,0 +1,11 @@
+{
+  "id": "TA-C470-paramukam",
+  "pathSegment": "TA-PATH-470-VICUVACAM470",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-470-VICUVACAM470",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 556,
+  "sourceHash": "fnv1a64:9b4ddebbd5f41f48",
+  "lessonIds": [
+    "MR-C556-anukul",
+    "MR-C556-pratikul",
+    "MR-C556-ghol",
+    "MR-C556-bikat",
+    "MR-C556-sambhram"
+  ],
+  "tex": "marathi/book/chapters/ch556-favourable-or-not.tex"
+}

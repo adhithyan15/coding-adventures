@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C558-kusalam",
+    "language": "malayalam",
+    "chapter": 558,
+    "sequence": 28100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ca367fe7fa4b2cf"
+  },
+  "findings": []
+}

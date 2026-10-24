@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:46288be3221dd9c9",
+  "lessonIds": [
+    "TA-C405-taksi",
+    "TA-C405-metro",
+    "TA-C405-inai",
+    "TA-C405-oyvarai",
+    "TA-C405-itaivelai"
+  ],
+  "tex": "tamil/book/chapters/ch405-taxis-and-the-metro.tex"
+}

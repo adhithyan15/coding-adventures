@@ -361,6 +361,51 @@ describe("the gate that would have caught the A2 claim", () => {
     // subjunctive and the unreal condition, realizing all five B1 nodes, plus
     // letter lessons for ع غ ژ ث ذ ض ئ) and chapters 300-539 (1,200 headwords,
     // 358 verbs).
+    // Arabic followed as the ninth, with chapters 283-292 (the B1 core: the past
+    // and present for every person, kāna + imperfect, the subjunctive after an,
+    // the future, comparison, idhā and law, realizing all five B1 nodes, plus
+    // letter lessons for ؤ and ئ) and chapters 293-552 (1,300 headwords, 507
+    // verbs).
+    // Malayalam followed as the tenth, with chapters 339-348 (the B1 core: narrating with
+    // the past and -ഉമായിരുന്നു, reasons with കൊണ്ട് and കാരണം, travel, comparison
+    // with -ഏക്കാൾ, and the conditional -ആൽ / എങ്കിൽ, realizing all five B1 nodes,
+    // plus letter lessons for ഈ ഐ ഔ ഋ ഡ ഘ ൗ ഃ) and chapters 349-572 (1,120
+    // headwords).
+    // Telugu followed as the eleventh, with chapters 316-325 (the B1 core: the plain past
+    // and the habitual -ఏవాడిని, reasons with కాబట్టి and అందుకే, the obligative
+    // -ఆలి, travel, comparison with కంటే, and the conditional -తే with the unreal
+    // -ఇ ఉంటే, realizing all five B1 nodes, plus letter lessons for ఈ ఓ ఊ ఔ ః)
+    // and chapters 326-549 (1,120 headwords, 388 verbs).
+    // Kannada followed as the twelfth, with chapters 309-318 (the B1 core: the
+    // past by person and -ುತ್ತಿದ್ದೆ, reasons, travel, experience, -ದರೆ and the
+    // unreal -ಇದ್ದರೆ … -ುತ್ತಿದ್ದೆ, realizing all five B1 nodes, plus letter
+    // lessons for ಛ and ಔ) and chapters 319-546 (1,140 headwords, 348 verbs),
+    // which moved it from the A2 row of HELD to B1.
+    // Tamil followed as the thirteenth, with chapters 284-293 (the B1 core: the
+    // past by person and -கொண்டிருந்தேன், reasons, travel, experience, -ஆல்
+    // and the unreal -இருந்தால் … -இருப்பேன், realizing all five B1 nodes,
+    // plus a letter lesson for ஈ) and chapters 294-558 (1,325 headwords, 399
+    // verbs), which moved it from the A2 row of HELD to B1.
+    // Marathi followed as the fourteenth, with chapters 276-287 (the B1 core: the
+    // past with the ergative -ने, the future, -त होतो and -ायचो, reasons,
+    // travel, comparison with -पेक्षा, and जर … तर / -ल्यास with the unreal
+    // past + असतो, realizing all five B1 nodes, plus letter lessons for ऋ and
+    // ञ) and chapters 288-557 (1,350 headwords, 408 verbs), which moved it from
+    // the A2 row of HELD to B1.
+    // Bengali followed as the fifteenth, with chapters 264-275 (the B1 core: the
+    // past by person with its changed stems, the future -ব / -বে / -বেন, -ছি and
+    // -ছিলাম, the -এ form, reasons with কারণ / উচিত / -তে হবে / তাই, travel,
+    // feelings with the genitive and -এর চেয়ে / সবচেয়ে, and যদি … তাহলে / -লে /
+    // -তাম, realizing all five B1 nodes, plus twelve letter and sign lessons
+    // from ঘ to ঙ) and chapters 276-545 (1,350 headwords, 380 verbs), which
+    // moved it from the A2 row of HELD to B1.
+    // Hindi followed as the sixteenth, with chapters 276-287 (the B1 core: the
+    // perfective with ने and the verb agreeing with its object, the full future,
+    // -रहा था and -कर, reasons with की वजह से / चाहिए / -ना पड़ता है / इसलिए,
+    // travel, feelings with को and से ज़्यादा / सबसे, and अगर … तो / वरना / the
+    // -ता counterfactual, realizing all five B1 nodes, plus letter lessons for ऐ
+    // and ः) and chapters 288-559 (1,360 headwords, 368 verbs), which moved it
+    // from the A2 row of HELD to B1.
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

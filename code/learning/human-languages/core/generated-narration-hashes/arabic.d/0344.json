@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:fc2aa7c8dce48a93",
+  "lessonIds": [
+    "AR-C344-hattab",
+    "AR-C344-sahara",
+    "AR-C344-tahawwala",
+    "AR-C344-tahaqqaqa",
+    "AR-C344-intaqama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch344.txt",
+  "json": "arabic/narration/ch344.json",
+  "textHash": "fnv1a64:a927dbf26120ebaa",
+  "jsonHash": "fnv1a64:add6024f54e29cc6",
+  "findings": []
+}

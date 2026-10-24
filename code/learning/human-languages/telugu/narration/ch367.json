@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 367,
+  "title": "Digging Up the Past",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:92853ae13137d254",
+  "lessons": [
+    {
+      "id": "TE-C367-sithilalu",
+      "sequence": 18100,
+      "title": "శిథిలాలు (śithilālu) — ruins",
+      "headword": "శిథిలాలు",
+      "romanization": "śithilālu",
+      "gloss": "ruins",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9406c15ecc59939c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a lord, then the Telugu for to occupy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శిథిలాలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శిథిలాలు — śithilālu — \"ruins\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అడవిలో పాత కోట శిథిలాలు ఉన్నాయి. aḍavilō pāta kōṭa śithilālu unnāyi. There are ruins of an old fort in the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "A plural noun; శిథిల, loose or decayed, makes the adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శిథిలాలు (śithilālu) is built on Sanskrit śithila, \"loose, slack\" (Monier-Williams): what has come loose and fallen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śithilālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śithilālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śithilālu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śithilālu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḍavilō pāta kōṭa śithilālu unnāyi. — There are ruins of an old fort in the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḍavilō pāta kōṭa śithilālu unnāyi.* — There are ruins of an old fort in the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a lord, then the Telugu for to occupy, then say śithilālu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a lord, then the Telugu for to occupy, then say *śithilālu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శిథిలాలు (śithilālu) mean? (\"Ruins\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C367-puratana",
+      "sequence": 18110,
+      "title": "పురాతన (purātana) — ancient; very old",
+      "headword": "పురాతన",
+      "romanization": "purātana",
+      "gloss": "ancient; very old",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e791382191ca9c06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to occupy, then the Telugu for ruins."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పురాతన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పురాతన — purātana — \"ancient; very old\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అది ఒక పురాతన దేవాలయం. adi oka purātana dēvālayaṁ. That is an ancient temple."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective that goes before its noun: పురాతన (purātana) కట్టడం, an ancient building."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పురాతన (purātana) is borrowed from Sanskrit purātana, \"ancient\" (CDIAL 8285)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purātana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purātana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purātana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purātana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adi oka purātana dēvālayaṁ. — That is an ancient temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adi oka purātana dēvālayaṁ.* — That is an ancient temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to occupy, then the Telugu for ruins, then say purātana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to occupy, then the Telugu for ruins, then say *purātana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పురాతన (purātana) mean? (\"Ancient; very old\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C367-tavvakalu",
+      "sequence": 18120,
+      "title": "తవ్వకాలు (tavvakālu) — excavations",
+      "headword": "తవ్వకాలు",
+      "romanization": "tavvakālu",
+      "gloss": "excavations",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1ff7b4bbb47590c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for ruins, then the Telugu for ancient."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తవ్వకాలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తవ్వకాలు — tavvakālu — \"excavations\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తవ్వకాలలో పాత నాణేలు దొరికాయి. tavvakālalō pāta nāṇēlu dorikāyi. Old coins were found in the excavations."
+            },
+            {
+              "kind": "speech",
+              "text": "From తవ్వు, to dig."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తవ్వకాలు (tavvakālu) is native Dravidian, the plural noun of tavvu, \"to dig, excavate\" (DEDR 3122)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavvakālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavvakālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavvakālu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavvakālu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavvakālalō pāta nāṇēlu dorikāyi. — Old coins were found in the excavations.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavvakālalō pāta nāṇēlu dorikāyi.* — Old coins were found in the excavations.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for ruins, then the Telugu for ancient, then say tavvakālu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for ruins, then the Telugu for ancient, then say *tavvakālu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తవ్వకాలు (tavvakālu) mean? (\"Excavations\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C367-avasesalu",
+      "sequence": 18130,
+      "title": "అవశేషాలు (avaśēṣālu) — remains; relics",
+      "headword": "అవశేషాలు",
+      "romanization": "avaśēṣālu",
+      "gloss": "remains; relics",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c393f0f2172dc983",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for ancient, then the Telugu for excavations."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అవశేషాలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అవశేషాలు — avaśēṣālu — \"remains; relics\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అక్కడ పాత నగరం అవశేషాలు దొరికాయి. akkaḍa pāta nagaraṁ avaśēṣālu dorikāyi. The remains of an old city were found there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అవశేషాలు (avaśēṣālu) is built on Sanskrit avaśeṣa, \"leavings, remainder\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaśēṣālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaśēṣālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaśēṣālu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaśēṣālu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akkaḍa pāta nagaraṁ avaśēṣālu dorikāyi. — The remains of an old city were found there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akkaḍa pāta nagaraṁ avaśēṣālu dorikāyi.* — The remains of an old city were found there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for ancient, then the Telugu for excavations, then say avaśēṣālu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for ancient, then the Telugu for excavations, then say *avaśēṣālu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అవశేషాలు (avaśēṣālu) mean? (\"Remains; relics\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C367-velikitiyu",
+      "sequence": 18140,
+      "title": "వెలికితీయు (velikitīyu) — to unearth; to dig out",
+      "headword": "వెలికితీయు",
+      "romanization": "velikitīyu",
+      "gloss": "to unearth; to dig out",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:252cd0f791091a72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for excavations, then the Telugu for remains."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వెలికితీయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెలికితీయు — velikitīyu — \"to unearth; to dig out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "శాస్త్రవేత్తలు ఒక పాత కుండను వెలికితీశారు. śāstravēttalu oka pāta kuṇḍanu velikitīśāru. The scientists unearthed an old pot."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వెలికితీశాను, velikitīśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally to pull to the outside; also to bring a secret to light."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెలికితీయు (velikitīyu) is a native compound: veliki, \"to the outside\", from veli, \"the outside\" (DEDR 5498), and tīyu, \"to draw, pull out\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velikitīyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velikitīyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velikitīyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velikitīyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāstravēttalu oka pāta kuṇḍanu velikitīśāru. — The scientists unearthed an old pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāstravēttalu oka pāta kuṇḍanu velikitīśāru.* — The scientists unearthed an old pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for excavations, then the Telugu for remains, then say velikitīyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for excavations, then the Telugu for remains, then say *velikitīyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వెలికితీయు (velikitīyu) mean? (\"To unearth; to dig out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

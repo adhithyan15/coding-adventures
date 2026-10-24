@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:11971d2bd6eb6f2b",
+  "lessonIds": [
+    "AR-C360-wafaqa",
+    "AR-C360-itarada",
+    "AR-C360-ijma",
+    "AR-C360-jadala",
+    "AR-C360-jadal"
+  ],
+  "tex": "arabic/book/chapters/ch360-agreeing-and-objecting.tex"
+}

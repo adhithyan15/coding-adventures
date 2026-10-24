@@ -1,0 +1,11 @@
+{
+  "id": "MR-C411-pherphatka",
+  "pathSegment": "MR-PATH-411-SAFAR411",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-411-SAFAR411",
+      "order": 2
+    }
+  ]
+}

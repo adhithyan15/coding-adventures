@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C435-korda",
+    "language": "marathi",
+    "chapter": 435,
+    "sequence": 25010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0aba254b72c255f"
+  },
+  "findings": []
+}

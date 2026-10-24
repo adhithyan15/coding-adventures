@@ -1,0 +1,11 @@
+{
+  "id": "ML-C561-vadyam",
+  "pathSegment": "ML-PATH-561-VADYAM561",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-561-VADYAM561",
+      "order": 1
+    }
+  ]
+}

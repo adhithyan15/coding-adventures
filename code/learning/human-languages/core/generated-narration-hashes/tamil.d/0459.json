@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:c60cc727afc78b2d",
+  "lessonIds": [
+    "TA-C459-anantam",
+    "TA-C459-inpam",
+    "TA-C459-purippu",
+    "TA-C459-kutukalam",
+    "TA-C459-ullacam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch459.txt",
+  "json": "tamil/narration/ch459.json",
+  "textHash": "fnv1a64:496051bf6fb520e7",
+  "jsonHash": "fnv1a64:8e230e490ab6a199",
+  "findings": []
+}

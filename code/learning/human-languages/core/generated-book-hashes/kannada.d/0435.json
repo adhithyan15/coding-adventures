@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:ca434f5bf8baca73",
+  "lessonIds": [
+    "KA-C435-bart",
+    "KA-C435-asana",
+    "KA-C435-kaitappu",
+    "KA-C435-inuku",
+    "KA-C435-dara"
+  ],
+  "tex": "kannada/book/chapters/ch435-berths-and-missed-trains.tex"
+}

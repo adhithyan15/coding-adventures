@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Pipes and Leaks",
+  "label": "ch:mr-pipes-and-leaks",
+  "canDo": "I can talk about water pipes, leaks and blocked drains.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C520-tumbne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about water pipes, leaks and blocked drains.",
+    "assesses": [
+      "MR-LEX-C520-NAL520-03",
+      "MR-LEX-C520-NAL520-04",
+      "MR-LEX-C520-NAL520-05"
+    ]
+  }
+}

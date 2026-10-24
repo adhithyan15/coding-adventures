@@ -1,0 +1,11 @@
+{
+  "id": "MR-R286-if-and-otherwise",
+  "pathSegment": "MR-PATH-286-IF-OTHERWISE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-286-IF-OTHERWISE",
+      "order": 2
+    }
+  ]
+}

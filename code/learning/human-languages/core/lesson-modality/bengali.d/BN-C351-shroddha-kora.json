@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C351-shroddha-kora",
+    "language": "bengali",
+    "chapter": 351,
+    "sequence": 22070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60e98480e7c8dd80"
+  },
+  "findings": []
+}

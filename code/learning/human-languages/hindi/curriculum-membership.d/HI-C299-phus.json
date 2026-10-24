@@ -1,0 +1,11 @@
+{
+  "id": "HI-C299-phus",
+  "pathSegment": "HI-PATH-299-AAG299",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-299-AAG299",
+      "order": 4
+    }
+  ]
+}

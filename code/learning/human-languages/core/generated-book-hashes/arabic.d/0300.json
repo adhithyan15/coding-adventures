@@ -1,0 +1,14 @@
+{
+  "language": "arabic",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:b98ecbba7f0cbdaf",
+  "lessonIds": [
+    "AR-C300-jarima",
+    "AR-C300-mujrim",
+    "AR-C300-liss",
+    "AR-C300-saraqa",
+    "AR-C300-itaqala",
+    "AR-R300-review-293-300"
+  ],
+  "tex": "arabic/book/chapters/ch300-a-crime.tex"
+}

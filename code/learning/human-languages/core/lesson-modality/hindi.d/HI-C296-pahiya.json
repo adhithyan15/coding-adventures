@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C296-pahiya",
+    "language": "hindi",
+    "chapter": 296,
+    "sequence": 16440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89240f7fbb5fbb78"
+  },
+  "findings": []
+}

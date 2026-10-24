@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "A birth",
+  "label": "ch:ar-a-birth",
+  "canDo": "I can say childbirth, a newborn, to have a child, a midwife and a naming.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C311-tasmiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can say childbirth, a newborn, to have a child, a midwife and a naming.",
+    "assesses": [
+      "AR-LEX-C311-WILADA311-03",
+      "AR-LEX-C311-WILADA311-04",
+      "AR-LEX-C311-WILADA311-05"
+    ]
+  }
+}

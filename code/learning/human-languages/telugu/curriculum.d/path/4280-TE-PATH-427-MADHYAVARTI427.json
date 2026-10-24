@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-427-MADHYAVARTI427",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-427-MADHYAVARTI427"
+  ],
+  "after": []
+}

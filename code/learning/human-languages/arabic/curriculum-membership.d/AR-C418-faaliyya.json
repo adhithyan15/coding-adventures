@@ -1,0 +1,11 @@
+{
+  "id": "AR-C418-faaliyya",
+  "pathSegment": "AR-PATH-418-TAQWIYA418",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-418-TAQWIYA418",
+      "order": 3
+    }
+  ]
+}

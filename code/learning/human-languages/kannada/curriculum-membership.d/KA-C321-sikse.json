@@ -1,0 +1,11 @@
+{
+  "id": "KA-C321-sikse",
+  "pathSegment": "KA-PATH-321-NYAYA321",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-321-NYAYA321",
+      "order": 4
+    }
+  ]
+}

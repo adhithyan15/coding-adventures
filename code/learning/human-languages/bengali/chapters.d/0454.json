@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Shyness and Hesitation",
+  "label": "ch:bn-shyness-and-hesitation",
+  "canDo": "I can say that I felt shy, awkward or unsure.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C454-itostoto-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can say that I felt shy, awkward or unsure.",
+    "assesses": [
+      "BN-LEX-C454-SONGKOCH454-03",
+      "BN-LEX-C454-SONGKOCH454-04",
+      "BN-LEX-C454-SONGKOCH454-05"
+    ]
+  }
+}

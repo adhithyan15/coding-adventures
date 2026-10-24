@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:cdebeef7825e29fe",
+  "lessonIds": [
+    "BN-C318-biplob",
+    "BN-C318-andolon",
+    "BN-C318-songgram",
+    "BN-C318-protishtha-kora",
+    "BN-C318-mukti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch318.txt",
+  "json": "bengali/narration/ch318.json",
+  "textHash": "fnv1a64:bc7e25abcbca06a2",
+  "jsonHash": "fnv1a64:32608442b696c6d9",
+  "findings": []
+}

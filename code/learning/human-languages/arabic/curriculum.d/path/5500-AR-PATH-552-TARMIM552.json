@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-552-TARMIM552",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-552-TARMIM552"
+  ],
+  "after": []
+}

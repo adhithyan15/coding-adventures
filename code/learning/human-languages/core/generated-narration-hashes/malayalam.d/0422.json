@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:80157abfe04c342f",
+  "lessonIds": [
+    "ML-C422-niyamasabha",
+    "ML-C422-amgam",
+    "ML-C422-pratinidhi",
+    "ML-C422-pratinidhikarikkuka",
+    "ML-C422-pratipaksam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch422.txt",
+  "json": "malayalam/narration/ch422.json",
+  "textHash": "fnv1a64:c7ed17b641c70b3d",
+  "jsonHash": "fnv1a64:83fc37caf40e95ce",
+  "findings": []
+}

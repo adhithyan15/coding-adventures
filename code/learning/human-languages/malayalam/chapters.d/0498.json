@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "Mangroves and Reefs",
+  "label": "ch:ml-mangroves-and-reefs",
+  "canDo": "I can say a mangrove forest, a swamp, a coral reef, a shark and to accumulate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C498-atinnukutuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can say a mangrove forest, a swamp, a coral reef, a shark and to accumulate.",
+    "assesses": [
+      "ML-LEX-C498-KANTAL498-03",
+      "ML-LEX-C498-KANTAL498-04",
+      "ML-LEX-C498-KANTAL498-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Online",
+  "label": "ch:ta-online",
+  "canDo": "I can talk about browsing, blogs and videos.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C516-payanar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about browsing, blogs and videos.",
+    "assesses": [
+      "TA-LEX-C516-INAIYAM516-03",
+      "TA-LEX-C516-INAIYAM516-04",
+      "TA-LEX-C516-INAIYAM516-05"
+    ]
+  }
+}

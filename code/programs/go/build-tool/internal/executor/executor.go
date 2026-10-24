@@ -110,8 +110,103 @@ func runPackageBuild(pkg discovery.Package, clippy bool) BuildResult {
 		}
 	}
 
-	return runCommands(pkg, clippyGatedCommands(pkg, clippy), start)
+	commands := swiftNativeBuildSystemCommands(clippyGatedCommands(pkg, clippy), runtime.GOOS)
+	return runCommands(pkg, commands, start)
 }
+
+// swiftNativeBuildSystemCommands pins SwiftPM's legacy ("native") build
+// planner on Linux by adding `--build-system native` to every `swift build`,
+// `swift test` and `swift run` a BUILD command runs.
+//
+// # Why
+//
+// Swift 6.4 (the toolchain GitHub's ubuntu-24.04 image ships) plans builds
+// with its new swift-build backend. That planner races: its libdispatch
+// manager thread dereferences a bad pointer in `_dispatch_event_loop_drain`
+// while another thread reads swift-build's macro tables
+// (`SWBMacro.MacroNamespace.lookupMacroDeclaration`), and `swift-package`
+// dies with signal 11 before compiling a file. It fails whichever Swift
+// package a shard happens to hold, on PRs that touch no Swift:
+//
+//	swift/ITF  (#17824 shard 5)  during `swift test` planning
+//	swift/zip  (#17914 shard 3)  during `swift build -c release` planning,
+//	                             after all 36 of its tests had passed
+//
+// `--build-system native` selects the planner SwiftPM used before
+// swift-build, so none of that code runs. macOS and Windows have not shown
+// the crash and keep their toolchain's default; so does a command that
+// already names a build system.
+//
+// The rewrite happens here, at run time, so BUILD files, their hashes and
+// the scaffold generator stay unchanged, and it is undone by deleting this
+// function once a fixed toolchain ships.
+func swiftNativeBuildSystemCommands(commands []string, goos string) []string {
+	if goos != "linux" {
+		return commands
+	}
+	var out []string
+	for i, command := range commands {
+		if strings.Contains(command, "--build-system") {
+			continue
+		}
+		rewritten := withNativeSwiftBuildSystem(command)
+		if rewritten == command {
+			continue
+		}
+		if out == nil {
+			// Copy on first change: the caller's slice may be the package's
+			// own BuildCommands, which must not be mutated.
+			out = append([]string(nil), commands...)
+		}
+		out[i] = rewritten
+	}
+	if out == nil {
+		return commands
+	}
+	return out
+}
+
+// withNativeSwiftBuildSystem inserts ` --build-system native` after each
+// `swift build`, `swift test` or `swift run` in one shell command line.
+//
+// A match counts only as a command: `swift` must open the line or follow a
+// separator, a space or a path (`xcrun swift`, `&& swift`, `(swift`,
+// `/usr/bin/swift`), and the verb
+// must end the line or meet a space or a shell terminator. The terminators
+// matter. Most Linux BUILDs read
+//
+//	if command -v xcrun ...; then xcrun swift test; else swift test; fi
+//
+// so `test` is followed by `;`, not a space. Quotes are not terminators, so
+// an echoed "... skipping swift test" stays as written. The boundaries are
+// checked by hand, not by the regexp, so neighbours that share a separator
+// (`swift test;swift build`) are both found.
+func withNativeSwiftBuildSystem(command string) string {
+	var b strings.Builder
+	last := 0
+	for _, loc := range swiftPlanningVerbRe.FindAllStringIndex(command, -1) {
+		start, end := loc[0], loc[1]
+		if start > 0 && !strings.ContainsRune(" \t;&|(/", rune(command[start-1])) {
+			continue
+		}
+		if end < len(command) && !strings.ContainsRune(" \t\n;&|)", rune(command[end])) {
+			continue
+		}
+		b.WriteString(command[last:end])
+		b.WriteString(" --build-system native")
+		last = end
+	}
+	if last == 0 {
+		return command
+	}
+	b.WriteString(command[last:])
+	return b.String()
+}
+
+// swiftPlanningVerbRe finds the SwiftPM verbs that plan a build; the
+// command boundaries around each match are checked by
+// withNativeSwiftBuildSystem.
+var swiftPlanningVerbRe = regexp.MustCompile(`swift[ \t]+(?:build|test|run)`)
 
 // clippyGatedCommands returns the command list to run for a package. For Rust
 // packages under the clippy gate it prepends a `cargo clippy --all-targets --
@@ -1018,11 +1113,10 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 			keys["global:rustup-targets"] = true
 		}
 
-		if pkg.Language == "lua" &&
-			(strings.Contains(command, "luarocks make") || strings.Contains(command, "luarocks remove")) {
+		if luarocksTreeWriteRe.MatchString(command) {
 			// LuaRocks uses a shared rocks tree under HOME on every platform.
 			// Concurrent writes race for that tree lock and can leave packages
-			// observing partially-installed local dependencies. Serialise Lua
+			// observing partially-installed local dependencies. Serialise
 			// BUILDs that mutate the tree so sibling rock installs stay stable.
 			keys["global:luarocks-tree"] = true
 		}
@@ -1098,6 +1192,28 @@ var rubyGemInstallRe = regexp.MustCompile(`(^|[\s;&|(])(bundle|gem)\s+install(\s
 // drives opam (a scaffold fixture, say) is serialized with the OCaml ones,
 // while a path or name merely containing "opam" is not.
 var opamCommandRe = regexp.MustCompile(`(^|[\s;&|(])opam(\s|$)`)
+
+// luarocksTreeWriteRe matches the LuaRocks subcommands that write the shared
+// rocks tree: `make`, `remove`, and `install`. LuaRocks takes an exclusive
+// lock on the tree for each of them, so two at once fail outright:
+//
+//	Error: command 'install' requires exclusive write access to
+//	/home/runner/.luarocks - try --force-lock to overwrite the lock
+//
+// `install` was once missing here. `lua/tcp_client` runs
+// `luarocks install luasocket --local`, ran unserialized beside another
+// package's `luarocks make`, and failed a full-build shard with exactly that
+// error. Read-only subcommands (`show`, `path`) do not take the lock and do
+// not need serializing.
+//
+// A missed match costs a red shard while an extra one only serializes a
+// build, so the pattern leans towards matching. The program name may follow
+// any non-word character, which covers paths (`/usr/bin/luarocks`), quotes
+// (`sh -c "luarocks make x"`), command substitution (`$(luarocks make)`) and
+// shell operators. It may be `luarocks.bat` or `luarocks.exe`, and flags may
+// precede the subcommand (`luarocks --local make`). `\b` ends the subcommand,
+// so `make;`, `make)` and `make"` match while `makefile` does not.
+var luarocksTreeWriteRe = regexp.MustCompile(`(^|[^A-Za-z0-9_.-])luarocks(\.bat|\.exe)?(\s+-{1,2}\S+)*\s+(make|remove|install)\b`)
 
 func isGradleCommand(command string) bool {
 	trimmed := strings.TrimSpace(command)

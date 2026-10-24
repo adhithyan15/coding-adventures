@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Rules of the Road",
+  "label": "ch:ka-rules-of-the-road",
+  "canDo": "I can say to comply with, to violate, to obey, to ban and one-way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C444-ekamukha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can say to comply with, to violate, to obey, to ban and one-way.",
+    "assesses": [
+      "KA-LEX-C444-NIYAMA444-03",
+      "KA-LEX-C444-NIYAMA444-04",
+      "KA-LEX-C444-NIYAMA444-05"
+    ]
+  }
+}

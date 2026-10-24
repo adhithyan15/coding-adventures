@@ -1,0 +1,870 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 341,
+  "title": "Today's Headlines",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9aed0f6e3c74e9f0",
+  "lessons": [
+    {
+      "id": "TE-C341-mukhyamsalu",
+      "sequence": 16760,
+      "title": "ముఖ్యాంశాలు (mukhyāṁśālu) — the main points; highlights",
+      "headword": "ముఖ్యాంశాలు",
+      "romanization": "mukhyāṁśālu",
+      "gloss": "the main points; highlights",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2cd6f481887771e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for in the end, then the Telugu for to wake up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ముఖ్యాంశాలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ముఖ్యాంశాలు — mukhyāṁśālu — \"the main points; highlights\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రేడియోలో వార్తల ముఖ్యాంశాలు చెప్పారు. rēḍiyōlō vārtala mukhyāṁśālu ceppāru. The radio gave the main points of the news."
+            },
+            {
+              "kind": "speech",
+              "text": "ముఖ్య, chief, and అంశాలు, points: also the headlines read at the start of a bulletin. On election night the ముఖ్యాంశాలు (mukhyāṁśālu) are all about the ఓటు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ముఖ్యాంశాలు (mukhyāṁśālu) is a compound borrowed from Sanskrit: mukhya, \"chief\" (CDIAL 10174), and aṁśa, \"a share, a part\" (CDIAL 2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhyāṁśālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhyāṁśālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhyāṁśālu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhyāṁśālu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rēḍiyōlō vārtala mukhyāṁśālu ceppāru. — The radio gave the main points of the news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rēḍiyōlō vārtala mukhyāṁśālu ceppāru.* — The radio gave the main points of the news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for in the end, then the Telugu for to wake up, then say mukhyāṁśālu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for in the end, then the Telugu for to wake up, then say *mukhyāṁśālu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ముఖ్యాంశాలు (mukhyāṁśālu) mean? (\"The main points; highlights\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C341-sampadakudu",
+      "sequence": 16770,
+      "title": "సంపాదకుడు (sampādakuḍu) — an editor",
+      "headword": "సంపాదకుడు",
+      "romanization": "sampādakuḍu",
+      "gloss": "an editor",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1a18b012c26de2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to wake up, then the Telugu for the main points."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంపాదకుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంపాదకుడు — sampādakuḍu — \"an editor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సంపాదకుడు ఆ శీర్షిక మార్చాడు. sampādakuḍu ā śīrṣika mārcāḍu. The editor changed that headline."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: సంపాదకులు, sampādakulu."
+            },
+            {
+              "kind": "speech",
+              "text": "The person who puts a paper together each day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంపాదకుడు (sampādakuḍu) is built on Sanskrit sampādaka, \"producing, bringing about\" (Monier-Williams), with the Telugu ending -uḍu: the one who brings the paper about."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādakuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādakuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādakuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādakuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādakuḍu ā śīrṣika mārcāḍu. — The editor changed that headline.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādakuḍu ā śīrṣika mārcāḍu.* — The editor changed that headline.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to wake up, then the Telugu for the main points, then say sampādakuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to wake up, then the Telugu for the main points, then say *sampādakuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంపాదకుడు (sampādakuḍu) mean? (\"An editor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C341-sampadakiyam",
+      "sequence": 16780,
+      "title": "సంపాదకీయం (sampādakīyaṁ) — an editorial",
+      "headword": "సంపాదకీయం",
+      "romanization": "sampādakīyaṁ",
+      "gloss": "an editorial",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69a7b8793ed4059c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for the main points, then the Telugu for an editor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంపాదకీయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంపాదకీయం — sampādakīyaṁ — \"an editorial\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పత్రిక సంపాదకీయంలో ఆ సంఘటన గురించి రాసింది. patrika sampādakīyaṁlō ā saṅghaṭana guriñci rāsindi. The paper wrote about the incident in its editorial."
+            },
+            {
+              "kind": "speech",
+              "text": "The editor's own piece of writing: built on సంపాదకుడు (sampādakuḍu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంపాదకీయం (sampādakīyaṁ) is a modern word built on Sanskrit sampādaka, \"producing, bringing about\" (Monier-Williams), with the Sanskrit ending -īya, \"belonging to\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādakīyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādakīyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādakīyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādakīyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrika sampādakīyaṁlō ā saṅghaṭana guriñci rāsindi. — The paper wrote about the incident in its editorial.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrika sampādakīyaṁlō ā saṅghaṭana guriñci rāsindi.* — The paper wrote about the incident in its editorial.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for the main points, then the Telugu for an editor, then say sampādakīyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for the main points, then the Telugu for an editor, then say *sampādakīyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంపాదకీయం (sampādakīyaṁ) mean? (\"An editorial\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C341-pathakudu",
+      "sequence": 16790,
+      "title": "పాఠకుడు (pāṭhakuḍu) — a reader",
+      "headword": "పాఠకుడు",
+      "romanization": "pāṭhakuḍu",
+      "gloss": "a reader",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ad25a181da133a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an editor, then the Telugu for an editorial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పాఠకుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాఠకుడు — pāṭhakuḍu — \"a reader\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చాలా మంది పాఠకులు ఉత్తరాలు రాశారు. cālā mandi pāṭhakulu uttarālu rāśāru. Many readers wrote letters."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: పాఠకులు, pāṭhakulu."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on the root of పాఠం, a lesson: పాఠకుడు (pāṭhakuḍu), one who reads."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాఠకుడు (pāṭhakuḍu) is borrowed from Sanskrit pāṭhaka, \"a reader, a teacher\" (CDIAL 8036), from paṭh, \"to read aloud\", which also gives పాఠం, a lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhakuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhakuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhakuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhakuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālā mandi pāṭhakulu uttarālu rāśāru. — Many readers wrote letters.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālā mandi pāṭhakulu uttarālu rāśāru.* — Many readers wrote letters.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an editor, then the Telugu for an editorial, then say pāṭhakuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an editor, then the Telugu for an editorial, then say *pāṭhakuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పాఠకుడు (pāṭhakuḍu) mean? (\"A reader\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C341-dhruvikarincu",
+      "sequence": 16800,
+      "title": "ధ్రువీకరించు (dhruvīkariñcu) — to certify; to confirm",
+      "headword": "ధ్రువీకరించు",
+      "romanization": "dhruvīkariñcu",
+      "gloss": "to certify; to confirm",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4bdf992e1dffb1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an editorial, then the Telugu for a reader."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ధ్రువీకరించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ధ్రువీకరించు — dhruvīkariñcu — \"to certify; to confirm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పోలీసులు ఆ వార్తను ధ్రువీకరించారు. pōlīsulu ā vārtanu dhruvīkariñcāru. The police confirmed the news."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ధ్రువీకరించాను, dhruvīkariñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ధ్రువ, fixed or firm: to make a report firm. Print often spells it ధృవీకరించు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ధ్రువీకరించు (dhruvīkariñcu) is built on Sanskrit dhruva, \"fixed, firm\" (CDIAL 6892), with -īkariñcu, \"to make into\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhruvīkariñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhruvīkariñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhruvīkariñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhruvīkariñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsulu ā vārtanu dhruvīkariñcāru. — The police confirmed the news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsulu ā vārtanu dhruvīkariñcāru.* — The police confirmed the news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an editorial, then the Telugu for a reader, then say dhruvīkariñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an editorial, then the Telugu for a reader, then say *dhruvīkariñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ధ్రువీకరించు (dhruvīkariñcu) mean? (\"To certify; to confirm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R341-review-334-341",
+      "sequence": 16810,
+      "title": "Words from chapters 334–341 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 334-341",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05e8756b755c1ee2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for a birth and a newborn baby."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a birth, a newborn baby, a naming ceremony, to take birth, to bless",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a birth, a newborn baby, a naming ceremony, to take birth, to bless]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crown, a throne, a coronation, to enthrone, a reign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crown, a throne, a coronation, to enthrone, a reign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rumour, hearsay, an exaggeration, an uproar, to disclose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rumour, hearsay, an exaggeration, an uproar, to disclose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to arrest, to get caught, a prisoner, shackles, the accused",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to arrest, to get caught, a prisoner, shackles, the accused]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gradually, as time went by, previously, the past, in those days",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gradually, as time went by, previously, the past, in those days]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an army, a soldier, a commander, a march, to march against",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an army, a soldier, a commander, a march, to march against]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "instantly, unexpectedly, out of the blue, in the end, to wake up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: instantly, unexpectedly, out of the blue, in the end, to wake up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the main points, an editor, an editorial, a reader, to certify",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the main points, an editor, an editorial, a reader, to certify]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A birth? (జననం, jananaṁ.) A newborn baby? (పసికందు, pasikandu.) A naming ceremony? (నామకరణం, nāmakaraṇaṁ.) To take birth? (జన్మించు, janmiñcu.) To bless? (దీవించు, dīviñcu.) A crown? (కిరీటం, kirīṭaṁ.) A throne? (సింహాసనం, siṁhāsanaṁ.) A coronation? (పట్టాభిషేకం, paṭṭābhiṣēkaṁ.) To enthrone? (పట్టం కట్టు, paṭṭaṁ kaṭṭu.) A reign? (పాలన, pālana.) A rumour? (పుకారు, pukāru.) Hearsay? (వదంతి, vadanti.) An exaggeration? (అతిశయోక్తి, atiśayōkti.) An uproar? (కలకలం, kalakalaṁ.) To disclose? (వెల్లడించు, vellaḍiñcu.) To arrest? (అరెస్టు చేయు, aresṭu cēyu.) To get caught? (పట్టుబడు, paṭṭubaḍu.) A prisoner? (ఖైదీ, khaidī.) Shackles? (సంకెళ్ళు, saṅkeḷḷu.) The accused? (నిందితుడు, nindituḍu.) Gradually? (క్రమంగా, kramaṅgā.) As time went by? (రానురాను, rānurānu.) Previously? (మునుపు, munupu.) The past? (గతం, gataṁ.) In those days? (అప్పట్లో, appaṭlō.) An army? (సైన్యం, sainyaṁ.) A soldier? (సైనికుడు, sainikuḍu.) A commander? (సేనాధిపతి, sēnādhipati.) A march? (కవాతు, kavātu.) To march against? (దండెత్తు, daṇḍettu.) Instantly? (తక్షణం, takṣaṇaṁ.) Unexpectedly? (అనుకోకుండా, anukōkuṇḍā.) Out of the blue? (ఉన్నట్టుండి, unnaṭṭuṇḍi.) In the end? (తీరా, tīrā.) To wake up? (మేల్కొను, mēlkonu.) The main points? (ముఖ్యాంశాలు, mukhyāṁśālu.) An editor? (సంపాదకుడు, sampādakuḍu.) An editorial? (సంపాదకీయం, sampādakīyaṁ.) A reader? (పాఠకుడు, pāṭhakuḍu.) To certify? (ధ్రువీకరించు, dhruvīkariñcu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

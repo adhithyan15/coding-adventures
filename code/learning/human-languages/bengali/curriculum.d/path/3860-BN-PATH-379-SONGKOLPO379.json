@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-379-SONGKOLPO379",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "BN-EXT-379-SONGKOLPO379"
+  ],
+  "after": []
+}

@@ -1,0 +1,857 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 518,
+  "title": "Hiring and Retiring",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9f181af15fdbc751",
+  "lessons": [
+    {
+      "id": "KA-C518-nemisu",
+      "sequence": 26430,
+      "title": "ನೇಮಿಸು (nēmisu) — to appoint; to hire",
+      "headword": "ನೇಮಿಸು",
+      "romanization": "nēmisu",
+      "gloss": "to appoint; to hire",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1b257bbf8b8b92b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to achieve, then the Kannada for to gain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನೇಮಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೇಮಿಸು — nēmisu — \"to appoint; to hire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಂಪನಿ ಹತ್ತು ಹೊಸ ನೌಕರರನ್ನು ನೇಮಿಸಿತು. kampani hattu hosa naukararannu nēmisitu. The company hired ten new employees."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ನೇಮಿಸಿದೆ, nēmiside."
+            },
+            {
+              "kind": "speech",
+              "text": "The one appointed takes -ಅನ್ನು. ನೇಮಕ is an appointment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೇಮಿಸು (nēmisu) is built on nēma, \"a fixed rule or arrangement\", a Kannada form of Sanskrit niyama, \"restraint, fixed law\" (CDIAL 7250), with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēmisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēmisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēmisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēmisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampani hattu hosa naukararannu nēmisitu. — The company hired ten new employees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampani hattu hosa naukararannu nēmisitu.* — The company hired ten new employees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to achieve, then the Kannada for to gain, then say nēmisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to achieve, then the Kannada for to gain, then say *nēmisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನೇಮಿಸು (nēmisu) mean? (\"To appoint; to hire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C518-vaja-madu",
+      "sequence": 26440,
+      "title": "ವಜಾ ಮಾಡು (vajā māḍu) — to dismiss; to sack",
+      "headword": "ವಜಾ ಮಾಡು",
+      "romanization": "vajā māḍu",
+      "gloss": "to dismiss; to sack",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68a80106a194bdbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to gain, then the Kannada for to appoint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಜಾ ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಜಾ ಮಾಡು — vajā māḍu — \"to dismiss; to sack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ತಡವಾಗಿ ಬರುತ್ತಿದ್ದ ನೌಕರನನ್ನು ಕಂಪನಿ ವಜಾ ಮಾಡಿತು. taḍavāgi baruttidda naukaranannu kampani vajā māḍitu. The company sacked the employee who kept coming late."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವಜಾ ಮಾಡಿದೆ, vajā māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of a court case: ಅರ್ಜಿ ವಜಾ ಆಯಿತು, the petition was dismissed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಜಾ ಮಾಡು (vajā māḍu) joins vajā, a word that came into Kannada through the language of offices and courts, with ಮಾಡು, \"to do\"; the earlier source of vajā is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vajā māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vajā māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vajā māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vajā māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍavāgi baruttidda naukaranannu kampani vajā māḍitu. — The company sacked the employee who kept coming late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍavāgi baruttidda naukaranannu kampani vajā māḍitu.* — The company sacked the employee who kept coming late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to gain, then the Kannada for to appoint, then say vajā māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to gain, then the Kannada for to appoint, then say *vajā māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಜಾ ಮಾಡು (vajā māḍu) mean? (\"To dismiss; to sack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C518-nirudyoga",
+      "sequence": 26450,
+      "title": "ನಿರುದ್ಯೋಗ (nirudyōga) — unemployment",
+      "headword": "ನಿರುದ್ಯೋಗ",
+      "romanization": "nirudyōga",
+      "gloss": "unemployment",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbdc32d7a900e45a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to appoint, then the Kannada for to dismiss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿರುದ್ಯೋಗ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿರುದ್ಯೋಗ — nirudyōga — \"unemployment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಳ್ಳಿಗಳಲ್ಲಿ ನಿರುದ್ಯೋಗ ದೊಡ್ಡ ಸಮಸ್ಯೆ. haḷḷigaḷalli nirudyōga doḍḍa samasye. Unemployment is a big problem in the villages."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿರ್, without + ಉದ್ಯೋಗ, a job. ನಿರುದ್ಯೋಗಿ, an unemployed person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿರುದ್ಯೋಗ (nirudyōga) is a learned compound built from Sanskrit nir-, \"without\", and udyoga, \"undertaking, exertion\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirudyōga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirudyōga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirudyōga, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirudyōga*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḷḷigaḷalli nirudyōga doḍḍa samasye. — Unemployment is a big problem in the villages.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḷḷigaḷalli nirudyōga doḍḍa samasye.* — Unemployment is a big problem in the villages.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to appoint, then the Kannada for to dismiss, then say nirudyōga again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to appoint, then the Kannada for to dismiss, then say *nirudyōga* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿರುದ್ಯೋಗ (nirudyōga) mean? (\"Unemployment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C518-nivrtti",
+      "sequence": 26460,
+      "title": "ನಿವೃತ್ತಿ (nivṛtti) — retirement",
+      "headword": "ನಿವೃತ್ತಿ",
+      "romanization": "nivṛtti",
+      "gloss": "retirement",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43d34d58fd90bd12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to dismiss, then the Kannada for unemployment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿವೃತ್ತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿವೃತ್ತಿ — nivṛtti — \"retirement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅರವತ್ತನೇ ವಯಸ್ಸಿನಲ್ಲಿ ಅಪ್ಪ ನಿವೃತ್ತಿ ಪಡೆದರು. aravattanē vayassinalli appa nivṛtti paḍedaru. Father retired at the age of sixty."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿವೃತ್ತ, retired."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿವೃತ್ತಿ (nivṛtti) is borrowed from Sanskrit nivṛtti, \"returning; ceasing, abstaining\" (Monier-Williams), from ni-, \"back\", and vṛt, \"to turn\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivṛtti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivṛtti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivṛtti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivṛtti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aravattanē vayassinalli appa nivṛtti paḍedaru. — Father retired at the age of sixty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aravattanē vayassinalli appa nivṛtti paḍedaru.* — Father retired at the age of sixty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to dismiss, then the Kannada for unemployment, then say nivṛtti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to dismiss, then the Kannada for unemployment, then say *nivṛtti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿವೃತ್ತಿ (nivṛtti) mean? (\"Retirement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C518-guttige",
+      "sequence": 26470,
+      "title": "ಗುತ್ತಿಗೆ (guttige) — a contract; a lease",
+      "headword": "ಗುತ್ತಿಗೆ",
+      "romanization": "guttige",
+      "gloss": "a contract; a lease",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ebcfd43677f746f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for unemployment, then the Kannada for retirement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗುತ್ತಿಗೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗುತ್ತಿಗೆ — guttige — \"a contract; a lease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಸ್ತೆ ಕೆಲಸದ ಗುತ್ತಿಗೆ ಒಂದು ಕಂಪನಿಗೆ ಸಿಕ್ಕಿತು. raste kelasada guttige ondu kampanige sikkitu. The road-building contract went to a company."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗುತ್ತಿಗೆದಾರ, a contractor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗುತ್ತಿಗೆ (guttige) is a Kannada word for a contract or lease; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guttige",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guttige*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guttige, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guttige*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raste kelasada guttige ondu kampanige sikkitu. — The road-building contract went to a company.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raste kelasada guttige ondu kampanige sikkitu.* — The road-building contract went to a company.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for unemployment, then the Kannada for retirement, then say guttige again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for unemployment, then the Kannada for retirement, then say *guttige* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗುತ್ತಿಗೆ (guttige) mean? (\"A contract; a lease\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R518-review-512-518",
+      "sequence": 26480,
+      "title": "Looking back: from Serious Illness to Hiring and Retiring",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Serious Illness to Hiring and Retiring",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a915e1f20ce62ce4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for blood pressure and a heart attack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "blood pressure, a heart attack, bleeding, a stroke, to faint",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: blood pressure, a heart attack, bleeding, a stroke, to faint]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to recover, to feed, a heartbeat, nursing, a herbal decoction",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to recover, to feed, a heartbeat, nursing, a herbal decoction]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a diet, a vitamin, to waste away, to get tired, lifespan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a diet, a vitamin, to waste away, to get tired, lifespan]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a blind man, deaf, mute, to groan, to droop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a blind man, deaf, mute, to groan, to droop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a profession, a post, a qualification, an expert, expertise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a profession, a post, a qualification, an expert, expertise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a promotion, progress, ambition, to achieve, to gain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a promotion, progress, ambition, to achieve, to gain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to appoint, to dismiss, unemployment, retirement, a contract",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to appoint, to dismiss, unemployment, retirement, a contract]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Blood pressure? (ರಕ್ತದೊತ್ತಡ, raktadottaḍa.) A heart attack? (ಹೃದಯಾಘಾತ, hṛdayāghāta.) Bleeding? (ರಕ್ತಸ್ರಾವ, raktasrāva.) A stroke? (ಪಾರ್ಶ್ವವಾಯು, pārśvavāyu.) To faint? (ಪ್ರಜ್ಞೆ ತಪ್ಪು, prajñe tappu.) To recover? (ಚೇತರಿಸಿಕೊ, cētarisiko.) To feed? (ಉಣಿಸು, uṇisu.) A heartbeat? (ಬಡಿತ, baḍita.) Nursing? (ಆರೈಕೆ, āraike.) A herbal decoction? (ಕಷಾಯ, kaṣāya.) A diet? (ಪಥ್ಯ, pathya.) A vitamin? (ಜೀವಸತ್ವ, jīvasatva.) To waste away? (ಸೊರಗು, soragu.) To get tired? (ದಣಿ, daṇi.) Lifespan? (ಆಯುಷ್ಯ, āyuṣya.) A blind man? (ಕುರುಡ, kuruḍa.) Deaf? (ಕಿವುಡ, kivuḍa.) Mute? (ಮೂಕ, mūka.) To groan? (ನರಳು, naraḷu.) To droop? (ನಲುಗು, nalugu.) A profession? (ವೃತ್ತಿ, vṛtti.) A post? (ಹುದ್ದೆ, hudde.) A qualification? (ಅರ್ಹತೆ, arhate.) An expert? (ತಜ್ಞ, tajña.) Expertise? (ಪರಿಣತಿ, pariṇati.) A promotion? (ಬಡ್ತಿ, baḍti.) Progress? (ಪ್ರಗತಿ, pragati.) Ambition? (ಮಹತ್ವಾಕಾಂಕ್ಷೆ, mahatvākāṅkṣe.) To achieve? (ಸಾಧಿಸು, sādhisu.) To gain? (ಗಳಿಸು, gaḷisu.) To appoint? (ನೇಮಿಸು, nēmisu.) To dismiss? (ವಜಾ ಮಾಡು, vajā māḍu.) Unemployment? (ನಿರುದ್ಯೋಗ, nirudyōga.) Retirement? (ನಿವೃತ್ತಿ, nivṛtti.) A contract? (ಗುತ್ತಿಗೆ, guttige.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

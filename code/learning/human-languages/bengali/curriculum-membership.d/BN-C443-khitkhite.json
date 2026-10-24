@@ -1,0 +1,11 @@
+{
+  "id": "BN-C443-khitkhite",
+  "pathSegment": "BN-PATH-443-KHOBH443",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-443-KHOBH443",
+      "order": 1
+    }
+  ]
+}

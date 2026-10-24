@@ -1,0 +1,11 @@
+{
+  "id": "TE-C412-samacaram",
+  "pathSegment": "TE-PATH-412-PARISODHANA412",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-412-PARISODHANA412",
+      "order": 3
+    }
+  ]
+}

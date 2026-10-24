@@ -1,0 +1,11 @@
+{
+  "id": "MR-C298-hahakar",
+  "pathSegment": "MR-PATH-298-GONDHAL298",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-298-GONDHAL298",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C454-gairsamaj",
+    "language": "marathi",
+    "chapter": 454,
+    "sequence": 26210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fe3b4da59b3086b"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:75bee6044d73d0f1",
+  "lessonIds": [
+    "MR-C338-raksas",
+    "MR-C338-pari",
+    "MR-C338-jadu",
+    "MR-C338-cetkin",
+    "MR-C338-sap"
+  ],
+  "tex": "marathi/book/chapters/ch338-ogres-and-fairies.tex"
+}

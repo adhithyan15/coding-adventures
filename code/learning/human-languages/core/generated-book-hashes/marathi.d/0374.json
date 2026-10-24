@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:68c56a0db7dfb37c",
+  "lessonIds": [
+    "MR-C374-prakriya",
+    "MR-C374-tappa",
+    "MR-C374-sutra",
+    "MR-C374-vyakhya",
+    "MR-C374-sastra"
+  ],
+  "tex": "marathi/book/chapters/ch374-how-things-work.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 286,
+  "title": "What I Think and So",
+  "label": "ch:ta-what-i-think-and-so",
+  "canDo": "I can give an opinion with … eṉṟu niṉaikkiṟēṉ, … eṉṟu tōṉṟukiṟatu and eṉ karuttil, and give a result with ataṉāl, ataṉāltāṉ and eṉavē.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-R286-opinion-and-result",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: give an opinion and say what followed, with tōṉṟukiṟatu, eṉ karuttil, ataṉāl and eṉavē.",
+    "assesses": [
+      "TA-GRAMMAR-C286-SEEMS-01",
+      "TA-GRAMMAR-C286-IN-MY-OPINION-01",
+      "TA-GRAMMAR-C286-SO-RESULT-01",
+      "TA-GRAMMAR-C286-THEREFORE-01"
+    ]
+  }
+}

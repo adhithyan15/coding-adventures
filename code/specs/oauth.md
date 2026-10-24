@@ -503,16 +503,29 @@ and trailing data in exact mode. It does not interpret ASN.1 types, recurse
 through constructed values, parse X.509, validate certificate paths, verify
 signatures, or select trust roots, so it does not unblock concrete HTTPS by
 itself. The typed `der-asn1` layer is now shipped above that framing primitive:
-it provides allocation-free canonical BOOLEAN, INTEGER, BIT STRING, OCTET
-STRING, NULL, and OBJECT IDENTIFIER decoding plus exact SEQUENCE, SET, and
+it provides allocation-free canonical BOOLEAN, INTEGER, ENUMERATED, BIT STRING,
+OCTET STRING, NULL, and OBJECT IDENTIFIER decoding plus exact SEQUENCE, SET, and
 explicit context-wrapper traversal under one shared depth and total-element
-budget. It also validates universal IA5String and schema-selected implicit BIT
-STRING, OCTET STRING, IA5String, and OBJECT IDENTIFIER values under exact
+budget. It also validates universal IA5String and schema-selected implicit NULL,
+BIT STRING, OCTET STRING, IA5String, and OBJECT IDENTIFIER values under exact
 primitive context-specific tags, providing typed value prerequisites for
-later X.509 schemas without claiming their semantics. A separate
+later X.509 schemas without claiming their semantics. The implicit NULL helper
+requires the exact caller-selected primitive context-specific tag and empty
+contents; it does not select a schema tag or grant CertStatus, OCSP, revocation,
+freshness, or authentication semantics. The generic ENUMERATED
+decoder requires the exact primitive universal tag and canonical non-empty
+two's-complement contents, preserves signed values as borrowed bytes, and
+offers checked conversion to `u64`; it does not define an enum registry or
+grant CRL, OCSP, revocation, or freshness semantics. A separate
 `x509-time` profile layer now validates exact RFC 5280
 UTCTime and GeneralizedTime tags, fixed Zulu forms, the 1950/2050 century
-split, and Gregorian fields without a clock or platform calendar. A bounded
+split, and Gregorian fields without a clock or platform calendar. A separate
+tag-strict entry point in that same repository-owned layer validates the RFC
+5280 GeneralizedTime wire form used by RFC 6960 OCSP fields without applying
+the certificate-validity rule that reserves GeneralizedTime for 2050 and
+later. It accepts only the fixed `YYYYMMDDHHMMSSZ` form and returns the same
+clock-free calendar value; it does not parse an OCSP container, read a clock,
+or decide freshness. A bounded
 `x509-validity` layer is now shipped above them: it decodes the exact two-field
 `Validity` sequence, rejects inverted endpoints, and classifies an explicitly
 supplied validated time against inclusive endpoints. These layers still
@@ -743,6 +756,59 @@ still owns all RFC 5280 Name normalization and equality semantics; the result
 does not prove self-signature, construct a path, or grant trust. Complete Name
 comparison, path construction and validation, trust-anchor constraints, name
 constraints, revocation, TLS, HTTP, and network effects remain blockers.
+A bounded `x509-intermediate-certificate-policy` composition now consumes
+certificate-wide issuing-CA role-policy evidence, certificate-bound
+caller-selected algorithm-policy evidence, and caller-policy self-issued
+classification. It fails closed unless all three non-copyable inputs retain
+the same exact decoded certificate object and the role is exactly issuing CA,
+then classifies that certificate's inclusive validity interval at one explicit
+validated caller-owned observation. Its non-copyable result retains all three
+inputs plus the validity result so later path traversal can consume one
+non-mixable intermediate-certificate policy boundary. The self-issued result
+remains only caller-owned Name classification, and the algorithm profile
+remains policy data rather than a verifier. This composition does not
+authenticate either adjacent link, advance path-length state, apply name
+constraints, construct or validate a certification path, recognize or
+constrain a trust anchor, check revocation, perform TLS or HTTP, authorize
+OAuth transport, or open a network connection.
+The path-length state can now consume that complete intermediate-certificate
+policy evidence directly. It derives both issuing-CA role evidence and the
+self-issued transition bit from the one retained certificate-bound policy,
+then applies the existing decrement and `pathLenConstraint` tightening rules.
+This prevents a path traversal from silently discarding the intermediate's
+critical-extension recognition, algorithm policy, and explicit-time validity
+checks by re-deriving only a detached role/classification pair. The aggregate
+state still proves only path-length accounting: it does not retain an
+authenticated adjacent link, choose or order certificates, apply name
+constraints, recognize trust, check revocation, perform TLS or HTTP, authorize
+OAuth transport, or open a network connection.
+A bounded authenticated-intermediate binding follow-up now consumes the
+strongest selected RSA SHA-256 issuer-link evidence together with complete
+intermediate-certificate policy. It fails closed unless the authenticated
+link's exact selected candidate issuer is the same decoded certificate object
+retained by the intermediate policy, then returns one distinct non-copyable
+result retaining both proofs. This prevents later traversal from combining an
+authenticated child-to-issuer link with validity, self-issued, algorithm, or
+critical-extension policy for a different intermediate. The result proves
+only that this policy-approved intermediate authenticated one exact child; it
+does not authenticate the intermediate's own issuer link, advance path-length
+state, choose or order certificates, construct or validate a complete path,
+recognize trust, process name constraints or revocation, perform TLS or HTTP,
+authorize OAuth transport, or open a network connection.
+A bounded authenticated path-length follow-up now consumes that complete
+authenticated-intermediate proof together with one path-length state. It
+derives the transition's issuing-CA role, caller-policy self-issued bit, and
+decoded `pathLenConstraint` only from the exact intermediate policy retained
+by the authenticated link, then returns a distinct non-copyable result that
+retains both the authenticated intermediate and the advanced state. This
+prevents callers from presenting one authenticated intermediate while
+advancing path-length state with policy for another certificate, or from
+silently discarding the adjacent-link proof at this composition boundary. The
+result covers one caller-ordered transition only: it does not authenticate the
+intermediate's own issuer, prove adjacency to another step, choose or order
+certificates, construct or validate a complete path, recognize trust, process
+name constraints or revocation, perform TLS or HTTP, authorize OAuth
+transport, or open a network connection.
 A bounded `x509-certificate-issuer-candidate-selection` path-construction
 prerequisite now scans one caller-bounded pool of decoded candidate
 certificates in caller order. It invokes caller-owned Name policy exactly once
@@ -755,14 +821,161 @@ anchor, or validate a path. Complete RFC 4518 and schema-specific Name
 comparison, algorithm routing and link authentication, full path construction
 and validation, trust-anchor and name constraints, revocation, TLS, HTTP, and
 network effects remain blockers.
-The RSA SHA-256 issuer-link composition can now consume that non-copyable
-selection evidence directly. It derives the exact child and selected candidate
-from the evidence, then performs issuing-CA role, caller-owned RSA key-policy,
-and exact child-signature checks without a second Name callback. This closes a
-cross-certificate mixing gap between selection and authentication for the one
-implemented algorithm, but does not add algorithm routing, construct or
-validate a complete path, recognize trust, process constraints or revocation,
-or provide TLS, HTTP, OAuth transport, or network authority.
+A bounded `x509-certificate-path-construction` follow-up now repeats that unique
+issuer selection into one caller-bounded target-to-terminal chain. Candidate
+pool size and requested path depth are rejected before policy callbacks;
+caller-owned terminal policy runs exactly once per accepted path certificate;
+and exact certificate-encoding cycles or exhaustion before a terminal match
+fail closed. Non-copyable success evidence retains the exact target, candidate
+pool, and ordered selected indices, so a later validator can consume the one
+constructed chain without caller substitution. This deterministic primitive
+does not search alternate ambiguous branches, define Name equality, decide
+trust, authenticate any link, apply certificate roles, algorithms, validity,
+path length, name constraints, hostname or revocation policy, or provide TLS,
+HTTP, OAuth transport, or network authority.
+A bounded reviewed-terminal binding follow-up now consumes that constructed
+path together with reviewed-root selection evidence. It requires the path to
+contain at least one selected issuer, derives the exact terminal certificate
+from the path's final retained candidate index, and fails closed unless the
+reviewed-root evidence retains that same decoded certificate object. Distinct
+non-copyable success evidence keeps both complete inputs, preventing a caller
+from substituting a byte-equal re-decode or attaching reviewed-root membership
+to a different path certificate. The binding does not authenticate any path
+link, validate the terminal certificate's role or self-signature, apply anchor
+constraints, or provide complete path validation, revocation, TLS, HTTP, OAuth
+transport, or network authority.
+A bounded constructed-target binding follow-up now consumes that constructed
+path together with complete validated server-certificate policy. It fails
+closed unless the server-policy evidence retains the same exact decoded target
+certificate object as the path, then returns distinct non-copyable evidence
+retaining both complete inputs. This prevents callers from attaching hostname,
+validity, purpose, end-entity role, critical-extension, or algorithm policy for
+another certificate, including a byte-equal re-decode, to the constructed
+chain. The binding does not authenticate any path link, validate an issuer or
+trust anchor, apply path-length or name constraints, check revocation, or
+provide complete path validation, TLS, HTTP, OAuth transport, or network
+authority.
+A bounded reviewed-endpoints follow-up now consumes the reviewed-terminal-bound
+constructed path together with complete validated server-certificate policy.
+It fails closed unless that policy retains the same exact decoded target object
+as the constructed path, then returns one distinct non-copyable result retaining
+the reviewed terminal, constructed candidate pool and indices, and complete
+target policy. This prevents the two endpoint proofs from requiring separate
+consumption of the non-copyable path or allowing either endpoint to be silently
+discarded. The composition does not authenticate path links, apply issuer,
+anchor, path-length, or name-constraint policy, check revocation, or provide
+complete path validation, TLS, HTTP, OAuth transport, or network authority.
+A bounded adjacent-link projection now borrows one exact constructed path and
+one selected-issuer depth below its retained issuer count. Depth zero derives
+the target as child; every later depth derives the preceding selected candidate
+as child; and the current selected candidate is always the issuer. Out-of-range
+depths return no evidence. The non-copyable projection retains the construction
+borrow and derives both endpoints from its private depth, so later signature
+verification can consume an exact ordered pair without rerunning Name policy or
+accepting caller-substituted certificates. Projection alone does not authenticate
+a signature, validate either certificate, route an algorithm, advance path-length
+state, apply constraints or revocation, establish trust, or provide complete path
+validation, TLS, HTTP, OAuth transport, or network authority.
+The RSA SHA-256 issuer-link composition can now consume non-copyable unique
+candidate-selection evidence directly. It derives the exact child and selected
+candidate from that evidence, then performs issuing-CA role, caller-owned RSA
+key-policy, and exact child-signature checks without a second Name callback.
+This closes a cross-certificate mixing gap between one-step selection and
+authentication for the one implemented algorithm, but does not add algorithm
+routing, construct or validate a complete path, recognize trust, process
+constraints or revocation, or provide TLS, HTTP, OAuth transport, or network
+authority.
+A bounded constructed-path authentication follow-up now consumes one adjacent-
+link projection from the exact retained path. It authenticates only the
+projection's derived target-or-candidate child against its derived selected
+issuer with the existing fixed RSA PKCS #1 v1.5 SHA-256 verifier, without
+rerunning Name policy, then returns distinct non-copyable evidence retaining
+both the construction projection and validated issuer key. This prevents path
+order from being discarded or either endpoint from being substituted between
+construction and authentication. It still does not route algorithms, retain
+complete issuer policy, authenticate any other link, validate the whole path,
+recognize or constrain trust, process name constraints or revocation, perform
+TLS or HTTP, authorize OAuth transport, or open a network connection.
+A bounded complete-intermediate-policy follow-up now strengthens that
+construction-bound authentication without accepting either endpoint
+separately. It consumes one constructed-path adjacency together with complete
+intermediate policy for the exact projected non-terminal issuer, rejects the
+construction's terminal adjacency and any certificate-object mismatch before
+RSA key parsing or signature verification, and then retains
+both the authenticated construction projection and the complete intermediate
+policy in distinct non-copyable evidence. This binds caller-owned critical-
+extension recognition, issuing-CA role, data-driven algorithm profile,
+self-issued classification, and explicit-time validity to the same ordered
+issuer that authenticated the projected child. It does not advance path-length
+state, authenticate another link, route algorithms, validate the whole path,
+recognize or constrain trust, process name constraints or revocation, perform
+TLS or HTTP, authorize OAuth transport, or open a network connection.
+A bounded construction-bound path-length follow-up now consumes that exact
+non-terminal intermediate proof together with one caller-supplied path-length
+state. It derives issuing-CA role, self-issued classification, and any decoded
+`pathLenConstraint` only from the complete intermediate policy retained by the
+ordered proof, then returns distinct non-copyable evidence retaining both the
+construction-bound authenticated link and the advanced state. Terminal
+certificates cannot enter this transition because the consumed proof already
+rejects the construction's final adjacency. The result covers one retained
+non-terminal adjacency only: it does not prove that the input state represents
+earlier construction depths, authenticate another link, route algorithms,
+validate the whole path, recognize or constrain trust, process name constraints
+or revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection.
+A bounded construction-bound reviewed-path follow-up now consumes that
+path-length result, the authenticated terminal adjacency projected from the
+same construction, and reviewed-root selection for the terminal issuer. It
+accepts only an exact two-link target-to-intermediate-to-terminal construction:
+the first retained adjacency must be depth zero, the terminal adjacency must be
+depth one, both must retain the identical constructed-path object, and the
+terminal issuer must be the exact decoded certificate retained by the reviewed
+root evidence. Distinct non-copyable success evidence keeps all three inputs,
+including complete intermediate policy and the advanced path-length state, so
+callers cannot splice authenticated links from separately constructed paths or
+discard the reviewed terminal. The caller-supplied initial path-length state
+still is not derived from anchor policy, and this fixed-shape composition does
+not apply anchor constraints, target policy, revocation, generalized path
+validation, TLS, HTTP, OAuth transport, or network authority.
+A bounded construction-bound target-policy follow-up now consumes that complete
+authenticated reviewed path together with complete validated server-certificate
+policy. It fails closed unless the server-policy certificate is the same exact
+decoded target object retained by the constructed path, then returns distinct
+non-copyable evidence retaining both complete inputs. This prevents callers
+from attaching hostname, validity, purpose, end-entity role, critical-extension,
+and algorithm policy for one certificate to a separately constructed and
+authenticated target, including a byte-equal re-decode. The result still uses
+the caller-supplied initial path-length state retained by the prior proof and
+does not apply anchor or intermediate name constraints, other anchor policy,
+revocation, generalized path validation, TLS, HTTP, OAuth transport, or network
+authority.
+A bounded construction-bound anchor-policy follow-up now consumes that exact
+target-policy result and applies the selected reviewed terminal's exact
+supported DNS constraints to the exact target certificate retained by the
+construction. Entries without out-of-band name constraints retain the complete
+construction-bound proof without DNS evidence. Constrained entries reuse the
+repository-owned bounded NameConstraints and Subject Alternative Name decoders,
+require every target dNSName to satisfy at least one permitted DNS subtree, and
+retain optional payload-free count evidence. Callers cannot substitute another
+constructed path, reviewed terminal, target certificate, or SAN collection.
+The result still retains caller-supplied initial path-length state and does not
+apply intermediate name constraints, excluded or non-DNS anchor constraints,
+other anchor policy, revocation, generalized path validation, TLS, HTTP, OAuth
+transport, or network authority.
+A bounded construction-bound intermediate-policy follow-up now consumes that
+complete anchor-policy result and applies the exact retained intermediate's
+NameConstraints extension to the exact retained target. An absent extension
+retains the complete prior proof without new DNS evidence. A present extension
+must be critical and must decode under caller-owned limits as the supported
+permitted-and-excluded-dNSName subset; every target dNSName must satisfy the
+permitted policy, excluded names take precedence, and wildcard targets that
+overlap an excluded subtree fail closed. The target, intermediate, constructed
+path, reviewed terminal, and SAN collection are all derived through the one
+retained proof, so callers cannot splice policy evidence from another path or
+certificate. This fixed two-link boundary still retains caller-supplied initial
+path-length state and does not apply excluded or non-DNS anchor constraints,
+other anchor policy, revocation, generalized path validation, TLS, HTTP, OAuth
+transport, or network authority.
 Certificate-wide role policy can now bind caller-owned critical-extension
 recognition and algorithm-independent role semantics to the same exact decoded
 certificate. The non-copyable result prevents checking critical extensions on
@@ -829,16 +1042,19 @@ issuer link terminating at a selected reviewed Mozilla root. It still does not
 apply the root's name constraints, path-length or other anchor constraints,
 construct a multi-hop path, check revocation, perform TLS or HTTP, authorize
 OAuth transport, or open a network connection.
-A bounded fail-closed anchor-policy follow-up now consumes that complete direct
+A bounded fail-closed anchor-policy follow-up consumes that complete direct
 reviewed-server-link evidence and inspects the selected reviewed snapshot entry.
-It accepts only an entry whose optional out-of-band name constraints are absent,
-then retains the consumed link in a distinct non-copyable result. A reviewed
-root carrying name constraints is rejected with a payload-free category until
-repository-owned parsing and subtree evaluation can apply those constraints;
-their bytes are never treated as understood merely because the root was
-selected. This gate adds no NameConstraints parser, constrained-root support,
-multi-hop path construction, revocation, TLS, HTTP, OAuth transport, or network
-authority.
+For an unconstrained entry it retains the consumed link directly. For an entry
+carrying out-of-band name constraints, it decodes those exact selected-entry
+bytes, re-decodes Subject Alternative Name from the exact target certificate
+retained by the server-policy evidence, and requires every target dNSName to
+satisfy the supported permitted DNS subtrees. Separate caller-owned DER limits
+bound both parses, and the non-copyable result retains the link plus optional
+payload-free DNS-constraint evidence. Malformed or unsupported constraint
+bytes, malformed target SAN, or a constraint violation fail closed. This
+supports only the exact direct target-to-reviewed-root link and adds no excluded
+or non-DNS constraint forms, multi-hop path construction, revocation, TLS,
+HTTP, OAuth transport, or network authority.
 A smaller repository-owned DER prerequisite for that future parser now opens an
 exact context-specific constructed value selected by its schema tag as one
 bounded child cursor. The cursor reuses the same depth, total-element, and DER
@@ -848,6 +1064,193 @@ the missing IMPLICIT-constructed traversal primitive required by the
 `permittedSubtrees [0]` and `excludedSubtrees [1]` NameConstraints fields; it
 does not recognize either field, decode GeneralSubtree, apply a constraint, or
 grant certificate-path, trust, TLS, HTTP, OAuth, or network authority.
+A bounded repository-owned NameConstraints structural decoder first consumed
+the out-of-band SEQUENCE contents carried by reviewed trust anchors. Its first
+fail-closed subset accepts one `permittedSubtrees [0]` field containing one or
+more dNSName GeneralSubtree sequences with absent distance fields, retaining
+the non-empty ASCII subtree strings in fixed capacity and wire order. The
+decoder is data-driven and covers the reviewed `.tr` constraint without
+hard-coding that suffix. That initial slice did not validate DNS syntax,
+support excluded or non-DNS subtrees, evaluate a certificate name, bind the
+parsed bytes back to
+selected-anchor evidence, construct or validate a path, grant trust, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection.
+A separate bounded evaluator initially validated every decoded permitted DNS
+subtree before matching caller-supplied DNS names. It enforces strict ASCII labels,
+case-insensitive label-boundary matching, the reviewed leading-dot semantics,
+and a complete-leftmost-label-only presented wildcard, then requires every
+supplied name to match at least one data-driven subtree. Both collections are
+capped at 256 and evaluation allocates nothing. The result retained only the
+evaluated count: it was not bound to certificate SAN evidence or the selected
+anchor and did not yet handle excluded or non-DNS subtrees, construct or validate a
+path, check trust or revocation, perform TLS or HTTP, authorize OAuth transport,
+or open a network connection. Concrete HTTPS therefore remains unavailable.
+The direct reviewed-server anchor-policy composition is the sole consumer in
+this slice that binds that evaluator to certificate and anchor evidence. It
+does not make the standalone decoder or evaluator authoritative, and complete
+path validation, revocation, TLS, HTTP, and OAuth transport remain unavailable.
+A bounded two-link evidence-binding follow-up now consumes one authenticated
+child-to-intermediate path-length transition together with one authenticated
+intermediate-to-reviewed-root link. It fails closed unless the complete
+intermediate policy retained by the first proof and the child certificate
+retained by the second proof refer to the same exact decoded certificate
+object, then returns distinct non-copyable evidence retaining both inputs. This
+prevents traversal from joining independently authenticated links through
+byte-equal but separately decoded intermediates or silently discarding the
+advanced path-length state. The result covers exactly one caller-ordered
+child-to-intermediate-to-reviewed-root chain for the fixed RSA SHA-256 path;
+it does not search or generalize paths, apply anchor name constraints, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection.
+A bounded target-policy follow-up now consumes complete validated server
+certificate policy together with that reviewed two-link path. It fails closed
+unless the server-policy certificate and the authenticated path's target child
+refer to the same exact decoded certificate object, then returns distinct
+non-copyable evidence retaining both complete inputs. This prevents callers
+from attaching hostname, validity, purpose, end-entity role, critical-extension,
+and algorithm policy for one certificate to a separately authenticated target,
+including a byte-equal re-decode. The result does not apply the selected
+anchor's name constraints or other anchor policy, search or generalize paths,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or open a
+network connection.
+A bounded anchor-policy follow-up now consumes that complete reviewed two-link
+server-path evidence and applies the selected reviewed snapshot entry's exact
+supported DNS constraints to the exact target certificate already retained by
+the path. Entries without out-of-band name constraints retain the complete path
+without DNS evidence. Constrained entries reuse the same separately bounded,
+repository-owned NameConstraints and Subject Alternative Name decoding as the
+direct-link composition, require every target dNSName to satisfy at least one
+permitted DNS subtree, and retain optional payload-free count evidence. Callers
+cannot substitute another root, target certificate, or SAN collection. This
+does not add excluded or non-DNS constraint forms, other anchor constraints,
+path search or generalized construction, revocation, TLS, HTTP, OAuth transport,
+or network authority.
+A bounded intermediate-constraint follow-up first consumed that anchor-policy
+result and inspected only the exact intermediate certificate already retained by the
+authenticated two-link path. An absent NameConstraints extension preserves the
+complete prior proof without new DNS evidence. A present extension must be
+critical, contain one exact DER NameConstraints SEQUENCE, and decode within
+caller-owned limits to the then-supported permitted-DNS-only subset; malformed,
+non-critical, excluded, or non-DNS forms failed closed. The
+same exact target certificate's separately bounded Subject Alternative Name is
+then required, and every dNSName must satisfy at least one permitted subtree.
+Success retains the complete anchor-policy proof plus optional payload-free
+intermediate constraint evidence, so callers cannot substitute an intermediate,
+target, root, or SAN collection. That initial form remained a fixed two-link
+policy step and did not implement excluded or non-DNS constraint semantics,
+apply other anchor
+constraints, search or generalize paths, check revocation, perform TLS or HTTP,
+authorize OAuth transport, or grant network authority.
+A bounded excluded-DNS follow-up extends the repository-owned complete
+NameConstraints parser and shared evaluator without widening the reviewed-root
+snapshot format. A certificate extension may carry a non-empty
+`permittedSubtrees [0]` field, a non-empty `excludedSubtrees [1]` field, or both
+in schema order; the supported GeneralSubtree form remains dNSName with absent
+minimum and maximum. The snapshot-contents decoder remains restricted to its
+reviewed permitted-DNS-only input. Evaluation validates every retained
+permitted and excluded subtree before examining a presented name, rejects a
+name matching any excluded subtree, rejects a presented wildcard when any of
+its concrete expansions falls within an excluded subtree, and, when permitted
+subtrees are present, requires every represented name to stay within that set.
+The exact direct and two-link anchor-policy
+consumers use the shared evaluator, while the exact intermediate-policy
+consumer now accepts and enforces supported critical excluded-DNS constraints
+instead of rejecting their field solely by tag. Empty fields, duplicates,
+reversed order, distance fields, non-DNS GeneralName choices, malformed DER,
+and caller-limit exhaustion continue to fail closed with redacted categories.
+This remains fixed-path DNS policy only: it does not implement other name
+forms, generalized path construction or validation, revocation, TLS, HTTP,
+OAuth transport, or network authority.
+A bounded `x509-revocation-policy` prerequisite now evaluates one explicit
+caller-supplied certificate-status observation at one explicit validated time.
+The status must be `good`; `revoked` and `unknown` fail closed. A successful
+observation must carry both `thisUpdate` and `nextUpdate`, those endpoints must
+form an ordered inclusive interval, and the caller's observation time must lie
+inside it. Missing observations, missing freshness endpoints, future
+`thisUpdate` values, and stale `nextUpdate` values fail with stable payload-free
+categories. The package reads no clock and accepts no tolerance or unbounded
+freshness mode. Its caller-owned observation is policy input only: the package
+does not parse or authenticate OCSP responses or CRLs, bind status to a
+certificate or constructed path, fetch revocation data, define responder or
+distribution-point authorization, implement nonce or cache policy, or grant
+path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
+therefore remains unavailable until authenticated revocation evidence is
+composed with the exact certificate/path boundary and the other remaining TLS
+work.
+A bounded `x509-ocsp-cert-id` prerequisite now decodes exactly one RFC 6960
+`CertID` SEQUENCE within caller-owned DER depth, element, length, and OID-arc
+limits. Success retains the generic hash `AlgorithmIdentifier`, exact borrowed
+issuer-name and issuer-key hash OCTET STRING contents, and the validated
+positive RFC 5280 certificate serial number. The structural layer deliberately
+accepts hash lengths according to the selected algorithm's later data-driven
+policy rather than embedding an algorithm registry. It does not choose a hash
+algorithm, compute or compare issuer hashes, parse a larger OCSP response,
+authenticate a response signature, authorize a responder, bind the identifier
+to a certificate or constructed path, decide status or freshness, fetch or
+cache revocation data, read a clock, or grant path, trust, TLS, HTTP, OAuth
+transport, or network authority. Concrete HTTPS remains unavailable.
+A bounded `x509-ocsp-cert-status` prerequisite now decodes exactly one RFC
+6960 `CertStatus` CHOICE within caller-owned DER depth, element, and length
+limits. It accepts the exact primitive empty `good [0]` and `unknown [2]`
+forms, or the exact constructed `revoked [1]` form containing one required
+OCSP GeneralizedTime and one optional explicit `CRLReason`. The reason registry
+is the fixed RFC 5280 set used by RFC 6960; canonical negative, unassigned, and
+out-of-range ENUMERATED values fail closed. Success retains only a clock-free
+validated revocation time and the optional typed reason. This structural layer
+does not parse a `SingleResponse` or larger OCSP response, authenticate a
+response signature, authorize a responder, bind status to a `CertID`,
+certificate, or constructed path, decide freshness, fetch or cache revocation
+data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or network
+authority. Concrete HTTPS remains unavailable.
+A bounded `x509-ocsp-single-response` prerequisite now composes exactly one
+RFC 6960 `SingleResponse` SEQUENCE within caller-owned DER depth, element,
+length, OID-arc, and extension-count limits. It requires one structural
+`CertID`, one structural `CertStatus`, and one OCSP GeneralizedTime
+`thisUpdate`, followed in schema order by an optional explicit `nextUpdate [0]`
+and optional explicit `singleExtensions [1]`. Present extension collections
+reuse the bounded generic RFC 5280 `Extensions` decoder, remain non-empty and
+unique by OID, and retain no OCSP extension semantics. The structural layer
+does not select or validate the CertID hash algorithm, authenticate a response
+signature, authorize a responder, bind the identifier or status to a
+certificate or constructed path, interpret extensions, decide freshness,
+fetch or cache revocation data, read a clock, or grant path, trust, TLS, HTTP,
+OAuth transport, or network authority. Concrete HTTPS remains unavailable.
+A bounded `x509-ocsp-response-data` prerequisite now composes exactly one RFC
+6960 `ResponseData` SEQUENCE within caller-owned DER depth, element, length,
+OID-arc, extension-count, and fixed response-count limits. DER's default `v1`
+version is accepted only by omission; a present explicit version is rejected
+as either the encoded default or an unsupported value. The responder identifier
+must be exactly one explicit `byName [1]` RFC 5280 Name or explicit `byKey [2]`
+OCTET STRING, `producedAt` uses the strict OCSP GeneralizedTime profile, and
+the non-empty ordered response sequence composes bounded structural
+`SingleResponse` values. One optional explicit `responseExtensions [1]` field
+may follow and remains a generic, non-empty, unique-OID extension collection.
+Success retains the exact canonical DER `ResponseData` bytes that a later
+repository-owned verifier must authenticate, without reserialization.
+The structural layer does not interpret the responder key hash or extensions,
+select or validate CertID hash algorithms, authenticate a response signature,
+authorize a responder, bind any response to a certificate or constructed path,
+decide freshness or revocation, fetch or cache data, read a clock, or grant
+path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
+remains unavailable.
+A bounded `x509-ocsp-basic-response` prerequisite now composes exactly one RFC
+6960 `BasicOCSPResponse` SEQUENCE under a shared caller-owned DER depth,
+element, length, OID-arc, extension-count, response-count, and fixed
+certificate-count budget. It requires one structural `ResponseData`, one
+generic signature `AlgorithmIdentifier`, and one canonical signature BIT
+STRING in schema order, followed by an optional explicit `certs [0]` sequence.
+Each present certificate is decoded by the complete repository-owned RFC 5280
+certificate structure layer through the same enclosing DER decoder; no nested
+budget is reset. Success retains the exact complete response encoding, the
+exact signed `ResponseData` bytes, the generic algorithm identifier, the
+borrowed signature bits, and the ordered bounded certificate values without
+reserialization. The structural layer does not recognize or enable a signature
+algorithm, verify the signature, authorize or select a responder certificate,
+match `ResponderID`, build or validate a certificate path, apply certificate
+role or critical-extension policy, decide freshness or revocation, fetch or
+cache data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

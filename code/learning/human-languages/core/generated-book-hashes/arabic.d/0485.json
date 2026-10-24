@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:91644d288c4ef4d5",
+  "lessonIds": [
+    "AR-C485-sahw",
+    "AR-C485-qaws-quzah",
+    "AR-C485-nada",
+    "AR-C485-ashraqa",
+    "AR-C485-azlama"
+  ],
+  "tex": "arabic/book/chapters/ch485-sky-and-light.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Falling Ill",
+  "label": "ch:te-falling-ill",
+  "canDo": "I can say that someone fell ill, was laid up or came round.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C512-teruko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can say that someone fell ill, was laid up or came round.",
+    "assesses": [
+      "TE-LEX-C512-JABBU512-03",
+      "TE-LEX-C512-JABBU512-04",
+      "TE-LEX-C512-JABBU512-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C468-talar",
+    "language": "tamil",
+    "chapter": 468,
+    "sequence": 26890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd6325f003ad4e81"
+  },
+  "findings": []
+}

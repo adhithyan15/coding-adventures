@@ -1,0 +1,21 @@
+{
+  "chapter": 284,
+  "title": "What Happened and What Was Going On",
+  "label": "ch:ta-what-happened-and-what-was-going-on",
+  "canDo": "I can say what happened in the past for every person (vantēṉ, vantāṉ, vantārkaḷ), set the scene with -koṇṭiruntēṉ and vanta pōtu, say what there was with iruntatu, and say what did not happen with -villai.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-R284-the-past-three-ways",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: tell what happened, what was going on and what was there, with the past by person, -koṇṭiruntēṉ, vanta pōtu and iruntatu.",
+    "assesses": [
+      "TA-GRAMMAR-C284-PAST-PERSON-01",
+      "TA-GRAMMAR-C284-PAST-STEMS-01",
+      "TA-GRAMMAR-C284-ONGOING-PAST-01",
+      "TA-GRAMMAR-C284-WHEN-PAST-01",
+      "TA-GRAMMAR-C284-THERE-WAS-01"
+    ]
+  }
+}

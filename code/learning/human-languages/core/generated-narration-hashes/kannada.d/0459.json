@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:967f2179a11ac55f",
+  "lessonIds": [
+    "KA-C459-parvata",
+    "KA-C459-sikhara",
+    "KA-C459-muggarisu",
+    "KA-C459-dere",
+    "KA-C459-bidara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch459.txt",
+  "json": "kannada/narration/ch459.json",
+  "textHash": "fnv1a64:a197cb85efd08bdb",
+  "jsonHash": "fnv1a64:87d1b73d12538e58",
+  "findings": []
+}

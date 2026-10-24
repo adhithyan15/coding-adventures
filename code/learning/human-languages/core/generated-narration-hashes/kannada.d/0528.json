@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:683d58d0c83f4db8",
+  "lessonIds": [
+    "KA-C528-sneha",
+    "KA-C528-bandhavya",
+    "KA-C528-odanata",
+    "KA-C528-atmiya",
+    "KA-C528-raji-madiko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch528.txt",
+  "json": "kannada/narration/ch528.json",
+  "textHash": "fnv1a64:97b75e21c0b8a6b7",
+  "jsonHash": "fnv1a64:87ff3c697ddcbab7",
+  "findings": []
+}

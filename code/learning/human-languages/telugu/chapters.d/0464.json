@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Arranging Things",
+  "label": "ch:te-arranging-things",
+  "canDo": "I can say to provide, to gather together, to organise, a supply and to collect payment.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C464-vasulu-ceyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can say to provide, to gather together, to organise, a supply and to collect payment.",
+    "assesses": [
+      "TE-LEX-C464-SEVA464-03",
+      "TE-LEX-C464-SEVA464-04",
+      "TE-LEX-C464-SEVA464-05"
+    ]
+  }
+}

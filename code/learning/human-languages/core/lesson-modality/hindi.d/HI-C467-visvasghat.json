@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C467-visvasghat",
+    "language": "hindi",
+    "chapter": 467,
+    "sequence": 25790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:caa93bcfa180efbb"
+  },
+  "findings": []
+}

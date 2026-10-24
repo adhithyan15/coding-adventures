@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C539-urjuha",
+    "language": "arabic",
+    "chapter": 539,
+    "sequence": 29820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2758e680eedf65f"
+  },
+  "findings": []
+}

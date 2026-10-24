@@ -1,0 +1,11 @@
+{
+  "id": "TA-C359-mikaippatuttu",
+  "pathSegment": "TA-PATH-359-TIRI359",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-359-TIRI359",
+      "order": 1
+    }
+  ]
+}

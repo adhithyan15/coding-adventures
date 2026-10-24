@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:d4c9dfd1f06413a6",
+  "lessonIds": [
+    "KA-C324-agnisamaka",
+    "KA-C324-hottiko",
+    "KA-C324-samayaprajne",
+    "KA-C324-nandisu",
+    "KA-C324-raksisu"
+  ],
+  "tex": "kannada/book/chapters/ch324-fire-in-the-market.tex"
+}

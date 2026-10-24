@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:ea468bf77c1fbe24",
+  "lessonIds": [
+    "AR-C311-wilada",
+    "AR-C311-mawlud",
+    "AR-C311-qabila-midwife",
+    "AR-C311-anjaba",
+    "AR-C311-tasmiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch311.txt",
+  "json": "arabic/narration/ch311.json",
+  "textHash": "fnv1a64:faebc9aa76987bd7",
+  "jsonHash": "fnv1a64:54f508096c98e238",
+  "findings": []
+}

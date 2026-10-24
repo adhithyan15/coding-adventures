@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C403-sanksemam",
+    "language": "telugu",
+    "chapter": 403,
+    "sequence": 20110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5c683e8ea270dc8"
+  },
+  "findings": []
+}

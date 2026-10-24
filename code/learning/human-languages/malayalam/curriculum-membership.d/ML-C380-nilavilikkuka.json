@@ -1,0 +1,11 @@
+{
+  "id": "ML-C380-nilavilikkuka",
+  "pathSegment": "ML-PATH-380-NILAVILI380",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-380-NILAVILI380",
+      "order": 3
+    }
+  ]
+}

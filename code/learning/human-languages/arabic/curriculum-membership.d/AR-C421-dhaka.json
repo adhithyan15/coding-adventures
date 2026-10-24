@@ -1,0 +1,11 @@
+{
+  "id": "AR-C421-dhaka",
+  "pathSegment": "AR-PATH-421-FURSA421",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-421-FURSA421",
+      "order": 3
+    }
+  ]
+}

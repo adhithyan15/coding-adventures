@@ -1,0 +1,11 @@
+{
+  "id": "TA-C507-ceyalalar",
+  "pathSegment": "TA-PATH-507-ALUVALAKAM507",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-507-ALUVALAKAM507",
+      "order": 2
+    }
+  ]
+}

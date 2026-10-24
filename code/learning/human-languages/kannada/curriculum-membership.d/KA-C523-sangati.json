@@ -1,0 +1,11 @@
+{
+  "id": "KA-C523-sangati",
+  "pathSegment": "KA-PATH-523-SAMSARA523",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-523-SAMSARA523",
+      "order": 2
+    }
+  ]
+}

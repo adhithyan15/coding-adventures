@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C354-kutra",
+    "language": "telugu",
+    "chapter": 354,
+    "sequence": 17430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a72f009a9a4a2fe2"
+  },
+  "findings": []
+}

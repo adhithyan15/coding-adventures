@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:9d2e83b2c0fa90b6",
+  "lessonIds": [
+    "AR-C340-hakim",
+    "AR-C340-sultan",
+    "AR-C340-qabila",
+    "AR-C340-balat",
+    "AR-C340-tawalla",
+    "AR-R340-review-333-340"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch340.txt",
+  "json": "arabic/narration/ch340.json",
+  "textHash": "fnv1a64:dc641392378c54d8",
+  "jsonHash": "fnv1a64:2b510d76908883e3",
+  "findings": []
+}

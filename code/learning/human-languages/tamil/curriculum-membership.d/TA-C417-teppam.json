@@ -1,0 +1,11 @@
+{
+  "id": "TA-C417-teppam",
+  "pathSegment": "TA-PATH-417-MALUMI417",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-417-MALUMI417",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Mysteries",
+  "label": "ch:mr-mysteries",
+  "canDo": "I can tell a thrilling story with a mystery and a moral.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C340-jhagadne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can tell a thrilling story with a mystery and a moral.",
+    "assesses": [
+      "MR-LEX-C340-RAHASYA340-03",
+      "MR-LEX-C340-RAHASYA340-04",
+      "MR-LEX-C340-RAHASYA340-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C317-rahasya",
+    "language": "hindi",
+    "chapter": 317,
+    "sequence": 17480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd21dce9880baee7"
+  },
+  "findings": []
+}

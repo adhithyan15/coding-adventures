@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 447,
+  "title": "Traffic Rules",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c7f9090b4ec0da8e",
+  "lessons": [
+    {
+      "id": "TE-C447-signalu",
+      "sequence": 22460,
+      "title": "సిగ్నలు (signalu) — a traffic signal",
+      "headword": "సిగ్నలు",
+      "romanization": "signalu",
+      "gloss": "a traffic signal",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7016911c5226244a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to overturn, then the Telugu for to get dented."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సిగ్నలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సిగ్నలు — signalu — \"a traffic signal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఎర్ర సిగ్నలు దగ్గర వాహనాలు ఆగాలి. erra signalu daggara vāhanālu āgāli. Vehicles must stop at a red signal."
+            },
+            {
+              "kind": "speech",
+              "text": "ఎర్ర సిగ్నలు (signalu), a red light; పచ్చ సిగ్నలు (signalu), a green light."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సిగ్నలు (signalu) is a loan from English signal, with the Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "signalu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *signalu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "signalu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *signalu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "erra signalu daggara vāhanālu āgāli. — Vehicles must stop at a red signal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *erra signalu daggara vāhanālu āgāli.* — Vehicles must stop at a red signal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to overturn, then the Telugu for to get dented, then say signalu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to overturn, then the Telugu for to get dented, then say *signalu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సిగ్నలు (signalu) mean? (\"A traffic signal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C447-laisensu",
+      "sequence": 22470,
+      "title": "లైసెన్సు (laisensu) — a licence",
+      "headword": "లైసెన్సు",
+      "romanization": "laisensu",
+      "gloss": "a licence",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:099f8fe9a578f452",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to get dented, then the Telugu for a traffic signal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: లైసెన్సు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లైసెన్సు — laisensu — \"a licence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "లైసెన్సు లేకుండా బండి నడపకూడదు. laisensu lēkuṇḍā baṇḍi naḍapakūḍadu. You must not drive without a licence."
+            },
+            {
+              "kind": "speech",
+              "text": "A driving licence is డ్రైవింగ్ లైసెన్సు (laisensu); a shop needs a trade లైసెన్సు (laisensu) too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లైసెన్సు (laisensu) is a loan from English licence, with the Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laisensu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laisensu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laisensu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laisensu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laisensu lēkuṇḍā baṇḍi naḍapakūḍadu. — You must not drive without a licence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laisensu lēkuṇḍā baṇḍi naḍapakūḍadu.* — You must not drive without a licence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to get dented, then the Telugu for a traffic signal, then say laisensu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to get dented, then the Telugu for a traffic signal, then say *laisensu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does లైసెన్సు (laisensu) mean? (\"A licence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C447-padacari",
+      "sequence": 22480,
+      "title": "పాదచారి (pādacāri) — a pedestrian",
+      "headword": "పాదచారి",
+      "romanization": "pādacāri",
+      "gloss": "a pedestrian",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:731d46594733d566",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a traffic signal, then the Telugu for a licence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పాదచారి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాదచారి — pādacāri — \"a pedestrian\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పాదచారులు రోడ్డు దాటుతున్నప్పుడు కార్లు ఆగాయి. pādacārulu rōḍḍu dāṭutunnappuḍu kārlu āgāyi. The cars stopped while the pedestrians were crossing the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: పాదచారులు, pādacārulu."
+            },
+            {
+              "kind": "speech",
+              "text": "పాద, foot, + -చారి, one who moves: one who goes on foot. Plural పాదచారులు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాదచారి (pādacāri) is borrowed from Sanskrit pādacārin, \"going on foot\" (Monier-Williams), from pāda, \"foot\", and cārin, \"moving\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pādacāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pādacāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pādacāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pādacāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pādacārulu rōḍḍu dāṭutunnappuḍu kārlu āgāyi. — The cars stopped while the pedestrians were crossing the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pādacārulu rōḍḍu dāṭutunnappuḍu kārlu āgāyi.* — The cars stopped while the pedestrians were crossing the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a traffic signal, then the Telugu for a licence, then say pādacāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a traffic signal, then the Telugu for a licence, then say *pādacāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పాదచారి (pādacāri) mean? (\"A pedestrian\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C447-kalibata",
+      "sequence": 22490,
+      "title": "కాలిబాట (kālibāṭa) — a footpath; a pavement",
+      "headword": "కాలిబాట",
+      "romanization": "kālibāṭa",
+      "gloss": "a footpath; a pavement",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23460190bdbbc751",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a licence, then the Telugu for a pedestrian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కాలిబాట",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాలిబాట — kālibāṭa — \"a footpath; a pavement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పిల్లలు కాలిబాట మీదే నడవాలి. pillalu kālibāṭa mīdē naḍavāli. Children should walk only on the pavement."
+            },
+            {
+              "kind": "speech",
+              "text": "కాలి, of the foot, + బాట, a path. In a town it is the pavement beside the road."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాలిబాట (kālibāṭa) is a Telugu compound: కాలి, the oblique of కాలు, \"foot, leg\", native Dravidian (DEDR 1479), and బాట, \"a path\", usually traced to Sanskrit vartman, \"a track\", through Prakrit (CDIAL 11366)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālibāṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālibāṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālibāṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālibāṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pillalu kālibāṭa mīdē naḍavāli. — Children should walk only on the pavement.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pillalu kālibāṭa mīdē naḍavāli.* — Children should walk only on the pavement.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a licence, then the Telugu for a pedestrian, then say kālibāṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a licence, then the Telugu for a pedestrian, then say *kālibāṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కాలిబాట (kālibāṭa) mean? (\"A footpath; a pavement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C447-atikramincu",
+      "sequence": 22500,
+      "title": "అతిక్రమించు (atikramiñcu) — to break a rule; to violate",
+      "headword": "అతిక్రమించు",
+      "romanization": "atikramiñcu",
+      "gloss": "to break a rule; to violate",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c67c7788d442f563",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a pedestrian, then the Telugu for a footpath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అతిక్రమించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అతిక్రమించు — atikramiñcu — \"to break a rule; to violate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను సిగ్నలు అతిక్రమించి జరిమానా కట్టాడు. atanu signalu atikramiñci jarimānā kaṭṭāḍu. He jumped the signal and paid a fine."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): అతిక్రమించాను, atikramiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word. What is broken takes no ending: నియమాలు అతిక్రమించు (atikramiñcu), to break the rules."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అతిక్రమించు (atikramiñcu) is built from Sanskrit atikrama, \"a going beyond, overstepping\" (Monier-Williams), from ati, \"beyond\", and kram, \"to step\", with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atikramiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atikramiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atikramiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atikramiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu signalu atikramiñci jarimānā kaṭṭāḍu. — He jumped the signal and paid a fine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu signalu atikramiñci jarimānā kaṭṭāḍu.* — He jumped the signal and paid a fine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a pedestrian, then the Telugu for a footpath, then say atikramiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a pedestrian, then the Telugu for a footpath, then say *atikramiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అతిక్రమించు (atikramiñcu) mean? (\"To break a rule; to violate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

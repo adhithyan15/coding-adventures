@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C332-por",
+    "language": "tamil",
+    "chapter": 332,
+    "sequence": 19040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:febdd52bacd64f74"
+  },
+  "findings": []
+}

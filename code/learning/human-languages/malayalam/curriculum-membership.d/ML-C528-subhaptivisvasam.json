@@ -1,0 +1,11 @@
+{
+  "id": "ML-C528-subhaptivisvasam",
+  "pathSegment": "ML-PATH-528-SATHYAM528",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-528-SATHYAM528",
+      "order": 2
+    }
+  ]
+}

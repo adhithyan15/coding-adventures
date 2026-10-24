@@ -1,0 +1,19 @@
+{
+  "chapter": 546,
+  "title": "Firm Intentions",
+  "label": "ch:mr-firm-intentions",
+  "canDo": "I can talk about resolutions, oaths and daring.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C546-dhajne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 546: I can talk about resolutions, oaths and daring.",
+    "assesses": [
+      "MR-LEX-C546-NISHCHAY546-03",
+      "MR-LEX-C546-NISHCHAY546-04",
+      "MR-LEX-C546-NISHCHAY546-05"
+    ]
+  }
+}

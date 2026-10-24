@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C454-aroshto",
+    "language": "bengali",
+    "chapter": 454,
+    "sequence": 27840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c645e3115327bf1f"
+  },
+  "findings": []
+}

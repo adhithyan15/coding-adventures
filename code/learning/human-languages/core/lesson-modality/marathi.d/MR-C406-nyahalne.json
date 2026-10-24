@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C406-nyahalne",
+    "language": "marathi",
+    "chapter": 406,
+    "sequence": 23550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:081837c270f0653d"
+  },
+  "findings": []
+}

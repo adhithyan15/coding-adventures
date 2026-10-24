@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R287-depends-and-would",
+    "language": "marathi",
+    "chapter": 287,
+    "sequence": 16470,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3a667b30e87b9124"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-326-SANGHATANA326",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-326-SANGHATANA326"
+  ],
+  "after": []
+}

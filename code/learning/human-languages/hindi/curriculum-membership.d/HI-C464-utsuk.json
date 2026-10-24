@@ -1,0 +1,11 @@
+{
+  "id": "HI-C464-utsuk",
+  "pathSegment": "HI-PATH-464-UBNA464",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-464-UBNA464",
+      "order": 2
+    }
+  ]
+}

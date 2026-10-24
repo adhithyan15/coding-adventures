@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C431-bhav",
+    "language": "hindi",
+    "chapter": 431,
+    "sequence": 23690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38e90668782d7bba"
+  },
+  "findings": []
+}

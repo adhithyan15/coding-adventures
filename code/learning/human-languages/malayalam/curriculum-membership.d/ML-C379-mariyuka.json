@@ -1,0 +1,11 @@
+{
+  "id": "ML-C379-mariyuka",
+  "pathSegment": "ML-PATH-379-KOOTTAM379",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-379-KOOTTAM379",
+      "order": 3
+    }
+  ]
+}

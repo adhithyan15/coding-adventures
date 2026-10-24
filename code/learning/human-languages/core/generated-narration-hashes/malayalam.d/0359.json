@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:35ff518916d13c89",
+  "lessonIds": [
+    "ML-C359-vaikate",
+    "ML-C359-otukkam",
+    "ML-C359-etantu",
+    "ML-C359-itaykkite",
+    "ML-C359-tottupinnale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch359.txt",
+  "json": "malayalam/narration/ch359.json",
+  "textHash": "fnv1a64:7d99ec0eed926fa1",
+  "jsonHash": "fnv1a64:e32c95409be8c6e5",
+  "findings": []
+}

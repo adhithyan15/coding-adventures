@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Checking the Bill",
+  "label": "ch:ml-checking-the-bill",
+  "canDo": "I can say to take back, an expense, to tally, to count and check and to sell off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C494-virralikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can say to take back, an expense, to tally, to count and check and to sell off.",
+    "assesses": [
+      "ML-LEX-C494-BILL494-03",
+      "ML-LEX-C494-BILL494-04",
+      "ML-LEX-C494-BILL494-05"
+    ]
+  }
+}

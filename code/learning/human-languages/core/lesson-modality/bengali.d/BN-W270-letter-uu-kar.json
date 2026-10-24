@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "BN-W270-letter-uu-kar",
+    "language": "bengali",
+    "chapter": 270,
+    "sequence": 16820,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1a9fc0e9ebf5e506",
+    "detachableSegments": [
+      "Script you'll notice: ূ",
+      "Writing: ূ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

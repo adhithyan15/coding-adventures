@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C546-curu",
+    "language": "telugu",
+    "chapter": 546,
+    "sequence": 27660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7de8230b797dc63"
+  },
+  "findings": []
+}

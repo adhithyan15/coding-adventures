@@ -1,0 +1,11 @@
+{
+  "id": "BN-C483-nonod",
+  "pathSegment": "BN-PATH-483-JAMAI483",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-483-JAMAI483",
+      "order": 2
+    }
+  ]
+}

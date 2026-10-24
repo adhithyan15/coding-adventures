@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-432-ADARSAM432",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-432-ADARSAM432"
+  ],
+  "after": []
+}

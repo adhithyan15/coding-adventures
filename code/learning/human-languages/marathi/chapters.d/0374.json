@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "How Things Work",
+  "label": "ch:mr-how-things-work",
+  "canDo": "I can talk about processes, phases, formulas and definitions.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C374-sastra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can talk about processes, phases, formulas and definitions.",
+    "assesses": [
+      "MR-LEX-C374-PRAKRIYA374-03",
+      "MR-LEX-C374-PRAKRIYA374-04",
+      "MR-LEX-C374-PRAKRIYA374-05"
+    ]
+  }
+}

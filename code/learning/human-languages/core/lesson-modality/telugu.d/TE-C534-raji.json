@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C534-raji",
+    "language": "telugu",
+    "chapter": 534,
+    "sequence": 27080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:866a9488a42bce7c"
+  },
+  "findings": []
+}

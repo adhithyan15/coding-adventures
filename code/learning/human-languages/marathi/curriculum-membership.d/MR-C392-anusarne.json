@@ -1,0 +1,11 @@
+{
+  "id": "MR-C392-anusarne",
+  "pathSegment": "MR-PATH-392-KALAM392",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-392-KALAM392",
+      "order": 3
+    }
+  ]
+}

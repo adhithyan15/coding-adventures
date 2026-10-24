@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:f55f0046e8add70b",
+  "lessonIds": [
+    "AR-C542-masrahiyya",
+    "AR-C542-mashhad",
+    "AR-C542-tasfiq",
+    "AR-C542-saffaqa",
+    "AR-C542-tamthil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch542.txt",
+  "json": "arabic/narration/ch542.json",
+  "textHash": "fnv1a64:37bbe3a700306327",
+  "jsonHash": "fnv1a64:cf7ba7e55788c78a",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:58da3abdc0420fb1",
+  "lessonIds": [
+    "KA-C334-bananti",
+    "KA-C334-janana",
+    "KA-C334-namakarana",
+    "KA-C334-simanta",
+    "KA-C334-uttaradhikari"
+  ],
+  "tex": "kannada/book/chapters/ch334-a-baby-in-the-family.tex"
+}

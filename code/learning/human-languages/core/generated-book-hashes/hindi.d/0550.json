@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:11d26d66ea68a079",
+  "lessonIds": [
+    "HI-C550-marzi",
+    "HI-C550-manpasand",
+    "HI-C550-manahi",
+    "HI-C550-pasandida",
+    "HI-C550-cayan"
+  ],
+  "tex": "hindi/book/chapters/ch550-making-up-one-s-mind.tex"
+}

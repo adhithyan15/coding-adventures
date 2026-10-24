@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:aa0223f464f54361",
+  "lessonIds": [
+    "BN-C482-jetha",
+    "BN-C482-meso",
+    "BN-C482-bhagne",
+    "BN-C482-bhaijhi",
+    "BN-C482-beyai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch482.txt",
+  "json": "bengali/narration/ch482.json",
+  "textHash": "fnv1a64:ad776fd148d90553",
+  "jsonHash": "fnv1a64:11c7e17a2416dd13",
+  "findings": []
+}

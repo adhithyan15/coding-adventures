@@ -1,0 +1,11 @@
+{
+  "id": "ML-C533-talaruka",
+  "pathSegment": "ML-PATH-533-VAKSIN533",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-533-VAKSIN533",
+      "order": 3
+    }
+  ]
+}

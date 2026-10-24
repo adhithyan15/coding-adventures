@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 403,
+  "title": "Society and Self-Reliance",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:61562b6f398da2ff",
+  "lessons": [
+    {
+      "id": "KA-C403-samaja",
+      "sequence": 20380,
+      "title": "ಸಮಾಜ (samāja) — society",
+      "headword": "ಸಮಾಜ",
+      "romanization": "samāja",
+      "gloss": "society",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:600723899f771f34",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to conceal, then the Kannada for to recommend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಮಾಜ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಾಜ — samāja — \"society\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಮಾಜದಲ್ಲಿ ಎಲ್ಲರಿಗೂ ಗೌರವ ಸಿಗಬೇಕು. samājadalli ellarigū gaurava sigabēku. Everyone in society should be respected."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಾಮಾಜಿಕ, social."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಾಜ (samāja) is borrowed from Sanskrit samāja, \"a meeting, an assembly\" (CDIAL 13207)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samāja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samāja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samāja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samāja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samājadalli ellarigū gaurava sigabēku. — Everyone in society should be respected.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samājadalli ellarigū gaurava sigabēku.* — Everyone in society should be respected.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to conceal, then the Kannada for to recommend, then say samāja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to conceal, then the Kannada for to recommend, then say *samāja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಮಾಜ (samāja) mean? (\"Society\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C403-svavalambane",
+      "sequence": 20390,
+      "title": "ಸ್ವಾವಲಂಬನೆ (svāvalambane) — self-reliance",
+      "headword": "ಸ್ವಾವಲಂಬನೆ",
+      "romanization": "svāvalambane",
+      "gloss": "self-reliance",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9009dbeb5fa6818",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to recommend, then the Kannada for society."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ವಾವಲಂಬನೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಾವಲಂಬನೆ — svāvalambane — \"self-reliance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಳ್ಳಿಯ ಹೆಂಗಸರು ಹೊಲಿಗೆ ಕಲಿತು ಸ್ವಾವಲಂಬನೆ ಸಾಧಿಸಿದರು. haḷḷiya heṅgasaru holige kalitu svāvalambane sādhisidaru. The village women learned tailoring and became self-reliant."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ವ (self) + ಅವಲಂಬನೆ (leaning on)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಾವಲಂಬನೆ (svāvalambane) is built from Sanskrit sva, \"self\", and avalambana, \"leaning on, depending upon\" (Monier-Williams): depending on oneself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svāvalambane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svāvalambane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svāvalambane, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svāvalambane*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḷḷiya heṅgasaru holige kalitu svāvalambane sādhisidaru. — The village women learned tailoring and became self-reliant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḷḷiya heṅgasaru holige kalitu svāvalambane sādhisidaru.* — The village women learned tailoring and became self-reliant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to recommend, then the Kannada for society, then say svāvalambane again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to recommend, then the Kannada for society, then say *svāvalambane* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ವಾವಲಂಬನೆ (svāvalambane) mean? (\"Self-reliance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C403-jagrti",
+      "sequence": 20400,
+      "title": "ಜಾಗೃತಿ (jāgṛti) — awareness",
+      "headword": "ಜಾಗೃತಿ",
+      "romanization": "jāgṛti",
+      "gloss": "awareness",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84e942c7e3387e6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for society, then the Kannada for self-reliance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಜಾಗೃತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜಾಗೃತಿ — jāgṛti — \"awareness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆರೋಗ್ಯದ ಬಗ್ಗೆ ಜನರಲ್ಲಿ ಜಾಗೃತಿ ಬೇಕು. ārōgyada bagge janaralli jāgṛti bēku. People need awareness about health."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜಾಗೃತಿ (jāgṛti) ಮೂಡಿಸು, to raise awareness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜಾಗೃತಿ (jāgṛti) is built on Sanskrit jāgṛ, \"to be awake, to watch\" (Monier-Williams): a waking up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāgṛti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāgṛti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāgṛti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāgṛti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārōgyada bagge janaralli jāgṛti bēku. — People need awareness about health.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārōgyada bagge janaralli jāgṛti bēku.* — People need awareness about health.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for society, then the Kannada for self-reliance, then say jāgṛti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for society, then the Kannada for self-reliance, then say *jāgṛti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಜಾಗೃತಿ (jāgṛti) mean? (\"Awareness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C403-vaividhya",
+      "sequence": 20410,
+      "title": "ವೈವಿಧ್ಯ (vaividhya) — diversity; variety",
+      "headword": "ವೈವಿಧ್ಯ",
+      "romanization": "vaividhya",
+      "gloss": "diversity; variety",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14b5007d8b89801e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for self-reliance, then the Kannada for awareness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವೈವಿಧ್ಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವೈವಿಧ್ಯ — vaividhya — \"diversity; variety\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಊರಿನಲ್ಲಿ ಭಾಷೆಗಳ ವೈವಿಧ್ಯ ಇದೆ. ī ūrinalli bhāṣegaḷa vaividhya ide. This town has a variety of languages."
+            },
+            {
+              "kind": "speech",
+              "text": "ವೈವಿಧ್ಯಮಯ, varied."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವೈವಿಧ್ಯ (vaividhya) is built on Sanskrit vividha, \"of various sorts, manifold\" (Monier-Williams), with the vowel strengthening that makes an abstract noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaividhya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaividhya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaividhya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaividhya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī ūrinalli bhāṣegaḷa vaividhya ide. — This town has a variety of languages.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī ūrinalli bhāṣegaḷa vaividhya ide.* — This town has a variety of languages.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for self-reliance, then the Kannada for awareness, then say vaividhya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for self-reliance, then the Kannada for awareness, then say *vaividhya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವೈವಿಧ್ಯ (vaividhya) mean? (\"Diversity; variety\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C403-rupisu",
+      "sequence": 20420,
+      "title": "ರೂಪಿಸು (rūpisu) — to devise; to shape",
+      "headword": "ರೂಪಿಸು",
+      "romanization": "rūpisu",
+      "gloss": "to devise; to shape",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b548b368a5d6eb5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for awareness, then the Kannada for diversity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ರೂಪಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರೂಪಿಸು — rūpisu — \"to devise; to shape\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಶಿಕ್ಷಕರು ಹೊಸ ಪಾಠಗಳನ್ನು ರೂಪಿಸಿದರು. śikṣakaru hosa pāṭhagaḷannu rūpisidaru. The teachers devised new lessons."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ರೂಪಿಸಿದೆ, rūpiside."
+            },
+            {
+              "kind": "speech",
+              "text": "What is shaped takes -ಅನ್ನು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರೂಪಿಸು (rūpisu) is built on Sanskrit rūpa, \"form, shape\" (CDIAL 10803), with the Kannada verb ending -isu: to give form to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūpisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūpisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūpisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūpisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikṣakaru hosa pāṭhagaḷannu rūpisidaru. — The teachers devised new lessons.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikṣakaru hosa pāṭhagaḷannu rūpisidaru.* — The teachers devised new lessons.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for awareness, then the Kannada for diversity, then say rūpisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for awareness, then the Kannada for diversity, then say *rūpisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ರೂಪಿಸು (rūpisu) mean? (\"To devise; to shape\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

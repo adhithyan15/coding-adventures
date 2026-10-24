@@ -1,0 +1,11 @@
+{
+  "id": "TA-C390-mempatuttu",
+  "pathSegment": "TA-PATH-390-CIRTIRUTTAM390",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-390-CIRTIRUTTAM390",
+      "order": 2
+    }
+  ]
+}

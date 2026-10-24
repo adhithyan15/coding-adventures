@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:1b3fda6b398a90f5",
+  "lessonIds": [
+    "AR-C387-hijra",
+    "AR-C387-umma",
+    "AR-C387-jinsiyya",
+    "AR-C387-aghlabiyya",
+    "AR-C387-aqalliyya"
+  ],
+  "tex": "arabic/book/chapters/ch387-people-and-nations.tex"
+}

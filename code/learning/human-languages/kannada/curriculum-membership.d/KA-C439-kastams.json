@@ -1,0 +1,11 @@
+{
+  "id": "KA-C439-kastams",
+  "pathSegment": "KA-PATH-439-GADI439",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-439-GADI439",
+      "order": 1
+    }
+  ]
+}

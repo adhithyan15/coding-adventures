@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:7304b83f33900b9a",
+  "lessonIds": [
+    "MR-C311-vartahar",
+    "MR-C311-sampadak",
+    "MR-C311-lekh",
+    "MR-C311-agralekh",
+    "MR-C311-prakasit-karne",
+    "MR-R311-review-304-311"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch311.txt",
+  "json": "marathi/narration/ch311.json",
+  "textHash": "fnv1a64:d70e2c377fae5174",
+  "jsonHash": "fnv1a64:5b476732afb8ed3f",
+  "findings": []
+}

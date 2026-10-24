@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Princes and palaces",
+  "label": "ch:ar-princes-and-palaces",
+  "canDo": "I can say a prince, a palace, a crown, a throne and to crown.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C309-tawwaja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can say a prince, a palace, a crown, a throne and to crown.",
+    "assesses": [
+      "AR-LEX-C309-QASR309-03",
+      "AR-LEX-C309-QASR309-04",
+      "AR-LEX-C309-QASR309-05"
+    ]
+  }
+}

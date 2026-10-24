@@ -1,0 +1,11 @@
+{
+  "id": "TA-C407-kilomittar",
+  "pathSegment": "TA-PATH-407-URIMAM407",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-407-URIMAM407",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C551-pratiksa",
+  "pathSegment": "MR-PATH-551-YADI551",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-551-YADI551",
+      "order": 0
+    }
+  ]
+}

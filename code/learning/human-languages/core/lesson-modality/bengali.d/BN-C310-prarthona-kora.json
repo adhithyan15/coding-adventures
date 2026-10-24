@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C310-prarthona-kora",
+    "language": "bengali",
+    "chapter": 310,
+    "sequence": 19750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66853ae1ba42c3c2"
+  },
+  "findings": []
+}

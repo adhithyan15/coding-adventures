@@ -1,0 +1,21 @@
+{
+  "chapter": 322,
+  "title": "Ogres, Fairies and Ghosts",
+  "label": "ch:bn-ogres-fairies-and-ghosts",
+  "canDo": "I can tell of ogres, fairies, witches and curses.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-R322-review-316-322",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can tell of ogres, fairies, witches and curses.",
+    "assesses": [
+      "BN-LEX-C322-RAKKHOSH322-01",
+      "BN-LEX-C322-RAKKHOSH322-02",
+      "BN-LEX-C322-RAKKHOSH322-03",
+      "BN-LEX-C322-RAKKHOSH322-04",
+      "BN-LEX-C322-RAKKHOSH322-05"
+    ]
+  }
+}

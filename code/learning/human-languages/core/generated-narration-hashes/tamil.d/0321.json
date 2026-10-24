@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:74114a7c1117848c",
+  "lessonIds": [
+    "TA-C321-catanku",
+    "TA-C321-marapu",
+    "TA-C321-peyarcuttu",
+    "TA-C321-valaikappu",
+    "TA-C321-putumanai-pukuvila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch321.txt",
+  "json": "tamil/narration/ch321.json",
+  "textHash": "fnv1a64:a5ee36eca4e4f331",
+  "jsonHash": "fnv1a64:4a4673f813c45be9",
+  "findings": []
+}

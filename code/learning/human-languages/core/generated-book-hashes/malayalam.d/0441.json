@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:bce2d2bbca31faff",
+  "lessonIds": [
+    "ML-C441-sadhyamaya",
+    "ML-C441-asadhyamaya",
+    "ML-C441-sadhyamakkuka",
+    "ML-C441-annaneyenkil",
+    "ML-C441-mikkavarum"
+  ],
+  "tex": "malayalam/book/chapters/ch441-possible-or-not.tex"
+}

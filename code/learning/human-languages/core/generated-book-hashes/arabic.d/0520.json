@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:5f460afd51caa639",
+  "lessonIds": [
+    "AR-C520-itada",
+    "AR-C520-munawaba",
+    "AR-C520-ijaza",
+    "AR-C520-mahamma",
+    "AR-C520-naffadha"
+  ],
+  "tex": "arabic/book/chapters/ch520-hours-and-tasks.tex"
+}

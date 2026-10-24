@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C400-thikana",
+    "language": "bengali",
+    "chapter": 400,
+    "sequence": 24820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9714525331759df"
+  },
+  "findings": []
+}

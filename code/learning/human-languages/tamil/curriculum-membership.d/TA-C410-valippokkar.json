@@ -1,0 +1,11 @@
+{
+  "id": "TA-C410-valippokkar",
+  "pathSegment": "TA-PATH-410-THERU410",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-410-THERU410",
+      "order": 1
+    }
+  ]
+}

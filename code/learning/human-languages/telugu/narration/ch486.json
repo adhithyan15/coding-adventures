@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 486,
+  "title": "Weights and Measures",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e27659f26c2f0840",
+  "lessons": [
+    {
+      "id": "TE-C486-kolata",
+      "sequence": 24460,
+      "title": "కొలత (kolata) — a measurement",
+      "headword": "కొలత",
+      "romanization": "kolata",
+      "gloss": "a measurement",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09c106d591938f47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an exchange rate, then the Telugu for to dodge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కొలత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొలత — kolata — \"a measurement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దర్జీ నా చొక్కా కొలతలు తీసుకున్నాడు. darjī nā cokkā kolatalu tīsukunnāḍu. The tailor took my measurements for a shirt."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: కొలతలు, kolatalu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of కొలుచు, to measure. కొలతలు తీసుకో, to take measurements."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొలత (kolata) is native Dravidian: DEDR 1827 lists Telugu kolãta, \"measurement, measuring\", beside kolucu, \"to measure\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kolata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kolata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kolata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kolata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darjī nā cokkā kolatalu tīsukunnāḍu. — The tailor took my measurements for a shirt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darjī nā cokkā kolatalu tīsukunnāḍu.* — The tailor took my measurements for a shirt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an exchange rate, then the Telugu for to dodge, then say kolata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an exchange rate, then the Telugu for to dodge, then say *kolata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కొలత (kolata) mean? (\"A measurement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C486-parimanam",
+      "sequence": 24470,
+      "title": "పరిమాణం (parimāṇaṁ) — size; quantity",
+      "headword": "పరిమాణం",
+      "romanization": "parimāṇaṁ",
+      "gloss": "size; quantity",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49839739d6f33576",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to dodge, then the Telugu for a measurement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పరిమాణం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరిమాణం — parimāṇaṁ — \"size; quantity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పెట్టె పరిమాణం చాలా పెద్దది. ā peṭṭe parimāṇaṁ cālā peddadi. That box is very big in size."
+            },
+            {
+              "kind": "speech",
+              "text": "Size of a thing, or an amount: నీటి పరిమాణం (parimāṇaṁ), the quantity of water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరిమాణం (parimāṇaṁ) is borrowed from Sanskrit parimāṇa, \"measure, size, quantity\" (Monier-Williams), from pari-mā, \"to measure out\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parimāṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parimāṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parimāṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parimāṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā peṭṭe parimāṇaṁ cālā peddadi. — That box is very big in size.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā peṭṭe parimāṇaṁ cālā peddadi.* — That box is very big in size.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to dodge, then the Telugu for a measurement, then say parimāṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to dodge, then the Telugu for a measurement, then say *parimāṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పరిమాణం (parimāṇaṁ) mean? (\"Size; quantity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C486-namuna",
+      "sequence": 24480,
+      "title": "నమూనా (namūnā) — a sample; a pattern",
+      "headword": "నమూనా",
+      "romanization": "namūnā",
+      "gloss": "a sample; a pattern",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:153e4de2489dbc20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a measurement, then the Telugu for size."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నమూనా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నమూనా — namūnā — \"a sample; a pattern\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దుకాణదారు బట్ట నమూనా చూపించాడు. dukāṇadāru baṭṭa namūnā cūpiñcāḍu. The shopkeeper showed a sample of the cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "A sample of goods, and a pattern or model to copy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నమూనా (namūnā) is a loan from Persian namūna, \"a sample, a specimen, a model\", which reached Telugu through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namūnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namūnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namūnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namūnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukāṇadāru baṭṭa namūnā cūpiñcāḍu. — The shopkeeper showed a sample of the cloth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukāṇadāru baṭṭa namūnā cūpiñcāḍu.* — The shopkeeper showed a sample of the cloth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a measurement, then the Telugu for size, then say namūnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a measurement, then the Telugu for size, then say *namūnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నమూనా (namūnā) mean? (\"A sample; a pattern\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C486-viluva",
+      "sequence": 24490,
+      "title": "విలువ (viluva) — value; worth",
+      "headword": "విలువ",
+      "romanization": "viluva",
+      "gloss": "value; worth",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4dd506167efa8a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for size, then the Telugu for a sample."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విలువ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విలువ — viluva — \"value; worth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పాత నాణేలకు ఇప్పుడు చాలా విలువ ఉంది. ā pāta nāṇēlaku ippuḍu cālā viluva undi. Those old coins are worth a lot now."
+            },
+            {
+              "kind": "speech",
+              "text": "Value in money and in esteem: మాటకు విలువ (viluva), the worth of a promise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విలువ (viluva) is native Dravidian: DEDR 5421 lists Telugu viluva, \"price, value, cost\", beside vilucu, \"to sell, to buy\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viluva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viluva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viluva, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viluva*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pāta nāṇēlaku ippuḍu cālā viluva undi. — Those old coins are worth a lot now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pāta nāṇēlaku ippuḍu cālā viluva undi.* — Those old coins are worth a lot now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for size, then the Telugu for a sample, then say viluva again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for size, then the Telugu for a sample, then say *viluva* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విలువ (viluva) mean? (\"Value; worth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C486-tucu",
+      "sequence": 24500,
+      "title": "తూచు (tūcu) — to weigh",
+      "headword": "తూచు",
+      "romanization": "tūcu",
+      "gloss": "to weigh",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3f027be1dbbe795",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a sample, then the Telugu for value."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తూచు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తూచు — tūcu — \"to weigh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొట్టువాడు బియ్యం తూచి ఇచ్చాడు. koṭṭuvāḍu biyyaṁ tūci iccāḍu. The shopkeeper weighed out the rice for us."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తూచాను, tūcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "తూకం, weight, is its noun. Also to weigh words: మాటలు తూచి మాట్లాడు, to speak carefully."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తూచు (tūcu) is native Dravidian: DEDR 3376 lists Telugu tūcu, \"to weigh, to find the weight of\", beside tūgu, \"to hang, to swing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭṭuvāḍu biyyaṁ tūci iccāḍu. — The shopkeeper weighed out the rice for us.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭṭuvāḍu biyyaṁ tūci iccāḍu.* — The shopkeeper weighed out the rice for us.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a sample, then the Telugu for value, then say tūcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a sample, then the Telugu for value, then say *tūcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తూచు (tūcu) mean? (\"To weigh\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

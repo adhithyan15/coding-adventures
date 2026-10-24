@@ -1,0 +1,11 @@
+{
+  "id": "AR-C353-tajammaa",
+  "pathSegment": "AR-PATH-353-MUZAHARA353",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-353-MUZAHARA353",
+      "order": 1
+    }
+  ]
+}

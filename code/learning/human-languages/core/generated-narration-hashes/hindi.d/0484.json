@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:f3e75be5713face4",
+  "lessonIds": [
+    "HI-C484-datun",
+    "HI-C484-katvana",
+    "HI-C484-nahlana",
+    "HI-C484-malna",
+    "HI-C484-ustara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch484.txt",
+  "json": "hindi/narration/ch484.json",
+  "textHash": "fnv1a64:0b1bdcd11424f0ed",
+  "jsonHash": "fnv1a64:af78d6a61b90c6cc",
+  "findings": []
+}

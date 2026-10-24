@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C348-dopidi",
+    "language": "telugu",
+    "chapter": 348,
+    "sequence": 17120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1789c2bb9be8bc9"
+  },
+  "findings": []
+}

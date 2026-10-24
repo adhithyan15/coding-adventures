@@ -1,0 +1,861 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 550,
+  "title": "Luck and Chance",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:34caa14e06d9c9af",
+  "lessons": [
+    {
+      "id": "MR-C550-yogayog",
+      "sequence": 31350,
+      "title": "योगायोग (yogāyog) — a coincidence",
+      "headword": "योगायोग",
+      "romanization": "yogāyog",
+      "gloss": "a coincidence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3fe18e5180b4ab43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for protection, then the Marathi for reliance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: योगायोग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "योगायोग — yogāyog — \"a coincidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बाजारात जुना मित्र भेटला, हा मोठा योगायोग होता. bājārāt junā mitra bheṭlā, hā moṭhā yogāyog hotā. Meeting an old friend in the market was a great coincidence."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "योगायोग (yogāyog) is a tatsama, Sanskrit yogāyoga, yoga, \"joining\", with ayoga, its opposite, glossed as fitness and unfitness (Monier-Williams). Marathi uses it for things that happen to meet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yogāyog",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yogāyog*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yogāyog, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yogāyog*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bājārāt junā mitra bheṭlā, hā moṭhā yogāyog hotā. — Meeting an old friend in the market was a great coincidence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bājārāt junā mitra bheṭlā, hā moṭhā yogāyog hotā.* — Meeting an old friend in the market was a great coincidence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for protection, then the Marathi for reliance, then say yogāyog again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for protection, then the Marathi for reliance, then say *yogāyog* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does योगायोग (yogāyog) mean? (\"A coincidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C550-jugar",
+      "sequence": 31360,
+      "title": "जुगार (jugār) — gambling",
+      "headword": "जुगार",
+      "romanization": "jugār",
+      "gloss": "gambling",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a9466e3536c184f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for reliance, then the Marathi for a coincidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जुगार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जुगार — jugār — \"gambling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जुगारात त्याने सगळे पैसे घालवले. jugārāt tyāne sagḷe paise ghālavle. He lost all his money gambling."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "जुगार (jugār) खेळणे, to gamble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जुगार (jugār) is usually linked with Sanskrit dyūtakāra, \"gambler\", under which CDIAL lists Prakrit juāra and Hindi juwārī (CDIAL 6609). CDIAL gives no Marathi form, so the path is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jugār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jugār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jugār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jugār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jugārāt tyāne sagḷe paise ghālavle. — He lost all his money gambling.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jugārāt tyāne sagḷe paise ghālavle.* — He lost all his money gambling.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for reliance, then the Marathi for a coincidence, then say jugār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for reliance, then the Marathi for a coincidence, then say *jugār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जुगार (jugār) mean? (\"Gambling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C550-bhagya",
+      "sequence": 31370,
+      "title": "भाग्य (bhāgya) — good fortune",
+      "headword": "भाग्य",
+      "romanization": "bhāgya",
+      "gloss": "good fortune",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:547018089dc1bfbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a coincidence, then the Marathi for gambling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भाग्य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाग्य — bhāgya — \"good fortune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अशी आई मिळणं हे माझं भाग्य आहे. aśī āī miḷṇaṁ he mājhaṁ bhāgya āhe. Having a mother like this is my good fortune."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाग्य (bhāgya) is a tatsama, taken from Sanskrit bhāgya, \"one's lot, fortune\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aśī āī miḷṇaṁ he mājhaṁ bhāgya āhe. — Having a mother like this is my good fortune.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aśī āī miḷṇaṁ he mājhaṁ bhāgya āhe.* — Having a mother like this is my good fortune.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a coincidence, then the Marathi for gambling, then say bhāgya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a coincidence, then the Marathi for gambling, then say *bhāgya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भाग्य (bhāgya) mean? (\"Good fortune\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C550-nanephek",
+      "sequence": 31380,
+      "title": "नाणेफेक (nāṇephek) — a coin toss",
+      "headword": "नाणेफेक",
+      "romanization": "nāṇephek",
+      "gloss": "a coin toss",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d706d9f4b2781b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for gambling, then the Marathi for good fortune."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाणेफेक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाणेफेक — nāṇephek — \"a coin toss\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सामन्याआधी कर्णधारांनी नाणेफेक केली. sāmnyāādhī karṇadhārānnī nāṇephek kelī. Before the match the captains tossed a coin."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "नाणेफेक (nāṇephek) करणे, to toss a coin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाणेफेक (nāṇephek) is a Marathi compound built from नाणे, \"a coin\", inherited from Sanskrit nāṇaka, \"coin\" (CDIAL 7050), and फेक, \"a throw\", from फेकणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṇephek",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṇephek*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṇephek, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṇephek*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāmnyāādhī karṇadhārānnī nāṇephek kelī. — Before the match the captains tossed a coin.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāmnyāādhī karṇadhārānnī nāṇephek kelī.* — Before the match the captains tossed a coin.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for gambling, then the Marathi for good fortune, then say nāṇephek again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for gambling, then the Marathi for good fortune, then say *nāṇephek* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नाणेफेक (nāṇephek) mean? (\"A coin toss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C550-paij-lavne",
+      "sequence": 31390,
+      "title": "पैज लावणे (paij lāvṇe) — to bet",
+      "headword": "पैज लावणे",
+      "romanization": "paij lāvṇe",
+      "gloss": "to bet",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa0653679ee1bba4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for good fortune, then the Marathi for a coin toss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पैज लावणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पैज लावणे — paij lāvṇe — \"to bet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कोण जिंकेल यावर दोन मित्रांनी पैज लावली. koṇ jiṅkel yāvar don mitrānnī paij lāvlī. Two friends bet on who would win."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने पैज लावली, tyāne paij lāvlī."
+            },
+            {
+              "kind": "speech",
+              "text": "The question takes -वर: यावर पैज लावणे (paij lāvṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पैज लावणे (paij lāvṇe) is पैज, a tadbhava: CDIAL lists Marathi paij, \"bet, promise\", under Sanskrit pratijñā, \"promise\" (CDIAL 8563), with लावणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paij lāvṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paij lāvṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paij lāvṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paij lāvṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṇ jiṅkel yāvar don mitrānnī paij lāvlī. — Two friends bet on who would win.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṇ jiṅkel yāvar don mitrānnī paij lāvlī.* — Two friends bet on who would win.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for good fortune, then the Marathi for a coin toss, then say paij lāvṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for good fortune, then the Marathi for a coin toss, then say *paij lāvṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पैज लावणे (paij lāvṇe) mean? (\"To bet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R550-review-544-550",
+      "sequence": 31400,
+      "title": "Looking back: from Outlines and Drafts to Luck and Chance",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Outlines and Drafts to Luck and Chance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6519e6336fa8ece0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for an outline and a draft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an outline, a draft, to plan ahead, to postpone, to see through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an outline, a draft, to plan ahead, to postpone, to see through]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "destiny, a golden chance, a convenience, to conjecture, to forecast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: destiny, a golden chance, a convenience, to conjecture, to forecast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a resolution, determination, an intention, to take an oath, to dare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a resolution, determination, an intention, to take an oath, to dare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an emergency, a fire extinguisher, an alarm, a security guard, to bring under control",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an emergency, a fire extinguisher, an alarm, a security guard, to bring under control]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an obstacle, a way out, to bear a load, to sort out, to waver",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an obstacle, a way out, to bear a load, to sort out, to waver]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to compensate, to miss out on, a shield, protection, reliance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to compensate, to miss out on, a shield, protection, reliance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a coincidence, gambling, good fortune, a coin toss, to bet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a coincidence, gambling, good fortune, a coin toss, to bet]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An outline? (आराखडा, ārākhḍā.) A draft? (मसुदा, masudā.) To plan ahead? (नियोजन करणे, niyojan karṇe.) To postpone? (लांबणीवर टाकणे, lāmbṇīvar ṭākṇe.) To see through? (तडीस नेणे, taḍīs neṇe.) Destiny? (भवितव्य, bhavitavya.) A golden chance? (सुवर्णसंधी, suvarṇasandhī.) A convenience? (सोय, soy.) To conjecture? (अटकळ बांधणे, aṭkaḷ bāndhṇe.) To forecast? (वर्तवणे, vartavṇe.) A resolution? (संकल्प, saṅkalpa.) Determination? (निर्धार, nirdhār.) An intention? (इरादा, irādā.) To take an oath? (शपथ घेणे, śapath gheṇe.) To dare? (धजणे, dhajṇe.) An emergency? (आणीबाणी, āṇībāṇī.) A fire extinguisher? (अग्निशामक, agniśāmak.) An alarm? (गजर, gajar.) A security guard? (सुरक्षारक्षक, surakṣārakṣak.) To bring under control? (आटोक्यात आणणे, āṭokyāt āṇṇe.) An obstacle? (अडथळा, aḍthaḷā.) A way out? (तोडगा, toḍgā.) To bear a load? (पेलणे, pelṇe.) To sort out? (निस्तरणे, nistarṇe.) To waver? (डळमळणे, ḍaḷmaḷṇe.) To compensate? (भरपाई देणे, bharpāī deṇe.) To miss out on? (मुकणे, mukṇe.) A shield? (कवच, kavac.) Protection? (संरक्षण, saṁrakṣaṇ.) Reliance? (भरवसा, bharavsā.) A coincidence? (योगायोग, yogāyog.) Gambling? (जुगार, jugār.) Good fortune? (भाग्य, bhāgya.) A coin toss? (नाणेफेक, nāṇephek.) To bet? (पैज लावणे, paij lāvṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

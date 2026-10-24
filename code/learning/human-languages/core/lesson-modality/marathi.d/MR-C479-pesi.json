@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C479-pesi",
+    "language": "marathi",
+    "chapter": 479,
+    "sequence": 27510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec7e40f29d11557c"
+  },
+  "findings": []
+}

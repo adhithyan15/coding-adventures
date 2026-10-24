@@ -1,0 +1,11 @@
+{
+  "id": "AR-C367-way",
+  "pathSegment": "AR-PATH-367-IDRAK367",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-367-IDRAK367",
+      "order": 3
+    }
+  ]
+}

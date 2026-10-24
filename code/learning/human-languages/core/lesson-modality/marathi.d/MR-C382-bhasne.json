@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C382-bhasne",
+    "language": "marathi",
+    "chapter": 382,
+    "sequence": 22090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:961f519493f44853"
+  },
+  "findings": []
+}

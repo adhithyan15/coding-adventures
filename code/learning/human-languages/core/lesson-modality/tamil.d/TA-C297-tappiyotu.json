@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C297-tappiyotu",
+    "language": "tamil",
+    "chapter": 297,
+    "sequence": 17260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:376a373bd15f5ccf"
+  },
+  "findings": []
+}

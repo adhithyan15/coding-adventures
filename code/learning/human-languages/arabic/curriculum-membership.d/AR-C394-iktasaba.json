@@ -1,0 +1,11 @@
+{
+  "id": "AR-C394-iktasaba",
+  "pathSegment": "AR-PATH-394-ITQAN394",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-394-ITQAN394",
+      "order": 1
+    }
+  ]
+}

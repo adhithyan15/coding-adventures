@@ -1,0 +1,11 @@
+{
+  "id": "MR-C278-astana",
+  "pathSegment": "MR-PATH-278-PAST-SCENE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-278-PAST-SCENE",
+      "order": 1
+    }
+  ]
+}

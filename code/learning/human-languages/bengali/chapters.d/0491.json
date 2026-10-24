@@ -1,0 +1,21 @@
+{
+  "chapter": 491,
+  "title": "The End of a Life",
+  "label": "ch:bn-the-end-of-a-life",
+  "canDo": "I can talk about a lifespan, a funeral and condolences.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R491-review-final-491",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can talk about a lifespan, a funeral and condolences.",
+    "assesses": [
+      "BN-LEX-C491-SHRADDHO491-01",
+      "BN-LEX-C491-SHRADDHO491-02",
+      "BN-LEX-C491-SHRADDHO491-03",
+      "BN-LEX-C491-SHRADDHO491-04",
+      "BN-LEX-C491-SHRADDHO491-05"
+    ]
+  }
+}

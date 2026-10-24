@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C490-cedagottu",
+    "language": "telugu",
+    "chapter": 490,
+    "sequence": 24660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ff098c07f596603"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C394-nayakatva",
+    "language": "kannada",
+    "chapter": 394,
+    "sequence": 19960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:282343a77785d483"
+  },
+  "findings": []
+}

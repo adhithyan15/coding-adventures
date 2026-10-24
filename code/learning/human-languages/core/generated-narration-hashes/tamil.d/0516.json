@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:09998689eb2d6ca5",
+  "lessonIds": [
+    "TA-C516-ulavi",
+    "TA-C516-tetupori",
+    "TA-C516-valaippativu",
+    "TA-C516-kanoli",
+    "TA-C516-payanar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch516.txt",
+  "json": "tamil/narration/ch516.json",
+  "textHash": "fnv1a64:262d119059ae98f8",
+  "jsonHash": "fnv1a64:8d54265a2add7115",
+  "findings": []
+}

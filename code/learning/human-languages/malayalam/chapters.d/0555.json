@@ -1,0 +1,19 @@
+{
+  "chapter": 555,
+  "title": "Generations Under One Roof",
+  "label": "ch:ml-generations-under-one-roof",
+  "canDo": "I can say a lullaby, a joint family, a nuclear family, to split up and to be reconciled.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C555-inannuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 555: I can say a lullaby, a joint family, a nuclear family, to split up and to be reconciled.",
+    "assesses": [
+      "ML-LEX-C555-TALAMURA555-03",
+      "ML-LEX-C555-TALAMURA555-04",
+      "ML-LEX-C555-TALAMURA555-05"
+    ]
+  }
+}

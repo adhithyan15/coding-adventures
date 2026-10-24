@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:3c0bc1448fa2cd03",
+  "lessonIds": [
+    "TA-C549-mantapam",
+    "TA-C549-nikalcciniral",
+    "TA-C549-munnottam",
+    "TA-C549-ayattam",
+    "TA-C549-naluvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch549.txt",
+  "json": "tamil/narration/ch549.json",
+  "textHash": "fnv1a64:64f91106700d22e5",
+  "jsonHash": "fnv1a64:5a8193a827e27ca8",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C501-hakim",
+    "language": "arabic",
+    "chapter": 501,
+    "sequence": 27860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:525e053ab5520c4c"
+  },
+  "findings": []
+}

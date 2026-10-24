@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Robbers on the Road",
+  "label": "ch:te-robbers-on-the-road",
+  "canDo": "I can say a robbery, to attack, to snatch, to lie in wait and a disguise.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C348-maruvesam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can say a robbery, to attack, to snatch, to lie in wait and a disguise.",
+    "assesses": [
+      "TE-LEX-C348-DOPIDI348-03",
+      "TE-LEX-C348-DOPIDI348-04",
+      "TE-LEX-C348-DOPIDI348-05"
+    ]
+  }
+}

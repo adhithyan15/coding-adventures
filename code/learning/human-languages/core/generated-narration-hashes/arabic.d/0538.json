@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:b98bbd486830bf3b",
+  "lessonIds": [
+    "AR-C538-tatriz",
+    "AR-C538-tarraza",
+    "AR-C538-hiyaka",
+    "AR-C538-haka-knit",
+    "AR-C538-khata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch538.txt",
+  "json": "arabic/narration/ch538.json",
+  "textHash": "fnv1a64:928e7072cf1ef90f",
+  "jsonHash": "fnv1a64:c15c7d0bfa1f92ee",
+  "findings": []
+}

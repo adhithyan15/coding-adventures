@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C425-samaram",
+    "language": "malayalam",
+    "chapter": 425,
+    "sequence": 21040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afb9f78dd8b33043"
+  },
+  "findings": []
+}

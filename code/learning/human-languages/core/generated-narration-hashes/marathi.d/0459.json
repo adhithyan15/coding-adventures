@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:fad6d4f1e4617e63",
+  "lessonIds": [
+    "MR-C459-odh",
+    "MR-C459-hurhur",
+    "MR-C459-aturta",
+    "MR-C459-asusne",
+    "MR-C459-jhurne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch459.txt",
+  "json": "marathi/narration/ch459.json",
+  "textHash": "fnv1a64:3ba826aae49ffc49",
+  "jsonHash": "fnv1a64:69fcf6a9ac8e4c29",
+  "findings": []
+}

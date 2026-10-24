@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Saving Resources",
+  "label": "ch:ml-saving-resources",
+  "canDo": "I can say energy, a shortage, groundwater, global warming and a rain pit.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C505-malakkuli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can say energy, a shortage, groundwater, global warming and a rain pit.",
+    "assesses": [
+      "ML-LEX-C505-URJAM505-03",
+      "ML-LEX-C505-URJAM505-04",
+      "ML-LEX-C505-URJAM505-05"
+    ]
+  }
+}

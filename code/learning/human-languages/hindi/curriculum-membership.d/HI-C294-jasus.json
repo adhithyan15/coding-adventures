@@ -1,0 +1,11 @@
+{
+  "id": "HI-C294-jasus",
+  "pathSegment": "HI-PATH-294-TAFTISH294",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-294-TAFTISH294",
+      "order": 2
+    }
+  ]
+}

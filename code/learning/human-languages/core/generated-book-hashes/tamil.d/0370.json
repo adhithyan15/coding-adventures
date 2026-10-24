@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:314c969fb124247a",
+  "lessonIds": [
+    "TA-C370-varumai",
+    "TA-C370-celvam",
+    "TA-C370-errattalvu",
+    "TA-C370-velaiyinmai",
+    "TA-C370-curantu",
+    "TA-R370-review-363-370"
+  ],
+  "tex": "tamil/book/chapters/ch370-rich-and-poor.tex"
+}

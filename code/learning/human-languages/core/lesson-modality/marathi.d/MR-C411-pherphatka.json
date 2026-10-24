@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C411-pherphatka",
+    "language": "marathi",
+    "chapter": 411,
+    "sequence": 23780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0180d65b66024411"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Memory and Muddle",
+  "label": "ch:te-memory-and-muddle",
+  "canDo": "I can say that I was confused, or that I recalled or reminded someone of something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C511-gurtuceyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can say that I was confused, or that I recalled or reminded someone of something.",
+    "assesses": [
+      "TE-LEX-C511-GNAPAKAM511-03",
+      "TE-LEX-C511-GNAPAKAM511-04",
+      "TE-LEX-C511-GNAPAKAM511-05"
+    ]
+  }
+}

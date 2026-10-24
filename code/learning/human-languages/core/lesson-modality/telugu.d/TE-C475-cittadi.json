@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C475-cittadi",
+    "language": "telugu",
+    "chapter": 475,
+    "sequence": 23930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b2605dec6e8143b"
+  },
+  "findings": []
+}

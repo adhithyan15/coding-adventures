@@ -1,0 +1,11 @@
+{
+  "id": "TE-C462-kauntaru",
+  "pathSegment": "TE-PATH-462-KAUNTARU462",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-462-KAUNTARU462",
+      "order": 0
+    }
+  ]
+}

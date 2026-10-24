@@ -1,0 +1,11 @@
+{
+  "id": "MR-C527-ukalne-boil",
+  "pathSegment": "MR-PATH-527-SHIJAVNE527",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-527-SHIJAVNE527",
+      "order": 1
+    }
+  ]
+}

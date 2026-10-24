@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 562,
+  "sourceHash": "fnv1a64:fd2e7a5920820735",
+  "lessonIds": [
+    "ML-C562-talam",
+    "ML-C562-ragam",
+    "ML-C562-samvidhayakan",
+    "ML-C562-tirakkatha",
+    "ML-C562-noval"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch562.txt",
+  "json": "malayalam/narration/ch562.json",
+  "textHash": "fnv1a64:a692c2b9a45aa5b3",
+  "jsonHash": "fnv1a64:44e541b8ed66d88b",
+  "findings": []
+}

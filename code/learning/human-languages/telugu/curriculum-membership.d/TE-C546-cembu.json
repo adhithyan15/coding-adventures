@@ -1,0 +1,11 @@
+{
+  "id": "TE-C546-cembu",
+  "pathSegment": "TE-PATH-546-INTLO546",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-546-INTLO546",
+      "order": 3
+    }
+  ]
+}

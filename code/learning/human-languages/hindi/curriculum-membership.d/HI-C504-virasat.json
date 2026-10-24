@@ -1,0 +1,11 @@
+{
+  "id": "HI-C504-virasat",
+  "pathSegment": "HI-PATH-504-BUDHAPA504",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-504-BUDHAPA504",
+      "order": 4
+    }
+  ]
+}

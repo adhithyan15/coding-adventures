@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Litter",
+  "label": "ch:ml-litter",
+  "canDo": "I can say litter, to throw away, to pile up, to be ruined and to reuse.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C504-punarupayogikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can say litter, to throw away, to pile up, to be ruined and to reuse.",
+    "assesses": [
+      "ML-LEX-C504-CAVAR504-03",
+      "ML-LEX-C504-CAVAR504-04",
+      "ML-LEX-C504-CAVAR504-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "The Hunt in the Forest",
+  "label": "ch:ka-the-hunt-in-the-forest",
+  "canDo": "I can say to hunt, to wander, to lie in wait, to barge in and to snap.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C360-muri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can say to hunt, to wander, to lie in wait, to barge in and to snap.",
+    "assesses": [
+      "KA-LEX-C360-BETE360-03",
+      "KA-LEX-C360-BETE360-04",
+      "KA-LEX-C360-BETE360-05"
+    ]
+  }
+}

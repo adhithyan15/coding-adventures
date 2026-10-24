@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-321-SADANGU321",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-321-SADANGU321"
+  ],
+  "after": []
+}

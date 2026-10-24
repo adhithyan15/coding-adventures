@@ -1,0 +1,11 @@
+{
+  "id": "TE-C414-upanyasam",
+  "pathSegment": "TE-PATH-414-UPANYASAM414",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-414-UPANYASAM414",
+      "order": 1
+    }
+  ]
+}

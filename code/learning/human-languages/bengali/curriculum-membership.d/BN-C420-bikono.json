@@ -1,0 +1,11 @@
+{
+  "id": "BN-C420-bikono",
+  "pathSegment": "BN-PATH-420-HAT420",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-420-HAT420",
+      "order": 4
+    }
+  ]
+}

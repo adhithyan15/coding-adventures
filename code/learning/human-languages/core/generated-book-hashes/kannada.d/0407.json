@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:5665435bf3ae026e",
+  "lessonIds": [
+    "KA-C407-samsodhane",
+    "KA-C407-prayoga",
+    "KA-C407-siddhanta",
+    "KA-C407-vislesisu",
+    "KA-C407-samikse"
+  ],
+  "tex": "kannada/book/chapters/ch407-doing-research.tex"
+}

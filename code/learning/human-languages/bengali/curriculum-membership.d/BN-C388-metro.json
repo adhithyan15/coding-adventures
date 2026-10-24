@@ -1,0 +1,11 @@
+{
+  "id": "BN-C388-metro",
+  "pathSegment": "BN-PATH-388-TRAM388",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-388-TRAM388",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C529-putir",
+    "language": "tamil",
+    "chapter": 529,
+    "sequence": 30270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4b0f822783c8f53"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C277-jain",
+    "language": "marathi",
+    "chapter": 277,
+    "sequence": 16040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da542372c14c1473"
+  },
+  "findings": []
+}

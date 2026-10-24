@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:e52ea08ee9cc0e2a",
+  "lessonIds": [
+    "MR-C344-matbhed",
+    "MR-C344-sahmat-hone",
+    "MR-C344-aksep-ghene",
+    "MR-C344-visangti",
+    "MR-C344-drstikon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch344.txt",
+  "json": "marathi/narration/ch344.json",
+  "textHash": "fnv1a64:ffdad54250251b59",
+  "jsonHash": "fnv1a64:5e99f1f9c8e01fd2",
+  "findings": []
+}

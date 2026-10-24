@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Leaks and Holes",
+  "label": "ch:bn-leaks-and-holes",
+  "canDo": "I can talk about water tanks, holes and water that seeps in.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C506-chuiye-pora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about water tanks, holes and water that seeps in.",
+    "assesses": [
+      "BN-LEX-C506-TANK506-03",
+      "BN-LEX-C506-TANK506-04",
+      "BN-LEX-C506-TANK506-05"
+    ]
+  }
+}

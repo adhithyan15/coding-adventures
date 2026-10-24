@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C336-songkkhepe",
+    "language": "bengali",
+    "chapter": 336,
+    "sequence": 21340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:191b17cac7357ac8"
+  },
+  "findings": []
+}

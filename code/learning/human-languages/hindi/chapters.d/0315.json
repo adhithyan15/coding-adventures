@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "Claims and Denials",
+  "label": "ch:hi-claims-and-denials",
+  "canDo": "I can report what someone claimed and how it was answered.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C315-ttaalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can report what someone claimed and how it was answered.",
+    "assesses": [
+      "HI-LEX-C315-DAVA315-03",
+      "HI-LEX-C315-DAVA315-04",
+      "HI-LEX-C315-DAVA315-05"
+    ]
+  }
+}

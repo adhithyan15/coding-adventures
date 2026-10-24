@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C503-daunlod-kora",
+    "language": "bengali",
+    "chapter": 503,
+    "sequence": 30600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbdf34f9a6d9ff51"
+  },
+  "findings": []
+}

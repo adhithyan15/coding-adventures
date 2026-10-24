@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:905aed6e92026934",
+  "lessonIds": [
+    "TE-C464-andincu",
+    "TE-C464-samakurcu",
+    "TE-C464-erpatu-ceyu",
+    "TE-C464-saraphara",
+    "TE-C464-vasulu-ceyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch464.txt",
+  "json": "telugu/narration/ch464.json",
+  "textHash": "fnv1a64:ca1fff77771bd372",
+  "jsonHash": "fnv1a64:cfd37b966224ece3",
+  "findings": []
+}

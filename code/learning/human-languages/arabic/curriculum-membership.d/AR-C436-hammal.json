@@ -1,0 +1,11 @@
+{
+  "id": "AR-C436-hammal",
+  "pathSegment": "AR-PATH-436-KUSHK436",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-436-KUSHK436",
+      "order": 3
+    }
+  ]
+}

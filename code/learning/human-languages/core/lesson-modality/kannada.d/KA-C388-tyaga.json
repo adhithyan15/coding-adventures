@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C388-tyaga",
+    "language": "kannada",
+    "chapter": 388,
+    "sequence": 19620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ef71425e29826af"
+  },
+  "findings": []
+}

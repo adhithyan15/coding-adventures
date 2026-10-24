@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C532-phasa",
+    "language": "marathi",
+    "chapter": 532,
+    "sequence": 30450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:152ac6eed7cf790e"
+  },
+  "findings": []
+}

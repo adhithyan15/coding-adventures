@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:6771d9ed8f3dbcaf",
+  "lessonIds": [
+    "BN-C284-kobul-kora",
+    "BN-C284-sutro",
+    "BN-C284-pahara-deoya",
+    "BN-C284-koyedi",
+    "BN-C284-jamin"
+  ],
+  "tex": "bengali/book/chapters/ch284-at-the-police-station.tex"
+}

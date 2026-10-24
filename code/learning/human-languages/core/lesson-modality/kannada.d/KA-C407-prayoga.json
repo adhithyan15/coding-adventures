@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C407-prayoga",
+    "language": "kannada",
+    "chapter": 407,
+    "sequence": 20600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f04f1684bd983f0e"
+  },
+  "findings": []
+}

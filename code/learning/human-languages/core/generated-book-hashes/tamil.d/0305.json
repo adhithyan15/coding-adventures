@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:2e58051bb315c348",
+  "lessonIds": [
+    "TA-C305-nirupar",
+    "TA-C305-neralai",
+    "TA-C305-oliparappu",
+    "TA-C305-tokuppalar",
+    "TA-C305-olippativalar"
+  ],
+  "tex": "tamil/book/chapters/ch305-on-air.tex"
+}

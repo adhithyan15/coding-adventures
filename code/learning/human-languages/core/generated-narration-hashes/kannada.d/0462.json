@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:5766ab7b6ef7fcbf",
+  "lessonIds": [
+    "KA-C462-balkani",
+    "KA-C462-lipht",
+    "KA-C462-solleparade",
+    "KA-C462-hitar",
+    "KA-C462-kiruguttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch462.txt",
+  "json": "kannada/narration/ch462.json",
+  "textHash": "fnv1a64:ccba8d2afee4c318",
+  "jsonHash": "fnv1a64:f4ca31aeaa0fe9ac",
+  "findings": []
+}

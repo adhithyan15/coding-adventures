@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:c786223c2818dc41",
+  "lessonIds": [
+    "MR-C471-sahana",
+    "MR-C471-catur",
+    "MR-C471-buddhiman",
+    "MR-C471-samjutdar",
+    "MR-C471-akkal"
+  ],
+  "tex": "marathi/book/chapters/ch471-good-sense.tex"
+}

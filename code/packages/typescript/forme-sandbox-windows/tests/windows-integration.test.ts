@@ -80,7 +80,10 @@ shutil.copytree(source, destination, dirs_exist_ok=True, symlinks=True, ignore=i
 `,
       sourceRoot,
       root,
-    ], { timeout: 60_000, maxBuffer: 16_384 });
+    // The copy walks the whole hosted Python tree. On a Windows runner that is
+    // also building hundreds of other packages it overran a 60 s budget
+    // (#17972), so allow three minutes here and four for the first test below.
+    ], { timeout: 180_000, maxBuffer: 16_384 });
     const destinationVerification = await verifyRuntimeRoot(root);
     expect(destinationVerification.accepted, destinationVerification.stderr).toBe(true);
     return { executable: join(root, executableRelativePath), root };
@@ -304,7 +307,7 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
     const result = await exitWithStderr(child);
     expect(result.exit, result.stderr).toEqual({ code: 0, signal: null });
     expect(Buffer.concat(stdout).toString("utf8")).toBe("sandbox python protocol probe");
-  }, 75_000);
+  }, 240_000);
 
   it("does not grant Node access to sibling runtime-root files", async () => {
     const runtimeRoot = await mkdtemp(join(homedir(), "forme-windows-node-runtime-"));

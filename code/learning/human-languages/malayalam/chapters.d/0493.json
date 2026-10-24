@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Buyers and Warranties",
+  "label": "ch:ml-buyers-and-warranties",
+  "canDo": "I can say a consumer, a customer, a warranty, to test and to swap for another.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C493-marriyetukkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can say a consumer, a customer, a warranty, to test and to swap for another.",
+    "assesses": [
+      "ML-LEX-C493-VANGAL493-03",
+      "ML-LEX-C493-VANGAL493-04",
+      "ML-LEX-C493-VANGAL493-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "The King and the Queen",
+  "label": "ch:ka-the-king-and-the-queen",
+  "canDo": "I can say a king, a queen, to reign, a throne and a crown.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C322-kirita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can say a king, a queen, to reign, a throne and a crown.",
+    "assesses": [
+      "KA-LEX-C322-RAJA322-03",
+      "KA-LEX-C322-RAJA322-04",
+      "KA-LEX-C322-RAJA322-05"
+    ]
+  }
+}

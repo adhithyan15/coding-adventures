@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:14161eee746b12a1",
+  "lessonIds": [
+    "KA-C469-kaicila",
+    "KA-C469-adalubadalu-madu",
+    "KA-C469-varanti",
+    "KA-C469-bekari",
+    "KA-C469-delivari"
+  ],
+  "tex": "kannada/book/chapters/ch469-bags-bakeries-and-deliveries.tex"
+}

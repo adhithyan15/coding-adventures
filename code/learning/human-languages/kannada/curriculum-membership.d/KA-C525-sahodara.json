@@ -1,0 +1,11 @@
+{
+  "id": "KA-C525-sahodara",
+  "pathSegment": "KA-PATH-525-NENTARU525",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-525-NENTARU525",
+      "order": 4
+    }
+  ]
+}

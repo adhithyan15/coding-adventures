@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:54f3fa434cbd49bc",
+  "lessonIds": [
+    "ML-C489-karansi",
+    "ML-C489-vinimayam",
+    "ML-C489-cillarayakkuka",
+    "ML-C489-panamataykkuka",
+    "ML-C489-varinilkkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch489-money-matters.tex"
+}

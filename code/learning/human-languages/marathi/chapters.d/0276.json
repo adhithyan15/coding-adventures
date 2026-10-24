@@ -1,0 +1,22 @@
+{
+  "chapter": 276,
+  "title": "What Happened, Who Did It, What There Was",
+  "label": "ch:mr-what-happened-who-did-it-what-there-was",
+  "canDo": "I can say what happened (gelo, ālī), who did something with -ne (tyāne kām kelaṁ), and what there was (hotā).",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MR-R276-what-happened",
+    "kind": "production",
+    "summary": "Complete MR-R276-what-happened: say what happened, who did it and what there was, in the past.",
+    "assesses": [
+      "MR-GRAMMAR-C276-PAST-PERSON-01",
+      "MR-GRAMMAR-C276-PAST-STEMS-01",
+      "MR-GRAMMAR-C276-ERGATIVE-NE-01",
+      "MR-GRAMMAR-C276-OBJECT-AGREEMENT-01",
+      "MR-GRAMMAR-C276-WAS-01",
+      "MR-GRAMMAR-C276-WAS-NOT-01"
+    ]
+  }
+}

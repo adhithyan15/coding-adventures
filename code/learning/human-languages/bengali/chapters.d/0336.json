@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "What Matters Most",
+  "label": "ch:bn-what-matters-most",
+  "canDo": "I can say what matters most and put it in a few words.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C336-songkkhepe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can say what matters most and put it in a few words.",
+    "assesses": [
+      "BN-LEX-C336-GURUTTO336-03",
+      "BN-LEX-C336-GURUTTO336-04",
+      "BN-LEX-C336-GURUTTO336-05"
+    ]
+  }
+}

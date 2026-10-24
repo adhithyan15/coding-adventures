@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C511-errumati",
+    "language": "tamil",
+    "chapter": 511,
+    "sequence": 29350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c5a93b9c7e4f190"
+  },
+  "findings": []
+}

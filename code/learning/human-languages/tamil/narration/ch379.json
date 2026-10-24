@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 379,
+  "title": "Helping Others",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2d0bc1be4a1cf0c9",
+  "lessons": [
+    {
+      "id": "TA-C379-tannarvalar",
+      "sequence": 21740,
+      "title": "தன்னார்வலர் (taṉṉārvalar) — a volunteer",
+      "headword": "தன்னார்வலர்",
+      "romanization": "taṉṉārvalar",
+      "gloss": "a volunteer",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e950ad738e563347",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a leader, then the Tamil for a treasurer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தன்னார்வலர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தன்னார்வலர் — taṉṉārvalar — \"a volunteer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெள்ளத்தின்போது பல தன்னார்வலர்கள் உதவினார்கள். veḷḷattiṉpōtu pala taṉṉārvalarkaḷ utaviṉārkaḷ. Many volunteers helped during the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "தன், self + ஆர்வலர், an eager person: one who comes of their own will."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தன்னார்வலர் (taṉṉārvalar) is a modern native coinage: taṉ, \"oneself\" (DEDR 3196), and ārvalar, \"the eager\", from ārvam, \"desire, devotion\" (DEDR 381)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṉṉārvalar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṉṉārvalar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṉṉārvalar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṉṉārvalar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷattiṉpōtu pala taṉṉārvalarkaḷ utaviṉārkaḷ. — Many volunteers helped during the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷattiṉpōtu pala taṉṉārvalarkaḷ utaviṉārkaḷ.* — Many volunteers helped during the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a leader, then the Tamil for a treasurer, then say taṉṉārvalar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a leader, then the Tamil for a treasurer, then say *taṉṉārvalar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தன்னார்வலர் (taṉṉārvalar) mean? (\"A volunteer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C379-payanali",
+      "sequence": 21750,
+      "title": "பயனாளி (payaṉāḷi) — a beneficiary",
+      "headword": "பயனாளி",
+      "romanization": "payaṉāḷi",
+      "gloss": "a beneficiary",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44c773866a8fbe90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a treasurer, then the Tamil for a volunteer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பயனாளி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பயனாளி — payaṉāḷi — \"a beneficiary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தத் திட்டத்தின் பயனாளிகள் யார்? intat tiṭṭattiṉ payaṉāḷikaḷ yār? Who are the beneficiaries of this scheme?"
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: பயனாளிகள், payaṉāḷikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "பயன், benefit + -ஆளி, the one who holds."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பயனாளி (payaṉāḷi) is built from payaṉ, \"use, benefit\", and native āḷi, \"one who holds\" (DEDR 399), as in முதலாளி."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "payaṉāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *payaṉāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "payaṉāḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *payaṉāḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intat tiṭṭattiṉ payaṉāḷikaḷ yār? — Who are the beneficiaries of this scheme?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intat tiṭṭattiṉ payaṉāḷikaḷ yār?* — Who are the beneficiaries of this scheme?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a treasurer, then the Tamil for a volunteer, then say payaṉāḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a treasurer, then the Tamil for a volunteer, then say *payaṉāḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பயனாளி (payaṉāḷi) mean? (\"A beneficiary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C379-niti-funds",
+      "sequence": 21760,
+      "title": "நிதி (niti) — funds; a fund",
+      "headword": "நிதி",
+      "romanization": "niti",
+      "gloss": "funds; a fund",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c14b6ec9aaeb6a31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a volunteer, then the Tamil for a beneficiary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிதி — niti — \"funds; a fund\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பள்ளிக்குப் புதிய கட்டிடம் கட்ட நிதி தேவை. paḷḷikkup putiya kaṭṭiṭam kaṭṭa niti tēvai. Funds are needed to build a new school building."
+            },
+            {
+              "kind": "speech",
+              "text": "நிதியமைச்சர், the finance minister."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிதி (niti) is borrowed from Sanskrit nidhi, \"a setting down; hoard, treasure\" (CDIAL 7207). Tamil writes the dh as த."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḷḷikkup putiya kaṭṭiṭam kaṭṭa niti tēvai. — Funds are needed to build a new school building.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḷḷikkup putiya kaṭṭiṭam kaṭṭa niti tēvai.* — Funds are needed to build a new school building.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a volunteer, then the Tamil for a beneficiary, then say niti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a volunteer, then the Tamil for a beneficiary, then say *niti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிதி (niti) mean? (\"Funds; a fund\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C379-tirattu",
+      "sequence": 21770,
+      "title": "திரட்டு (tiraṭṭu) — to muster; to raise (funds)",
+      "headword": "திரட்டு",
+      "romanization": "tiraṭṭu",
+      "gloss": "to muster; to raise (funds)",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47463f3f8e2d6f2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a beneficiary, then the Tamil for funds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: திரட்டு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திரட்டு — tiraṭṭu — \"to muster; to raise (funds)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மாணவர்கள் வெள்ள நிவாரணத்துக்கு நிதி திரட்டினார்கள். māṇavarkaḷ veḷḷa nivāraṇattukku niti tiraṭṭiṉārkaḷ. The students raised funds for flood relief."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): திரட்டினேன், tiraṭṭiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "நிதி (niti) திரட்டு (tiraṭṭu), to raise funds; ஆட்களைத் திரட்டு (tiraṭṭu), to gather people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திரட்டு (tiraṭṭu) is native Dravidian: DEDR 3245 lists Tamil tiraḷ, \"to assemble, collect in numbers\", and its causative tiraṭṭu, \"to gather\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṇavarkaḷ veḷḷa nivāraṇattukku niti tiraṭṭiṉārkaḷ. — The students raised funds for flood relief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṇavarkaḷ veḷḷa nivāraṇattukku niti tiraṭṭiṉārkaḷ.* — The students raised funds for flood relief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a beneficiary, then the Tamil for funds, then say tiraṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a beneficiary, then the Tamil for funds, then say *tiraṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does திரட்டு (tiraṭṭu) mean? (\"To muster; to raise (funds)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C379-nalan",
+      "sequence": 21780,
+      "title": "நலன் (nalaṉ) — welfare; well-being",
+      "headword": "நலன்",
+      "romanization": "nalaṉ",
+      "gloss": "welfare; well-being",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6053d722efba9ad9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for funds, then the Tamil for to muster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நலன்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நலன் — nalaṉ — \"welfare; well-being\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குழந்தைகளின் நலனுக்காக அவர் பல வேலைகள் செய்தார். kuḻantaikaḷiṉ nalaṉukkāka avar pala vēlaikaḷ ceytār. He did a lot of work for the welfare of children."
+            },
+            {
+              "kind": "speech",
+              "text": "நலம், health, as in நான் நலம், is a close cousin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நலன் (nalaṉ) is native Dravidian, built on nal, \"good\" (DEDR 3610), the root of நலம், \"well-being\", and நன்மை, \"a benefit\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nalaṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nalaṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nalaṉ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nalaṉ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻantaikaḷiṉ nalaṉukkāka avar pala vēlaikaḷ ceytār. — He did a lot of work for the welfare of children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻantaikaḷiṉ nalaṉukkāka avar pala vēlaikaḷ ceytār.* — He did a lot of work for the welfare of children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for funds, then the Tamil for to muster, then say nalaṉ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for funds, then the Tamil for to muster, then say *nalaṉ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நலன் (nalaṉ) mean? (\"Welfare; well-being\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

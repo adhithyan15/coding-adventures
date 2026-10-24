@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:bef5f6d2fc88638a",
+  "lessonIds": [
+    "ML-C499-vanam",
+    "ML-C499-vanyajivi",
+    "ML-C499-sanketam",
+    "ML-C499-kattana",
+    "ML-C499-kattupottu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch499.txt",
+  "json": "malayalam/narration/ch499.json",
+  "textHash": "fnv1a64:7a51065622f6c240",
+  "jsonHash": "fnv1a64:552db7e5e68159cb",
+  "findings": []
+}

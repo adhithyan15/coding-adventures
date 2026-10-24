@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Kings and Queens",
+  "label": "ch:ta-kings-and-queens",
+  "canDo": "I can talk about kings, queens and their children.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C328-ariyanai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can talk about kings, queens and their children.",
+    "assesses": [
+      "TA-LEX-C328-MANNAR328-03",
+      "TA-LEX-C328-MANNAR328-04",
+      "TA-LEX-C328-MANNAR328-05"
+    ]
+  }
+}

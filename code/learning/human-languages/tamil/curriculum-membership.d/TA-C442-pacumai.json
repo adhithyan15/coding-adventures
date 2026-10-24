@@ -1,0 +1,11 @@
+{
+  "id": "TA-C442-pacumai",
+  "pathSegment": "TA-PATH-442-PASUMAI442",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-442-PASUMAI442",
+      "order": 2
+    }
+  ]
+}

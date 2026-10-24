@@ -1,0 +1,11 @@
+{
+  "id": "MR-C400-ducaki",
+  "pathSegment": "MR-PATH-400-VAHAN400",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-400-VAHAN400",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C485-azlama",
+  "pathSegment": "AR-PATH-485-SAMA485",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-485-SAMA485",
+      "order": 4
+    }
+  ]
+}

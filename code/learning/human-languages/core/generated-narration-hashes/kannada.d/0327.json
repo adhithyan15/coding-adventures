@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:fd0275ab7f9da513",
+  "lessonIds": [
+    "KA-C327-astaralli",
+    "KA-C327-hathattagi",
+    "KA-C327-kudale",
+    "KA-C327-ekaeki",
+    "KA-C327-beccibilu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch327.txt",
+  "json": "kannada/narration/ch327.json",
+  "textHash": "fnv1a64:d3474d69f28f63ba",
+  "jsonHash": "fnv1a64:702746f0f5c96c58",
+  "findings": []
+}

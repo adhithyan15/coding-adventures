@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:c86fc34262529d50",
+  "lessonIds": [
+    "TE-C362-poradu",
+    "TE-C362-tarimikottu",
+    "TE-C362-talavancu",
+    "TE-C362-sandhi",
+    "TE-C362-duta"
+  ],
+  "tex": "telugu/book/chapters/ch362-truce.tex"
+}

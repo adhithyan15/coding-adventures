@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 498,
+  "title": "Shame and Shyness",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:04373c179bb39cec",
+  "lessons": [
+    {
+      "id": "TE-C498-atmagauravam",
+      "sequence": 25200,
+      "title": "ఆత్మగౌరవం (ātmagauravaṁ) — self-respect; dignity",
+      "headword": "ఆత్మగౌరవం",
+      "romanization": "ātmagauravaṁ",
+      "gloss": "self-respect; dignity",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd499492e88d5c97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for fury, then the Telugu for irritation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆత్మగౌరవం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆత్మగౌరవం — ātmagauravaṁ — \"self-respect; dignity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పేదవాడైనా అతనికి ఆత్మగౌరవం ఎక్కువ. pēdavāḍainā ataniki ātmagauravaṁ ekkuva. Though he is poor, he has a strong sense of self-respect."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆత్మ, self, + గౌరవం, respect. ఆత్మగౌరవంతో బతుకు, to live with dignity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆత్మగౌరవం (ātmagauravaṁ) is a learned compound built from Sanskrit ātman, \"breath, self\" (CDIAL 1135), and gaurava, \"weight; venerableness\" (CDIAL 4346), the word behind గౌరవం, \"respect\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmagauravaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmagauravaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmagauravaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmagauravaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēdavāḍainā ataniki ātmagauravaṁ ekkuva. — Though he is poor, he has a strong sense of self-respect.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēdavāḍainā ataniki ātmagauravaṁ ekkuva.* — Though he is poor, he has a strong sense of self-respect.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for fury, then the Telugu for irritation, then say ātmagauravaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for fury, then the Telugu for irritation, then say *ātmagauravaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆత్మగౌరవం (ātmagauravaṁ) mean? (\"Self-respect; dignity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C498-avamanam",
+      "sequence": 25210,
+      "title": "అవమానం (avamānaṁ) — humiliation; an insult",
+      "headword": "అవమానం",
+      "romanization": "avamānaṁ",
+      "gloss": "humiliation; an insult",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1e06eee1af268c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for irritation, then the Telugu for self-respect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అవమానం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అవమానం — avamānaṁ — \"humiliation; an insult\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అందరి ముందు తిట్టడం అతనికి అవమానంగా అనిపించింది. andari mundu tiṭṭaḍaṁ ataniki avamānaṅgā anipiñcindi. Being scolded in front of everyone felt humiliating to him."
+            },
+            {
+              "kind": "speech",
+              "text": "Its opposite is గౌరవం, respect."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అవమానం (avamānaṁ) is borrowed from Sanskrit avamāna, \"disrespect, dishonour\" (Monier-Williams), from ava-, \"down\", and man, \"to think\": to think someone low."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avamānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avamānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avamānaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avamānaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andari mundu tiṭṭaḍaṁ ataniki avamānaṅgā anipiñcindi. — Being scolded in front of everyone felt humiliating to him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andari mundu tiṭṭaḍaṁ ataniki avamānaṅgā anipiñcindi.* — Being scolded in front of everyone felt humiliating to him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for irritation, then the Telugu for self-respect, then say avamānaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for irritation, then the Telugu for self-respect, then say *avamānaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అవమానం (avamānaṁ) mean? (\"Humiliation; an insult\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C498-garvapadu",
+      "sequence": 25220,
+      "title": "గర్వపడు (garvapaḍu) — to be proud",
+      "headword": "గర్వపడు",
+      "romanization": "garvapaḍu",
+      "gloss": "to be proud",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9bae761e48aad42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for self-respect, then the Telugu for humiliation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గర్వపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గర్వపడు — garvapaḍu — \"to be proud\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కూతురి విజయం చూసి తల్లిదండ్రులు గర్వపడ్డారు. kūturi vijayaṁ cūsi tallidaṇḍrulu garvapaḍḍāru. Seeing their daughter succeed, the parents were proud."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): గర్వపడ్డాను, garvapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun గర్వం can also mean arrogance; the verb is the good kind of pride."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గర్వపడు (garvapaḍu) is built from గర్వం, \"pride\", from Sanskrit garva, \"pride, arrogance\" (CDIAL 4064) and the native verb paḍu, \"to feel, to suffer\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garvapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garvapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garvapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garvapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūturi vijayaṁ cūsi tallidaṇḍrulu garvapaḍḍāru. — Seeing their daughter succeed, the parents were proud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūturi vijayaṁ cūsi tallidaṇḍrulu garvapaḍḍāru.* — Seeing their daughter succeed, the parents were proud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for self-respect, then the Telugu for humiliation, then say garvapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for self-respect, then the Telugu for humiliation, then say *garvapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గర్వపడు (garvapaḍu) mean? (\"To be proud\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C498-mohamatapadu",
+      "sequence": 25230,
+      "title": "మొహమాటపడు (mohamāṭapaḍu) — to hold back politely; to be too polite to ask",
+      "headword": "మొహమాటపడు",
+      "romanization": "mohamāṭapaḍu",
+      "gloss": "to hold back politely; to be too polite to ask",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1abfbd1b017d05a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for humiliation, then the Telugu for to be proud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మొహమాటపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మొహమాటపడు — mohamāṭapaḍu — \"to hold back politely; to be too polite to ask\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను మొహమాటపడి ఇంకా అన్నం అడగలేదు. atanu mohamāṭapaḍi iṅkā annaṁ aḍagalēdu. Out of politeness he did not ask for more rice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మొహమాటపడ్డాను, mohamāṭapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun మొహమాటం is the polite reluctance to refuse, to ask or to say no."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మొహమాటపడు (mohamāṭapaḍu) is built from మొహమాటం, the polite reluctance to refuse or to ask, and the native verb paḍu, \"to feel, to suffer\" (DEDR 3853). The origin of మొహమాటం is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mohamāṭapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mohamāṭapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mohamāṭapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mohamāṭapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu mohamāṭapaḍi iṅkā annaṁ aḍagalēdu. — Out of politeness he did not ask for more rice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu mohamāṭapaḍi iṅkā annaṁ aḍagalēdu.* — Out of politeness he did not ask for more rice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for humiliation, then the Telugu for to be proud, then say mohamāṭapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for humiliation, then the Telugu for to be proud, then say *mohamāṭapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మొహమాటపడు (mohamāṭapaḍu) mean? (\"To hold back politely; to be too polite to ask\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C498-taladincuko",
+      "sequence": 25240,
+      "title": "తలదించుకో (taladiñcukō) — to hang one's head; to be ashamed",
+      "headword": "తలదించుకో",
+      "romanization": "taladiñcukō",
+      "gloss": "to hang one's head; to be ashamed",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5e821768d1edba7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be proud, then the Telugu for to hold back politely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తలదించుకో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తలదించుకో — taladiñcukō — \"to hang one's head; to be ashamed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అబద్ధం బయటపడగానే అతను తలదించుకున్నాడు. abaddhaṁ bayaṭapaḍagānē atanu taladiñcukunnāḍu. As soon as the lie came out, he hung his head."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తలదించుకున్నాను, taladiñcukunnānu."
+            },
+            {
+              "kind": "speech",
+              "text": "తల, head, + దించుకో, to lower your own: the gesture of shame. Its opposite is తలెత్తుకో, to hold your head high."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తలదించుకో (taladiñcukō) is native Dravidian: తల, \"head\" (DEDR 3103), and దించు, \"to lower, to put down\" (DEDR 502), with -కో, \"for oneself\", from కొను, \"to take\" (DEDR 2151): to lower one's own head."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taladiñcukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taladiñcukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taladiñcukō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taladiñcukō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abaddhaṁ bayaṭapaḍagānē atanu taladiñcukunnāḍu. — As soon as the lie came out, he hung his head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abaddhaṁ bayaṭapaḍagānē atanu taladiñcukunnāḍu.* — As soon as the lie came out, he hung his head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be proud, then the Telugu for to hold back politely, then say taladiñcukō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be proud, then the Telugu for to hold back politely, then say *taladiñcukō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తలదించుకో (taladiñcukō) mean? (\"To hang one's head; to be ashamed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

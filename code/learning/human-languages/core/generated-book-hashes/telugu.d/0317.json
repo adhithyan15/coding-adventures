@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:007593bd961db8e4",
+  "lessonIds": [
+    "TE-C317-iloga",
+    "TE-S174-letter-ii",
+    "TE-C317-a-taruvata",
+    "TE-C317-vacci",
+    "TE-C317-ammamma-gramam",
+    "TE-R317-a-story-in-order"
+  ],
+  "tex": "telugu/book/chapters/ch317-telling-a-story-in-order.tex"
+}

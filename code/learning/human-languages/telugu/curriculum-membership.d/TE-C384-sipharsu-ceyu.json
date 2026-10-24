@@ -1,0 +1,11 @@
+{
+  "id": "TE-C384-sipharsu-ceyu",
+  "pathSegment": "TE-PATH-384-SUCANA384",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-384-SUCANA384",
+      "order": 3
+    }
+  ]
+}

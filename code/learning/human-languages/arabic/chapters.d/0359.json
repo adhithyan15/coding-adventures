@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Points of view",
+  "label": "ch:ar-points-of-view",
+  "canDo": "I can talk about an impression and a perspective, and say what someone assumed, suggested or found convincing.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C359-muqni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can talk about an impression and a perspective, and say what someone assumed, suggested or found convincing.",
+    "assesses": [
+      "AR-LEX-C359-NAZAR359-03",
+      "AR-LEX-C359-NAZAR359-04",
+      "AR-LEX-C359-NAZAR359-05"
+    ]
+  }
+}

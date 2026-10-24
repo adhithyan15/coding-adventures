@@ -1,0 +1,11 @@
+{
+  "id": "KA-C442-tol",
+  "pathSegment": "KA-PATH-442-HEDDARI442",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-442-HEDDARI442",
+      "order": 1
+    }
+  ]
+}

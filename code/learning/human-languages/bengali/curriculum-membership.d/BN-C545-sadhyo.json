@@ -1,0 +1,11 @@
+{
+  "id": "BN-C545-sadhyo",
+  "pathSegment": "BN-PATH-545-SADHYO545",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-545-SADHYO545",
+      "order": 2
+    }
+  ]
+}

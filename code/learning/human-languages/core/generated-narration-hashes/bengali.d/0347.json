@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:5a51cb2560ab9a31",
+  "lessonIds": [
+    "BN-C347-doptor",
+    "BN-C347-pourosobha",
+    "BN-C347-ponchayet",
+    "BN-C347-niyog-kora",
+    "BN-C347-jari-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch347.txt",
+  "json": "bengali/narration/ch347.json",
+  "textHash": "fnv1a64:89bccb073fa7e306",
+  "jsonHash": "fnv1a64:7da9b93e4bd44bdd",
+  "findings": []
+}

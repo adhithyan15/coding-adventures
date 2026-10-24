@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C378-paksapata",
+    "language": "kannada",
+    "chapter": 378,
+    "sequence": 19130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d3d5f7a8aaf039c"
+  },
+  "findings": []
+}

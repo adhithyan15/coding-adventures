@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:a112948117ca9ad3",
+  "lessonIds": [
+    "AR-C358-hujja",
+    "AR-C358-mabda",
+    "AR-C358-burhan",
+    "AR-C358-athbata",
+    "AR-C358-aqnaa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch358.txt",
+  "json": "arabic/narration/ch358.json",
+  "textHash": "fnv1a64:f6dc2e9be77bb2d0",
+  "jsonHash": "fnv1a64:b2ebfe1f51fc8113",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Finding a Room",
+  "label": "ch:ml-finding-a-room",
+  "canDo": "I can say a resort, an inn, accommodation, a resident and a reception desk.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C481-risapsan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can say a resort, an inn, accommodation, a resident and a reception desk.",
+    "assesses": [
+      "ML-LEX-C481-TAMASAM481-03",
+      "ML-LEX-C481-TAMASAM481-04",
+      "ML-LEX-C481-TAMASAM481-05"
+    ]
+  }
+}

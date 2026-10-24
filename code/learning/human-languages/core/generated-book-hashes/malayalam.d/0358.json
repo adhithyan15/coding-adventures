@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:33d726cf82b546c8",
+  "lessonIds": [
+    "ML-C358-pantupantu",
+    "ML-C358-akkalattu",
+    "ML-C358-anneram",
+    "ML-C358-tutarnnu",
+    "ML-C358-utanilam"
+  ],
+  "tex": "malayalam/book/chapters/ch358-once-upon-a-time.tex"
+}

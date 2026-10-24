@@ -1,0 +1,20 @@
+{
+  "chapter": 311,
+  "title": "What I Think, and So",
+  "label": "ch:ka-what-i-think-and-so",
+  "canDo": "I can give my view with … anta nanage anisuttade and nanna abhiprāyadalli, ask for someone else's, and give a result with hāgāgi, adakkē and ādudarinda.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-R311-opinion-and-result",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: give a view with anta nanage anisuttade and its result with hāgāgi.",
+    "assesses": [
+      "KA-GRAMMAR-C311-THINK-THAT-01",
+      "KA-GRAMMAR-C311-IN-MY-OPINION-01",
+      "KA-GRAMMAR-C311-HAGAGI-01",
+      "KA-GRAMMAR-C311-SO-WORDS-01"
+    ]
+  }
+}

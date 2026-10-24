@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:c7806878f8bbde7b",
+  "lessonIds": [
+    "AR-C344-hattab",
+    "AR-C344-sahara",
+    "AR-C344-tahawwala",
+    "AR-C344-tahaqqaqa",
+    "AR-C344-intaqama"
+  ],
+  "tex": "arabic/book/chapters/ch344-in-the-fairy-tale.tex"
+}

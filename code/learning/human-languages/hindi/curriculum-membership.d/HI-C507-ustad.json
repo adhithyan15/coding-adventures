@@ -1,0 +1,11 @@
+{
+  "id": "HI-C507-ustad",
+  "pathSegment": "HI-PATH-507-DAFTAR507",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-507-DAFTAR507",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Bumps on the Road",
+  "label": "ch:te-bumps-on-the-road",
+  "canDo": "I can say bumpy, a jolt, to avoid, to overturn and to get dented.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C446-sottapadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can say bumpy, a jolt, to avoid, to overturn and to get dented.",
+    "assesses": [
+      "TE-LEX-C446-KUDUPU446-03",
+      "TE-LEX-C446-KUDUPU446-04",
+      "TE-LEX-C446-KUDUPU446-05"
+    ]
+  }
+}

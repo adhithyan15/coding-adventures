@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C330-qayd",
+    "language": "arabic",
+    "chapter": 330,
+    "sequence": 18920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47651ac3e235b74d"
+  },
+  "findings": []
+}

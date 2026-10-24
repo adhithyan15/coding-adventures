@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C520-cidu",
+    "language": "telugu",
+    "chapter": 520,
+    "sequence": 26360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62ac5c36e3f359ea"
+  },
+  "findings": []
+}

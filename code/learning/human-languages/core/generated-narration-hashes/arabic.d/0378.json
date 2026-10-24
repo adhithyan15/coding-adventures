@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:adb70eddbdb1ce6b",
+  "lessonIds": [
+    "AR-C378-intikhab",
+    "AR-C378-intakhaba",
+    "AR-C378-sawwata",
+    "AR-C378-nakhib",
+    "AR-C378-murashshah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch378.txt",
+  "json": "arabic/narration/ch378.json",
+  "textHash": "fnv1a64:edf0cb927c9c568b",
+  "jsonHash": "fnv1a64:9dceda00a2e06a4a",
+  "findings": []
+}

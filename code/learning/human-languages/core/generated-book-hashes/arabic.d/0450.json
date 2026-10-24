@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:08f242cf95b15489",
+  "lessonIds": [
+    "AR-C450-baladiyya",
+    "AR-C450-qunsuliyya",
+    "AR-C450-dawam",
+    "AR-C450-tabur",
+    "AR-C450-taqaddama"
+  ],
+  "tex": "arabic/book/chapters/ch450-town-hall-and-consulate.tex"
+}

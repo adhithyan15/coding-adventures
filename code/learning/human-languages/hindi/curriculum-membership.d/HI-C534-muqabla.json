@@ -1,0 +1,11 @@
+{
+  "id": "HI-C534-muqabla",
+  "pathSegment": "HI-PATH-534-MAICH534",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-534-MAICH534",
+      "order": 1
+    }
+  ]
+}

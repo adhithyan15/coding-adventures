@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 489,
+  "title": "Panic, terror and calm",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7bef40282618de72",
+  "lessons": [
+    {
+      "id": "AR-C489-dhur",
+      "sequence": 27250,
+      "title": "ذعر (dhuʿr) — panic, alarm",
+      "headword": "ذعر",
+      "romanization": "dhuʿr",
+      "gloss": "panic, alarm",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39c6c0e8cf529c10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to grieve, then the Arabic for to sigh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ذعر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ذعر — dhuʿr — \"panic, alarm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أصاب الناس ذعر بعد الزلزال. aṣāba an-nās dhuʿr baʿda az-zilzāl. Panic seized the people after the earthquake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ذعر (dhuʿr) is built on the native Arabic root dh-ʿ-r, \"to frighten, to alarm\" (Lane). Dhuʿr is a sudden fright that runs through a crowd."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhuʿr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhuʿr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhuʿr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhuʿr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṣāba an-nās dhuʿr baʿda az-zilzāl. — Panic seized the people after the earthquake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṣāba an-nās dhuʿr baʿda az-zilzāl.* — Panic seized the people after the earthquake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to grieve, then the Arabic for to sigh, then say dhuʿr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to grieve, then the Arabic for to sigh, then say *dhuʿr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ذعر (dhuʿr) mean? (\"Panic, alarm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C489-rub",
+      "sequence": 27260,
+      "title": "رعب (ruʿb) — terror",
+      "headword": "رعب",
+      "romanization": "ruʿb",
+      "gloss": "terror",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:750c6ade48899bde",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to sigh, then the Arabic for panic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رعب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رعب — ruʿb — \"terror\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شاهد أخي فيلم رعب أمس. shāhada akhī fīlm ruʿb ams. My brother watched a horror film yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "فيلم رعب (ruʿb) is a horror film."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رعب (ruʿb) is built on the native Arabic root r-ʿ-b, \"to fill with fear\" (Lane). Ruʿb is fear at its strongest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ruʿb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ruʿb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ruʿb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ruʿb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāhada akhī fīlm ruʿb ams. — My brother watched a horror film yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāhada akhī fīlm ruʿb ams.* — My brother watched a horror film yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to sigh, then the Arabic for panic, then say ruʿb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to sigh, then the Arabic for panic, then say *ruʿb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رعب (ruʿb) mean? (\"Terror\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C489-hudu",
+      "sequence": 27270,
+      "title": "هدوء (hudūʾ) — calm, quiet",
+      "headword": "هدوء",
+      "romanization": "hudūʾ",
+      "gloss": "calm, quiet",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ed7dc407cce90bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for panic, then the Arabic for terror."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: هدوء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هدوء — hudūʾ — \"calm, quiet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أحب هدوء القرية في المساء. uḥibbu hudūʾ al-qarya fī al-masāʾ. I love the quiet of the village in the evening."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هدوء (hudūʾ) is built on the native Arabic root h-d-ʾ, \"to become still, to be at rest\" (Lane). Hudūʾ is the stillness itself: of a place, the sea or a person."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hudūʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hudūʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hudūʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hudūʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḥibbu hudūʾ al-qarya fī al-masāʾ. — I love the quiet of the village in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḥibbu hudūʾ al-qarya fī al-masāʾ.* — I love the quiet of the village in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for panic, then the Arabic for terror, then say hudūʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for panic, then the Arabic for terror, then say *hudūʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does هدوء (hudūʾ) mean? (\"Calm, quiet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C489-irtaasha",
+      "sequence": 27280,
+      "title": "ارتعش (irtaʿasha) — to shiver",
+      "headword": "ارتعش",
+      "romanization": "irtaʿasha",
+      "gloss": "to shiver",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87c94140fb8536d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for terror, then the Arabic for calm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ارتعش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارتعش — irtaʿasha — \"to shiver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ارتعش الولد من الخوف. irtaʿasha al-walad min al-khawf. The boy shivered with fear."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يرتعش, yartaʿish."
+            },
+            {
+              "kind": "speech",
+              "text": "It is said of cold as well as fear: ارتعش (irtaʿasha) من البرد."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارتعش (irtaʿasha) is built on the native Arabic root r-ʿ-sh, \"to tremble, to quiver\" (Lane). Form VIII irtaʿasha is to shake all over."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtaʿasha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtaʿasha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtaʿasha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtaʿasha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtaʿasha al-walad min al-khawf. — The boy shivered with fear.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtaʿasha al-walad min al-khawf.* — The boy shivered with fear.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for terror, then the Arabic for calm, then say irtaʿasha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for terror, then the Arabic for calm, then say *irtaʿasha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ارتعش (irtaʿasha) mean? (\"To shiver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C489-akhafa",
+      "sequence": 27290,
+      "title": "أخاف (akhāfa) — to frighten",
+      "headword": "أخاف",
+      "romanization": "akhāfa",
+      "gloss": "to frighten",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b26ea90194c86bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for calm, then the Arabic for to shiver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أخاف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أخاف — akhāfa — \"to frighten\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أخافني صوت الرعد في الليل. akhāfanī ṣawt ar-raʿd fī al-layl. The sound of the thunder frightened me in the night."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يخيف, yukhīf."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not confuse it with أخاف (akhāfa) read akhāfu, I am afraid, the present of خاف."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أخاف (akhāfa) is built on the native Arabic root kh-w-f, \"fear\" (Lane). It is Form IV of khāfa, to be afraid: to make someone afraid. Mukhīf, frightening, is its participle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhāfa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhāfa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhāfa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhāfa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhāfanī ṣawt ar-raʿd fī al-layl. — The sound of the thunder frightened me in the night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhāfanī ṣawt ar-raʿd fī al-layl.* — The sound of the thunder frightened me in the night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for calm, then the Arabic for to shiver, then say akhāfa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for calm, then the Arabic for to shiver, then say *akhāfa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أخاف (akhāfa) mean? (\"To frighten\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C377-gasti",
+  "pathSegment": "TE-PATH-377-VIPATTU377",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-377-VIPATTU377",
+      "order": 3
+    }
+  ]
+}

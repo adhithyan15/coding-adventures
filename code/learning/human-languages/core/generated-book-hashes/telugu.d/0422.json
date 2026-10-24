@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:e5b19a3d9da144d8",
+  "lessonIds": [
+    "TE-C422-hami",
+    "TE-C422-neravercu",
+    "TE-C422-uddesincu",
+    "TE-C422-sankalpam",
+    "TE-C422-niscayincu"
+  ],
+  "tex": "telugu/book/chapters/ch422-promises-and-intentions.tex"
+}

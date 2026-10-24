@@ -1,0 +1,11 @@
+{
+  "id": "HI-C486-kasakna",
+  "pathSegment": "HI-PATH-486-DUKHNA486",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-486-DUKHNA486",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C289-kanavillai",
+    "language": "tamil",
+    "chapter": 289,
+    "sequence": 16310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:851443efd62fd3ff"
+  },
+  "findings": []
+}

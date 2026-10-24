@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 456,
+  "title": "Shyness and Confidence",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:411a42640fedb2cf",
+  "lessons": [
+    {
+      "id": "MR-C456-atmavisvas",
+      "sequence": 26300,
+      "title": "आत्मविश्वास (ātmaviśvās) — self-confidence",
+      "headword": "आत्मविश्वास",
+      "romanization": "ātmaviśvās",
+      "gloss": "self-confidence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d902302deec63875",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to toss and turn, then the Marathi for to feel stifled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आत्मविश्वास",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आत्मविश्वास — ātmaviśvās — \"self-confidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सरावानंतर तिचा आत्मविश्वास वाढला. sarāvānantar ticā ātmaviśvās vāḍhlā. Her self-confidence grew after practice."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "आत्म-, self, + विश्वास, trust. आत्मविश्वासाने, confidently."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आत्मविश्वास (ātmaviśvās) is a learned compound built from two Sanskrit words, ātman, \"self\", and viśvāsa, \"trust\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmaviśvās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmaviśvās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmaviśvās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmaviśvās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarāvānantar ticā ātmaviśvās vāḍhlā. — Her self-confidence grew after practice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarāvānantar ticā ātmaviśvās vāḍhlā.* — Her self-confidence grew after practice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to toss and turn, then the Marathi for to feel stifled, then say ātmaviśvās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to toss and turn, then the Marathi for to feel stifled, then say *ātmaviśvās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आत्मविश्वास (ātmaviśvās) mean? (\"Self-confidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C456-sankoc",
+      "sequence": 26310,
+      "title": "संकोच (saṅkoc) — hesitation; reserve",
+      "headword": "संकोच",
+      "romanization": "saṅkoc",
+      "gloss": "hesitation; reserve",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d1d0f0a36528d76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to feel stifled, then the Marathi for self-confidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संकोच",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संकोच — saṅkoc — \"hesitation; reserve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मोठ्या माणसांसमोर बोलायला त्याला संकोच वाटतो. moṭhyā māṇsāṁsamor bolāylā tyālā saṅkoc vāṭto. He feels shy about speaking in front of grown-ups."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "संकोच (saṅkoc) वाटणे, to feel shy about something: the dative plus the -ायला form. संकोची, reserved."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संकोच (saṅkoc) is a tatsama, taken from Sanskrit saṃkoca, \"contraction, shrinking together\" (Monier-Williams); the shrinking is now of the self."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkoc",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkoc*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkoc, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkoc*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭhyā māṇsāṁsamor bolāylā tyālā saṅkoc vāṭto. — He feels shy about speaking in front of grown-ups.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭhyā māṇsāṁsamor bolāylā tyālā saṅkoc vāṭto.* — He feels shy about speaking in front of grown-ups.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to feel stifled, then the Marathi for self-confidence, then say saṅkoc again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to feel stifled, then the Marathi for self-confidence, then say *saṅkoc* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संकोच (saṅkoc) mean? (\"Hesitation; reserve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C456-bicakne",
+      "sequence": 26320,
+      "title": "बिचकणे (bicakṇe) — to shrink back",
+      "headword": "बिचकणे",
+      "romanization": "bicakṇe",
+      "gloss": "to shrink back",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79e71e848e9c9dc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for self-confidence, then the Marathi for hesitation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बिचकणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिचकणे — bicakṇe — \"to shrink back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कुत्रा जवळ आला तेव्हा मुलगी बिचकली. kutrā javaḷ ālā tevhā mulgī bicaklī. The girl shrank back when the dog came near."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो बिचकला, to bicaklā."
+            },
+            {
+              "kind": "speech",
+              "text": "A small start of fear or doubt; बिचकत बिचकत, hesitantly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिचकणे (bicakṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bicakṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bicakṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bicakṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bicakṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kutrā javaḷ ālā tevhā mulgī bicaklī. — The girl shrank back when the dog came near.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kutrā javaḷ ālā tevhā mulgī bicaklī.* — The girl shrank back when the dog came near.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for self-confidence, then the Marathi for hesitation, then say bicakṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for self-confidence, then the Marathi for hesitation, then say *bicakṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बिचकणे (bicakṇe) mean? (\"To shrink back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C456-gangarne",
+      "sequence": 26330,
+      "title": "गांगरणे (gāṅgarṇe) — to get flustered",
+      "headword": "गांगरणे",
+      "romanization": "gāṅgarṇe",
+      "gloss": "to get flustered",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8abbb192dbc6488",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for hesitation, then the Marathi for to shrink back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गांगरणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गांगरणे — gāṅgarṇe — \"to get flustered\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रश्न ऐकून तो गांगरला आणि गप्प बसला. praśna aikūn to gāṅgarlā āṇi gappa baslā. He got flustered at the question and fell silent."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो गांगरला, to gāṅgarlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Of nerves before people: रंगमंचावर गांगरणे (gāṅgarṇe), to get stage fright."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गांगरणे (gāṅgarṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṅgarṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṅgarṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṅgarṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṅgarṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśna aikūn to gāṅgarlā āṇi gappa baslā. — He got flustered at the question and fell silent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśna aikūn to gāṅgarlā āṇi gappa baslā.* — He got flustered at the question and fell silent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for hesitation, then the Marathi for to shrink back, then say gāṅgarṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for hesitation, then the Marathi for to shrink back, then say *gāṅgarṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गांगरणे (gāṅgarṇe) mean? (\"To get flustered\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C456-bujne",
+      "sequence": 26340,
+      "title": "बुजणे (bujṇe) — to be bashful",
+      "headword": "बुजणे",
+      "romanization": "bujṇe",
+      "gloss": "to be bashful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec11f7c915f40dcb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to shrink back, then the Marathi for to get flustered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बुजणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुजणे — bujṇe — \"to be bashful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पाहुणे आले की आमचा मुलगा बुजतो. pāhuṇe āle kī āmcā mulgā bujto. Our son goes shy when guests come."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो बुजला, to bujlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a shy child, and of a horse that shies; बुजरा, bashful."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुजणे (bujṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bujṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bujṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bujṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bujṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāhuṇe āle kī āmcā mulgā bujto. — Our son goes shy when guests come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāhuṇe āle kī āmcā mulgā bujto.* — Our son goes shy when guests come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to shrink back, then the Marathi for to get flustered, then say bujṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to shrink back, then the Marathi for to get flustered, then say *bujṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बुजणे (bujṇe) mean? (\"To be bashful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:a589a32c16689d77",
+  "lessonIds": [
+    "KA-C346-sphota",
+    "KA-C346-tattarisu",
+    "KA-C346-kampisu",
+    "KA-C346-pralaya",
+    "KA-C346-gayalu"
+  ],
+  "tex": "kannada/book/chapters/ch346-an-explosion-and-a-shock.tex"
+}

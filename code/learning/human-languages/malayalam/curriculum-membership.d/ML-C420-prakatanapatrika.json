@@ -1,0 +1,11 @@
+{
+  "id": "ML-C420-prakatanapatrika",
+  "pathSegment": "ML-PATH-420-VIJAYAM420",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-420-VIJAYAM420",
+      "order": 1
+    }
+  ]
+}

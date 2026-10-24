@@ -1,0 +1,11 @@
+{
+  "id": "MR-C467-kalvalne",
+  "pathSegment": "MR-PATH-467-YATANA467",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-467-YATANA467",
+      "order": 2
+    }
+  ]
+}

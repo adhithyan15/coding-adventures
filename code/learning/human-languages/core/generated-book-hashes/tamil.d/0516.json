@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:1495fae11d61bd31",
+  "lessonIds": [
+    "TA-C516-ulavi",
+    "TA-C516-tetupori",
+    "TA-C516-valaippativu",
+    "TA-C516-kanoli",
+    "TA-C516-payanar"
+  ],
+  "tex": "tamil/book/chapters/ch516-online.tex"
+}

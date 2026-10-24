@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 419,
+  "title": "If Not, Then What",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:da10e24455e69b08",
+  "lessons": [
+    {
+      "id": "TE-C419-kakapote",
+      "sequence": 20890,
+      "title": "కాకపోతే (kākapōtē) — if not; otherwise",
+      "headword": "కాకపోతే",
+      "romanization": "kākapōtē",
+      "gloss": "if not; otherwise",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aef4052f2e730334",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for unavoidable, then the Telugu for if possible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కాకపోతే",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాకపోతే — kākapōtē — \"if not; otherwise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బస్సు దొరికితే వస్తాను, కాకపోతే రేపు వస్తాను. bassu dorikitē vastānu, kākapōtē rēpu vastānu. If I get a bus I will come; if not, I will come tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "A cousin of లేకపోతే: if it does not turn out so."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాకపోతే (kākapōtē) is native Dravidian: kā-, a stem of avu, \"to be\" (DEDR 333), and pōtē, \"if it goes\", a form of pōvu, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kākapōtē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kākapōtē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kākapōtē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kākapōtē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bassu dorikitē vastānu, kākapōtē rēpu vastānu. — If I get a bus I will come; if not, I will come tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bassu dorikitē vastānu, kākapōtē rēpu vastānu.* — If I get a bus I will come; if not, I will come tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for unavoidable, then the Telugu for if possible, then say kākapōtē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for unavoidable, then the Telugu for if possible, then say *kākapōtē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కాకపోతే (kākapōtē) mean? (\"If not; otherwise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C419-batti",
+      "sequence": 20900,
+      "title": "బట్టి (baṭṭi) — depending on; going by",
+      "headword": "బట్టి",
+      "romanization": "baṭṭi",
+      "gloss": "depending on; going by",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82697c7ea34763bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for if possible, then the Telugu for if not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బట్టి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బట్టి — baṭṭi — \"depending on; going by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ధరను బట్టి నేను కొంటాను. dharanu baṭṭi nēnu koṇṭānu. I will buy it depending on the price."
+            },
+            {
+              "kind": "speech",
+              "text": "The thing depended on takes -ని: ధరను బట్టి (baṭṭi)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బట్టి (baṭṭi) is native Dravidian, usually taken as a form of paṭṭu, \"to hold, to take hold of\" (DEDR 4034): holding to a thing, going by it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṭṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṭṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dharanu baṭṭi nēnu koṇṭānu. — I will buy it depending on the price.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dharanu baṭṭi nēnu koṇṭānu.* — I will buy it depending on the price.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for if possible, then the Telugu for if not, then say baṭṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for if possible, then the Telugu for if not, then say *baṭṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బట్టి (baṭṭi) mean? (\"Depending on; going by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C419-minahayimpu",
+      "sequence": 20910,
+      "title": "మినహాయింపు (minahāyimpu) — an exemption",
+      "headword": "మినహాయింపు",
+      "romanization": "minahāyimpu",
+      "gloss": "an exemption",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44047b437166e822",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for if not, then the Telugu for depending on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మినహాయింపు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మినహాయింపు — minahāyimpu — \"an exemption\"."
+            },
+            {
+              "kind": "speech",
+              "text": "విద్యార్థులకు ఫీజులో మినహాయింపు ఇచ్చారు. vidyārthulaku phījulō minahāyimpu iccāru. Students were given an exemption from the fee."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of మినహాయించు, to exempt, which is built on మినహా, except: -ఇంపు makes a noun of an -ఇంచు verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మినహాయింపు (minahāyimpu) is built on మినహా, \"except\", which is usually traced to Hindustani minhā, of Arabic origin, with -ఇంపు, which makes a noun of the verb మినహాయించు, to exempt."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "minahāyimpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *minahāyimpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "minahāyimpu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *minahāyimpu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidyārthulaku phījulō minahāyimpu iccāru. — Students were given an exemption from the fee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidyārthulaku phījulō minahāyimpu iccāru.* — Students were given an exemption from the fee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for if not, then the Telugu for depending on, then say minahāyimpu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for if not, then the Telugu for depending on, then say *minahāyimpu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మినహాయింపు (minahāyimpu) mean? (\"An exemption\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C419-emainappatiki",
+      "sequence": 20920,
+      "title": "ఏమైనప్పటికీ (ēmainappaṭikī) — in any case; whatever happens",
+      "headword": "ఏమైనప్పటికీ",
+      "romanization": "ēmainappaṭikī",
+      "gloss": "in any case; whatever happens",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53f0f1e350dc7237",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for depending on, then the Telugu for an exemption."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఏమైనప్పటికీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఏమైనప్పటికీ — ēmainappaṭikī — \"in any case; whatever happens\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఏమైనప్పటికీ నేను పరీక్ష రాస్తాను. ēmainappaṭikī nēnu parīkṣa rāstānu. Whatever happens, I will sit the exam."
+            },
+            {
+              "kind": "speech",
+              "text": "ఏమి, what, + అయినప్పటికీ, even if it is. Close to ఏదేమైనా, which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఏమైనప్పటికీ (ēmainappaṭikī) is native Dravidian: ēmi, \"what\" (DEDR 5151), and ayinappaṭikī, \"even though it is\", built on avu, \"to be\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēmainappaṭikī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēmainappaṭikī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēmainappaṭikī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēmainappaṭikī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēmainappaṭikī nēnu parīkṣa rāstānu. — Whatever happens, I will sit the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēmainappaṭikī nēnu parīkṣa rāstānu.* — Whatever happens, I will sit the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for depending on, then the Telugu for an exemption, then say ēmainappaṭikī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for depending on, then the Telugu for an exemption, then say *ēmainappaṭikī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఏమైనప్పటికీ (ēmainappaṭikī) mean? (\"In any case; whatever happens\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C419-sambhavincu",
+      "sequence": 20930,
+      "title": "సంభవించు (sambhaviñcu) — to occur; to take place",
+      "headword": "సంభవించు",
+      "romanization": "sambhaviñcu",
+      "gloss": "to occur; to take place",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2d7dae003e70832",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an exemption, then the Telugu for in any case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంభవించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంభవించు — sambhaviñcu — \"to occur; to take place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఒకవేళ ప్రమాదం సంభవిస్తే, వెంటనే పోలీసులకు చెప్పాలి. okavēḷa pramādaṁ sambhavistē, veṇṭanē pōlīsulaku ceppāli. If an accident occurs, you must tell the police at once."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): సంభవించింది, sambhaviñcindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal: for accidents and events, so its past is shown as సంభవించింది, it occurred. In talk, జరుగు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంభవించు (sambhaviñcu) is built on Sanskrit saṁbhava, \"origin\", and also \"possibility\" (CDIAL 12963), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhaviñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhaviñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhaviñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhaviñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okavēḷa pramādaṁ sambhavistē, veṇṭanē pōlīsulaku ceppāli. — If an accident occurs, you must tell the police at once.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okavēḷa pramādaṁ sambhavistē, veṇṭanē pōlīsulaku ceppāli.* — If an accident occurs, you must tell the police at once.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an exemption, then the Telugu for in any case, then say sambhaviñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an exemption, then the Telugu for in any case, then say *sambhaviñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంభవించు (sambhaviñcu) mean? (\"To occur; to take place\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

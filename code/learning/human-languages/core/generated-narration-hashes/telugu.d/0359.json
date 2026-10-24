@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:e25aa7b560041e2b",
+  "lessonIds": [
+    "TE-C359-samrajyam",
+    "TE-C359-cakravarti",
+    "TE-C359-rakumarudu",
+    "TE-C359-rakumari",
+    "TE-C359-sthapincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch359.txt",
+  "json": "telugu/narration/ch359.json",
+  "textHash": "fnv1a64:d6914102e0667153",
+  "jsonHash": "fnv1a64:020af2dfc0b964a8",
+  "findings": []
+}

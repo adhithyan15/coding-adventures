@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Local Government",
+  "label": "ch:ml-local-government",
+  "canDo": "I can say a municipality, a village office, a taluk, a district collector and a nuisance.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C487-salyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can say a municipality, a village office, a taluk, a district collector and a nuisance.",
+    "assesses": [
+      "ML-LEX-C487-NAGARAM487-03",
+      "ML-LEX-C487-NAGARAM487-04",
+      "ML-LEX-C487-NAGARAM487-05"
+    ]
+  }
+}

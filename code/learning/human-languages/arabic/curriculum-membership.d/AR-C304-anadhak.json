@@ -1,0 +1,11 @@
+{
+  "id": "AR-C304-anadhak",
+  "pathSegment": "AR-PATH-304-ZAMAN304",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-304-ZAMAN304",
+      "order": 3
+    }
+  ]
+}

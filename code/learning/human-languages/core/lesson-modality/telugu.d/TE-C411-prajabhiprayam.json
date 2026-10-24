@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C411-prajabhiprayam",
+    "language": "telugu",
+    "chapter": 411,
+    "sequence": 20510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b7002fa3aa65396"
+  },
+  "findings": []
+}

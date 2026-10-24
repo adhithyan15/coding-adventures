@@ -1,0 +1,11 @@
+{
+  "id": "MR-C325-rajya-karne",
+  "pathSegment": "MR-PATH-325-RAJA325",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-325-RAJA325",
+      "order": 4
+    }
+  ]
+}

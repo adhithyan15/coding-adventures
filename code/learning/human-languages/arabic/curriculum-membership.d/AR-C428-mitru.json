@@ -1,0 +1,11 @@
+{
+  "id": "AR-C428-mitru",
+  "pathSegment": "AR-PATH-428-SIKKA428",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-428-SIKKA428",
+      "order": 3
+    }
+  ]
+}

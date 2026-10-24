@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C507-chhidro",
+    "language": "bengali",
+    "chapter": 507,
+    "sequence": 30760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6967e9ed5a06a0a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Medals and Trophies",
+  "label": "ch:mr-medals-and-trophies",
+  "canDo": "I can talk about medals, trophies and winning.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C530-patkavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can talk about medals, trophies and winning.",
+    "assesses": [
+      "MR-LEX-C530-PADAK530-03",
+      "MR-LEX-C530-PADAK530-04",
+      "MR-LEX-C530-PADAK530-05"
+    ]
+  }
+}

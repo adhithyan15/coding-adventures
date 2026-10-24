@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Peaks, Valleys and Deserts",
+  "label": "ch:bn-peaks-valleys-and-deserts",
+  "canDo": "I can describe a summit, a valley, a mound, a desert and a forest.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C432-jonggol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can describe a summit, a valley, a mound, a desert and a forest.",
+    "assesses": [
+      "BN-LEX-C432-CHURA432-03",
+      "BN-LEX-C432-CHURA432-04",
+      "BN-LEX-C432-CHURA432-05"
+    ]
+  }
+}

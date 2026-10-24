@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:af627af25a1d9ec5",
+  "lessonIds": [
+    "AR-C399-illa-idha",
+    "AR-C399-fi-hal",
+    "AR-C399-bi-sharti-an",
+    "AR-C399-talama",
+    "AR-C399-wa-illa"
+  ],
+  "tex": "arabic/book/chapters/ch399-if-and-unless.tex"
+}

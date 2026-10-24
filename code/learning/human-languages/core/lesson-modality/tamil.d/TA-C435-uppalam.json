@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C435-uppalam",
+    "language": "tamil",
+    "chapter": 435,
+    "sequence": 24920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1917cd1dd8bafe6"
+  },
+  "findings": []
+}

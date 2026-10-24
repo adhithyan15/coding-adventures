@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:a18bf5fb24f05f4d",
+  "lessonIds": [
+    "BN-C451-ghinghine",
+    "BN-C451-bitrishna",
+    "BN-C451-poroshrikator",
+    "BN-C451-ghrina-kora",
+    "BN-C451-nak-sitkano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch451.txt",
+  "json": "bengali/narration/ch451.json",
+  "textHash": "fnv1a64:20b74fee031e92df",
+  "jsonHash": "fnv1a64:55cac6d7f23ccb4e",
+  "findings": []
+}

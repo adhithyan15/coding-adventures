@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R317-review-310-317",
+    "language": "tamil",
+    "chapter": 317,
+    "sequence": 18320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:392f58ae96a8ff54"
+  },
+  "findings": []
+}

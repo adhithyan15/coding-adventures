@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:b140eac136538767",
+  "lessonIds": [
+    "KA-C423-hanta",
+    "KA-C423-karya",
+    "KA-C423-tantra",
+    "KA-C423-upaya",
+    "KA-C423-vibhajisu"
+  ],
+  "tex": "kannada/book/chapters/ch423-step-by-step.tex"
+}

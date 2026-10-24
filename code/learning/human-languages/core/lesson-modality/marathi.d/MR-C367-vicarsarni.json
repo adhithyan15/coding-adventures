@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C367-vicarsarni",
+    "language": "marathi",
+    "chapter": 367,
+    "sequence": 21300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f4446ae010e9325"
+  },
+  "findings": []
+}

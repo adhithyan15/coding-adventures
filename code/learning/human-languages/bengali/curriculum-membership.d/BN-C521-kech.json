@@ -1,0 +1,11 @@
+{
+  "id": "BN-C521-kech",
+  "pathSegment": "BN-PATH-521-BAT521",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-521-BAT521",
+      "order": 3
+    }
+  ]
+}

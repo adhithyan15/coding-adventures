@@ -323,7 +323,9 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         ):
             self.assertIn(row, step)
         self.assertLess(workflow.index("- name: Round-trip Rust engine through standard SwiftUI binding"), start)
-        setup = workflow.index("      - name: Set up Flutter\n")
+        # The build job's Flutter setup, which this macOS step relies on (the
+        # Linux lanes' own setup lives in the mosaic-linux-runtime job).
+        setup = workflow.index("      - name: Set up Flutter\n", workflow.index("\n  build:\n"))
         self.assertIn(
             "(runner.os == 'Linux' || (runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'))",
             workflow[setup : workflow.index("\n      - name:", setup)],

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 471,
+  "title": "Falling Ill",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7e02d26d36062387",
+  "lessons": [
+    {
+      "id": "BN-C471-osukh",
+      "sequence": 28690,
+      "title": "অসুখ (ôsukh) — an illness",
+      "headword": "অসুখ",
+      "romanization": "ôsukh",
+      "gloss": "an illness",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6744c8d1471f3de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to fall out, then the Bengali for a knot of hair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অসুখ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অসুখ — ôsukh — \"an illness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অসুখের জন্য অরুণ এক সপ্তাহ স্কুলে গেল না। ôsukher jônyô ôrun ek sôptāhô skule gelô nā. Arun missed a week of school because of illness."
+            },
+            {
+              "kind": "speech",
+              "text": "অসুখ (ôsukh) করা, to fall ill: আমার অসুখ (ôsukh) করল."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অসুখ (ôsukh) is Sanskrit asukha, \"unhappy, painful\" (Monier-Williams): a-, \"not\", on sukha, the সুখ (ease) of an earlier lesson. Bengali made it the everyday word for an illness, a dis-ease."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôsukh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôsukh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôsukh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôsukh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôsukher jônyô ôrun ek sôptāhô skule gelô nā. — Arun missed a week of school because of illness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôsukher jônyô ôrun ek sôptāhô skule gelô nā.* — Arun missed a week of school because of illness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to fall out, then the Bengali for a knot of hair, then say ôsukh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to fall out, then the Bengali for a knot of hair, then say *ôsukh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অসুখ (ôsukh) mean? (\"An illness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C471-lokkhon",
+      "sequence": 28700,
+      "title": "লক্ষণ (lôkkhôn) — a symptom; a sign",
+      "headword": "লক্ষণ",
+      "romanization": "lôkkhôn",
+      "gloss": "a symptom; a sign",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3be6ba9262f82f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a knot of hair, then the Bengali for an illness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: লক্ষণ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লক্ষণ — lôkkhôn — \"a symptom; a sign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "জ্বর আর কাশি এই রোগের লক্ষণ। jbôr ār kāshi ei roger lôkkhôn. Fever and a cough are symptoms of this disease."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লক্ষণ (lôkkhôn) is a tatsama, Sanskrit lakṣaṇa, \"a mark, a sign\", used also of the signs of a disease (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lôkkhôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lôkkhôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lôkkhôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lôkkhôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jbôr ār kāshi ei roger lôkkhôn. — Fever and a cough are symptoms of this disease.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jbôr ār kāshi ei roger lôkkhôn.* — Fever and a cough are symptoms of this disease.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a knot of hair, then the Bengali for an illness, then say lôkkhôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a knot of hair, then the Bengali for an illness, then say *lôkkhôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does লক্ষণ (lôkkhôn) mean? (\"A symptom; a sign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C471-bhoga",
+      "sequence": 28710,
+      "title": "ভোগা (bhogā) — to suffer from (an illness)",
+      "headword": "ভোগা",
+      "romanization": "bhogā",
+      "gloss": "to suffer from (an illness)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff859b812fb9570b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an illness, then the Bengali for a symptom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভোগা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভোগা — bhogā — \"to suffer from (an illness)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দাদু তিন সপ্তাহ ধরে জ্বরে ভুগছেন। dādu tin sôptāhô dhôre jbôre bhugchhen. Grandfather has been suffering from fever for three weeks."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি কাশিতে ভুগলেন, tini kāshite bhuglen."
+            },
+            {
+              "kind": "speech",
+              "text": "The illness takes -এ or -তে: জ্বরে ভোগা (bhogā), to suffer from fever."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভোগা (bhogā) is listed by CDIAL for Bengali, with the sense of going through or experiencing something, under a reconstructed form (CDIAL 9523); Bengali uses it above all for suffering an illness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhogā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhogā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhogā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhogā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādu tin sôptāhô dhôre jbôre bhugchhen. — Grandfather has been suffering from fever for three weeks.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādu tin sôptāhô dhôre jbôre bhugchhen.* — Grandfather has been suffering from fever for three weeks.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an illness, then the Bengali for a symptom, then say bhogā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an illness, then the Bengali for a symptom, then say *bhogā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভোগা (bhogā) mean? (\"To suffer from (an illness)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C471-ogyan-hooya",
+      "sequence": 28720,
+      "title": "অজ্ঞান হওয়া (ôgyān hôoyā) — to faint; to lose consciousness",
+      "headword": "অজ্ঞান হওয়া",
+      "romanization": "ôgyān hôoyā",
+      "gloss": "to faint; to lose consciousness",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:287c47697fb3717c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a symptom, then the Bengali for to suffer from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অজ্ঞান হওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অজ্ঞান হওয়া — ôgyān hôoyā — \"to faint; to lose consciousness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রোদে দাঁড়িয়ে থেকে মহিলাটি অজ্ঞান হয়ে গেলেন। rode dā̃ṛiye theke môhilāṭi ôgyān hôye gelen. After standing in the sun, the woman fainted."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি হঠাৎ অজ্ঞান হলেন, tini hôṭhāt ôgyān hôlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অজ্ঞান হওয়া (ôgyān hôoyā) is Sanskrit ajñāna, \"not knowing\" (Monier-Williams), a- on the জ্ঞান (taught) of knowledge, with hôoyā, \"to be, to become\" (CDIAL 9416): to become senseless."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôgyān hôoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôgyān hôoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôgyān hôoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôgyān hôoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rode dā̃ṛiye theke môhilāṭi ôgyān hôye gelen. — After standing in the sun, the woman fainted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rode dā̃ṛiye theke môhilāṭi ôgyān hôye gelen.* — After standing in the sun, the woman fainted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a symptom, then the Bengali for to suffer from, then say ôgyān hôoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a symptom, then the Bengali for to suffer from, then say *ôgyān hôoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অজ্ঞান হওয়া (ôgyān hôoyā) mean? (\"To faint; to lose consciousness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C471-shojyashayi",
+      "sequence": 28730,
+      "title": "শয্যাশায়ী (shôjyāshāyī) — bedridden; confined to bed (by illness)",
+      "headword": "শয্যাশায়ী",
+      "romanization": "shôjyāshāyī",
+      "gloss": "bedridden; confined to bed (by illness)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e4f4e519d7bce70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to suffer from, then the Bengali for to faint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শয্যাশায়ী",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শয্যাশায়ী — shôjyāshāyī — \"bedridden; confined to bed (by illness)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অসুখের পরে দাদু এক মাস শয্যাশায়ী ছিলেন। ôsukher pôre dādu ek mās shôjyāshāyī chhilen. After his illness my grandfather was confined to bed for a month."
+            },
+            {
+              "kind": "speech",
+              "text": "Another sign of being unwell: মাথা ঘোরা, to feel dizzy (the head goes round): আমার মাথা ঘুরছে."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শয্যাশায়ী (shôjyāshāyī) puts Sanskrit śayyā, \"a bed\", with śāyin, \"lying, resting\" (Monier-Williams): lying in bed, and so laid up by illness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôjyāshāyī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôjyāshāyī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôjyāshāyī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôjyāshāyī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôsukher pôre dādu ek mās shôjyāshāyī chhilen. — After his illness my grandfather was confined to bed for a month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôsukher pôre dādu ek mās shôjyāshāyī chhilen.* — After his illness my grandfather was confined to bed for a month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to suffer from, then the Bengali for to faint, then say shôjyāshāyī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to suffer from, then the Bengali for to faint, then say *shôjyāshāyī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শয্যাশায়ী (shôjyāshāyī) mean? (\"Bedridden; confined to bed (by illness)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

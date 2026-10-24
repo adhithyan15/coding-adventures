@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C530-sabyosto-kora",
+    "language": "bengali",
+    "chapter": 530,
+    "sequence": 31980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33d718779dd3c689"
+  },
+  "findings": []
+}

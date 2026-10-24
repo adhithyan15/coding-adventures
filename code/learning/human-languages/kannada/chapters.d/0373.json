@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "The Rise and Fall of a Kingdom",
+  "label": "ch:ka-the-rise-and-fall-of-a-kingdom",
+  "canDo": "I can say a rise, a downfall, the past, a narrative and a triumph.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C373-vijaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can say a rise, a downfall, the past, a narrative and a triumph.",
+    "assesses": [
+      "KA-LEX-C373-UDAYA373-03",
+      "KA-LEX-C373-UDAYA373-04",
+      "KA-LEX-C373-UDAYA373-05"
+    ]
+  }
+}

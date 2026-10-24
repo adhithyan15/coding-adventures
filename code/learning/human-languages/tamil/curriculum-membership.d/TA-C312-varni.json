@@ -1,0 +1,11 @@
+{
+  "id": "TA-C312-varni",
+  "pathSegment": "TA-PATH-312-VIRIVAKA312",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-312-VIRIVAKA312",
+      "order": 2
+    }
+  ]
+}

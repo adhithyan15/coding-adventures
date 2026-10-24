@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:a1aa6c19a32832e3",
+  "lessonIds": [
+    "HI-C456-naraz",
+    "HI-C456-krodh",
+    "HI-C456-cirhna",
+    "HI-C456-bipharna",
+    "HI-C456-khijhna"
+  ],
+  "tex": "hindi/book/chapters/ch456-losing-one-s-temper.tex"
+}

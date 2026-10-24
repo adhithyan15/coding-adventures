@@ -1,0 +1,11 @@
+{
+  "id": "ML-C366-kalppatu",
+  "pathSegment": "ML-PATH-366-SUCHANA366",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-366-SUCHANA366",
+      "order": 2
+    }
+  ]
+}

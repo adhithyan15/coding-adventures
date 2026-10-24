@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C365-adesincu",
+    "language": "telugu",
+    "chapter": 365,
+    "sequence": 18020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bdb084c35c6520d"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:fcf13dc80bcdc769",
+  "lessonIds": [
+    "TE-C373-atmakatha",
+    "TE-C373-jivitacaritra",
+    "TE-C373-sameta",
+    "TE-C373-burrakatha",
+    "TE-C373-srikaram-cuttu",
+    "TE-R373-review-366-373"
+  ],
+  "tex": "telugu/book/chapters/ch373-lives-in-writing.tex"
+}

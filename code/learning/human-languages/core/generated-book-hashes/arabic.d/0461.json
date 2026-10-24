@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:c529f1bf7741dff5",
+  "lessonIds": [
+    "AR-C461-ilgha",
+    "AR-C461-tajil",
+    "AR-C461-algha",
+    "AR-C461-fawwata",
+    "AR-C461-dayyaa"
+  ],
+  "tex": "arabic/book/chapters/ch461-cancelled-and-postponed.tex"
+}

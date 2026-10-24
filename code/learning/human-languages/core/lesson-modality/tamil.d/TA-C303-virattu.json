@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C303-virattu",
+    "language": "tamil",
+    "chapter": 303,
+    "sequence": 17600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4056d260141b69fb"
+  },
+  "findings": []
+}

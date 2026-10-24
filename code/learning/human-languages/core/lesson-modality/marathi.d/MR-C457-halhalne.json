@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C457-halhalne",
+    "language": "marathi",
+    "chapter": 457,
+    "sequence": 26380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25b28c50ad6f8369"
+  },
+  "findings": []
+}

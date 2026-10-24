@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:6538cd7ccd89ddc4",
+  "lessonIds": [
+    "MR-C546-sankalpa",
+    "MR-C546-nirdhar",
+    "MR-C546-irada",
+    "MR-C546-sapath-ghene",
+    "MR-C546-dhajne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch546.txt",
+  "json": "marathi/narration/ch546.json",
+  "textHash": "fnv1a64:893970dc413f54fe",
+  "jsonHash": "fnv1a64:a39127268e731479",
+  "findings": []
+}

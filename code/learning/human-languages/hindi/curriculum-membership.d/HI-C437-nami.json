@@ -1,0 +1,11 @@
+{
+  "id": "HI-C437-nami",
+  "pathSegment": "HI-PATH-437-MANSUN437",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-437-MANSUN437",
+      "order": 2
+    }
+  ]
+}

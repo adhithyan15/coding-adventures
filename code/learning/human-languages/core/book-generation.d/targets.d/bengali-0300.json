@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 300,
+  "output": "bengali/book/chapters/ch300-readers-and-listeners.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

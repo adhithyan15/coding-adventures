@@ -1,0 +1,11 @@
+{
+  "id": "MR-C522-sayangrh",
+  "pathSegment": "MR-PATH-522-KHOLI522",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-522-KHOLI522",
+      "order": 1
+    }
+  ]
+}

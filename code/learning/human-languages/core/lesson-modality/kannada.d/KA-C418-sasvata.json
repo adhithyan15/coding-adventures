@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C418-sasvata",
+    "language": "kannada",
+    "chapter": 418,
+    "sequence": 21180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb962f08ddbfcd5d"
+  },
+  "findings": []
+}

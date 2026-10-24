@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Rising and Falling",
+  "label": "ch:mr-rising-and-falling",
+  "canDo": "I can say what went up, what went down and by how much.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C391-star",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can say what went up, what went down and by how much.",
+    "assesses": [
+      "MR-LEX-C391-GHATNE391-03",
+      "MR-LEX-C391-GHATNE391-04",
+      "MR-LEX-C391-GHATNE391-05"
+    ]
+  }
+}

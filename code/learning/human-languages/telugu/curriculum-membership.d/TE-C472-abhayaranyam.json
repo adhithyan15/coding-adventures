@@ -1,0 +1,11 @@
+{
+  "id": "TE-C472-abhayaranyam",
+  "pathSegment": "TE-PATH-472-VANYAPRANI472",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-472-VANYAPRANI472",
+      "order": 1
+    }
+  ]
+}

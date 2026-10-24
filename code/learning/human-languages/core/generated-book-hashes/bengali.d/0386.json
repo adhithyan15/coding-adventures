@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:1cb2654ade809ddb",
+  "lessonIds": [
+    "BN-C386-kuli",
+    "BN-C386-sutkes",
+    "BN-C386-troli",
+    "BN-C386-namano",
+    "BN-C386-bohon-kora"
+  ],
+  "tex": "bengali/book/chapters/ch386-porters-and-luggage.tex"
+}

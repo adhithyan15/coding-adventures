@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:9713b06c7612ea1d",
+  "lessonIds": [
+    "TA-C484-potuku",
+    "TA-C484-pen",
+    "TA-C484-valukkai",
+    "TA-C484-utir",
+    "TA-C484-narai",
+    "TA-R484-review-477-484"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch484.txt",
+  "json": "tamil/narration/ch484.json",
+  "textHash": "fnv1a64:f6884aef9c016310",
+  "jsonHash": "fnv1a64:7bf1696351a2051a",
+  "findings": []
+}

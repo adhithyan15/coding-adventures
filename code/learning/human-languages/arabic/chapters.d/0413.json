@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Change over time",
+  "label": "ch:ar-change-over-time",
+  "canDo": "I can say that something evolved, grew, worsened, recurred or endured.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-R413-review-406-413",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can say that something evolved, grew, worsened, recurred or endured.",
+    "assesses": [
+      "AR-LEX-C413-TATAWWUR413-03",
+      "AR-LEX-C413-TATAWWUR413-04",
+      "AR-LEX-C413-TATAWWUR413-05"
+    ]
+  }
+}

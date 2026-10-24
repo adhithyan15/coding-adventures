@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C489-sastrakriya",
+    "language": "marathi",
+    "chapter": 489,
+    "sequence": 28000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7fdda70c58a2c2bb"
+  },
+  "findings": []
+}

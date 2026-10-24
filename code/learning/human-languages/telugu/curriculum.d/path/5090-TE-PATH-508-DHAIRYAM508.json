@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-508-DHAIRYAM508",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-508-DHAIRYAM508"
+  ],
+  "after": []
+}

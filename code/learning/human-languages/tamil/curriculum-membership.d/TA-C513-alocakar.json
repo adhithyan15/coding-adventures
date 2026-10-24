@@ -1,0 +1,11 @@
+{
+  "id": "TA-C513-alocakar",
+  "pathSegment": "TA-PATH-513-THOZHILALAR513",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-513-THOZHILALAR513",
+      "order": 1
+    }
+  ]
+}

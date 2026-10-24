@@ -1,0 +1,11 @@
+{
+  "id": "AR-C320-masdar",
+  "pathSegment": "AR-PATH-320-ILAM320",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-320-ILAM320",
+      "order": 2
+    }
+  ]
+}

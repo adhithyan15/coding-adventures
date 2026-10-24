@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:464e1f5ca5610c8b",
+  "lessonIds": [
+    "TE-C372-kathakudu",
+    "TE-C372-kathamsam",
+    "TE-C372-patra",
+    "TE-C372-kalpana",
+    "TE-C372-kattukatha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch372.txt",
+  "json": "telugu/narration/ch372.json",
+  "textHash": "fnv1a64:85191cc614fef3bf",
+  "jsonHash": "fnv1a64:a91ed563e1ec9b2c",
+  "findings": []
+}

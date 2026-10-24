@@ -1,0 +1,11 @@
+{
+  "id": "BN-C402-kinara",
+  "pathSegment": "BN-PATH-402-MAJHKHAN402",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-402-MAJHKHAN402",
+      "order": 2
+    }
+  ]
+}

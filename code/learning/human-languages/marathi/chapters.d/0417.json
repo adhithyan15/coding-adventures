@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Renting a Room",
+  "label": "ch:mr-renting-a-room",
+  "canDo": "I can talk about a deposit, settling in, a tenant, a strongbox and a lift.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C417-udvahak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can talk about a deposit, settling in, a tenant, a strongbox and a lift.",
+    "assesses": [
+      "MR-LEX-C417-ANAMAT417-03",
+      "MR-LEX-C417-ANAMAT417-04",
+      "MR-LEX-C417-ANAMAT417-05"
+    ]
+  }
+}

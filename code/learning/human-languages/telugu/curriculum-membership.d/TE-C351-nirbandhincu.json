@@ -1,0 +1,11 @@
+{
+  "id": "TE-C351-nirbandhincu",
+  "pathSegment": "TE-PATH-351-BANDI351",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-351-BANDI351",
+      "order": 1
+    }
+  ]
+}

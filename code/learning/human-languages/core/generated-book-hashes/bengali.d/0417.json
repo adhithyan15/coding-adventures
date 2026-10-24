@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:f8c6f188279c2007",
+  "lessonIds": [
+    "BN-C417-not",
+    "BN-C417-etiem",
+    "BN-C417-belans",
+    "BN-C417-transphar-kora",
+    "BN-C417-chada"
+  ],
+  "tex": "bengali/book/chapters/ch417-notes-and-transfers.tex"
+}

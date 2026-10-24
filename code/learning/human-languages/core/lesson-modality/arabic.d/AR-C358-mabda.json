@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C358-mabda",
+    "language": "arabic",
+    "chapter": 358,
+    "sequence": 20410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9d83d119fe1ab61"
+  },
+  "findings": []
+}

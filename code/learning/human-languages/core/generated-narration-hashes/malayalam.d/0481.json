@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:db05db5d652c3ff8",
+  "lessonIds": [
+    "ML-C481-risorttu",
+    "ML-C481-satram",
+    "ML-C481-tamasasthalam",
+    "ML-C481-tamasakkaran",
+    "ML-C481-risapsan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch481.txt",
+  "json": "malayalam/narration/ch481.json",
+  "textHash": "fnv1a64:c67e53c08415f10b",
+  "jsonHash": "fnv1a64:23c869be6399ab3a",
+  "findings": []
+}

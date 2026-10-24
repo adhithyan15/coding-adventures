@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 399,
+  "title": "Trips and Camps",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9bbdff137abc5e1f",
+  "lessons": [
+    {
+      "id": "BN-C399-bhromon-kora",
+      "sequence": 24760,
+      "title": "ভ্রমণ করা (bhrômôn kôrā) — to travel; to tour",
+      "headword": "ভ্রমণ করা",
+      "romanization": "bhrômôn kôrā",
+      "gloss": "to travel; to tour",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba8b00678244f713",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to take a dip, then the Bengali for to splash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভ্রমণ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভ্রমণ করা — bhrômôn kôrā — \"to travel; to tour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গত বছর আমরা পাহাড়ে ভ্রমণ করলাম। gôtô bôchhôr āmrā pāhāṛe bhrômôn kôrlām. Last year we travelled in the hills."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি অনেক দেশ ভ্রমণ করলেন, tini ônek desh bhrômôn kôrlen."
+            },
+            {
+              "kind": "speech",
+              "text": "A careful word, for travel writing and the news; বেড়ানো is the everyday one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভ্রমণ করা (bhrômôn kôrā) joins Sanskrit bhramaṇa, \"wandering, roaming about\" (Monier-Williams), to করা, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhrômôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhrômôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhrômôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhrômôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôtô bôchhôr āmrā pāhāṛe bhrômôn kôrlām. — Last year we travelled in the hills.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôtô bôchhôr āmrā pāhāṛe bhrômôn kôrlām.* — Last year we travelled in the hills.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to take a dip, then the Bengali for to splash, then say bhrômôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to take a dip, then the Bengali for to splash, then say *bhrômôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভ্রমণ করা (bhrômôn kôrā) mean? (\"To travel; to tour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C399-bonbhojon",
+      "sequence": 24770,
+      "title": "বনভোজন (bônbhojôn) — a picnic",
+      "headword": "বনভোজন",
+      "romanization": "bônbhojôn",
+      "gloss": "a picnic",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15690cabbb1b7ff7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to splash, then the Bengali for to travel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বনভোজন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বনভোজন — bônbhojôn — \"a picnic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শীতে আমরা নদীর পাড়ে বনভোজন করলাম। shīte āmrā nôdīr pāṛe bônbhojôn kôrlām. In winter we had a picnic on the riverbank."
+            },
+            {
+              "kind": "speech",
+              "text": "Winter is the season for it in Bengal, with a cook-pot carried out to a field or a riverbank."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বনভোজন (bônbhojôn) joins বন, \"a forest\", Sanskrit vana, to Sanskrit bhojana, \"eating, a meal\" (Monier-Williams for both): a meal out in the woods."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bônbhojôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bônbhojôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bônbhojôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bônbhojôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shīte āmrā nôdīr pāṛe bônbhojôn kôrlām. — In winter we had a picnic on the riverbank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shīte āmrā nôdīr pāṛe bônbhojôn kôrlām.* — In winter we had a picnic on the riverbank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to splash, then the Bengali for to travel, then say bônbhojôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to splash, then the Bengali for to travel, then say *bônbhojôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বনভোজন (bônbhojôn) mean? (\"A picnic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C399-tabu",
+      "sequence": 24780,
+      "title": "তাঁবু (tā̃bu) — a tent",
+      "headword": "তাঁবু",
+      "romanization": "tā̃bu",
+      "gloss": "a tent",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e15ce6fe0db6d4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to travel, then the Bengali for a picnic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তাঁবু",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তাঁবু — tā̃bu — \"a tent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পাহাড়ে আমরা তাঁবুতে রাত কাটালাম। pāhāṛe āmrā tā̃bute rāt kāṭālām. In the hills we spent the night in a tent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তাঁবু (tā̃bu) is usually traced to Persian tanbū, \"a tent\", with the n become the nasal ঁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā̃bu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā̃bu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā̃bu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā̃bu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāhāṛe āmrā tā̃bute rāt kāṭālām. — In the hills we spent the night in a tent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāhāṛe āmrā tā̃bute rāt kāṭālām.* — In the hills we spent the night in a tent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to travel, then the Bengali for a picnic, then say tā̃bu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to travel, then the Bengali for a picnic, then say *tā̃bu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does তাঁবু (tā̃bu) mean? (\"A tent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C399-pohano",
+      "sequence": 24790,
+      "title": "পোহানো (pohāno) — to warm oneself (at a fire or in the sun)",
+      "headword": "পোহানো",
+      "romanization": "pohāno",
+      "gloss": "to warm oneself (at a fire or in the sun)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35e5e9f3df94027c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a picnic, then the Bengali for a tent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পোহানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পোহানো — pohāno — \"to warm oneself (at a fire or in the sun)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাতে তাঁবুর বাইরে আমরা আগুন পোহালাম। rāte tā̃bur bāire āmrā āgun pohālām. At night we warmed ourselves at a fire outside the tent."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি আগুন পোহালেন, tini āgun pohālen."
+            },
+            {
+              "kind": "speech",
+              "text": "আগুন পোহানো (pohāno), to warm oneself at a fire; রোদ পোহানো (pohāno), to sit in the winter sun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পোহানো (pohāno) is inherited: CDIAL lists Bengali pohāna, \"to warm oneself by the fire\", under Sanskrit pratāpayati, \"warms, heats\" (CDIAL 8539)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pohāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pohāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pohāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pohāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāte tā̃bur bāire āmrā āgun pohālām. — At night we warmed ourselves at a fire outside the tent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāte tā̃bur bāire āmrā āgun pohālām.* — At night we warmed ourselves at a fire outside the tent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a picnic, then the Bengali for a tent, then say pohāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a picnic, then the Bengali for a tent, then say *pohāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পোহানো (pohāno) mean? (\"To warm oneself (at a fire or in the sun)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C399-gaid",
+      "sequence": 24800,
+      "title": "গাইড (gāiḍ) — a guide (for visitors)",
+      "headword": "গাইড",
+      "romanization": "gāiḍ",
+      "gloss": "a guide (for visitors)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b5e238f10876e56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a tent, then the Bengali for to warm oneself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গাইড",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গাইড — gāiḍ — \"a guide (for visitors)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গাইড আমাদের পুরনো দুর্গটা দেখালেন। gāiḍ āmāder purôno durgôṭā dekhālen. The guide showed us the old fort."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গাইড (gāiḍ) is borrowed from English guide, with the final d said as the hard ড."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāiḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāiḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāiḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāiḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāiḍ āmāder purôno durgôṭā dekhālen. — The guide showed us the old fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāiḍ āmāder purôno durgôṭā dekhālen.* — The guide showed us the old fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a tent, then the Bengali for to warm oneself, then say gāiḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a tent, then the Bengali for to warm oneself, then say *gāiḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গাইড (gāiḍ) mean? (\"A guide (for visitors)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R399-review-392-399",
+      "sequence": 24810,
+      "title": "Looking back: from Traffic and Crossings to Trips and Camps",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Traffic and Crossings to Trips and Camps",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb4b9f78afe4d865",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for traffic and a pedestrian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "traffic, a pedestrian, a flyover, a signboard, to keep close to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: traffic, a pedestrian, a flyover, a signboard, to keep close to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diesel, air, a puncture, to run out, to start (an engine)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: diesel, air, a puncture, to run out, to start (an engine)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to break down, a spare part, a screw, a steering wheel, to rub",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to break down, a spare part, a screw, a steering wheel, to rub]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flight, a runway, customs, abroad, to make a crossing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flight, a runway, customs, abroad, to make a crossing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a boatman, an oar, an anchor, the hood of a country boat, to row",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a boatman, an oar, an anchor, the hood of a country boat, to row]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a landing place, a launch, a ferry, a bank (of a pond or river), to moor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a landing place, a launch, a ferry, a bank (of a pond or river), to moor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a current, a beach, a jetty, to take a dip, to splash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a current, a beach, a jetty, to take a dip, to splash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to travel, a picnic, a tent, to warm oneself, a guide (for visitors)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to travel, a picnic, a tent, to warm oneself, a guide (for visitors)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Traffic? (ট্রাফিক, ṭrāphik.) A pedestrian? (পথচারী, pôthchārī.) A flyover? (ফ্লাইওভার, phlāiobhār.) A signboard? (সাইনবোর্ড, sāinborḍ.) To keep close to? (ঘেঁষা, ghẽshā.) Diesel? (ডিজেল, ḍijel.) Air? (হাওয়া, hāoyā.) A puncture? (পাংচার, pāngchār.) To run out? (ফুরানো, phurāno.) To start (an engine)? (চালু করা, chālu kôrā.) To break down? (বিগড়ানো, bigṛāno.) A spare part? (যন্ত্রাংশ, jôntrāngshô.) A screw? (স্ক্রু, skru.) A steering wheel? (স্টিয়ারিং, sṭiyāring.) To rub? (ঘষা, ghôshā.) A flight? (ফ্লাইট, phlāiṭ.) A runway? (রানওয়ে, rānoye.) Customs? (কাস্টমস, kāsṭôms.) Abroad? (বিদেশ, bidesh.) To make a crossing? (পাড়ি দেওয়া, pāṛi deoyā.) A boatman? (মাঝি, mājhi.) An oar? (দাঁড়, dā̃ṛ.) An anchor? (নোঙর, nongôr.) The hood of a country boat? (ছই, chhôi.) To row? (বাওয়া, bāoyā.) A landing place? (ঘাট, ghāṭ.) A launch? (লঞ্চ, lônch.) A ferry? (খেয়া, kheyā.) A bank (of a pond or river)? (পাড়, pāṛ.) To moor? (ভেড়ানো, bheṛāno.) A current? (স্রোত, srot.) A beach? (সৈকত, soikôt.) A jetty? (জেটি, jeṭi.) To take a dip? (ডুব দেওয়া, ḍub deoyā.) To splash? (ছিটানো, chhiṭāno.) To travel? (ভ্রমণ করা, bhrômôn kôrā.) A picnic? (বনভোজন, bônbhojôn.) A tent? (তাঁবু, tā̃bu.) To warm oneself? (পোহানো, pohāno.) A guide (for visitors)? (গাইড, gāiḍ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

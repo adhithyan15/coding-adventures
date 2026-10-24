@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 313,
+  "title": "Right away",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a687c428445dfc77",
+  "lessons": [
+    {
+      "id": "AR-C313-ala-al-fawr",
+      "sequence": 18020,
+      "title": "على الفور (ʿalā al-fawr) — on the spot, at once",
+      "headword": "على الفور",
+      "romanization": "ʿalā al-fawr",
+      "gloss": "on the spot, at once",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a6a57e7b5b8c127",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an explorer, then the Arabic for a treasure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: على الفور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "على الفور — ʿalā al-fawr — \"on the spot, at once\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اتصلت بالطبيب على الفور. ittaṣaltu bi-ṭ-ṭabīb ʿalā al-fawr. I called the doctor at once."
+            },
+            {
+              "kind": "speech",
+              "text": "The taught فورا is the same word as an adverb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "على الفور (ʿalā al-fawr) is \"on the boiling\": fawr is built on the native Arabic root f-w-r, \"to boil, to gush\" (Lane), the root of the taught fawran. What is done at the boil is done at once."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿalā al-fawr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿalā al-fawr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿalā al-fawr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿalā al-fawr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ittaṣaltu bi-ṭ-ṭabīb ʿalā al-fawr. — I called the doctor at once.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ittaṣaltu bi-ṭ-ṭabīb ʿalā al-fawr.* — I called the doctor at once.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an explorer, then the Arabic for a treasure, then say ʿalā al-fawr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an explorer, then the Arabic for a treasure, then say *ʿalā al-fawr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does على الفور (ʿalā al-fawr) mean? (\"On the spot, at once\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C313-suraana-ma",
+      "sequence": 18030,
+      "title": "سرعان ما (surʿāna mā) — before long, soon after",
+      "headword": "سرعان ما",
+      "romanization": "surʿāna mā",
+      "gloss": "before long, soon after",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f6517a64354e470",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a treasure, then the Arabic for on the spot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سرعان ما",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرعان ما — surʿāna mā — \"before long, soon after\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بدأ المطر وسرعان ما توقف. badaʾa al-maṭar wa-surʿāna mā tawaqqafa. The rain began and soon stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "A past verb follows it: سرعان ما (surʿāna mā) عاد."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرعان ما (surʿāna mā) is built on the native Arabic root s-r-ʿ, \"to be quick\" (Lane), the root of surʿa, speed: surʿāna means \"how quick!\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "surʿāna mā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *surʿāna mā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "surʿāna mā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *surʿāna mā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badaʾa al-maṭar wa-surʿāna mā tawaqqafa. — The rain began and soon stopped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badaʾa al-maṭar wa-surʿāna mā tawaqqafa.* — The rain began and soon stopped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a treasure, then the Arabic for on the spot, then say surʿāna mā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a treasure, then the Arabic for on the spot, then say *surʿāna mā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سرعان ما (surʿāna mā) mean? (\"Before long, soon after\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C313-tadrijiyyan",
+      "sequence": 18040,
+      "title": "تدريجيا (tadrījiyyan) — gradually, step by step",
+      "headword": "تدريجيا",
+      "romanization": "tadrījiyyan",
+      "gloss": "gradually, step by step",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1b991397a0c1947",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for on the spot, then the Arabic for before long."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تدريجيا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تدريجيا — tadrījiyyan — \"gradually, step by step\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تحسن الطقس تدريجيا. taḥassana aṭ-ṭaqs tadrījiyyan. The weather gradually got better."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تدريجيا (tadrījiyyan) is built on the native Arabic root d-r-j (Lane), \"to walk step by step\", the root of daraja, a step. Tadrīj is the verbal noun of Form II; -iyyan makes it an adverb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadrījiyyan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadrījiyyan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadrījiyyan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadrījiyyan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥassana aṭ-ṭaqs tadrījiyyan. — The weather gradually got better.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥassana aṭ-ṭaqs tadrījiyyan.* — The weather gradually got better.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for on the spot, then the Arabic for before long, then say tadrījiyyan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for on the spot, then the Arabic for before long, then say *tadrījiyyan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تدريجيا (tadrījiyyan) mean? (\"Gradually, step by step\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C313-min-jadid",
+      "sequence": 18050,
+      "title": "من جديد (min jadīd) — anew, all over again",
+      "headword": "من جديد",
+      "romanization": "min jadīd",
+      "gloss": "anew, all over again",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a79606b2ee26a28b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for before long, then the Arabic for gradually."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: من جديد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "من جديد — min jadīd — \"anew, all over again\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بدأ الطلاب الدرس من جديد. badaʾa aṭ-ṭullāb ad-dars min jadīd. The students started the lesson all over again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "من جديد (min jadīd) is \"from new\": min with the taught jadīd, new, which is built on the native Arabic root j-d-d (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "min jadīd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *min jadīd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "min jadīd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *min jadīd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badaʾa aṭ-ṭullāb ad-dars min jadīd. — The students started the lesson all over again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badaʾa aṭ-ṭullāb ad-dars min jadīd.* — The students started the lesson all over again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for before long, then the Arabic for gradually, then say min jadīd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for before long, then the Arabic for gradually, then say *min jadīd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does من جديد (min jadīd) mean? (\"Anew, all over again\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C313-istaada",
+      "sequence": 18060,
+      "title": "استعاد (istaʿāda) — to regain, to get back",
+      "headword": "استعاد",
+      "romanization": "istaʿāda",
+      "gloss": "to regain, to get back",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d785f1ae38adbd22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for gradually, then the Arabic for anew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استعاد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استعاد — istaʿāda — \"to regain, to get back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استعاد الرجل حقيبته من الشرطة. istaʿāda ar-rajul ḥaqībatahu min ash-shurṭa. The man got his bag back from the police."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستعيد, yastaʿīd."
+            },
+            {
+              "kind": "speech",
+              "text": "استعاد (istaʿāda) ذكرياته: he went back over his memories."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استعاد (istaʿāda) is built on the native Arabic root ʿ-w-d (Lane), \"to return\", the root of ʿāda, he came back. It is Form X, \"to seek the return of\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaʿāda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaʿāda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaʿāda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaʿāda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaʿāda ar-rajul ḥaqībatahu min ash-shurṭa. — The man got his bag back from the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaʿāda ar-rajul ḥaqībatahu min ash-shurṭa.* — The man got his bag back from the police.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for gradually, then the Arabic for anew, then say istaʿāda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for gradually, then the Arabic for anew, then say *istaʿāda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استعاد (istaʿāda) mean? (\"To regain, to get back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

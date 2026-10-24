@@ -1,0 +1,11 @@
+{
+  "id": "AR-C477-madiq",
+  "pathSegment": "AR-PATH-477-QIRSH477",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-477-QIRSH477",
+      "order": 4
+    }
+  ]
+}

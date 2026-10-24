@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C540-khesarot",
+    "language": "bengali",
+    "chapter": 540,
+    "sequence": 32470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8914f00d70dbdb9"
+  },
+  "findings": []
+}

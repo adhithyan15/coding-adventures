@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Climate and Heat",
+  "label": "ch:ta-climate-and-heat",
+  "canDo": "I can talk about climate, heat and temperature, a scorching sun and sultry weather.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C427-pulunku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can talk about climate, heat and temperature, a scorching sun and sultry weather.",
+    "assesses": [
+      "TA-LEX-C427-VEPPAM427-03",
+      "TA-LEX-C427-VEPPAM427-04",
+      "TA-LEX-C427-VEPPAM427-05"
+    ]
+  }
+}

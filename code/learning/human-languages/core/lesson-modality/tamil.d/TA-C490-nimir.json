@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C490-nimir",
+    "language": "tamil",
+    "chapter": 490,
+    "sequence": 27990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf4ba212220dfd01"
+  },
+  "findings": []
+}

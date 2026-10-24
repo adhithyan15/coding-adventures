@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Weighing and Testing",
+  "label": "ch:bn-weighing-and-testing",
+  "canDo": "I can watch goods weighed, check they are pure and test them before I buy.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C422-porokh-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can watch goods weighed, check they are pure and test them before I buy.",
+    "assesses": [
+      "BN-LEX-C422-PORAKH422-03",
+      "BN-LEX-C422-PORAKH422-04",
+      "BN-LEX-C422-PORAKH422-05"
+    ]
+  }
+}

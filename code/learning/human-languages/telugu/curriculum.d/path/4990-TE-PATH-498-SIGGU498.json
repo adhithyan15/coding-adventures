@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-498-SIGGU498",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-498-SIGGU498"
+  ],
+  "after": []
+}

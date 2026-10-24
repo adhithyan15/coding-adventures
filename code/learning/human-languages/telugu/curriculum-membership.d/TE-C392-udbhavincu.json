@@ -1,0 +1,11 @@
+{
+  "id": "TE-C392-udbhavincu",
+  "pathSegment": "TE-PATH-392-MULAM392",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-392-MULAM392",
+      "order": 1
+    }
+  ]
+}

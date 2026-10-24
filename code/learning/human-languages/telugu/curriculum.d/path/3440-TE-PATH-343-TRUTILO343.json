@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-343-TRUTILO343",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-343-TRUTILO343"
+  ],
+  "after": []
+}

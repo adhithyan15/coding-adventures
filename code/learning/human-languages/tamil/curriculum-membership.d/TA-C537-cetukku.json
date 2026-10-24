@@ -1,0 +1,11 @@
+{
+  "id": "TA-C537-cetukku",
+  "pathSegment": "TA-PATH-537-SIRPAM537",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-537-SIRPAM537",
+      "order": 1
+    }
+  ]
+}

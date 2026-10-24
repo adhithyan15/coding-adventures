@@ -1,0 +1,11 @@
+{
+  "id": "TE-C480-pongiporlu",
+  "pathSegment": "TE-PATH-480-MUNCETTU480",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-480-MUNCETTU480",
+      "order": 1
+    }
+  ]
+}

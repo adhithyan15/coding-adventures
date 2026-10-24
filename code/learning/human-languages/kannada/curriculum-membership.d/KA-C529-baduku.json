@@ -1,0 +1,11 @@
+{
+  "id": "KA-C529-baduku",
+  "pathSegment": "KA-PATH-529-JIVANA529",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-529-JIVANA529",
+      "order": 4
+    }
+  ]
+}

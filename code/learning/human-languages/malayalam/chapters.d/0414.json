@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Ideas and Sources",
+  "label": "ch:ml-ideas-and-sources",
+  "canDo": "I can say a principle, an understanding, a theory, a source and per cent.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C414-satamanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can say a principle, an understanding, a theory, a source and per cent.",
+    "assesses": [
+      "ML-LEX-C414-TATVAM414-03",
+      "ML-LEX-C414-TATVAM414-04",
+      "ML-LEX-C414-TATVAM414-05"
+    ]
+  }
+}

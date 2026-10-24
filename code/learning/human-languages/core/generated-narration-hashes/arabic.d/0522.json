@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:8eb1be479e6a2048",
+  "lessonIds": [
+    "AR-C522-bashara",
+    "AR-C522-kadaha",
+    "AR-C522-istiqala",
+    "AR-C522-mutaqaid",
+    "AR-C522-atil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch522.txt",
+  "json": "arabic/narration/ch522.json",
+  "textHash": "fnv1a64:47c41b9e24b3b513",
+  "jsonHash": "fnv1a64:0f25a11782ffe80f",
+  "findings": []
+}

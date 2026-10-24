@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:eb943f9d1f4aa876",
+  "lessonIds": [
+    "TE-C427-pattubattu",
+    "TE-C427-kudurcu",
+    "TE-C427-samadhanaparacu",
+    "TE-C427-santrptiparacu",
+    "TE-C427-madhyavarti"
+  ],
+  "tex": "telugu/book/chapters/ch427-coming-to-terms.tex"
+}

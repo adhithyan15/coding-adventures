@@ -1,0 +1,11 @@
+{
+  "id": "HI-C338-jadu",
+  "pathSegment": "HI-PATH-338-PARI338",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-338-PARI338",
+      "order": 1
+    }
+  ]
+}

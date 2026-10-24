@@ -1,0 +1,11 @@
+{
+  "id": "AR-C498-lama",
+  "pathSegment": "AR-PATH-498-ATHAR498",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-498-ATHAR498",
+      "order": 4
+    }
+  ]
+}

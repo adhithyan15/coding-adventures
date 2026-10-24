@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Honours and Winners",
+  "label": "ch:ml-honours-and-winners",
+  "canDo": "I can say an award, an honour, a winner, to honour and to make one's own.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-R396-review-389-396",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can say an award, an honour, a winner, to honour and to make one's own.",
+    "assesses": [
+      "ML-LEX-C396-PURASKARAM396-03",
+      "ML-LEX-C396-PURASKARAM396-04",
+      "ML-LEX-C396-PURASKARAM396-05"
+    ]
+  }
+}

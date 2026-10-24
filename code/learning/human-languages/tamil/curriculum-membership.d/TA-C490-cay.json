@@ -1,0 +1,11 @@
+{
+  "id": "TA-C490-cay",
+  "pathSegment": "TA-PATH-490-NIMIR490",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-490-NIMIR490",
+      "order": 2
+    }
+  ]
+}

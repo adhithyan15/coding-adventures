@@ -1,0 +1,23 @@
+{
+  "chapter": 285,
+  "title": "Telling a Story in Order",
+  "label": "ch:ta-telling-a-story-in-order",
+  "canDo": "I can tell a short story in order with mutalil, ataṉ piṟaku and kaṭaiciyil, join actions with vantu and pōy, read a connected story of about eighty words, and read the letter ஈ in īram.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-R285-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: tell a story in order with first, after that, having done and in the end, and read and write ஈ.",
+    "assesses": [
+      "TA-LEX-C285-IRAM-01",
+      "TA-SCRIPT-RECOG-141",
+      "TA-GRAMMAR-C285-FIRST-THEN-01",
+      "TA-GRAMMAR-C285-BEFORE-AFTER-01",
+      "TA-GRAMMAR-C285-VERBAL-PARTICIPLE-01",
+      "TA-GRAMMAR-C285-AFTER-DOING-01",
+      "TA-SKILL-C285-READ-STORY-01"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C521-virippu",
+    "language": "tamil",
+    "chapter": 521,
+    "sequence": 29870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb73e1a35cdd241b"
+  },
+  "findings": []
+}

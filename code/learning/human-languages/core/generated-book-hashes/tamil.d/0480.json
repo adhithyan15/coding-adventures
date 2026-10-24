@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:48a49d4e2228c87b",
+  "lessonIds": [
+    "TA-C480-mantai",
+    "TA-C480-tatai",
+    "TA-C480-puruvam",
+    "TA-C480-imai",
+    "TA-C480-cimittu"
+  ],
+  "tex": "tamil/book/chapters/ch480-head-and-face.tex"
+}

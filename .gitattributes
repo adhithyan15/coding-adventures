@@ -4,6 +4,11 @@
 # Python docstrings, etc.).
 * text=auto eol=lf
 
+# LANG84 4c: this Perl corpus case exists to prove that a CR before LF is
+# whitespace, so its CRLF line ends are the test. Without -text, `eol=lf`
+# above would normalize them to LF on commit and the case would test nothing.
+code/grammars/perl/corpus/pl-int-print/crlf_layout.pl -text
+
 # WPT tree-construction data includes inputs whose trailing spaces are semantic.
 code/packages/rust/html-parser/tests/fixtures/html5lib-tree-construction-smoke.dat whitespace=-trailing-space
 

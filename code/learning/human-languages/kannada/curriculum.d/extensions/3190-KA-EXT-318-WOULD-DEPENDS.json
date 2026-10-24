@@ -1,0 +1,10 @@
+{
+  "id": "KA-EXT-318-WOULD-DEPENDS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what something depends on with … mēle avalambiside, say what would have happened with -iddare … -uttidde, and write six connected lines about a trip.",
+  "prerequisites": [
+    "KA-EXT-317-IF-REAL"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C392-ghesha",
+  "pathSegment": "BN-PATH-392-TRAFFIC392",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-392-TRAFFIC392",
+      "order": 4
+    }
+  ]
+}

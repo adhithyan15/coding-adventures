@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:e8135d4acd461863",
+  "lessonIds": [
+    "AR-C484-mawjat-harr",
+    "AR-C484-khaniq",
+    "AR-C484-rutuba",
+    "AR-C484-jafaf",
+    "AR-C484-tabakhkhara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch484.txt",
+  "json": "arabic/narration/ch484.json",
+  "textHash": "fnv1a64:cadefdab9fe1b427",
+  "jsonHash": "fnv1a64:5dde70055fde28fb",
+  "findings": []
+}

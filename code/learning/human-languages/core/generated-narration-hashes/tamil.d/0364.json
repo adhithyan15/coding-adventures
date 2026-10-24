@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:9e664e8317303368",
+  "lessonIds": [
+    "TA-C364-peraciriyar",
+    "TA-C364-virivurai",
+    "TA-C364-pattatari",
+    "TA-C364-payil",
+    "TA-C364-cerkkai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch364.txt",
+  "json": "tamil/narration/ch364.json",
+  "textHash": "fnv1a64:404d192f3fee2936",
+  "jsonHash": "fnv1a64:e61c761463b0e274",
+  "findings": []
+}

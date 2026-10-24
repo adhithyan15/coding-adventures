@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Quick Minds and Slow",
+  "label": "ch:ka-quick-minds-and-slow",
+  "canDo": "I can say quick, talent, slow-witted, forgetfulness and concentration.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C503-ekagrate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can say quick, talent, slow-witted, forgetfulness and concentration.",
+    "assesses": [
+      "KA-LEX-C503-BUDDHI503-03",
+      "KA-LEX-C503-BUDDHI503-04",
+      "KA-LEX-C503-BUDDHI503-05"
+    ]
+  }
+}

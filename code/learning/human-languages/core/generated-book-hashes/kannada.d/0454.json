@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:4337f0993e72c0ae",
+  "lessonIds": [
+    "KA-C454-teppa",
+    "KA-C454-ambiga",
+    "KA-C454-tira",
+    "KA-C454-ubbara",
+    "KA-C454-suli",
+    "KA-R454-review-448-454"
+  ],
+  "tex": "kannada/book/chapters/ch454-crossing-the-river.tex"
+}

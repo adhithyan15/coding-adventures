@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:60bf558a92c246f7",
+  "lessonIds": [
+    "MR-C429-lilav",
+    "MR-C429-taran",
+    "MR-C429-gahan-thevne",
+    "MR-C429-vasul-karne",
+    "MR-C429-bhadepatta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch429.txt",
+  "json": "marathi/narration/ch429.json",
+  "textHash": "fnv1a64:bd1de31208f8405b",
+  "jsonHash": "fnv1a64:b848e028721a061b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "Corruption and reform",
+  "label": "ch:ar-corruption-and-reform",
+  "canDo": "I can talk about corruption, a bribe and reform, and say that someone violated or exploited something.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C388-istaghalla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can talk about corruption, a bribe and reform, and say that someone violated or exploited something.",
+    "assesses": [
+      "AR-LEX-C388-FASAD388-03",
+      "AR-LEX-C388-FASAD388-04",
+      "AR-LEX-C388-FASAD388-05"
+    ]
+  }
+}

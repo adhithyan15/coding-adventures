@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Bones and joints",
+  "label": "ch:ar-bones-and-joints",
+  "canDo": "I can name the skull, a rib, a thigh, a hip and a joint.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C505-mafsil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can name the skull, a rib, a thigh, a hip and a joint.",
+    "assesses": [
+      "AR-LEX-C505-ADHM505-03",
+      "AR-LEX-C505-ADHM505-04",
+      "AR-LEX-C505-ADHM505-05"
+    ]
+  }
+}

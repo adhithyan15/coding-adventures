@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "The Empire and Its Army",
+  "label": "ch:ml-the-empire-and-its-army",
+  "canDo": "I can say an empire, a fort, an army, a soldier and to conquer.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C399-kilatakkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can say an empire, a fort, an army, a soldier and to conquer.",
+    "assesses": [
+      "ML-LEX-C399-SAMRAJYAM399-03",
+      "ML-LEX-C399-SAMRAJYAM399-04",
+      "ML-LEX-C399-SAMRAJYAM399-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C389-indamma",
+  "pathSegment": "AR-PATH-389-NUFUDH389",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-389-NUFUDH389",
+      "order": 2
+    }
+  ]
+}

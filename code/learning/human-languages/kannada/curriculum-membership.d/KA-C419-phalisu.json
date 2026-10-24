@@ -1,0 +1,11 @@
+{
+  "id": "KA-C419-phalisu",
+  "pathSegment": "KA-PATH-419-VIPHALA419",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-419-VIPHALA419",
+      "order": 1
+    }
+  ]
+}

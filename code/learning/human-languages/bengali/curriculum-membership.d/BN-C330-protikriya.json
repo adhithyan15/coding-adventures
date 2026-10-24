@@ -1,0 +1,11 @@
+{
+  "id": "BN-C330-protikriya",
+  "pathSegment": "BN-PATH-330-UTSO330",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-330-UTSO330",
+      "order": 3
+    }
+  ]
+}

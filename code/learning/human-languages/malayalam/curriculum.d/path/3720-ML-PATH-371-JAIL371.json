@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-371-JAIL371",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-371-JAIL371"
+  ],
+  "after": []
+}

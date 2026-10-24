@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:578c0d9fa8525ddb",
+  "lessonIds": [
+    "TE-C484-ammakam",
+    "TE-C484-viniyogadarudu",
+    "TE-C484-nanyata",
+    "TE-C484-rayiti",
+    "TE-C484-beramadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch484.txt",
+  "json": "telugu/narration/ch484.json",
+  "textHash": "fnv1a64:1c849bdda2cf1a04",
+  "jsonHash": "fnv1a64:a5dd6061b05640d6",
+  "findings": []
+}

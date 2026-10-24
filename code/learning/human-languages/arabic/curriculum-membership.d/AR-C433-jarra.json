@@ -1,0 +1,11 @@
+{
+  "id": "AR-C433-jarra",
+  "pathSegment": "AR-PATH-433-AJALA433",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-433-AJALA433",
+      "order": 4
+    }
+  ]
+}

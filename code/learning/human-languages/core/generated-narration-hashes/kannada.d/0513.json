@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:726f58f86d10b2d5",
+  "lessonIds": [
+    "KA-C513-cetarisiko",
+    "KA-C513-unisu",
+    "KA-C513-badita",
+    "KA-C513-araike",
+    "KA-C513-kasaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch513.txt",
+  "json": "kannada/narration/ch513.json",
+  "textHash": "fnv1a64:49bb49d0b7cad323",
+  "jsonHash": "fnv1a64:a05f990521622ffd",
+  "findings": []
+}

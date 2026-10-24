@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-363-NAZARIYYA363",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "AR-EXT-363-NAZARIYYA363"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C499-tampati",
+  "pathSegment": "TA-PATH-499-MANAM499",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-499-MANAM499",
+      "order": 3
+    }
+  ]
+}

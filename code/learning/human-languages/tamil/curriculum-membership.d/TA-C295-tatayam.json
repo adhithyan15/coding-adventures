@@ -1,0 +1,11 @@
+{
+  "id": "TA-C295-tatayam",
+  "pathSegment": "TA-PATH-295-THUPPU295",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-295-THUPPU295",
+      "order": 1
+    }
+  ]
+}

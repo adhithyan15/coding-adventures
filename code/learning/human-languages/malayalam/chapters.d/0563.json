@@ -1,0 +1,19 @@
+{
+  "chapter": 563,
+  "title": "On Stage",
+  "label": "ch:ml-on-stage",
+  "canDo": "I can say a story character, a stage scene, a stage, an onlooker and applause.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C563-kayyati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 563: I can say a story character, a stage scene, a stage, an onlooker and applause.",
+    "assesses": [
+      "ML-LEX-C563-RANGAM563-03",
+      "ML-LEX-C563-RANGAM563-04",
+      "ML-LEX-C563-RANGAM563-05"
+    ]
+  }
+}

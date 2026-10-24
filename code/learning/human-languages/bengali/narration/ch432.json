@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 432,
+  "title": "Peaks, Valleys and Deserts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:68391d3a5ce3fa73",
+  "lessons": [
+    {
+      "id": "BN-C432-chura",
+      "sequence": 26460,
+      "title": "চূড়া (chūṛā) — a peak; a summit; a top",
+      "headword": "চূড়া",
+      "romanization": "chūṛā",
+      "gloss": "a peak; a summit; a top",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9406edee7f3b8bfc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for silt, then the Bengali for to fill in (a pond or low land)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চূড়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চূড়া — chūṛā — \"a peak; a summit; a top\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমরা ভোরে পাহাড়ের চূড়ায় উঠলাম। āmrā bhore pāhāṛer chūṛāy uṭhlām. We climbed to the summit at dawn."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the top of anything tall: মন্দিরের চূড়া (chūṛā), the spire of a temple."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চূড়া (chūṛā) is Sanskrit cūḍā, \"the hair on the top of the head, a crest\" (Monier-Williams); the sense of a mountain top is a natural step, though Monier-Williams gives the head first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūṛā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūṛā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmrā bhore pāhāṛer chūṛāy uṭhlām. — We climbed to the summit at dawn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmrā bhore pāhāṛer chūṛāy uṭhlām.* — We climbed to the summit at dawn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for silt, then the Bengali for to fill in (a pond or low land), then say chūṛā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for silt, then the Bengali for to fill in (a pond or low land), then say *chūṛā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চূড়া (chūṛā) mean? (\"A peak; a summit; a top\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C432-upotyoka",
+      "sequence": 26470,
+      "title": "উপত্যকা (upôtyôkā) — a valley",
+      "headword": "উপত্যকা",
+      "romanization": "upôtyôkā",
+      "gloss": "a valley",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b24b8f94811763a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to fill in (a pond or low land), then the Bengali for a summit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপত্যকা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপত্যকা — upôtyôkā — \"a valley\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পাহাড়ের নিচে উপত্যকায় ছোট একটা গ্রাম। pāhāṛer niche upôtyôkāy chhoṭo ekṭā grām. Below the mountain, in the valley, lies a small village."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপত্যকা (upôtyôkā) is Sanskrit upatyakā, \"land at the foot of a mountain, low land\" (Monier-Williams), taken over whole."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôtyôkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôtyôkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôtyôkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôtyôkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāhāṛer niche upôtyôkāy chhoṭo ekṭā grām. — Below the mountain, in the valley, lies a small village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāhāṛer niche upôtyôkāy chhoṭo ekṭā grām.* — Below the mountain, in the valley, lies a small village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to fill in (a pond or low land), then the Bengali for a summit, then say upôtyôkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to fill in (a pond or low land), then the Bengali for a summit, then say *upôtyôkā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপত্যকা (upôtyôkā) mean? (\"A valley\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C432-dhibi",
+      "sequence": 26480,
+      "title": "ঢিবি (ḍhibi) — a mound; a heap of earth",
+      "headword": "ঢিবি",
+      "romanization": "ḍhibi",
+      "gloss": "a mound; a heap of earth",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:965d2381ebbb4d5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a summit, then the Bengali for a valley."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঢিবি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঢিবি — ḍhibi — \"a mound; a heap of earth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মাঠের মাঝখানে একটা মাটির ঢিবি আছে। māṭher mājhkhāne ekṭā māṭir ḍhibi āchhe. There is a mound of earth in the middle of the field."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঢিবি (ḍhibi) is inherited: CDIAL lists Bengali ḍhibi, \"a heap\", under the reconstructed ḍhappa, \"a lump\" (CDIAL 5580)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhibi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhibi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhibi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhibi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṭher mājhkhāne ekṭā māṭir ḍhibi āchhe. — There is a mound of earth in the middle of the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṭher mājhkhāne ekṭā māṭir ḍhibi āchhe.* — There is a mound of earth in the middle of the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a summit, then the Bengali for a valley, then say ḍhibi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a summit, then the Bengali for a valley, then say *ḍhibi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঢিবি (ḍhibi) mean? (\"A mound; a heap of earth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C432-morubhumi",
+      "sequence": 26490,
+      "title": "মরুভূমি (môrubhūmi) — a desert",
+      "headword": "মরুভূমি",
+      "romanization": "môrubhūmi",
+      "gloss": "a desert",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7dc75934b543c20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a valley, then the Bengali for a mound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মরুভূমি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মরুভূমি — môrubhūmi — \"a desert\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মরুভূমিতে দিনে গরম, রাতে ঠান্ডা। môrubhūmite dine gôrôm, rāte ṭhānḍā. In the desert it is hot by day and cold by night."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মরুভূমি (môrubhūmi) joins Sanskrit maru, \"a wilderness, a sandy waste\", to bhūmi, \"land, ground\" (Monier-Williams for both)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môrubhūmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môrubhūmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môrubhūmi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môrubhūmi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môrubhūmite dine gôrôm, rāte ṭhānḍā. — In the desert it is hot by day and cold by night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môrubhūmite dine gôrôm, rāte ṭhānḍā.* — In the desert it is hot by day and cold by night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a valley, then the Bengali for a mound, then say môrubhūmi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a valley, then the Bengali for a mound, then say *môrubhūmi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মরুভূমি (môrubhūmi) mean? (\"A desert\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C432-jonggol",
+      "sequence": 26500,
+      "title": "জঙ্গল (jônggôl) — a forest; a jungle; overgrown land",
+      "headword": "জঙ্গল",
+      "romanization": "jônggôl",
+      "gloss": "a forest; a jungle; overgrown land",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c887a6fcf04ab337",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a mound, then the Bengali for a desert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জঙ্গল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জঙ্গল — jônggôl — \"a forest; a jungle; overgrown land\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গ্রামের পিছনে একটা বড় জঙ্গল আছে। grāmer pichhône ekṭā bôṛo jônggôl āchhe. Behind the village there is a big forest."
+            },
+            {
+              "kind": "speech",
+              "text": "বন is a forest in general; জঙ্গল (jônggôl) is wild and thick, and also an overgrown patch of weeds."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জঙ্গল (jônggôl) is inherited: CDIAL lists Bengali jaṅgal, \"a forest\", under Sanskrit jāṅgala, \"arid, sparsely wooded; a desert region\" (CDIAL 5177); the turn from dry land to thick forest happened in the modern languages, and English jungle is the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jônggôl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jônggôl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jônggôl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jônggôl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāmer pichhône ekṭā bôṛo jônggôl āchhe. — Behind the village there is a big forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāmer pichhône ekṭā bôṛo jônggôl āchhe.* — Behind the village there is a big forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a mound, then the Bengali for a desert, then say jônggôl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a mound, then the Bengali for a desert, then say *jônggôl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জঙ্গল (jônggôl) mean? (\"A forest; a jungle; overgrown land\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

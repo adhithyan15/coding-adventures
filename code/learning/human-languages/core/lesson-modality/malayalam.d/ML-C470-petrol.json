@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C470-petrol",
+    "language": "malayalam",
+    "chapter": 470,
+    "sequence": 23460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffbd45fbda9dc92a"
+  },
+  "findings": []
+}

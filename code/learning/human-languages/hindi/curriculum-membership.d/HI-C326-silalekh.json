@@ -1,0 +1,11 @@
+{
+  "id": "HI-C326-silalekh",
+  "pathSegment": "HI-PATH-326-KHANDAHAR326",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-326-KHANDAHAR326",
+      "order": 3
+    }
+  ]
+}

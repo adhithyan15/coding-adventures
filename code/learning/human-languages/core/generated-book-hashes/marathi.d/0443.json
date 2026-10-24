@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:9a4af4b8982cc850",
+  "lessonIds": [
+    "MR-C443-odha",
+    "MR-C443-kalva",
+    "MR-C443-dharan",
+    "MR-C443-sarovar",
+    "MR-C443-khalkhalne"
+  ],
+  "tex": "marathi/book/chapters/ch443-streams-and-dams.tex"
+}

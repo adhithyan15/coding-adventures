@@ -1,0 +1,689 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 290,
+  "title": "Feelings and Hopes",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:a592b46025d2fb72",
+  "lessons": [
+    {
+      "id": "TA-C290-kopam-vantatu",
+      "sequence": 16330,
+      "title": "எனக்குக் கோபம் வந்தது (eṉakkuk kōpam vantatu) — how I felt",
+      "headword": "எனக்குக் கோபம் வந்தது",
+      "romanization": "eṉakkuk kōpam vantatu",
+      "gloss": "I got angry — feelings that come to you, and feelings you are in",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5183dd5406ab03c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for anger, fear and gladness. (kōpam, payam, cantōṣam.) Then \"I know Tamil\". (eṉakkut tamiḻ teriyum.) Then say \"dampness\". (īram.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a feeling comes to you",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எனக்குக் கோபம் வந்தது. eṉakkuk kōpam vantatu. — \"I got angry.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word: \"to me, anger came\". The feeling is what came, so the verb is the \"it\" past, வந்தது, and the person it came to takes -க்கு, as in எனக்குத் தமிழ் தெரியும். The first letter of the feeling doubles in writing: எனக்குக் கோபம், அவனுக்குப் பயம்."
+            },
+            {
+              "kind": "speech",
+              "text": "அவனுக்குப் பயம் வந்தது. avaṉukkup payam vantatu. — \"He got frightened.\""
+            },
+            {
+              "kind": "speech",
+              "text": "அவனுக்கு (avaṉukku, \"to him\"), அவளுக்கு (avaḷukku, \"to her\"), உங்களுக்கு (uṅkaḷukku, \"to you\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the state you are in, -ஆக இருக்கிறது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எனக்குச் சந்தோஷமாக இருக்கிறது. eṉakkuc cantōṣamāka irukkiṟatu. — \"I am happy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "For a feeling you are in, the feeling takes -ஆக, the -ஆக of நன்றாக, and the verb is இருக்கிறது: \"to me, it is in gladness\". In the past: இருந்தது."
+            },
+            {
+              "kind": "speech",
+              "text": "எனக்குப் பயமாக இருந்தது. eṉakkup payamāka iruntatu. — \"I was afraid.\""
+            },
+            {
+              "kind": "speech",
+              "text": "அவளுக்கு ஏமாற்றமாக இருந்தது. avaḷukku ēmāṟṟamāka iruntatu. — \"She was disappointed.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The same feelings also go with a plain subject: நான் சந்தோஷமாக இருக்கிறேன் (nāṉ cantōṣamāka irukkiṟēṉ, \"I am happy\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I got angry\" — eṉakkuk kōpam vantatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I got angry\" — *eṉakkuk kōpam vantatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He got frightened\" — avaṉukkup payam vantatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He got frightened\" — *avaṉukkup payam vantatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I am happy\" — eṉakkuc cantōṣamāka irukkiṟatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I am happy\" — *eṉakkuc cantōṣamāka irukkiṟatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She was disappointed\" — avaḷukku ēmāṟṟamāka iruntatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She was disappointed\" — *avaḷukku ēmāṟṟamāka iruntatu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I got angry\"? (எனக்குக் கோபம் வந்தது (eṉakkuk kōpam vantatu).) Who takes -க்கு? (The person who feels.) \"I was afraid\"? (எனக்குப் பயமாக இருந்தது.) Which verb says the feeling arrived, and which says you were in it? (வந்தது arrived; இருந்தது was.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C290-acai",
+      "sequence": 16340,
+      "title": "ஆசை (ācai) — a wish, a longing",
+      "headword": "ஆசை",
+      "romanization": "ācai",
+      "gloss": "a wish, a longing, a desire",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4581c50d03c861ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I am happy.\" (eṉakkuc cantōṣamāka irukkiṟatu.) Then \"to dream\" and \"the sea\". (kaṉavu kāṇ, kaṭal.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆசை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆசை — ācai — \"a wish, a longing, a desire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எனக்கு ஒரு ஆசை இருக்கிறது. eṉakku oru ācai irukkiṟatu. — \"I have a wish.\""
+            },
+            {
+              "kind": "speech",
+              "text": "எனக்குக் கடலில் நீந்த ஆசை. eṉakkuk kaṭalil nīnta ācai. — \"I long to swim in the sea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ஆசை (ācai) goes the way of the feelings: the one who wishes takes -க்கு. What you long to do comes as a verb's to-form before it: நீந்த ஆசை (ācai), \"a longing to swim\". It covers a child's wish for a sweet and a grown person's hope for a whole life; the sentence tells you which."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆசை (ācai) is a loan from Sanskrit āśā, which Monier-Williams glosses \"wish, desire, hope\". The final -ā of the Sanskrit word became -ஐ in Tamil, the change you can hear in கதை, \"a story\", from Sanskrit kathā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ācai, slowly, then at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ācai*, slowly, then at speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have a wish\" — eṉakku oru ācai irukkiṟatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have a wish\" — *eṉakku oru ācai irukkiṟatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I long to swim in the sea\" — eṉakkuk kaṭalil nīnta ācai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I long to swim in the sea\" — *eṉakkuk kaṭalil nīnta ācai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆசை (ācai) mean? (A wish, a longing.) \"I long to swim in the sea\"? (எனக்குக் கடலில் நீந்த ஆசை (ācai).) Which language is it from? (Sanskrit: āśā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C290-ilakku",
+      "sequence": 16350,
+      "title": "இலக்கு (ilakku) — a goal, a target",
+      "headword": "இலக்கு",
+      "romanization": "ilakku",
+      "gloss": "a goal, a target",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f45ad9220c723fac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I have a wish.\" (eṉakku oru ācai irukkiṟatu.) Then the words for a doctor and a teacher. (maruttuvar, āciriyar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இலக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இலக்கு — ilakku — \"a goal, a target\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் இலக்கு மருத்துவர் ஆவது. eṉ ilakku maruttuvar āvatu. — \"My goal is to become a doctor.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ஆவது (āvatu, \"becoming\"). Where ஆசை (ācai) is a longing, இலக்கு (ilakku) is a mark you aim at and work towards. The same word names the target an arrow is shot at."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த ஆண்டு என் இலக்கு: மாதம் ஒரு புத்தகம். inta āṇṭu eṉ ilakku: mātam oru puttakam. — \"My goal this year: a book a month.\""
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த (inta, \"this\"): the i- of இது and இங்கே, in front of a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இலக்கு (ilakku) is usually traced to Sanskrit lakṣya or lakṣa, \"mark, aim\": CDIAL 10881 lists lakṣá \"mark, sign\" and \"aim\", and lakṣya- \"aim\". The இ in front is the vowel older Tamil set before a borrowed word that began with l."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ilakku, slowly, then at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ilakku*, slowly, then at speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My goal is to become a doctor\" — eṉ ilakku maruttuvar āvatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My goal is to become a doctor\" — *eṉ ilakku maruttuvar āvatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My goal this year: a book a month\" — inta āṇṭu eṉ ilakku: mātam oru puttakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My goal this year: a book a month\" — *inta āṇṭu eṉ ilakku: mātam oru puttakam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இலக்கு (ilakku) mean? (A goal, a target.) And ஆசை (ācai)? (A wish, a longing.) \"My goal\"? (என் இலக்கு (ilakku).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C290-poka-acai",
+      "sequence": 16360,
+      "title": "போக ஆசை (pōka ācai) — what I hope for",
+      "headword": "போக ஆசை",
+      "romanization": "pōka ācai",
+      "gloss": "I long to go — wishes, hopes, and what you want to become",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98d400644f51797b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I long to swim in the sea.\" (eṉakkuk kaṭalil nīnta ācai.) Then \"My goal is to become a doctor.\" (eṉ ilakku maruttuvar āvatu.) Then \"I must go.\" (nāṉ pōka vēṇṭum.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a wish, with the to-form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எனக்கு ஒரு நாள் விமானத்தில் பயணம் செய்ய ஆசை. eṉakku oru nāḷ vimāṉattil payaṇam ceyya ācai. — \"I long to travel by plane one day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "விமானத்தில் (vimāṉattil, \"by plane\"); பயணம் செய் (payaṇam cey, \"to travel\"), \"do a journey\". The to-form that came before வேண்டும் comes before ஆசை (ācai): செய்ய ஆசை (ācai)."
+            },
+            {
+              "kind": "speech",
+              "text": "நான் தமிழ் நன்றாகப் பேச விரும்புகிறேன். nāṉ tamiḻ naṉṟākap pēca virumpukiṟēṉ. — \"I want to speak Tamil well.\""
+            },
+            {
+              "kind": "speech",
+              "text": "விரும்பு, \"to wish, to like\", takes a plain subject, நான், and the same to-form. It is plainer than ஆசை (ācai), and fits a letter or a form as well as talk."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: what you want to become, ஆக",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான் ஆசிரியர் ஆக விரும்புகிறேன். nāṉ āciriyar āka virumpukiṟēṉ. — \"I want to become a teacher.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ஆக (āka, \"to become\") is the to-form of ஆகு. The thing you will become stands bare in front of it: ஆசிரியர் ஆக, மருத்துவர் ஆக."
+            },
+            {
+              "kind": "speech",
+              "text": "Three ways to say the same hope: எனக்கு ஆசிரியர் ஆக ஆசை (ācai); நான் ஆசிரியர் ஆக விரும்புகிறேன்; என் இலக்கு (ilakku) ஆசிரியர் ஆவது. And the biggest of them: என் கனவு (eṉ kaṉavu, \"my dream\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I long to travel by plane one day\" — eṉakku oru nāḷ vimāṉattil payaṇam ceyya ācai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I long to travel by plane one day\" — *eṉakku oru nāḷ vimāṉattil payaṇam ceyya ācai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to speak Tamil well\" — nāṉ tamiḻ naṉṟākap pēca virumpukiṟēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to speak Tamil well\" — *nāṉ tamiḻ naṉṟākap pēca virumpukiṟēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to become a teacher\" — nāṉ āciriyar āka virumpukiṟēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to become a teacher\" — *nāṉ āciriyar āka virumpukiṟēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one hope of your own, with ஆசை (ācai), and one goal, with இலக்கு (ilakku)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one hope of your own, with ஆசை, and one goal, with இலக்கு]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I long to go\"? (எனக்குப் போக ஆசை (pōka ācai).) \"I want to speak\"? (நான் பேச விரும்புகிறேன்.) \"To become\"? (ஆக.) Which one takes -க்கு, and which one takes நான்? (ஆசை takes -க்கு; விரும்புகிறேன் takes நான்.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R290-feelings-and-hopes",
+      "sequence": 16370,
+      "title": "Review — feelings and hopes",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "how I felt, what I long for, and what I aim at",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:90381655255bb6e2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a wish\" and \"a goal\". Then read ஈரம் aloud. (īram.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ஆசை (ācai) and இலக்கு (ilakku), once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ஆசை** and **இலக்கு**, once each]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I missed the bus. I got angry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I missed the bus. I got angry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "When my friend came, I was happy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: When my friend came, I was happy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I long to swim in the sea one day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I long to swim in the sea one day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My goal is to speak Tamil well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My goal is to speak Tamil well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one feeling from last week, and why you felt it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one feeling from last week, and why you felt it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I got angry\"? (எனக்குக் கோபம் வந்தது (eṉakkuk kōpam vantatu).) \"I was happy\"? (எனக்குச் சந்தோஷமாக இருந்தது.) \"I long to go\"? (எனக்குப் போக ஆசை (pōka ācai).) \"To become a doctor\"? (மருத்துவர் ஆக.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

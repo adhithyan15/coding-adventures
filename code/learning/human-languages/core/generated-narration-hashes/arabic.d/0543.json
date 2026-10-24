@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:6e9c5ae60e21e3cf",
+  "lessonIds": [
+    "AR-C543-lahn",
+    "AR-C543-iqa",
+    "AR-C543-azafa",
+    "AR-C543-mulahhin",
+    "AR-C543-jawqa",
+    "AR-R543-review-536-543"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch543.txt",
+  "json": "arabic/narration/ch543.json",
+  "textHash": "fnv1a64:4acd4516286f75de",
+  "jsonHash": "fnv1a64:9e91c99ddecb25a4",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C512-patavi-vilaku",
+  "pathSegment": "TA-PATH-512-VILAKAL512",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-512-VILAKAL512",
+      "order": 1
+    }
+  ]
+}

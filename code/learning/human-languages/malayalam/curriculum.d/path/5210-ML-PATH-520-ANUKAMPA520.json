@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-520-ANUKAMPA520",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-520-ANUKAMPA520"
+  ],
+  "after": []
+}

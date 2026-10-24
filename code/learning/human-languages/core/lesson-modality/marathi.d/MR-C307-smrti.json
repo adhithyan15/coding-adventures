@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C307-smrti",
+    "language": "marathi",
+    "chapter": 307,
+    "sequence": 18010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:715300a8cc7d5992"
+  },
+  "findings": []
+}

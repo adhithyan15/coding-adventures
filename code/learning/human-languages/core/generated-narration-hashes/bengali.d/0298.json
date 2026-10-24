@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:67b2091538b8c51e",
+  "lessonIds": [
+    "BN-C298-uttejona",
+    "BN-C298-rotano",
+    "BN-C298-hoichoi",
+    "BN-C298-phisphis-kora",
+    "BN-C298-chancholyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch298.txt",
+  "json": "bengali/narration/ch298.json",
+  "textHash": "fnv1a64:f5686ac9a9118022",
+  "jsonHash": "fnv1a64:2503093038c6d0f2",
+  "findings": []
+}

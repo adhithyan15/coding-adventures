@@ -1,0 +1,11 @@
+{
+  "id": "BN-C462-phaki-deoya",
+  "pathSegment": "BN-PATH-462-OLOS462",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-462-OLOS462",
+      "order": 3
+    }
+  ]
+}

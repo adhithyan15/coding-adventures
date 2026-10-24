@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:2776bb929bb8058f",
+  "lessonIds": [
+    "KA-C426-tolagisu",
+    "KA-C426-kadeganisu",
+    "KA-C426-jagaruka",
+    "KA-C426-todaku",
+    "KA-C426-pratikula"
+  ],
+  "tex": "kannada/book/chapters/ch426-snags-and-setbacks.tex"
+}

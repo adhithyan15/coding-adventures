@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:86d933aa6336df3b",
+  "lessonIds": [
+    "AR-C484-mawjat-harr",
+    "AR-C484-khaniq",
+    "AR-C484-rutuba",
+    "AR-C484-jafaf",
+    "AR-C484-tabakhkhara"
+  ],
+  "tex": "arabic/book/chapters/ch484-heat.tex"
+}

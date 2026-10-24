@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:5b07aedc10b871e7",
+  "lessonIds": [
+    "BN-C510-phinail",
+    "BN-C510-jhul",
+    "BN-C510-saph",
+    "BN-C510-ningrano",
+    "BN-C510-maja"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch510.txt",
+  "json": "bengali/narration/ch510.json",
+  "textHash": "fnv1a64:37662f6e170056a4",
+  "jsonHash": "fnv1a64:b87d947e753aaf22",
+  "findings": []
+}

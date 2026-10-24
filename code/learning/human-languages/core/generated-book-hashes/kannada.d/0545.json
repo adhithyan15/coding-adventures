@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:042950ed4d9e5b7f",
+  "lessonIds": [
+    "KA-C545-jamakhana",
+    "KA-C545-raggu",
+    "KA-C545-jhadisu",
+    "KA-C545-oge",
+    "KA-C545-ganji"
+  ],
+  "tex": "kannada/book/chapters/ch545-laundry-day.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C542-hostilu",
+  "pathSegment": "KA-PATH-542-MANE542",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-542-MANE542",
+      "order": 1
+    }
+  ]
+}

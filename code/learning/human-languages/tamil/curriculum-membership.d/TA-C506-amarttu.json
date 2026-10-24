@@ -1,0 +1,11 @@
+{
+  "id": "TA-C506-amarttu",
+  "pathSegment": "TA-PATH-506-VELAI506",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-506-VELAI506",
+      "order": 2
+    }
+  ]
+}

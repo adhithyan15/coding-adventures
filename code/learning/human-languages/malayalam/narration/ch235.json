@@ -4,7 +4,7 @@
   "chapter": 235,
   "title": "Wrist, Heel, Spine, Liver, Kidney",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d41dfaa8ad3d51d8",
+  "sourceHash": "fnv1a64:c0476307315ceceb",
   "lessons": [
     {
       "id": "ML-C235-kanankai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6bade6866eb119e",
+      "sourceHash": "fnv1a64:6bb93bc0367c85d9",
       "notice": null,
       "blocks": [
         {

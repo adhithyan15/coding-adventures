@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:219b2452f2696e25",
+  "lessonIds": [
+    "BN-C489-bagdan",
+    "BN-C489-songsar",
+    "BN-C489-man-bhangano",
+    "BN-C489-ashirbad",
+    "BN-C489-pronam-kora"
+  ],
+  "tex": "bengali/book/chapters/ch489-weddings-and-households.tex"
+}

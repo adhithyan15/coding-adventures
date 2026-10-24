@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:25f4077feadf0ca6",
+  "lessonIds": [
+    "BN-C286-uki-deoya",
+    "BN-C286-prodorshon-kora",
+    "BN-C286-odbhut",
+    "BN-C286-chhaya",
+    "BN-C286-lokkho-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch286.txt",
+  "json": "bengali/narration/ch286.json",
+  "textHash": "fnv1a64:d20d3802df87703b",
+  "jsonHash": "fnv1a64:8b1bd2e815539957",
+  "findings": []
+}

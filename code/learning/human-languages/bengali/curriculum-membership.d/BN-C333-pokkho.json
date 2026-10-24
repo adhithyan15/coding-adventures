@@ -1,0 +1,11 @@
+{
+  "id": "BN-C333-pokkho",
+  "pathSegment": "BN-PATH-333-JUKTI333",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-333-JUKTI333",
+      "order": 2
+    }
+  ]
+}

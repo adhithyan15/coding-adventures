@@ -1,0 +1,948 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 516,
+  "title": "Blocked Roads",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:7f05b44054d06a9a",
+  "lessons": [
+    {
+      "id": "ML-C516-kuli",
+      "sequence": 25810,
+      "title": "കുഴി (kuḻi) — a pothole; a pit",
+      "headword": "കുഴി",
+      "romanization": "kuḻi",
+      "gloss": "a pothole; a pit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60c2ef7278c4e1b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to get tangled, then the Malayalam for to grope for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുഴി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുഴി — kuḻi — \"a pothole; a pit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വഴിയിലെ വലിയ കുഴിയിൽ ബൈക്ക് വീണു. vaḻiyile valiya kuḻiyil baikkŭ vīṇu. The motorbike fell into a big pothole in the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: കുഴികൾ, kuḻikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Any hole in the ground: a pit, a grave, a pothole."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുഴി (kuḻi) is native Dravidian, \"a hollow, a hole, a pit\" (DEDR 1818)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḻiyile valiya kuḻiyil baikkŭ vīṇu. — The motorbike fell into a big pothole in the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḻiyile valiya kuḻiyil baikkŭ vīṇu.* — The motorbike fell into a big pothole in the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to get tangled, then the Malayalam for to grope for, then say kuḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to get tangled, then the Malayalam for to grope for, then say *kuḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുഴി (kuḻi) mean? (\"A pothole; a pit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C516-poti",
+      "sequence": 25820,
+      "title": "പൊടി (poṭi) — dust; powder",
+      "headword": "പൊടി",
+      "romanization": "poṭi",
+      "gloss": "dust; powder",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7ff1f09cac9b5d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to grope for, then the Malayalam for a pothole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പൊടി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പൊടി — poṭi — \"dust; powder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വേനലിൽ വഴിയിൽ നിറയെ പൊടിയാണ്. vēnalil vaḻiyil niṟaye poṭiyāṇŭ. In the dry season the road is full of dust."
+            },
+            {
+              "kind": "speech",
+              "text": "Also any powder: മുളകുപൊടി, chilli powder."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പൊടി (poṭi) is native Dravidian, \"dust, powder\" (DEDR 4481)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēnalil vaḻiyil niṟaye poṭiyāṇŭ. — In the dry season the road is full of dust.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēnalil vaḻiyil niṟaye poṭiyāṇŭ.* — In the dry season the road is full of dust.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to grope for, then the Malayalam for a pothole, then say poṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to grope for, then the Malayalam for a pothole, then say *poṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പൊടി (poṭi) mean? (\"Dust; powder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C516-atayuka",
+      "sequence": 25830,
+      "title": "അടയുക (aṭayuka) — to get blocked; to be shut",
+      "headword": "അടയുക",
+      "romanization": "aṭayuka",
+      "gloss": "to get blocked; to be shut",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72c4b367254e7bd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a pothole, then the Malayalam for dust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അടയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അടയുക — aṭayuka — \"to get blocked; to be shut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ചവറ് കാരണം തോടുകൾ അടഞ്ഞു. cavaṟŭ kāraṇaṁ tōṭukaḷ aṭaññu. Because of the litter, the streams got blocked."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അടഞ്ഞു, aṭaññu."
+            },
+            {
+              "kind": "speech",
+              "text": "The intransitive partner of അടയ്ക്കുക, to close: a road, a drain or a nose gets blocked."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അടയുക (aṭayuka) is native Dravidian, \"to be shut, to be blocked up\" (DEDR 83)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭayuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭayuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭayuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭayuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cavaṟŭ kāraṇaṁ tōṭukaḷ aṭaññu. — Because of the litter, the streams got blocked.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cavaṟŭ kāraṇaṁ tōṭukaḷ aṭaññu.* — Because of the litter, the streams got blocked.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a pothole, then the Malayalam for dust, then say aṭayuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a pothole, then the Malayalam for dust, then say *aṭayuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അടയുക (aṭayuka) mean? (\"To get blocked; to be shut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C516-tatayuka",
+      "sequence": 25840,
+      "title": "തടയുക (taṭayuka) — to block; to stop",
+      "headword": "തടയുക",
+      "romanization": "taṭayuka",
+      "gloss": "to block; to stop",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9ca7b29abee7b09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for dust, then the Malayalam for to get blocked."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തടയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തടയുക — taṭayuka — \"to block; to stop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് പാലത്തിൽ വണ്ടികൾ തടഞ്ഞു. pōlīsŭ pālattil vaṇṭikaḷ taṭaññu. The police stopped the vehicles at the bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: തടഞ്ഞു, taṭaññu."
+            },
+            {
+              "kind": "speech",
+              "text": "What is stopped takes no ending or -എ: വണ്ടികൾ തടഞ്ഞു."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തടയുക (taṭayuka) is native Dravidian, \"to be obstructed; to stop\" (DEDR 3031)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭayuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭayuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭayuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭayuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ pālattil vaṇṭikaḷ taṭaññu. — The police stopped the vehicles at the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ pālattil vaṇṭikaḷ taṭaññu.* — The police stopped the vehicles at the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for dust, then the Malayalam for to get blocked, then say taṭayuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for dust, then the Malayalam for to get blocked, then say *taṭayuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തടയുക (taṭayuka) mean? (\"To block; to stop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C516-tatassappetuka",
+      "sequence": 25850,
+      "title": "തടസ്സപ്പെടുക (taṭassappeṭuka) — to be obstructed; to be held up",
+      "headword": "തടസ്സപ്പെടുക",
+      "romanization": "taṭassappeṭuka",
+      "gloss": "to be obstructed; to be held up",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8b6f77bb9ff111b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to get blocked, then the Malayalam for to block."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തടസ്സപ്പെടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തടസ്സപ്പെടുക — taṭassappeṭuka — \"to be obstructed; to be held up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മരം വീണ് ഗതാഗതം തടസ്സപ്പെട്ടു. maraṁ vīṇŭ gatāgataṁ taṭassappeṭṭu. A tree fell and the traffic was held up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: തടസ്സപ്പെട്ടു, taṭassappeṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "തടസ്സം, an obstacle, plus -പ്പെടുക, to undergo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തടസ്സപ്പെടുക (taṭassappeṭuka) is a native Dravidian verb built on തടസ്സം, an obstruction (DEDR 3031), with -പ്പെടുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭassappeṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭassappeṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭassappeṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭassappeṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraṁ vīṇŭ gatāgataṁ taṭassappeṭṭu. — A tree fell and the traffic was held up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraṁ vīṇŭ gatāgataṁ taṭassappeṭṭu.* — A tree fell and the traffic was held up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to get blocked, then the Malayalam for to block, then say taṭassappeṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to get blocked, then the Malayalam for to block, then say *taṭassappeṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തടസ്സപ്പെടുക (taṭassappeṭuka) mean? (\"To be obstructed; to be held up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R516-review-509-516",
+      "sequence": 25860,
+      "title": "More words for getting around",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 509-516",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5055683c02cc2f07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for temperature and humidity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temperature, humidity, sultry heat, a chill, to get hot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: temperature, humidity, sultry heat, a chill, to get hot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fog, hail, to cloud over, to grow cold, to rumble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fog, hail, to cloud over, to grow cold, to rumble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a forecast, vigilance, a heatwave, a cyclone, to snap and fall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a forecast, vigilance, a heatwave, a cyclone, to snap and fall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to overflow its banks, waterlogging, to float up, to go under, to divert",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to overflow its banks, waterlogging, to float up, to go under, to divert]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a relief camp, disaster relief, to cave in, to be uprooted, to be in distress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a relief camp, disaster relief, to cave in, to be uprooted, to be in distress]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a drought, to crack open, to get scorched, to be disconnected, to stop working",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a drought, to crack open, to get scorched, to be disconnected, to stop working]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "breakage, compensation, a hardship, to get tangled, to grope for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: breakage, compensation, a hardship, to get tangled, to grope for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pothole, dust, to get blocked, to block, to be obstructed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pothole, dust, to get blocked, to block, to be obstructed]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Temperature? (താപനില, tāpanila.) Humidity? (ആർദ്രത, ārdrata.) Sultry heat? (ഉഷ്ണം, uṣṇaṁ.) A chill? (കുളിർ, kuḷir.) To get hot? (ചൂടാകുക, cūṭākuka.) Fog? (മൂടൽമഞ്ഞ്, mūṭalmaññŭ.) Hail? (ആലിപ്പഴം, ālippaḻaṁ.) To cloud over? (മൂടിക്കെട്ടുക, mūṭikkeṭṭuka.) To grow cold? (തണുക്കുക, taṇukkuka.) To rumble? (ഇരമ്പുക, irampuka.) A forecast? (പ്രവചനം, pravacanaṁ.) Vigilance? (ജാഗ്രത, jāgrata.) A heatwave? (ഉഷ്ണതരംഗം, uṣṇataraṁgaṁ.) A cyclone? (ചുഴലിക്കാറ്റ്, cuḻalikkāṟṟŭ.) To snap and fall? (പൊട്ടിവീഴുക, poṭṭivīḻuka.) To overflow its banks? (കരകവിയുക, karakaviyuka.) Waterlogging? (വെള്ളക്കെട്ട്, veḷḷakkeṭṭŭ.) To float up? (പൊങ്ങുക, poṅṅuka.) To go under? (മുങ്ങിപ്പോകുക, muṅṅippōkuka.) To divert? (വഴിതിരിച്ചുവിടുക, vaḻitiriccuviṭuka.) A relief camp? (ക്യാമ്പ്, kyāmpŭ.) Disaster relief? (ദുരിതാശ്വാസം, duritāśvāsaṁ.) To cave in? (ഇടിയുക, iṭiyuka.) To be uprooted? (കടപുഴകുക, kaṭapuḻakuka.) To be in distress? (വലയുക, valayuka.) A drought? (വരൾച്ച, varaḷcca.) To crack open? (വിണ്ടുകീറുക, viṇṭukīṟuka.) To get scorched? (കരിയുക, kariyuka.) To be disconnected? (മുറിഞ്ഞുപോകുക, muṟiññupōkuka.) To stop working? (നിലയ്ക്കുക, nilaykkuka.) Breakage? (കേടുപാട്, kēṭupāṭŭ.) Compensation? (നഷ്ടപരിഹാരം, naṣṭaparihāraṁ.) A hardship? (ബുദ്ധിമുട്ട്, buddhimuṭṭŭ.) To get tangled? (കുരുങ്ങുക, kuruṅṅuka.) To grope for? (തപ്പുക, tappuka.) A pothole? (കുഴി, kuḻi.) Dust? (പൊടി, poṭi.) To get blocked? (അടയുക, aṭayuka.) To block? (തടയുക, taṭayuka.) To be obstructed? (തടസ്സപ്പെടുക, taṭassappeṭuka.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R516-review-final-516",
+      "sequence": 25870,
+      "title": "Blocked Roads — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 516",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99718bce00836b88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for a pothole and dust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pothole, dust, to get blocked, to block, to be obstructed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pothole, dust, to get blocked, to block, to be obstructed]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A pothole? (കുഴി, kuḻi.) Dust? (പൊടി, poṭi.) To get blocked? (അടയുക, aṭayuka.) To block? (തടയുക, taṭayuka.) To be obstructed? (തടസ്സപ്പെടുക, taṭassappeṭuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

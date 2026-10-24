@@ -1,0 +1,10 @@
+{
+  "id": "TE-EXT-320-ASK-THE-WAY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask where a place is and how to get there, follow directions with sūṭigā, eḍama vaipu and kuḍi vaipu, and talk about my ūru.",
+  "prerequisites": [
+    "TE-EXT-319-MUST-BECAUSE"
+  ]
+}

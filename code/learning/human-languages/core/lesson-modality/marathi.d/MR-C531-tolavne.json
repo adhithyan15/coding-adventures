@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C531-tolavne",
+    "language": "marathi",
+    "chapter": 531,
+    "sequence": 30410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44ce41c6f8da3b5f"
+  },
+  "findings": []
+}

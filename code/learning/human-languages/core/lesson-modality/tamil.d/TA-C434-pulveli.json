@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C434-pulveli",
+    "language": "tamil",
+    "chapter": 434,
+    "sequence": 24840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c21638b9b41db4e3"
+  },
+  "findings": []
+}

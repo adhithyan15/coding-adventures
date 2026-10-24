@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C313-singhason",
+    "language": "bengali",
+    "chapter": 313,
+    "sequence": 19910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f67d9bb699c495e"
+  },
+  "findings": []
+}

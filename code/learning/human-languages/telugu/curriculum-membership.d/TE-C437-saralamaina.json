@@ -1,0 +1,11 @@
+{
+  "id": "TE-C437-saralamaina",
+  "pathSegment": "TE-PATH-437-SANKLISTAM437",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-437-SANKLISTAM437",
+      "order": 1
+    }
+  ]
+}

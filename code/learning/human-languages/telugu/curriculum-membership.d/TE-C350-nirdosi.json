@@ -1,0 +1,11 @@
+{
+  "id": "TE-C350-nirdosi",
+  "pathSegment": "TE-PATH-350-NERAM350",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-350-NERAM350",
+      "order": 3
+    }
+  ]
+}

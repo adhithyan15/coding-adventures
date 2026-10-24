@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "If Not, Then What",
+  "label": "ch:te-if-not-then-what",
+  "canDo": "I can say otherwise, depending on, and whatever happens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C419-sambhavincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can say otherwise, depending on, and whatever happens.",
+    "assesses": [
+      "TE-LEX-C419-KAKAPOTE419-03",
+      "TE-LEX-C419-KAKAPOTE419-04",
+      "TE-LEX-C419-KAKAPOTE419-05"
+    ]
+  }
+}

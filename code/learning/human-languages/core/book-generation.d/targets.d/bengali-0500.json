@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 500,
+  "output": "bengali/book/chapters/ch500-orders-and-departments.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

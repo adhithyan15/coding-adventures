@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:8a8632a9bf111878",
+  "lessonIds": [
+    "ML-C506-suryodayam",
+    "ML-C506-suryastamayam",
+    "ML-C506-cakravalam",
+    "ML-C506-antariksam",
+    "ML-C506-malakkar"
+  ],
+  "tex": "malayalam/book/chapters/ch506-the-sky.tex"
+}

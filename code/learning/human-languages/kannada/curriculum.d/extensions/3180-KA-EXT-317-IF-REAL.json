@@ -1,0 +1,10 @@
+{
+  "id": "KA-EXT-317-IF-REAL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what will happen if something happens with the -are form (bandare, iddare), add ondu vēḷe for if by chance, and say if not with -adiddare.",
+  "prerequisites": [
+    "KA-EXT-316-COMPARE-DURATION"
+  ]
+}

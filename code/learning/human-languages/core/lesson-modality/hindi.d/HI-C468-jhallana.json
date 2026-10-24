@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C468-jhallana",
+    "language": "hindi",
+    "chapter": 468,
+    "sequence": 25860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7fb6d1351a3b5d5"
+  },
+  "findings": []
+}

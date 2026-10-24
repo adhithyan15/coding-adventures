@@ -1,0 +1,11 @@
+{
+  "id": "HI-C395-qatai",
+  "pathSegment": "HI-PATH-395-MANZURI395",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-395-MANZURI395",
+      "order": 4
+    }
+  ]
+}

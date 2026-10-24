@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "Time Pressure",
+  "label": "ch:bn-time-pressure",
+  "canDo": "I can talk about rushing, breaks and dates drawing near.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C544-jhotpot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can talk about rushing, breaks and dates drawing near.",
+    "assesses": [
+      "BN-LEX-C544-SOMOY544-03",
+      "BN-LEX-C544-SOMOY544-04",
+      "BN-LEX-C544-SOMOY544-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:788a3d766290bb1f",
+  "lessonIds": [
+    "TE-C411-janaganana",
+    "TE-C411-sarve",
+    "TE-C411-ganankalu",
+    "TE-C411-prajabhiprayam",
+    "TE-C411-satam"
+  ],
+  "tex": "telugu/book/chapters/ch411-counting-people.tex"
+}

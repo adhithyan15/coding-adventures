@@ -1,0 +1,11 @@
+{
+  "id": "AR-C379-nashit",
+  "pathSegment": "AR-PATH-379-HIZB379",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-379-HIZB379",
+      "order": 3
+    }
+  ]
+}

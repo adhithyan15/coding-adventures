@@ -1,0 +1,11 @@
+{
+  "id": "AR-C400-sawa",
+  "pathSegment": "AR-PATH-400-KULLAMA400",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-400-KULLAMA400",
+      "order": 3
+    }
+  ]
+}

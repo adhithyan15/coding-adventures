@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Routes and fares",
+  "label": "ch:ar-routes-and-fares",
+  "canDo": "I can say a route, a fare, a subscription, a pedestrian crossing and to turn around.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C435-istadara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can say a route, a fare, a subscription, a pedestrian crossing and to turn around.",
+    "assesses": [
+      "AR-LEX-C435-MASAR435-03",
+      "AR-LEX-C435-MASAR435-04",
+      "AR-LEX-C435-MASAR435-05"
+    ]
+  }
+}

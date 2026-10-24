@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-522-VRTTI522",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-522-VRTTI522"
+  ],
+  "after": []
+}

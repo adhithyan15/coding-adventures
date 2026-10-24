@@ -1,0 +1,11 @@
+{
+  "id": "ML-C533-svasammuttu",
+  "pathSegment": "ML-PATH-533-VAKSIN533",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-533-VAKSIN533",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "KA-EXT-316-COMPARE-DURATION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can compare two things with -ginta, say which is most with ellakkinta, say how long something has gone on with -inda, and give a span from … until.",
+  "prerequisites": [
+    "KA-EXT-315-FEELINGS-HOPES"
+  ]
+}

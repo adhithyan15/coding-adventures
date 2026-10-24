@@ -1,0 +1,23 @@
+{
+  "chapter": 317,
+  "title": "Telling a Story in Order",
+  "label": "ch:te-telling-a-story-in-order",
+  "canDo": "I can tell a short story in order with modaṭa, ā taruvāta, the -i form and civariki, and read one of about eighty words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-R317-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete TE-R317-a-story-in-order: retell a day in order with modaṭa, ā taruvāta, -i and civariki, read the new letter ఈ, and say what someone did in the meantime.",
+    "assesses": [
+      "TE-LEX-C317-ILOGA-01",
+      "TE-SCRIPT-RECOG-174",
+      "TE-GRAMMAR-C317-FIRST-THEN-01",
+      "TE-GRAMMAR-C317-CIVARIKI-01",
+      "TE-GRAMMAR-C317-CONJUNCTIVE-01",
+      "TE-GRAMMAR-C317-AFTER-DOING-01",
+      "TE-SKILL-C317-READ-STORY-01"
+    ]
+  }
+}

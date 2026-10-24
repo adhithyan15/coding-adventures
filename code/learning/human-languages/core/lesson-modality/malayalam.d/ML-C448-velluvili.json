@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C448-velluvili",
+    "language": "malayalam",
+    "chapter": 448,
+    "sequence": 22210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4f913b188d30ac5"
+  },
+  "findings": []
+}

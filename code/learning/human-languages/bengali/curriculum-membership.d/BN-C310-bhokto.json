@@ -1,0 +1,11 @@
+{
+  "id": "BN-C310-bhokto",
+  "pathSegment": "BN-PATH-310-SHONKHO310",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-310-SHONKHO310",
+      "order": 2
+    }
+  ]
+}

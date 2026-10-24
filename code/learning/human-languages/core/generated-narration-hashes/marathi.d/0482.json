@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:1937efa3ae76c89b",
+  "lessonIds": [
+    "MR-C482-dokedukhi",
+    "MR-C482-dukhne",
+    "MR-C482-kal-yene",
+    "MR-C482-kanhne",
+    "MR-C482-vivhalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch482.txt",
+  "json": "marathi/narration/ch482.json",
+  "textHash": "fnv1a64:b3cd4b84246177db",
+  "jsonHash": "fnv1a64:c56a7a0283678659",
+  "findings": []
+}

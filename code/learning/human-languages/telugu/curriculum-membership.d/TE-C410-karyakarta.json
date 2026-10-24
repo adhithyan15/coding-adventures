@@ -1,0 +1,11 @@
+{
+  "id": "TE-C410-karyakarta",
+  "pathSegment": "TE-PATH-410-SEVA410",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-410-SEVA410",
+      "order": 3
+    }
+  ]
+}

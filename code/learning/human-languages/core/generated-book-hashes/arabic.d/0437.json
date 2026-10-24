@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:ce29dd249f50da30",
+  "lessonIds": [
+    "AR-C437-busala",
+    "AR-C437-sura",
+    "AR-C437-murshid",
+    "AR-C437-arshada",
+    "AR-C437-khatt-sayr"
+  ],
+  "tex": "arabic/book/chapters/ch437-finding-the-way.tex"
+}

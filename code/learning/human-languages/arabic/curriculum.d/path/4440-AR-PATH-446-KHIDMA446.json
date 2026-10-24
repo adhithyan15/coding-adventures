@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-446-KHIDMA446",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-446-KHIDMA446"
+  ],
+  "after": []
+}

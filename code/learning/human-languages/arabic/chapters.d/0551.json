@@ -1,0 +1,19 @@
+{
+  "chapter": 551,
+  "title": "Sheets, cushions and a couch",
+  "label": "ch:ar-sheets-cushions-and-a-couch",
+  "canDo": "I can name a bedsheet, a cushion, a basin, a mop and a couch.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-R551-review-544-551",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 551: I can name a bedsheet, a cushion, a basin, a mop and a couch.",
+    "assesses": [
+      "AR-LEX-C551-GHURFA551-03",
+      "AR-LEX-C551-GHURFA551-04",
+      "AR-LEX-C551-GHURFA551-05"
+    ]
+  }
+}

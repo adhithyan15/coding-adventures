@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Fields of Knowledge",
+  "label": "ch:ta-fields-of-knowledge",
+  "canDo": "I can name some fields of study and define a word.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C366-varaiyaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can name some fields of study and define a word.",
+    "assesses": [
+      "TA-LEX-C366-TURAI366-03",
+      "TA-LEX-C366-TURAI366-04",
+      "TA-LEX-C366-TURAI366-05"
+    ]
+  }
+}

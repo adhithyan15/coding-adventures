@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 386,
+  "title": "Hosts and Guests",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7017c211d9964a51",
+  "lessons": [
+    {
+      "id": "ML-C386-atitheyan",
+      "sequence": 18890,
+      "title": "ആതിഥേയൻ (ātithēyan) — a host",
+      "headword": "ആതിഥേയൻ",
+      "romanization": "ātithēyan",
+      "gloss": "a host",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61f66c69ffa05304",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an invitation card, then the Malayalam for to marry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആതിഥേയൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആതിഥേയൻ — ātithēyan — \"a host\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആതിഥേയൻ എല്ലാ അതിഥികളെയും വാതിൽക്കൽ സ്വാഗതം ചെയ്തു. ātithēyan ellā atithikaḷeyuṁ vātilkkal svāgataṁ ceytu. The host welcomed all the guests at the door."
+            },
+            {
+              "kind": "speech",
+              "text": "From അതിഥി, a guest: the one who receives guests."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആതിഥേയൻ (ātithēyan) is borrowed from Sanskrit ātitheya, \"proper for a guest, hospitable\" (Monier-Williams), from atithi, \"a guest\", the source of അതിഥി (atithi)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātithēyan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātithēyan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātithēyan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātithēyan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātithēyan ellā atithikaḷeyuṁ vātilkkal svāgataṁ ceytu. — The host welcomed all the guests at the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātithēyan ellā atithikaḷeyuṁ vātilkkal svāgataṁ ceytu.* — The host welcomed all the guests at the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an invitation card, then the Malayalam for to marry, then say ātithēyan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an invitation card, then the Malayalam for to marry, then say *ātithēyan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആതിഥേയൻ (ātithēyan) mean? (\"A host\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C386-atithyam",
+      "sequence": 18900,
+      "title": "ആതിഥ്യം (ātithyaṁ) — hospitality",
+      "headword": "ആതിഥ്യം",
+      "romanization": "ātithyaṁ",
+      "gloss": "hospitality",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85403b623e36d411",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to marry, then the Malayalam for a host."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആതിഥ്യം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആതിഥ്യം — ātithyaṁ — \"hospitality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവരുടെ ആതിഥ്യം ഞങ്ങൾ ഒരിക്കലും മറക്കില്ല. avaruṭe ātithyaṁ ñaṅṅaḷ orikkaluṁ maṟakkilla. We will never forget their hospitality."
+            },
+            {
+              "kind": "speech",
+              "text": "Also from അതിഥി: what a good host gives."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആതിഥ്യം (ātithyaṁ) is borrowed from Sanskrit ātithya, \"proper for a guest\" (Monier-Williams), the noun of atithi, \"a guest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātithyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātithyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātithyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātithyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaruṭe ātithyaṁ ñaṅṅaḷ orikkaluṁ maṟakkilla. — We will never forget their hospitality.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaruṭe ātithyaṁ ñaṅṅaḷ orikkaluṁ maṟakkilla.* — We will never forget their hospitality.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to marry, then the Malayalam for a host, then say ātithyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to marry, then the Malayalam for a host, then say *ātithyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആതിഥ്യം (ātithyaṁ) mean? (\"Hospitality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C386-svikaranam",
+      "sequence": 18910,
+      "title": "സ്വീകരണം (svīkaraṇaṁ) — a reception; a welcome",
+      "headword": "സ്വീകരണം",
+      "romanization": "svīkaraṇaṁ",
+      "gloss": "a reception; a welcome",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9babd33abde6eb47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a host, then the Malayalam for hospitality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സ്വീകരണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്വീകരണം — svīkaraṇaṁ — \"a reception; a welcome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വിവാഹത്തിന് ശേഷം ഹാളിൽ ഒരു സ്വീകരണം ഉണ്ടായിരുന്നു. vivāhattinŭ śēṣaṁ hāḷil oru svīkaraṇaṁ uṇṭāyirunnu. After the wedding there was a reception in the hall."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a welcome given to someone: അവന് വലിയ സ്വീകരണം (svīkaraṇaṁ) കിട്ടി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്വീകരണം (svīkaraṇaṁ) is borrowed from Sanskrit svīkaraṇa, \"making one's own, accepting\" (Monier-Williams): a reception takes guests in as one's own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svīkaraṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svīkaraṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svīkaraṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svīkaraṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivāhattinŭ śēṣaṁ hāḷil oru svīkaraṇaṁ uṇṭāyirunnu. — After the wedding there was a reception in the hall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivāhattinŭ śēṣaṁ hāḷil oru svīkaraṇaṁ uṇṭāyirunnu.* — After the wedding there was a reception in the hall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a host, then the Malayalam for hospitality, then say svīkaraṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a host, then the Malayalam for hospitality, then say *svīkaraṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സ്വീകരണം (svīkaraṇaṁ) mean? (\"A reception; a welcome\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C386-ksanikkuka",
+      "sequence": 18920,
+      "title": "ക്ഷണിക്കുക (kṣaṇikkuka) — to invite",
+      "headword": "ക്ഷണിക്കുക",
+      "romanization": "kṣaṇikkuka",
+      "gloss": "to invite",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bf898df7bc97bff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for hospitality, then the Malayalam for a reception."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ക്ഷണിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷണിക്കുക — kṣaṇikkuka — \"to invite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവർ ഞങ്ങളെ വിവാഹത്തിന് ക്ഷണിച്ചു. avar ñaṅṅaḷe vivāhattinŭ kṣaṇiccu. They invited us to the wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ക്ഷണിച്ചു, kṣaṇiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The guest takes -എ, the event -ക്ക് or -ന്: എന്നെ പാർട്ടിക്ക് ക്ഷണിച്ചു."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷണിക്കുക (kṣaṇikkuka) is built on ക്ഷണം (kṣaṇaṁ), \"an invitation\", from Sanskrit kṣaṇa (CDIAL 3642), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣaṇikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣaṇikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣaṇikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣaṇikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar ñaṅṅaḷe vivāhattinŭ kṣaṇiccu. — They invited us to the wedding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar ñaṅṅaḷe vivāhattinŭ kṣaṇiccu.* — They invited us to the wedding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for hospitality, then the Malayalam for a reception, then say kṣaṇikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for hospitality, then the Malayalam for a reception, then say *kṣaṇikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്ഷണിക്കുക (kṣaṇikkuka) mean? (\"To invite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C386-svikarikkuka",
+      "sequence": 18930,
+      "title": "സ്വീകരിക്കുക (svīkarikkuka) — to receive; to accept",
+      "headword": "സ്വീകരിക്കുക",
+      "romanization": "svīkarikkuka",
+      "gloss": "to receive; to accept",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35c0b1cfac89b61b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a reception, then the Malayalam for to invite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സ്വീകരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്വീകരിക്കുക — svīkarikkuka — \"to receive; to accept\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അമ്മ അതിഥികളെ ചിരിയോടെ സ്വീകരിച്ചു. amma atithikaḷe ciriyōṭe svīkariccu. Mother received the guests with a smile."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സ്വീകരിച്ചു, svīkariccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to accept: സമ്മാനം സ്വീകരിച്ചു, accepted the prize."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്വീകരിക്കുക (svīkarikkuka) is built from Sanskrit svīkāra, \"making one's own; reception\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svīkarikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svīkarikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svīkarikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svīkarikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amma atithikaḷe ciriyōṭe svīkariccu. — Mother received the guests with a smile.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amma atithikaḷe ciriyōṭe svīkariccu.* — Mother received the guests with a smile.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a reception, then the Malayalam for to invite, then say svīkarikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a reception, then the Malayalam for to invite, then say *svīkarikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സ്വീകരിക്കുക (svīkarikkuka) mean? (\"To receive; to accept\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

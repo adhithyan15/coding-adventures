@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C494-nate",
+    "language": "marathi",
+    "chapter": 494,
+    "sequence": 28250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f631663d66da61d"
+  },
+  "findings": []
+}

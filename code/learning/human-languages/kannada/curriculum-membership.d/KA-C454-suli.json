@@ -1,0 +1,11 @@
+{
+  "id": "KA-C454-suli",
+  "pathSegment": "KA-PATH-454-TEPPA454",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-454-TEPPA454",
+      "order": 4
+    }
+  ]
+}

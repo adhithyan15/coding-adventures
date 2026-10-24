@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-329-THAWRA329",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-329-THAWRA329"
+  ],
+  "after": []
+}

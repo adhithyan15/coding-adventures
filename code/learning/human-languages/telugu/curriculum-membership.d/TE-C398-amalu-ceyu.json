@@ -1,0 +1,11 @@
+{
+  "id": "TE-C398-amalu-ceyu",
+  "pathSegment": "TE-PATH-398-CATTAM398",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-398-CATTAM398",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C390-ekun",
+  "pathSegment": "MR-PATH-390-EKUN390",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-390-EKUN390",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C422-paramarsisu",
+    "language": "kannada",
+    "chapter": 422,
+    "sequence": 21360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0fc63772390e6ac"
+  },
+  "findings": []
+}

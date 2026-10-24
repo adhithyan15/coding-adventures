@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C377-vivada",
+    "language": "kannada",
+    "chapter": 377,
+    "sequence": 19070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47c8d8a7324427a9"
+  },
+  "findings": []
+}

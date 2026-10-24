@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:062ee358bce4422f",
+  "lessonIds": [
+    "AR-C391-bahith",
+    "AR-C391-dirasa",
+    "AR-C391-mukhtabar",
+    "AR-C391-mahad",
+    "AR-C391-istibyan"
+  ],
+  "tex": "arabic/book/chapters/ch391-research.tex"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-284-PAST-SCENE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what happened in the past for every person (vantēṉ, vantāṉ, vantārkaḷ), set the scene with -koṇṭiruntēṉ and vanta pōtu, say what there was with iruntatu, and say what did not happen with -villai.",
+  "prerequisites": [
+    "TA-EXT-283-A2WRITING"
+  ]
+}

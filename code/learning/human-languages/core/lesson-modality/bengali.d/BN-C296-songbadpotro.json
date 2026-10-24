@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C296-songbadpotro",
+    "language": "bengali",
+    "chapter": 296,
+    "sequence": 19020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7897ffb14d1109de"
+  },
+  "findings": []
+}

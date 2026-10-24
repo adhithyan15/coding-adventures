@@ -1,0 +1,11 @@
+{
+  "id": "TE-C391-pradhanyam",
+  "pathSegment": "TE-PATH-391-PRAMUKHYATA391",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-391-PRAMUKHYATA391",
+      "order": 1
+    }
+  ]
+}

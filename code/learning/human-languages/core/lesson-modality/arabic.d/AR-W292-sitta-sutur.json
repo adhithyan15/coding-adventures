@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W292-sitta-sutur",
+    "language": "arabic",
+    "chapter": 292,
+    "sequence": 16840,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e78d9830e4d33bbf",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ]
+  },
+  "findings": []
+}

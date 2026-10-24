@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:e5d5bd526ba23e68",
+  "lessonIds": [
+    "MR-C497-dhakta",
+    "MR-C497-thorla",
+    "MR-C497-ekulta",
+    "MR-C497-culat",
+    "MR-C497-savatra"
+  ],
+  "tex": "marathi/book/chapters/ch497-elder-and-younger.tex"
+}

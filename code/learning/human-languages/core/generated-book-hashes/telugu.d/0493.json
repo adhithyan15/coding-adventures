@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:d5fee06364bf271c",
+  "lessonIds": [
+    "TE-C493-samagri",
+    "TE-C493-sagu",
+    "TE-C493-tippu",
+    "TE-C493-cediripovu",
+    "TE-C493-venudirugu",
+    "TE-R493-review-486-493",
+    "TE-R493-review-final-493"
+  ],
+  "tex": "telugu/book/chapters/ch493-heading-home.tex"
+}

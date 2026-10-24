@@ -1,0 +1,11 @@
+{
+  "id": "TE-C385-sammatincu",
+  "pathSegment": "TE-PATH-385-ANGIKARAM385",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-385-ANGIKARAM385",
+      "order": 3
+    }
+  ]
+}

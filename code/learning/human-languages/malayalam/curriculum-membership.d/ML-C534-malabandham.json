@@ -1,0 +1,11 @@
+{
+  "id": "ML-C534-malabandham",
+  "pathSegment": "ML-PATH-534-NENCU534",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-534-NENCU534",
+      "order": 2
+    }
+  ]
+}

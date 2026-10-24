@@ -1,0 +1,11 @@
+{
+  "id": "KA-C441-manna-madu",
+  "pathSegment": "KA-PATH-441-SHULKA441",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-441-SHULKA441",
+      "order": 1
+    }
+  ]
+}

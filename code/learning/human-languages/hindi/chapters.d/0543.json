@@ -1,0 +1,19 @@
+{
+  "chapter": 543,
+  "title": "Keeping One's Word",
+  "label": "ch:hi-keeping-one-s-word",
+  "canDo": "I can talk about promises, oaths and being bound by them.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C543-paband",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 543: I can talk about promises, oaths and being bound by them.",
+    "assesses": [
+      "HI-LEX-C543-VACHAN543-03",
+      "HI-LEX-C543-VACHAN543-04",
+      "HI-LEX-C543-VACHAN543-05"
+    ]
+  }
+}

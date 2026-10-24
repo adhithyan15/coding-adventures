@@ -1,0 +1,11 @@
+{
+  "id": "TA-C453-ericcal",
+  "pathSegment": "TA-PATH-453-KOPAM453",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-453-KOPAM453",
+      "order": 1
+    }
+  ]
+}

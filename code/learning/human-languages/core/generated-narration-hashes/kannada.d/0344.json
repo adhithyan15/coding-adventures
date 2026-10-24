@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:d024527b72402e47",
+  "lessonIds": [
+    "KA-C344-ayudha",
+    "KA-C344-banduku",
+    "KA-C344-ranaranga",
+    "KA-C344-ratha",
+    "KA-C344-kadadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch344.txt",
+  "json": "kannada/narration/ch344.json",
+  "textHash": "fnv1a64:df82dc9d5e692a5e",
+  "jsonHash": "fnv1a64:da57da1fc06ae312",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:f844c0477620f3b0",
+  "lessonIds": [
+    "MR-C484-rog",
+    "MR-C484-samsarga",
+    "MR-C484-jantu",
+    "MR-C484-visanu",
+    "MR-C484-sath"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch484.txt",
+  "json": "marathi/narration/ch484.json",
+  "textHash": "fnv1a64:e29113ff3f7b9248",
+  "jsonHash": "fnv1a64:cccbaafa8f39e6b6",
+  "findings": []
+}

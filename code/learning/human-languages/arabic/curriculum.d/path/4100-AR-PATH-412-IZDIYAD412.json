@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-412-IZDIYAD412",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "AR-EXT-412-IZDIYAD412"
+  ],
+  "after": []
+}

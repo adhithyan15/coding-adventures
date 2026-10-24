@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C444-anumati",
+    "language": "malayalam",
+    "chapter": 444,
+    "sequence": 22000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b74cc7fb8fcb8821"
+  },
+  "findings": []
+}

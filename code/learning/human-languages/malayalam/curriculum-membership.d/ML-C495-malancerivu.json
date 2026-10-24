@@ -1,0 +1,11 @@
+{
+  "id": "ML-C495-malancerivu",
+  "pathSegment": "ML-PATH-495-MALA495",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-495-MALA495",
+      "order": 1
+    }
+  ]
+}

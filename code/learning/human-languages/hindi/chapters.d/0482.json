@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "How Someone Looks",
+  "label": "ch:hi-how-someone-looks",
+  "canDo": "I can describe how tall or thin someone is.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C482-dubla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can describe how tall or thin someone is.",
+    "assesses": [
+      "HI-LEX-C482-KAD482-03",
+      "HI-LEX-C482-KAD482-04",
+      "HI-LEX-C482-KAD482-05"
+    ]
+  }
+}

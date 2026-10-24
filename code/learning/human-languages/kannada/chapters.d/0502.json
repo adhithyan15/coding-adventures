@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Good Manners",
+  "label": "ch:ka-good-manners",
+  "canDo": "I can say polite, obedient, discipline, to take note and to react.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C502-spandisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can say polite, obedient, discipline, to take note and to react.",
+    "assesses": [
+      "KA-LEX-C502-SABHYA502-03",
+      "KA-LEX-C502-SABHYA502-04",
+      "KA-LEX-C502-SABHYA502-05"
+    ]
+  }
+}

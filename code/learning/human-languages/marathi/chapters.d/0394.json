@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Being Aware",
+  "label": "ch:mr-being-aware",
+  "canDo": "I can talk about awareness, realization and good judgement.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C394-umagne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can talk about awareness, realization and good judgement.",
+    "assesses": [
+      "MR-LEX-C394-BHAN394-03",
+      "MR-LEX-C394-BHAN394-04",
+      "MR-LEX-C394-BHAN394-05"
+    ]
+  }
+}

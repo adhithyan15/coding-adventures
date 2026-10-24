@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 448,
+  "title": "Sewage and Stench",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8091e7ef5e580ab8",
+  "lessons": [
+    {
+      "id": "MR-C448-sandpani",
+      "sequence": 25660,
+      "title": "सांडपाणी (sāṇḍpāṇī) — waste water; sewage",
+      "headword": "सांडपाणी",
+      "romanization": "sāṇḍpāṇī",
+      "gloss": "waste water; sewage",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea7a1f43879effe7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to chirp, then the Marathi for migration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सांडपाणी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांडपाणी — sāṇḍpāṇī — \"waste water; sewage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सांडपाणी नदीत सोडू नये. sāṇḍpāṇī nadīt soḍū naye. Waste water should not be let into the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Used water from homes and factories, which should be cleaned before it reaches a river."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांडपाणी (sāṇḍpāṇī) is built from sāṇḍ-, \"spilt, let go\", and पाणी, \"water\", inherited from Sanskrit pānīya (CDIAL 8082); the first part is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāṇḍpāṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāṇḍpāṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāṇḍpāṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāṇḍpāṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāṇḍpāṇī nadīt soḍū naye. — Waste water should not be let into the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāṇḍpāṇī nadīt soḍū naye.* — Waste water should not be let into the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to chirp, then the Marathi for migration, then say sāṇḍpāṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to chirp, then the Marathi for migration, then say *sāṇḍpāṇī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सांडपाणी (sāṇḍpāṇī) mean? (\"Waste water; sewage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C448-durgandhi",
+      "sequence": 25670,
+      "title": "दुर्गंधी (durgandhī) — a stench",
+      "headword": "दुर्गंधी",
+      "romanization": "durgandhī",
+      "gloss": "a stench",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd8ece9362bea6a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for migration, then the Marathi for waste water."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुर्गंधी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुर्गंधी — durgandhī — \"a stench\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सांडपाण्यामुळे गल्लीत दुर्गंधी पसरली. sāṇḍpāṇyāmuḷe gallīt durgandhī pasarlī. A stench spread through the lane because of the sewage."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun; the opposite is सुगंध, a fragrance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुर्गंधी (durgandhī) is a tatsama, taken from Sanskrit durgandha, \"a bad smell, a stink\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durgandhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durgandhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durgandhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durgandhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāṇḍpāṇyāmuḷe gallīt durgandhī pasarlī. — A stench spread through the lane because of the sewage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāṇḍpāṇyāmuḷe gallīt durgandhī pasarlī.* — A stench spread through the lane because of the sewage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for migration, then the Marathi for waste water, then say durgandhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for migration, then the Marathi for waste water, then say *durgandhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुर्गंधी (durgandhī) mean? (\"A stench\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C448-pradusit",
+      "sequence": 25680,
+      "title": "प्रदूषित (pradūṣit) — polluted",
+      "headword": "प्रदूषित",
+      "romanization": "pradūṣit",
+      "gloss": "polluted",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df0b244e8fe51425",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for waste water, then the Marathi for a stench."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रदूषित",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रदूषित — pradūṣit — \"polluted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शहरातली हवा प्रदूषित झाली आहे. śahrātlī havā pradūṣit jhālī āhe. The air in the city has become polluted."
+            },
+            {
+              "kind": "speech",
+              "text": "It does not change: प्रदूषित (pradūṣit) हवा, प्रदूषित (pradūṣit) पाणी."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रदूषित (pradūṣit) is a tatsama, taken from Sanskrit pradūṣita, \"corrupted, spoilt\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradūṣit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradūṣit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradūṣit, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradūṣit*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śahrātlī havā pradūṣit jhālī āhe. — The air in the city has become polluted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śahrātlī havā pradūṣit jhālī āhe.* — The air in the city has become polluted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for waste water, then the Marathi for a stench, then say pradūṣit again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for waste water, then the Marathi for a stench, then say *pradūṣit* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रदूषित (pradūṣit) mean? (\"Polluted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C448-kujne",
+      "sequence": 25690,
+      "title": "कुजणे (kujṇe) — to rot",
+      "headword": "कुजणे",
+      "romanization": "kujṇe",
+      "gloss": "to rot",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a07247bea4e4b9d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a stench, then the Marathi for polluted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कुजणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुजणे — kujṇe — \"to rot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पावसात लाकूड कुजलं. pāvsāt lākūḍ kujlaṁ. The wood rotted in the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो कुजला, to kujlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Wood, leaves and fruit कुजतात slowly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुजणे (kujṇe) is inherited: CDIAL lists Marathi kuj̈ṇẽ, \"to rot\", under kujjati, \"rots\" (CDIAL 3222)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kujṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kujṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kujṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kujṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvsāt lākūḍ kujlaṁ. — The wood rotted in the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvsāt lākūḍ kujlaṁ.* — The wood rotted in the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a stench, then the Marathi for polluted, then say kujṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a stench, then the Marathi for polluted, then say *kujṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कुजणे (kujṇe) mean? (\"To rot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C448-sadne",
+      "sequence": 25700,
+      "title": "सडणे (saḍṇe) — to decay",
+      "headword": "सडणे",
+      "romanization": "saḍṇe",
+      "gloss": "to decay",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b561c59140fb6002",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for polluted, then the Marathi for to rot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सडणे — saḍṇe — \"to decay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "टोपलीतले आंबे सडले. ṭoplītle āmbe saḍle. The mangoes in the basket went rotten."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो सडला, to saḍlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Sharper than कुजणे (kujṇe): it often smells."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सडणे (saḍṇe) is inherited: CDIAL lists Marathi saḍṇẽ, \"to rot\", under Sanskrit śaṭati (CDIAL 12268)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭoplītle āmbe saḍle. — The mangoes in the basket went rotten.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭoplītle āmbe saḍle.* — The mangoes in the basket went rotten.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for polluted, then the Marathi for to rot, then say saḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for polluted, then the Marathi for to rot, then say *saḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सडणे (saḍṇe) mean? (\"To decay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

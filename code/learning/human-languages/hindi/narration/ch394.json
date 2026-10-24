@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 394,
+  "title": "Prizes and Rewards",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4563c15092898060",
+  "lessons": [
+    {
+      "id": "HI-C394-inam",
+      "sequence": 21610,
+      "title": "इनाम (inām) — a prize, a reward",
+      "headword": "इनाम",
+      "romanization": "inām",
+      "gloss": "a prize, a reward",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:436c6de232ad914c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a promotion, then the Hindi for a matter of honour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इनाम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इनाम — inām — \"a prize, a reward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम दौड़ जीतोगे तो तुम्हें इनाम मिलेगा। agar tum dauṛ jītoge to tumhẽ inām milegā. If you win the race, you'll get a prize."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इनाम (inām) is usually traced to Arabic inʿām, \"a favour, a gift\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum dauṛ jītoge to tumhẽ inām milegā. — If you win the race, you'll get a prize.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum dauṛ jītoge to tumhẽ inām milegā.* — If you win the race, you'll get a prize.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a promotion, then the Hindi for a matter of honour, then say inām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a promotion, then the Hindi for a matter of honour, then say *inām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इनाम (inām) mean? (\"A prize, a reward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C394-pratiyogita",
+      "sequence": 21620,
+      "title": "प्रतियोगिता (pratiyogitā) — a competition",
+      "headword": "प्रतियोगिता",
+      "romanization": "pratiyogitā",
+      "gloss": "a competition",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:311480a3738fdd2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a matter of honour, then the Hindi for a prize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रतियोगिता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतियोगिता — pratiyogitā — \"a competition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर कल प्रतियोगिता होगी तो पूरा स्कूल आएगा। agar kal pratiyogitā hogī to pūrā skūl āegā. If the competition is tomorrow, the whole school will come."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतियोगिता (pratiyogitā) is a tatsama, borrowed from Sanskrit pratiyogitā, \"correlation\" (Monier-Williams). Monier-Williams does not give the sense of a contest, which is usually taken as a modern Hindi one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiyogitā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiyogitā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiyogitā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiyogitā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar kal pratiyogitā hogī to pūrā skūl āegā. — If the competition is tomorrow, the whole school will come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar kal pratiyogitā hogī to pūrā skūl āegā.* — If the competition is tomorrow, the whole school will come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a matter of honour, then the Hindi for a prize, then say pratiyogitā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a matter of honour, then the Hindi for a prize, then say *pratiyogitā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रतियोगिता (pratiyogitā) mean? (\"A competition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C394-pad",
+      "sequence": 21630,
+      "title": "पद (pad) — a post, a position",
+      "headword": "पद",
+      "romanization": "pad",
+      "gloss": "a post, a position",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfafd50fe3927710",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a prize, then the Hindi for a competition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पद — pad — \"a post, a position\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर वह चुनाव जीत गया तो उसे मंत्री का पद मिलेगा। agar vah cunāv jīt gayā to use mantrī kā pad milegā. If he wins the election, he'll get a minister's post."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पद (pad) is a tatsama, borrowed from Sanskrit pada, \"a step, a footing\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar vah cunāv jīt gayā to use mantrī kā pad milegā. — If he wins the election, he'll get a minister's post.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar vah cunāv jīt gayā to use mantrī kā pad milegā.* — If he wins the election, he'll get a minister's post.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a prize, then the Hindi for a competition, then say pad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a prize, then the Hindi for a competition, then say *pad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पद (pad) mean? (\"A post, a position\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C394-qabil",
+      "sequence": 21640,
+      "title": "क़ाबिल (qābil) — capable, able",
+      "headword": "क़ाबिल",
+      "romanization": "qābil",
+      "gloss": "capable, able",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c55781919d30d8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a competition, then the Hindi for a post."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क़ाबिल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क़ाबिल — qābil — \"capable, able\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर वह क़ाबिल होता तो उसे यह पद मिलता। agar vah qābil hotā to use yah pad miltā. If he were capable, he would get this post."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क़ाबिल (qābil) is usually traced to Arabic qābil, \"receiving, capable\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qābil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qābil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qābil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qābil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar vah qābil hotā to use yah pad miltā. — If he were capable, he would get this post.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar vah qābil hotā to use yah pad miltā.* — If he were capable, he would get this post.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a competition, then the Hindi for a post, then say qābil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a competition, then the Hindi for a post, then say *qābil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क़ाबिल (qābil) mean? (\"Capable, able\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C394-savarna",
+      "sequence": 21650,
+      "title": "सँवारना (sãvārnā) — to put in order, to make (something) look its best",
+      "headword": "सँवारना",
+      "romanization": "sãvārnā",
+      "gloss": "to put in order, to make (something) look its best",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d83e7cce491214c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a post, then the Hindi for capable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सँवारना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सँवारना — sãvārnā — \"to put in order, to make (something) look its best\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम अपना कमरा सँवारोगे तो मेहमान ख़ुश होंगे। agar tum apnā kamrā sãvāroge to mehmān khuś hoṅge. If you tidy up your room, the guests will be pleased."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने अपना घर सँवारा, usne apnā ghar sãvārā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सँवारना (sãvārnā) is a tadbhava, inherited from Sanskrit saṃvārayati, \"keeps off; puts in order\" (CDIAL 13021)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sãvārnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sãvārnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sãvārnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sãvārnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum apnā kamrā sãvāroge to mehmān khuś hoṅge. — If you tidy up your room, the guests will be pleased.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum apnā kamrā sãvāroge to mehmān khuś hoṅge.* — If you tidy up your room, the guests will be pleased.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a post, then the Hindi for capable, then say sãvārnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a post, then the Hindi for capable, then say *sãvārnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सँवारना (sãvārnā) mean? (\"To put in order, to make (something) look its best\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

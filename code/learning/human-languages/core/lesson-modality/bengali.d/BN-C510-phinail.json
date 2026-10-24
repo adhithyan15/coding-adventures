@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C510-phinail",
+    "language": "bengali",
+    "chapter": 510,
+    "sequence": 30920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25cc2131d5754e21"
+  },
+  "findings": []
+}

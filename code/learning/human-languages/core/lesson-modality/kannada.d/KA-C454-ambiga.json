@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C454-ambiga",
+    "language": "kannada",
+    "chapter": 454,
+    "sequence": 23080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79f0e3e7b62a784f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 489,
+  "title": "Cold Nights and Clear Skies",
+  "label": "ch:ka-cold-nights-and-clear-skies",
+  "canDo": "I can say dew, a chill wind, ice, to freeze and to twinkle.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-R489-review-final-489",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can say dew, a chill wind, ice, to freeze and to twinkle.",
+    "assesses": [
+      "KA-LEX-C489-IBBANI489-01",
+      "KA-LEX-C489-IBBANI489-02",
+      "KA-LEX-C489-IBBANI489-03",
+      "KA-LEX-C489-IBBANI489-04",
+      "KA-LEX-C489-IBBANI489-05"
+    ]
+  }
+}

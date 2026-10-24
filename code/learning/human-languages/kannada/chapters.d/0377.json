@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Logic and Objections",
+  "label": "ch:ka-logic-and-objections",
+  "canDo": "I can say logic, to justify, a controversy, to object and reasonable.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C377-samanjasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can say logic, to justify, a controversy, to object and reasonable.",
+    "assesses": [
+      "KA-LEX-C377-TARKA377-03",
+      "KA-LEX-C377-TARKA377-04",
+      "KA-LEX-C377-TARKA377-05"
+    ]
+  }
+}

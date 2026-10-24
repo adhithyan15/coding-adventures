@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:a37ec8b94aba7ce5",
+  "lessonIds": [
+    "MR-C469-kathor",
+    "MR-C469-nirdayi",
+    "MR-C469-dusta",
+    "MR-C469-ugra",
+    "MR-C469-kapti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch469.txt",
+  "json": "marathi/narration/ch469.json",
+  "textHash": "fnv1a64:60bbc8bfc619f5ab",
+  "jsonHash": "fnv1a64:de2280afd6535972",
+  "findings": []
+}

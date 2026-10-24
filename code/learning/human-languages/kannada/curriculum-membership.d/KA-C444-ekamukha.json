@@ -1,0 +1,11 @@
+{
+  "id": "KA-C444-ekamukha",
+  "pathSegment": "KA-PATH-444-NIYAMA444",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-444-NIYAMA444",
+      "order": 4
+    }
+  ]
+}

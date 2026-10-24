@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C371-otukku",
+    "language": "tamil",
+    "chapter": 371,
+    "sequence": 21370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5d724211dcfebdc"
+  },
+  "findings": []
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 495,
+  "title": "Fear and Fright",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b8445b32cacc2a72",
+  "lessons": [
+    {
+      "id": "TE-C495-bhayapadu",
+      "sequence": 25050,
+      "title": "భయపడు (bhayapaḍu) — to be afraid",
+      "headword": "భయపడు",
+      "romanization": "bhayapaḍu",
+      "gloss": "to be afraid",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b0f8a07d04bf02f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to panic, then the Telugu for eagerness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: భయపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "భయపడు — bhayapaḍu — \"to be afraid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చిన్నప్పుడు నేను చీకటికి భయపడేవాడిని. cinnappuḍu nēnu cīkaṭiki bhayapaḍēvāḍini. As a child I used to be afraid of the dark."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): భయపడ్డాను, bhayapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "What you fear takes -కి or -అంటే: కుక్కలంటే భయపడు (bhayapaḍu), to be afraid of dogs. The noun is భయం."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "భయపడు (bhayapaḍu) joins a Sanskrit noun to a native verb: bhaya, \"fear, peril\" (CDIAL 9390), borrowed as భయం, and the native verb paḍu, \"to feel, to suffer\" (DEDR 3853). A noun of feeling + -పడు makes many Telugu verbs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhayapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhayapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhayapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhayapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cinnappuḍu nēnu cīkaṭiki bhayapaḍēvāḍini. — As a child I used to be afraid of the dark.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cinnappuḍu nēnu cīkaṭiki bhayapaḍēvāḍini.* — As a child I used to be afraid of the dark.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to panic, then the Telugu for eagerness, then say bhayapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to panic, then the Telugu for eagerness, then say *bhayapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does భయపడు (bhayapaḍu) mean? (\"To be afraid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C495-bhayapettu",
+      "sequence": 25060,
+      "title": "భయపెట్టు (bhayapeṭṭu) — to frighten; to scare",
+      "headword": "భయపెట్టు",
+      "romanization": "bhayapeṭṭu",
+      "gloss": "to frighten; to scare",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d34c0db4fff6fac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for eagerness, then the Telugu for to be afraid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: భయపెట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "భయపెట్టు — bhayapeṭṭu — \"to frighten; to scare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ కుక్క పిల్లల్ని భయపెట్టింది. ā kukka pillalni bhayapeṭṭindi. That dog frightened the children."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): భయపెట్టాను, bhayapeṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "-పెట్టు after a noun of feeling makes someone else feel it: భయపడు (bhayapaḍu), to be afraid; భయపెట్టు (bhayapeṭṭu), to frighten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "భయపెట్టు (bhayapeṭṭu) joins Sanskrit bhaya, \"fear\" (CDIAL 9390), to the native verb peṭṭu, \"to put, to place\": to put fear into someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhayapeṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhayapeṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhayapeṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhayapeṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kukka pillalni bhayapeṭṭindi. — That dog frightened the children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kukka pillalni bhayapeṭṭindi.* — That dog frightened the children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for eagerness, then the Telugu for to be afraid, then say bhayapeṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for eagerness, then the Telugu for to be afraid, then say *bhayapeṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does భయపెట్టు (bhayapeṭṭu) mean? (\"To frighten; to scare\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C495-ulikkipadu",
+      "sequence": 25070,
+      "title": "ఉలిక్కిపడు (ulikkipaḍu) — to be startled; to jump with fright",
+      "headword": "ఉలిక్కిపడు",
+      "romanization": "ulikkipaḍu",
+      "gloss": "to be startled; to jump with fright",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a6e8639603fbc10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be afraid, then the Telugu for to frighten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉలిక్కిపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉలిక్కిపడు — ulikkipaḍu — \"to be startled; to jump with fright\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తలుపు చప్పుడు విని ఆమె ఉలిక్కిపడింది. talupu cappuḍu vini āme ulikkipaḍindi. Hearing the knock at the door, she started."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఉలిక్కిపడ్డాను, ulikkipaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The cause often takes -కి: చప్పుడుకి ఉలిక్కిపడు (ulikkipaḍu), to start at a noise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉలిక్కిపడు (ulikkipaḍu) ends in the native verb paḍu, \"to feel, to suffer\" (DEDR 3853); the origin of the first part, ulikki, is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ulikkipaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ulikkipaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ulikkipaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ulikkipaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talupu cappuḍu vini āme ulikkipaḍindi. — Hearing the knock at the door, she started.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talupu cappuḍu vini āme ulikkipaḍindi.* — Hearing the knock at the door, she started.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be afraid, then the Telugu for to frighten, then say ulikkipaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be afraid, then the Telugu for to frighten, then say *ulikkipaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉలిక్కిపడు (ulikkipaḍu) mean? (\"To be startled; to jump with fright\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C495-pidakala",
+      "sequence": 25080,
+      "title": "పీడకల (pīḍakala) — a nightmare",
+      "headword": "పీడకల",
+      "romanization": "pīḍakala",
+      "gloss": "a nightmare",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d57d918b9082a678",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to frighten, then the Telugu for to be startled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పీడకల",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పీడకల — pīḍakala — \"a nightmare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నిన్న రాత్రి నాకు ఒక పీడకల వచ్చింది. ninna rātri nāku oka pīḍakala vaccindi. Last night I had a nightmare."
+            },
+            {
+              "kind": "speech",
+              "text": "A dream comes to you: నాకు కల వచ్చింది. Plural: పీడకలలు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పీడకల (pīḍakala) is a compound: Sanskrit pīḍā, \"pain, damage\" (CDIAL 8227), borrowed as పీడ, \"trouble\", and the Telugu word కల, \"a dream\": a dream that torments."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīḍakala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīḍakala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīḍakala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīḍakala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ninna rātri nāku oka pīḍakala vaccindi. — Last night I had a nightmare.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ninna rātri nāku oka pīḍakala vaccindi.* — Last night I had a nightmare.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to frighten, then the Telugu for to be startled, then say pīḍakala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to frighten, then the Telugu for to be startled, then say *pīḍakala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పీడకల (pīḍakala) mean? (\"A nightmare\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C495-talladillu",
+      "sequence": 25090,
+      "title": "తల్లడిల్లు (tallaḍillu) — to be distraught",
+      "headword": "తల్లడిల్లు",
+      "romanization": "tallaḍillu",
+      "gloss": "to be distraught",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75343cdd4feee4b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be startled, then the Telugu for a nightmare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తల్లడిల్లు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తల్లడిల్లు — tallaḍillu — \"to be distraught\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బాబు కనిపించలేదు, అమ్మ తల్లడిల్లింది. bābu kanipiñcalēdu, amma tallaḍillindi. The little boy could not be found; his mother was distraught."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తల్లడిల్లాను, tallaḍillānu."
+            },
+            {
+              "kind": "speech",
+              "text": "A strong verb for being torn with worry or grief."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తల్లడిల్లు (tallaḍillu) is native Dravidian: DEDR 3104 lists it, with tallaḍamu, \"turmoil, anxiety\", beside Kannada tallaṇa, \"agitation, alarm, grief\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tallaḍillu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tallaḍillu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tallaḍillu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tallaḍillu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bābu kanipiñcalēdu, amma tallaḍillindi. — The little boy could not be found; his mother was distraught.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bābu kanipiñcalēdu, amma tallaḍillindi.* — The little boy could not be found; his mother was distraught.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be startled, then the Telugu for a nightmare, then say tallaḍillu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be startled, then the Telugu for a nightmare, then say *tallaḍillu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తల్లడిల్లు (tallaḍillu) mean? (\"To be distraught\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

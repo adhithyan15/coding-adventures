@@ -1,0 +1,11 @@
+{
+  "id": "AR-C402-yaqin",
+  "pathSegment": "AR-PATH-402-HATMAN402",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-402-HATMAN402",
+      "order": 4
+    }
+  ]
+}

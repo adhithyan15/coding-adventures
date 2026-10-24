@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:39dd8bfa30725a26",
+  "lessonIds": [
+    "KA-C360-beteyadu",
+    "KA-C360-aledadu",
+    "KA-C360-honcu-haku",
+    "KA-C360-nuggu",
+    "KA-C360-muri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch360.txt",
+  "json": "kannada/narration/ch360.json",
+  "textHash": "fnv1a64:f699e695a4db8625",
+  "jsonHash": "fnv1a64:e206a19ccc55bf72",
+  "findings": []
+}

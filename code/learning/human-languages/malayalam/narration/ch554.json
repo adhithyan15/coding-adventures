@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 554,
+  "title": "Parents and In-laws",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cdc4037771047654",
+  "lessons": [
+    {
+      "id": "ML-C554-sahodari",
+      "sequence": 27890,
+      "title": "സഹോദരി (sahōdari) — a sister",
+      "headword": "സഹോദരി",
+      "romanization": "sahōdari",
+      "gloss": "a sister",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd336fae8a0dd511",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a sibling, then the Malayalam for a brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സഹോദരി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഹോദരി — sahōdari — \"a sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവന്റെ സഹോദരി ഒരു നഴ്സാണ്. avanṟe sahōdari oru naḻsāṇŭ. His sister is a nurse."
+            },
+            {
+              "kind": "speech",
+              "text": "At home, ചേച്ചി or അനിയത്തി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഹോദരി (sahōdari) is borrowed from Sanskrit sahodarī, the feminine of sahodara, \"born of the same womb\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahōdari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahōdari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahōdari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahōdari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanṟe sahōdari oru naḻsāṇŭ. — His sister is a nurse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanṟe sahōdari oru naḻsāṇŭ.* — His sister is a nurse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a sibling, then the Malayalam for a brother, then say sahōdari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a sibling, then the Malayalam for a brother, then say *sahōdari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സഹോദരി (sahōdari) mean? (\"A sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C554-matapitakkal",
+      "sequence": 27900,
+      "title": "മാതാപിതാക്കൾ (mātāpitākkaḷ) — parents",
+      "headword": "മാതാപിതാക്കൾ",
+      "romanization": "mātāpitākkaḷ",
+      "gloss": "parents",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e468692053892e03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a brother, then the Malayalam for a sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മാതാപിതാക്കൾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മാതാപിതാക്കൾ — mātāpitākkaḷ — \"parents\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എന്റെ മാതാപിതാക്കൾ ഗ്രാമത്തിലാണ് താമസിക്കുന്നത്. enṟe mātāpitākkaḷ grāmattilāṇŭ tāmasikkunnatŭ. My parents live in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "മാതാവ് mother + പിതാവ് father, with the plural -ക്കൾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മാതാപിതാക്കൾ (mātāpitākkaḷ) is a Malayalam compound built from Sanskrit mātṛ, \"mother\", and pitṛ, \"father\" (Monier-Williams), with the plural ending -ക്കൾ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātāpitākkaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātāpitākkaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātāpitākkaḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātāpitākkaḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enṟe mātāpitākkaḷ grāmattilāṇŭ tāmasikkunnatŭ. — My parents live in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enṟe mātāpitākkaḷ grāmattilāṇŭ tāmasikkunnatŭ.* — My parents live in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a brother, then the Malayalam for a sister, then say mātāpitākkaḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a brother, then the Malayalam for a sister, then say *mātāpitākkaḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മാതാപിതാക്കൾ (mātāpitākkaḷ) mean? (\"Parents\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C554-aliyan",
+      "sequence": 27910,
+      "title": "അളിയൻ (aḷiyan) — a brother-in-law",
+      "headword": "അളിയൻ",
+      "romanization": "aḷiyan",
+      "gloss": "a brother-in-law",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f6e03e2d4911a9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a sister, then the Malayalam for parents."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അളിയൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അളിയൻ — aḷiyan — \"a brother-in-law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എന്റെ അളിയൻ ഒരു എഞ്ചിനീയറാണ്. enṟe aḷiyan oru eñcinīyaṟāṇŭ. My brother-in-law is an engineer."
+            },
+            {
+              "kind": "speech",
+              "text": "A wife's brother or a sister's husband."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അളിയൻ (aḷiyan) is native Dravidian: DEDR 2410 gives it as a wife's brother or a sister's husband (DEDR 2410)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḷiyan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḷiyan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḷiyan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḷiyan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enṟe aḷiyan oru eñcinīyaṟāṇŭ. — My brother-in-law is an engineer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enṟe aḷiyan oru eñcinīyaṟāṇŭ.* — My brother-in-law is an engineer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a sister, then the Malayalam for parents, then say aḷiyan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a sister, then the Malayalam for parents, then say *aḷiyan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അളിയൻ (aḷiyan) mean? (\"A brother-in-law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C554-nattun",
+      "sequence": 27920,
+      "title": "നാത്തൂൻ (nāttūn) — a sister-in-law",
+      "headword": "നാത്തൂൻ",
+      "romanization": "nāttūn",
+      "gloss": "a sister-in-law",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1c1147a75acb760",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for parents, then the Malayalam for a brother-in-law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നാത്തൂൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നാത്തൂൻ — nāttūn — \"a sister-in-law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാത്തൂനും ഞാനും ഒരുമിച്ച് ചന്തയിൽ പോയി. nāttūnuṁ ñānuṁ orumiccŭ cantayil pōyi. My sister-in-law and I went to the market together."
+            },
+            {
+              "kind": "speech",
+              "text": "A husband's sister or a brother's wife."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നാത്തൂൻ (nāttūn) is native Dravidian: DEDR 3644 gives it as a sister-in-law, a brother's wife (DEDR 3644)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāttūn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāttūn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāttūn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāttūn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāttūnuṁ ñānuṁ orumiccŭ cantayil pōyi. — My sister-in-law and I went to the market together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāttūnuṁ ñānuṁ orumiccŭ cantayil pōyi.* — My sister-in-law and I went to the market together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for parents, then the Malayalam for a brother-in-law, then say nāttūn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for parents, then the Malayalam for a brother-in-law, then say *nāttūn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നാത്തൂൻ (nāttūn) mean? (\"A sister-in-law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C554-kutumbamgam",
+      "sequence": 27930,
+      "title": "കുടുംബാംഗം (kuṭumbāṁgaṁ) — a family member",
+      "headword": "കുടുംബാംഗം",
+      "romanization": "kuṭumbāṁgaṁ",
+      "gloss": "a family member",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62d88f4ef90de22b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a brother-in-law, then the Malayalam for a sister-in-law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുടുംബാംഗം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുടുംബാംഗം — kuṭumbāṁgaṁ — \"a family member\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കല്യാണത്തിന് എല്ലാ കുടുംബാംഗങ്ങളും എത്തി. kalyāṇattinŭ ellā kuṭumbāṁgaṅṅaḷuṁ etti. All the family members came to the wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: കുടുംബാംഗങ്ങൾ, kuṭumbāṁgaṅṅaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "കുടുംബം family + അംഗം a limb, a member."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുടുംബാംഗം (kuṭumbāṁgaṁ) is a learned compound built from Sanskrit kuṭumba, \"a household\" (CDIAL 3233), and aṅga, \"a limb\" (CDIAL 114)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭumbāṁgaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭumbāṁgaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭumbāṁgaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭumbāṁgaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalyāṇattinŭ ellā kuṭumbāṁgaṅṅaḷuṁ etti. — All the family members came to the wedding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalyāṇattinŭ ellā kuṭumbāṁgaṅṅaḷuṁ etti.* — All the family members came to the wedding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a brother-in-law, then the Malayalam for a sister-in-law, then say kuṭumbāṁgaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a brother-in-law, then the Malayalam for a sister-in-law, then say *kuṭumbāṁgaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുടുംബാംഗം (kuṭumbāṁgaṁ) mean? (\"A family member\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

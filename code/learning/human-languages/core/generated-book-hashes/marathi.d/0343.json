@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:5130c8465fd5cba3",
+  "lessonIds": [
+    "MR-C343-mudda",
+    "MR-C343-tarka",
+    "MR-C343-yuktivad",
+    "MR-C343-mandne",
+    "MR-C343-purava"
+  ],
+  "tex": "marathi/book/chapters/ch343-making-a-case.tex"
+}

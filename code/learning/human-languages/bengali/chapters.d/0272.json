@@ -1,0 +1,22 @@
+{
+  "chapter": 272,
+  "title": "Feelings and Hopes",
+  "label": "ch:bn-feelings-and-hopes",
+  "canDo": "I can say how I feel with āmār (āmār bhālo lāgchhe, āmār bhôy kôrchhe), say what I want to become (ḍāktār hôte chāi) and what I wish, and read and write অ in অভিজ্ঞতা.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R272-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete BN-R272-feelings-and-hopes: say how you feel, what you want to become and what you wish.",
+    "assesses": [
+      "BN-GRAMMAR-C272-FEELING-GENITIVE-01",
+      "BN-GRAMMAR-C272-WANT-TO-BE-01",
+      "BN-LEX-C272-OBHIGYOTA-01",
+      "BN-SCRIPT-C272-O-INDEP-01",
+      "BN-GRAMMAR-C272-FEELING-PAST-01",
+      "BN-GRAMMAR-C272-WISH-01"
+    ]
+  }
+}

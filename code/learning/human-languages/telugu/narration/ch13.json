@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ab5d3514d4b861bf",
+  "sourceHash": "fnv1a64:38940975b9cf14b1",
   "lessons": [
     {
       "id": "TE-C13-sharira-bhagalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cede24ba7ccf678a",
+      "sourceHash": "fnv1a64:9573258a87bf12be",
       "notice": null,
       "blocks": [
         {

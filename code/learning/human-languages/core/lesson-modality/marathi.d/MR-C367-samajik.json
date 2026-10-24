@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C367-samajik",
+    "language": "marathi",
+    "chapter": 367,
+    "sequence": 21320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:992457621d05de4e"
+  },
+  "findings": []
+}

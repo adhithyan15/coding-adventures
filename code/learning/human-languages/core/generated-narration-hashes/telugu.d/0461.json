@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:008c631dd12468e3",
+  "lessonIds": [
+    "TE-C461-attapette",
+    "TE-C461-vadilivellu",
+    "TE-C461-paresuko",
+    "TE-C461-taralincu",
+    "TE-C461-ceraveyu",
+    "TE-R461-review-454-461"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch461.txt",
+  "json": "telugu/narration/ch461.json",
+  "textHash": "fnv1a64:93fc26607e757e91",
+  "jsonHash": "fnv1a64:863c120a73a1cf7b",
+  "findings": []
+}

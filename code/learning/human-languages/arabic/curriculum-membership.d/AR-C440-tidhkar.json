@@ -1,0 +1,11 @@
+{
+  "id": "AR-C440-tidhkar",
+  "pathSegment": "AR-PATH-440-TIDHKAR440",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-440-TIDHKAR440",
+      "order": 1
+    }
+  ]
+}

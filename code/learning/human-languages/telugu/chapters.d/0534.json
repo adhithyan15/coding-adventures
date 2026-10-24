@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Quarrels",
+  "label": "ch:te-quarrels",
+  "canDo": "I can talk about rows, disputes, sulks and making up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C534-manaspartha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can talk about rows, disputes, sulks and making up.",
+    "assesses": [
+      "TE-LEX-C534-GODAVA534-03",
+      "TE-LEX-C534-GODAVA534-04",
+      "TE-LEX-C534-GODAVA534-05"
+    ]
+  }
+}

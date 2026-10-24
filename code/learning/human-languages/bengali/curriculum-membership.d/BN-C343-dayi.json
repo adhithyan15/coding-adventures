@@ -1,0 +1,11 @@
+{
+  "id": "BN-C343-dayi",
+  "pathSegment": "BN-PATH-343-DOSH343",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-343-DOSH343",
+      "order": 1
+    }
+  ]
+}

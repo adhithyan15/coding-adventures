@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C343-jobabdihi-kora",
+    "language": "bengali",
+    "chapter": 343,
+    "sequence": 21690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16d2eb3c7dd7f73a"
+  },
+  "findings": []
+}

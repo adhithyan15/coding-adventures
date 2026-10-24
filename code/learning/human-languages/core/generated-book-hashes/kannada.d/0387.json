@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:41dedccf24559cbe",
+  "lessonIds": [
+    "KA-C387-savalu",
+    "KA-C387-misalidu",
+    "KA-C387-samatolana",
+    "KA-C387-adyate",
+    "KA-C387-maulya"
+  ],
+  "tex": "kannada/book/chapters/ch387-priorities-and-values.tex"
+}

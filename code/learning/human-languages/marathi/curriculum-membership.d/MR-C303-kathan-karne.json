@@ -1,0 +1,11 @@
+{
+  "id": "MR-C303-kathan-karne",
+  "pathSegment": "MR-PATH-303-KATHA303",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-303-KATHA303",
+      "order": 4
+    }
+  ]
+}

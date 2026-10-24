@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:b4c10b048d8c1cb1",
+  "lessonIds": [
+    "MR-C346-balagne",
+    "MR-C346-visad-karne",
+    "MR-C346-khatri",
+    "MR-C346-padtalne",
+    "MR-C346-phetalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch346.txt",
+  "json": "marathi/narration/ch346.json",
+  "textHash": "fnv1a64:9e8d543a97cceda9",
+  "jsonHash": "fnv1a64:aa19c158f876e3c7",
+  "findings": []
+}

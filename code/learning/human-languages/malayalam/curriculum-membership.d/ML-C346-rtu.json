@@ -1,0 +1,11 @@
+{
+  "id": "ML-C346-rtu",
+  "pathSegment": "ML-PATH-346-COMPARE-DURATION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-346-COMPARE-DURATION",
+      "order": 1
+    }
+  ]
+}

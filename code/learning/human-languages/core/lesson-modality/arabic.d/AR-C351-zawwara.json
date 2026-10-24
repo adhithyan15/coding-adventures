@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C351-zawwara",
+    "language": "arabic",
+    "chapter": 351,
+    "sequence": 20000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2aa47077bbba1e96"
+  },
+  "findings": []
+}

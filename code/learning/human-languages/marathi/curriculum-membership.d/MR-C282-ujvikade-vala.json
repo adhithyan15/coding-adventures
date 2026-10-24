@@ -1,0 +1,11 @@
+{
+  "id": "MR-C282-ujvikade-vala",
+  "pathSegment": "MR-PATH-282-ASK-WAY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-282-ASK-WAY",
+      "order": 1
+    }
+  ]
+}

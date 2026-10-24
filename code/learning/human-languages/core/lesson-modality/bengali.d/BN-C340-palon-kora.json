@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C340-palon-kora",
+    "language": "bengali",
+    "chapter": 340,
+    "sequence": 21540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3db755664a5e9688"
+  },
+  "findings": []
+}

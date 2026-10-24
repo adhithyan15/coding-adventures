@@ -1,0 +1,11 @@
+{
+  "id": "MR-C284-bhiti",
+  "pathSegment": "MR-PATH-284-FEELINGS-HOPES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-284-FEELINGS-HOPES",
+      "order": 1
+    }
+  ]
+}

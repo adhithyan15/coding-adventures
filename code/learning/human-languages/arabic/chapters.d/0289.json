@@ -1,0 +1,21 @@
+{
+  "chapter": 289,
+  "title": "How It Felt, What I Hope",
+  "label": "ch:ar-how-it-felt-what-i-hope",
+  "canDo": "I can say how an experience felt and what I hope, dream or want to become.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-R289-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete AR-R289-feelings-and-hopes: how an experience felt, with kuntu and -an, and what you hope for, with atamannā an.",
+    "assesses": [
+      "AR-GRAMMAR-C289-KANA-ACCUSATIVE-01",
+      "AR-GRAMMAR-C289-SHAARTU-BI-01",
+      "AR-LEX-C289-TAJRIBA289-01",
+      "AR-GRAMMAR-C289-WISH-AN-01",
+      "AR-GRAMMAR-C289-BECOME-01"
+    ]
+  }
+}

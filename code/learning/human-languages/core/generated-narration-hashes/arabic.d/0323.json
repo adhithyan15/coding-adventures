@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:e5fd7e21b01db037",
+  "lessonIds": [
+    "AR-C323-nashaa",
+    "AR-C323-taraara",
+    "AR-C323-masqat-ras",
+    "AR-C323-siba",
+    "AR-C323-kuhula"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch323.txt",
+  "json": "arabic/narration/ch323.json",
+  "textHash": "fnv1a64:3c12c1a0f9260dd2",
+  "jsonHash": "fnv1a64:2269c82c0d96e007",
+  "findings": []
+}

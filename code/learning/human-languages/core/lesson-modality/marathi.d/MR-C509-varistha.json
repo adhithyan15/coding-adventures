@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C509-varistha",
+    "language": "marathi",
+    "chapter": 509,
+    "sequence": 29270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2dcfce608458db4"
+  },
+  "findings": []
+}

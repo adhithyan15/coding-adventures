@@ -1,0 +1,11 @@
+{
+  "id": "ML-C441-asadhyamaya",
+  "pathSegment": "ML-PATH-441-SADHYAM441",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-441-SADHYAM441",
+      "order": 1
+    }
+  ]
+}

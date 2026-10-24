@@ -1,0 +1,21 @@
+{
+  "chapter": 505,
+  "title": "The End of Life",
+  "label": "ch:ta-the-end-of-life",
+  "canDo": "I can talk about a lifespan, death, wills, widows and orphans.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R505-review-final-505",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about a lifespan, death, wills, widows and orphans.",
+    "assesses": [
+      "TA-LEX-C505-MARANAM505-01",
+      "TA-LEX-C505-MARANAM505-02",
+      "TA-LEX-C505-MARANAM505-03",
+      "TA-LEX-C505-MARANAM505-04",
+      "TA-LEX-C505-MARANAM505-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Addresses and Signs",
+  "label": "ch:bn-addresses-and-signs",
+  "canDo": "I can follow an address, a sign and an instruction, and point the way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C400-inggit-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can follow an address, a sign and an instruction, and point the way.",
+    "assesses": [
+      "BN-LEX-C400-THIKANA400-03",
+      "BN-LEX-C400-THIKANA400-04",
+      "BN-LEX-C400-THIKANA400-05"
+    ]
+  }
+}

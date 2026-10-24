@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:896fcc7fcb531f83",
+  "lessonIds": [
+    "BN-C335-osvikar-kora",
+    "BN-C335-somalochona-kora",
+    "BN-C335-drishtibhonggi",
+    "BN-C335-udahoron",
+    "BN-C335-prosonggo"
+  ],
+  "tex": "bengali/book/chapters/ch335-granting-and-denying.tex"
+}

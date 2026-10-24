@@ -1,0 +1,24 @@
+{
+  "chapter": 340,
+  "title": "Telling a Story in Order",
+  "label": "ch:ml-telling-a-story-in-order",
+  "canDo": "I can tell a short story about something that happened, in order, with ādyaṁ, enniṭṭŭ, atinuśēṣaṁ and oṭuvil, and read one of about a hundred words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-R340-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete ML-R340-a-story-in-order: retell a day in order with enniṭṭŭ, -appōḷ and atinuśēṣaṁ, read the new letter ഈ, and say what recently happened.",
+    "assesses": [
+      "ML-LEX-C340-IYITE-01",
+      "ML-SCRIPT-C340-II-01",
+      "ML-GRAMMAR-C340-ENNITTU-01",
+      "ML-GRAMMAR-C340-ATINUSESHAM-01",
+      "ML-GRAMMAR-C340-APPOL-01",
+      "ML-SKILL-C340-READ-STORY-01",
+      "ML-GRAMMAR-C339-PAST-PROGRESSIVE-01",
+      "ML-GRAMMAR-C339-PAST-HABITUAL-01"
+    ]
+  }
+}

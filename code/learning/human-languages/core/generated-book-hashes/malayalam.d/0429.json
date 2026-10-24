@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:e09579e5ed043bcb",
+  "lessonIds": [
+    "ML-C429-ksemam",
+    "ML-C429-resan",
+    "ML-C429-dhanasahayam",
+    "ML-C429-anukulyam",
+    "ML-C429-vitaranam-ceyyuka"
+  ],
+  "tex": "malayalam/book/chapters/ch429-welfare.tex"
+}

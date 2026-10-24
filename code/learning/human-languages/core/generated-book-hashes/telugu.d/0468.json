@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:687a15a805680fd2",
+  "lessonIds": [
+    "TE-C468-murugu",
+    "TE-C468-parisuddhyam",
+    "TE-C468-durvasana",
+    "TE-C468-murikivada",
+    "TE-C468-perukupovu"
+  ],
+  "tex": "telugu/book/chapters/ch468-drains-and-rubbish.tex"
+}

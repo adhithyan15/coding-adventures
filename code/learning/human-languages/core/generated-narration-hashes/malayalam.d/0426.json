@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:0a42f8c47d7786a6",
+  "lessonIds": [
+    "ML-C426-bahiskarikkuka",
+    "ML-C426-avasyappetuka",
+    "ML-C426-nivedanam",
+    "ML-C426-samarppikkuka",
+    "ML-C426-harji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch426.txt",
+  "json": "malayalam/narration/ch426.json",
+  "textHash": "fnv1a64:f6c37e2cf6ffd225",
+  "jsonHash": "fnv1a64:2a24ba699f3e579d",
+  "findings": []
+}

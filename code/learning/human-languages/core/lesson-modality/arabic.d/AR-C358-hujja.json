@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C358-hujja",
+    "language": "arabic",
+    "chapter": 358,
+    "sequence": 20400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81241c6730648c7f"
+  },
+  "findings": []
+}

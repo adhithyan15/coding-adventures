@@ -1,0 +1,11 @@
+{
+  "id": "TA-C376-arppattam",
+  "pathSegment": "TA-PATH-376-PORATU376",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-376-PORATU376",
+      "order": 1
+    }
+  ]
+}

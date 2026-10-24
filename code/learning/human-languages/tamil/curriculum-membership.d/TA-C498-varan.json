@@ -1,0 +1,11 @@
+{
+  "id": "TA-C498-varan",
+  "pathSegment": "TA-PATH-498-ILAMAI498",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-498-ILAMAI498",
+      "order": 3
+    }
+  ]
+}

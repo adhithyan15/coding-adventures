@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C508-pemari",
+    "language": "malayalam",
+    "chapter": 508,
+    "sequence": 25410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b1fdab4e8157c8c"
+  },
+  "findings": []
+}

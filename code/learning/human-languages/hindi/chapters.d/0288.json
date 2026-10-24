@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "A Theft in the Lane",
+  "label": "ch:hi-a-theft-in-the-lane",
+  "canDo": "I can say what was stolen and who saw it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C288-bahar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can say what was stolen and who saw it.",
+    "assesses": [
+      "HI-LEX-C288-CHORI288-03",
+      "HI-LEX-C288-CHORI288-04",
+      "HI-LEX-C288-CHORI288-05"
+    ]
+  }
+}

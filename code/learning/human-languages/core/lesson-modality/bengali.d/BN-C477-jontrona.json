@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C477-jontrona",
+    "language": "bengali",
+    "chapter": 477,
+    "sequence": 28990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b087f4899a7cdfc"
+  },
+  "findings": []
+}

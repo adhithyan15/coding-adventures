@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C471-osukh",
+    "language": "bengali",
+    "chapter": 471,
+    "sequence": 28690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6744c8d1471f3de"
+  },
+  "findings": []
+}

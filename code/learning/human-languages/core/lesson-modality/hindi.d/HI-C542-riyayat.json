@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C542-riyayat",
+    "language": "hindi",
+    "chapter": 542,
+    "sequence": 29850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:463935b1bcd4d294"
+  },
+  "findings": []
+}

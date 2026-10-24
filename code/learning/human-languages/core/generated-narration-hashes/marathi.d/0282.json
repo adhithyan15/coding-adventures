@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:d3b5fbda61d93180",
+  "lessonIds": [
+    "MR-C282-kasa-jaycha",
+    "MR-C282-ujvikade-vala",
+    "MR-R282-asking-the-way"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "marathi/narration/ch282.txt",
+  "json": "marathi/narration/ch282.json",
+  "textHash": "fnv1a64:ba15cd978582889b",
+  "jsonHash": "fnv1a64:ded7c27aad31ddbd",
+  "findings": []
+}

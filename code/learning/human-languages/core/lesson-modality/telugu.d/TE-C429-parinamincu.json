@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C429-parinamincu",
+    "language": "telugu",
+    "chapter": 429,
+    "sequence": 21440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0dfe392f88774891"
+  },
+  "findings": []
+}

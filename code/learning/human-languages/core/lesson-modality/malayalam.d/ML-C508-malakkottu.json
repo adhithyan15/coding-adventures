@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C508-malakkottu",
+    "language": "malayalam",
+    "chapter": 508,
+    "sequence": 25430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48f07b573ce9971a"
+  },
+  "findings": []
+}

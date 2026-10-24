@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:30d37ada485007ad",
+  "lessonIds": [
+    "MR-C367-pratha",
+    "MR-C367-rudhi",
+    "MR-C367-vicarsarni",
+    "MR-C367-pravrtti",
+    "MR-C367-samajik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch367.txt",
+  "json": "marathi/narration/ch367.json",
+  "textHash": "fnv1a64:5c6c1c045a24f17a",
+  "jsonHash": "fnv1a64:8e9df2afb54dc100",
+  "findings": []
+}

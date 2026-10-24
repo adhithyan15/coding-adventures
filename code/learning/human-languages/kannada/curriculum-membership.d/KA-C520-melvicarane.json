@@ -1,0 +1,11 @@
+{
+  "id": "KA-C520-melvicarane",
+  "pathSegment": "KA-PATH-520-TANDA520",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-520-TANDA520",
+      "order": 3
+    }
+  ]
+}

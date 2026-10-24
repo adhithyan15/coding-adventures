@@ -1,0 +1,19 @@
+{
+  "chapter": 569,
+  "title": "Winning and Losing",
+  "label": "ch:ml-winning-and-losing",
+  "canDo": "I can say a sports champion, an opponent, a tournament, to advance and to fall behind.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C569-pinnilakuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 569: I can say a sports champion, an opponent, a tournament, to advance and to fall behind.",
+    "assesses": [
+      "ML-LEX-C569-VIJAYAM569-03",
+      "ML-LEX-C569-VIJAYAM569-04",
+      "ML-LEX-C569-VIJAYAM569-05"
+    ]
+  }
+}

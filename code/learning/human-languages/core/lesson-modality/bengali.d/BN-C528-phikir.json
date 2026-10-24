@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C528-phikir",
+    "language": "bengali",
+    "chapter": 528,
+    "sequence": 31850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23d1eaf6cb66eda6"
+  },
+  "findings": []
+}

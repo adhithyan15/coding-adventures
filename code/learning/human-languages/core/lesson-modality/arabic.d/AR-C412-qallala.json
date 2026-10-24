@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C412-qallala",
+    "language": "arabic",
+    "chapter": 412,
+    "sequence": 23190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d0b958a9b5cc034"
+  },
+  "findings": []
+}

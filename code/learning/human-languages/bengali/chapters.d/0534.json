@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Bets and Luck",
+  "label": "ch:bn-bets-and-luck",
+  "canDo": "I can talk about bets, gambling and good omens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C534-phola-bear-fruit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can talk about bets, gambling and good omens.",
+    "assesses": [
+      "BN-LEX-C534-BAJI534-03",
+      "BN-LEX-C534-BAJI534-04",
+      "BN-LEX-C534-BAJI534-05"
+    ]
+  }
+}

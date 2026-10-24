@@ -1,0 +1,11 @@
+{
+  "id": "TA-C337-vanci",
+  "pathSegment": "TA-PATH-337-SATHI337",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-337-SATHI337",
+      "order": 3
+    }
+  ]
+}

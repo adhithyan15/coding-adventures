@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-365-SOMJHOTA365",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-365-SOMJHOTA365"
+  ],
+  "after": []
+}

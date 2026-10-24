@@ -1,0 +1,11 @@
+{
+  "id": "TA-C447-pakki",
+  "pathSegment": "TA-PATH-447-THAVANAI447",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-447-THAVANAI447",
+      "order": 2
+    }
+  ]
+}

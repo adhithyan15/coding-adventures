@@ -1,0 +1,11 @@
+{
+  "id": "KA-C331-yuga",
+  "pathSegment": "KA-PATH-331-HINDE331",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-331-HINDE331",
+      "order": 4
+    }
+  ]
+}

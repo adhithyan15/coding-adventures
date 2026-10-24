@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Meals and Comforts",
+  "label": "ch:te-meals-and-comforts",
+  "canDo": "I can say a snack, a dining hall, a facility, the web and a charger.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C459-charjaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can say a snack, a dining hall, a facility, the web and a charger.",
+    "assesses": [
+      "TE-LEX-C459-PHALAHARAM459-03",
+      "TE-LEX-C459-PHALAHARAM459-04",
+      "TE-LEX-C459-PHALAHARAM459-05"
+    ]
+  }
+}

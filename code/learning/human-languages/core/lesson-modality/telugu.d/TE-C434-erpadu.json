@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C434-erpadu",
+    "language": "telugu",
+    "chapter": 434,
+    "sequence": 21700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01964d3532f636a9"
+  },
+  "findings": []
+}

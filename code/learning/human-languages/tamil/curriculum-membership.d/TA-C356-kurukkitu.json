@@ -1,0 +1,11 @@
+{
+  "id": "TA-C356-kurukkitu",
+  "pathSegment": "TA-PATH-356-KALANTURAIYA356",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-356-KALANTURAIYA356",
+      "order": 2
+    }
+  ]
+}

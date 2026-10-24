@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:f082aa684c0567d6",
+  "lessonIds": [
+    "TA-C370-varumai",
+    "TA-C370-celvam",
+    "TA-C370-errattalvu",
+    "TA-C370-velaiyinmai",
+    "TA-C370-curantu",
+    "TA-R370-review-363-370"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch370.txt",
+  "json": "tamil/narration/ch370.json",
+  "textHash": "fnv1a64:26a03bb30951bcdd",
+  "jsonHash": "fnv1a64:b1d84bbcfbe5f86c",
+  "findings": []
+}

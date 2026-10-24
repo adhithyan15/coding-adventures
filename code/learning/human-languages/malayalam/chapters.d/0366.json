@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Clues and Footprints",
+  "label": "ch:ml-clues-and-footprints",
+  "canDo": "I can say a clue, a mark, a footprint, a fingerprint and mysterious.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C366-duruhamaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can say a clue, a mark, a footprint, a fingerprint and mysterious.",
+    "assesses": [
+      "ML-LEX-C366-SUCHANA366-03",
+      "ML-LEX-C366-SUCHANA366-04",
+      "ML-LEX-C366-SUCHANA366-05"
+    ]
+  }
+}

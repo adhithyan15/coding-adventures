@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C365-sorbosommoto",
+    "language": "bengali",
+    "chapter": 365,
+    "sequence": 22830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9bc91de066662a5"
+  },
+  "findings": []
+}

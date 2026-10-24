@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Taking a Chance",
+  "label": "ch:ka-taking-a-chance",
+  "canDo": "I can say a lottery, gambling, a bet, to estimate and an average.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C413-sarasari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can say a lottery, gambling, a bet, to estimate and an average.",
+    "assesses": [
+      "KA-LEX-C413-PANA413-03",
+      "KA-LEX-C413-PANA413-04",
+      "KA-LEX-C413-PANA413-05"
+    ]
+  }
+}

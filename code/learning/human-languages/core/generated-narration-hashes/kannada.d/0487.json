@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:387af64c675295b0",
+  "lessonIds": [
+    "KA-C487-candamaruta",
+    "KA-C487-suntaragali",
+    "KA-C487-abbarisu",
+    "KA-C487-bhukusita",
+    "KA-C487-sunami"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch487.txt",
+  "json": "kannada/narration/ch487.json",
+  "textHash": "fnv1a64:6da8d32fbee700ed",
+  "jsonHash": "fnv1a64:833db2fb3ca56ecf",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C488-bisigali",
+    "language": "kannada",
+    "chapter": 488,
+    "sequence": 24820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aef42be81b6b1c3a"
+  },
+  "findings": []
+}

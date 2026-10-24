@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C317-vacci",
+    "language": "telugu",
+    "chapter": 317,
+    "sequence": 15270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:569a6e4e05c684f0"
+  },
+  "findings": []
+}

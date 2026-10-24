@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "A Thief in the Night",
+  "label": "ch:ml-a-thief-in-the-night",
+  "canDo": "I can say a thief, a theft, a robbery, to steal and to break open.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-R364-review-357-364",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can say a thief, a theft, a robbery, to steal and to break open.",
+    "assesses": [
+      "ML-LEX-C364-KALLAN364-03",
+      "ML-LEX-C364-KALLAN364-04",
+      "ML-LEX-C364-KALLAN364-05"
+    ]
+  }
+}

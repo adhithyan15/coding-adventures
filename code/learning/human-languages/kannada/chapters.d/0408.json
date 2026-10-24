@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Studying Well",
+  "label": "ch:ka-studying-well",
+  "canDo": "I can say to focus, a study, optional, a syllabus and revision.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C408-punaravartane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can say to focus, a study, optional, a syllabus and revision.",
+    "assesses": [
+      "KA-LEX-C408-PATHYAKRAMA408-03",
+      "KA-LEX-C408-PATHYAKRAMA408-04",
+      "KA-LEX-C408-PATHYAKRAMA408-05"
+    ]
+  }
+}

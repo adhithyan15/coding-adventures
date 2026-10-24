@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "A Wedding in the Family",
+  "label": "ch:bn-a-wedding-in-the-family",
+  "canDo": "I can describe a wedding: the garlands, the music, the guests.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C312-borjatri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can describe a wedding: the garlands, the music, the guests.",
+    "assesses": [
+      "BN-LEX-C312-ONUSHTHAN312-03",
+      "BN-LEX-C312-ONUSHTHAN312-04",
+      "BN-LEX-C312-ONUSHTHAN312-05"
+    ]
+  }
+}

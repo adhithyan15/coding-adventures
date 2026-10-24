@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C195-vala-review",
+    "language": "punjabi",
+    "chapter": 195,
+    "sequence": 10620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8fae48a5aa23d779"
+  },
+  "findings": []
+}

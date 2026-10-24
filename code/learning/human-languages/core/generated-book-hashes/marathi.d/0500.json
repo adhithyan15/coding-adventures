@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:43818738d89e0361",
+  "lessonIds": [
+    "MR-C500-sangopan",
+    "MR-C500-sambhalne",
+    "MR-C500-jopasne",
+    "MR-C500-lad-karne",
+    "MR-C500-dattak-ghene"
+  ],
+  "tex": "marathi/book/chapters/ch500-raising-children.tex"
+}

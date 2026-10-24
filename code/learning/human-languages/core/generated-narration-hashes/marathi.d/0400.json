@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:b71a707dcb7f5443",
+  "lessonIds": [
+    "MR-C400-vahan",
+    "MR-C400-ducaki",
+    "MR-C400-riksa",
+    "MR-C400-trak",
+    "MR-C400-kombne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch400.txt",
+  "json": "marathi/narration/ch400.json",
+  "textHash": "fnv1a64:9236761248301226",
+  "jsonHash": "fnv1a64:f64eb72dcc51622c",
+  "findings": []
+}

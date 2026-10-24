@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Along the Coast",
+  "label": "ch:mr-along-the-coast",
+  "canDo": "I can talk about a coastline, a creek, a lighthouse, a peninsula and a beachfront.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C410-caupati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can talk about a coastline, a creek, a lighthouse, a peninsula and a beachfront.",
+    "assesses": [
+      "MR-LEX-C410-KHADI410-03",
+      "MR-LEX-C410-KHADI410-04",
+      "MR-LEX-C410-KHADI410-05"
+    ]
+  }
+}

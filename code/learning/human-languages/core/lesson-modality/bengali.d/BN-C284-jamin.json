@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C284-jamin",
+    "language": "bengali",
+    "chapter": 284,
+    "sequence": 18450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d0a8c0146a3f2f4"
+  },
+  "findings": []
+}

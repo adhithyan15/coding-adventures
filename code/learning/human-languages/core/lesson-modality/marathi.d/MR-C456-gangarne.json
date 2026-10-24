@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C456-gangarne",
+    "language": "marathi",
+    "chapter": 456,
+    "sequence": 26330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8abbb192dbc6488"
+  },
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 549,
+  "title": "Two Ways to Go",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bf27d55238207c1e",
+  "lessons": [
+    {
+      "id": "HI-C549-vikalp",
+      "sequence": 30200,
+      "title": "विकल्प (vikalp) — an option; an alternative",
+      "headword": "विकल्प",
+      "romanization": "vikalp",
+      "gloss": "an option; an alternative",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52918b08c33698ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for laziness, then the Hindi for to squander."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विकल्प",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विकल्प — vikalp — \"an option; an alternative\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हमारे पास दो विकल्प हैं: बस या ट्रेन। Hamāre pās do vikalp haiṁ: bas yā ṭren. We have two options: the bus or the train."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विकल्प (vikalp) is a tatsama, taken whole from Sanskrit vikalpa, \"alternation, option\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vikalp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vikalp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vikalp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vikalp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hamāre pās do vikalp haiṁ: bas yā ṭren. — We have two options: the bus or the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hamāre pās do vikalp haiṁ: bas yā ṭren.* — We have two options: the bus or the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for laziness, then the Hindi for to squander, then say vikalp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for laziness, then the Hindi for to squander, then say *vikalp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विकल्प (vikalp) mean? (\"An option; an alternative\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C549-duvidha",
+      "sequence": 30210,
+      "title": "दुविधा (duvidhā) — a dilemma; being in two minds",
+      "headword": "दुविधा",
+      "romanization": "duvidhā",
+      "gloss": "a dilemma; being in two minds",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60e1a12ae16ed041",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to squander, then the Hindi for an option."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुविधा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुविधा — duvidhā — \"a dilemma; being in two minds\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दो अच्छे घर देखकर अरुण दुविधा में पड़ गया। Do acche ghar dekhkar Aruṇ duvidhā meṁ paṛ gayā. After seeing two good houses, Arun was in two minds."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुविधा (duvidhā) is usually traced to Sanskrit dvividha, \"twofold, of two kinds\" (Monier-Williams); the sense \"being of two minds\" is the Hindi one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duvidhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duvidhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duvidhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duvidhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Do acche ghar dekhkar Aruṇ duvidhā meṁ paṛ gayā. — After seeing two good houses, Arun was in two minds.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Do acche ghar dekhkar Aruṇ duvidhā meṁ paṛ gayā.* — After seeing two good houses, Arun was in two minds.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to squander, then the Hindi for an option, then say duvidhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to squander, then the Hindi for an option, then say *duvidhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुविधा (duvidhā) mean? (\"A dilemma; being in two minds\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C549-asmanjas",
+      "sequence": 30220,
+      "title": "असमंजस (asmañjas) — indecision; uncertainty",
+      "headword": "असमंजस",
+      "romanization": "asmañjas",
+      "gloss": "indecision; uncertainty",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3dd504403bf6517",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an option, then the Hindi for a dilemma."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: असमंजस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "असमंजस — asmañjas — \"indecision; uncertainty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नौकरी बदलने को लेकर वह असमंजस में है। Naukrī badalne ko lekar vah asmañjas meṁ hai. He cannot decide whether to change jobs."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "असमंजस (asmañjas) is a tatsama, taken whole from Sanskrit asamañjasa, \"unfit, unbecoming\" (Monier-Williams). Hindi uses it for not knowing which way to turn."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asmañjas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asmañjas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asmañjas, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asmañjas*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Naukrī badalne ko lekar vah asmañjas meṁ hai. — He cannot decide whether to change jobs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Naukrī badalne ko lekar vah asmañjas meṁ hai.* — He cannot decide whether to change jobs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an option, then the Hindi for a dilemma, then say asmañjas again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an option, then the Hindi for a dilemma, then say *asmañjas* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does असमंजस (asmañjas) mean? (\"Indecision; uncertainty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C549-tarjih",
+      "sequence": 30230,
+      "title": "तरजीह (tarjīh) — preference; priority",
+      "headword": "तरजीह",
+      "romanization": "tarjīh",
+      "gloss": "preference; priority",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87daa4dc4909704b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a dilemma, then the Hindi for indecision."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तरजीह",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तरजीह — tarjīh — \"preference; priority\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दुकानदार ने पुराने ग्राहकों को तरजीह दी। Dukāndār ne purāne grāhkoṁ ko tarjīh dī. The shopkeeper gave priority to his old customers."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तरजीह (tarjīh) is usually traced to Arabic tarjīḥ, \"giving more weight, preferring\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarjīh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarjīh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarjīh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarjīh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dukāndār ne purāne grāhkoṁ ko tarjīh dī. — The shopkeeper gave priority to his old customers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dukāndār ne purāne grāhkoṁ ko tarjīh dī.* — The shopkeeper gave priority to his old customers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a dilemma, then the Hindi for indecision, then say tarjīh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a dilemma, then the Hindi for indecision, then say *tarjīh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तरजीह (tarjīh) mean? (\"Preference; priority\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C549-hicakna",
+      "sequence": 30240,
+      "title": "हिचकना (hicaknā) — to hesitate, to hold back",
+      "headword": "हिचकना",
+      "romanization": "hicaknā",
+      "gloss": "to hesitate, to hold back",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd6ff2f68828bacf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for indecision, then the Hindi for preference."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हिचकना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिचकना — hicaknā — \"to hesitate, to hold back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बोलने से पहले वह थोड़ा हिचका। Bolne se pahle vah thoṛā hickā. He hesitated a little before speaking."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह हिचका, vah hickā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिचकना (hicaknā) is a tadbhava, inherited from hicc, \"draw back\", a form CDIAL reconstructs from its descendants (CDIAL 14083)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hicaknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hicaknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hicaknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hicaknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bolne se pahle vah thoṛā hickā. — He hesitated a little before speaking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Bolne se pahle vah thoṛā hickā.* — He hesitated a little before speaking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for indecision, then the Hindi for preference, then say hicaknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for indecision, then the Hindi for preference, then say *hicaknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हिचकना (hicaknā) mean? (\"To hesitate, to hold back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

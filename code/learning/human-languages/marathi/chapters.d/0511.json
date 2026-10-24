@@ -1,0 +1,21 @@
+{
+  "chapter": 511,
+  "title": "Running a Business",
+  "label": "ch:mr-running-a-business",
+  "canDo": "I can talk about a business, its partners and its profit.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R511-review-504-511",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about a business, its partners and its profit.",
+    "assesses": [
+      "MR-LEX-C511-DHANDA511-01",
+      "MR-LEX-C511-DHANDA511-02",
+      "MR-LEX-C511-DHANDA511-03",
+      "MR-LEX-C511-DHANDA511-04",
+      "MR-LEX-C511-DHANDA511-05"
+    ]
+  }
+}

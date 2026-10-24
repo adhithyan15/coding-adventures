@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 535,
+  "title": "Aches That Linger",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d9d332b22cd2e4fe",
+  "lessons": [
+    {
+      "id": "ML-C535-arbudam",
+      "sequence": 26920,
+      "title": "അർബുദം (arbudaṁ) — cancer",
+      "headword": "അർബുദം",
+      "romanization": "arbudaṁ",
+      "gloss": "cancer",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ed1ddd51e90b393",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for insomnia, then the Malayalam for to have a cough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അർബുദം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അർബുദം — arbudaṁ — \"cancer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുകവലി അർബുദത്തിന് കാരണമാകും. pukavali arbudattinŭ kāraṇamākuṁ. Smoking can cause cancer."
+            },
+            {
+              "kind": "speech",
+              "text": "In speech many say ക്യാൻസർ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അർബുദം (arbudaṁ) is borrowed from Sanskrit arbuda, \"a long round mass; a tumour\" (CDIAL 686)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arbudaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arbudaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arbudaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arbudaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pukavali arbudattinŭ kāraṇamākuṁ. — Smoking can cause cancer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pukavali arbudattinŭ kāraṇamākuṁ.* — Smoking can cause cancer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for insomnia, then the Malayalam for to have a cough, then say arbudaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for insomnia, then the Malayalam for to have a cough, then say *arbudaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അർബുദം (arbudaṁ) mean? (\"Cancer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C535-mutantu",
+      "sequence": 26930,
+      "title": "മുടന്ത് (muṭantŭ) — a limp; lameness",
+      "headword": "മുടന്ത്",
+      "romanization": "muṭantŭ",
+      "gloss": "a limp; lameness",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6691781b072d701e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to have a cough, then the Malayalam for cancer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുടന്ത്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുടന്ത് — muṭantŭ — \"a limp; lameness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കാലിലെ മുറിവ് കാരണം അവന് മുടന്ത് ഉണ്ട്. kālile muṟivŭ kāraṇaṁ avanŭ muṭantŭ uṇṭŭ. He has a limp because of the wound on his leg."
+            },
+            {
+              "kind": "speech",
+              "text": "മുടന്തുക is to limp."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുടന്ത് (muṭantŭ) is native Dravidian: DEDR 4919 lists Malayalam words for lameness and limping, among them മുടന്തൻ, a lame man (DEDR 4919)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭantŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭantŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭantŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭantŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālile muṟivŭ kāraṇaṁ avanŭ muṭantŭ uṇṭŭ. — He has a limp because of the wound on his leg.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālile muṟivŭ kāraṇaṁ avanŭ muṭantŭ uṇṭŭ.* — He has a limp because of the wound on his leg.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to have a cough, then the Malayalam for cancer, then say muṭantŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to have a cough, then the Malayalam for cancer, then say *muṭantŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മുടന്ത് (muṭantŭ) mean? (\"A limp; lameness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C535-cennikkuttu",
+      "sequence": 26940,
+      "title": "ചെന്നിക്കുത്ത് (cennikkuttŭ) — a migraine",
+      "headword": "ചെന്നിക്കുത്ത്",
+      "romanization": "cennikkuttŭ",
+      "gloss": "a migraine",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ebeb3f63948aa20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for cancer, then the Malayalam for a limp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചെന്നിക്കുത്ത്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചെന്നിക്കുത്ത് — cennikkuttŭ — \"a migraine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വെയിലത്ത് നടന്നാൽ അമ്മയ്ക്ക് ചെന്നിക്കുത്ത് വരും. veyilattŭ naṭannāl ammaykkŭ cennikkuttŭ varuṁ. If she walks in the sun, Mother gets a migraine."
+            },
+            {
+              "kind": "speech",
+              "text": "ചെന്നി the temple of the head + കുത്ത് a stab: the pain that stabs at one side."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചെന്നിക്കുത്ത് (cennikkuttŭ) is native Dravidian, a compound of ചെന്നി, \"the temples\" (DEDR 1989), and കുത്ത്, \"a stab, a piercing pain\" (DEDR 1719)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cennikkuttŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cennikkuttŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cennikkuttŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cennikkuttŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veyilattŭ naṭannāl ammaykkŭ cennikkuttŭ varuṁ. — If she walks in the sun, Mother gets a migraine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veyilattŭ naṭannāl ammaykkŭ cennikkuttŭ varuṁ.* — If she walks in the sun, Mother gets a migraine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for cancer, then the Malayalam for a limp, then say cennikkuttŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for cancer, then the Malayalam for a limp, then say *cennikkuttŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചെന്നിക്കുത്ത് (cennikkuttŭ) mean? (\"A migraine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C535-vatam",
+      "sequence": 26950,
+      "title": "വാതം (vātaṁ) — rheumatism; joint pain",
+      "headword": "വാതം",
+      "romanization": "vātaṁ",
+      "gloss": "rheumatism; joint pain",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3eadb67f86e66890",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a limp, then the Malayalam for a migraine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വാതം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാതം — vātaṁ — \"rheumatism; joint pain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴക്കാലത്ത് മുത്തച്ഛന് വാതം കൂടും. maḻakkālattŭ muttacchanŭ vātaṁ kūṭuṁ. In the rainy season grandfather's rheumatism gets worse."
+            },
+            {
+              "kind": "speech",
+              "text": "In traditional medicine വാതം (vātaṁ) is also one of the three humours of the body."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാതം (vātaṁ) is borrowed from Sanskrit vāta, \"wind\", and in medicine \"wind as a humour of the body\" (CDIAL 11491)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vātaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vātaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vātaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vātaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻakkālattŭ muttacchanŭ vātaṁ kūṭuṁ. — In the rainy season grandfather's rheumatism gets worse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻakkālattŭ muttacchanŭ vātaṁ kūṭuṁ.* — In the rainy season grandfather's rheumatism gets worse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a limp, then the Malayalam for a migraine, then say vātaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a limp, then the Malayalam for a migraine, then say *vātaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വാതം (vātaṁ) mean? (\"Rheumatism; joint pain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C535-charddikkuka",
+      "sequence": 26960,
+      "title": "ഛർദ്ദിക്കുക (charddikkuka) — to throw up; to vomit",
+      "headword": "ഛർദ്ദിക്കുക",
+      "romanization": "charddikkuka",
+      "gloss": "to throw up; to vomit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2507be590190a5a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a migraine, then the Malayalam for rheumatism."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഛർദ്ദിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഛർദ്ദിക്കുക — charddikkuka — \"to throw up; to vomit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ബസ് യാത്രയിൽ കുട്ടി ഛർദ്ദിച്ചു. basŭ yātrayil kuṭṭi charddiccu. The child threw up on the bus journey."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഛർദ്ദിച്ചു, charddiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun ഛർദ്ദി, vomiting, is already familiar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഛർദ്ദിക്കുക (charddikkuka) is built from Sanskrit chardi, \"vomiting\" (CDIAL 4999), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charddikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *charddikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charddikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *charddikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basŭ yātrayil kuṭṭi charddiccu. — The child threw up on the bus journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *basŭ yātrayil kuṭṭi charddiccu.* — The child threw up on the bus journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a migraine, then the Malayalam for rheumatism, then say charddikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a migraine, then the Malayalam for rheumatism, then say *charddikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഛർദ്ദിക്കുക (charddikkuka) mean? (\"To throw up; to vomit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

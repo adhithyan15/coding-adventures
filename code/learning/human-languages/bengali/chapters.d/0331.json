@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "What It Is For",
+  "label": "ch:bn-what-it-is-for",
+  "canDo": "I can say what something is for and who gains from it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C331-upojogi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can say what something is for and who gains from it.",
+    "assesses": [
+      "BN-LEX-C331-UDDESHYO331-03",
+      "BN-LEX-C331-UDDESHYO331-04",
+      "BN-LEX-C331-UDDESHYO331-05"
+    ]
+  }
+}

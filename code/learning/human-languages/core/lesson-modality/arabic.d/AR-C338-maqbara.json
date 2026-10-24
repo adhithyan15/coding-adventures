@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C338-maqbara",
+    "language": "arabic",
+    "chapter": 338,
+    "sequence": 19330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c5daef996a4231d"
+  },
+  "findings": []
+}

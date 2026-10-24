@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R357-review-final-357",
+    "language": "arabic",
+    "chapter": 357,
+    "sequence": 20340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8542e6dd7c569b72"
+  },
+  "findings": []
+}

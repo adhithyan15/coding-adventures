@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C342-nalish",
+    "language": "bengali",
+    "chapter": 342,
+    "sequence": 21640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8d46c81f8d7f690"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:b9c92881368ce5b8",
+  "lessonIds": [
+    "AR-C351-khadaa-trick",
+    "AR-C351-ghashsha",
+    "AR-C351-ihtala",
+    "AR-C351-zawwara",
+    "AR-C351-akhfa"
+  ],
+  "tex": "arabic/book/chapters/ch351-tricks-and-lies.tex"
+}

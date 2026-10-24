@@ -1,0 +1,11 @@
+{
+  "id": "HI-C456-bipharna",
+  "pathSegment": "HI-PATH-456-KRODH456",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-456-KRODH456",
+      "order": 3
+    }
+  ]
+}

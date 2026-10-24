@@ -1,0 +1,21 @@
+{
+  "chapter": 427,
+  "title": "Interest and Arrears",
+  "label": "ch:mr-interest-and-arrears",
+  "canDo": "I can talk about interest, arrears, buying on credit, what is left, and repaying.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-R427-review-420-427",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can talk about interest, arrears, buying on credit, what is left, and repaying.",
+    "assesses": [
+      "MR-LEX-C427-VYAJ427-01",
+      "MR-LEX-C427-VYAJ427-02",
+      "MR-LEX-C427-VYAJ427-03",
+      "MR-LEX-C427-VYAJ427-04",
+      "MR-LEX-C427-VYAJ427-05"
+    ]
+  }
+}

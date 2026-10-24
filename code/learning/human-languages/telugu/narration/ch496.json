@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 496,
+  "title": "Sorrow",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:54c4d12e20a411af",
+  "lessons": [
+    {
+      "id": "TE-C496-badhapadu",
+      "sequence": 25100,
+      "title": "బాధపడు (bādhapaḍu) — to feel sad; to grieve",
+      "headword": "బాధపడు",
+      "romanization": "bādhapaḍu",
+      "gloss": "to feel sad; to grieve",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8eefbedcb2e3e52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a nightmare, then the Telugu for to be distraught."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బాధపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బాధపడు — bādhapaḍu — \"to feel sad; to grieve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "స్నేహితుడు వెళ్ళిపోయాక నేను చాలా బాధపడ్డాను. snēhituḍu veḷḷipōyāka nēnu cālā bādhapaḍḍānu. After my friend left, I was very sad."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): బాధపడ్డాను, bādhapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The cause takes -కి: ఆ మాటకి బాధపడ్డాను, that remark upset me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బాధపడు (bādhapaḍu) joins బాధ, \"pain, sorrow\", a loan from Sanskrit bādhā, to the native verb paḍu, \"to feel, to suffer\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "snēhituḍu veḷḷipōyāka nēnu cālā bādhapaḍḍānu. — After my friend left, I was very sad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *snēhituḍu veḷḷipōyāka nēnu cālā bādhapaḍḍānu.* — After my friend left, I was very sad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a nightmare, then the Telugu for to be distraught, then say bādhapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a nightmare, then the Telugu for to be distraught, then say *bādhapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బాధపడు (bādhapaḍu) mean? (\"To feel sad; to grieve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C496-badhapettu",
+      "sequence": 25110,
+      "title": "బాధపెట్టు (bādhapeṭṭu) — to hurt; to upset",
+      "headword": "బాధపెట్టు",
+      "romanization": "bādhapeṭṭu",
+      "gloss": "to hurt; to upset",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91c1755d5394537d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be distraught, then the Telugu for to feel sad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బాధపెట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బాధపెట్టు — bādhapeṭṭu — \"to hurt; to upset\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నా మాటలు ఆమెను బాధపెట్టాయి. nā māṭalu āmenu bādhapeṭṭāyi. My words hurt her."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): బాధపెట్టాను, bādhapeṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "For feelings rather than the body: మనసును బాధపెట్టు (bādhapeṭṭu), to hurt someone deeply."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బాధపెట్టు (bādhapeṭṭu) joins బాధ, \"pain\", a loan from Sanskrit bādhā, to the native verb peṭṭu, \"to put\": to cause someone pain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhapeṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhapeṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhapeṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhapeṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nā māṭalu āmenu bādhapeṭṭāyi. — My words hurt her.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nā māṭalu āmenu bādhapeṭṭāyi.* — My words hurt her.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be distraught, then the Telugu for to feel sad, then say bādhapeṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be distraught, then the Telugu for to feel sad, then say *bādhapeṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బాధపెట్టు (bādhapeṭṭu) mean? (\"To hurt; to upset\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C496-kungipovu",
+      "sequence": 25120,
+      "title": "కుంగిపోవు (kuṅgipōvu) — to be crushed; to sink in spirit",
+      "headword": "కుంగిపోవు",
+      "romanization": "kuṅgipōvu",
+      "gloss": "to be crushed; to sink in spirit",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78e05559eb0b3107",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to feel sad, then the Telugu for to hurt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కుంగిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుంగిపోవు — kuṅgipōvu — \"to be crushed; to sink in spirit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉద్యోగం పోయాక అతను కుంగిపోయాడు. udyōgaṁ pōyāka atanu kuṅgipōyāḍu. After losing his job, he was crushed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కుంగిపోయాను, kuṅgipōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally to sink and go: a -పోవు compound, like వెళ్ళిపోవు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుంగిపోవు (kuṅgipōvu) is a native compound: DEDR 1767 lists Telugu k(r)uṅgu, \"to sink, to fall down\", with Kannada kuggu; pōvu, \"to go\" (DEDR 4572) completes it. Someone who sinks in spirit is crushed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṅgipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṅgipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṅgipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṅgipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyōgaṁ pōyāka atanu kuṅgipōyāḍu. — After losing his job, he was crushed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyōgaṁ pōyāka atanu kuṅgipōyāḍu.* — After losing his job, he was crushed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to feel sad, then the Telugu for to hurt, then say kuṅgipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to feel sad, then the Telugu for to hurt, then say *kuṅgipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కుంగిపోవు (kuṅgipōvu) mean? (\"To be crushed; to sink in spirit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C496-kumilipovu",
+      "sequence": 25130,
+      "title": "కుమిలిపోవు (kumilipōvu) — to grieve inwardly",
+      "headword": "కుమిలిపోవు",
+      "romanization": "kumilipōvu",
+      "gloss": "to grieve inwardly",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40fe09ffea0eb25a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to hurt, then the Telugu for to be crushed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కుమిలిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుమిలిపోవు — kumilipōvu — \"to grieve inwardly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె ఎవరికీ చెప్పకుండా కుమిలిపోయింది. āme evarikī ceppakuṇḍā kumilipōyindi. She grieved inside without telling anyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కుమిలిపోయాను, kumilipōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Grief that smoulders without being spoken."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుమిలిపోవు (kumilipōvu) is native Dravidian: DEDR 1752 lists Telugu kumulu, \"to smoulder without flame, to be consumed inwardly, to grieve\", and the verb ends in pōvu, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumilipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumilipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumilipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumilipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme evarikī ceppakuṇḍā kumilipōyindi. — She grieved inside without telling anyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme evarikī ceppakuṇḍā kumilipōyindi.* — She grieved inside without telling anyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to hurt, then the Telugu for to be crushed, then say kumilipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to hurt, then the Telugu for to be crushed, then say *kumilipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కుమిలిపోవు (kumilipōvu) mean? (\"To grieve inwardly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C496-nisprha",
+      "sequence": 25140,
+      "title": "నిస్పృహ (nispṛha) — despair; dejection",
+      "headword": "నిస్పృహ",
+      "romanization": "nispṛha",
+      "gloss": "despair; dejection",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d2db68ab755e379",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be crushed, then the Telugu for to grieve inwardly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిస్పృహ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిస్పృహ — nispṛha — \"despair; dejection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చాలా ప్రయత్నాల తరువాత అతనికి నిస్పృహ కలిగింది. cālā prayatnāla taruvāta ataniki nispṛha kaligindi. After many attempts, despair set in."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word: నిస్పృహ (nispṛha) కలుగు, despair sets in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిస్పృహ (nispṛha) is borrowed from Sanskrit niḥspṛha, \"free from desire, not longing for anything\" (Monier-Williams), from niḥ-, \"without\", and spṛhā, \"longing\". In Telugu, having nothing left to long for is despair."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nispṛha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nispṛha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nispṛha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nispṛha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālā prayatnāla taruvāta ataniki nispṛha kaligindi. — After many attempts, despair set in.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālā prayatnāla taruvāta ataniki nispṛha kaligindi.* — After many attempts, despair set in.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be crushed, then the Telugu for to grieve inwardly, then say nispṛha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be crushed, then the Telugu for to grieve inwardly, then say *nispṛha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిస్పృహ (nispṛha) mean? (\"Despair; dejection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

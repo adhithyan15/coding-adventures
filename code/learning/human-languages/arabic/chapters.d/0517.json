@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Habits good and bad",
+  "label": "ch:ar-habits-good-and-bad",
+  "canDo": "I can say that someone smokes, became addicted, got hungry, was full or craved something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C517-shabia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can say that someone smokes, became addicted, got hungry, was full or craved something.",
+    "assesses": [
+      "AR-LEX-C517-ADAT517-03",
+      "AR-LEX-C517-ADAT517-04",
+      "AR-LEX-C517-ADAT517-05"
+    ]
+  }
+}

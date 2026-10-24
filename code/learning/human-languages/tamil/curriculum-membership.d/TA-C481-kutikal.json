@@ -1,0 +1,11 @@
+{
+  "id": "TA-C481-kutikal",
+  "pathSegment": "TA-PATH-481-KAL481",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-481-KAL481",
+      "order": 1
+    }
+  ]
+}

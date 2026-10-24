@@ -1,0 +1,11 @@
+{
+  "id": "MR-C474-vendhla",
+  "pathSegment": "MR-PATH-474-SHISTA474",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-474-SHISTA474",
+      "order": 2
+    }
+  ]
+}

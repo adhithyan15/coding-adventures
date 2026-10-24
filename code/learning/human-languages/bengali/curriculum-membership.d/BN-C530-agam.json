@@ -1,0 +1,11 @@
+{
+  "id": "BN-C530-agam",
+  "pathSegment": "BN-PATH-530-BATIL530",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-530-BATIL530",
+      "order": 2
+    }
+  ]
+}

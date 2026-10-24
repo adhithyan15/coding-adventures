@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C454-pratirodhikkuka",
+    "language": "malayalam",
+    "chapter": 454,
+    "sequence": 22520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca1f2125fa9d76ed"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:347d9d601df67ffc",
+  "lessonIds": [
+    "BN-C276-ghotona",
+    "BN-C276-kichhu",
+    "BN-C276-onek",
+    "BN-C276-manush",
+    "BN-C276-durghotona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch276.txt",
+  "json": "bengali/narration/ch276.json",
+  "textHash": "fnv1a64:530454df5cf43d5b",
+  "jsonHash": "fnv1a64:becebce3398f15e2",
+  "findings": []
+}

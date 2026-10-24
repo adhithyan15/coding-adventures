@@ -1,0 +1,11 @@
+{
+  "id": "TE-C382-abhiprayabhedam",
+  "pathSegment": "TE-PATH-382-ALOCANA382",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-382-ALOCANA382",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-292-IF-REAL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what will happen if with vantāl and maḻai peytāl, say if after a noun with eṉṟāl, make an if less likely with oruvēḷai, and say even if (-ālum) and if not (-āviṭṭāl).",
+  "prerequisites": [
+    "TA-EXT-291-COMPARE-DURATION"
+  ]
+}

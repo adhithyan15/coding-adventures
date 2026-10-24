@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:3e9da059a4fdc36f",
+  "lessonIds": [
+    "MR-C401-indhan",
+    "MR-C401-petrol",
+    "MR-C401-tayar",
+    "MR-C401-pankcar",
+    "MR-C401-sampne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch401.txt",
+  "json": "marathi/narration/ch401.json",
+  "textHash": "fnv1a64:579db0672ddada9c",
+  "jsonHash": "fnv1a64:7f161bbadfc07c70",
+  "findings": []
+}

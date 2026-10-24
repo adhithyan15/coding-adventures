@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:cc433ca931689ae7",
+  "lessonIds": [
+    "TA-C467-kintal",
+    "TA-C467-cettai",
+    "TA-C467-naccari",
+    "TA-C467-ularu",
+    "TA-C467-kurukuru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch467.txt",
+  "json": "tamil/narration/ch467.json",
+  "textHash": "fnv1a64:71fa083a3b9a67eb",
+  "jsonHash": "fnv1a64:d975ff6e48a0dba9",
+  "findings": []
+}

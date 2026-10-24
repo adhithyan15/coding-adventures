@@ -1,0 +1,11 @@
+{
+  "id": "MR-C478-kana",
+  "pathSegment": "MR-PATH-478-HAD478",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-478-HAD478",
+      "order": 1
+    }
+  ]
+}

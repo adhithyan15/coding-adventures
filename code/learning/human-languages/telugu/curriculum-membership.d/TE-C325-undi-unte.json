@@ -1,0 +1,11 @@
+{
+  "id": "TE-C325-undi-unte",
+  "pathSegment": "TE-PATH-325-WOULD-DEPENDS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-325-WOULD-DEPENDS",
+      "order": 2
+    }
+  ]
+}

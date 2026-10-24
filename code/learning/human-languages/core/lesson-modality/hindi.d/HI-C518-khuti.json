@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C518-khuti",
+    "language": "hindi",
+    "chapter": 518,
+    "sequence": 28640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f5e1f4727d36843"
+  },
+  "findings": []
+}

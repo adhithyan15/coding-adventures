@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:13b5055063fe3f24",
+  "lessonIds": [
+    "TA-C409-kuli",
+    "TA-C409-pallam",
+    "TA-C409-katavai",
+    "TA-C409-kurukkuvali",
+    "TA-C409-cikku"
+  ],
+  "tex": "tamil/book/chapters/ch409-potholes-and-shortcuts.tex"
+}

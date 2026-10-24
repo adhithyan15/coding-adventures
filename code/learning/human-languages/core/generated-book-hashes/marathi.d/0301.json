@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:8dbcef828c0384d1",
+  "lessonIds": [
+    "MR-C301-disne",
+    "MR-C301-sapadne",
+    "MR-C301-adhalne",
+    "MR-C301-dokavne",
+    "MR-C301-nirakhne"
+  ],
+  "tex": "marathi/book/chapters/ch301-strange-sights.tex"
+}

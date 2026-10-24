@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Jubilees and Anniversaries",
+  "label": "ch:ta-jubilees-and-anniversaries",
+  "canDo": "I can talk about anniversaries and yearly celebrations.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C319-alaippital",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can talk about anniversaries and yearly celebrations.",
+    "assesses": [
+      "TA-LEX-C319-AANDU319-03",
+      "TA-LEX-C319-AANDU319-04",
+      "TA-LEX-C319-AANDU319-05"
+    ]
+  }
+}

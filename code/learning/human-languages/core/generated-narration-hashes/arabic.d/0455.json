@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:8ba9fd4907d3d4ff",
+  "lessonIds": [
+    "AR-C455-muntaj",
+    "AR-C455-marka",
+    "AR-C455-wajiha",
+    "AR-C455-arada-display",
+    "AR-C455-basta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch455.txt",
+  "json": "arabic/narration/ch455.json",
+  "textHash": "fnv1a64:294315787133e110",
+  "jsonHash": "fnv1a64:9be3a7cd4662ed50",
+  "findings": []
+}

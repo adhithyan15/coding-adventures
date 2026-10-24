@@ -1,0 +1,11 @@
+{
+  "id": "TA-C486-koppali",
+  "pathSegment": "TA-PATH-486-VAITTIYAM486",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-486-VAITTIYAM486",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C337-culcci",
+    "language": "tamil",
+    "chapter": 337,
+    "sequence": 19310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d86ef1fa4ca7ea1"
+  },
+  "findings": []
+}

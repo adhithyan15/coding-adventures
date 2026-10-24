@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C391-songghorsho",
+    "language": "bengali",
+    "chapter": 391,
+    "sequence": 24350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5de5507326e9af1"
+  },
+  "findings": []
+}

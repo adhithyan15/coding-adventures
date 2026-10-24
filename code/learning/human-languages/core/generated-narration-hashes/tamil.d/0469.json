@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:000b0b643081fdc3",
+  "lessonIds": [
+    "TA-C469-pakai",
+    "TA-C469-virotam",
+    "TA-C469-vancam",
+    "TA-C469-etiri",
+    "TA-C469-palivanku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch469.txt",
+  "json": "tamil/narration/ch469.json",
+  "textHash": "fnv1a64:36515b8790829577",
+  "jsonHash": "fnv1a64:7707cad5e755f90f",
+  "findings": []
+}

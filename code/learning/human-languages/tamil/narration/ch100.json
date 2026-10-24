@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "Children, Husbands, Wives",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b24aab30a4c59138",
+  "sourceHash": "fnv1a64:b0413afaca8f8776",
   "lessons": [
     {
       "id": "TA-C100-children",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b925aad764475139",
+      "sourceHash": "fnv1a64:32e165a8ec85062d",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "-கள் is the plural. உங்களுக்குக் குழந்தைகள் (kuḻantaikaḷ) இருக்கிறார்களா? — \"do you have children?\"."
+              "text": "உங்களுக்குக் குழந்தைகள் (kuḻantaikaḷ) இருக்கிறார்களா? — \"do you have children?\". -கள் is the plural."
             }
           ]
         },

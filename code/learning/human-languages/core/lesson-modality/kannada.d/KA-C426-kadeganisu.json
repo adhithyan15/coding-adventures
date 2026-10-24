@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C426-kadeganisu",
+    "language": "kannada",
+    "chapter": 426,
+    "sequence": 21580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88b4010dac766a68"
+  },
+  "findings": []
+}

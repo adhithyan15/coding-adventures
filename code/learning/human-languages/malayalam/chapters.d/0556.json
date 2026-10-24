@@ -1,0 +1,19 @@
+{
+  "chapter": 556,
+  "title": "Betrayal and Care",
+  "label": "ch:ml-betrayal-and-care",
+  "canDo": "I can say a falling-out, to betray, betrayal, care and consideration.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-R556-review-549-556",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 556: I can say a falling-out, to betray, betrayal, care and consideration.",
+    "assesses": [
+      "ML-LEX-C556-VANCANA556-03",
+      "ML-LEX-C556-VANCANA556-04",
+      "ML-LEX-C556-VANCANA556-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "At the Lodge",
+  "label": "ch:ta-at-the-lodge",
+  "canDo": "I can talk about a lodge, a receptionist, a lift and a bed, and spreading a sheet.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C418-viri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can talk about a lodge, a receptionist, a lift and a bed, and spreading a sheet.",
+    "assesses": [
+      "TA-LEX-C418-VIDUTHI418-03",
+      "TA-LEX-C418-VIDUTHI418-04",
+      "TA-LEX-C418-VIDUTHI418-05"
+    ]
+  }
+}

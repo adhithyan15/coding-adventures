@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Imports and Exports",
+  "label": "ch:ta-imports-and-exports",
+  "canDo": "I can talk about trade between countries.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C511-kuttali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about trade between countries.",
+    "assesses": [
+      "TA-LEX-C511-VANIKAM511-03",
+      "TA-LEX-C511-VANIKAM511-04",
+      "TA-LEX-C511-VANIKAM511-05"
+    ]
+  }
+}

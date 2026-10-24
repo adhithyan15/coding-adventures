@@ -1,0 +1,11 @@
+{
+  "id": "AR-C375-amma",
+  "pathSegment": "AR-PATH-375-TADADD375",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-375-TADADD375",
+      "order": 2
+    }
+  ]
+}

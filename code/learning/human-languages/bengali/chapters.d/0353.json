@@ -1,0 +1,21 @@
+{
+  "chapter": 353,
+  "title": "Customs and Change",
+  "label": "ch:bn-customs-and-change",
+  "canDo": "I can say which customs people keep and which they change.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-R353-review-346-353",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say which customs people keep and which they change.",
+    "assesses": [
+      "BN-LEX-C353-RITI353-01",
+      "BN-LEX-C353-RITI353-02",
+      "BN-LEX-C353-RITI353-03",
+      "BN-LEX-C353-RITI353-04",
+      "BN-LEX-C353-RITI353-05"
+    ]
+  }
+}

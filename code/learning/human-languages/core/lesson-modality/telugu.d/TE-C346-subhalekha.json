@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C346-subhalekha",
+    "language": "telugu",
+    "chapter": 346,
+    "sequence": 17040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:823687e44af2d720"
+  },
+  "findings": []
+}

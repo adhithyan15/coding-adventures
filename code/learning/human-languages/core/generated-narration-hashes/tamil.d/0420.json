@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:a182fcf3a65b2d30",
+  "lessonIds": [
+    "TA-C420-calavai",
+    "TA-C420-cevai",
+    "TA-C420-cumaitukki",
+    "TA-C420-kuli-wage",
+    "TA-C420-tuppuravu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch420.txt",
+  "json": "tamil/narration/ch420.json",
+  "textHash": "fnv1a64:442bf4d652ee81c0",
+  "jsonHash": "fnv1a64:27cd6fde48681182",
+  "findings": []
+}

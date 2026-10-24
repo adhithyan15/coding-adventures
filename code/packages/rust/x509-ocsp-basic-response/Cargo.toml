@@ -1,0 +1,12 @@
+[package]
+name = "x509-ocsp-basic-response"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free structural RFC 6960 BasicOCSPResponse decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+der-tlv = { path = "../der-tlv" }
+x509-algorithm-identifier = { path = "../x509-algorithm-identifier" }
+x509-certificate = { path = "../x509-certificate" }
+x509-ocsp-response-data = { path = "../x509-ocsp-response-data" }

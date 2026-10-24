@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:be9c7a9a04443fa6",
+  "lessonIds": [
+    "ML-C546-kulippani",
+    "ML-C546-upajivanam",
+    "ML-C546-jolibharam",
+    "ML-C546-pravrttiparicayam",
+    "ML-C546-nayikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch546-industry-and-stress.tex"
+}

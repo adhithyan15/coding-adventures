@@ -1,0 +1,11 @@
+{
+  "id": "ML-W343-da",
+  "pathSegment": "ML-PATH-343-ASK-THE-WAY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-343-ASK-THE-WAY",
+      "order": 1
+    }
+  ]
+}

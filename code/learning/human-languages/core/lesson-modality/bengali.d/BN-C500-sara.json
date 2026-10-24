@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C500-sara",
+    "language": "bengali",
+    "chapter": 500,
+    "sequence": 30440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef84109a148359a1"
+  },
+  "findings": []
+}

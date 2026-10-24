@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:7ef4de2aa1bec3fa",
+  "lessonIds": [
+    "KA-C376-purave",
+    "KA-C376-sabitupadisu",
+    "KA-C376-sadhyate",
+    "KA-C376-mahatva",
+    "KA-C376-adharisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch376.txt",
+  "json": "kannada/narration/ch376.json",
+  "textHash": "fnv1a64:f64f5c84ab5167ae",
+  "jsonHash": "fnv1a64:7d6be2bc2fe86f6d",
+  "findings": []
+}

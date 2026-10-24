@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C408-nilapatu",
+    "language": "malayalam",
+    "chapter": 408,
+    "sequence": 20170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:229067c6b2d173b6"
+  },
+  "findings": []
+}

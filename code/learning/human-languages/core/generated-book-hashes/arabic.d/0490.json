@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:90780c5d4b5599a0",
+  "lessonIds": [
+    "AR-C490-dahsha",
+    "AR-C490-mundahish",
+    "AR-C490-indahasha",
+    "AR-C490-tafajaa",
+    "AR-C490-ijab"
+  ],
+  "tex": "arabic/book/chapters/ch490-surprise-and-admiration.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Symptoms and Surgery",
+  "label": "ch:ml-symptoms-and-surgery",
+  "canDo": "I can say a symptom, an infection, surgery, a diagnosis and to treat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-R532-review-525-532",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can say a symptom, an infection, surgery, a diagnosis and to treat.",
+    "assesses": [
+      "ML-LEX-C532-ROGAM532-03",
+      "ML-LEX-C532-ROGAM532-04",
+      "ML-LEX-C532-ROGAM532-05"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:332a38f309ab3bc1",
+  "lessonIds": [
+    "TE-C429-purogati",
+    "TE-C429-mundadugu",
+    "TE-C429-venukabatu",
+    "TE-C429-meruguparacu",
+    "TE-C429-parinamincu",
+    "TE-R429-review-422-429"
+  ],
+  "tex": "telugu/book/chapters/ch429-progress-and-setbacks.tex"
+}

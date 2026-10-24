@@ -1,0 +1,11 @@
+{
+  "id": "KA-C381-manana-madu",
+  "pathSegment": "KA-PATH-381-PARIGANISU381",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-381-PARIGANISU381",
+      "order": 3
+    }
+  ]
+}

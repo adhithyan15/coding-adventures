@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:3be50bca3d66a70e",
+  "lessonIds": [
+    "AR-C295-hikaya",
+    "AR-C295-rawa",
+    "AR-C295-qassa",
+    "AR-C295-sarada",
+    "AR-C295-dhata-yawm"
+  ],
+  "tex": "arabic/book/chapters/ch295-telling-a-story.tex"
+}

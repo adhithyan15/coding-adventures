@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-510-TASHKHIS510",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a diagnosis, a lab test and X-rays, and say that a doctor treated or cured someone.",
+  "prerequisites": []
+}

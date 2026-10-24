@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:0de5f985d544f82c",
+  "lessonIds": [
+    "TA-C341-akalvaraycci",
+    "TA-C341-tolporul",
+    "TA-C341-putaiyal",
+    "TA-C341-tontiyetu",
+    "TA-C341-kantetu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch341.txt",
+  "json": "tamil/narration/ch341.json",
+  "textHash": "fnv1a64:adc7d213998544ba",
+  "jsonHash": "fnv1a64:87e890084e3711c6",
+  "findings": []
+}

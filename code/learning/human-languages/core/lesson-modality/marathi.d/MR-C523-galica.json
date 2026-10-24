@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C523-galica",
+    "language": "marathi",
+    "chapter": 523,
+    "sequence": 29970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3fd4fda391e6d19"
+  },
+  "findings": []
+}

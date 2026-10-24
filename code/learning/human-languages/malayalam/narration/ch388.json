@@ -1,0 +1,874 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 388,
+  "title": "Blessings and Gifts",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:2c71a45c0c0abcb1",
+  "lessons": [
+    {
+      "id": "ML-C388-paritosikam",
+      "sequence": 18990,
+      "title": "പാരിതോഷികം (pāritōṣikaṁ) — a gratuity; a reward",
+      "headword": "പാരിതോഷികം",
+      "romanization": "pāritōṣikaṁ",
+      "gloss": "a gratuity; a reward",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7e5087c5dfbe9b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to put on finery, then the Malayalam for to make ready."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പാരിതോഷികം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാരിതോഷികം — pāritōṣikaṁ — \"a gratuity; a reward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കള്ളനെ പിടിച്ചയാൾക്ക് പോലീസ് ഒരു പാരിതോഷികം നൽകി. kaḷḷane piṭiccayāḷkkŭ pōlīsŭ oru pāritōṣikaṁ nalki. The police gave a reward to the man who caught the thief."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word: a reward for a good deed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാരിതോഷികം (pāritōṣikaṁ) is borrowed from Sanskrit pāritoṣika, \"gratifying; a reward, a gratuity\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāritōṣikaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāritōṣikaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāritōṣikaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāritōṣikaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷane piṭiccayāḷkkŭ pōlīsŭ oru pāritōṣikaṁ nalki. — The police gave a reward to the man who caught the thief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷane piṭiccayāḷkkŭ pōlīsŭ oru pāritōṣikaṁ nalki.* — The police gave a reward to the man who caught the thief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to put on finery, then the Malayalam for to make ready, then say pāritōṣikaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to put on finery, then the Malayalam for to make ready, then say *pāritōṣikaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പാരിതോഷികം (pāritōṣikaṁ) mean? (\"A gratuity; a reward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C388-anugrahikkuka",
+      "sequence": 19000,
+      "title": "അനുഗ്രഹിക്കുക (anugrahikkuka) — to bless",
+      "headword": "അനുഗ്രഹിക്കുക",
+      "romanization": "anugrahikkuka",
+      "gloss": "to bless",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83d2fb76f56825e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to make ready, then the Malayalam for a gratuity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അനുഗ്രഹിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അനുഗ്രഹിക്കുക — anugrahikkuka — \"to bless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മുത്തശ്ശി വധുവിനെയും വരനെയും അനുഗ്രഹിച്ചു. muttaśśi vadhuvineyuṁ varaneyuṁ anugrahiccu. Grandmother blessed the bride and the groom."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അനുഗ്രഹിച്ചു, anugrahiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is അനുഗ്രഹം, a blessing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അനുഗ്രഹിക്കുക (anugrahikkuka) is built from Sanskrit anugraha, \"favour, kindness\" (CDIAL 314), the source of അനുഗ്രഹം (anugrahaṁ), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anugrahikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anugrahikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anugrahikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anugrahikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttaśśi vadhuvineyuṁ varaneyuṁ anugrahiccu. — Grandmother blessed the bride and the groom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttaśśi vadhuvineyuṁ varaneyuṁ anugrahiccu.* — Grandmother blessed the bride and the groom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to make ready, then the Malayalam for a gratuity, then say anugrahikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to make ready, then the Malayalam for a gratuity, then say *anugrahikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അനുഗ്രഹിക്കുക (anugrahikkuka) mean? (\"To bless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C388-asamsikkuka",
+      "sequence": 19010,
+      "title": "ആശംസിക്കുക (āśaṁsikkuka) — to wish someone well",
+      "headword": "ആശംസിക്കുക",
+      "romanization": "āśaṁsikkuka",
+      "gloss": "to wish someone well",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:107bebb5c108d25e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a gratuity, then the Malayalam for to bless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആശംസിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആശംസിക്കുക — āśaṁsikkuka — \"to wish someone well\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എല്ലാവരും ദമ്പതികൾക്ക് നല്ല ഭാവി ആശംസിച്ചു. ellāvaruṁ dampatikaḷkkŭ nalla bhāvi āśaṁsiccu. Everyone wished the couple a good future."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ആശംസിച്ചു, āśaṁsiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The person takes -ക്ക് or -ന്. The noun is ആശംസകൾ, good wishes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആശംസിക്കുക (āśaṁsikkuka) is built from the Sanskrit verb ā-śaṁs, \"to hope for, to wish\" (Monier-Williams), whose noun gave ആശംസകൾ (āśaṁsakaḷ), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśaṁsikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśaṁsikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśaṁsikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśaṁsikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellāvaruṁ dampatikaḷkkŭ nalla bhāvi āśaṁsiccu. — Everyone wished the couple a good future.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellāvaruṁ dampatikaḷkkŭ nalla bhāvi āśaṁsiccu.* — Everyone wished the couple a good future.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a gratuity, then the Malayalam for to bless, then say āśaṁsikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a gratuity, then the Malayalam for to bless, then say *āśaṁsikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആശംസിക്കുക (āśaṁsikkuka) mean? (\"To wish someone well\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C388-abhinandikkuka",
+      "sequence": 19020,
+      "title": "അഭിനന്ദിക്കുക (abhinandikkuka) — to congratulate",
+      "headword": "അഭിനന്ദിക്കുക",
+      "romanization": "abhinandikkuka",
+      "gloss": "to congratulate",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7599cfddd05641d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to bless, then the Malayalam for to wish someone well."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അഭിനന്ദിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അഭിനന്ദിക്കുക — abhinandikkuka — \"to congratulate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അധ്യാപകൻ എന്നെ നല്ല മാർക്കിന് അഭിനന്ദിച്ചു. adhyāpakan enne nalla mārkkinŭ abhinandiccu. The teacher congratulated me on my good marks."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അഭിനന്ദിച്ചു, abhinandiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The person takes -എ, the reason -ക്ക് or -ന്. അഭിനന്ദനങ്ങൾ! is Congratulations!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അഭിനന്ദിക്കുക (abhinandikkuka) is built from the Sanskrit verb abhi-nand, \"to rejoice at, to greet, to praise\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhinandikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhinandikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhinandikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhinandikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhyāpakan enne nalla mārkkinŭ abhinandiccu. — The teacher congratulated me on my good marks.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhyāpakan enne nalla mārkkinŭ abhinandiccu.* — The teacher congratulated me on my good marks.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to bless, then the Malayalam for to wish someone well, then say abhinandikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to bless, then the Malayalam for to wish someone well, then say *abhinandikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അഭിനന്ദിക്കുക (abhinandikkuka) mean? (\"To congratulate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C388-sammanikkuka",
+      "sequence": 19030,
+      "title": "സമ്മാനിക്കുക (sammānikkuka) — to bestow; to give as a gift",
+      "headword": "സമ്മാനിക്കുക",
+      "romanization": "sammānikkuka",
+      "gloss": "to bestow; to give as a gift",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2691a78aade35c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to wish someone well, then the Malayalam for to congratulate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സമ്മാനിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമ്മാനിക്കുക — sammānikkuka — \"to bestow; to give as a gift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അച്ഛൻ അമ്മയ്ക്ക് ഒരു മോതിരം സമ്മാനിച്ചു. acchan ammaykkŭ oru mōtiraṁ sammāniccu. Father gave mother a ring as a gift."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സമ്മാനിച്ചു, sammāniccu."
+            },
+            {
+              "kind": "speech",
+              "text": "From സമ്മാനം, a gift, a prize."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമ്മാനിക്കുക (sammānikkuka) is built on സമ്മാനം (sammānaṁ), \"a gift, a prize\", from Sanskrit sammāna, \"honour, respect\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sammānikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sammānikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sammānikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sammānikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acchan ammaykkŭ oru mōtiraṁ sammāniccu. — Father gave mother a ring as a gift.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acchan ammaykkŭ oru mōtiraṁ sammāniccu.* — Father gave mother a ring as a gift.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to wish someone well, then the Malayalam for to congratulate, then say sammānikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to wish someone well, then the Malayalam for to congratulate, then say *sammānikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സമ്മാനിക്കുക (sammānikkuka) mean? (\"To bestow; to give as a gift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R388-review-381-388",
+      "sequence": 19040,
+      "title": "Words from chapters 381–388 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 381-388",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f3b74fd396b1882",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for darkness and a sound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darkness, a sound, silence, to whisper, to disappear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: darkness, a sound, silence, to whisper, to disappear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a riot, a weapon, to surround, to drive away, to calm down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a riot, a weapon, to surround, to drive away, to calm down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a secret, to appear, to vanish, to find out, to retrieve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a secret, to appear, to vanish, to find out, to retrieve]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "birth, death, an obituary, an autobiography, a biography",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: birth, death, an obituary, an autobiography, a biography]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a marriage, an engagement, a wedding pendant, an invitation card, to marry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a marriage, an engagement, a wedding pendant, an invitation card, to marry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a host, hospitality, a reception, to invite, to receive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a host, hospitality, a reception, to invite, to receive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a banquet, a house guest, a ceremony, to put on finery, to make ready",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a banquet, a house guest, a ceremony, to put on finery, to make ready]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a gratuity, to bless, to wish someone well, to congratulate, to bestow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a gratuity, to bless, to wish someone well, to congratulate, to bestow]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Darkness? (ഇരുട്ട്, iruṭṭŭ.) A sound? (ശബ്ദം, śabdaṁ.) Silence? (നിശ്ശബ്ദത, niśśabdata.) To whisper? (മന്ത്രിക്കുക, mantrikkuka.) To disappear? (അപ്രത്യക്ഷമാകുക, apratyakṣamākuka.) A riot? (കലാപം, kalāpaṁ.) A weapon? (ആയുധം, āyudhaṁ.) To surround? (വളയുക, vaḷayuka.) To drive away? (തുരത്തുക, turattuka.) To calm down? (ശാന്തമാകുക, śāntamākuka.) A secret? (രഹസ്യം, rahasyaṁ.) To appear? (പ്രത്യക്ഷപ്പെടുക, pratyakṣappeṭuka.) To vanish? (മറയുക, maṟayuka.) To find out? (കണ്ടുപിടിക്കുക, kaṇṭupiṭikkuka.) To retrieve? (കണ്ടെടുക്കുക, kaṇṭeṭukkuka.) Birth? (ജനനം, jananaṁ.) Death? (മരണം, maraṇaṁ.) An obituary? (ചരമം, caramaṁ.) An autobiography? (ആത്മകഥ, ātmakatha.) A biography? (ജീവചരിത്രം, jīvacaritraṁ.) A marriage? (വിവാഹം, vivāhaṁ.) An engagement? (വിവാഹനിശ്ചയം, vivāhaniścayaṁ.) A wedding pendant? (താലി, tāli.) An invitation card? (ക്ഷണക്കത്ത്, kṣaṇakkattŭ.) To marry? (വിവാഹം കഴിക്കുക, vivāhaṁ kaḻikkuka.) A host? (ആതിഥേയൻ, ātithēyan.) Hospitality? (ആതിഥ്യം, ātithyaṁ.) A reception? (സ്വീകരണം, svīkaraṇaṁ.) To invite? (ക്ഷണിക്കുക, kṣaṇikkuka.) To receive? (സ്വീകരിക്കുക, svīkarikkuka.) A banquet? (സൽക്കാരം, salkkāraṁ.) A house guest? (വിരുന്നുകാരൻ, virunnukāran.) A ceremony? (ചടങ്ങ്, caṭaṅṅŭ.) To put on finery? (അണിയുക, aṇiyuka.) To make ready? (ഒരുക്കുക, orukkuka.) A gratuity? (പാരിതോഷികം, pāritōṣikaṁ.) To bless? (അനുഗ്രഹിക്കുക, anugrahikkuka.) To wish someone well? (ആശംസിക്കുക, āśaṁsikkuka.) To congratulate? (അഭിനന്ദിക്കുക, abhinandikkuka.) To bestow? (സമ്മാനിക്കുക, sammānikkuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C329-ettukupovu",
+  "pathSegment": "TE-PATH-329-DONGATANAM329",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-329-DONGATANAM329",
+      "order": 3
+    }
+  ]
+}

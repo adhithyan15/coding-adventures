@@ -1,0 +1,11 @@
+{
+  "id": "TE-C406-lancam",
+  "pathSegment": "TE-PATH-406-AVINITI406",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-406-AVINITI406",
+      "order": 1
+    }
+  ]
+}

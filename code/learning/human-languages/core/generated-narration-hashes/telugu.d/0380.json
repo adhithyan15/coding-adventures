@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:72fb1c6e659efc93",
+  "lessonIds": [
+    "TE-C380-kritam",
+    "TE-C380-antakumundu",
+    "TE-C380-appatinunci",
+    "TE-C380-mrtadeham",
+    "TE-C380-ventadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch380.txt",
+  "json": "telugu/narration/ch380.json",
+  "textHash": "fnv1a64:3f06e9372c812e95",
+  "jsonHash": "fnv1a64:82c0fede6b300040",
+  "findings": []
+}

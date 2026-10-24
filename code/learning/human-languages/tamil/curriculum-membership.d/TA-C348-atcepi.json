@@ -1,0 +1,11 @@
+{
+  "id": "TA-C348-atcepi",
+  "pathSegment": "TA-PATH-348-ETIR348",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-348-ETIR348",
+      "order": 1
+    }
+  ]
+}

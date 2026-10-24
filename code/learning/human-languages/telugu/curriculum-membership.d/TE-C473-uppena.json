@@ -1,0 +1,11 @@
+{
+  "id": "TE-C473-uppena",
+  "pathSegment": "TE-PATH-473-DVIPAM473",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-473-DVIPAM473",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C501-thopatne",
+  "pathSegment": "MR-PATH-501-MITHI501",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-501-MITHI501",
+      "order": 3
+    }
+  ]
+}

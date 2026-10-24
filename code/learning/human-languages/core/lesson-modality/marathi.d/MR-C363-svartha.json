@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C363-svartha",
+    "language": "marathi",
+    "chapter": 363,
+    "sequence": 21100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22d3228ed43931ba"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:0e7822bd9ad5d00d",
+  "lessonIds": [
+    "ML-C505-urjjam",
+    "ML-C505-ksamam",
+    "ML-C505-bhugarbhajalam",
+    "ML-C505-agolatapanam",
+    "ML-C505-malakkuli"
+  ],
+  "tex": "malayalam/book/chapters/ch505-saving-resources.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:a5a4e15d165b5c4d",
+  "lessonIds": [
+    "TA-C318-tirappuvila",
+    "TA-C318-kuttuvilakku",
+    "TA-C318-cirappu-viruntinar",
+    "TA-C318-talaimaitanku",
+    "TA-C318-uraiyarru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch318.txt",
+  "json": "tamil/narration/ch318.json",
+  "textHash": "fnv1a64:c6d97e9a1f5cc46f",
+  "jsonHash": "fnv1a64:1c7cecfb5e35ab42",
+  "findings": []
+}

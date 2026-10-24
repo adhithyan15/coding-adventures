@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:b6a30bfdc100d132",
+  "lessonIds": [
+    "MR-C464-himmat",
+    "MR-C464-jidda",
+    "MR-C464-cikati",
+    "MR-C464-umed",
+    "MR-C464-tag-dharne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch464.txt",
+  "json": "marathi/narration/ch464.json",
+  "textHash": "fnv1a64:47049fa62400e1a2",
+  "jsonHash": "fnv1a64:c8f93d0e06198298",
+  "findings": []
+}

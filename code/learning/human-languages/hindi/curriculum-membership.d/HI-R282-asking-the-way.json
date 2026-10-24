@@ -1,0 +1,11 @@
+{
+  "id": "HI-R282-asking-the-way",
+  "pathSegment": "HI-PATH-282-ASKWAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-282-ASKWAY",
+      "order": 3
+    }
+  ]
+}

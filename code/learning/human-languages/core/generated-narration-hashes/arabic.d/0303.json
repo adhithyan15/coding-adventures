@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:b2f59482bd3bd26e",
+  "lessonIds": [
+    "AR-C303-ustura",
+    "AR-C303-khurafa",
+    "AR-C303-batal",
+    "AR-C303-shirrir",
+    "AR-C303-takhayyala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch303.txt",
+  "json": "arabic/narration/ch303.json",
+  "textHash": "fnv1a64:84de5bd7286a40ef",
+  "jsonHash": "fnv1a64:2dc0bf69b876abd6",
+  "findings": []
+}

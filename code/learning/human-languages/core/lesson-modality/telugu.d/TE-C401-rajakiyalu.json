@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C401-rajakiyalu",
+    "language": "telugu",
+    "chapter": 401,
+    "sequence": 20010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40f99c4141a962b4"
+  },
+  "findings": []
+}

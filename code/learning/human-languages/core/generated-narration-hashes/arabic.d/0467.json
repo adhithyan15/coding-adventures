@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:81a82728a41fa4ba",
+  "lessonIds": [
+    "AR-C467-mahmiyya",
+    "AR-C467-muhaddad",
+    "AR-C467-hafaza",
+    "AR-C467-inqarada",
+    "AR-C467-ahdara-waste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch467.txt",
+  "json": "arabic/narration/ch467.json",
+  "textHash": "fnv1a64:5f587570accf4837",
+  "jsonHash": "fnv1a64:57d36029c9427515",
+  "findings": []
+}

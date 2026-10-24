@@ -1,23 +1,38 @@
-use der_asn1::Asn1Limits;
+use der_asn1::{Asn1Decoder, Asn1Limits};
 use rsa_public_operation::RsaPublicOperationLimits;
 use std::cell::Cell;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_issuer_candidate_selection::select_unique_x509_issuer_candidate_by;
-use x509_certificate_policy::{
-    validate_certificate_algorithm_policy, validate_certificate_role_policy,
-    X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
-    X509CertificateIssuerLinkErrorKind, X509CertificateRole, X509CertificateRoleErrorKind,
+use x509_certificate_path_construction::{
+    construct_unique_x509_certificate_path_by, ConstructedX509CertificatePath,
 };
+use x509_certificate_path_length_policy::{
+    X509CertificatePathLengthErrorKind, X509CertificatePathLengthState,
+};
+use x509_certificate_policy::{
+    classify_certificate_self_issued, validate_certificate_algorithm_policy,
+    validate_certificate_role_policy, X509AlgorithmParametersPolicy,
+    X509CertificateAlgorithmProfile, X509CertificateIssuerLinkErrorKind, X509CertificateRole,
+    X509CertificateRoleErrorKind,
+};
+use x509_intermediate_certificate_policy::validate_x509_intermediate_certificate_policy;
 use x509_rsa_pkcs1_v1_5_sha256_signature::X509RsaSha256SignatureErrorKind;
 use x509_rsa_public_key::{RsaPublicKeyErrorKind, RsaPublicKeyPolicy};
 use x509_rsa_sha256_issuer_link::{
-    verify_selected_x509_rsa_sha256_issuer_link,
+    advance_constructed_x509_rsa_sha256_intermediate_path_length,
+    advance_x509_rsa_sha256_authenticated_intermediate_path_length,
+    bind_x509_rsa_sha256_intermediate_issuer_policy_link,
+    verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link,
+    verify_constructed_x509_rsa_sha256_issuer_link, verify_selected_x509_rsa_sha256_issuer_link,
     verify_selected_x509_rsa_sha256_issuer_link_with_policies,
     verify_selected_x509_rsa_sha256_issuer_link_with_role_policy,
-    verify_x509_rsa_sha256_issuer_link, X509RsaSha256IssuerLinkErrorKind,
+    verify_x509_rsa_sha256_issuer_link, X509RsaSha256ConstructedPathAdjacentLinkErrorKind,
+    X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind,
+    X509RsaSha256IntermediateIssuerPolicyLinkErrorKind, X509RsaSha256IssuerLinkErrorKind,
     X509RsaSha256IssuerLinkPolicy, X509RsaSha256IssuerPolicyLinkErrorKind,
     X509RsaSha256IssuerRolePolicyLinkErrorKind,
 };
+use x509_time::{decode_x509_time, X509Time};
 
 const RSA_ENCRYPTION_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
 const SHA256_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 11];
@@ -101,6 +116,123 @@ fn algorithm_profiles() -> [X509CertificateAlgorithmProfile<'static>; 1] {
     .unwrap()]
 }
 
+fn observed_time() -> X509Time {
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    decode_x509_time(decoder.decode_exact(b"\x17\x0d261101000000Z").unwrap()).unwrap()
+}
+
+fn authenticated_intermediate<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    child: &'child_certificate X509Certificate<'child_encoded>,
+    candidates: &'issuer_certificate [X509Certificate<'issuer_encoded>],
+    profiles: &[X509CertificateAlgorithmProfile<'_>],
+    is_self_issued: bool,
+) -> x509_rsa_sha256_issuer_link::VerifiedX509RsaSha256IntermediateIssuerPolicyLink<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    let selected = select_unique_x509_issuer_candidate_by(
+        child,
+        candidates,
+        1,
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let link_role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let link_algorithm_policy =
+        validate_certificate_algorithm_policy(&candidates[0], profiles).unwrap();
+    let verified_link = verify_selected_x509_rsa_sha256_issuer_link_with_policies(
+        selected,
+        link_role_policy,
+        link_algorithm_policy,
+        policy(),
+    )
+    .unwrap();
+
+    let intermediate_role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let intermediate_algorithm_policy =
+        validate_certificate_algorithm_policy(&candidates[0], profiles).unwrap();
+    let self_issued =
+        classify_certificate_self_issued(&candidates[0], |_issuer, _subject| is_self_issued);
+    let intermediate_policy = validate_x509_intermediate_certificate_policy(
+        intermediate_role_policy,
+        intermediate_algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap();
+
+    bind_x509_rsa_sha256_intermediate_issuer_policy_link(verified_link, intermediate_policy)
+        .unwrap()
+}
+
+fn constructed_authenticated_first_intermediate<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    path: &'path ConstructedX509CertificatePath<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    candidates: &'candidates [X509Certificate<'candidate_encoded>],
+    profiles: &[X509CertificateAlgorithmProfile<'_>],
+) -> x509_rsa_sha256_issuer_link::VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    let role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy = validate_certificate_algorithm_policy(&candidates[0], profiles).unwrap();
+    let self_issued = classify_certificate_self_issued(&candidates[0], |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+    let intermediate_policy = validate_x509_intermediate_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap();
+
+    verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link(
+        path.adjacent_link(0).unwrap(),
+        intermediate_policy,
+        policy(),
+    )
+    .unwrap()
+}
+
 fn mutate_first(encoded: &mut [u8], needle: &[u8], mutate: impl FnOnce(&mut [u8])) {
     let offset = encoded
         .windows(needle.len())
@@ -122,6 +254,17 @@ fn mutate_every(encoded: &mut [u8], needle: &[u8], mut mutate: impl FnMut(&mut [
         matches += 1;
     }
     assert!(matches > 0, "fixture contains mutation target");
+}
+
+fn replace_nth(encoded: &mut [u8], needle: &[u8], occurrence: usize, replacement: &[u8]) {
+    assert_eq!(needle.len(), replacement.len());
+    let offset = encoded
+        .windows(needle.len())
+        .enumerate()
+        .filter_map(|(offset, window)| (window == needle).then_some(offset))
+        .nth(occurrence)
+        .expect("fixture contains requested mutation target");
+    encoded[offset..offset + needle.len()].copy_from_slice(replacement);
 }
 
 #[test]
@@ -188,6 +331,499 @@ fn authenticates_the_exact_pair_consumed_from_selection_evidence() {
     assert!(std::ptr::eq(verified.child(), &child));
     assert!(std::ptr::eq(verified.candidate_issuer(), &candidates[1]));
     assert_eq!(verified.issuer_public_key().modulus_bits(), 2_048);
+}
+
+#[test]
+fn authenticates_the_exact_target_link_projected_from_a_constructed_path() {
+    let child_encoded = fixture();
+    let mut issuer_encoded = fixture();
+    mutate_first(&mut issuer_encoded, &[0x02, 0x01, 0x01], |serial| {
+        serial[2] = 2;
+    });
+    let child = decode(&child_encoded);
+    let candidates = vec![decode(&issuer_encoded)];
+    let path = construct_unique_x509_certificate_path_by(
+        &child,
+        &candidates,
+        1,
+        2,
+        |certificate| certificate.encoded() == candidates[0].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let adjacent_link = path.adjacent_link(0).unwrap();
+
+    let verified = verify_constructed_x509_rsa_sha256_issuer_link(adjacent_link, policy()).unwrap();
+
+    assert!(std::ptr::eq(
+        verified.adjacent_link().constructed_path(),
+        &path
+    ));
+    assert!(std::ptr::eq(
+        verified.adjacent_link().child_target_certificate().unwrap(),
+        &child
+    ));
+    assert!(verified
+        .adjacent_link()
+        .child_candidate_certificate()
+        .is_none());
+    assert!(std::ptr::eq(
+        verified.adjacent_link().issuer_certificate(),
+        &candidates[0]
+    ));
+    assert_eq!(verified.issuer_public_key().modulus_bits(), 2_048);
+    assert_eq!(
+        format!("{verified:?}"),
+        "VerifiedX509RsaSha256ConstructedPathAdjacentLink"
+    );
+}
+
+#[test]
+fn authenticates_the_projected_candidate_child_without_endpoint_substitution() {
+    let mut target_encoded = fixture();
+    replace_nth(
+        &mut target_encoded,
+        b"fixture.example",
+        0,
+        b"interm1.example",
+    );
+    let mut intermediate_encoded = fixture();
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        1,
+        b"interm1.example",
+    );
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let adjacent_link = path.adjacent_link(1).unwrap();
+    assert!(std::ptr::eq(
+        adjacent_link.child_candidate_certificate().unwrap(),
+        &candidates[0]
+    ));
+    assert!(std::ptr::eq(
+        adjacent_link.issuer_certificate(),
+        &candidates[1]
+    ));
+
+    let error = verify_constructed_x509_rsa_sha256_issuer_link(adjacent_link, policy())
+        .expect_err("the mutated intermediate must fail its exact signature check");
+
+    assert!(matches!(
+        error.kind(),
+        X509RsaSha256ConstructedPathAdjacentLinkErrorKind::IssuerLink(
+            X509RsaSha256IssuerLinkErrorKind::ChildSignature(
+                X509RsaSha256SignatureErrorKind::EncodedMessage(_)
+                    | X509RsaSha256SignatureErrorKind::PublicOperation(_)
+            )
+        )
+    ));
+    assert!(!error.to_string().contains("interm1"));
+    assert!(!error.to_string().contains("root001"));
+}
+
+#[test]
+fn authenticates_constructed_adjacency_with_complete_exact_intermediate_policy() {
+    let target_encoded = fixture();
+    let mut intermediate_encoded = fixture();
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let profiles = algorithm_profiles();
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let adjacent_link = path.adjacent_link(0).unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(&candidates[0], &profiles).unwrap();
+    let self_issued = classify_certificate_self_issued(&candidates[0], |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+    let intermediate_policy = validate_x509_intermediate_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap();
+
+    let verified = verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link(
+        adjacent_link,
+        intermediate_policy,
+        policy(),
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        verified.verified_link().adjacent_link().constructed_path(),
+        &path
+    ));
+    assert!(std::ptr::eq(
+        verified
+            .verified_link()
+            .adjacent_link()
+            .child_target_certificate()
+            .unwrap(),
+        &target
+    ));
+    assert!(std::ptr::eq(
+        verified
+            .verified_link()
+            .adjacent_link()
+            .issuer_certificate(),
+        verified.intermediate_policy().certificate()
+    ));
+    assert_eq!(
+        verified.verified_link().issuer_public_key().modulus_bits(),
+        2_048
+    );
+    assert_eq!(
+        format!("{verified:?}"),
+        "VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink"
+    );
+}
+
+#[test]
+fn rejects_constructed_terminal_issuer_before_link_crypto() {
+    let target_encoded = fixture();
+    let mut intermediate_encoded = fixture();
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let profiles = algorithm_profiles();
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let terminal_link = path.adjacent_link(1).unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &candidates[1],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(&candidates[1], &profiles).unwrap();
+    let self_issued = classify_certificate_self_issued(&candidates[1], |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+    let terminal_policy = validate_x509_intermediate_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap();
+
+    let error = verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link(
+        terminal_link,
+        terminal_policy,
+        policy(),
+    )
+    .expect_err("the constructed path's terminal issuer is not an intermediate");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind::TerminalIssuer
+    );
+    assert!(!error.to_string().contains("root001"));
+}
+
+#[test]
+fn rejects_detached_intermediate_policy_before_constructed_link_crypto() {
+    let target_encoded = fixture();
+    let mut detached_intermediate_encoded = fixture();
+    replace_nth(
+        &mut detached_intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut invalid_intermediate_encoded = detached_intermediate_encoded.clone();
+    mutate_first(
+        &mut invalid_intermediate_encoded,
+        RSA_ENCRYPTION_OID_DER,
+        |oid| {
+            oid[oid.len() - 1] = 0x0b;
+        },
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&invalid_intermediate_encoded), decode(&root_encoded)];
+    let detached_issuer = decode(&detached_intermediate_encoded);
+    let profiles = algorithm_profiles();
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let adjacent_link = path.adjacent_link(0).unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &detached_issuer,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(&detached_issuer, &profiles).unwrap();
+    let self_issued = classify_certificate_self_issued(&detached_issuer, |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+    let intermediate_policy = validate_x509_intermediate_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap();
+
+    let error = verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link(
+        adjacent_link,
+        intermediate_policy,
+        policy(),
+    )
+    .expect_err("detached policy must fail before invalid issuer-key parsing");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind::EvidenceMismatch
+    );
+    assert!(!error.to_string().contains("fixture"));
+}
+
+#[test]
+fn rejects_byte_equal_redecoded_intermediate_policy() {
+    let target_encoded = fixture();
+    let mut intermediate_encoded = fixture();
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let detached_issuer = decode(&intermediate_encoded);
+    let profiles = algorithm_profiles();
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let adjacent_link = path.adjacent_link(0).unwrap();
+    assert_eq!(
+        adjacent_link.issuer_certificate().encoded(),
+        detached_issuer.encoded()
+    );
+    assert!(!std::ptr::eq(
+        adjacent_link.issuer_certificate(),
+        &detached_issuer
+    ));
+    let role_policy = validate_certificate_role_policy(
+        &detached_issuer,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(&detached_issuer, &profiles).unwrap();
+    let self_issued = classify_certificate_self_issued(&detached_issuer, |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+    let intermediate_policy = validate_x509_intermediate_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap();
+
+    let error = verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link(
+        adjacent_link,
+        intermediate_policy,
+        policy(),
+    )
+    .expect_err("a byte-equal re-decode is still detached policy evidence");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind::EvidenceMismatch
+    );
+    assert!(!error.to_string().contains("fixture"));
+}
+
+#[test]
+fn constructed_intermediate_advances_path_length_and_retains_ordered_proof() {
+    let target_encoded = fixture();
+    let mut intermediate_encoded = fixture();
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let profiles = algorithm_profiles();
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let authenticated = constructed_authenticated_first_intermediate(&path, &candidates, &profiles);
+
+    let advanced = advance_constructed_x509_rsa_sha256_intermediate_path_length(
+        X509CertificatePathLengthState::new(1),
+        authenticated,
+    )
+    .unwrap();
+
+    assert_eq!(
+        advanced
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    assert!(std::ptr::eq(
+        advanced
+            .authenticated_intermediate()
+            .verified_link()
+            .adjacent_link()
+            .constructed_path(),
+        &path
+    ));
+    assert_eq!(
+        advanced
+            .authenticated_intermediate()
+            .verified_link()
+            .adjacent_link()
+            .issuer_depth(),
+        0
+    );
+    assert!(std::ptr::eq(
+        advanced
+            .authenticated_intermediate()
+            .intermediate_policy()
+            .certificate(),
+        &candidates[0]
+    ));
+    assert_eq!(
+        format!("{advanced:?}"),
+        "ValidatedX509RsaSha256ConstructedPathIntermediatePathLength"
+    );
+}
+
+#[test]
+fn constructed_non_self_issued_intermediate_fails_on_exhausted_path_length() {
+    let target_encoded = fixture();
+    let mut intermediate_encoded = fixture();
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let profiles = algorithm_profiles();
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let authenticated = constructed_authenticated_first_intermediate(&path, &candidates, &profiles);
+
+    let error = advance_constructed_x509_rsa_sha256_intermediate_path_length(
+        X509CertificatePathLengthState::new(0),
+        authenticated,
+    )
+    .expect_err("the construction-bound non-self-issued intermediate consumes capacity");
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathLengthErrorKind::MaximumExceeded
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 certificate path length policy error MaximumExceeded"
+    );
+    assert!(!error.to_string().contains("fixture"));
+    assert!(!error.to_string().contains("root001"));
 }
 
 #[test]
@@ -321,6 +957,205 @@ fn authenticates_selected_pair_with_exact_role_and_algorithm_policy_evidence() {
         format!("{verified:?}"),
         "VerifiedX509RsaSha256IssuerPolicyLink"
     );
+}
+
+#[test]
+fn binds_authenticated_link_to_complete_policy_for_the_exact_intermediate() {
+    let encoded = fixture();
+    let child = decode(&encoded);
+    let candidates = vec![decode(&encoded)];
+    let profiles = algorithm_profiles();
+
+    let selected = select_unique_x509_issuer_candidate_by(
+        &child,
+        &candidates,
+        1,
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let link_role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let link_algorithm_policy =
+        validate_certificate_algorithm_policy(&candidates[0], &profiles).unwrap();
+    let verified_link = verify_selected_x509_rsa_sha256_issuer_link_with_policies(
+        selected,
+        link_role_policy,
+        link_algorithm_policy,
+        policy(),
+    )
+    .unwrap();
+
+    let intermediate_role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let intermediate_algorithm_policy =
+        validate_certificate_algorithm_policy(&candidates[0], &profiles).unwrap();
+    let self_issued = classify_certificate_self_issued(&candidates[0], |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+    let intermediate_policy = validate_x509_intermediate_certificate_policy(
+        intermediate_role_policy,
+        intermediate_algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap();
+
+    let verified =
+        bind_x509_rsa_sha256_intermediate_issuer_policy_link(verified_link, intermediate_policy)
+            .unwrap();
+
+    assert!(std::ptr::eq(
+        verified
+            .issuer_policy_link()
+            .role_policy_link()
+            .verified_link()
+            .child(),
+        &child
+    ));
+    assert!(std::ptr::eq(
+        verified
+            .issuer_policy_link()
+            .role_policy_link()
+            .verified_link()
+            .candidate_issuer(),
+        verified.intermediate_policy().certificate()
+    ));
+    assert_eq!(
+        format!("{verified:?}"),
+        "VerifiedX509RsaSha256IntermediateIssuerPolicyLink"
+    );
+}
+
+#[test]
+fn authenticated_intermediate_advances_path_length_and_retains_both_proofs() {
+    let encoded = fixture();
+    let child = decode(&encoded);
+    let candidates = vec![decode(&encoded)];
+    let profiles = algorithm_profiles();
+    let authenticated = authenticated_intermediate(&child, &candidates, &profiles, true);
+
+    let advanced = advance_x509_rsa_sha256_authenticated_intermediate_path_length(
+        X509CertificatePathLengthState::new(1),
+        authenticated,
+    )
+    .unwrap();
+
+    assert_eq!(
+        advanced
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        1
+    );
+    assert!(std::ptr::eq(
+        advanced
+            .authenticated_intermediate()
+            .intermediate_policy()
+            .certificate(),
+        &candidates[0]
+    ));
+    assert_eq!(
+        format!("{advanced:?}"),
+        "ValidatedX509RsaSha256AuthenticatedIntermediatePathLength"
+    );
+}
+
+#[test]
+fn authenticated_non_self_issued_intermediate_fails_on_exhausted_path_length() {
+    let encoded = fixture();
+    let child = decode(&encoded);
+    let candidates = vec![decode(&encoded)];
+    let profiles = algorithm_profiles();
+    let authenticated = authenticated_intermediate(&child, &candidates, &profiles, false);
+
+    let error = advance_x509_rsa_sha256_authenticated_intermediate_path_length(
+        X509CertificatePathLengthState::new(0),
+        authenticated,
+    )
+    .expect_err("a non-self-issued intermediate must consume available capacity");
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathLengthErrorKind::MaximumExceeded
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 certificate path length policy error MaximumExceeded"
+    );
+    assert!(!error.to_string().contains("fixture"));
+}
+
+#[test]
+fn rejects_complete_intermediate_policy_for_a_byte_equal_distinct_issuer() {
+    let encoded = fixture();
+    let child = decode(&encoded);
+    let candidates = vec![decode(&encoded)];
+    let detached_intermediate = decode(&encoded);
+    let profiles = algorithm_profiles();
+
+    let selected = select_unique_x509_issuer_candidate_by(
+        &child,
+        &candidates,
+        1,
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let link_role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+    let link_algorithm_policy =
+        validate_certificate_algorithm_policy(&candidates[0], &profiles).unwrap();
+    let verified_link = verify_selected_x509_rsa_sha256_issuer_link_with_policies(
+        selected,
+        link_role_policy,
+        link_algorithm_policy,
+        policy(),
+    )
+    .unwrap();
+
+    let intermediate_role_policy = validate_certificate_role_policy(
+        &detached_intermediate,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+    let intermediate_algorithm_policy =
+        validate_certificate_algorithm_policy(&detached_intermediate, &profiles).unwrap();
+    let self_issued =
+        classify_certificate_self_issued(&detached_intermediate, |issuer, subject| {
+            issuer.encoded() == subject.encoded()
+        });
+    let intermediate_policy = validate_x509_intermediate_certificate_policy(
+        intermediate_role_policy,
+        intermediate_algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap();
+
+    let error =
+        bind_x509_rsa_sha256_intermediate_issuer_policy_link(verified_link, intermediate_policy)
+            .expect_err("byte-equal evidence from another decoded issuer must fail");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha256IntermediateIssuerPolicyLinkErrorKind::EvidenceMismatch
+    );
+    assert!(!error.to_string().contains("fixture"));
 }
 
 #[test]

@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-347-DOPTOR347",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-347-DOPTOR347"
+  ],
+  "after": []
+}

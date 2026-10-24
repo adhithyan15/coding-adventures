@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C348-dadi-ceyu",
+    "language": "telugu",
+    "chapter": 348,
+    "sequence": 17130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd9c521270c9e2a9"
+  },
+  "findings": []
+}

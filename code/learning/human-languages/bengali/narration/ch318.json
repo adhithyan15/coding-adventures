@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 318,
+  "title": "Turning Points",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cdebeef7825e29fe",
+  "lessons": [
+    {
+      "id": "BN-C318-biplob",
+      "sequence": 20150,
+      "title": "বিপ্লব (biplôb) — a revolution",
+      "headword": "বিপ্লব",
+      "romanization": "biplôb",
+      "gloss": "a revolution",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19a805a37363bc3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to surrender, then the Bengali for defeat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিপ্লব",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিপ্লব — biplôb — \"a revolution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বিপ্লবের পরে দেশে নতুন সরকার এল। biplôber pôre deshe nôtun sôrkār elô. After the revolution a new government came to power."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিপ্লব (biplôb) is Sanskrit viplava, 'tumult, a revolt; ruin' (Monier-Williams), from vi-√plu, 'to float apart'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biplôb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biplôb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biplôb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biplôb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biplôber pôre deshe nôtun sôrkār elô. — After the revolution a new government came to power.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biplôber pôre deshe nôtun sôrkār elô.* — After the revolution a new government came to power.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to surrender, then the Bengali for defeat, then say biplôb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to surrender, then the Bengali for defeat, then say *biplôb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিপ্লব (biplôb) mean? (\"A revolution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C318-andolon",
+      "sequence": 20160,
+      "title": "আন্দোলন (āndolôn) — a movement; a campaign",
+      "headword": "আন্দোলন",
+      "romanization": "āndolôn",
+      "gloss": "a movement; a campaign",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5657a9320983ca1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for defeat, then the Bengali for a revolution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আন্দোলন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আন্দোলন — āndolôn — \"a movement; a campaign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শহরে ছাত্রদের একটা বড় আন্দোলন শুরু হল। shôhôre chhātrôder ekṭā bôṛo āndolôn shuru hôlô. A big student movement began in the city."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আন্দোলন (āndolôn) is Sanskrit āndolana, 'swinging, trembling' (Monier-Williams); the sense 'a political movement', a people set swaying, is the modern one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āndolôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āndolôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āndolôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āndolôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôhôre chhātrôder ekṭā bôṛo āndolôn shuru hôlô. — A big student movement began in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôhôre chhātrôder ekṭā bôṛo āndolôn shuru hôlô.* — A big student movement began in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for defeat, then the Bengali for a revolution, then say āndolôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for defeat, then the Bengali for a revolution, then say *āndolôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আন্দোলন (āndolôn) mean? (\"A movement; a campaign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C318-songgram",
+      "sequence": 20170,
+      "title": "সংগ্রাম (sônggrām) — a struggle",
+      "headword": "সংগ্রাম",
+      "romanization": "sônggrām",
+      "gloss": "a struggle",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ca3db7fb2c9a947",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a revolution, then the Bengali for a movement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সংগ্রাম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংগ্রাম — sônggrām — \"a struggle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "স্বাধীনতার জন্য সংগ্রাম অনেক বছর চলল। svādhīnôtār jônyô sônggrām ônek bôchhôr chôllô. The struggle for independence went on for many years."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংগ্রাম (sônggrām) is Sanskrit saṃgrāma, first a host of people and then 'battle, conflict' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sônggrām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sônggrām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sônggrām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sônggrām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svādhīnôtār jônyô sônggrām ônek bôchhôr chôllô. — The struggle for independence went on for many years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svādhīnôtār jônyô sônggrām ônek bôchhôr chôllô.* — The struggle for independence went on for many years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a revolution, then the Bengali for a movement, then say sônggrām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a revolution, then the Bengali for a movement, then say *sônggrām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সংগ্রাম (sônggrām) mean? (\"A struggle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C318-protishtha-kora",
+      "sequence": 20180,
+      "title": "প্রতিষ্ঠা করা (prôtishṭhā kôrā) — to found; to establish",
+      "headword": "প্রতিষ্ঠা করা",
+      "romanization": "prôtishṭhā kôrā",
+      "gloss": "to found; to establish",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:839b19494b2fea81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a movement, then the Bengali for a struggle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রতিষ্ঠা করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিষ্ঠা করা — prôtishṭhā kôrā — \"to found; to establish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দাদু গ্রামে এই স্কুলটা প্রতিষ্ঠা করলেন। dādu grāme ei skulṭā prôtishṭhā kôrlen. Grandfather founded this school in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি একটা স্কুল প্রতিষ্ঠা করলেন, tini ekṭā skul prôtishṭhā kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিষ্ঠা করা (prôtishṭhā kôrā) puts Sanskrit pratiṣṭhā, 'standing still, stability' (Monier-Williams), before করা: to make a thing stand firm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtishṭhā kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtishṭhā kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtishṭhā kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtishṭhā kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādu grāme ei skulṭā prôtishṭhā kôrlen. — Grandfather founded this school in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādu grāme ei skulṭā prôtishṭhā kôrlen.* — Grandfather founded this school in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a movement, then the Bengali for a struggle, then say prôtishṭhā kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a movement, then the Bengali for a struggle, then say *prôtishṭhā kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রতিষ্ঠা করা (prôtishṭhā kôrā) mean? (\"To found; to establish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C318-mukti",
+      "sequence": 20190,
+      "title": "মুক্তি (mukti) — liberation; release",
+      "headword": "মুক্তি",
+      "romanization": "mukti",
+      "gloss": "liberation; release",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c4bf4accef8be01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a struggle, then the Bengali for to found."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মুক্তি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মুক্তি — mukti — \"liberation; release\"."
+            },
+            {
+              "kind": "speech",
+              "text": "যুদ্ধের পরে কয়েদিরা মুক্তি পেল। juddher pôre kôyedirā mukti pelô. After the war the prisoners were set free."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মুক্তি (mukti) is Sanskrit mukti, 'setting free, release' (Monier-Williams). মুক্তি পাওয়া, to be set free."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juddher pôre kôyedirā mukti pelô. — After the war the prisoners were set free.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juddher pôre kôyedirā mukti pelô.* — After the war the prisoners were set free.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a struggle, then the Bengali for to found, then say mukti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a struggle, then the Bengali for to found, then say *mukti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মুক্তি (mukti) mean? (\"Liberation; release\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

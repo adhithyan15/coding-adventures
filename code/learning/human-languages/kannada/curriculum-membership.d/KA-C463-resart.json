@@ -1,0 +1,11 @@
+{
+  "id": "KA-C463-resart",
+  "pathSegment": "KA-PATH-463-SEVE463",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-463-SEVE463",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C377-carya",
+  "pathSegment": "TE-PATH-377-VIPATTU377",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-377-VIPATTU377",
+      "order": 4
+    }
+  ]
+}

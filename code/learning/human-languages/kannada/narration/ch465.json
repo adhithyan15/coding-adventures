@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 465,
+  "title": "Town and Capital",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:722356b7d42fd2fb",
+  "lessons": [
+    {
+      "id": "KA-C465-pattana",
+      "sequence": 23640,
+      "title": "ಪಟ್ಟಣ (paṭṭaṇa) — a small town; a town",
+      "headword": "ಪಟ್ಟಣ",
+      "romanization": "paṭṭaṇa",
+      "gloss": "a small town; a town",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56c9010233dab3e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a gratuity, then the Kannada for to order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಟ್ಟಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಟ್ಟಣ — paṭṭaṇa — \"a small town; a town\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಊರು ಒಂದು ಚಿಕ್ಕ ಪಟ್ಟಣ. nanna ūru ondu cikka paṭṭaṇa. My home town is a small town."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಪಟ್ಟಣಗಳು, paṭṭaṇagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Bigger than a ಹಳ್ಳಿ, smaller than a ನಗರ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಟ್ಟಣ (paṭṭaṇa) comes from Sanskrit paṭṭana, \"a town\" (CDIAL 7705); Turner notes that the Sanskrit word itself was probably taken from a Dravidian source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭaṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭaṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭaṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭaṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna ūru ondu cikka paṭṭaṇa. — My home town is a small town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna ūru ondu cikka paṭṭaṇa.* — My home town is a small town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a gratuity, then the Kannada for to order, then say paṭṭaṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a gratuity, then the Kannada for to order, then say *paṭṭaṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಟ್ಟಣ (paṭṭaṇa) mean? (\"A small town; a town\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C465-rajadhani",
+      "sequence": 23650,
+      "title": "ರಾಜಧಾನಿ (rājadhāni) — a capital city",
+      "headword": "ರಾಜಧಾನಿ",
+      "romanization": "rājadhāni",
+      "gloss": "a capital city",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbb33cc07bc028ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to order, then the Kannada for a small town."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ರಾಜಧಾನಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಾಜಧಾನಿ — rājadhāni — \"a capital city\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿ ರಾಜ್ಯಕ್ಕೆ ಒಂದು ರಾಜಧಾನಿ ಇದೆ. prati rājyakke ondu rājadhāni ide. Every state has a capital."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಾಜ, a king, plus ಧಾನಿ, a seat: where the ruler sits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಾಜಧಾನಿ (rājadhāni) is borrowed from Sanskrit rājadhānī, \"a king's seat, a capital\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājadhāni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājadhāni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājadhāni, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājadhāni*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prati rājyakke ondu rājadhāni ide. — Every state has a capital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prati rājyakke ondu rājadhāni ide.* — Every state has a capital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to order, then the Kannada for a small town, then say rājadhāni again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to order, then the Kannada for a small town, then say *rājadhāni* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ರಾಜಧಾನಿ (rājadhāni) mean? (\"A capital city\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C465-pradesa",
+      "sequence": 23660,
+      "title": "ಪ್ರದೇಶ (pradēśa) — a region; an area",
+      "headword": "ಪ್ರದೇಶ",
+      "romanization": "pradēśa",
+      "gloss": "a region; an area",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed3487cf952dde9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a small town, then the Kannada for a capital city."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರದೇಶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರದೇಶ — pradēśa — \"a region; an area\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಪ್ರದೇಶದಲ್ಲಿ ತುಂಬಾ ಕಾಡು ಇದೆ. ī pradēśadalli tumbā kāḍu ide. There is a lot of forest in this region."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗ್ರಾಮೀಣ ಪ್ರದೇಶ (pradēśa), a rural area."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರದೇಶ (pradēśa) is borrowed from Sanskrit pradēśa, \"a region, a country\" (CDIAL 8668), built on dēśa, the source of ದೇಶ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradēśa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradēśa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradēśa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradēśa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī pradēśadalli tumbā kāḍu ide. — There is a lot of forest in this region.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī pradēśadalli tumbā kāḍu ide.* — There is a lot of forest in this region.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a small town, then the Kannada for a capital city, then say pradēśa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a small town, then the Kannada for a capital city, then say *pradēśa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರದೇಶ (pradēśa) mean? (\"A region; an area\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C465-sthala",
+      "sequence": 23670,
+      "title": "ಸ್ಥಳ (sthaḷa) — a place; a site",
+      "headword": "ಸ್ಥಳ",
+      "romanization": "sthaḷa",
+      "gloss": "a place; a site",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b896f63ebccb8d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a capital city, then the Kannada for a region."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ಥಳ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ಥಳ — sthaḷa — \"a place; a site\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊಟಕ್ಕೆ ನಾವು ಒಂದು ಶಾಂತ ಸ್ಥಳ ಹುಡುಕಿದೆವು. ūṭakke nāvu ondu śānta sthaḷa huḍukidevu. We looked for a quiet place to eat."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ಥಳೀಯ, local, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ಥಳ (sthaḷa) is borrowed from Sanskrit sthala, \"dry land, ground, a place\" (CDIAL 13744); Kannada writes its l as ಳ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthaḷa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthaḷa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthaḷa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthaḷa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṭakke nāvu ondu śānta sthaḷa huḍukidevu. — We looked for a quiet place to eat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṭakke nāvu ondu śānta sthaḷa huḍukidevu.* — We looked for a quiet place to eat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a capital city, then the Kannada for a region, then say sthaḷa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a capital city, then the Kannada for a region, then say *sthaḷa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ಥಳ (sthaḷa) mean? (\"A place; a site\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C465-kendra",
+      "sequence": 23680,
+      "title": "ಕೇಂದ್ರ (kēndra) — a centre; a hub",
+      "headword": "ಕೇಂದ್ರ",
+      "romanization": "kēndra",
+      "gloss": "a centre; a hub",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32c4902d3e1f50b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a region, then the Kannada for a place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೇಂದ್ರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೇಂದ್ರ — kēndra — \"a centre; a hub\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಸ್ ನಿಲ್ದಾಣ ನಗರದ ಕೇಂದ್ರದಲ್ಲಿ ಇದೆ. bas nildāṇa nagarada kēndradalli ide. The bus station is in the centre of the city."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಾಹಿತಿ ಕೇಂದ್ರ (kēndra), an information centre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೇಂದ್ರ (kēndra) is borrowed from Sanskrit kendra, \"the centre of a circle\", which Sanskrit itself took from Greek kentron (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēndra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēndra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēndra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēndra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bas nildāṇa nagarada kēndradalli ide. — The bus station is in the centre of the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bas nildāṇa nagarada kēndradalli ide.* — The bus station is in the centre of the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a region, then the Kannada for a place, then say kēndra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a region, then the Kannada for a place, then say *kēndra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೇಂದ್ರ (kēndra) mean? (\"A centre; a hub\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

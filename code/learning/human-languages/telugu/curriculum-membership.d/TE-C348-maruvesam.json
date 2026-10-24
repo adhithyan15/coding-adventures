@@ -1,0 +1,11 @@
+{
+  "id": "TE-C348-maruvesam",
+  "pathSegment": "TE-PATH-348-DOPIDI348",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-348-DOPIDI348",
+      "order": 4
+    }
+  ]
+}

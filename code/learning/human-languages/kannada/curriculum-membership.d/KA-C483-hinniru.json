@@ -1,0 +1,11 @@
+{
+  "id": "KA-C483-hinniru",
+  "pathSegment": "KA-PATH-483-JALASHAYA483",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-483-JALASHAYA483",
+      "order": 2
+    }
+  ]
+}

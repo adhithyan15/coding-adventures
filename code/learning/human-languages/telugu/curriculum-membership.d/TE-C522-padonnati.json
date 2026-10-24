@@ -1,0 +1,11 @@
+{
+  "id": "TE-C522-padonnati",
+  "pathSegment": "TE-PATH-522-VRTTI522",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-522-VRTTI522",
+      "order": 3
+    }
+  ]
+}

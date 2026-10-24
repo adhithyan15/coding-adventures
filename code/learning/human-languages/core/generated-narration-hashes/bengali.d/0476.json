@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:5e4c4bc8db6d2bd7",
+  "lessonIds": [
+    "BN-C476-dom",
+    "BN-C476-hechki",
+    "BN-C476-dhekur",
+    "BN-C476-hapano",
+    "BN-C476-katrano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch476.txt",
+  "json": "bengali/narration/ch476.json",
+  "textHash": "fnv1a64:c7ba44e70eb87fa4",
+  "jsonHash": "fnv1a64:90ef823c6efb171e",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C314-atarkul",
+  "pathSegment": "TA-PATH-314-NINAIVU314",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-314-NINAIVU314",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R407-review-400-407",
+    "language": "tamil",
+    "chapter": 407,
+    "sequence": 23500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d867e02b7128238c"
+  },
+  "findings": []
+}

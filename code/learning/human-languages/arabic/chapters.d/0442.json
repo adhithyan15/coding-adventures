@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Camps and resorts",
+  "label": "ch:ar-camps-and-resorts",
+  "canDo": "I can say a campsite, a resort, a chalet, to set alight and pine trees.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C442-sanawbar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can say a campsite, a resort, a chalet, to set alight and pine trees.",
+    "assesses": [
+      "AR-LEX-C442-MUNTAJA442-03",
+      "AR-LEX-C442-MUNTAJA442-04",
+      "AR-LEX-C442-MUNTAJA442-05"
+    ]
+  }
+}

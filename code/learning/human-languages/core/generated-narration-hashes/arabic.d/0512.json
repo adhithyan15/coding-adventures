@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:0ffbd522c32c31d0",
+  "lessonIds": [
+    "AR-C512-shifa",
+    "AR-C512-naqaha",
+    "AR-C512-taafa",
+    "AR-C512-afiya",
+    "AR-C512-taallama-pain"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch512.txt",
+  "json": "arabic/narration/ch512.json",
+  "textHash": "fnv1a64:5ed7ccb3d5739e85",
+  "jsonHash": "fnv1a64:46cac99eb0cbf166",
+  "findings": []
+}

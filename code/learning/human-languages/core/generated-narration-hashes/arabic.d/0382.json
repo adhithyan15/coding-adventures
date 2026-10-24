@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:c96a3400c5bf7bcc",
+  "lessonIds": [
+    "AR-C382-ihtijaj",
+    "AR-C382-karama",
+    "AR-C382-tazahara",
+    "AR-C382-ihtajja",
+    "AR-C382-idrab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch382.txt",
+  "json": "arabic/narration/ch382.json",
+  "textHash": "fnv1a64:418e307111f3e74d",
+  "jsonHash": "fnv1a64:a01ca84f8752d689",
+  "findings": []
+}

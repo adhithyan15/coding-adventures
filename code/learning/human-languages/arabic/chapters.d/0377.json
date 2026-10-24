@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Government",
+  "label": "ch:ar-government",
+  "canDo": "I can talk about a government, a minister, a ministry, a parliament and a constitution.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C377-dustur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can talk about a government, a minister, a ministry, a parliament and a constitution.",
+    "assesses": [
+      "AR-LEX-C377-HUKUMA377-03",
+      "AR-LEX-C377-HUKUMA377-04",
+      "AR-LEX-C377-HUKUMA377-05"
+    ]
+  }
+}

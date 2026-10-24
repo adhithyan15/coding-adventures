@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Losing Strength",
+  "label": "ch:te-losing-strength",
+  "canDo": "I can say that someone grew weak, thin or heavier, and talk about nutrition.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C521-posakaharam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can say that someone grew weak, thin or heavier, and talk about nutrition.",
+    "assesses": [
+      "TE-LEX-C521-BALAM521-03",
+      "TE-LEX-C521-BALAM521-04",
+      "TE-LEX-C521-BALAM521-05"
+    ]
+  }
+}

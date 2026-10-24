@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:c6dab14c88b8eafe",
+  "lessonIds": [
+    "MR-C517-sanketsabda",
+    "MR-C517-antarjal",
+    "MR-C517-sandes",
+    "MR-C517-duva",
+    "MR-C517-sathavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch517.txt",
+  "json": "marathi/narration/ch517.json",
+  "textHash": "fnv1a64:02c75950bcffdb9a",
+  "jsonHash": "fnv1a64:7990997ec92cd0eb",
+  "findings": []
+}

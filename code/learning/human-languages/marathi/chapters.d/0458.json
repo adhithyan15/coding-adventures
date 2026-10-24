@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Comfort and Relief",
+  "label": "ch:mr-comfort-and-relief",
+  "canDo": "I can comfort someone and say that I feel relieved.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C458-gahivarne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can comfort someone and say that I feel relieved.",
+    "assesses": [
+      "MR-LEX-C458-DILASA458-03",
+      "MR-LEX-C458-DILASA458-04",
+      "MR-LEX-C458-DILASA458-05"
+    ]
+  }
+}

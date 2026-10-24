@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-409-KUZHI409",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-409-KUZHI409"
+  ],
+  "after": []
+}

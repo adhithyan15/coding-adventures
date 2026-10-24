@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-523-GALICHA523",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-523-GALICHA523"
+  ],
+  "after": []
+}

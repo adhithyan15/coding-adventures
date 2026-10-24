@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:11572c6ed590ae83",
+  "lessonIds": [
+    "AR-C322-qala",
+    "AR-C322-hisn",
+    "AR-C322-sur",
+    "AR-C322-hasara",
+    "AR-C322-dafaa-defend"
+  ],
+  "tex": "arabic/book/chapters/ch322-castles-and-walls.tex"
+}

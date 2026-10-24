@@ -1,0 +1,11 @@
+{
+  "id": "BN-C497-chhatai-kora",
+  "pathSegment": "BN-PATH-497-ISTOPHA497",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-497-ISTOPHA497",
+      "order": 4
+    }
+  ]
+}

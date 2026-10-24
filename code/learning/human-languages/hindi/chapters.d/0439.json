@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Heat",
+  "label": "ch:hi-heat",
+  "canDo": "I can talk about the heat and the temperature in degrees, and roads scorching in the sun.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C439-tapna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can talk about the heat and the temperature in degrees, and roads scorching in the sun.",
+    "assesses": [
+      "HI-LEX-C439-TAP439-03",
+      "HI-LEX-C439-TAP439-04",
+      "HI-LEX-C439-TAP439-05"
+    ]
+  }
+}

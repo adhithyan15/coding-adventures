@@ -1,0 +1,22 @@
+{
+  "chapter": 309,
+  "title": "Did, Was Doing, Used To",
+  "label": "ch:ka-did-was-doing-used-to",
+  "canDo": "I can say what happened in the past for every person (hōde, bandaru), set the scene with ōduttidde and ōduvāga, say what used to happen, and say what there was with ittu.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-R309-the-past-three-ways",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: tell what happened, what was going on and what used to happen, with the past by person, -uttidde, -uvāga and ittu.",
+    "assesses": [
+      "KA-GRAMMAR-C309-PAST-PERSON-01",
+      "KA-GRAMMAR-C309-PAST-STEMS-01",
+      "KA-GRAMMAR-C309-ONGOING-PAST-01",
+      "KA-GRAMMAR-C309-HABITUAL-PAST-01",
+      "KA-GRAMMAR-C309-WHILE-01",
+      "KA-GRAMMAR-C309-THERE-WAS-01"
+    ]
+  }
+}

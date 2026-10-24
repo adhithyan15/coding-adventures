@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:2883c0ce63c3130c",
+  "lessonIds": [
+    "TE-C406-aviniti",
+    "TE-C406-lancam",
+    "TE-C406-paradarsakata",
+    "TE-C406-aropana",
+    "TE-C406-aropincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch406.txt",
+  "json": "telugu/narration/ch406.json",
+  "textHash": "fnv1a64:aae5ad8b9c90affa",
+  "jsonHash": "fnv1a64:52059f61a7e38905",
+  "findings": []
+}

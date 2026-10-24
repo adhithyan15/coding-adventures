@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C493-tippu",
+    "language": "telugu",
+    "chapter": 493,
+    "sequence": 24830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed2f3d3fb8dc134e"
+  },
+  "findings": []
+}

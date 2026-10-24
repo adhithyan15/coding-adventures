@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Close Ties",
+  "label": "ch:bn-close-ties",
+  "canDo": "I can talk about a relationship, a touch, a lap and a protective hold.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C487-bolano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about a relationship, a touch, a lap and a protective hold.",
+    "assesses": [
+      "BN-LEX-C487-SOMPORKO487-03",
+      "BN-LEX-C487-SOMPORKO487-04",
+      "BN-LEX-C487-SOMPORKO487-05"
+    ]
+  }
+}

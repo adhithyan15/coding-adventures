@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 385,
+  "title": "When Things Get Worse",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b3748e97c788f20a",
+  "lessons": [
+    {
+      "id": "MR-C385-cighalne",
+      "sequence": 22200,
+      "title": "चिघळणे (cighaḷṇe) — to worsen; to fester",
+      "headword": "चिघळणे",
+      "romanization": "cighaḷṇe",
+      "gloss": "to worsen; to fester",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1537e3fd96818650",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a tight spot, then the Marathi for a test."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चिघळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिघळणे — cighaḷṇe — \"to worsen; to fester\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वेळेवर बोलणं झालं नाही, म्हणून वाद चिघळला. veḷevar bolṇaṁ jhālaṁ nāhī, mhaṇūn vād cighaḷlā. Nobody talked in time, so the dispute festered."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो चिघळला, to cighaḷlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a wound or a quarrel left alone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिघळणे (cighaḷṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cighaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cighaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cighaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cighaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷevar bolṇaṁ jhālaṁ nāhī, mhaṇūn vād cighaḷlā. — Nobody talked in time, so the dispute festered.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷevar bolṇaṁ jhālaṁ nāhī, mhaṇūn vād cighaḷlā.* — Nobody talked in time, so the dispute festered.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a tight spot, then the Marathi for a test, then say cighaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a tight spot, then the Marathi for a test, then say *cighaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चिघळणे (cighaḷṇe) mean? (\"To worsen; to fester\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C385-uphalne",
+      "sequence": 22210,
+      "title": "उफाळणे (uphāḷṇe) — to surge up; to flare up",
+      "headword": "उफाळणे",
+      "romanization": "uphāḷṇe",
+      "gloss": "to surge up; to flare up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9fb3d459ba0923d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a test, then the Marathi for to worsen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उफाळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उफाळणे — uphāḷṇe — \"to surge up; to flare up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जुन्या गोष्टींवरून पुन्हा भांडण उफाळलं. junyā goṣṭīṁvarūn punhā bhāṇḍaṇ uphāḷlaṁ. The quarrel flared up again over old matters."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो उफाळला, to uphāḷlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Of flames, boiling water and feelings."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उफाळणे (uphāḷṇe) is a tadbhava: CDIAL lists Marathi uphāḷṇẽ, \"to boil or bubble up, rise (of flame)\", under Sanskrit utphalati, \"springs open, bursts\" (CDIAL 1837)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uphāḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uphāḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uphāḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uphāḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "junyā goṣṭīṁvarūn punhā bhāṇḍaṇ uphāḷlaṁ. — The quarrel flared up again over old matters.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *junyā goṣṭīṁvarūn punhā bhāṇḍaṇ uphāḷlaṁ.* — The quarrel flared up again over old matters.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a test, then the Marathi for to worsen, then say uphāḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a test, then the Marathi for to worsen, then say *uphāḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उफाळणे (uphāḷṇe) mean? (\"To surge up; to flare up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C385-nivalne",
+      "sequence": 22220,
+      "title": "निवळणे (nivaḷṇe) — to calm down; to clear",
+      "headword": "निवळणे",
+      "romanization": "nivaḷṇe",
+      "gloss": "to calm down; to clear",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8a52ba800e5e90c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to worsen, then the Marathi for to surge up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निवळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निवळणे — nivaḷṇe — \"to calm down; to clear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दोन दिवसांनी गावातील तणाव निवळला. don divsānnī gāvātīl taṇāv nivaḷlā. After two days the tension in the village eased."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो निवळला, to nivaḷlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Of muddy water as well: पाणी निवळलं, the water cleared."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निवळणे (nivaḷṇe) is a verb built on Marathi nivaḷ, \"pure, clear\", which CDIAL lists under Sanskrit nirmala, \"spotless, clean\" (CDIAL 7366)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "don divsānnī gāvātīl taṇāv nivaḷlā. — After two days the tension in the village eased.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *don divsānnī gāvātīl taṇāv nivaḷlā.* — After two days the tension in the village eased.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to worsen, then the Marathi for to surge up, then say nivaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to worsen, then the Marathi for to surge up, then say *nivaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निवळणे (nivaḷṇe) mean? (\"To calm down; to clear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C385-talne-averted",
+      "sequence": 22230,
+      "title": "टळणे (ṭaḷṇe) — to be averted",
+      "headword": "टळणे",
+      "romanization": "ṭaḷṇe",
+      "gloss": "to be averted",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01aee4ab15ee93de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to surge up, then the Marathi for to calm down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टळणे — ṭaḷṇe — \"to be averted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "थोडक्यात अपघात टळला. thoḍkyāt apghāt ṭaḷlā. An accident was narrowly averted."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो टळला, to ṭaḷlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Intransitive: the danger is the subject; टाळणे, to avoid, is its causative partner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टळणे (ṭaḷṇe) is inherited: CDIAL lists Marathi ṭaḷṇẽ, \"to pass off\", under ṭalati, \"moves aside\" (CDIAL 5450), beside ṭāḷṇẽ, \"to avoid\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thoḍkyāt apghāt ṭaḷlā. — An accident was narrowly averted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thoḍkyāt apghāt ṭaḷlā.* — An accident was narrowly averted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to surge up, then the Marathi for to calm down, then say ṭaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to surge up, then the Marathi for to calm down, then say *ṭaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टळणे (ṭaḷṇe) mean? (\"To be averted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C385-samore-jane",
+      "sequence": 22240,
+      "title": "सामोरे जाणे (sāmore jāṇe) — to confront; to face",
+      "headword": "सामोरे जाणे",
+      "romanization": "sāmore jāṇe",
+      "gloss": "to confront; to face",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e14c6e58b281bd46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to calm down, then the Marathi for to be averted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सामोरे जाणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सामोरे जाणे — sāmore jāṇe — \"to confront; to face\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ती अडचणींना धैर्याने सामोरी गेली. tī aḍcaṇīnnā dhairyāne sāmorī gelī. She faced the difficulties bravely."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो सामोरा गेला, to sāmorā gelā."
+            },
+            {
+              "kind": "speech",
+              "text": "What is faced takes -ला, and सामोरा agrees with the subject: तो सामोरा गेला, ती सामोरी गेली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सामोरे जाणे (sāmore jāṇe) joins सामोरे, \"in front\", inherited from Sanskrit saṁmukha, \"facing\" (CDIAL 12982 lists Marathi sāmorā), to जाणे, \"to go\": to go up face to face."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāmore jāṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāmore jāṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāmore jāṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāmore jāṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tī aḍcaṇīnnā dhairyāne sāmorī gelī. — She faced the difficulties bravely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tī aḍcaṇīnnā dhairyāne sāmorī gelī.* — She faced the difficulties bravely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to calm down, then the Marathi for to be averted, then say sāmore jāṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to calm down, then the Marathi for to be averted, then say *sāmore jāṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सामोरे जाणे (sāmore jāṇe) mean? (\"To confront; to face\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

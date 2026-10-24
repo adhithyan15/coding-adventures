@@ -1,0 +1,11 @@
+{
+  "id": "BN-C477-pora-burn",
+  "pathSegment": "BN-PATH-477-JBOLUNI477",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-477-JBOLUNI477",
+      "order": 1
+    }
+  ]
+}

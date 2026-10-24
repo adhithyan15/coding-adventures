@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Standards and Levels",
+  "label": "ch:te-standards-and-levels",
+  "canDo": "I can talk about standards, levels, trends and testing.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C431-pariksincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can talk about standards, levels, trends and testing.",
+    "assesses": [
+      "TE-LEX-C431-PRAMANAM431-03",
+      "TE-LEX-C431-PRAMANAM431-04",
+      "TE-LEX-C431-PRAMANAM431-05"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:1cd5fea6ee091a5f",
+  "lessonIds": [
+    "MR-C287-avlambun-ahe",
+    "MR-C287-gelo-asto",
+    "MR-W287-six-lines",
+    "MR-R287-depends-and-would"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "marathi/narration/ch287.txt",
+  "json": "marathi/narration/ch287.json",
+  "textHash": "fnv1a64:f3e0831d16970289",
+  "jsonHash": "fnv1a64:6433c52cd1520b5f",
+  "findings": []
+}

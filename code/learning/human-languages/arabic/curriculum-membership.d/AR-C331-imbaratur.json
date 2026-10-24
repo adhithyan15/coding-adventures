@@ -1,0 +1,11 @@
+{
+  "id": "AR-C331-imbaratur",
+  "pathSegment": "AR-PATH-331-IMBARATUR331",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-331-IMBARATUR331",
+      "order": 4
+    }
+  ]
+}

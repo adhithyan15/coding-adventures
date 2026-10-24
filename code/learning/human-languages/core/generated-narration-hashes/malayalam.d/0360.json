@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:4a1638552b12ddb5",
+  "lessonIds": [
+    "ML-C360-yadrcchikamayi",
+    "ML-C360-manappurvam",
+    "ML-C360-abaddham",
+    "ML-C360-bhagyam",
+    "ML-C360-vidhivasal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch360.txt",
+  "json": "malayalam/narration/ch360.json",
+  "textHash": "fnv1a64:0615423f44867e64",
+  "jsonHash": "fnv1a64:78dea0696d55878f",
+  "findings": []
+}

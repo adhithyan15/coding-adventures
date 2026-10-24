@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C524-ijel",
+    "language": "bengali",
+    "chapter": 524,
+    "sequence": 31640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8bdf9d5707aaf4d"
+  },
+  "findings": []
+}

@@ -14,7 +14,7 @@ romanization: "talayaṇa"
 concept_tag: ML-THINGS158-TALAYANA
 prerequisites: [ML-C158-toni, ML-C158-treyin]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-anai-support]
+roots: [dravidian-talai-head, dravidian-anai-support]
 etymology_hook: "talayaṇa: native Dravidian, 'head support': tala (DEDR 3103) + aṇa 'support, prop' (DEDR 123)"
 duration:
   max_seconds: 200

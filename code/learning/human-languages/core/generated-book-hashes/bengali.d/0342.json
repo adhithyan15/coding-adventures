@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:a3055099770ae7b5",
+  "lessonIds": [
+    "BN-C342-ukil",
+    "BN-C342-bichar-kora",
+    "BN-C342-ray",
+    "BN-C342-nalish",
+    "BN-C342-mimangsa-kora"
+  ],
+  "tex": "bengali/book/chapters/ch342-in-court.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C340-ennittu",
+  "pathSegment": "ML-PATH-340-STORY-ORDER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-340-STORY-ORDER",
+      "order": 2
+    }
+  ]
+}

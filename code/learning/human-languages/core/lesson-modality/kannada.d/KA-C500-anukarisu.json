@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C500-anukarisu",
+    "language": "kannada",
+    "chapter": 500,
+    "sequence": 25550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2e8aa9a6c69af86"
+  },
+  "findings": []
+}

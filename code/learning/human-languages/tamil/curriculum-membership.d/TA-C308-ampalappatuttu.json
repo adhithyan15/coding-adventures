@@ -1,0 +1,11 @@
+{
+  "id": "TA-C308-ampalappatuttu",
+  "pathSegment": "TA-PATH-308-PARAPARAPPU308",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-308-PARAPARAPPU308",
+      "order": 3
+    }
+  ]
+}

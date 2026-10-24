@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Standing for Office",
+  "label": "ch:bn-standing-for-office",
+  "canDo": "I can talk about who stands for office, who votes and who steps down.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C346-shopoth-neoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can talk about who stands for office, who votes and who steps down.",
+    "assesses": [
+      "BN-LEX-C346-PRARTHI346-03",
+      "BN-LEX-C346-PRARTHI346-04",
+      "BN-LEX-C346-PRARTHI346-05"
+    ]
+  }
+}

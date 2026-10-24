@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Celebrations",
+  "label": "ch:te-celebrations",
+  "canDo": "I can say a public celebration, to felicitate, a housewarming, a farewell and adoption.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C356-dattata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can say a public celebration, to felicitate, a housewarming, a farewell and adoption.",
+    "assesses": [
+      "TE-LEX-C356-UTSAVAM356-03",
+      "TE-LEX-C356-UTSAVAM356-04",
+      "TE-LEX-C356-UTSAVAM356-05"
+    ]
+  }
+}

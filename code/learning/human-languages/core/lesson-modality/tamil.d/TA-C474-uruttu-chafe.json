@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C474-uruttu-chafe",
+    "language": "tamil",
+    "chapter": 474,
+    "sequence": 27210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82b16c8c460a755a"
+  },
+  "findings": []
+}

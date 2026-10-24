@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:f89df3722950b1dc",
+  "lessonIds": [
+    "AR-C329-thawra",
+    "AR-C329-thara",
+    "AR-C329-istaqalla",
+    "AR-C329-istiqlal",
+    "AR-C329-shab"
+  ],
+  "tex": "arabic/book/chapters/ch329-revolts-and-independence.tex"
+}

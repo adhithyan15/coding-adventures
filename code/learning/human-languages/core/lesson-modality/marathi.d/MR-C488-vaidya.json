@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C488-vaidya",
+    "language": "marathi",
+    "chapter": 488,
+    "sequence": 27960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b569dc2c6d8f7190"
+  },
+  "findings": []
+}

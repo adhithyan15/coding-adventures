@@ -1,0 +1,11 @@
+{
+  "id": "TA-C371-otukku",
+  "pathSegment": "TA-PATH-371-CAMATTUVAM371",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-371-CAMATTUVAM371",
+      "order": 4
+    }
+  ]
+}

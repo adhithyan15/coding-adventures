@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-339-PAST-SCENE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say where someone was and what there was, set a scene with what was going on, and say what used to happen.",
+  "prerequisites": []
+}

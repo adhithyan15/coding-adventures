@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-353-ADRSYAM353",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-353-ADRSYAM353"
+  ],
+  "after": []
+}

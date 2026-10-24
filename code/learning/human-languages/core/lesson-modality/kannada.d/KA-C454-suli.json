@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C454-suli",
+    "language": "kannada",
+    "chapter": 454,
+    "sequence": 23110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8af04b285bba6eca"
+  },
+  "findings": []
+}

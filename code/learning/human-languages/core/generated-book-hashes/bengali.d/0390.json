@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:a9146fb696381ddd",
+  "lessonIds": [
+    "BN-C390-sorok",
+    "BN-C390-bak",
+    "BN-C390-gorto",
+    "BN-C390-pich",
+    "BN-C390-gorano"
+  ],
+  "tex": "bengali/book/chapters/ch390-highways-and-bends.tex"
+}

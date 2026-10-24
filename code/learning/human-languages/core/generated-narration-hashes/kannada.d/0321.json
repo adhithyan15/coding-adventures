@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:ed8a174b0778181e",
+  "lessonIds": [
+    "KA-C321-nyayalaya",
+    "KA-C321-nyayadhisa",
+    "KA-C321-aropisu",
+    "KA-C321-tirpu",
+    "KA-C321-sikse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch321.txt",
+  "json": "kannada/narration/ch321.json",
+  "textHash": "fnv1a64:964c7d8ba1aae8c4",
+  "jsonHash": "fnv1a64:a395e7dbfa2eaf2b",
+  "findings": []
+}

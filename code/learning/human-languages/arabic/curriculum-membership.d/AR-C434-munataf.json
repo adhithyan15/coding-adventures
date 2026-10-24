@@ -1,0 +1,11 @@
+{
+  "id": "AR-C434-munataf",
+  "pathSegment": "AR-PATH-434-RUKHSA434",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-434-RUKHSA434",
+      "order": 1
+    }
+  ]
+}

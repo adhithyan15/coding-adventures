@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:d893981800a72204",
+  "lessonIds": [
+    "MR-C429-lilav",
+    "MR-C429-taran",
+    "MR-C429-gahan-thevne",
+    "MR-C429-vasul-karne",
+    "MR-C429-bhadepatta"
+  ],
+  "tex": "marathi/book/chapters/ch429-auctions-and-pledges.tex"
+}

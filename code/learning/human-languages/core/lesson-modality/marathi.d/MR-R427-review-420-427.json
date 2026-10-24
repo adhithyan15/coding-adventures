@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R427-review-420-427",
+    "language": "marathi",
+    "chapter": 427,
+    "sequence": 24630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35c8a2ce9cbed4c7"
+  },
+  "findings": []
+}

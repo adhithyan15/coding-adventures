@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:0ce187a4f9889d89",
+  "lessonIds": [
+    "AR-C521-ajr",
+    "AR-C521-mukafaa",
+    "AR-C521-tarqiya",
+    "AR-C521-raqqa",
+    "AR-C521-taiba"
+  ],
+  "tex": "arabic/book/chapters/ch521-pay-and-rewards.tex"
+}

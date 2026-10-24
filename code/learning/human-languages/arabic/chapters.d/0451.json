@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Offices and enquiries",
+  "label": "ch:ar-offices-and-enquiries",
+  "canDo": "I can say a police station, a library, to enquire, to check over and to ban.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C451-hazara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can say a police station, a library, to enquire, to check over and to ban.",
+    "assesses": [
+      "AR-LEX-C451-MAKHFAR451-03",
+      "AR-LEX-C451-MAKHFAR451-04",
+      "AR-LEX-C451-MAKHFAR451-05"
+    ]
+  }
+}

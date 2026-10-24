@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-476-CEHRA476",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-476-CEHRA476"
+  ],
+  "after": []
+}

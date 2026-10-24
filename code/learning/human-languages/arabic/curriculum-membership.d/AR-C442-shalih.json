@@ -1,0 +1,11 @@
+{
+  "id": "AR-C442-shalih",
+  "pathSegment": "AR-PATH-442-MUNTAJA442",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-442-MUNTAJA442",
+      "order": 2
+    }
+  ]
+}

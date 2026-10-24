@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:60b72534cacaf057",
+  "lessonIds": [
+    "TE-C332-appatike",
+    "TE-C332-antalo",
+    "TE-C332-hathattuga",
+    "TE-C332-ksanam",
+    "TE-C332-arucu"
+  ],
+  "tex": "telugu/book/chapters/ch332-already-meanwhile-suddenly.tex"
+}

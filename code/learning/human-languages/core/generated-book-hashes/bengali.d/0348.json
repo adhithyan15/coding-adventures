@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:ec5521c3f795e84b",
+  "lessonIds": [
+    "BN-C348-rajosvo",
+    "BN-C348-bajet",
+    "BN-C348-koshagar",
+    "BN-C348-aday-kora",
+    "BN-C348-monjur-kora"
+  ],
+  "tex": "bengali/book/chapters/ch348-public-money.tex"
+}

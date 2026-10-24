@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C361-mapna",
+    "language": "hindi",
+    "chapter": 361,
+    "sequence": 19950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc98e3050c4d6c54"
+  },
+  "findings": []
+}

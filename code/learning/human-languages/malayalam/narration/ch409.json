@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 409,
+  "title": "Blame and Denial",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b031670cd9062e9e",
+  "lessons": [
+    {
+      "id": "ML-C409-nisedhikkuka",
+      "sequence": 20200,
+      "title": "നിഷേധിക്കുക (niṣēdhikkuka) — to deny",
+      "headword": "നിഷേധിക്കുക",
+      "romanization": "niṣēdhikkuka",
+      "gloss": "to deny",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02494487bb7b6bd3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an attitude, then the Malayalam for to justify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിഷേധിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിഷേധിക്കുക — niṣēdhikkuka — \"to deny\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ ആ വാർത്ത നിഷേധിച്ചു. avan ā vārtta niṣēdhiccu. He denied that news report."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നിഷേധിച്ചു, niṣēdhiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is നിഷേധം, a denial; നിഷേധിക്കുക (niṣēdhikkuka) can also mean to refuse a thing to someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിഷേധിക്കുക (niṣēdhikkuka) is built from Sanskrit niṣedha, \"warding off, prevention, prohibition\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക. To deny is to push a claim away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣēdhikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣēdhikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣēdhikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣēdhikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan ā vārtta niṣēdhiccu. — He denied that news report.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan ā vārtta niṣēdhiccu.* — He denied that news report.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an attitude, then the Malayalam for to justify, then say niṣēdhikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an attitude, then the Malayalam for to justify, then say *niṣēdhikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിഷേധിക്കുക (niṣēdhikkuka) mean? (\"To deny\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C409-avakasappetuka",
+      "sequence": 20210,
+      "title": "അവകാശപ്പെടുക (avakāśappeṭuka) — to claim",
+      "headword": "അവകാശപ്പെടുക",
+      "romanization": "avakāśappeṭuka",
+      "gloss": "to claim",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e8e160234b9d4bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to justify, then the Malayalam for to deny."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അവകാശപ്പെടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അവകാശപ്പെടുക — avakāśappeṭuka — \"to claim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ഭൂമി തന്റേതാണെന്ന് അയാൾ അവകാശപ്പെട്ടു. ā bhūmi tanṟētāṇennŭ ayāḷ avakāśappeṭṭu. He claimed that the land was his."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അവകാശപ്പെട്ടു, avakāśappeṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on അവകാശം, a right: to claim is to say a right is yours. What is claimed comes before എന്ന്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അവകാശപ്പെടുക (avakāśappeṭuka) is built on അവകാശം, \"a right\", from Sanskrit avakāśa, \"space, room; opportunity\" (CDIAL 728), with -പ്പെടുക from native പെടുക (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avakāśappeṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avakāśappeṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avakāśappeṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avakāśappeṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā bhūmi tanṟētāṇennŭ ayāḷ avakāśappeṭṭu. — He claimed that the land was his.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā bhūmi tanṟētāṇennŭ ayāḷ avakāśappeṭṭu.* — He claimed that the land was his.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to justify, then the Malayalam for to deny, then say avakāśappeṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to justify, then the Malayalam for to deny, then say *avakāśappeṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അവകാശപ്പെടുക (avakāśappeṭuka) mean? (\"To claim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C409-aropikkuka",
+      "sequence": 20220,
+      "title": "ആരോപിക്കുക (ārōpikkuka) — to allege; to accuse",
+      "headword": "ആരോപിക്കുക",
+      "romanization": "ārōpikkuka",
+      "gloss": "to allege; to accuse",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9b10a21ad04853c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to deny, then the Malayalam for to claim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആരോപിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആരോപിക്കുക — ārōpikkuka — \"to allege; to accuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അയൽക്കാരൻ പണം എടുത്തു എന്ന് അവൾ ആരോപിച്ചു. ayalkkāran paṇaṁ eṭuttu ennŭ avaḷ ārōpiccu. She alleged that the neighbour had taken the money."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ആരോപിച്ചു, ārōpiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ആരോപണം, an allegation. Against someone: -ന് എതിരെ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആരോപിക്കുക (ārōpikkuka) is built from Sanskrit āropa, \"laying on (as a burden), charging with\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക: to allege is to lay a charge on someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārōpikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārōpikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārōpikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārōpikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ayalkkāran paṇaṁ eṭuttu ennŭ avaḷ ārōpiccu. — She alleged that the neighbour had taken the money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ayalkkāran paṇaṁ eṭuttu ennŭ avaḷ ārōpiccu.* — She alleged that the neighbour had taken the money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to deny, then the Malayalam for to claim, then say ārōpikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to deny, then the Malayalam for to claim, then say *ārōpikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആരോപിക്കുക (ārōpikkuka) mean? (\"To allege; to accuse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C409-nispaksamaya",
+      "sequence": 20230,
+      "title": "നിഷ്പക്ഷമായ (niṣpakṣamāya) — impartial; neutral",
+      "headword": "നിഷ്പക്ഷമായ",
+      "romanization": "niṣpakṣamāya",
+      "gloss": "impartial; neutral",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07a6aad4b4442309",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to claim, then the Malayalam for to allege."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിഷ്പക്ഷമായ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിഷ്പക്ഷമായ — niṣpakṣamāya — \"impartial; neutral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അന്വേഷണം നിഷ്പക്ഷമായിരിക്കണം. anvēṣaṇaṁ niṣpakṣamāyirikkaṇaṁ. The inquiry must be impartial."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is നിഷ്പക്ഷത, impartiality."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിഷ്പക്ഷമായ (niṣpakṣamāya) is built from Sanskrit niṣ-, \"without\", and pakṣa, \"a wing, a side\" (CDIAL 7627), with the adjective ending -ആയ: taking no side."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣpakṣamāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣpakṣamāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣpakṣamāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣpakṣamāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anvēṣaṇaṁ niṣpakṣamāyirikkaṇaṁ. — The inquiry must be impartial.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anvēṣaṇaṁ niṣpakṣamāyirikkaṇaṁ.* — The inquiry must be impartial.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to claim, then the Malayalam for to allege, then say niṣpakṣamāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to claim, then the Malayalam for to allege, then say *niṣpakṣamāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിഷ്പക്ഷമായ (niṣpakṣamāya) mean? (\"Impartial; neutral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C409-visadikaranam",
+      "sequence": 20240,
+      "title": "വിശദീകരണം (viśadīkaraṇaṁ) — an explanation",
+      "headword": "വിശദീകരണം",
+      "romanization": "viśadīkaraṇaṁ",
+      "gloss": "an explanation",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65dd9f0b17957d22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to allege, then the Malayalam for impartial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിശദീകരണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിശദീകരണം — viśadīkaraṇaṁ — \"an explanation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വൈകിയതിന് അവൻ ഒരു വിശദീകരണവും നൽകിയില്ല. vaikiyatinŭ avan oru viśadīkaraṇavuṁ nalkiyilla. He gave no explanation for being late."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb വിശദീകരിക്കുക, to explain, is the same word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിശദീകരണം (viśadīkaraṇaṁ) is built from Sanskrit viśada, \"clear, bright\" (Monier-Williams), with -ī-karaṇa, \"a making into\": a making clear. It is the noun of വിശദീകരിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśadīkaraṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśadīkaraṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśadīkaraṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśadīkaraṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaikiyatinŭ avan oru viśadīkaraṇavuṁ nalkiyilla. — He gave no explanation for being late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaikiyatinŭ avan oru viśadīkaraṇavuṁ nalkiyilla.* — He gave no explanation for being late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to allege, then the Malayalam for impartial, then say viśadīkaraṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to allege, then the Malayalam for impartial, then say *viśadīkaraṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിശദീകരണം (viśadīkaraṇaṁ) mean? (\"An explanation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

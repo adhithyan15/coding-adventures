@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-288-ASK-THE-WAY",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-288-ASK-THE-WAY"
+  ],
+  "after": []
+}

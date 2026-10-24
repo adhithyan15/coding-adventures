@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 440,
+  "title": "Droughts and Cloudbursts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b5de51b61cb666b4",
+  "lessons": [
+    {
+      "id": "MR-C440-duskal",
+      "sequence": 25250,
+      "title": "दुष्काळ (duṣkāḷ) — a drought; a famine",
+      "headword": "दुष्काळ",
+      "romanization": "duṣkāḷ",
+      "gloss": "a drought; a famine",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dccdfccb9dd28921",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to howl, then the Marathi for to crackle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुष्काळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुष्काळ — duṣkāḷ — \"a drought; a famine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्या वर्षी मोठा दुष्काळ पडला. tyā varṣī moṭhā duṣkāḷ paḍlā. That year there was a great drought."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "दुष्काळ (duṣkāḷ) पडणे, a drought strikes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुष्काळ (duṣkāḷ) is a tatsama, taken from Sanskrit duṣkāla, \"a bad time, a famine\" (CDIAL 6470), where CDIAL also lists the inherited Marathi dukāḷ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duṣkāḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duṣkāḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duṣkāḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duṣkāḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyā varṣī moṭhā duṣkāḷ paḍlā. — That year there was a great drought.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyā varṣī moṭhā duṣkāḷ paḍlā.* — That year there was a great drought.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to howl, then the Marathi for to crackle, then say duṣkāḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to howl, then the Marathi for to crackle, then say *duṣkāḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुष्काळ (duṣkāḷ) mean? (\"A drought; a famine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C440-dhagphuti",
+      "sequence": 25260,
+      "title": "ढगफुटी (ḍhagphuṭī) — a cloudburst",
+      "headword": "ढगफुटी",
+      "romanization": "ḍhagphuṭī",
+      "gloss": "a cloudburst",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0f57bb51cd6b3d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to crackle, then the Marathi for a drought."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ढगफुटी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढगफुटी — ḍhagphuṭī — \"a cloudburst\"."
+            },
+            {
+              "kind": "speech",
+              "text": "डोंगरावर ढगफुटी झाली. ḍoṅgarāvar ḍhagphuṭī jhālī. There was a cloudburst on the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "ढग, a cloud, and फुटणे, to burst."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढगफुटी (ḍhagphuṭī) is built from ढग, \"a cloud\", and the stem of फुटणे, \"to burst\" (CDIAL 13845)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhagphuṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhagphuṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhagphuṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhagphuṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍoṅgarāvar ḍhagphuṭī jhālī. — There was a cloudburst on the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍoṅgarāvar ḍhagphuṭī jhālī.* — There was a cloudburst on the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to crackle, then the Marathi for a drought, then say ḍhagphuṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to crackle, then the Marathi for a drought, then say *ḍhagphuṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ढगफुटी (ḍhagphuṭī) mean? (\"A cloudburst\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C440-kadaka",
+      "sequence": 25270,
+      "title": "कडाका (kaḍākā) — a severe spell",
+      "headword": "कडाका",
+      "romanization": "kaḍākā",
+      "gloss": "a severe spell",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4fafdf17b985af5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a drought, then the Marathi for a cloudburst."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कडाका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कडाका — kaḍākā — \"a severe spell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यंदा थंडीचा कडाका जास्त आहे. yandā thaṇḍīcā kaḍākā jāsta āhe. This year the cold is especially severe."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Of cold or heat: थंडीचा कडाका (kaḍākā), उन्हाचा कडाका (kaḍākā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कडाका (kaḍākā) is inherited, from the family of Sanskrit kaṭakaṭā, where CDIAL lists Marathi kaḍakṇẽ, \"to crackle\" (CDIAL 2632): cold sharp enough to crack."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍākā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍākā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍākā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍākā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yandā thaṇḍīcā kaḍākā jāsta āhe. — This year the cold is especially severe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yandā thaṇḍīcā kaḍākā jāsta āhe.* — This year the cold is especially severe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a drought, then the Marathi for a cloudburst, then say kaḍākā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a drought, then the Marathi for a cloudburst, then say *kaḍākā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कडाका (kaḍākā) mean? (\"A severe spell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C440-jhodapne",
+      "sequence": 25280,
+      "title": "झोडपणे (jhoḍapṇe) — to lash; to batter",
+      "headword": "झोडपणे",
+      "romanization": "jhoḍapṇe",
+      "gloss": "to lash; to batter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e277dea9a603b443",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a cloudburst, then the Marathi for a severe spell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झोडपणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झोडपणे — jhoḍapṇe — \"to lash; to batter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पावसाने गावाला झोडपलं. pāvsāne gāvālā jhoḍaplaṁ. The rain lashed the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने झोडपलं, tyāne jhoḍaplaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The rain is the agent and takes -ने: पावसाने झोडपलं."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झोडपणे (jhoḍapṇe) is a Marathi verb for heavy rain or blows beating down; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhoḍapṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhoḍapṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhoḍapṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhoḍapṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvsāne gāvālā jhoḍaplaṁ. — The rain lashed the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvsāne gāvālā jhoḍaplaṁ.* — The rain lashed the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a cloudburst, then the Marathi for a severe spell, then say jhoḍapṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a cloudburst, then the Marathi for a severe spell, then say *jhoḍapṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झोडपणे (jhoḍapṇe) mean? (\"To lash; to batter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C440-osarne",
+      "sequence": 25290,
+      "title": "ओसरणे (osarṇe) — to recede; to subside",
+      "headword": "ओसरणे",
+      "romanization": "osarṇe",
+      "gloss": "to recede; to subside",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4fd537fd3d84d752",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a severe spell, then the Marathi for to lash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओसरणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओसरणे — osarṇe — \"to recede; to subside\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दोन दिवसांनी पूर ओसरला. don divasānnī pūr osarlā. After two days the flood went down."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो ओसरला, to osarlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Floods, crowds and fevers ओसरतात; not the same word as ओसरी, a veranda."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओसरणे (osarṇe) is inherited: CDIAL lists Marathi osarṇẽ, \"to flow away, decrease, subside\", under Sanskrit apasarati, \"slips off, goes away\" (CDIAL 465)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osarṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osarṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osarṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osarṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "don divasānnī pūr osarlā. — After two days the flood went down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *don divasānnī pūr osarlā.* — After two days the flood went down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a severe spell, then the Marathi for to lash, then say osarṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a severe spell, then the Marathi for to lash, then say *osarṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ओसरणे (osarṇe) mean? (\"To recede; to subside\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

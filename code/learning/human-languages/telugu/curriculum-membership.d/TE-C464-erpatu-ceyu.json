@@ -1,0 +1,11 @@
+{
+  "id": "TE-C464-erpatu-ceyu",
+  "pathSegment": "TE-PATH-464-SEVA464",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-464-SEVA464",
+      "order": 2
+    }
+  ]
+}

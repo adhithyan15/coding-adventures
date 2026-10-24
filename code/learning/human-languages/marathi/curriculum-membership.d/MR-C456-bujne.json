@@ -1,0 +1,11 @@
+{
+  "id": "MR-C456-bujne",
+  "pathSegment": "MR-PATH-456-SANKOC456",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-456-SANKOC456",
+      "order": 4
+    }
+  ]
+}

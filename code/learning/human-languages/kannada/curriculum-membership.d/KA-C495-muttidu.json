@@ -1,0 +1,11 @@
+{
+  "id": "KA-C495-muttidu",
+  "pathSegment": "KA-PATH-495-MAMATE495",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-495-MAMATE495",
+      "order": 1
+    }
+  ]
+}

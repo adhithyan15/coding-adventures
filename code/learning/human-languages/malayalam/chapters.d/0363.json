@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Flames and Damage",
+  "label": "ch:ml-flames-and-damage",
+  "canDo": "I can say a flame, damage, to blaze up, to explode and to collapse.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C363-takaruka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can say a flame, damage, to blaze up, to explode and to collapse.",
+    "assesses": [
+      "ML-LEX-C363-JVALA363-03",
+      "ML-LEX-C363-JVALA363-04",
+      "ML-LEX-C363-JVALA363-05"
+    ]
+  }
+}

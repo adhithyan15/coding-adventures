@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Shop windows",
+  "label": "ch:ar-shop-windows",
+  "canDo": "I can say a product, a brand, a shop window, to display and a market stall.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C455-basta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can say a product, a brand, a shop window, to display and a market stall.",
+    "assesses": [
+      "AR-LEX-C455-WAJIHA455-03",
+      "AR-LEX-C455-WAJIHA455-04",
+      "AR-LEX-C455-WAJIHA455-05"
+    ]
+  }
+}

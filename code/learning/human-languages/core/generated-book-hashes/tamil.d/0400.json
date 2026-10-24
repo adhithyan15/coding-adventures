@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:1532a919ed3dfbe2",
+  "lessonIds": [
+    "TA-C400-nataimetai",
+    "TA-C400-tantavalam",
+    "TA-C400-varukai",
+    "TA-C400-ottivai",
+    "TA-C400-maru-change"
+  ],
+  "tex": "tamil/book/chapters/ch400-platforms-and-tracks.tex"
+}

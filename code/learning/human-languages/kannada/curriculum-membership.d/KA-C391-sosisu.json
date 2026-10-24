@@ -1,0 +1,11 @@
+{
+  "id": "KA-C391-sosisu",
+  "pathSegment": "KA-PATH-391-SAMANATE391",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-391-SAMANATE391",
+      "order": 2
+    }
+  ]
+}

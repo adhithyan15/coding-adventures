@@ -1,0 +1,11 @@
+{
+  "id": "TE-C329-baddalu-kottu",
+  "pathSegment": "TE-PATH-329-DONGATANAM329",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-329-DONGATANAM329",
+      "order": 2
+    }
+  ]
+}

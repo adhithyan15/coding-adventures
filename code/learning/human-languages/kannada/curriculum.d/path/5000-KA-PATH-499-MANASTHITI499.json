@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-499-MANASTHITI499",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-499-MANASTHITI499"
+  ],
+  "after": []
+}

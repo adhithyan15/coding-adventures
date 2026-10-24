@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:c794562cd2119811",
+  "lessonIds": [
+    "TE-C358-jivincu",
+    "TE-C358-sthirapadu",
+    "TE-C358-taladacuko",
+    "TE-C358-kalaganu",
+    "TE-C358-adrstavasattu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch358.txt",
+  "json": "telugu/narration/ch358.json",
+  "textHash": "fnv1a64:f3d0450f4c033b8e",
+  "jsonHash": "fnv1a64:281acdd5506dfb86",
+  "findings": []
+}

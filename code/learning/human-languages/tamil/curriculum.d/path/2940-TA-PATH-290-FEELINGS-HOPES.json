@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-290-FEELINGS-HOPES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-290-FEELINGS-HOPES"
+  ],
+  "after": []
+}

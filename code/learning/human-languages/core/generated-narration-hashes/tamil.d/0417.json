@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:867c5af47e1ece05",
+  "lessonIds": [
+    "TA-C417-malumi",
+    "TA-C417-nankuram",
+    "TA-C417-teppam",
+    "TA-C417-tattali",
+    "TA-C417-karai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch417.txt",
+  "json": "tamil/narration/ch417.json",
+  "textHash": "fnv1a64:a7890b4eaf1e7ef5",
+  "jsonHash": "fnv1a64:18bfaf77f31aaf6d",
+  "findings": []
+}

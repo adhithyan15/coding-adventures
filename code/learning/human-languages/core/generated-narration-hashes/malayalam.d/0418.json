@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:bc9aabde97934e8c",
+  "lessonIds": [
+    "ML-C418-siksa",
+    "ML-C418-siksikkuka",
+    "ML-C418-vilakku",
+    "ML-C418-nirodhikkuka",
+    "ML-C418-anuvadikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch418.txt",
+  "json": "malayalam/narration/ch418.json",
+  "textHash": "fnv1a64:0158bc1150b87ac3",
+  "jsonHash": "fnv1a64:2907c6bbc521dd40",
+  "findings": []
+}

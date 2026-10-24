@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Kingdoms",
+  "label": "ch:bn-kingdoms",
+  "canDo": "I can talk about kingdoms, emperors and thrones.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C313-shason-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can talk about kingdoms, emperors and thrones.",
+    "assesses": [
+      "BN-LEX-C313-RAJYO313-03",
+      "BN-LEX-C313-RAJYO313-04",
+      "BN-LEX-C313-RAJYO313-05"
+    ]
+  }
+}

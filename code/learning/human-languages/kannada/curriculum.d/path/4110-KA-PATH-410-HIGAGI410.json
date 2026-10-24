@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-410-HIGAGI410",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-410-HIGAGI410"
+  ],
+  "after": []
+}

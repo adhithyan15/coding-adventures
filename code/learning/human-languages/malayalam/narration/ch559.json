@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 559,
+  "title": "Looking After Each Other",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e1534d9de327b01f",
+  "lessons": [
+    {
+      "id": "ML-C559-paripalikkuka",
+      "sequence": 28150,
+      "title": "പരിപാലിക്കുക (paripālikkuka) — to look after; to maintain",
+      "headword": "പരിപാലിക്കുക",
+      "romanization": "paripālikkuka",
+      "gloss": "to look after; to maintain",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8446c560f52c45cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for grown-up, then the Malayalam for a twin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പരിപാലിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരിപാലിക്കുക — paripālikkuka — \"to look after; to maintain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വിരമിച്ച ശേഷം അച്ഛൻ പൂന്തോട്ടം പരിപാലിക്കുന്നു. viramicca śēṣaṁ acchan pūntōṭṭaṁ paripālikkunnu. Since retiring, Father has been looking after the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പരിപാലിച്ചു, paripāliccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is പരിപാലനം, upkeep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരിപാലിക്കുക (paripālikkuka) is built from Sanskrit paripālana, \"guarding, fostering\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paripālikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paripālikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paripālikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paripālikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viramicca śēṣaṁ acchan pūntōṭṭaṁ paripālikkunnu. — Since retiring, Father has been looking after the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viramicca śēṣaṁ acchan pūntōṭṭaṁ paripālikkunnu.* — Since retiring, Father has been looking after the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for grown-up, then the Malayalam for a twin, then say paripālikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for grown-up, then the Malayalam for a twin, then say *paripālikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പരിപാലിക്കുക (paripālikkuka) mean? (\"To look after; to maintain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C559-certtupitikkuka",
+      "sequence": 28160,
+      "title": "ചേർത്തുപിടിക്കുക (cērttupiṭikkuka) — to hold close",
+      "headword": "ചേർത്തുപിടിക്കുക",
+      "romanization": "cērttupiṭikkuka",
+      "gloss": "to hold close",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d16437095c92903c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a twin, then the Malayalam for to look after."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചേർത്തുപിടിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചേർത്തുപിടിക്കുക — cērttupiṭikkuka — \"to hold close\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കരയുന്ന കുട്ടിയെ അമ്മ ചേർത്തുപിടിച്ചു. karayunna kuṭṭiye amma cērttupiṭiccu. Mother held the crying child close."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചേർത്തുപിടിച്ചു, cērttupiṭiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "ചേർത്ത്, having joined, + പിടിക്കുക, to hold."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചേർത്തുപിടിക്കുക (cērttupiṭikkuka) is native Dravidian, a compound of ചേർക്കുക, \"to join, to bring close\" (DEDR 2814), and പിടിക്കുക, \"to seize, to hold\" (DEDR 4148)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cērttupiṭikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cērttupiṭikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cērttupiṭikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cērttupiṭikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karayunna kuṭṭiye amma cērttupiṭiccu. — Mother held the crying child close.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karayunna kuṭṭiye amma cērttupiṭiccu.* — Mother held the crying child close.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a twin, then the Malayalam for to look after, then say cērttupiṭikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a twin, then the Malayalam for to look after, then say *cērttupiṭikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചേർത്തുപിടിക്കുക (cērttupiṭikkuka) mean? (\"To hold close\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C559-ottupokuka",
+      "sequence": 28170,
+      "title": "ഒത്തുപോകുക (ottupōkuka) — to get along; to fit in",
+      "headword": "ഒത്തുപോകുക",
+      "romanization": "ottupōkuka",
+      "gloss": "to get along; to fit in",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6a4d6c42a8e142d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to look after, then the Malayalam for to hold close."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഒത്തുപോകുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒത്തുപോകുക — ottupōkuka — \"to get along; to fit in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുതിയ ഓഫീസിലെ എല്ലാവരുമായി അവൾ നന്നായി ഒത്തുപോകുന്നു. putiya ōphīsile ellāvarumāyi avaḷ nannāyi ottupōkunnu. She gets along well with everyone at the new office."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഒത്തുപോയി, ottupōyi."
+            },
+            {
+              "kind": "speech",
+              "text": "The person takes -ഉമായി, with: അവരുമായി ഒത്തുപോകുക (ottupōkuka)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒത്തുപോകുക (ottupōkuka) is native Dravidian, a compound of ഒത്ത്, from ഒക്കുക, \"to agree, to be alike\" (DEDR 924), and പോകുക, \"to go\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ottupōkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ottupōkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ottupōkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ottupōkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya ōphīsile ellāvarumāyi avaḷ nannāyi ottupōkunnu. — She gets along well with everyone at the new office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya ōphīsile ellāvarumāyi avaḷ nannāyi ottupōkunnu.* — She gets along well with everyone at the new office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to look after, then the Malayalam for to hold close, then say ottupōkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to look after, then the Malayalam for to hold close, then say *ottupōkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഒത്തുപോകുക (ottupōkuka) mean? (\"To get along; to fit in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C559-kattusuksikkuka",
+      "sequence": 28180,
+      "title": "കാത്തുസൂക്ഷിക്കുക (kāttusūkṣikkuka) — to cherish; to safeguard",
+      "headword": "കാത്തുസൂക്ഷിക്കുക",
+      "romanization": "kāttusūkṣikkuka",
+      "gloss": "to cherish; to safeguard",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e3e6c3c5b91d195",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to hold close, then the Malayalam for to get along."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കാത്തുസൂക്ഷിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാത്തുസൂക്ഷിക്കുക — kāttusūkṣikkuka — \"to cherish; to safeguard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മുത്തശ്ശി പഴയ ഫോട്ടോകൾ കാത്തുസൂക്ഷിച്ചു. muttaśśi paḻaya phōṭṭōkaḷ kāttusūkṣiccu. Grandmother kept the old photos safe."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കാത്തുസൂക്ഷിച്ചു, kāttusūkṣiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "കാത്ത് guarding + സൂക്ഷിക്കുക to keep with care; സൂക്ഷിക്കണേ, take care, holds the second part."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാത്തുസൂക്ഷിക്കുക (kāttusūkṣikkuka) is a Malayalam compound built from കാത്ത്, from the native verb കാക്കുക, \"to keep, to guard\" (DEDR 1416), and സൂക്ഷിക്കുക, from Sanskrit sūkṣma, \"fine, minute\" (CDIAL 13546)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāttusūkṣikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāttusūkṣikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāttusūkṣikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāttusūkṣikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttaśśi paḻaya phōṭṭōkaḷ kāttusūkṣiccu. — Grandmother kept the old photos safe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttaśśi paḻaya phōṭṭōkaḷ kāttusūkṣiccu.* — Grandmother kept the old photos safe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to hold close, then the Malayalam for to get along, then say kāttusūkṣikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to hold close, then the Malayalam for to get along, then say *kāttusūkṣikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കാത്തുസൂക്ഷിക്കുക (kāttusūkṣikkuka) mean? (\"To cherish; to safeguard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C559-ksama-codikkuka",
+      "sequence": 28190,
+      "title": "ക്ഷമ ചോദിക്കുക (kṣama cōdikkuka) — to ask forgiveness; to apologise",
+      "headword": "ക്ഷമ ചോദിക്കുക",
+      "romanization": "kṣama cōdikkuka",
+      "gloss": "to ask forgiveness; to apologise",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f21e5568df840fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to get along, then the Malayalam for to cherish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ക്ഷമ ചോദിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷമ ചോദിക്കുക — kṣama cōdikkuka — \"to ask forgiveness; to apologise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വൈകി വന്നതിന് അവൻ അധ്യാപകനോട് ക്ഷമ ചോദിച്ചു. vaiki vannatinŭ avan adhyāpakanōṭŭ kṣama cōdiccu. He apologised to the teacher for coming late."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ക്ഷമ ചോദിച്ചു, kṣama cōdiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "What one apologises for takes -ഇന്, the person -ഓട്. മാപ്പ് ചോദിക്കുക says the same."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷമ ചോദിക്കുക (kṣama cōdikkuka) is a Malayalam phrase built from ക്ഷമ, from Sanskrit kṣamā, \"patience, forbearance\" (CDIAL 3659), and ചോദിക്കുക, \"to ask\": to ask for forbearance."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣama cōdikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣama cōdikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣama cōdikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣama cōdikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaiki vannatinŭ avan adhyāpakanōṭŭ kṣama cōdiccu. — He apologised to the teacher for coming late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaiki vannatinŭ avan adhyāpakanōṭŭ kṣama cōdiccu.* — He apologised to the teacher for coming late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to get along, then the Malayalam for to cherish, then say kṣama cōdikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to get along, then the Malayalam for to cherish, then say *kṣama cōdikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്ഷമ ചോദിക്കുക (kṣama cōdikkuka) mean? (\"To ask forgiveness; to apologise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

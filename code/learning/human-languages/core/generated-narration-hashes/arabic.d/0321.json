@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:740ea71717c44c67",
+  "lessonIds": [
+    "AR-C321-sariq",
+    "AR-C321-nashshal",
+    "AR-C321-isaba",
+    "AR-C321-salaba",
+    "AR-C321-nahaba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch321.txt",
+  "json": "arabic/narration/ch321.json",
+  "textHash": "fnv1a64:4c036abe25a0def3",
+  "jsonHash": "fnv1a64:455c9dc91cd92da7",
+  "findings": []
+}

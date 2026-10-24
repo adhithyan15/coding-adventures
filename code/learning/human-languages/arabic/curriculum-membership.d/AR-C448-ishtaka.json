@@ -1,0 +1,11 @@
+{
+  "id": "AR-C448-ishtaka",
+  "pathSegment": "AR-PATH-448-DAJIJ448",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-448-DAJIJ448",
+      "order": 4
+    }
+  ]
+}

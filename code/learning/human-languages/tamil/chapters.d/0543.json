@@ -1,0 +1,19 @@
+{
+  "chapter": 543,
+  "title": "Rules and Checks",
+  "label": "ch:ta-rules-and-checks",
+  "canDo": "I can talk about orders, strict rules and checks.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C543-coti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 543: I can talk about orders, strict rules and checks.",
+    "assesses": [
+      "TA-LEX-C543-KATTALAI543-03",
+      "TA-LEX-C543-KATTALAI543-04",
+      "TA-LEX-C543-KATTALAI543-05"
+    ]
+  }
+}

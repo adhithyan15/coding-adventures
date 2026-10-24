@@ -1,0 +1,11 @@
+{
+  "id": "BN-C347-ponchayet",
+  "pathSegment": "BN-PATH-347-DOPTOR347",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-347-DOPTOR347",
+      "order": 2
+    }
+  ]
+}

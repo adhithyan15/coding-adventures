@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R311-opinion-and-result",
+    "language": "kannada",
+    "chapter": 311,
+    "sequence": 15120,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2f2da7f107e8e828"
+  },
+  "findings": []
+}

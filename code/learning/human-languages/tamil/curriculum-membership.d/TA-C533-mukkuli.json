@@ -1,0 +1,11 @@
+{
+  "id": "TA-C533-mukkuli",
+  "pathSegment": "TA-PATH-533-OTTAM533",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-533-OTTAM533",
+      "order": 4
+    }
+  ]
+}

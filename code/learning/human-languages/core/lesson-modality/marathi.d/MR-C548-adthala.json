@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C548-adthala",
+    "language": "marathi",
+    "chapter": 548,
+    "sequence": 31250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3973e7a5b975f549"
+  },
+  "findings": []
+}

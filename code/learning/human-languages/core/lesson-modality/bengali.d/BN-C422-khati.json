@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C422-khati",
+    "language": "bengali",
+    "chapter": 422,
+    "sequence": 25950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cb983470dc04e77"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C462-solleparade",
+  "pathSegment": "KA-PATH-462-KOTHADI462",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-462-KOTHADI462",
+      "order": 2
+    }
+  ]
+}

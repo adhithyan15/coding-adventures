@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C365-arasrru-ceyyuka",
+    "language": "malayalam",
+    "chapter": 365,
+    "sequence": 17850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0804d32392abae0"
+  },
+  "findings": []
+}

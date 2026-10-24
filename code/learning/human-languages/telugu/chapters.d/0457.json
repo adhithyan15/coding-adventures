@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "A Place to Stay",
+  "label": "ch:te-a-place-to-stay",
+  "canDo": "I can say lodging, an inn, a reception desk, an elevator and to stay overnight.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C457-basa-ceyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can say lodging, an inn, a reception desk, an elevator and to stay overnight.",
+    "assesses": [
+      "TE-LEX-C457-VASATI457-03",
+      "TE-LEX-C457-VASATI457-04",
+      "TE-LEX-C457-VASATI457-05"
+    ]
+  }
+}

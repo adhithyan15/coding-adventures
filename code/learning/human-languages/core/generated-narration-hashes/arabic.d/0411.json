@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:8cdef06acbd09deb",
+  "lessonIds": [
+    "AR-C411-ajaza",
+    "AR-C411-khadaa",
+    "AR-C411-zalama",
+    "AR-C411-kafaha",
+    "AR-C411-aqarra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch411.txt",
+  "json": "arabic/narration/ch411.json",
+  "textHash": "fnv1a64:8c95ed23ef84e567",
+  "jsonHash": "fnv1a64:0f3221561bbef1b2",
+  "findings": []
+}

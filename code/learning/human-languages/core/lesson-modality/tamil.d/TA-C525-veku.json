@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C525-veku",
+    "language": "tamil",
+    "chapter": 525,
+    "sequence": 30110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2db90192b6d5336"
+  },
+  "findings": []
+}

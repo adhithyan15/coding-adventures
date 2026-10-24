@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C492-sekra",
+    "language": "bengali",
+    "chapter": 492,
+    "sequence": 30010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1e35b6043c7760a"
+  },
+  "findings": []
+}

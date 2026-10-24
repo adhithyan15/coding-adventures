@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:ab5a44ca989d213c",
+  "lessonIds": [
+    "TA-C475-cikiccai",
+    "TA-C475-paricoti",
+    "TA-C475-nati",
+    "TA-C475-sken",
+    "TA-C475-pattiyam"
+  ],
+  "tex": "tamil/book/chapters/ch475-at-the-doctor.tex"
+}

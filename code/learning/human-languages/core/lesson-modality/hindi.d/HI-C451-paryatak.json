@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C451-paryatak",
+    "language": "hindi",
+    "chapter": 451,
+    "sequence": 24720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:025f26e9ed836e30"
+  },
+  "findings": []
+}

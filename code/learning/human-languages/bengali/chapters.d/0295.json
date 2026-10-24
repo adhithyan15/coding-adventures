@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Counting the Cost",
+  "label": "ch:bn-counting-the-cost",
+  "canDo": "I can talk about damage, hardship and getting over a disaster.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C295-phire-paoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can talk about damage, hardship and getting over a disaster.",
+    "assesses": [
+      "BN-LEX-C295-KHOTI295-03",
+      "BN-LEX-C295-KHOTI295-04",
+      "BN-LEX-C295-KHOTI295-05"
+    ]
+  }
+}

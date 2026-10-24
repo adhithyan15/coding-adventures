@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 386,
+  "title": "Planning Ahead",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:494cc1985c1cb47e",
+  "lessons": [
+    {
+      "id": "TA-C386-utti",
+      "sequence": 22100,
+      "title": "உத்தி (utti) — a strategy; a technique",
+      "headword": "உத்தி",
+      "romanization": "utti",
+      "gloss": "a strategy; a technique",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1b6a36f12c8e635",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a complication, then the Tamil for to handle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உத்தி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உத்தி — utti — \"a strategy; a technique\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெற்றி பெற நமக்கு ஒரு புதிய உத்தி தேவை. veṟṟi peṟa namakku oru putiya utti tēvai. We need a new strategy to win."
+            },
+            {
+              "kind": "speech",
+              "text": "Often plural: உத்திகள், techniques."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உத்தி (utti) is borrowed from Sanskrit yukti, \"union, preparation, application\" (CDIAL 10480); Tamil drops the initial y and makes kt into த்த."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veṟṟi peṟa namakku oru putiya utti tēvai. — We need a new strategy to win.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veṟṟi peṟa namakku oru putiya utti tēvai.* — We need a new strategy to win.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a complication, then the Tamil for to handle, then say utti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a complication, then the Tamil for to handle, then say *utti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உத்தி (utti) mean? (\"A strategy; a technique\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C386-munneccarikkai",
+      "sequence": 22110,
+      "title": "முன்னெச்சரிக்கை (muṉṉeccarikkai) — a precaution",
+      "headword": "முன்னெச்சரிக்கை",
+      "romanization": "muṉṉeccarikkai",
+      "gloss": "a precaution",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e488d6fc6bbf3666",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to handle, then the Tamil for a strategy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முன்னெச்சரிக்கை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னெச்சரிக்கை — muṉṉeccarikkai — \"a precaution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழைக்காலத்துக்கு முன் முன்னெச்சரிக்கை எடுக்க வேண்டும். maḻaikkālattukku muṉ muṉṉeccarikkai eṭukka vēṇṭum. Precautions must be taken before the rainy season."
+            },
+            {
+              "kind": "speech",
+              "text": "முன், before, + a warning: எச்சரி, to warn, is the verb inside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னெச்சரிக்கை (muṉṉeccarikkai) is built from native muṉ, \"before\" (DEDR 5020), and eccarikkai, \"a warning\", the noun of எச்சரி: a warning taken ahead of time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉeccarikkai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉeccarikkai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉeccarikkai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉeccarikkai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻaikkālattukku muṉ muṉṉeccarikkai eṭukka vēṇṭum. — Precautions must be taken before the rainy season.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻaikkālattukku muṉ muṉṉeccarikkai eṭukka vēṇṭum.* — Precautions must be taken before the rainy season.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to handle, then the Tamil for a strategy, then say muṉṉeccarikkai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to handle, then the Tamil for a strategy, then say *muṉṉeccarikkai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முன்னெச்சரிக்கை (muṉṉeccarikkai) mean? (\"A precaution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C386-varaivu",
+      "sequence": 22120,
+      "title": "வரைவு (varaivu) — a draft",
+      "headword": "வரைவு",
+      "romanization": "varaivu",
+      "gloss": "a draft",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c7b49cd64c23a7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a strategy, then the Tamil for a precaution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வரைவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வரைவு — varaivu — \"a draft\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் கடிதத்தின் வரைவைத் தயாரித்தார். avar kaṭitattiṉ varaivait tayārittār. He prepared a draft of the letter."
+            },
+            {
+              "kind": "speech",
+              "text": "வரைவுத் திட்டம், a draft plan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வரைவு (varaivu) is native Dravidian: DEDR 5263 lists Tamil varai, \"to write, inscribe, paint, draw\", and varaivu: a first drawing of a text."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varaivu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varaivu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varaivu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varaivu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar kaṭitattiṉ varaivait tayārittār. — He prepared a draft of the letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar kaṭitattiṉ varaivait tayārittār.* — He prepared a draft of the letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a strategy, then the Tamil for a precaution, then say varaivu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a strategy, then the Tamil for a precaution, then say *varaivu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வரைவு (varaivu) mean? (\"A draft\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C386-munnetu",
+      "sequence": 22130,
+      "title": "முன்னெடு (muṉṉeṭu) — to take forward; to spearhead",
+      "headword": "முன்னெடு",
+      "romanization": "muṉṉeṭu",
+      "gloss": "to take forward; to spearhead",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86b4a469ff52c410",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a precaution, then the Tamil for a draft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முன்னெடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னெடு — muṉṉeṭu — \"to take forward; to spearhead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த முயற்சியை அவர்தான் முன்னெடுத்தார். inta muyaṟciyai avartāṉ muṉṉeṭuttār. It was he who took this effort forward."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): முன்னெடுத்தேன், muṉṉeṭuttēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is led takes -ஐ: போராட்டத்தை முன்னெடு (muṉṉeṭu), to lead a struggle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னெடு (muṉṉeṭu) is native: muṉ, \"front\" (DEDR 5020), and eṭu, \"to take up, lift\" (DEDR 851): to take something to the front."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉeṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉeṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉeṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉeṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta muyaṟciyai avartāṉ muṉṉeṭuttār. — It was he who took this effort forward.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta muyaṟciyai avartāṉ muṉṉeṭuttār.* — It was he who took this effort forward.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a precaution, then the Tamil for a draft, then say muṉṉeṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a precaution, then the Tamil for a draft, then say *muṉṉeṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முன்னெடு (muṉṉeṭu) mean? (\"To take forward; to spearhead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C386-kurikkol",
+      "sequence": 22140,
+      "title": "குறிக்கோள் (kuṟikkōḷ) — an aim; a goal",
+      "headword": "குறிக்கோள்",
+      "romanization": "kuṟikkōḷ",
+      "gloss": "an aim; a goal",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab4cc935118a58bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a draft, then the Tamil for to take forward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குறிக்கோள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறிக்கோள் — kuṟikkōḷ — \"an aim; a goal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் குறிக்கோள் ஒரு மருத்துவர் ஆவது. eṉ kuṟikkōḷ oru maruttuvar āvatu. My aim is to become a doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "குறி, a mark, a target + கோள், a holding."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறிக்கோள் (kuṟikkōḷ) is native: kuṟi, \"a mark; to aim at\" (DEDR 1847), and kōḷ, \"taking, holding\" (DEDR 2151): the mark one holds to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟikkōḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟikkōḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟikkōḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟikkōḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ kuṟikkōḷ oru maruttuvar āvatu. — My aim is to become a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ kuṟikkōḷ oru maruttuvar āvatu.* — My aim is to become a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a draft, then the Tamil for to take forward, then say kuṟikkōḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a draft, then the Tamil for to take forward, then say *kuṟikkōḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குறிக்கோள் (kuṟikkōḷ) mean? (\"An aim; a goal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

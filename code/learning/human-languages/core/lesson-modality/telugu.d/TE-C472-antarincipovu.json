@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C472-antarincipovu",
+    "language": "telugu",
+    "chapter": 472,
+    "sequence": 23770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5e2c1e7daa42651"
+  },
+  "findings": []
+}

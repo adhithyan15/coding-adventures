@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Books and Essays",
+  "label": "ch:te-books-and-essays",
+  "canDo": "I can talk about textbooks, essays, treatises and syllabuses.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C416-samiksincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can talk about textbooks, essays, treatises and syllabuses.",
+    "assesses": [
+      "TE-LEX-C416-VYASAM416-03",
+      "TE-LEX-C416-VYASAM416-04",
+      "TE-LEX-C416-VYASAM416-05"
+    ]
+  }
+}

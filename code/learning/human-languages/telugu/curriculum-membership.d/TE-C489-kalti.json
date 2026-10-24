@@ -1,0 +1,11 @@
+{
+  "id": "TE-C489-kalti",
+  "pathSegment": "TE-PATH-489-KALTI489",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-489-KALTI489",
+      "order": 1
+    }
+  ]
+}

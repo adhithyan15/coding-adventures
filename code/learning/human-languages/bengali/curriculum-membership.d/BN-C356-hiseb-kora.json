@@ -1,0 +1,11 @@
+{
+  "id": "BN-C356-hiseb-kora",
+  "pathSegment": "BN-PATH-356-SHOTANGSHO356",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-356-SHOTANGSHO356",
+      "order": 2
+    }
+  ]
+}

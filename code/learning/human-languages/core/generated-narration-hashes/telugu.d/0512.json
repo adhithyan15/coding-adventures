@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:4c1e84c644df4663",
+  "lessonIds": [
+    "TE-C512-jabbu",
+    "TE-C512-jabbupadu",
+    "TE-C512-nalata",
+    "TE-C512-mancam-pattu",
+    "TE-C512-teruko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch512.txt",
+  "json": "telugu/narration/ch512.json",
+  "textHash": "fnv1a64:a8169b13b14c0e82",
+  "jsonHash": "fnv1a64:7d6bf04b774b198a",
+  "findings": []
+}

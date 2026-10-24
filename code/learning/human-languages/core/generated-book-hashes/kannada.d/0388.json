@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:73232d284d6ce824",
+  "lessonIds": [
+    "KA-C388-naitika",
+    "KA-C388-tyaga",
+    "KA-C388-manassaksi",
+    "KA-C388-hita",
+    "KA-C388-khandisu"
+  ],
+  "tex": "kannada/book/chapters/ch388-right-and-wrong.tex"
+}

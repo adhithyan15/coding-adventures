@@ -1,0 +1,11 @@
+{
+  "id": "KA-C470-pravesadvara",
+  "pathSegment": "KA-PATH-470-KAMAGARI470",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-470-KAMAGARI470",
+      "order": 1
+    }
+  ]
+}

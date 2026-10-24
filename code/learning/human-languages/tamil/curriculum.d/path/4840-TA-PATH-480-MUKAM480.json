@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-480-MUKAM480",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-480-MUKAM480"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:5ae60a6f5c6c5088",
+  "lessonIds": [
+    "ML-C531-parihasikkuka",
+    "ML-C531-vimpilakkuka",
+    "ML-C531-anukarikkuka",
+    "ML-C531-ponnaccam",
+    "ML-C531-salyappetuttuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch531.txt",
+  "json": "malayalam/narration/ch531.json",
+  "textHash": "fnv1a64:df73b78f2561b687",
+  "jsonHash": "fnv1a64:161de05f32f3b5ce",
+  "findings": []
+}

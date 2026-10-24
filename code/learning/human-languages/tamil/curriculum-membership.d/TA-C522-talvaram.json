@@ -1,0 +1,11 @@
+{
+  "id": "TA-C522-talvaram",
+  "pathSegment": "TA-PATH-522-PAZHAYAVEEDU522",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-522-PAZHAYAVEEDU522",
+      "order": 2
+    }
+  ]
+}

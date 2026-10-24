@@ -1,0 +1,11 @@
+{
+  "id": "HI-C389-badtar",
+  "pathSegment": "HI-PATH-389-BEHTAR389",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-389-BEHTAR389",
+      "order": 1
+    }
+  ]
+}

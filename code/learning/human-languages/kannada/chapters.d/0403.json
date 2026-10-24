@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Society and Self-Reliance",
+  "label": "ch:ka-society-and-self-reliance",
+  "canDo": "I can say society, self-reliance, awareness, diversity and to devise.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C403-rupisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can say society, self-reliance, awareness, diversity and to devise.",
+    "assesses": [
+      "KA-LEX-C403-SAMAJA403-03",
+      "KA-LEX-C403-SAMAJA403-04",
+      "KA-LEX-C403-SAMAJA403-05"
+    ]
+  }
+}

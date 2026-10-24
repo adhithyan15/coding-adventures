@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:c34ca6d55395fa31",
+  "lessonIds": [
+    "TA-C535-panketu",
+    "TA-C535-atukalam",
+    "TA-C535-kol",
+    "TA-C535-kurivai",
+    "TA-C535-mattai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch535.txt",
+  "json": "tamil/narration/ch535.json",
+  "textHash": "fnv1a64:cdc7f92fcf7fcfdc",
+  "jsonHash": "fnv1a64:f5988203ca484e6a",
+  "findings": []
+}

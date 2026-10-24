@@ -7,8 +7,18 @@
   "signature": "A headline (mātrā) runs along the top of most letters, as in Devanagari, but many letters hang a pointed, triangular body from it (ক ব র), and the signs ি and ে stand in front of their consonant.",
   "complete": false,
   "combination": "A consonant carries an inherent vowel, the open ô of awe (ক = kô). A vowel sign replaces it (ন + া → না = na); ি and ে are written in front of the consonant they follow in speech. The hasanta ্ deletes the vowel, and the bare consonant fuses with the next into a conjunct (স + ্ + ক → স্ক). Most letters hang from a headline that runs along the top of a word.",
-  "notes": "The Bengali track's own inventory: exactly the letters, signs and digits its lessons read (30 letters, 11 signs, 10 digits), each `sound` copied from that letter's own writing-lesson romanization. It is not the whole alphabet, so `complete` is false. Stroke order is source-gated: only rows with `penLifts` and `strokeOrderSource` carry a cited order, from native writers' pen traces stored in HP Labs India's LipiTk Bangla recognizer (counts and shares only; no trace is copied). Rows without them are recognition-only: `strokeOrder: []` means NOT VERIFIED, never none. The headline (mātrā) follows one rule: where one placement wins a majority of the traces and covers the printed bar, the path follows it (ব and র draw it first); where no placement wins a majority, the body follows the majority and the headline is drawn LAST, as its own stroke, left to right, by a convention each such row's variation names (ই চ ছ জ ড ত দ ন ফ ভ ম য ল হ). Rows left without an order, and why: ক (the majority opens with the headline, 296 of 524, but 281 of those stop it at the stem, so it does not cover Noto's bar over the loop); আ, গ, ট, ধ and প (no body stroke count wins a majority); স (two body strokes in only 133 of 250, a near tie); শ (one stroke and a clear start and end, but the pen's way between them splits, 66 to 77); ঝ (no placement wins, but Noto prints its headline in two pieces either side of the rising right stem, so a headline drawn last cannot be one stroke on the ink).",
+  "notes": "The Bengali track's own inventory: exactly the letters, signs and digits its lessons read (39 letters, 14 signs, 10 digits), each `sound` copied from that letter's own writing-lesson romanization. It is not the whole alphabet, so `complete` is false. Stroke order is source-gated: only rows with `penLifts` and `strokeOrderSource` carry a cited order, from native writers' pen traces stored in HP Labs India's LipiTk Bangla recognizer (counts and shares only; no trace is copied). Rows without them are recognition-only: `strokeOrder: []` means NOT VERIFIED, never none. The headline (mātrā) follows one rule: where one placement wins a majority of the traces and covers the printed bar, the path follows it (ব and র draw it first); where no placement wins a majority, the body follows the majority and the headline is drawn LAST, as its own stroke, left to right, by a convention each such row's variation names (ই চ ছ জ ড ত দ ন ফ ভ ম য ল হ). Rows left without an order, and why: ক (the majority opens with the headline, 296 of 524, but 281 of those stop it at the stem, so it does not cover Noto's bar over the loop); আ, গ, ট, ধ and প (no body stroke count wins a majority); স (two body strokes in only 133 of 250, a near tie); শ (one stroke and a clear start and end, but the pen's way between them splits, 66 to 77); ঝ (no placement wins, but Noto prints its headline in two pieces either side of the rising right stem, so a headline drawn last cannot be one stroke on the ink).",
   "letters": [
+    {
+      "glyph": "অ",
+      "sound": "ô",
+      "role": "independent-vowel",
+      "components": [
+        "অ  ô — independent vowel (no consonant to ride)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
     {
       "glyph": "আ",
       "sound": "a",
@@ -42,6 +52,16 @@
         "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
         "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: setting aside a straight headline lifted out as a stroke of its own, 165 of the 218 stored prototypes draw the body in two pen-down strokes. In 162 of those 165 the lower part, written like ha (হ), comes first: 143 start it inside the curl, 120 turn it clockwise and 150 end it at the bottom right, at the end of the tail. The second part is the hook above the headline: 131 draw it upward, ending at its tip. THE HEADLINE: of the 165, 80 open the hook's stroke with it, 22 lift it out as the last stroke, 8 draw it first, 5 between the two parts, and 50 inside one of the parts elsewhere, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
       }
+    },
+    {
+      "glyph": "উ",
+      "sound": "u",
+      "role": "independent-vowel",
+      "components": [
+        "উ  u — independent vowel (no consonant to ride)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
     },
     {
       "glyph": "এ",
@@ -130,6 +150,28 @@
       "inherentVowel": "ô",
       "components": [
         "গ  gô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ঘ",
+      "sound": "ghô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ঘ  ghô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ঙ",
+      "sound": "ngô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ঙ  ngô — consonant (inherent “ô”)"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -255,6 +297,17 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ঠ",
+      "sound": "ṭhô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ঠ  ṭhô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ড",
       "sound": "ḍô",
       "role": "consonant",
@@ -279,6 +332,28 @@
         "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
         "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 246 of the 280 stored prototypes draw the body in one pen-down stroke. 206 of those 246 start at the top, at the stem under the headline, 245 turn clockwise (down the stem, up to the point, down the right side and round the bottom) and 243 end on the left arm. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 94 of the 280 draw none at all, 103 open with it, 73 end with it and 10 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 176 of the 176 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
       }
+    },
+    {
+      "glyph": "ঢ",
+      "sound": "ḍhô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ঢ  ḍhô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ণ",
+      "sound": "nô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ণ  nô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
     },
     {
       "glyph": "ত",
@@ -587,6 +662,17 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ষ",
+      "sound": "shô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ষ  shô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "স",
       "sound": "shô",
       "role": "consonant",
@@ -621,6 +707,16 @@
         "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
         "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 270 of the 320 stored prototypes draw the body in one pen-down stroke. 242 of those 270 start inside the curl, 189 turn clockwise and 242 end at the bottom right, at the end of the tail. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 87 of the 320 draw none at all, 60 open with it, 62 end with it and 111 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 207 of the 218 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
       }
+    },
+    {
+      "glyph": "ৎ",
+      "sound": "t",
+      "role": "consonant",
+      "components": [
+        "ৎ  t — khanda ta, a t with no vowel after it"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
     }
   ],
   "marks": [
@@ -664,6 +760,17 @@
       }
     },
     {
+      "mark": "ূ",
+      "sound": "-ū",
+      "role": "vowel-sign",
+      "attachesAs": "an open hook with a short tail, written underneath its consonant; said like ু",
+      "example": {
+        "base": "দ",
+        "combined": "দূ",
+        "sound": "dū"
+      }
+    },
+    {
       "mark": "ৃ",
       "sound": "-ri",
       "role": "vowel-sign",
@@ -678,6 +785,28 @@
         "base": "ক",
         "combined": "কে",
         "sound": "ke"
+      }
+    },
+    {
+      "mark": "ৈ",
+      "sound": "-oi",
+      "role": "vowel-sign",
+      "attachesAs": "ে with a hook standing on the headline above it, written in FRONT of its consonant, though spoken after it",
+      "example": {
+        "base": "দ",
+        "combined": "দৈ",
+        "sound": "doi"
+      }
+    },
+    {
+      "mark": "ৌ",
+      "sound": "-ou",
+      "role": "vowel-sign",
+      "attachesAs": "written on both sides of its consonant: ে in front, and after it an upright stroke whose top stands above the headline in a hook",
+      "example": {
+        "base": "ন",
+        "combined": "নৌ",
+        "sound": "nou"
       }
     },
     {

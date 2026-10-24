@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:150807f9d99e31a7",
+  "lessonIds": [
+    "AR-C317-qabada",
+    "AR-C317-ihtajaza",
+    "AR-C317-awqafa",
+    "AR-C317-dawriyya",
+    "AR-C317-hajiz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch317.txt",
+  "json": "arabic/narration/ch317.json",
+  "textHash": "fnv1a64:3b0c099b0e95a7c0",
+  "jsonHash": "fnv1a64:a958f21e57ce36a7",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C475-anakatta",
+    "language": "telugu",
+    "chapter": 475,
+    "sequence": 23900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31fb4b42f3eea83b"
+  },
+  "findings": []
+}

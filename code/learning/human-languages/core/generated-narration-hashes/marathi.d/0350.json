@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:62dec95563b12717",
+  "lessonIds": [
+    "MR-C350-svikarne",
+    "MR-C350-manya-karne",
+    "MR-C350-grahya-dharne",
+    "MR-C350-dos-dene",
+    "MR-C350-arop-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch350.txt",
+  "json": "marathi/narration/ch350.json",
+  "textHash": "fnv1a64:59eb1f839ee56988",
+  "jsonHash": "fnv1a64:6d7a27657eb65cf3",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C496-aruvi",
+  "pathSegment": "ML-PATH-496-NADI496",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-496-NADI496",
+      "order": 1
+    }
+  ]
+}

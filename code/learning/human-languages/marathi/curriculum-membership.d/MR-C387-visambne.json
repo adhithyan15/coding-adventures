@@ -1,0 +1,11 @@
+{
+  "id": "MR-C387-visambne",
+  "pathSegment": "MR-PATH-387-GANANA387",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-387-GANANA387",
+      "order": 2
+    }
+  ]
+}

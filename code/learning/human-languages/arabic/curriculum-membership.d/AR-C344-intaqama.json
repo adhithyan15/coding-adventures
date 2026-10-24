@@ -1,0 +1,11 @@
+{
+  "id": "AR-C344-intaqama",
+  "pathSegment": "AR-PATH-344-HIKAYA344",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-344-HIKAYA344",
+      "order": 4
+    }
+  ]
+}

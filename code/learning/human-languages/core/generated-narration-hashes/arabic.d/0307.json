@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:5fa3b95b9c902696",
+  "lessonIds": [
+    "AR-C307-jaysh",
+    "AR-C307-jundi",
+    "AR-C307-harb",
+    "AR-C307-maraka",
+    "AR-C307-haraba-war"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch307.txt",
+  "json": "arabic/narration/ch307.json",
+  "textHash": "fnv1a64:bb7584457a61a8a9",
+  "jsonHash": "fnv1a64:055d7d84814b84ed",
+  "findings": []
+}

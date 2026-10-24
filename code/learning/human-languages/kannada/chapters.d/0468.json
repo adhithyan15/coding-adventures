@@ -1,0 +1,21 @@
+{
+  "chapter": 468,
+  "title": "Size and Quality",
+  "label": "ch:ka-size-and-quality",
+  "canDo": "I can say size, genuine, quality, a guarantee and to fade.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-R468-review-462-468",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can say size, genuine, quality, a guarantee and to fade.",
+    "assesses": [
+      "KA-LEX-C468-GATRA468-01",
+      "KA-LEX-C468-GATRA468-02",
+      "KA-LEX-C468-GATRA468-03",
+      "KA-LEX-C468-GATRA468-04",
+      "KA-LEX-C468-GATRA468-05"
+    ]
+  }
+}

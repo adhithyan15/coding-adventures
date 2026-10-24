@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C416-muccalike",
+    "language": "kannada",
+    "chapter": 416,
+    "sequence": 21050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c33e7770dd88fb2e"
+  },
+  "findings": []
+}

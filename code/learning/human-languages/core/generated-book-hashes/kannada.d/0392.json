@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:b480d74a627d27a3",
+  "lessonIds": [
+    "KA-C392-cunavane",
+    "KA-C392-mata",
+    "KA-C392-bahumata",
+    "KA-C392-pracara-madu",
+    "KA-C392-sambodhisu"
+  ],
+  "tex": "kannada/book/chapters/ch392-elections.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-459-CARANA459",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "KA-EXT-459-CARANA459"
+  ],
+  "after": []
+}

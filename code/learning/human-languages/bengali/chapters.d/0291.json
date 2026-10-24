@@ -1,0 +1,21 @@
+{
+  "chapter": 291,
+  "title": "Help Arrives",
+  "label": "ch:bn-help-arrives",
+  "canDo": "I can talk about relief, volunteers and camps.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-R291-review-284-291",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can talk about relief, volunteers and camps.",
+    "assesses": [
+      "BN-LEX-C291-TRAN291-01",
+      "BN-LEX-C291-TRAN291-02",
+      "BN-LEX-C291-TRAN291-03",
+      "BN-LEX-C291-TRAN291-04",
+      "BN-LEX-C291-TRAN291-05"
+    ]
+  }
+}

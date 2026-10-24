@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C528-vadina",
+    "language": "telugu",
+    "chapter": 528,
+    "sequence": 26780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec98657ac3743c2b"
+  },
+  "findings": []
+}

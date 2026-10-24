@@ -1,0 +1,11 @@
+{
+  "id": "ML-C382-ayudham",
+  "pathSegment": "ML-PATH-382-KALAPAM382",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-382-KALAPAM382",
+      "order": 1
+    }
+  ]
+}

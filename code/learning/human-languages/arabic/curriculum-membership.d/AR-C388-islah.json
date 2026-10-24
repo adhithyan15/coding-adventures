@@ -1,0 +1,11 @@
+{
+  "id": "AR-C388-islah",
+  "pathSegment": "AR-PATH-388-FASAD388",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-388-FASAD388",
+      "order": 2
+    }
+  ]
+}

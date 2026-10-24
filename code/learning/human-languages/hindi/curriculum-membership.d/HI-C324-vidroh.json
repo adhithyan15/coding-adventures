@@ -1,0 +1,11 @@
+{
+  "id": "HI-C324-vidroh",
+  "pathSegment": "HI-PATH-324-VIDROH324",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-324-VIDROH324",
+      "order": 3
+    }
+  ]
+}

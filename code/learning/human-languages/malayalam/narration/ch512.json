@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 512,
+  "title": "When the River Rises",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:32e3ddf8abeb1886",
+  "lessons": [
+    {
+      "id": "ML-C512-karakaviyuka",
+      "sequence": 25610,
+      "title": "കരകവിയുക (karakaviyuka) — to overflow its banks",
+      "headword": "കരകവിയുക",
+      "romanization": "karakaviyuka",
+      "gloss": "to overflow its banks",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16755aafab273bf4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a cyclone, then the Malayalam for to snap and fall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കരകവിയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കരകവിയുക — karakaviyuka — \"to overflow its banks\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കനത്ത മഴയിൽ പുഴ കരകവിഞ്ഞു. kanatta maḻayil puḻa karakaviññu. In the heavy rain the river overflowed its banks."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കരകവിഞ്ഞു, karakaviññu."
+            },
+            {
+              "kind": "speech",
+              "text": "കര, the bank, plus കവിയുക, to overflow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കരകവിയുക (karakaviyuka) is a native Dravidian compound of കര, a bank or shore (DEDR 1293), and കവിയുക, to overflow (DEDR 1221)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karakaviyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karakaviyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karakaviyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karakaviyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanatta maḻayil puḻa karakaviññu. — In the heavy rain the river overflowed its banks.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanatta maḻayil puḻa karakaviññu.* — In the heavy rain the river overflowed its banks.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a cyclone, then the Malayalam for to snap and fall, then say karakaviyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a cyclone, then the Malayalam for to snap and fall, then say *karakaviyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കരകവിയുക (karakaviyuka) mean? (\"To overflow its banks\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C512-vellakkettu",
+      "sequence": 25620,
+      "title": "വെള്ളക്കെട്ട് (veḷḷakkeṭṭŭ) — waterlogging",
+      "headword": "വെള്ളക്കെട്ട്",
+      "romanization": "veḷḷakkeṭṭŭ",
+      "gloss": "waterlogging",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc825c2260c69bb6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to snap and fall, then the Malayalam for to overflow its banks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വെള്ളക്കെട്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വെള്ളക്കെട്ട് — veḷḷakkeṭṭŭ — \"waterlogging\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴ പെയ്താൽ ആ വഴിയിൽ വെള്ളക്കെട്ട് ഉണ്ടാകും. maḻa peytāl ā vaḻiyil veḷḷakkeṭṭŭ uṇṭākuṁ. When it rains, that road gets waterlogged."
+            },
+            {
+              "kind": "speech",
+              "text": "വെള്ളം, water, plus കെട്ട്, a tying up: water that cannot drain away."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വെള്ളക്കെട്ട് (veḷḷakkeṭṭŭ) is a native Dravidian compound of വെള്ളം, water, and കെട്ട്, a tying or damming (DEDR 1147)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷakkeṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷakkeṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷakkeṭṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷakkeṭṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻa peytāl ā vaḻiyil veḷḷakkeṭṭŭ uṇṭākuṁ. — When it rains, that road gets waterlogged.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻa peytāl ā vaḻiyil veḷḷakkeṭṭŭ uṇṭākuṁ.* — When it rains, that road gets waterlogged.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to snap and fall, then the Malayalam for to overflow its banks, then say veḷḷakkeṭṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to snap and fall, then the Malayalam for to overflow its banks, then say *veḷḷakkeṭṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വെള്ളക്കെട്ട് (veḷḷakkeṭṭŭ) mean? (\"Waterlogging\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C512-ponnuka",
+      "sequence": 25630,
+      "title": "പൊങ്ങുക (poṅṅuka) — to float up; to rise (of water)",
+      "headword": "പൊങ്ങുക",
+      "romanization": "poṅṅuka",
+      "gloss": "to float up; to rise (of water)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a218d5b3b6eec39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to overflow its banks, then the Malayalam for waterlogging."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പൊങ്ങുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പൊങ്ങുക — poṅṅuka — \"to float up; to rise (of water)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വെള്ളം പൊങ്ങിയപ്പോൾ ഞങ്ങൾ മുകളിലത്തെ നിലയിലേക്ക് മാറി. veḷḷaṁ poṅṅiyappōḷ ñaṅṅaḷ mukaḷilatte nilayilēkkŭ māṟi. When the water rose, we moved to the upper floor."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പൊങ്ങി, poṅṅi."
+            },
+            {
+              "kind": "speech",
+              "text": "For water and for things that float up in it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പൊങ്ങുക (poṅṅuka) is native Dravidian; DEDR gives the Malayalam verb as to rise up out of the water (DEDR 4471)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṅṅuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṅṅuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṅṅuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṅṅuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷaṁ poṅṅiyappōḷ ñaṅṅaḷ mukaḷilatte nilayilēkkŭ māṟi. — When the water rose, we moved to the upper floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷaṁ poṅṅiyappōḷ ñaṅṅaḷ mukaḷilatte nilayilēkkŭ māṟi.* — When the water rose, we moved to the upper floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to overflow its banks, then the Malayalam for waterlogging, then say poṅṅuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to overflow its banks, then the Malayalam for waterlogging, then say *poṅṅuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പൊങ്ങുക (poṅṅuka) mean? (\"To float up; to rise (of water)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C512-munnippokuka",
+      "sequence": 25640,
+      "title": "മുങ്ങിപ്പോകുക (muṅṅippōkuka) — to go under; to be submerged",
+      "headword": "മുങ്ങിപ്പോകുക",
+      "romanization": "muṅṅippōkuka",
+      "gloss": "to go under; to be submerged",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c66fb2433209f03e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for waterlogging, then the Malayalam for to float up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുങ്ങിപ്പോകുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുങ്ങിപ്പോകുക — muṅṅippōkuka — \"to go under; to be submerged\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വെള്ളപ്പൊക്കത്തിൽ ഗ്രാമത്തിലെ വയലുകൾ മുങ്ങിപ്പോയി. veḷḷappokkattil grāmattile vayalukaḷ muṅṅippōyi. In the flood the village fields went under water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മുങ്ങിപ്പോയി, muṅṅippōyi."
+            },
+            {
+              "kind": "speech",
+              "text": "മുങ്ങി, sinking, plus പോകുക, to go: -പ്പോകുക adds the sense that it happened beyond help."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുങ്ങിപ്പോകുക (muṅṅippōkuka) is a native Dravidian compound of മുങ്ങുക, to sink under water (DEDR 4993), and പോകുക, to go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṅṅippōkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṅṅippōkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṅṅippōkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṅṅippōkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷappokkattil grāmattile vayalukaḷ muṅṅippōyi. — In the flood the village fields went under water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷappokkattil grāmattile vayalukaḷ muṅṅippōyi.* — In the flood the village fields went under water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for waterlogging, then the Malayalam for to float up, then say muṅṅippōkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for waterlogging, then the Malayalam for to float up, then say *muṅṅippōkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മുങ്ങിപ്പോകുക (muṅṅippōkuka) mean? (\"To go under; to be submerged\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C512-valitiriccuvituka",
+      "sequence": 25650,
+      "title": "വഴിതിരിച്ചുവിടുക (vaḻitiriccuviṭuka) — to divert (traffic)",
+      "headword": "വഴിതിരിച്ചുവിടുക",
+      "romanization": "vaḻitiriccuviṭuka",
+      "gloss": "to divert (traffic)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ce74e5db676b8f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to float up, then the Malayalam for to go under."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വഴിതിരിച്ചുവിടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വഴിതിരിച്ചുവിടുക — vaḻitiriccuviṭuka — \"to divert (traffic)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വെള്ളക്കെട്ട് കാരണം പോലീസ് ബസുകൾ വഴിതിരിച്ചുവിട്ടു. veḷḷakkeṭṭŭ kāraṇaṁ pōlīsŭ basukaḷ vaḻitiriccuviṭṭu. Because of the waterlogging, the police diverted the buses."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വഴിതിരിച്ചുവിട്ടു, vaḻitiriccuviṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "വഴി, the way, plus തിരിച്ചുവിടുക, to turn and send."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വഴിതിരിച്ചുവിടുക (vaḻitiriccuviṭuka) is a native Dravidian compound of വഴി, a way (DEDR 5297), തിരിക്കുക, to turn (DEDR 3246), and വിടുക, to let go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḻitiriccuviṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḻitiriccuviṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḻitiriccuviṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḻitiriccuviṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷakkeṭṭŭ kāraṇaṁ pōlīsŭ basukaḷ vaḻitiriccuviṭṭu. — Because of the waterlogging, the police diverted the buses.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷakkeṭṭŭ kāraṇaṁ pōlīsŭ basukaḷ vaḻitiriccuviṭṭu.* — Because of the waterlogging, the police diverted the buses.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to float up, then the Malayalam for to go under, then say vaḻitiriccuviṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to float up, then the Malayalam for to go under, then say *vaḻitiriccuviṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വഴിതിരിച്ചുവിടുക (vaḻitiriccuviṭuka) mean? (\"To divert (traffic)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:c7f9090b4ec0da8e",
+  "lessonIds": [
+    "TE-C447-signalu",
+    "TE-C447-laisensu",
+    "TE-C447-padacari",
+    "TE-C447-kalibata",
+    "TE-C447-atikramincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch447.txt",
+  "json": "telugu/narration/ch447.json",
+  "textHash": "fnv1a64:69cef7b2a7cba831",
+  "jsonHash": "fnv1a64:9c0b0525d3af3d41",
+  "findings": []
+}

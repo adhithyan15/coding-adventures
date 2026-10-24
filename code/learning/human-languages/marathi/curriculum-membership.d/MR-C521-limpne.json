@@ -1,0 +1,11 @@
+{
+  "id": "MR-C521-limpne",
+  "pathSegment": "MR-PATH-521-DURUSTI521",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-521-DURUSTI521",
+      "order": 4
+    }
+  ]
+}

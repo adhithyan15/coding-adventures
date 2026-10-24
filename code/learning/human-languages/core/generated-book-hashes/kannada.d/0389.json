@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:acc6b76a71df8a47",
+  "lessonIds": [
+    "KA-C389-slaghisu",
+    "KA-C389-puraskarisu",
+    "KA-C389-pratisthe",
+    "KA-C389-utpreksisu",
+    "KA-C389-sthanamana"
+  ],
+  "tex": "kannada/book/chapters/ch389-praise-and-prestige.tex"
+}

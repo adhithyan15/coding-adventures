@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Checks and Reviews",
+  "label": "ch:ka-checks-and-reviews",
+  "canDo": "I can say to observe, to critique, a circular, specific and an audit.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C424-parisodhane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can say to observe, to critique, a circular, specific and an audit.",
+    "assesses": [
+      "KA-LEX-C424-AVALOKISU424-03",
+      "KA-LEX-C424-AVALOKISU424-04",
+      "KA-LEX-C424-AVALOKISU424-05"
+    ]
+  }
+}

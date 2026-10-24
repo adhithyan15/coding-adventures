@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "Threats and Tricks",
+  "label": "ch:bn-threats-and-tricks",
+  "canDo": "I can talk about threats, bribes, frame-ups and looting.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C285-protarona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can talk about threats, bribes, frame-ups and looting.",
+    "assesses": [
+      "BN-LEX-C285-HUMKI285-03",
+      "BN-LEX-C285-HUMKI285-04",
+      "BN-LEX-C285-HUMKI285-05"
+    ]
+  }
+}

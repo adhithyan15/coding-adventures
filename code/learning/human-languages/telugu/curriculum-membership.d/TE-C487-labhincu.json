@@ -1,0 +1,11 @@
+{
+  "id": "TE-C487-labhincu",
+  "pathSegment": "TE-PATH-487-KHARCU487",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-487-KHARCU487",
+      "order": 3
+    }
+  ]
+}

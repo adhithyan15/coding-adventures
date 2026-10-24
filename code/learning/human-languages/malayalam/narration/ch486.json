@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 486,
+  "title": "Embassies and Offices",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7f0dda7630ec2efb",
+  "lessons": [
+    {
+      "id": "ML-C486-embasi",
+      "sequence": 24280,
+      "title": "എംബസി (embasi) — an embassy",
+      "headword": "എംബസി",
+      "romanization": "embasi",
+      "gloss": "an embassy",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbb5e2102acd08c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a waiting room, then the Malayalam for a roadside food stall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: എംബസി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എംബസി — embasi — \"an embassy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വിസയ്ക്കായി അവൾ എംബസിയിൽ പോയി. visaykkāyi avaḷ embasiyil pōyi. She went to the embassy for a visa."
+            },
+            {
+              "kind": "speech",
+              "text": "Each country has one embassy in the capital, and a consulate in some other cities."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എംബസി (embasi) was borrowed from English embassy, the office of a foreign government in the capital."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "embasi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *embasi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "embasi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *embasi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "visaykkāyi avaḷ embasiyil pōyi. — She went to the embassy for a visa.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *visaykkāyi avaḷ embasiyil pōyi.* — She went to the embassy for a visa.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a waiting room, then the Malayalam for a roadside food stall, then say embasi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a waiting room, then the Malayalam for a roadside food stall, then say *embasi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does എംബസി (embasi) mean? (\"An embassy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C486-vakuppu",
+      "sequence": 24290,
+      "title": "വകുപ്പ് (vakuppŭ) — a department",
+      "headword": "വകുപ്പ്",
+      "romanization": "vakuppŭ",
+      "gloss": "a department",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a8a68414afbfaf3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a roadside food stall, then the Malayalam for an embassy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വകുപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വകുപ്പ് — vakuppŭ — \"a department\"."
+            },
+            {
+              "kind": "speech",
+              "text": "റെയിൽവേ ഒരു വലിയ സർക്കാർ വകുപ്പാണ്. ṟeyilvē oru valiya sarkkār vakuppāṇŭ. The railway is a big government department."
+            },
+            {
+              "kind": "speech",
+              "text": "It also means a section of a law: നിയമത്തിന്റെ ഒരു വകുപ്പ് (vakuppŭ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വകുപ്പ് (vakuppŭ) is native Dravidian, from the root വക, to divide; DEDR gives the Malayalam noun as a section or kind (DEDR 5202)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vakuppŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vakuppŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vakuppŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vakuppŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṟeyilvē oru valiya sarkkār vakuppāṇŭ. — The railway is a big government department.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṟeyilvē oru valiya sarkkār vakuppāṇŭ.* — The railway is a big government department.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a roadside food stall, then the Malayalam for an embassy, then say vakuppŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a roadside food stall, then the Malayalam for an embassy, then say *vakuppŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വകുപ്പ് (vakuppŭ) mean? (\"A department\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C486-sakha",
+      "sequence": 24300,
+      "title": "ശാഖ (śākha) — a branch office; a branch",
+      "headword": "ശാഖ",
+      "romanization": "śākha",
+      "gloss": "a branch office; a branch",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b00bb9784ce15e83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an embassy, then the Malayalam for a department."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശാഖ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശാഖ — śākha — \"a branch office; a branch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ബാങ്കിന് ഞങ്ങളുടെ ഗ്രാമത്തിൽ ഒരു ശാഖ ഉണ്ട്. ā bāṅkinŭ ñaṅṅaḷuṭe grāmattil oru śākha uṇṭŭ. That bank has a branch in our village."
+            },
+            {
+              "kind": "speech",
+              "text": "In formal Malayalam it is also the branch of a tree; in speech that is a കൊമ്പ്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശാഖ (śākha) is borrowed from Sanskrit śākhā, \"a branch\" of a tree, and so a part of a larger body (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śākha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śākha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śākha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śākha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā bāṅkinŭ ñaṅṅaḷuṭe grāmattil oru śākha uṇṭŭ. — That bank has a branch in our village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā bāṅkinŭ ñaṅṅaḷuṭe grāmattil oru śākha uṇṭŭ.* — That bank has a branch in our village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an embassy, then the Malayalam for a department, then say śākha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an embassy, then the Malayalam for a department, then say *śākha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശാഖ (śākha) mean? (\"A branch office; a branch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C486-pravrttisamayam",
+      "sequence": 24310,
+      "title": "പ്രവൃത്തിസമയം (pravṛttisamayaṁ) — office hours; working hours",
+      "headword": "പ്രവൃത്തിസമയം",
+      "romanization": "pravṛttisamayaṁ",
+      "gloss": "office hours; working hours",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:202d3d2530703647",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a department, then the Malayalam for a branch office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രവൃത്തിസമയം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രവൃത്തിസമയം — pravṛttisamayaṁ — \"office hours; working hours\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ബാങ്കിന്റെ പ്രവൃത്തിസമയം രാവിലെ പത്ത് മുതൽ നാല് വരെയാണ്. bāṅkinṟe pravṛttisamayaṁ rāvile pattŭ mutal nālŭ vareyāṇŭ. The bank's working hours are from ten in the morning to four."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രവൃത്തി, work, plus സമയം, time. You find it on the board at every office door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രവൃത്തിസമയം (pravṛttisamayaṁ) is a Malayalam compound built from two words borrowed from Sanskrit, pravṛtti, \"moving onwards, activity\", and samaya, \"time\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravṛttisamayaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravṛttisamayaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravṛttisamayaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravṛttisamayaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṅkinṟe pravṛttisamayaṁ rāvile pattŭ mutal nālŭ vareyāṇŭ. — The bank's working hours are from ten in the morning to four.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṅkinṟe pravṛttisamayaṁ rāvile pattŭ mutal nālŭ vareyāṇŭ.* — The bank's working hours are from ten in the morning to four.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a department, then the Malayalam for a branch office, then say pravṛttisamayaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a department, then the Malayalam for a branch office, then say *pravṛttisamayaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രവൃത്തിസമയം (pravṛttisamayaṁ) mean? (\"Office hours; working hours\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C486-pravrttidinam",
+      "sequence": 24320,
+      "title": "പ്രവൃത്തിദിനം (pravṛttidinaṁ) — a working day",
+      "headword": "പ്രവൃത്തിദിനം",
+      "romanization": "pravṛttidinaṁ",
+      "gloss": "a working day",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb535f0fd195fd30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a branch office, then the Malayalam for office hours."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രവൃത്തിദിനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രവൃത്തിദിനം — pravṛttidinaṁ — \"a working day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ശനിയാഴ്ച ഇവിടെ പ്രവൃത്തിദിനമല്ല. śaniyāḻca iviṭe pravṛttidinamalla. Saturday is not a working day here."
+            },
+            {
+              "kind": "speech",
+              "text": "Its opposite is an അവധിദിനം, a holiday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രവൃത്തിദിനം (pravṛttidinaṁ) is a Malayalam compound built from two words borrowed from Sanskrit, pravṛtti, \"activity\", and dina, \"a day\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravṛttidinaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravṛttidinaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravṛttidinaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravṛttidinaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaniyāḻca iviṭe pravṛttidinamalla. — Saturday is not a working day here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaniyāḻca iviṭe pravṛttidinamalla.* — Saturday is not a working day here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a branch office, then the Malayalam for office hours, then say pravṛttidinaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a branch office, then the Malayalam for office hours, then say *pravṛttidinaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രവൃത്തിദിനം (pravṛttidinaṁ) mean? (\"A working day\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

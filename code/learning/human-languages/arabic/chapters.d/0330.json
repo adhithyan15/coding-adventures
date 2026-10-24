@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Prison",
+  "label": "ch:ar-prison",
+  "canDo": "I can say to imprison, a prisoner, a cell, a shackle and to release.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C330-afraja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can say to imprison, a prisoner, a cell, a shackle and to release.",
+    "assesses": [
+      "AR-LEX-C330-SIJN330-03",
+      "AR-LEX-C330-SIJN330-04",
+      "AR-LEX-C330-SIJN330-05"
+    ]
+  }
+}

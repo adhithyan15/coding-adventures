@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:b194bbd83fcc6050",
+  "lessonIds": [
+    "HI-C468-dhairya",
+    "HI-C468-adhir",
+    "HI-C468-jhakki",
+    "HI-C468-jhirakna",
+    "HI-C468-jhallana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch468.txt",
+  "json": "hindi/narration/ch468.json",
+  "textHash": "fnv1a64:b067689ac639e3ac",
+  "jsonHash": "fnv1a64:e3217ec113b1c7b9",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C348-uquba",
+    "language": "arabic",
+    "chapter": 348,
+    "sequence": 19830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c88123956e1d890"
+  },
+  "findings": []
+}

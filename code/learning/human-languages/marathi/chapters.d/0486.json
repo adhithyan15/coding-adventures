@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Small Injuries",
+  "label": "ch:mr-small-injuries",
+  "canDo": "I can talk about an injury, a scab, a graze, a sprain and swelling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C486-sujne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can talk about an injury, a scab, a graze, a sprain and swelling.",
+    "assesses": [
+      "MR-LEX-C486-IJA486-03",
+      "MR-LEX-C486-IJA486-04",
+      "MR-LEX-C486-IJA486-05"
+    ]
+  }
+}

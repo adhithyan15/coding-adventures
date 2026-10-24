@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:9a44395dbcc49edf",
+  "lessonIds": [
+    "MR-C525-kalsi",
+    "MR-C525-math",
+    "MR-C525-otne",
+    "MR-C525-sandne",
+    "MR-C525-visalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch525.txt",
+  "json": "marathi/narration/ch525.json",
+  "textHash": "fnv1a64:22e9968b228705f2",
+  "jsonHash": "fnv1a64:06954ffe2bcc6df6",
+  "findings": []
+}

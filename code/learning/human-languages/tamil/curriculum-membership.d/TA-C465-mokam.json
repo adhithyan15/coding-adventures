@@ -1,0 +1,11 @@
+{
+  "id": "TA-C465-mokam",
+  "pathSegment": "TA-PATH-465-ANPU465",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-465-ANPU465",
+      "order": 3
+    }
+  ]
+}

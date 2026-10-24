@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:23818d511ddda8ec",
+  "lessonIds": [
+    "KA-C495-muddisu",
+    "KA-C495-muttidu",
+    "KA-C495-vatsalya",
+    "KA-C495-mamate",
+    "KA-C495-kalaji"
+  ],
+  "tex": "kannada/book/chapters/ch495-love-and-care.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:ff581e069c97cf9b",
+  "lessonIds": [
+    "TA-C524-callatai",
+    "TA-C524-ural",
+    "TA-C524-ulakkai",
+    "TA-C524-kottu",
+    "TA-C524-cuttikari"
+  ],
+  "tex": "tamil/book/chapters/ch524-kitchen-work.tex"
+}

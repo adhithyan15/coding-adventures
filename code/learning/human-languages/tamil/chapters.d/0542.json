@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "Guarantees and Oaths",
+  "label": "ch:ta-guarantees-and-oaths",
+  "canDo": "I can talk about guarantees, promises and stamps.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C542-ali-grant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can talk about guarantees, promises and stamps.",
+    "assesses": [
+      "TA-LEX-C542-UTHTHARAVATHAM542-03",
+      "TA-LEX-C542-UTHTHARAVATHAM542-04",
+      "TA-LEX-C542-UTHTHARAVATHAM542-05"
+    ]
+  }
+}

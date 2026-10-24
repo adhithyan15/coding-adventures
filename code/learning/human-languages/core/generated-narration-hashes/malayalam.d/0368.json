@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:3e1be9737feb1680",
+  "lessonIds": [
+    "ML-C368-kotati",
+    "ML-C368-kesu",
+    "ML-C368-vicarana",
+    "ML-C368-nyayadhipan",
+    "ML-C368-prati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch368.txt",
+  "json": "malayalam/narration/ch368.json",
+  "textHash": "fnv1a64:fd038b7cbd54b9f3",
+  "jsonHash": "fnv1a64:190550d14f51a65e",
+  "findings": []
+}

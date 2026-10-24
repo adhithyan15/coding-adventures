@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C524-kersuni",
+    "language": "marathi",
+    "chapter": 524,
+    "sequence": 30030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69569343b2462ef9"
+  },
+  "findings": []
+}

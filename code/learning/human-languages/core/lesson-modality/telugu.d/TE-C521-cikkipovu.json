@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C521-cikkipovu",
+    "language": "telugu",
+    "chapter": 521,
+    "sequence": 26400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a50c28060ebb8a75"
+  },
+  "findings": []
+}

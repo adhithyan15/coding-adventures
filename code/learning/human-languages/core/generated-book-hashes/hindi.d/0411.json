@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:024efae233f0c28c",
+  "lessonIds": [
+    "HI-C411-vazan",
+    "HI-C411-vilamb",
+    "HI-C411-peti",
+    "HI-C411-radd",
+    "HI-C411-prasthan"
+  ],
+  "tex": "hindi/book/chapters/ch411-weights-and-delays.tex"
+}

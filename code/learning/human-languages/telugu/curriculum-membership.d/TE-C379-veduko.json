@@ -1,0 +1,11 @@
+{
+  "id": "TE-C379-veduko",
+  "pathSegment": "TE-PATH-379-BADHITUDU379",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-379-BADHITUDU379",
+      "order": 4
+    }
+  ]
+}

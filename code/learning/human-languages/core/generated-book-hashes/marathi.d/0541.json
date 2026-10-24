@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:57552c8a33bd3d14",
+  "lessonIds": [
+    "MR-C541-savadhgiri",
+    "MR-C541-khabardari",
+    "MR-C541-daksata",
+    "MR-C541-satark",
+    "MR-C541-isara-dene"
+  ],
+  "tex": "marathi/book/chapters/ch541-taking-care.tex"
+}

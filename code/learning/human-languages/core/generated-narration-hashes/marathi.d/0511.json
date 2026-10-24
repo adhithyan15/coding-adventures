@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:2fe9d460ab53ab30",
+  "lessonIds": [
+    "MR-C511-vyavsay",
+    "MR-C511-napha",
+    "MR-C511-bhandval",
+    "MR-C511-bhagidar",
+    "MR-C511-guntavne",
+    "MR-R511-review-504-511"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch511.txt",
+  "json": "marathi/narration/ch511.json",
+  "textHash": "fnv1a64:6a8bf1bb3f60ef51",
+  "jsonHash": "fnv1a64:e8a9a340843e032c",
+  "findings": []
+}

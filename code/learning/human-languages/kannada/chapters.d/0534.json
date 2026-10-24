@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Music",
+  "label": "ch:ka-music",
+  "canDo": "I can say a melody, a rhythm, a musical note, to hum a tune and to play an instrument.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C534-nudisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can say a melody, a rhythm, a musical note, to hum a tune and to play an instrument.",
+    "assesses": [
+      "KA-LEX-C534-SANGITA534-03",
+      "KA-LEX-C534-SANGITA534-04",
+      "KA-LEX-C534-SANGITA534-05"
+    ]
+  }
+}

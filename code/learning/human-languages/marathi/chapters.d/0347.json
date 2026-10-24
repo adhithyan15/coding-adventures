@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "For and Against",
+  "label": "ch:mr-for-and-against",
+  "canDo": "I can say who is for something and who is against it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C347-viruddha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can say who is for something and who is against it.",
+    "assesses": [
+      "MR-LEX-C347-VIRODH347-03",
+      "MR-LEX-C347-VIRODH347-04",
+      "MR-LEX-C347-VIRODH347-05"
+    ]
+  }
+}

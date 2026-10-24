@@ -1,0 +1,11 @@
+{
+  "id": "BN-C365-manano",
+  "pathSegment": "BN-PATH-365-SOMJHOTA365",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-365-SOMJHOTA365",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C431-pariksincu",
+    "language": "telugu",
+    "chapter": 431,
+    "sequence": 21550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3c217a4e5fce5a6"
+  },
+  "findings": []
+}

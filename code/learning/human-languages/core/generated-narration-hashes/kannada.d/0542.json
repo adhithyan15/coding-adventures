@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:1b7d71fe2ff70d5e",
+  "lessonIds": [
+    "KA-C542-malige",
+    "KA-C542-hostilu",
+    "KA-C542-hajara",
+    "KA-C542-nelamalige",
+    "KA-C542-kapatu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch542.txt",
+  "json": "kannada/narration/ch542.json",
+  "textHash": "fnv1a64:1caaff006664bbf9",
+  "jsonHash": "fnv1a64:e07b8bd6b4a6a1ed",
+  "findings": []
+}

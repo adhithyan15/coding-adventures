@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:2ae507e7564bc9b9",
+  "lessonIds": [
+    "TA-C465-enku",
+    "TA-C465-pacam",
+    "TA-C465-piriyam",
+    "TA-C465-mokam",
+    "TA-C465-nekil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch465.txt",
+  "json": "tamil/narration/ch465.json",
+  "textHash": "fnv1a64:5d7db84b63a4e48d",
+  "jsonHash": "fnv1a64:f9f3713216a32bb9",
+  "findings": []
+}

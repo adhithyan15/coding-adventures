@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 345,
+  "output": "arabic/book/chapters/ch345-facing-danger.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

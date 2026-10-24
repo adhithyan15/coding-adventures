@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:cb89547dd9d826f0",
+  "lessonIds": [
+    "BN-C321-kingbodonti",
+    "BN-C321-rupkotha",
+    "BN-C321-doityo",
+    "BN-C321-jadu",
+    "BN-C321-ghumano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch321.txt",
+  "json": "bengali/narration/ch321.json",
+  "textHash": "fnv1a64:0ef688897777bb5d",
+  "jsonHash": "fnv1a64:368e3984cb7d7efd",
+  "findings": []
+}

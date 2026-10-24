@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "The Siege of the Fort",
+  "label": "ch:ka-the-siege-of-the-fort",
+  "canDo": "I can say to besiege, a moat, to surround, to surrender and a cannon.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C342-phirangi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can say to besiege, a moat, to surround, to surrender and a cannon.",
+    "assesses": [
+      "KA-LEX-C342-MUTTIGE342-03",
+      "KA-LEX-C342-MUTTIGE342-04",
+      "KA-LEX-C342-MUTTIGE342-05"
+    ]
+  }
+}

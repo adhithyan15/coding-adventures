@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:471a4ea374060f52",
+  "lessonIds": [
+    "TA-C446-kanakku",
+    "TA-C446-iruppu",
+    "TA-C446-vatti",
+    "TA-C446-kacolai",
+    "TA-C446-rokkam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch446.txt",
+  "json": "tamil/narration/ch446.json",
+  "textHash": "fnv1a64:6f3c928eb2cd7fe2",
+  "jsonHash": "fnv1a64:53ff11e813019367",
+  "findings": []
+}

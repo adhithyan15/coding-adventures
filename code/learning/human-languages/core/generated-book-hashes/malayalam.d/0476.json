@@ -1,0 +1,14 @@
+{
+  "language": "malayalam",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:e7b284ad57ca7c03",
+  "lessonIds": [
+    "ML-C476-katattuvallam",
+    "ML-C476-olukku",
+    "ML-C476-culi",
+    "ML-C476-ulayuka",
+    "ML-C476-karaykkatukkuka",
+    "ML-R476-review-469-476"
+  ],
+  "tex": "malayalam/book/chapters/ch476-crossing-the-water.tex"
+}

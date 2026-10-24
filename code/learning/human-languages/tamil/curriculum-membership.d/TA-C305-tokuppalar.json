@@ -1,0 +1,11 @@
+{
+  "id": "TA-C305-tokuppalar",
+  "pathSegment": "TA-PATH-305-NERALAI305",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-305-NERALAI305",
+      "order": 3
+    }
+  ]
+}

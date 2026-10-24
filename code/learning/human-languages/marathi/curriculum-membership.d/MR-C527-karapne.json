@@ -1,0 +1,11 @@
+{
+  "id": "MR-C527-karapne",
+  "pathSegment": "MR-PATH-527-SHIJAVNE527",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-527-SHIJAVNE527",
+      "order": 4
+    }
+  ]
+}

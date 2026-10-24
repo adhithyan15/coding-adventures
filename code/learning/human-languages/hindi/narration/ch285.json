@@ -1,0 +1,577 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 285,
+  "title": "Taller, the Tallest, and How Long",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:125d50058084dfe0",
+  "lessons": [
+    {
+      "id": "HI-C285-sabse",
+      "sequence": 15670,
+      "title": "सबसे (sabse) — most, of all",
+      "headword": "सबसे",
+      "romanization": "sabse",
+      "gloss": "most, of all",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b52cd1afd1f2e50a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"all\" (सब) and \"the man is bigger than the child\". (आदमी बच्चे से बड़ा है.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सबसे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सबसे — sabse — \"most, of all\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरे परिवार में मीरा सबसे लंबी है। mere parivār meṁ Mīrā sabse lambī hai. — \"In my family Mira is the tallest.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is सब, \"all\", with the से of बच्चे से बड़ा: \"taller than all\". The adjective after it agrees as always: सबसे (sabse) लंबी for Mira, सबसे (sabse) लंबा for Arun. The group you choose from takes में."
+            },
+            {
+              "kind": "speech",
+              "text": "यह सबसे अच्छा है। (yah sabse acchā hai.) — This is the best."
+            },
+            {
+              "kind": "speech",
+              "text": "सबसे पहले (sabse pahle) — first of all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सबसे (sabse) is two words written as one: सब, which CDIAL traces to Sanskrit sarva, \"all, whole\" (CDIAL 13276), and से."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabse, then sabse acchā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabse*, then *sabse acchā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In my family Mira is the tallest\" — mere parivār meṁ Mīrā sabse lambī hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In my family Mira is the tallest\" — *mere parivār meṁ Mīrā sabse lambī hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"First of all we drank tea\" — sabse pahle hamne cāy pī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"First of all we drank tea\" — *sabse pahle hamne cāy pī*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सबसे (sabse) mean? (\"Most, of all\".) \"The best\"? (सबसे (sabse) अच्छा.) \"First of all\"? (सबसे (sabse) पहले.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C285-sezyada",
+      "sequence": 15680,
+      "title": "मीरा अरुण से लंबी है (Mīrā Aruṇ se lambī hai) — comparing two, and choosing the most",
+      "headword": "मीरा अरुण से लंबी है",
+      "romanization": "Mīrā Aruṇ se lambī hai",
+      "gloss": "Mira is taller than Arun — more than, less than, and the most in a group",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f949cf16cbd766f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the man is bigger than the child\", as you first learned it. (आदमी बच्चे से बड़ा है.) Then \"the best\". (सबसे (sabse) अच्छा.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: more and less",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मीरा अरुण से लंबी है। Mīrā Aruṇ se lambī hai. — \"Mira is taller than Arun.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You know the frame: what is measured against takes से, and the adjective agrees with the one described, लंबी for Mira. Two words sharpen it:"
+            },
+            {
+              "kind": "speech",
+              "text": "से ज़्यादा (se zyādā), \"more than\": यह कमरा उस कमरे से ज़्यादा बड़ा है। (yah kamrā us kamre se zyādā baṛā hai.) — This room is bigger than that one."
+            },
+            {
+              "kind": "speech",
+              "text": "से कम (se kam), \"less than\": यह साड़ी उससे कम महँगी है। (yah sāṛī usse kam mahãgī hai.) — This sari is less expensive than that one."
+            },
+            {
+              "kind": "speech",
+              "text": "उस कमरे से and उससे both use उस, the form वह takes when a postposition follows, as in उसके बाद; उससे is उस with से, \"than that one\"."
+            },
+            {
+              "kind": "speech",
+              "text": "They work with nouns too: मेरे पास तुमसे ज़्यादा पैसे हैं (mere pās tumse zyādā paise haiṁ), \"I have more money than you\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the most, in a group",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुझे फलों में आम सबसे ज़्यादा पसंद है। mujhe phaloṁ meṁ ām sabse zyādā pasand hai. — \"Of all fruits I like mangoes the most.\""
+            },
+            {
+              "kind": "speech",
+              "text": "सबसे (sabse) picks one from a group, and the group takes में: फलों में, इस शहर में. With a liking, \"the most\" is सबसे (sabse) ज़्यादा. A place can be the group too, with का:"
+            },
+            {
+              "kind": "speech",
+              "text": "यह शहर का सबसे बड़ा बाज़ार है। (yah śahar kā sabse baṛā bāzār hai.) — This is the biggest market in the city."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This sari is less expensive than that one\" — yah sāṛī usse kam mahãgī hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This sari is less expensive than that one\" — *yah sāṛī usse kam mahãgī hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have more money than you\" — mere pās tumse zyādā paise haiṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have more money than you\" — *mere pās tumse zyādā paise haiṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Of all fruits I like mangoes the most\" — mujhe phaloṁ meṁ ām sabse zyādā pasand hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Of all fruits I like mangoes the most\" — *mujhe phaloṁ meṁ ām sabse zyādā pasand hai*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C285-sezyada-r1",
+              "prompt": "Say that this sari is less expensive than that one, then that in your family Mira is the tallest.",
+              "assesses": [
+                "HI-GRAMMAR-C285-MORE-LESS-01",
+                "HI-GRAMMAR-C285-SUPERLATIVE-GROUP-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "yah sāṛī usse kam mahãgī hai; mere parivār meṁ mīrā sabse lambī hai",
+                "यह साड़ी उससे कम महँगी है। मेरे परिवार में मीरा सबसे लंबी है।"
+              ],
+              "feedback": {
+                "correct": "se kam for less than; sabse, with the group in meṁ, for the most.",
+                "incorrect": "Less than is se kam: usse kam mahãgī; for the most, mere parivār meṁ … sabse lambī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Taller than Arun\"? (अरुण से लंबी, or लंबा.) \"More than\"? (से ज़्यादा.) \"Less than\"? (से कम.) \"The biggest market in the city\"? (शहर का सबसे (sabse) बड़ा बाज़ार.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C285-dosaalse",
+      "sequence": 15690,
+      "title": "दो साल से (do sāl se) — for how long",
+      "headword": "दो साल से",
+      "romanization": "do sāl se",
+      "gloss": "for two years — how long something has gone on, and all day long",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2a4be530d6428f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"from morning to evening\". (सुबह से शाम तक.) Then \"I am doing\". (मैं कर रहा हूँ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: since, and for",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मैं दो साल से हिंदी सीख रहा हूँ। maiṁ do sāl se hindī sīkh rahā hūṁ. — \"I have been learning Hindi for two years.\""
+            },
+            {
+              "kind": "speech",
+              "text": "English says \"have been learning\". Hindi says \"am learning\", in the present, because it is still going on, and puts से, \"from\", on the stretch so far or on the time it began:"
+            },
+            {
+              "kind": "speech",
+              "text": "बारिश सुबह से हो रही है। (bāriś subah se ho rahī hai.) — It has been raining since the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "वह पाँच साल से यहाँ रहती है। (vah pā̃c sāl se yahā̃ rahtī hai.) — She has lived here for five years."
+            },
+            {
+              "kind": "speech",
+              "text": "कब से? (kab se?) — Since when? कितने दिनों से? (kitne dinoṁ se?) — For how many days?"
+            },
+            {
+              "kind": "speech",
+              "text": "से … तक, which you know, gives a stretch with both ends: सुबह से शाम तक. से on its own counts up to now."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: all day long",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कल मैं दिन भर काम कर रहा था। kal maiṁ din bhar kām kar rahā thā. — \"Yesterday I was working all day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "भर (bhar) after a stretch of time is \"all through it\": दिन भर (din bhar), all day; रात भर (rāt bhar), all night; साल भर (sāl bhar), all year. पूरा says the same as an adjective: पूरे दिन (pūre din), the whole day."
+            },
+            {
+              "kind": "speech",
+              "text": "रात भर बारिश हो रही थी। (rāt bhar bāriś ho rahī thī.) — It was raining all night."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Since when?\" — kab se?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Since when?\" — *kab se?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It has been raining since the morning\" — bāriś subah se ho rahī hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It has been raining since the morning\" — *bāriś subah se ho rahī hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She has lived here for five years\" — vah pā̃c sāl se yahā̃ rahtī hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She has lived here for five years\" — *vah pā̃c sāl se yahā̃ rahtī hai*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C285-dosaalse-r1",
+              "prompt": "Say that you have been learning Hindi for two years, then that it was raining all night.",
+              "assesses": [
+                "HI-GRAMMAR-C285-SINCE-FOR-01",
+                "HI-GRAMMAR-C285-ALL-DAY-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "maiṁ do sāl se hindī sīkh rahā hūṁ; rāt bhar bāriś ho rahī thī",
+                "मैं दो साल से हिंदी सीख रहा हूँ। रात भर बारिश हो रही थी।",
+                "मैं दो साल से हिंदी सीख रही हूँ। रात भर बारिश हो रही थी।",
+                "maiṁ do sāl se hindī sīkh rahī hūṁ; rāt bhar bāriś ho rahī thī"
+              ],
+              "feedback": {
+                "correct": "The present for what still goes on, with se; bhar for all night.",
+                "incorrect": "Keep the present, sīkh rahā hūṁ, and put se after do sāl; all night is rāt bhar."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"For two years\"? (दो साल से (do sāl se).) Why the present in मैं दो साल से (do sāl se) हिंदी सीख रहा हूँ? (It is still going on.) \"All night\"? (रात भर.) \"From morning to evening\"? (सुबह से शाम तक.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R285-comparing-and-time",
+      "sequence": 15700,
+      "title": "Review — comparing, and how long",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "comparing, the most, and how long",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce2a2679f803c54b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"Mira is taller than Arun\". (Mīrā Aruṇ se lambī hai.) Then \"the best\". (sabse acchā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "This shop is more expensive than that one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: This shop is more expensive than that one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In my opinion this is the best book in the library.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In my opinion this is the best book in the library.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have wanted to become a teacher for two years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have wanted to become a teacher for two years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yesterday it rained all day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Yesterday it rained all day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Since when have you lived here?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Since when have you lived here?]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"More expensive than\"? (से ज़्यादा महँगा.) \"The best in the library\"? (पुस्तकालय की सबसे (sabse) अच्छी किताब: किताब is feminine.) \"For two years\"? (दो साल से (do sāl se), with the present.) \"All day\"? (दिन भर.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

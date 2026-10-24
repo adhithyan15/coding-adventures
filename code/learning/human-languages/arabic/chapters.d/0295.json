@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Telling a story",
+  "label": "ch:ar-telling-a-story",
+  "canDo": "I can say a tale, to narrate, to tell a story, to recount and one day.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C295-dhata-yawm",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can say a tale, to narrate, to tell a story, to recount and one day.",
+    "assesses": [
+      "AR-LEX-C295-RIWAYA295-03",
+      "AR-LEX-C295-RIWAYA295-04",
+      "AR-LEX-C295-RIWAYA295-05"
+    ]
+  }
+}

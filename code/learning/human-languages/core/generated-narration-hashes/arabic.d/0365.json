@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:4f2c454bc35219b2",
+  "lessonIds": [
+    "AR-C365-haqiqa",
+    "AR-C365-waqi",
+    "AR-C365-khayal",
+    "AR-C365-fannada",
+    "AR-C365-iqtanaa",
+    "AR-R365-review-358-365"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch365.txt",
+  "json": "arabic/narration/ch365.json",
+  "textHash": "fnv1a64:38bb960a97fdcd6c",
+  "jsonHash": "fnv1a64:c55910e65b5abc53",
+  "findings": []
+}

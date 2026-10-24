@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:7816ebf89ac0394d",
+  "lessonIds": [
+    "KA-C319-yuddha",
+    "KA-C319-sainika",
+    "KA-C319-akramisu",
+    "KA-C319-kalla",
+    "KA-C319-odihogu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch319.txt",
+  "json": "kannada/narration/ch319.json",
+  "textHash": "fnv1a64:51e0ccf0d934b773",
+  "jsonHash": "fnv1a64:a891b348b310fc0c",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C517-maikam",
+    "language": "telugu",
+    "chapter": 517,
+    "sequence": 26180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a6b3baf0c89494f"
+  },
+  "findings": []
+}

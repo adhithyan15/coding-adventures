@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 456,
+  "output": "arabic/book/chapters/ch456-finding-the-right-size.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

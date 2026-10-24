@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:a23c5556e9bf7004",
+  "lessonIds": [
+    "TA-C550-astivaram",
+    "TA-C550-cenkal",
+    "TA-C550-ciment",
+    "TA-C550-caram",
+    "TA-C550-mestiri"
+  ],
+  "tex": "tamil/book/chapters/ch550-building-a-house.tex"
+}

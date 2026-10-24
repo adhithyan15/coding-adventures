@@ -1,0 +1,11 @@
+{
+  "id": "TE-C405-dravyolbanam",
+  "pathSegment": "TE-PATH-405-ARTHIKA405",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-405-ARTHIKA405",
+      "order": 1
+    }
+  ]
+}

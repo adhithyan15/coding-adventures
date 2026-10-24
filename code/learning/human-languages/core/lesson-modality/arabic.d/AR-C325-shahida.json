@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C325-shahida",
+    "language": "arabic",
+    "chapter": 325,
+    "sequence": 18640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ee06522292041e7"
+  },
+  "findings": []
+}

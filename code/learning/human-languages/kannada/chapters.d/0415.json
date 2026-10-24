@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "Suspensions and Exemptions",
+  "label": "ch:ka-suspensions-and-exemptions",
+  "canDo": "I can say suspension, to exclude, an exemption, to sanction and an official order.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C415-adesa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can say suspension, to exclude, an exemption, to sanction and an official order.",
+    "assesses": [
+      "KA-LEX-C415-AMANATU415-03",
+      "KA-LEX-C415-AMANATU415-04",
+      "KA-LEX-C415-AMANATU415-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "In Court",
+  "label": "ch:ka-in-court",
+  "canDo": "I can say a court of law, a judge, to accuse, a verdict and a punishment.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C321-sikse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can say a court of law, a judge, to accuse, a verdict and a punishment.",
+    "assesses": [
+      "KA-LEX-C321-NYAYA321-03",
+      "KA-LEX-C321-NYAYA321-04",
+      "KA-LEX-C321-NYAYA321-05"
+    ]
+  }
+}

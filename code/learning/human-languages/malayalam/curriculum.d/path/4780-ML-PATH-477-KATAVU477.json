@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-477-KATAVU477",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-477-KATAVU477"
+  ],
+  "after": []
+}

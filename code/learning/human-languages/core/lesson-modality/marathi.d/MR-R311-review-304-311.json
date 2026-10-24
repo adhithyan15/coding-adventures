@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R311-review-304-311",
+    "language": "marathi",
+    "chapter": 311,
+    "sequence": 18220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb2aea9541b493a4"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:387981f5933e8975",
+  "lessonIds": [
+    "TE-C434-vyavastha",
+    "TE-C434-vidhanam",
+    "TE-C434-sthiti",
+    "TE-C434-sandarbham",
+    "TE-C434-erpadu"
+  ],
+  "tex": "telugu/book/chapters/ch434-systems-and-situations.tex"
+}

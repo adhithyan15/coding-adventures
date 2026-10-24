@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:ff568939f5269734",
+  "lessonIds": [
+    "TA-C531-kutaippantu",
+    "TA-C531-irakuppantu",
+    "TA-C531-kaippantu",
+    "TA-C531-tennis",
+    "TA-C531-kapati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch531.txt",
+  "json": "tamil/narration/ch531.json",
+  "textHash": "fnv1a64:922e21d437fe6acf",
+  "jsonHash": "fnv1a64:295e2171f5671790",
+  "findings": []
+}

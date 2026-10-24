@@ -1,0 +1,11 @@
+{
+  "id": "BN-C450-upohas",
+  "pathSegment": "BN-PATH-450-OPOMAN450",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-450-OPOMAN450",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+[package]
+name = "x509-revocation-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Fail-closed policy for explicit X.509 revocation observations"
+
+[dependencies]
+x509-time = { path = "../x509-time" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C475-khuffash",
+  "pathSegment": "AR-PATH-475-DABU475",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-475-DABU475",
+      "order": 4
+    }
+  ]
+}

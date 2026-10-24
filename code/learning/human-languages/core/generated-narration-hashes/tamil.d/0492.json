@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:99aa497feca21c68",
+  "lessonIds": [
+    "TA-C492-tantai",
+    "TA-C492-tay",
+    "TA-C492-cakotaran",
+    "TA-C492-cakotari",
+    "TA-C492-kataikkutti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch492.txt",
+  "json": "tamil/narration/ch492.json",
+  "textHash": "fnv1a64:a3153c8c658c2d32",
+  "jsonHash": "fnv1a64:221bd55c25af1b6c",
+  "findings": []
+}

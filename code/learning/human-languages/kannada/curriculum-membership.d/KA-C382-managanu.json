@@ -1,0 +1,11 @@
+{
+  "id": "KA-C382-managanu",
+  "pathSegment": "KA-PATH-382-VASTAVA382",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-382-VASTAVA382",
+      "order": 4
+    }
+  ]
+}

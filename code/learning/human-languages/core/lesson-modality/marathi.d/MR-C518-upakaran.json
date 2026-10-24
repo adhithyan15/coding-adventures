@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C518-upakaran",
+    "language": "marathi",
+    "chapter": 518,
+    "sequence": 29720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:644bcf1e1fe77021"
+  },
+  "findings": []
+}

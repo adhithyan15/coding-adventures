@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "A Press Conference",
+  "label": "ch:ml-a-press-conference",
+  "canDo": "I can say a press conference, a statement, the real facts, to exaggerate and to say sorry.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C352-mappu-parayuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can say a press conference, a statement, the real facts, to exaggerate and to say sorry.",
+    "assesses": [
+      "ML-LEX-C352-PRESS352-03",
+      "ML-LEX-C352-PRESS352-04",
+      "ML-LEX-C352-PRESS352-05"
+    ]
+  }
+}

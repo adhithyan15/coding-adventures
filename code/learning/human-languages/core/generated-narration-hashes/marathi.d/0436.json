@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:26ccf0cb49826ba9",
+  "lessonIds": [
+    "MR-C436-vatavaran",
+    "MR-C436-usnata",
+    "MR-C436-ukada",
+    "MR-C436-damat",
+    "MR-C436-talapne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch436.txt",
+  "json": "marathi/narration/ch436.json",
+  "textHash": "fnv1a64:6b18b9556faa29c5",
+  "jsonHash": "fnv1a64:e1767dffdc5e5759",
+  "findings": []
+}

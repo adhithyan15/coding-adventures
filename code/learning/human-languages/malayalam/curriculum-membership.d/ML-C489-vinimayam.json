@@ -1,0 +1,11 @@
+{
+  "id": "ML-C489-vinimayam",
+  "pathSegment": "ML-PATH-489-PANAM489",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-489-PANAM489",
+      "order": 1
+    }
+  ]
+}

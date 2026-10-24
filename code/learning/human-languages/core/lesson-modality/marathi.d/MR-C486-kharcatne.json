@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C486-kharcatne",
+    "language": "marathi",
+    "chapter": 486,
+    "sequence": 27860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42ce81291f544874"
+  },
+  "findings": []
+}

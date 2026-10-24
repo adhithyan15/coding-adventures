@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C475-sangamam",
+    "language": "telugu",
+    "chapter": 475,
+    "sequence": 23890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:977f0653ba64b986"
+  },
+  "findings": []
+}

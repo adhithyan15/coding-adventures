@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "How to Tell a Story",
+  "label": "ch:ka-how-to-tell-a-story",
+  "canDo": "I can say to narrate, to describe vividly, a situation, an episode and a background.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C343-hinnele",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can say to narrate, to describe vividly, a situation, an episode and a background.",
+    "assesses": [
+      "KA-LEX-C343-NIRUPANE343-03",
+      "KA-LEX-C343-NIRUPANE343-04",
+      "KA-LEX-C343-NIRUPANE343-05"
+    ]
+  }
+}

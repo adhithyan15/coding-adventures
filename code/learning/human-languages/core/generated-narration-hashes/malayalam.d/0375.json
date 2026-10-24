@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:afe2f9954547778b",
+  "lessonIds": [
+    "ML-C375-raksakan",
+    "ML-C375-sannaddhapravarttakan",
+    "ML-C375-raksikkuka",
+    "ML-C375-raksappetuka",
+    "ML-C375-kutunnuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch375.txt",
+  "json": "malayalam/narration/ch375.json",
+  "textHash": "fnv1a64:8f505489b5efa157",
+  "jsonHash": "fnv1a64:9ca9beabb44d98cc",
+  "findings": []
+}

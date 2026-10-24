@@ -1,0 +1,24 @@
+{
+  "chapter": 345,
+  "title": "Feelings and Hopes",
+  "label": "ch:ml-feelings-and-hopes",
+  "canDo": "I can say how I felt and how I feel with the dative and tōnnuka, tell a feeling as scene or as event, and say what I hope to do or become.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-R345-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete ML-R345-feelings-and-hopes: feelings with enikkŭ … tōnni, sorrow with duḥkhaṁ and its visarga, and a wish with -ān āgrahamuṇṭŭ.",
+    "assesses": [
+      "ML-LEX-C345-DUHKHAM-01",
+      "ML-SCRIPT-C345-VISARGA-01",
+      "ML-GRAMMAR-C345-FELT-01",
+      "ML-GRAMMAR-C345-FEELING-SCENE-EVENT-01",
+      "ML-GRAMMAR-C345-AAN-AGRAHAM-01",
+      "ML-GRAMMAR-C345-ENNANU-AGRAHAM-01",
+      "ML-LEX-C344-SAUKARYAM-01",
+      "ML-GRAMMAR-C344-LOST-REPORT-01"
+    ]
+  }
+}

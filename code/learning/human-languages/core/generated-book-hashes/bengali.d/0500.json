@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:1e13670b39f372ed",
+  "lessonIds": [
+    "BN-C500-bibhag",
+    "BN-C500-hukum",
+    "BN-C500-kormosthol",
+    "BN-C500-sara",
+    "BN-C500-todarok-kora"
+  ],
+  "tex": "bengali/book/chapters/ch500-orders-and-departments.tex"
+}

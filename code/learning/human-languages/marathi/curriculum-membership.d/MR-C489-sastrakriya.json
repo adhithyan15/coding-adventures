@@ -1,0 +1,11 @@
+{
+  "id": "MR-C489-sastrakriya",
+  "pathSegment": "MR-PATH-489-LAS489",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-489-LAS489",
+      "order": 1
+    }
+  ]
+}

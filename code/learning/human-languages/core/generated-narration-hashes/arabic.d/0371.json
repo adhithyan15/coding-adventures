@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:fc16712cd34c40da",
+  "lessonIds": [
+    "AR-C371-wasila",
+    "AR-C371-saa",
+    "AR-C371-anjaza",
+    "AR-C371-sahama",
+    "AR-C371-hafiz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch371.txt",
+  "json": "arabic/narration/ch371.json",
+  "textHash": "fnv1a64:a1a8fd461c56276c",
+  "jsonHash": "fnv1a64:daa86cae90f70a3a",
+  "findings": []
+}

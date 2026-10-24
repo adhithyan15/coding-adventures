@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:a56434063ebb29bc",
+  "lessonIds": [
+    "BN-C488-shoishob",
+    "BN-C488-koishor",
+    "BN-C488-joubon",
+    "BN-C488-bardhokyo",
+    "BN-C488-bere-otha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch488.txt",
+  "json": "bengali/narration/ch488.json",
+  "textHash": "fnv1a64:dc0d49ecf278cc92",
+  "jsonHash": "fnv1a64:54bf91066e5c97eb",
+  "findings": []
+}

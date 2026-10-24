@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:0c210a92e7f1ed89",
+  "lessonIds": [
+    "HI-C487-chut",
+    "HI-C487-sankraman",
+    "HI-C487-khasra",
+    "HI-C487-cecak",
+    "HI-C487-pakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch487.txt",
+  "json": "hindi/narration/ch487.json",
+  "textHash": "fnv1a64:ad924bc8a76e8fbd",
+  "jsonHash": "fnv1a64:79819f4302066bc1",
+  "findings": []
+}

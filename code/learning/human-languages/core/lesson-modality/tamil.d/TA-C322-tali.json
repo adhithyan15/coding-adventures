@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C322-tali",
+    "language": "tamil",
+    "chapter": 322,
+    "sequence": 18540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2671d2d01fe85f9"
+  },
+  "findings": []
+}

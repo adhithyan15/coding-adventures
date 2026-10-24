@@ -1,0 +1,11 @@
+{
+  "id": "TE-C529-menatta",
+  "pathSegment": "TE-PATH-529-MENAMAMA529",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-529-MENAMAMA529",
+      "order": 1
+    }
+  ]
+}

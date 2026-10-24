@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 529,
+  "title": "A Day at the Match",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0cd1838b78ff4ad9",
+  "lessons": [
+    {
+      "id": "MR-C529-samna",
+      "sequence": 30280,
+      "title": "सामना (sāmnā) — a match; a contest",
+      "headword": "सामना",
+      "romanization": "sāmnā",
+      "gloss": "a match; a contest",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ac1a7eadb5df3b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for entertainment, then the Marathi for to be absorbed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सामना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सामना — sāmnā — \"a match; a contest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "काल क्रिकेटचा सामना खूप रंगला. kāl krikeṭcā sāmnā khūp raṅglā. Yesterday's cricket match was very exciting."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The oblique is सामन्या-: सामन्यात."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सामना (sāmnā) is usually linked with Hindi sāmnā, \"a facing, a confrontation\". CDIAL sets the words for facing and in front under Sanskrit saṁmukha, \"facing\" (CDIAL 12982), but lists no सामना, so the path is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāmnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāmnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāmnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāmnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāl krikeṭcā sāmnā khūp raṅglā. — Yesterday's cricket match was very exciting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāl krikeṭcā sāmnā khūp raṅglā.* — Yesterday's cricket match was very exciting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for entertainment, then the Marathi for to be absorbed, then say sāmnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for entertainment, then the Marathi for to be absorbed, then say *sāmnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सामना (sāmnā) mean? (\"A match; a contest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C529-karnadhar",
+      "sequence": 30290,
+      "title": "कर्णधार (karṇadhār) — a team captain",
+      "headword": "कर्णधार",
+      "romanization": "karṇadhār",
+      "gloss": "a team captain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4be4e4ee39139a23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to be absorbed, then the Marathi for a match."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कर्णधार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कर्णधार — karṇadhār — \"a team captain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा आमच्या संघाची कर्णधार आहे. mīrā āmcyā saṅghācī karṇadhār āhe. Meera is our team's captain."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "One word for a man or a woman."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कर्णधार (karṇadhār) is a tatsama, taken from Sanskrit karṇadhāra, \"helmsman\" (Monier-Williams): the captain steers the team."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karṇadhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karṇadhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karṇadhār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karṇadhār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā āmcyā saṅghācī karṇadhār āhe. — Meera is our team's captain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā āmcyā saṅghācī karṇadhār āhe.* — Meera is our team's captain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to be absorbed, then the Marathi for a match, then say karṇadhār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to be absorbed, then the Marathi for a match, then say *karṇadhār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कर्णधार (karṇadhār) mean? (\"A team captain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C529-panc",
+      "sequence": 30300,
+      "title": "पंच (pañc) — an umpire; a referee",
+      "headword": "पंच",
+      "romanization": "pañc",
+      "gloss": "an umpire; a referee",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e323a8aa49c33e3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a match, then the Marathi for a team captain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पंच",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पंच — pañc — \"an umpire; a referee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पंचांनी पावसामुळे खेळ थांबवला. pañcānnī pāvsāmuḷe kheḷ thāmbavlā. The umpires stopped play because of the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A match has two, so often plural: पंचांनी, the umpires."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पंच (pañc) is a tadbhava of Sanskrit pañca, \"five\" (CDIAL 7655): a council of five once settled disputes, and the word came to mean a judge of fair play."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pañc",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pañc*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pañc, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pañc*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pañcānnī pāvsāmuḷe kheḷ thāmbavlā. — The umpires stopped play because of the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pañcānnī pāvsāmuḷe kheḷ thāmbavlā.* — The umpires stopped play because of the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a match, then the Marathi for a team captain, then say pañc again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a match, then the Marathi for a team captain, then say *pañc* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पंच (pañc) mean? (\"An umpire; a referee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C529-maidan",
+      "sequence": 30310,
+      "title": "मैदान (maidān) — a playing field; a ground",
+      "headword": "मैदान",
+      "romanization": "maidān",
+      "gloss": "a playing field; a ground",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bb396d00651e9d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a team captain, then the Marathi for an umpire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मैदान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मैदान — maidān — \"a playing field; a ground\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शाळेच्या मैदानावर रोज संध्याकाळी मुलं खेळतात. śāḷecyā maidānāvar roj sandhyākāḷī mulaṁ kheḷtāt. Children play on the school ground every evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मैदान (maidān) is a loan from Persian maidān, \"open ground, a field\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maidān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maidān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maidān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maidān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāḷecyā maidānāvar roj sandhyākāḷī mulaṁ kheḷtāt. — Children play on the school ground every evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāḷecyā maidānāvar roj sandhyākāḷī mulaṁ kheḷtāt.* — Children play on the school ground every evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a team captain, then the Marathi for an umpire, then say maidān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a team captain, then the Marathi for an umpire, then say *maidān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मैदान (maidān) mean? (\"A playing field; a ground\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C529-mat-karne",
+      "sequence": 30320,
+      "title": "मात करणे (māt karṇe) — to overcome; to beat",
+      "headword": "मात करणे",
+      "romanization": "māt karṇe",
+      "gloss": "to overcome; to beat",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2cfd156222c6447d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an umpire, then the Marathi for a playing field."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मात करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मात करणे — māt karṇe — \"to overcome; to beat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आमच्या संघाने मोठ्या संघावर मात केली. āmcyā saṅghāne moṭhyā saṅghāvar māt kelī. Our team beat a bigger team."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने अडचणींवर मात केली, tyāne aḍcaṇīṁvar māt kelī."
+            },
+            {
+              "kind": "speech",
+              "text": "The one beaten takes -वर: संघावर मात करणे (māt karṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मात करणे (māt karṇe) is मात, a loan from Persian māt, \"checkmated\", usually traced to Arabic, with करणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māt karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māt karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māt karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māt karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmcyā saṅghāne moṭhyā saṅghāvar māt kelī. — Our team beat a bigger team.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmcyā saṅghāne moṭhyā saṅghāvar māt kelī.* — Our team beat a bigger team.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an umpire, then the Marathi for a playing field, then say māt karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an umpire, then the Marathi for a playing field, then say *māt karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मात करणे (māt karṇe) mean? (\"To overcome; to beat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

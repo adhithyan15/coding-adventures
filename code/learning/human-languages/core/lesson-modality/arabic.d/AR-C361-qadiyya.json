@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C361-qadiyya",
+    "language": "arabic",
+    "chapter": 361,
+    "sequence": 20550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95019fb963ae6e8b"
+  },
+  "findings": []
+}

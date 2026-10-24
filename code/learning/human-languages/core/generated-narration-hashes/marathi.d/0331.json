@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:9c4543a6c425d4df",
+  "lessonIds": [
+    "MR-C331-vedha",
+    "MR-C331-gherne",
+    "MR-C331-khandak",
+    "MR-C331-tatbandi",
+    "MR-C331-buruj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch331.txt",
+  "json": "marathi/narration/ch331.json",
+  "textHash": "fnv1a64:b3132600b116683e",
+  "jsonHash": "fnv1a64:dc5815b9f04d74ce",
+  "findings": []
+}

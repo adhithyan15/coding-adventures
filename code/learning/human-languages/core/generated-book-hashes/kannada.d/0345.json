@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:f202c9b261b9ae86",
+  "lessonIds": [
+    "KA-C345-adagu",
+    "KA-C345-talemaresiko",
+    "KA-C345-bennattu",
+    "KA-C345-gudhacara",
+    "KA-C345-nusulu"
+  ],
+  "tex": "kannada/book/chapters/ch345-the-spy-in-the-palace.tex"
+}

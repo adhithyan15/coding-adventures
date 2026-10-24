@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:33940d9d365bdfd2",
+  "lessonIds": [
+    "MR-C510-raja-leave",
+    "MR-C510-bekari",
+    "MR-C510-rajinama-dene",
+    "MR-C510-nivrtta-hone",
+    "MR-C510-badtarph-karne"
+  ],
+  "tex": "marathi/book/chapters/ch510-leaving-work.tex"
+}

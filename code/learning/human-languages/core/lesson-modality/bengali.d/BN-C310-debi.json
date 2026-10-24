@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C310-debi",
+    "language": "bengali",
+    "chapter": 310,
+    "sequence": 19770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9578e8dc9ae97a76"
+  },
+  "findings": []
+}

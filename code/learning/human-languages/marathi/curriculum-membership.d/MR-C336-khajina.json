@@ -1,0 +1,11 @@
+{
+  "id": "MR-C336-khajina",
+  "pathSegment": "MR-PATH-336-LENI336",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-336-LENI336",
+      "order": 4
+    }
+  ]
+}

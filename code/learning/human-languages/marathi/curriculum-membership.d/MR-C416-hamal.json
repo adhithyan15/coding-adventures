@@ -1,0 +1,11 @@
+{
+  "id": "MR-C416-hamal",
+  "pathSegment": "MR-PATH-416-HAMAL416",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-416-HAMAL416",
+      "order": 3
+    }
+  ]
+}

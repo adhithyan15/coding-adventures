@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C530-keram",
+    "language": "tamil",
+    "chapter": 530,
+    "sequence": 30360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69175c55995f8bca"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C399-bhromon-kora",
+    "language": "bengali",
+    "chapter": 399,
+    "sequence": 24760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba8b00678244f713"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C343-khatara",
+    "language": "arabic",
+    "chapter": 343,
+    "sequence": 19600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84390867b4604527"
+  },
+  "findings": []
+}

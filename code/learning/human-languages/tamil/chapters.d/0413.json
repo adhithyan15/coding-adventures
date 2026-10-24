@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Pilots and Customs",
+  "label": "ch:ta-pilots-and-customs",
+  "canDo": "I can talk about a pilot, landing, a wing, customs and immigration.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C413-kutivaravu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can talk about a pilot, landing, a wing, customs and immigration.",
+    "assesses": [
+      "TA-LEX-C413-VIMANI413-03",
+      "TA-LEX-C413-VIMANI413-04",
+      "TA-LEX-C413-VIMANI413-05"
+    ]
+  }
+}

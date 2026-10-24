@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 404,
+  "title": "Traffic Jams",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f320f2729c6e4d60",
+  "lessons": [
+    {
+      "id": "HI-C404-traifik",
+      "sequence": 22300,
+      "title": "ट्रैफ़िक (ṭraifik) — traffic",
+      "headword": "ट्रैफ़िक",
+      "romanization": "ṭraifik",
+      "gloss": "traffic",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6f44317837a6082",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to take a stroll, then the Hindi for to pant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ट्रैफ़िक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ट्रैफ़िक — ṭraifik — \"traffic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शाम को सड़क पर बहुत ट्रैफ़िक होता है। śām ko saṛak par bahut ṭraifik hotā hai. There is a lot of traffic on the road in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ट्रैफ़िक (ṭraifik) is borrowed from English traffic, and like its source it takes no plural: बहुत ट्रैफ़िक, a lot of traffic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭraifik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭraifik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭraifik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭraifik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śām ko saṛak par bahut ṭraifik hotā hai. — There is a lot of traffic on the road in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śām ko saṛak par bahut ṭraifik hotā hai.* — There is a lot of traffic on the road in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to take a stroll, then the Hindi for to pant, then say ṭraifik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to take a stroll, then the Hindi for to pant, then say *ṭraifik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ट्रैफ़िक (ṭraifik) mean? (\"Traffic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C404-jam",
+      "sequence": 22310,
+      "title": "जाम (jām) — a traffic jam",
+      "headword": "जाम",
+      "romanization": "jām",
+      "gloss": "a traffic jam",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:907ac17c0de64b74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to pant, then the Hindi for traffic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जाम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जाम — jām — \"a traffic jam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुल पर बड़ा जाम था। pul par baṛā jām thā. There was a big jam on the bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "जाम (jām) लगना, for a jam to build up: सड़क पर जाम (jām) लगा है."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जाम (jām) is borrowed from English jam, a road packed so tight that nothing moves."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pul par baṛā jām thā. — There was a big jam on the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pul par baṛā jām thā.* — There was a big jam on the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to pant, then the Hindi for traffic, then say jām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to pant, then the Hindi for traffic, then say *jām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जाम (jām) mean? (\"A traffic jam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C404-motarsaikil",
+      "sequence": 22320,
+      "title": "मोटरसाइकिल (moṭarsāikil) — a motorcycle",
+      "headword": "मोटरसाइकिल",
+      "romanization": "moṭarsāikil",
+      "gloss": "a motorcycle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08fa8bc7149dfd56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for traffic, then the Hindi for a traffic jam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मोटरसाइकिल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोटरसाइकिल — moṭarsāikil — \"a motorcycle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुण मोटरसाइकिल से दफ़्तर जाता है। Aruṇ moṭarsāikil se daftar jātā hai. Arun goes to the office by motorcycle."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोटरसाइकिल (moṭarsāikil) is borrowed from English motorcycle; like साइकिल it is feminine in Hindi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭarsāikil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭarsāikil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭarsāikil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭarsāikil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ moṭarsāikil se daftar jātā hai. — Arun goes to the office by motorcycle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ moṭarsāikil se daftar jātā hai.* — Arun goes to the office by motorcycle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for traffic, then the Hindi for a traffic jam, then say moṭarsāikil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for traffic, then the Hindi for a traffic jam, then say *moṭarsāikil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मोटरसाइकिल (moṭarsāikil) mean? (\"A motorcycle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C404-rengna",
+      "sequence": 22330,
+      "title": "रेंगना (reṅgnā) — to crawl",
+      "headword": "रेंगना",
+      "romanization": "reṅgnā",
+      "gloss": "to crawl",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d85f7d7bb86e4c32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a traffic jam, then the Hindi for a motorcycle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रेंगना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रेंगना — reṅgnā — \"to crawl\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जाम में गाड़ियाँ रेंग रही थीं। jām meṁ gāṛiyā̃ reṅg rahī thīṁ. The cars were crawling along in the jam."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह साँप घास में रेंगा, vah sā̃p ghās meṁ reṅgā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रेंगना (reṅgnā) is a tadbhava of Sanskrit riṅgati, \"crawls\" (CDIAL 10739), which lists Hindi rẽgnā. A baby, a snake and a jammed lane of traffic all crawl."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reṅgnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reṅgnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reṅgnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reṅgnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jām meṁ gāṛiyā̃ reṅg rahī thīṁ. — The cars were crawling along in the jam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jām meṁ gāṛiyā̃ reṅg rahī thīṁ.* — The cars were crawling along in the jam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a traffic jam, then the Hindi for a motorcycle, then say reṅgnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a traffic jam, then the Hindi for a motorcycle, then say *reṅgnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रेंगना (reṅgnā) mean? (\"To crawl\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C404-hakna",
+      "sequence": 22340,
+      "title": "हाँकना (hā̃knā) — to drive (animals); to drive (a cart)",
+      "headword": "हाँकना",
+      "romanization": "hā̃knā",
+      "gloss": "to drive (animals); to drive (a cart)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3fc315b540d22da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a motorcycle, then the Hindi for to crawl."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हाँकना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाँकना — hā̃knā — \"to drive (animals); to drive (a cart)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एक किसान सड़क पर भैंसें हाँक रहा था। ek kisān saṛak par bhaĩsẽ hā̃k rahā thā. A farmer was driving buffaloes along the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने गायें हाँकीं, usne gāyẽ hā̃kīṁ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाँकना (hā̃knā) is a tadbhava of Sanskrit hakkayati, \"calls to\" (CDIAL 13939), which lists Hindi hā̃knā, \"to cry out, drive off\": cattle are driven by shouting at them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā̃knā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā̃knā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā̃knā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā̃knā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek kisān saṛak par bhaĩsẽ hā̃k rahā thā. — A farmer was driving buffaloes along the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek kisān saṛak par bhaĩsẽ hā̃k rahā thā.* — A farmer was driving buffaloes along the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a motorcycle, then the Hindi for to crawl, then say hā̃knā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a motorcycle, then the Hindi for to crawl, then say *hā̃knā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हाँकना (hā̃knā) mean? (\"To drive (animals); to drive (a cart)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

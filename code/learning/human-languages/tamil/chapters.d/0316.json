@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "That Very Day",
+  "label": "ch:ta-that-very-day",
+  "canDo": "I can place events on a day in a story.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C316-ate-camayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can place events on a day in a story.",
+    "assesses": [
+      "TA-LEX-C316-ANNAAL316-03",
+      "TA-LEX-C316-ANNAAL316-04",
+      "TA-LEX-C316-ANNAAL316-05"
+    ]
+  }
+}

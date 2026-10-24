@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C407-londri",
+    "language": "bengali",
+    "chapter": 407,
+    "sequence": 25210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb4fc9d2c9319026"
+  },
+  "findings": []
+}

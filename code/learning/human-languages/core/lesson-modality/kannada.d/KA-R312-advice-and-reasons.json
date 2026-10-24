@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R312-advice-and-reasons",
+    "language": "kannada",
+    "chapter": 312,
+    "sequence": 15150,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bcdcd3dfe4d16231"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:87c696e0edf03bb9",
+  "lessonIds": [
+    "TE-C474-sikharam",
+    "TE-C474-pithabhumi",
+    "TE-C474-khandam",
+    "TE-C474-agniparvatam",
+    "TE-C474-prasantamaina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch474.txt",
+  "json": "telugu/narration/ch474.json",
+  "textHash": "fnv1a64:021bcda897829f59",
+  "jsonHash": "fnv1a64:0a2cbe1737b01278",
+  "findings": []
+}

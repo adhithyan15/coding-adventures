@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 323,
+  "title": "A Crime in the Town",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:10a52bfbdd5c7514",
+  "lessons": [
+    {
+      "id": "KA-C323-aparadha",
+      "sequence": 16200,
+      "title": "ಅಪರಾಧ (aparādha) — a crime; an offence",
+      "headword": "ಅಪರಾಧ",
+      "romanization": "aparādha",
+      "gloss": "a crime; an offence",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eab1b3055198fd8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a throne, then the Kannada for a crown."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಪರಾಧ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಪರಾಧ — aparādha — \"a crime; an offence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಪರಾಧ ಮಾಡಿದರೆ ಶಿಕ್ಷೆ ಸಿಗುತ್ತದೆ. aparādha māḍidare śikṣe siguttade. If you commit a crime, you get punished."
+            },
+            {
+              "kind": "speech",
+              "text": "One who commits a crime is an ಅಪರಾಧಿ, a criminal. A crime is \"done\": ಅಪರಾಧ (aparādha) ಮಾಡು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಪರಾಧ (aparādha) is borrowed from Sanskrit aparādha, \"an offence, a fault\" (CDIAL 439)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aparādha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aparādha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aparādha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aparādha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aparādha māḍidare śikṣe siguttade. — If you commit a crime, you get punished.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aparādha māḍidare śikṣe siguttade.* — If you commit a crime, you get punished.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a throne, then the Kannada for a crown, then say aparādha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a throne, then the Kannada for a crown, then say *aparādha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಪರಾಧ (aparādha) mean? (\"A crime; an offence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C323-bandhisu",
+      "sequence": 16210,
+      "title": "ಬಂಧಿಸು (bandhisu) — to arrest",
+      "headword": "ಬಂಧಿಸು",
+      "romanization": "bandhisu",
+      "gloss": "to arrest",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcc0ec35884f42b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a crown, then the Kannada for a crime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಂಧಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಂಧಿಸು — bandhisu — \"to arrest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೊಲೀಸರು ಕಳ್ಳನನ್ನು ಬೆಳಗ್ಗೆ ಬಂಧಿಸಿದರು. polīsaru kaḷḷanannu beḷagge bandhisidaru. The police arrested the thief in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಬಂಧಿಸಿದೆ, bandhiside."
+            },
+            {
+              "kind": "speech",
+              "text": "The person arrested takes -ಅನ್ನು: ಕಳ್ಳನನ್ನು ಬಂಧಿಸು (bandhisu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಂಧಿಸು (bandhisu) is built on Sanskrit bandha, \"a bond\", and also \"custody\" (CDIAL 9136), from the root bandh, \"to bind\", with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandhisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandhisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandhisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandhisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīsaru kaḷḷanannu beḷagge bandhisidaru. — The police arrested the thief in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīsaru kaḷḷanannu beḷagge bandhisidaru.* — The police arrested the thief in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a crown, then the Kannada for a crime, then say bandhisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a crown, then the Kannada for a crime, then say *bandhisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಂಧಿಸು (bandhisu) mean? (\"To arrest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C323-thane",
+      "sequence": 16220,
+      "title": "ಠಾಣೆ (ṭhāṇe) — a police station",
+      "headword": "ಠಾಣೆ",
+      "romanization": "ṭhāṇe",
+      "gloss": "a police station",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:572488d3b3d08057",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a crime, then the Kannada for to arrest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಠಾಣೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಠಾಣೆ — ṭhāṇe — \"a police station\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಠಾಣೆಗೆ ಹೋಗಿ ದೂರು ಕೊಟ್ಟೆ. nānu ṭhāṇege hōgi dūru koṭṭe. I went to the police station and made a complaint."
+            },
+            {
+              "kind": "speech",
+              "text": "In full it is ಪೊಲೀಸ್ ಠಾಣೆ (ṭhāṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಠಾಣೆ (ṭhāṇe) came through Hindustani thānā, \"a post, a police station\", which goes back to Sanskrit sthāna, \"a place, an abode\" (CDIAL 13753)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhāṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhāṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhāṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhāṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu ṭhāṇege hōgi dūru koṭṭe. — I went to the police station and made a complaint.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu ṭhāṇege hōgi dūru koṭṭe.* — I went to the police station and made a complaint.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a crime, then the Kannada for to arrest, then say ṭhāṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a crime, then the Kannada for to arrest, then say *ṭhāṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಠಾಣೆ (ṭhāṇe) mean? (\"A police station\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C323-tanikhe",
+      "sequence": 16230,
+      "title": "ತನಿಖೆ (tanikhe) — an investigation",
+      "headword": "ತನಿಖೆ",
+      "romanization": "tanikhe",
+      "gloss": "an investigation",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77dcabd84b156022",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to arrest, then the Kannada for a police station."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತನಿಖೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತನಿಖೆ — tanikhe — \"an investigation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೊಲೀಸರು ಆ ಘಟನೆಯ ತನಿಖೆ ಶುರು ಮಾಡಿದರು. polīsaru ā ghaṭaneya tanikhe śuru māḍidaru. The police began an investigation into that incident."
+            },
+            {
+              "kind": "speech",
+              "text": "ತನಿಖೆ (tanikhe) ಮಾಡು, to investigate. What is investigated takes the possessive -ಅ: ಘಟನೆಯ ತನಿಖೆ (tanikhe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತನಿಖೆ (tanikhe) is usually traced to Hindustani tanqīh, \"an inquiry, an investigation\", a word of Arabic origin; the path into Kannada is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanikhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanikhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanikhe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanikhe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīsaru ā ghaṭaneya tanikhe śuru māḍidaru. — The police began an investigation into that incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīsaru ā ghaṭaneya tanikhe śuru māḍidaru.* — The police began an investigation into that incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to arrest, then the Kannada for a police station, then say tanikhe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to arrest, then the Kannada for a police station, then say *tanikhe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತನಿಖೆ (tanikhe) mean? (\"An investigation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C323-sankisu",
+      "sequence": 16240,
+      "title": "ಶಂಕಿಸು (śaṅkisu) — to suspect",
+      "headword": "ಶಂಕಿಸು",
+      "romanization": "śaṅkisu",
+      "gloss": "to suspect",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56f51161bfec33dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a police station, then the Kannada for an investigation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಶಂಕಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶಂಕಿಸು — śaṅkisu — \"to suspect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೊಲೀಸರು ಆ ಕೆಲಸಗಾರನನ್ನು ಶಂಕಿಸಿದರು. polīsaru ā kelasagāranannu śaṅkisidaru. The police suspected that worker."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಶಂಕಿಸಿದೆ, śaṅkiside."
+            },
+            {
+              "kind": "speech",
+              "text": "The person suspected takes -ಅನ್ನು. The noun is ಶಂಕೆ, a suspicion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶಂಕಿಸು (śaṅkisu) is built on Sanskrit śaṅkā, \"fear, distrust, suspicion\" (CDIAL 12258), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaṅkisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaṅkisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaṅkisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaṅkisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīsaru ā kelasagāranannu śaṅkisidaru. — The police suspected that worker.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīsaru ā kelasagāranannu śaṅkisidaru.* — The police suspected that worker.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a police station, then the Kannada for an investigation, then say śaṅkisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a police station, then the Kannada for an investigation, then say *śaṅkisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಶಂಕಿಸು (śaṅkisu) mean? (\"To suspect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

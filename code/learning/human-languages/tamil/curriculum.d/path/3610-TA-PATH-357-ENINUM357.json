@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-357-ENINUM357",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-357-ENINUM357"
+  ],
+  "after": []
+}

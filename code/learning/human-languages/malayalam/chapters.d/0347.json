@@ -1,0 +1,24 @@
+{
+  "chapter": 347,
+  "title": "If It Rains",
+  "label": "ch:ml-if-it-rains",
+  "canDo": "I can say what will happen if something happens, check a fact with -eṅkil, and give the other outcome with illeṅkil.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-R347-if-and-otherwise",
+    "kind": "production",
+    "summary": "Complete ML-R347-if-and-otherwise: real conditions with -āl and the future, -eṅkil on a full verb, and illeṅkil for \"otherwise\".",
+    "assesses": [
+      "ML-GRAMMAR-C347-REAL-CONDITION-01",
+      "ML-GRAMMAR-C347-ENKIL-VERB-01",
+      "ML-SCRIPT-C346-VOCALIC-R-01",
+      "ML-GRAMMAR-C347-ILLENKIL-01",
+      "ML-GRAMMAR-C347-NEGATIVE-CONDITION-01",
+      "ML-GRAMMAR-C342-ANAM-01",
+      "ML-GRAMMAR-C346-SPAN-AAYI-01",
+      "ML-GRAMMAR-C346-SINCE-MUTAL-01"
+    ]
+  }
+}

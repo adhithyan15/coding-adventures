@@ -35,7 +35,12 @@ A pending target may name only its planned
 conformance test and known divergences; promotion fields are rejected. A conformant target must
 name an executed package test, carry the exact raw `cases.json` SHA-256, bind a
 reachable tested revision, match the checked-out canonical package tree,
-and name the durable adoption PR. Revision and PR evidence are checked against
+and name the durable adoption PR. The only post-verification drift the tree
+check admits is a dependency lockfile refresh (`package-lock.json`,
+`Cargo.lock`, and the other files in the test's `DEPENDENCY_LOCK_FILES`), so
+repo-wide security bumps do not need a re-verification round trip; any other
+change, including a dependency range in a manifest, requires re-verifying the
+lane and repointing its evidence. Revision and PR evidence are checked against
 the durable backlog owner. The verified revision must be an ancestor of the
 checked-out commit, so a local-only pre-squash PR object cannot satisfy the
 repository gate when the durable GitHub history cannot resolve it. A conformant

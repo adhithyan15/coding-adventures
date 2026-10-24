@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Paying for the Room",
+  "label": "ch:ml-paying-for-the-room",
+  "canDo": "I can say to hire, a security deposit, to vacate, to refund and an arrangement.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C482-erppatu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can say to hire, a security deposit, to vacate, to refund and an arrangement.",
+    "assesses": [
+      "ML-LEX-C482-VATAKA482-03",
+      "ML-LEX-C482-VATAKA482-04",
+      "ML-LEX-C482-VATAKA482-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C520-cidu",
+  "pathSegment": "TE-PATH-520-KOLUKO520",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-520-KOLUKO520",
+      "order": 3
+    }
+  ]
+}

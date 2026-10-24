@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER split attribute block vertical slice",
+  "fixtures": [
+    {
+      "name": "split-attribute-blocks-merge-in-source-order",
+      "source": "erDiagram\nBOOK {\n  string title\n}\nBOOK {\n  string author\n  float price\n}"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-534-NENCU534",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say asthma, heartburn, constipation, insomnia and to have a cough.",
+  "prerequisites": []
+}

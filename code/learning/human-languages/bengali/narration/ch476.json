@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 476,
+  "title": "Out of Breath",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5e4c4bc8db6d2bd7",
+  "lessons": [
+    {
+      "id": "BN-C476-dom",
+      "sequence": 28940,
+      "title": "দম (dôm) — breath; stamina",
+      "headword": "দম",
+      "romanization": "dôm",
+      "gloss": "breath; stamina",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9c30317c8c75f60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to swell, then the Bengali for to stumble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দম — dôm — \"breath; stamina\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সাঁতার কাটলে দম বাড়ে। sā̃tār kāṭle dôm bāṛe. Swimming builds up your stamina."
+            },
+            {
+              "kind": "speech",
+              "text": "দম (dôm) নেওয়া, to take a breather."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দম (dôm) is usually traced to Persian dam, \"breath\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dôm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dôm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dôm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dôm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃tār kāṭle dôm bāṛe. — Swimming builds up your stamina.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃tār kāṭle dôm bāṛe.* — Swimming builds up your stamina.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to swell, then the Bengali for to stumble, then say dôm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to swell, then the Bengali for to stumble, then say *dôm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দম (dôm) mean? (\"Breath; stamina\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C476-hechki",
+      "sequence": 28950,
+      "title": "হেঁচকি (hẽchki) — a hiccup; hiccups",
+      "headword": "হেঁচকি",
+      "romanization": "hẽchki",
+      "gloss": "a hiccup; hiccups",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57cc1f4442102a8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to stumble, then the Bengali for stamina."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হেঁচকি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হেঁচকি — hẽchki — \"a hiccup; hiccups\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তাড়াতাড়ি খেলে আমার হেঁচকি হয়। tāṛātāṛi khele āmār hẽchki hôy. If I eat too fast I get hiccups."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হেঁচকি (hẽchki) is an imitative word, its sound standing for the catch of a hiccup. No dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hẽchki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hẽchki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hẽchki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hẽchki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāṛātāṛi khele āmār hẽchki hôy. — If I eat too fast I get hiccups.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāṛātāṛi khele āmār hẽchki hôy.* — If I eat too fast I get hiccups.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to stumble, then the Bengali for stamina, then say hẽchki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to stumble, then the Bengali for stamina, then say *hẽchki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হেঁচকি (hẽchki) mean? (\"A hiccup; hiccups\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C476-dhekur",
+      "sequence": 28960,
+      "title": "ঢেকুর (ḍhekur) — a burp; a belch",
+      "headword": "ঢেকুর",
+      "romanization": "ḍhekur",
+      "gloss": "a burp; a belch",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d0a92a22049e5b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for stamina, then the Bengali for hiccups."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঢেকুর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঢেকুর — ḍhekur — \"a burp; a belch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ভারী খাবারের পরে দাদু ঢেকুর তুললেন। bhārī khābārer pôre dādu ḍhekur tullen. After the heavy meal my grandfather burped."
+            },
+            {
+              "kind": "speech",
+              "text": "ঢেকুর (ḍhekur) তোলা, to burp."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঢেকুর (ḍhekur) is an imitative word for a belch; it shows the new letter ঢ. No dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhekur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhekur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhekur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhekur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhārī khābārer pôre dādu ḍhekur tullen. — After the heavy meal my grandfather burped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhārī khābārer pôre dādu ḍhekur tullen.* — After the heavy meal my grandfather burped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for stamina, then the Bengali for hiccups, then say ḍhekur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for stamina, then the Bengali for hiccups, then say *ḍhekur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঢেকুর (ḍhekur) mean? (\"A burp; a belch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C476-hapano",
+      "sequence": 28970,
+      "title": "হাঁপানো (hā̃pāno) — to pant; to be out of breath",
+      "headword": "হাঁপানো",
+      "romanization": "hā̃pāno",
+      "gloss": "to pant; to be out of breath",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0eb1b50c0ea4399",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for hiccups, then the Bengali for a burp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হাঁপানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাঁপানো — hā̃pāno — \"to pant; to be out of breath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তাড়াতাড়ি হেঁটে এসে দাদু হাঁপাচ্ছিলেন। tāṛātāṛi hẽṭe ese dādu hā̃pāchchhilen. Grandfather was panting after walking fast."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি হাঁপালেন, tini hā̃pālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাঁপানো (hā̃pāno) is listed by CDIAL for Bengali under a reconstructed root for panting (CDIAL 13973); হাঁপানি, asthma, is its noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā̃pāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā̃pāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā̃pāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā̃pāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāṛātāṛi hẽṭe ese dādu hā̃pāchchhilen. — Grandfather was panting after walking fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāṛātāṛi hẽṭe ese dādu hā̃pāchchhilen.* — Grandfather was panting after walking fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for hiccups, then the Bengali for a burp, then say hā̃pāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for hiccups, then the Bengali for a burp, then say *hā̃pāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হাঁপানো (hā̃pāno) mean? (\"To pant; to be out of breath\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C476-katrano",
+      "sequence": 28980,
+      "title": "কাতরানো (kātrāno) — to groan (in pain); to writhe",
+      "headword": "কাতরানো",
+      "romanization": "kātrāno",
+      "gloss": "to groan (in pain); to writhe",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c8a068188497784",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a burp, then the Bengali for to pant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কাতরানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাতরানো — kātrāno — \"to groan (in pain); to writhe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পেটব্যথায় রোগীটা সারারাত কাতরাল। peṭbæthāy rogīṭā sārārāt kātrālô. The patient groaned all night with a stomach ache."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ব্যথায় কাতরালেন, tini bæthāy kātrālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাতরানো (kātrāno) is the verb of kātôr, \"distressed\", Sanskrit kātara, \"timid, despairing, agitated\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kātrāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kātrāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kātrāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kātrāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṭbæthāy rogīṭā sārārāt kātrālô. — The patient groaned all night with a stomach ache.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṭbæthāy rogīṭā sārārāt kātrālô.* — The patient groaned all night with a stomach ache.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a burp, then the Bengali for to pant, then say kātrāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a burp, then the Bengali for to pant, then say *kātrāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কাতরানো (kātrāno) mean? (\"To groan (in pain); to writhe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

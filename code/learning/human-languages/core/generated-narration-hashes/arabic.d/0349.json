@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:478004c9213acb10",
+  "lessonIds": [
+    "AR-C349-li-l-marra-al-ula",
+    "AR-C349-an-tariq-al-khata",
+    "AR-C349-awwal-ams",
+    "AR-C349-yawman-ma",
+    "AR-C349-aqiba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch349.txt",
+  "json": "arabic/narration/ch349.json",
+  "textHash": "fnv1a64:3e453aee69ae1e6d",
+  "jsonHash": "fnv1a64:bebf50afc41fc0dc",
+  "findings": []
+}

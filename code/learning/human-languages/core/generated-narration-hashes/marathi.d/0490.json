@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:a5ae1a436872732b",
+  "lessonIds": [
+    "MR-C490-pathya",
+    "MR-C490-nirogi",
+    "MR-C490-pratikarsakti",
+    "MR-C490-sekne",
+    "MR-C490-colne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch490.txt",
+  "json": "marathi/narration/ch490.json",
+  "textHash": "fnv1a64:123055bfabb10426",
+  "jsonHash": "fnv1a64:f41a45ba579bd33a",
+  "findings": []
+}

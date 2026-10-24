@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:f3874b541cfba3a9",
+  "lessonIds": [
+    "KA-C478-haddu",
+    "KA-C478-kokkare",
+    "KA-C478-mincuhulu",
+    "KA-C478-edi",
+    "KA-C478-timingila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch478.txt",
+  "json": "kannada/narration/ch478.json",
+  "textHash": "fnv1a64:cbe4e36b2f063fbf",
+  "jsonHash": "fnv1a64:f81ce2832d6e3b8f",
+  "findings": []
+}

@@ -27,6 +27,17 @@
   comment text. The owner approved the removal. Real HTML-comment support is
   #17884. #17875 merged with this check red, because the check isn't
   required; this restores the gate on main.
+- **Annex B HTML close comments pass, and are listed.** javascript-lexer now
+  skips a line-leading `-->`, so all 7 results in
+  `annexB/language/comments/` that use only `-->` now pass
+  (`multi-line-html-close`, `single-line-html-close`, and
+  `single-line-html-close-first-line-1/2/3`). They were added with a filtered
+  `--update annexB/language/comments`, which adds only those 7 ids. It also
+  re-lists `single-line-html-close-asi.js` (both modes), which #17898 removed
+  when #17875's newline-led `--` split exposed its accidental pass; it now
+  passes because the comment is skipped (issue #17884). Full run at
+  `7ab7faf`: 69,062 pass, 0 regressions. The other 38 unlisted passes on
+  `main` are left to the changes that caused them.
 
 - **The budget rises to 4 MiB.** `parser` now shares memoised subtrees, so
   `string-upper-lower-mapping.js` parses in about 3 GB and five seconds and is

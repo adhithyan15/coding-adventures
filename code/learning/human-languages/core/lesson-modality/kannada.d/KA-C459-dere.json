@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C459-dere",
+    "language": "kannada",
+    "chapter": 459,
+    "sequence": 23360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57f539e6b19bf45c"
+  },
+  "findings": []
+}

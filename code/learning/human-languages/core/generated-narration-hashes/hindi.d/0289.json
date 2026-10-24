@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:29033e9e4d7f5ba3",
+  "lessonIds": [
+    "HI-C289-jebkatra",
+    "HI-C289-chinna",
+    "HI-C289-jhapatna",
+    "HI-C289-farar",
+    "HI-C289-picha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch289.txt",
+  "json": "hindi/narration/ch289.json",
+  "textHash": "fnv1a64:192dfc88f6cf9a31",
+  "jsonHash": "fnv1a64:1483b9f386fcce3d",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C269-tai-sejonno",
+  "pathSegment": "BN-PATH-269-SHOULD-SO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-269-SHOULD-SO",
+      "order": 3
+    }
+  ]
+}

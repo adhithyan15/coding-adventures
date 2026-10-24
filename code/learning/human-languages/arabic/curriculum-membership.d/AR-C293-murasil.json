@@ -1,0 +1,11 @@
+{
+  "id": "AR-C293-murasil",
+  "pathSegment": "AR-PATH-293-AKHBAR293",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-293-AKHBAR293",
+      "order": 0
+    }
+  ]
+}

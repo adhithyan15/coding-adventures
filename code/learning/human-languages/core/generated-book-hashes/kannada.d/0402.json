@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:8e1446b8d833b86b",
+  "lessonIds": [
+    "KA-C402-bhrastacara",
+    "KA-C402-lanca",
+    "KA-C402-paradarsaka",
+    "KA-C402-maremacu",
+    "KA-C402-sipharasu-madu"
+  ],
+  "tex": "kannada/book/chapters/ch402-bribes-and-secrets.tex"
+}

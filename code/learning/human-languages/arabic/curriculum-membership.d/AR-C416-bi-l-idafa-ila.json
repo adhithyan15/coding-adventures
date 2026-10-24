@@ -1,0 +1,11 @@
+{
+  "id": "AR-C416-bi-l-idafa-ila",
+  "pathSegment": "AR-PATH-416-BADAL416",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-416-BADAL416",
+      "order": 2
+    }
+  ]
+}

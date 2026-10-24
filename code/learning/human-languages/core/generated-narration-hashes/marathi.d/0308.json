@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:1ce141de6a4665e3",
+  "lessonIds": [
+    "MR-C308-pidhi",
+    "MR-C308-purvaj",
+    "MR-C308-varsa",
+    "MR-C308-vams",
+    "MR-C308-jatan-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch308.txt",
+  "json": "marathi/narration/ch308.json",
+  "textHash": "fnv1a64:2b77d22e65bcf1de",
+  "jsonHash": "fnv1a64:32068f5acd14d66c",
+  "findings": []
+}

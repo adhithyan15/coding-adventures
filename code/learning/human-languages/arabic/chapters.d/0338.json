@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Remembering the dead",
+  "label": "ch:ar-remembering-the-dead",
+  "canDo": "I can say a eulogy, a tomb, a death, a cemetery and a coffin.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C338-nash",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can say a eulogy, a tomb, a death, a cemetery and a coffin.",
+    "assesses": [
+      "AR-LEX-C338-MAWTA338-03",
+      "AR-LEX-C338-MAWTA338-04",
+      "AR-LEX-C338-MAWTA338-05"
+    ]
+  }
+}

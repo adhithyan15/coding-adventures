@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C411-vastavattil",
+    "language": "malayalam",
+    "chapter": 411,
+    "sequence": 20340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1b207afb1d4636d1"
+  },
+  "findings": []
+}

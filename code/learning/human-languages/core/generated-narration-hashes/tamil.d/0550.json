@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:55d20540fcdb37f1",
+  "lessonIds": [
+    "TA-C550-astivaram",
+    "TA-C550-cenkal",
+    "TA-C550-ciment",
+    "TA-C550-caram",
+    "TA-C550-mestiri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch550.txt",
+  "json": "tamil/narration/ch550.json",
+  "textHash": "fnv1a64:2e60fed7c14bf37f",
+  "jsonHash": "fnv1a64:ecfb66a495403bf1",
+  "findings": []
+}

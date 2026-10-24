@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C278-dhakka",
+    "language": "bengali",
+    "chapter": 278,
+    "sequence": 18100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80e8f3fd0647fc5d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:4c1cee30ed22ce1f",
+  "lessonIds": [
+    "TA-C523-tiruku",
+    "TA-C523-mattu",
+    "TA-C523-ataippu",
+    "TA-C523-vatikal",
+    "TA-C523-vatikattu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch523.txt",
+  "json": "tamil/narration/ch523.json",
+  "textHash": "fnv1a64:169fd7f28b0f5cbd",
+  "jsonHash": "fnv1a64:7bafb4a6af5f40f6",
+  "findings": []
+}

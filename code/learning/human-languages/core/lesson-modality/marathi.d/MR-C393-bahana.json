@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C393-bahana",
+    "language": "marathi",
+    "chapter": 393,
+    "sequence": 22620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ba9be7f123b891a"
+  },
+  "findings": []
+}

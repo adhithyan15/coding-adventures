@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:fbed20590bc3282b",
+  "lessonIds": [
+    "KA-C452-sarige",
+    "KA-C452-dipo",
+    "KA-C452-saraku",
+    "KA-C452-sagisu",
+    "KA-C452-koriyar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch452.txt",
+  "json": "kannada/narration/ch452.json",
+  "textHash": "fnv1a64:37a4c9ce1e037b74",
+  "jsonHash": "fnv1a64:f59c891d87683550",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:4ef9d0744865e3c2",
+  "lessonIds": [
+    "TA-C511-errumati",
+    "TA-C511-irakkumati",
+    "TA-C511-vanikam",
+    "TA-C511-tolilatipar",
+    "TA-C511-kuttali"
+  ],
+  "tex": "tamil/book/chapters/ch511-imports-and-exports.tex"
+}

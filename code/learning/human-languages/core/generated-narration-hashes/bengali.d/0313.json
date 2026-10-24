@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:572914917cd2095c",
+  "lessonIds": [
+    "BN-C313-rajyo",
+    "BN-C313-somrat",
+    "BN-C313-singhason",
+    "BN-C313-mukut",
+    "BN-C313-shason-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch313.txt",
+  "json": "bengali/narration/ch313.json",
+  "textHash": "fnv1a64:a8cfb947b8d4f6f7",
+  "jsonHash": "fnv1a64:436fc494799da905",
+  "findings": []
+}

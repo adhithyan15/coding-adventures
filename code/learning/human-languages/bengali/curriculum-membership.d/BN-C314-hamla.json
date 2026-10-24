@@ -1,0 +1,11 @@
+{
+  "id": "BN-C314-hamla",
+  "pathSegment": "BN-PATH-314-SHOTRU314",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-314-SHOTRU314",
+      "order": 3
+    }
+  ]
+}

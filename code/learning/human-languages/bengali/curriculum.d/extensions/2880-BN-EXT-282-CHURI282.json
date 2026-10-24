@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-282-CHURI282",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell how a thief got in and what was taken.",
+  "prerequisites": []
+}

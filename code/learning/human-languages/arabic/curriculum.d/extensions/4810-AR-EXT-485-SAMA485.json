@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-485-SAMA485",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say clear weather, a rainbow, dew, to shine and to grow dark.",
+  "prerequisites": []
+}

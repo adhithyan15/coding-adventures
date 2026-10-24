@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "A wedding",
+  "label": "ch:ar-a-wedding",
+  "canDo": "I can say a wedding feast, to propose marriage, an engagement, to escort a bride and to ululate.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C306-zaghrada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can say a wedding feast, to propose marriage, an engagement, to escort a bride and to ululate.",
+    "assesses": [
+      "AR-LEX-C306-URS306-03",
+      "AR-LEX-C306-URS306-04",
+      "AR-LEX-C306-URS306-05"
+    ]
+  }
+}

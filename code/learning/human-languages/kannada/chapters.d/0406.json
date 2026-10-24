@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "At the University",
+  "label": "ch:ka-at-the-university",
+  "canDo": "I can say a university, a degree, a lecture, a professor and to instruct.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C406-bodhisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can say a university, a degree, a lecture, a professor and to instruct.",
+    "assesses": [
+      "KA-LEX-C406-VISHVAVIDYALAYA406-03",
+      "KA-LEX-C406-VISHVAVIDYALAYA406-04",
+      "KA-LEX-C406-VISHVAVIDYALAYA406-05"
+    ]
+  }
+}

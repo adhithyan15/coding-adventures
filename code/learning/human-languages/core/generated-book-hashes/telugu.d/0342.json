@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:7a741b7c7fa2839a",
+  "lessonIds": [
+    "TE-C342-dandora",
+    "TE-C342-pramukhudu",
+    "TE-C342-sabha",
+    "TE-C342-prasangam",
+    "TE-C342-prasangincu"
+  ],
+  "tex": "telugu/book/chapters/ch342-a-public-meeting.tex"
+}

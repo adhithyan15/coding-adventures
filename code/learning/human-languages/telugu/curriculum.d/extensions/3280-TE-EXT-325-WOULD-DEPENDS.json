@@ -1,0 +1,10 @@
+{
+  "id": "TE-EXT-325-WOULD-DEPENDS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what something depends on, say what would have happened with -i uṇṭē … -ēvāḍini, and write six connected lines about a trip.",
+  "prerequisites": [
+    "TE-EXT-324-IF-REAL"
+  ]
+}

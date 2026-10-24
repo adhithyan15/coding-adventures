@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:bf76de4ee50142b1",
+  "lessonIds": [
+    "AR-C421-fursa",
+    "AR-C421-laalla",
+    "AR-C421-iktishaf",
+    "AR-C421-dhaka",
+    "AR-C421-ijtihad",
+    "AR-R421-review-414-421"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch421.txt",
+  "json": "arabic/narration/ch421.json",
+  "textHash": "fnv1a64:70453a67f87c2015",
+  "jsonHash": "fnv1a64:a80714caabdd59bd",
+  "findings": []
+}

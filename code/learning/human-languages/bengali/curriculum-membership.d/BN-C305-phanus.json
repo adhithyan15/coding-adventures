@@ -1,0 +1,11 @@
+{
+  "id": "BN-C305-phanus",
+  "pathSegment": "BN-PATH-305-PRODIP305",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-305-PRODIP305",
+      "order": 4
+    }
+  ]
+}

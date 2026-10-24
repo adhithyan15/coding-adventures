@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:242ab2980bf406eb",
+  "lessonIds": [
+    "KA-C310-svaccha",
+    "KA-S174-letter-chha",
+    "KA-C310-adara-nantara",
+    "KA-C310-bandu",
+    "KA-C310-atithigalu",
+    "KA-R310-a-story-in-order"
+  ],
+  "tex": "kannada/book/chapters/ch310-telling-a-story-in-order.tex"
+}

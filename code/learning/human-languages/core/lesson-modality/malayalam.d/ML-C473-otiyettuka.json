@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C473-otiyettuka",
+    "language": "malayalam",
+    "chapter": 473,
+    "sequence": 23650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c834608c6b601da"
+  },
+  "findings": []
+}

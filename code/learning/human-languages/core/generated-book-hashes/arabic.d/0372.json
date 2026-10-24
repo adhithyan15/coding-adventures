@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:d2249785d1822d2f",
+  "lessonIds": [
+    "AR-C372-aqaba",
+    "AR-C372-suuba",
+    "AR-C372-mudila",
+    "AR-C372-akhfaqa",
+    "AR-C372-tamakkana"
+  ],
+  "tex": "arabic/book/chapters/ch372-obstacles.tex"
+}

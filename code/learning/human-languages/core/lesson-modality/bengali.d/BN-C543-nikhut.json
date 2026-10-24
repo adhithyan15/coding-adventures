@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C543-nikhut",
+    "language": "bengali",
+    "chapter": 543,
+    "sequence": 32630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dba437d6aa4439c"
+  },
+  "findings": []
+}

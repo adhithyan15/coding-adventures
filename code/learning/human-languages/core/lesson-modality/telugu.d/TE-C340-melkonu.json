@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C340-melkonu",
+    "language": "telugu",
+    "chapter": 340,
+    "sequence": 16750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4cc20cce408fb0e"
+  },
+  "findings": []
+}

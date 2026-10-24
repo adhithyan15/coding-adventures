@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Rules and Methods",
+  "label": "ch:ka-rules-and-methods",
+  "canDo": "I can say to refer to, a criterion, a course of action, a method and a process.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C422-prakriye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can say to refer to, a criterion, a course of action, a method and a process.",
+    "assesses": [
+      "KA-LEX-C422-MANADANDA422-03",
+      "KA-LEX-C422-MANADANDA422-04",
+      "KA-LEX-C422-MANADANDA422-05"
+    ]
+  }
+}

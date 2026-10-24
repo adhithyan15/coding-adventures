@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Separation and Loss",
+  "label": "ch:bn-separation-and-loss",
+  "canDo": "I can talk about separation, widowhood, adoption and retirement.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C490-obosor-neoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about separation, widowhood, adoption and retirement.",
+    "assesses": [
+      "BN-LEX-C490-BICHCHHED490-03",
+      "BN-LEX-C490-BICHCHHED490-04",
+      "BN-LEX-C490-BICHCHHED490-05"
+    ]
+  }
+}

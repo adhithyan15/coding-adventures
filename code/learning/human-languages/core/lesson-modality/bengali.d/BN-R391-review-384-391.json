@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R391-review-384-391",
+    "language": "bengali",
+    "chapter": 391,
+    "sequence": 24400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f29bb2d23c0f59f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C433-band-padne",
+  "pathSegment": "MR-PATH-433-TADA433",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-433-TADA433",
+      "order": 4
+    }
+  ]
+}

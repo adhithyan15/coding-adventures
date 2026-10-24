@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C458-vicumpu",
+    "language": "tamil",
+    "chapter": 458,
+    "sequence": 26370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a430891c6c29bc32"
+  },
+  "findings": []
+}

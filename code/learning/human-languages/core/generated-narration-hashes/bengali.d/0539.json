@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:386f7e19eb4d41d2",
+  "lessonIds": [
+    "BN-C539-bighno",
+    "BN-C539-nachhorbanda",
+    "BN-C539-moriya",
+    "BN-C539-hal-chhara",
+    "BN-C539-jorano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch539.txt",
+  "json": "bengali/narration/ch539.json",
+  "textHash": "fnv1a64:3cfa1623a4508e93",
+  "jsonHash": "fnv1a64:238fc34527a2ee62",
+  "findings": []
+}

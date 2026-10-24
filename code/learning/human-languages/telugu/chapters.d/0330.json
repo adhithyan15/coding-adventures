@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "The Reporter",
+  "label": "ch:te-the-reporter",
+  "canDo": "I can say a reporter, a periodical, a headline, a news story and to publish.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C330-pracurincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can say a reporter, a periodical, a headline, a news story and to publish.",
+    "assesses": [
+      "TE-LEX-C330-PATRIKA330-03",
+      "TE-LEX-C330-PATRIKA330-04",
+      "TE-LEX-C330-PATRIKA330-05"
+    ]
+  }
+}

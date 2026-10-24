@@ -1,0 +1,11 @@
+{
+  "id": "MR-C366-hit",
+  "pathSegment": "MR-PATH-366-MULYA366",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-366-MULYA366",
+      "order": 4
+    }
+  ]
+}

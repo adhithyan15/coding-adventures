@@ -1,0 +1,11 @@
+{
+  "id": "HI-C485-dakar",
+  "pathSegment": "HI-PATH-485-CHAKKAR485",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-485-CHAKKAR485",
+      "order": 4
+    }
+  ]
+}

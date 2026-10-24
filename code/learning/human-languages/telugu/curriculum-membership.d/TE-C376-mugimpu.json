@@ -1,0 +1,11 @@
+{
+  "id": "TE-C376-mugimpu",
+  "pathSegment": "TE-PATH-376-SPANDANA376",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-376-SPANDANA376",
+      "order": 2
+    }
+  ]
+}

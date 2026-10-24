@@ -1,0 +1,11 @@
+{
+  "language": "arabic",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:121841bd8bb56db0",
+  "lessonIds": [
+    "AR-C291-idha",
+    "AR-C291-idha-amtarat",
+    "AR-R291-if-it-rains"
+  ],
+  "tex": "arabic/book/chapters/ch291-if-it-rains.tex"
+}

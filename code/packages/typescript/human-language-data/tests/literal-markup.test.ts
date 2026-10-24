@@ -172,11 +172,16 @@ describe("literal markup", () => {
     expect(report.findings.map((f) => `${f.where}:${f.line} ${f.markup}`)).toEqual([]);
     expect(rendered.length).toBeGreaterThan(0);
     expect(lessons.length).toBeGreaterThan(0);
-    // 180s, like the other whole-corpus gates (gentle-ramp, its retirement
-    // pin): this renders every book of every track, so it grows with each
+    // 360s. This renders every book of every track, so it grows with each
     // vocabulary tranche. It took 36s locally once Arabic passed page 999
-    // and timed out at the old 60s on a CI runner.
-  }, 180_000);
+    // and timed out at the old 60s on a CI runner, which is when it got 180s
+    // like the other whole-corpus gates (gentle-ramp, its retirement pin).
+    // Measured again on #17972: 35.5s locally (load 10s, render 17,773
+    // outputs 22.5s, measure 1.5s), but 210s on a windows-2025 runner
+    // building ~490 packages at once -- about 6x slower, and the slowest
+    // test in the suite there after plan-cli. It is the most expensive of
+    // the gates, so it gets twice their budget rather than lifting them all.
+  }, 360_000);
 
   it("proves the corpus gate is not vacuous", () => {
     // The check above passes on an empty input too. This pins that the same

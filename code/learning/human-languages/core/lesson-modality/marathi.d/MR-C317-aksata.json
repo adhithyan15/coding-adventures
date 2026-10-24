@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C317-aksata",
+    "language": "marathi",
+    "chapter": 317,
+    "sequence": 18500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a00e969119fa60fd"
+  },
+  "findings": []
+}

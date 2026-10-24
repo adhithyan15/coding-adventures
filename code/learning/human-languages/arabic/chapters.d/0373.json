@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "Taking a stand",
+  "label": "ch:ar-taking-a-stand",
+  "canDo": "I can say that someone took sides, held on, gave way, backed down or settled a question.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-R373-review-366-373",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can say that someone took sides, held on, gave way, backed down or settled a question.",
+    "assesses": [
+      "AR-LEX-C373-MAWQIF373-03",
+      "AR-LEX-C373-MAWQIF373-04",
+      "AR-LEX-C373-MAWQIF373-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C408-bosbas-kora",
+  "pathSegment": "BN-PATH-408-BASA408",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-408-BASA408",
+      "order": 4
+    }
+  ]
+}

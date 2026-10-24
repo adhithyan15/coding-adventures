@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Hobbies and Leisure",
+  "label": "ch:mr-hobbies-and-leisure",
+  "canDo": "I can talk about hobbies, pastimes and free time.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C528-dang-hone",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about hobbies, pastimes and free time.",
+    "assesses": [
+      "MR-LEX-C528-CHHAND528-03",
+      "MR-LEX-C528-CHHAND528-04",
+      "MR-LEX-C528-CHHAND528-05"
+    ]
+  }
+}

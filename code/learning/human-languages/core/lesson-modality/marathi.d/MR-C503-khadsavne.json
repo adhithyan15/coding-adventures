@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C503-khadsavne",
+    "language": "marathi",
+    "chapter": 503,
+    "sequence": 28740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f407db3fc927dd86"
+  },
+  "findings": []
+}

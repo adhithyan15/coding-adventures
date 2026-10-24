@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 446,
+  "title": "Shortcuts and Detours",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7f6eb39d6c77df12",
+  "lessons": [
+    {
+      "id": "KA-C446-kaludari",
+      "sequence": 22660,
+      "title": "ಕಾಲುದಾರಿ (kāludāri) — a footpath",
+      "headword": "ಕಾಲುದಾರಿ",
+      "romanization": "kāludāri",
+      "gloss": "a footpath",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:052bfc9d7dc4977f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to move, then the Kannada for to approach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಾಲುದಾರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾಲುದಾರಿ — kāludāri — \"a footpath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಲಗಳ ನಡುವೆ ಒಂದು ಕಾಲುದಾರಿ ಇದೆ. holagaḷa naḍuve ondu kāludāri ide. There is a footpath between the fields."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಾಲು, foot, plus ದಾರಿ, way: a way for feet only."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾಲುದಾರಿ (kāludāri) is a native Kannada compound of kāl, \"foot, leg\" (DEDR 1479), and ದಾರಿ, \"a way\" (DEDR 3170)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāludāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāludāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāludāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāludāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "holagaḷa naḍuve ondu kāludāri ide. — There is a footpath between the fields.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *holagaḷa naḍuve ondu kāludāri ide.* — There is a footpath between the fields.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to move, then the Kannada for to approach, then say kāludāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to move, then the Kannada for to approach, then say *kāludāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಾಲುದಾರಿ (kāludāri) mean? (\"A footpath\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C446-oladari",
+      "sequence": 22670,
+      "title": "ಒಳದಾರಿ (oḷadāri) — a shortcut; a back way",
+      "headword": "ಒಳದಾರಿ",
+      "romanization": "oḷadāri",
+      "gloss": "a shortcut; a back way",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25831bdd057351bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to approach, then the Kannada for a footpath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒಳದಾರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಳದಾರಿ — oḷadāri — \"a shortcut; a back way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಒಳದಾರಿಯಲ್ಲಿ ಹೋದರೆ ಹತ್ತು ನಿಮಿಷ ಉಳಿಯುತ್ತದೆ. oḷadāriyalli hōdare hattu nimiṣa uḷiyuttade. If you take the shortcut, you save ten minutes."
+            },
+            {
+              "kind": "speech",
+              "text": "ಒಳ, inner, plus ದಾರಿ, way: a way through the inside."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಳದಾರಿ (oḷadāri) is a native Kannada compound of oḷa, \"the inside, inner\" (DEDR 698), and ದಾರಿ, \"a way\" (DEDR 3170)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷadāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷadāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷadāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷadāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷadāriyalli hōdare hattu nimiṣa uḷiyuttade. — If you take the shortcut, you save ten minutes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷadāriyalli hōdare hattu nimiṣa uḷiyuttade.* — If you take the shortcut, you save ten minutes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to approach, then the Kannada for a footpath, then say oḷadāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to approach, then the Kannada for a footpath, then say *oḷadāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒಳದಾರಿ (oḷadāri) mean? (\"A shortcut; a back way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C446-suttudari",
+      "sequence": 22680,
+      "title": "ಸುತ್ತುದಾರಿ (suttudāri) — a detour; a roundabout way",
+      "headword": "ಸುತ್ತುದಾರಿ",
+      "romanization": "suttudāri",
+      "gloss": "a detour; a roundabout way",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b849f1d103463999",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a footpath, then the Kannada for a shortcut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸುತ್ತುದಾರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸುತ್ತುದಾರಿ — suttudāri — \"a detour; a roundabout way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸೇತುವೆ ಮುಚ್ಚಿದ್ದರಿಂದ ನಾವು ಸುತ್ತುದಾರಿಯಲ್ಲಿ ಹೋದೆವು. sētuve mucciddarinda nāvu suttudāriyalli hōdevu. Because the bridge was closed we went the long way round."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸುತ್ತು, a round, plus ದಾರಿ, way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸುತ್ತುದಾರಿ (suttudāri) is a native Kannada compound of suttu, \"to go round; a turn\" (DEDR 2715), and ದಾರಿ, \"a way\" (DEDR 3170)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suttudāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suttudāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suttudāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suttudāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sētuve mucciddarinda nāvu suttudāriyalli hōdevu. — Because the bridge was closed we went the long way round.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sētuve mucciddarinda nāvu suttudāriyalli hōdevu.* — Because the bridge was closed we went the long way round.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a footpath, then the Kannada for a shortcut, then say suttudāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a footpath, then the Kannada for a shortcut, then say *suttudāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸುತ್ತುದಾರಿ (suttudāri) mean? (\"A detour; a roundabout way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C446-dari-tappu",
+      "sequence": 22690,
+      "title": "ದಾರಿ ತಪ್ಪು (dāri tappu) — to lose one's way",
+      "headword": "ದಾರಿ ತಪ್ಪು",
+      "romanization": "dāri tappu",
+      "gloss": "to lose one's way",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fddc37ea02b19f8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a shortcut, then the Kannada for a detour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದಾರಿ ತಪ್ಪು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದಾರಿ ತಪ್ಪು — dāri tappu — \"to lose one's way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕತ್ತಲೆಯಲ್ಲಿ ನಾವು ಕಾಡಿನಲ್ಲಿ ದಾರಿ ತಪ್ಪಿದೆವು. kattaleyalli nāvu kāḍinalli dāri tappidevu. In the dark we lost our way in the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ದಾರಿ ತಪ್ಪಿದೆ, dāri tappide."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word the way slips: ತಪ್ಪು is to slip or to go wrong."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದಾರಿ ತಪ್ಪು (dāri tappu) joins two native Dravidian words: ದಾರಿ, \"a way\" (DEDR 3170), and ತಪ್ಪು, \"to slip, to miss, to go wrong\" (DEDR 3071)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāri tappu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāri tappu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāri tappu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāri tappu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kattaleyalli nāvu kāḍinalli dāri tappidevu. — In the dark we lost our way in the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kattaleyalli nāvu kāḍinalli dāri tappidevu.* — In the dark we lost our way in the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a shortcut, then the Kannada for a detour, then say dāri tappu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a shortcut, then the Kannada for a detour, then say *dāri tappu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದಾರಿ ತಪ್ಪು (dāri tappu) mean? (\"To lose one's way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C446-hejje",
+      "sequence": 22700,
+      "title": "ಹೆಜ್ಜೆ (hejje) — a footstep; a step",
+      "headword": "ಹೆಜ್ಜೆ",
+      "romanization": "hejje",
+      "gloss": "a footstep; a step",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a61972399f56bad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a detour, then the Kannada for to lose one's way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೆಜ್ಜೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೆಜ್ಜೆ — hejje — \"a footstep; a step\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮರಳಿನ ಮೇಲೆ ಆನೆಯ ಹೆಜ್ಜೆಗಳು ಕಂಡವು. maraḷina mēle āneya hejjegaḷu kaṇḍavu. Elephant footprints could be seen on the sand."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಹೆಜ್ಜೆಗಳು, hejjegaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೆಜ್ಜೆ (hejje) ಹಾಕು, to take steps, to walk along."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೆಜ್ಜೆ (hejje) \"a footprint, a step\" is listed, beside older pajje, in the appendix of Indo-Aryan loans in DEDR (DEDR App. 6), which compares Sanskrit padyā, \"footsteps\" (CDIAL 7778); the exact path is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hejje",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hejje*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hejje, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hejje*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraḷina mēle āneya hejjegaḷu kaṇḍavu. — Elephant footprints could be seen on the sand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraḷina mēle āneya hejjegaḷu kaṇḍavu.* — Elephant footprints could be seen on the sand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a detour, then the Kannada for to lose one's way, then say hejje again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a detour, then the Kannada for to lose one's way, then say *hejje* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೆಜ್ಜೆ (hejje) mean? (\"A footstep; a step\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

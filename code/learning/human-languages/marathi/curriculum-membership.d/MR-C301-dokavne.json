@@ -1,0 +1,11 @@
+{
+  "id": "MR-C301-dokavne",
+  "pathSegment": "MR-PATH-301-DISNE301",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-301-DISNE301",
+      "order": 3
+    }
+  ]
+}

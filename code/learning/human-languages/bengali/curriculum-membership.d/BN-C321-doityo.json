@@ -1,0 +1,11 @@
+{
+  "id": "BN-C321-doityo",
+  "pathSegment": "BN-PATH-321-KINGBODONTI321",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-321-KINGBODONTI321",
+      "order": 2
+    }
+  ]
+}

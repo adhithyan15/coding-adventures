@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:b2f3ffd438861c74",
+  "lessonIds": [
+    "TE-C499-asuyapadu",
+    "TE-C499-dvesincu",
+    "TE-C499-asahyincuko",
+    "TE-C499-paga",
+    "TE-C499-cinnacupu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch499.txt",
+  "json": "telugu/narration/ch499.json",
+  "textHash": "fnv1a64:2078036a5187e4d2",
+  "jsonHash": "fnv1a64:a4c57f8451dc00a6",
+  "findings": []
+}

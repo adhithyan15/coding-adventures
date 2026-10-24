@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-409-QANUN409",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "AR-EXT-409-QANUN409"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 518,
+  "title": "Hiring and Retiring",
+  "label": "ch:ka-hiring-and-retiring",
+  "canDo": "I can say to appoint, to dismiss, unemployment, retirement and a contract.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-R518-review-512-518",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can say to appoint, to dismiss, unemployment, retirement and a contract.",
+    "assesses": [
+      "KA-LEX-C518-NEMAKA518-01",
+      "KA-LEX-C518-NEMAKA518-02",
+      "KA-LEX-C518-NEMAKA518-03",
+      "KA-LEX-C518-NEMAKA518-04",
+      "KA-LEX-C518-NEMAKA518-05"
+    ]
+  }
+}

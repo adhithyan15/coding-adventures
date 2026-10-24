@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Causes and Effects",
+  "label": "ch:ta-causes-and-effects",
+  "canDo": "I can say what caused something and what it led to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C352-pati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can say what caused something and what it led to.",
+    "assesses": [
+      "TA-LEX-C352-ERPATUTTU352-03",
+      "TA-LEX-C352-ERPATUTTU352-04",
+      "TA-LEX-C352-ERPATUTTU352-05"
+    ]
+  }
+}

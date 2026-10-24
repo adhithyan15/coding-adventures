@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-432-HATTIKKU432",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "KA-EXT-432-HATTIKKU432"
+  ],
+  "after": []
+}

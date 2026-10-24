@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "A Wedding Is Planned",
+  "label": "ch:ka-a-wedding-is-planned",
+  "canDo": "I can say a marriage, a wedding reception, a dowry, to bless and a wedding party.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C325-dibbana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can say a marriage, a wedding reception, a dowry, to bless and a wedding party.",
+    "assesses": [
+      "KA-LEX-C325-VIVAHA325-03",
+      "KA-LEX-C325-VIVAHA325-04",
+      "KA-LEX-C325-VIVAHA325-05"
+    ]
+  }
+}

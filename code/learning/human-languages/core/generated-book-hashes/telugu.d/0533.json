@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:c481e823ce059603",
+  "lessonIds": [
+    "TE-C533-kapuram",
+    "TE-C533-samsaram",
+    "TE-C533-grhini",
+    "TE-C533-atithyam",
+    "TE-C533-muccatincu",
+    "TE-R533-review-526-533"
+  ],
+  "tex": "telugu/book/chapters/ch533-home-life.tex"
+}

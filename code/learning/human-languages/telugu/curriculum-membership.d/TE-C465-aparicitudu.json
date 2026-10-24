@@ -1,0 +1,11 @@
+{
+  "id": "TE-C465-aparicitudu",
+  "pathSegment": "TE-PATH-465-NIVASI465",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-465-NIVASI465",
+      "order": 4
+    }
+  ]
+}

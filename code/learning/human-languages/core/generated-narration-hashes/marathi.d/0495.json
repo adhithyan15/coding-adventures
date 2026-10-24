@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:747f47f0ba023193",
+  "lessonIds": [
+    "MR-C495-putanya",
+    "MR-C495-bhaca",
+    "MR-C495-natu",
+    "MR-C495-panjoba",
+    "MR-C495-atya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch495.txt",
+  "json": "marathi/narration/ch495.json",
+  "textHash": "fnv1a64:1cf42b8cee9bdd35",
+  "jsonHash": "fnv1a64:267f991eaaed2058",
+  "findings": []
+}

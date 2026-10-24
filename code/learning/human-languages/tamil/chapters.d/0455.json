@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Worry and Unease",
+  "label": "ch:ta-worry-and-unease",
+  "canDo": "I can talk about unease, anguish and fretting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C455-tavi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can talk about unease, anguish and fretting.",
+    "assesses": [
+      "TA-LEX-C455-KAVALAI455-03",
+      "TA-LEX-C455-KAVALAI455-04",
+      "TA-LEX-C455-KAVALAI455-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C347-pathimba-dene",
+    "language": "marathi",
+    "chapter": 347,
+    "sequence": 20260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22d45c5c499c43b7"
+  },
+  "findings": []
+}

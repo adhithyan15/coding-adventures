@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Skill and Talent",
+  "label": "ch:te-skill-and-talent",
+  "canDo": "I can talk about talent, mastery, craft and initiative.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C524-corava",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about talent, mastery, craft and initiative.",
+    "assesses": [
+      "TE-LEX-C524-PRATIBHA524-03",
+      "TE-LEX-C524-PRATIBHA524-04",
+      "TE-LEX-C524-PRATIBHA524-05"
+    ]
+  }
+}

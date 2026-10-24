@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Leaving Work",
+  "label": "ch:bn-leaving-work",
+  "canDo": "I can talk about resigning, transfers, strikes and losing a job.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C497-chhatai-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about resigning, transfers, strikes and losing a job.",
+    "assesses": [
+      "BN-LEX-C497-ISTOPHA497-03",
+      "BN-LEX-C497-ISTOPHA497-04",
+      "BN-LEX-C497-ISTOPHA497-05"
+    ]
+  }
+}

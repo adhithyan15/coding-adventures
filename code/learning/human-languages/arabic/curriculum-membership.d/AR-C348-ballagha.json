@@ -1,0 +1,11 @@
+{
+  "id": "AR-C348-ballagha",
+  "pathSegment": "AR-PATH-348-TUHMA348",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-348-TUHMA348",
+      "order": 4
+    }
+  ]
+}

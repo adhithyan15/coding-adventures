@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:00e9059c612b50be",
+  "lessonIds": [
+    "TA-C545-pankuccantai",
+    "TA-C545-tarakar",
+    "TA-C545-uyarttu",
+    "TA-C545-kanicamaka",
+    "TA-C545-matiri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch545.txt",
+  "json": "tamil/narration/ch545.json",
+  "textHash": "fnv1a64:38ec454407eca427",
+  "jsonHash": "fnv1a64:00f20bb8d051be7e",
+  "findings": []
+}

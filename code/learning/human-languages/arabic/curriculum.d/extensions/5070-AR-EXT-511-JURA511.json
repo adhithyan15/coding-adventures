@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-511-JURA511",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a dose, a capsule, a drop and a splint, and say that a nurse bound up a wound.",
+  "prerequisites": []
+}

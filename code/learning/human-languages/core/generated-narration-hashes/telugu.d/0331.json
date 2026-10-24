@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:d09c115d7fabdce8",
+  "lessonIds": [
+    "TE-C331-manta",
+    "TE-C331-peludu",
+    "TE-C331-pranam",
+    "TE-C331-raksincu",
+    "TE-C331-parugulu-tiyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch331.txt",
+  "json": "telugu/narration/ch331.json",
+  "textHash": "fnv1a64:caf4e350b38ff142",
+  "jsonHash": "fnv1a64:65f96764d6c14eac",
+  "findings": []
+}

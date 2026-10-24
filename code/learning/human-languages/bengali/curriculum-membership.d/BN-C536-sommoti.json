@@ -1,0 +1,11 @@
+{
+  "id": "BN-C536-sommoti",
+  "pathSegment": "BN-PATH-536-ROKOM536",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-536-ROKOM536",
+      "order": 1
+    }
+  ]
+}

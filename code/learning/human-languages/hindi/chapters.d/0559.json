@@ -1,0 +1,21 @@
+{
+  "chapter": 559,
+  "title": "Looking Ahead",
+  "label": "ch:hi-looking-ahead",
+  "canDo": "I can talk about beginnings, what I imagine and the life ahead.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-R559-review-final-559",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 559: I can talk about beginnings, what I imagine and the life ahead.",
+    "assesses": [
+      "HI-LEX-C559-KALPANA559-01",
+      "HI-LEX-C559-KALPANA559-02",
+      "HI-LEX-C559-KALPANA559-03",
+      "HI-LEX-C559-KALPANA559-04",
+      "HI-LEX-C559-KALPANA559-05"
+    ]
+  }
+}

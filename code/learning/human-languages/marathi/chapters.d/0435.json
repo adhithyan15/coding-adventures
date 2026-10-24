@@ -1,0 +1,21 @@
+{
+  "chapter": 435,
+  "title": "Shortages",
+  "label": "ch:mr-shortages",
+  "canDo": "I can talk about shortages and scarcity, and say a well dried up or food went bad.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-R435-review-428-435",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can talk about shortages and scarcity, and say a well dried up or food went bad.",
+    "assesses": [
+      "MR-LEX-C435-TANCHAI435-01",
+      "MR-LEX-C435-TANCHAI435-02",
+      "MR-LEX-C435-TANCHAI435-03",
+      "MR-LEX-C435-TANCHAI435-04",
+      "MR-LEX-C435-TANCHAI435-05"
+    ]
+  }
+}

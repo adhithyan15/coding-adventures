@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-482-KAD482",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-482-KAD482"
+  ],
+  "after": []
+}

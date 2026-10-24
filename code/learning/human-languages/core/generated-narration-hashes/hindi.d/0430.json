@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:e37aa843afc8eba9",
+  "lessonIds": [
+    "HI-C430-divala",
+    "HI-C430-nidhi",
+    "HI-C430-puji",
+    "HI-C430-cuknaintr",
+    "HI-C430-ugahna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch430.txt",
+  "json": "hindi/narration/ch430.json",
+  "textHash": "fnv1a64:1c6d999b144719f2",
+  "jsonHash": "fnv1a64:371a4962598ad48a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:b0c434e2b1f6e1b0",
+  "lessonIds": [
+    "MR-C438-rimjhim",
+    "MR-C438-musaldhar",
+    "MR-C438-valiv",
+    "MR-C438-barasne",
+    "MR-C438-bhijne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch438.txt",
+  "json": "marathi/narration/ch438.json",
+  "textHash": "fnv1a64:a3edcc92235a962b",
+  "jsonHash": "fnv1a64:013ee14c0a17fcfb",
+  "findings": []
+}

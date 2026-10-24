@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Teasing and Pestering",
+  "label": "ch:ta-teasing-and-pestering",
+  "canDo": "I can talk about teasing, pranks, nagging and talking nonsense.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C467-kurukuru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can talk about teasing, pranks, nagging and talking nonsense.",
+    "assesses": [
+      "TA-LEX-C467-KINTAL467-03",
+      "TA-LEX-C467-KINTAL467-04",
+      "TA-LEX-C467-KINTAL467-05"
+    ]
+  }
+}

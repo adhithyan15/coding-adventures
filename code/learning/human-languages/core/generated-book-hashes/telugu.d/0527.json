@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:712a8db264c23ad5",
+  "lessonIds": [
+    "TE-C527-sadhincu",
+    "TE-C527-ranincu",
+    "TE-C527-viphalamavu",
+    "TE-C527-rajinama",
+    "TE-C527-maneyu"
+  ],
+  "tex": "telugu/book/chapters/ch527-success-and-failure.tex"
+}

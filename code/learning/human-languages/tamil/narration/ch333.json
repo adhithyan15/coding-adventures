@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 333,
+  "title": "The Battlefield",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ea9142071c416326",
+  "lessons": [
+    {
+      "id": "TA-C333-porkkalam",
+      "sequence": 19100,
+      "title": "போர்க்களம் (pōrkkaḷam) — a battlefield",
+      "headword": "போர்க்களம்",
+      "romanization": "pōrkkaḷam",
+      "gloss": "a battlefield",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d762031d741f86c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to attack, then the Tamil for a navy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: போர்க்களம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போர்க்களம் — pōrkkaḷam — \"a battlefield\"."
+            },
+            {
+              "kind": "speech",
+              "text": "போர்க்களத்தில் பல வீரர்கள் இறந்தார்கள். pōrkkaḷattil pala vīrarkaḷ iṟantārkaḷ. Many soldiers died on the battlefield."
+            },
+            {
+              "kind": "speech",
+              "text": "களம், field, open ground."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போர்க்களம் (pōrkkaḷam) is a Tamil compound built from போர், \"battle\" (DEDR 4540), and களம், \"open space, battlefield\" (DEDR 1376)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrkkaḷam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrkkaḷam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrkkaḷam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrkkaḷam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrkkaḷattil pala vīrarkaḷ iṟantārkaḷ. — Many soldiers died on the battlefield.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrkkaḷattil pala vīrarkaḷ iṟantārkaḷ.* — Many soldiers died on the battlefield.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to attack, then the Tamil for a navy, then say pōrkkaḷam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to attack, then the Tamil for a navy, then say *pōrkkaḷam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does போர்க்களம் (pōrkkaḷam) mean? (\"A battlefield\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C333-porvirar",
+      "sequence": 19110,
+      "title": "போர்வீரர் (pōrvīrar) — a soldier; a warrior",
+      "headword": "போர்வீரர்",
+      "romanization": "pōrvīrar",
+      "gloss": "a soldier; a warrior",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ddf79323c8f6df2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a navy, then the Tamil for a battlefield."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: போர்வீரர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போர்வீரர் — pōrvīrar — \"a soldier; a warrior\"."
+            },
+            {
+              "kind": "speech",
+              "text": "போர்வீரர்கள் வரிசையாக நின்றார்கள். pōrvīrarkaḷ varicaiyāka niṉṟārkaḷ. The soldiers stood in rows."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural போர்வீரர்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போர்வீரர் (pōrvīrar) joins native போர், \"battle\" (DEDR 4540), with வீரர், from Sanskrit vīra, \"man, hero\" (CDIAL 12056)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrvīrar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrvīrar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrvīrar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrvīrar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrvīrarkaḷ varicaiyāka niṉṟārkaḷ. — The soldiers stood in rows.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrvīrarkaḷ varicaiyāka niṉṟārkaḷ.* — The soldiers stood in rows.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a navy, then the Tamil for a battlefield, then say pōrvīrar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a navy, then the Tamil for a battlefield, then say *pōrvīrar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does போர்வீரர் (pōrvīrar) mean? (\"A soldier; a warrior\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C333-val-sword",
+      "sequence": 19120,
+      "title": "வாள் (vāḷ) — a sword",
+      "headword": "வாள்",
+      "romanization": "vāḷ",
+      "gloss": "a sword",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc1af4975f545aaf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a battlefield, then the Tamil for a soldier."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வாள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாள் — vāḷ — \"a sword\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மன்னர் தன் வாளை உயர்த்தினார். maṉṉar taṉ vāḷai uyarttiṉār. The king raised his sword."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural வாள்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாள் (vāḷ) is native Dravidian (DEDR 5376): sword, saw, sharpness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṉṉar taṉ vāḷai uyarttiṉār. — The king raised his sword.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṉṉar taṉ vāḷai uyarttiṉār.* — The king raised his sword.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a battlefield, then the Tamil for a soldier, then say vāḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a battlefield, then the Tamil for a soldier, then say *vāḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வாள் (vāḷ) mean? (\"A sword\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C333-ketayam",
+      "sequence": 19130,
+      "title": "கேடயம் (kēṭayam) — a shield",
+      "headword": "கேடயம்",
+      "romanization": "kēṭayam",
+      "gloss": "a shield",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bc50babcf86cbff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a soldier, then the Tamil for a sword."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கேடயம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கேடயம் — kēṭayam — \"a shield\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் கேடயத்தால் தன்னைக் காத்துக்கொண்டான். avaṉ kēṭayattāl taṉṉaik kāttukkoṇṭāṉ. He protected himself with a shield."
+            },
+            {
+              "kind": "speech",
+              "text": "-ஆல் marks the means: கேடயத்தால், with a shield."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கேடயம் (kēṭayam) is borrowed from Sanskrit kheṭaka, \"a shield\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēṭayam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēṭayam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēṭayam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēṭayam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ kēṭayattāl taṉṉaik kāttukkoṇṭāṉ. — He protected himself with a shield.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ kēṭayattāl taṉṉaik kāttukkoṇṭāṉ.* — He protected himself with a shield.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a soldier, then the Tamil for a sword, then say kēṭayam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a soldier, then the Tamil for a sword, then say *kēṭayam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கேடயம் (kēṭayam) mean? (\"A shield\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C333-kavacam",
+      "sequence": 19140,
+      "title": "கவசம் (kavacam) — armour",
+      "headword": "கவசம்",
+      "romanization": "kavacam",
+      "gloss": "armour",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:285f116a049159af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a sword, then the Tamil for a shield."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கவசம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கவசம் — kavacam — \"armour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வீரர்கள் இரும்புக் கவசம் அணிந்திருந்தார்கள். vīrarkaḷ irumpuk kavacam aṇintiruntārkaḷ. The warriors wore iron armour."
+            },
+            {
+              "kind": "speech",
+              "text": "Also any protective cover: தலைக்கவசம், a helmet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கவசம் (kavacam) is borrowed from Sanskrit kavaca, \"a coat of mail\" (CDIAL 2957); CDIAL notes a possible Dravidian source for the Sanskrit word itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kavacam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kavacam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kavacam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kavacam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīrarkaḷ irumpuk kavacam aṇintiruntārkaḷ. — The warriors wore iron armour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīrarkaḷ irumpuk kavacam aṇintiruntārkaḷ.* — The warriors wore iron armour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a sword, then the Tamil for a shield, then say kavacam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a sword, then the Tamil for a shield, then say *kavacam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கவசம் (kavacam) mean? (\"Armour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

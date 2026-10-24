@@ -1,0 +1,11 @@
+{
+  "id": "MR-C487-galu",
+  "pathSegment": "MR-PATH-487-CATKA487",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-487-CATKA487",
+      "order": 1
+    }
+  ]
+}

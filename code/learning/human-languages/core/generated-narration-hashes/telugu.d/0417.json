@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:0cfe5610a6703beb",
+  "lessonIds": [
+    "TE-C417-nibandhana",
+    "TE-C417-arhata",
+    "TE-C417-anumatincu",
+    "TE-C417-minaha",
+    "TE-C417-vartincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch417.txt",
+  "json": "telugu/narration/ch417.json",
+  "textHash": "fnv1a64:aa27d27aec2c8943",
+  "jsonHash": "fnv1a64:a2465375f8d102c6",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 327,
+  "title": "Ruling the Land",
+  "label": "ch:mr-ruling-the-land",
+  "canDo": "I can talk about a ruler's subjects, seal, banner and new towns.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-R327-review-320-327",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can talk about a ruler's subjects, seal, banner and new towns.",
+    "assesses": [
+      "MR-LEX-C327-PRAJA327-01",
+      "MR-LEX-C327-PRAJA327-02",
+      "MR-LEX-C327-PRAJA327-03",
+      "MR-LEX-C327-PRAJA327-04",
+      "MR-LEX-C327-PRAJA327-05"
+    ]
+  }
+}

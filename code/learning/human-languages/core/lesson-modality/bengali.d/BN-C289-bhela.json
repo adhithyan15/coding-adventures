@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C289-bhela",
+    "language": "bengali",
+    "chapter": 289,
+    "sequence": 18690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09275e788ca762bd"
+  },
+  "findings": []
+}

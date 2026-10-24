@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C385-mitna",
+    "language": "hindi",
+    "chapter": 385,
+    "sequence": 21160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2ba2f2f4139b909"
+  },
+  "findings": []
+}

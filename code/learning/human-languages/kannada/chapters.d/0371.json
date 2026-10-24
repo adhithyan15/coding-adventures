@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "The Chieftain Comes Home",
+  "label": "ch:ka-the-chieftain-comes-home",
+  "canDo": "I can say a wedding pendant, a palanquin, a chieftain, a mansion and to set foot.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C371-kalidu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can say a wedding pendant, a palanquin, a chieftain, a mansion and to set foot.",
+    "assesses": [
+      "KA-LEX-C371-PALLAKKI371-03",
+      "KA-LEX-C371-PALLAKKI371-04",
+      "KA-LEX-C371-PALLAKKI371-05"
+    ]
+  }
+}

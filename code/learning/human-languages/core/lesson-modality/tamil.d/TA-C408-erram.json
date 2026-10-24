@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C408-erram",
+    "language": "tamil",
+    "chapter": 408,
+    "sequence": 23530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:627e68aa1c8341d1"
+  },
+  "findings": []
+}

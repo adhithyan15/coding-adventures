@@ -1,0 +1,11 @@
+{
+  "id": "TA-C552-turitappatuttu",
+  "pathSegment": "TA-PATH-552-PATHUKAPPU552",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-552-PATHUKAPPU552",
+      "order": 3
+    }
+  ]
+}

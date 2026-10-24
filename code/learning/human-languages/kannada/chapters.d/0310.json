@@ -1,0 +1,23 @@
+{
+  "chapter": 310,
+  "title": "Telling a Story in Order",
+  "label": "ch:ka-telling-a-story-in-order",
+  "canDo": "I can tell a short story in order with modalu, adara nantara and konege, join actions with bandu and hōgi, read a connected story of about ninety words, and read the letter ಛ in svaccha.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-R310-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: tell a story in order with first, after that, having done and in the end, and read and write ಛ.",
+    "assesses": [
+      "KA-LEX-C310-SVACCHA-01",
+      "KA-SCRIPT-RECOG-174",
+      "KA-GRAMMAR-C310-FIRST-THEN-01",
+      "KA-GRAMMAR-C310-BEFORE-AFTER-01",
+      "KA-GRAMMAR-C310-CONJUNCTIVE-01",
+      "KA-GRAMMAR-C310-AFTER-DOING-01",
+      "KA-SKILL-C310-READ-STORY-01"
+    ]
+  }
+}

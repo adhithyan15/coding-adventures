@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C510-davade",
+    "language": "kannada",
+    "chapter": 510,
+    "sequence": 26060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73e9de21cfd9fc80"
+  },
+  "findings": []
+}

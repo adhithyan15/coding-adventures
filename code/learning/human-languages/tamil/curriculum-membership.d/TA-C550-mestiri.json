@@ -1,0 +1,11 @@
+{
+  "id": "TA-C550-mestiri",
+  "pathSegment": "TA-PATH-550-KATTIDAM550",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-550-KATTIDAM550",
+      "order": 4
+    }
+  ]
+}

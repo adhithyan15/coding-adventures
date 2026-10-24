@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C364-atmakathe",
+    "language": "kannada",
+    "chapter": 364,
+    "sequence": 18320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffeafd6e4f17922c"
+  },
+  "findings": []
+}

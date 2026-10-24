@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C465-enku",
+    "language": "tamil",
+    "chapter": 465,
+    "sequence": 26710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11ac9721afb04d40"
+  },
+  "findings": []
+}

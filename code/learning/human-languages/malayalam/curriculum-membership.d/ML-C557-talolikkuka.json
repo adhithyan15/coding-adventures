@@ -1,0 +1,11 @@
+{
+  "id": "ML-C557-talolikkuka",
+  "pathSegment": "ML-PATH-557-PINTUNA557",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-557-PINTUNA557",
+      "order": 3
+    }
+  ]
+}

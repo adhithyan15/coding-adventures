@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:ac63d2991562f0da",
+  "lessonIds": [
+    "TE-C385-angikarincu",
+    "TE-C385-angikaram",
+    "TE-C385-ekibhavincu",
+    "TE-C385-sammatincu",
+    "TE-C385-maddatu"
+  ],
+  "tex": "telugu/book/chapters/ch385-agreeing.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C267-ek-shonibar",
+  "pathSegment": "BN-PATH-267-STORY-ORDER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-267-STORY-ORDER",
+      "order": 4
+    }
+  ]
+}

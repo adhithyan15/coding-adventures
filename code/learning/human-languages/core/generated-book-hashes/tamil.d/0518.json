@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:57893773e4a56bbb",
+  "lessonIds": [
+    "TA-C518-niral",
+    "TA-C518-kuriyitu",
+    "TA-C518-kappuppirati",
+    "TA-C518-ropo",
+    "TA-C518-ceyarkai"
+  ],
+  "tex": "tamil/book/chapters/ch518-code-and-robots.tex"
+}

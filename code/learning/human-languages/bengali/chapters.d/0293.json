@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "When the Earth Shook",
+  "label": "ch:bn-when-the-earth-shook",
+  "canDo": "I can describe an earthquake: shaking ground and falling walls.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C293-chapa-pora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can describe an earthquake: shaking ground and falling walls.",
+    "assesses": [
+      "BN-LEX-C293-BHUMIKOMPO293-03",
+      "BN-LEX-C293-BHUMIKOMPO293-04",
+      "BN-LEX-C293-BHUMIKOMPO293-05"
+    ]
+  }
+}

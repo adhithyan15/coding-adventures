@@ -1,0 +1,11 @@
+{
+  "id": "TE-C347-puspaguccham",
+  "pathSegment": "TE-PATH-347-VINDU347",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-347-VINDU347",
+      "order": 2
+    }
+  ]
+}

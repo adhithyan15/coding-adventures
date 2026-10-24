@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-502-TOTTAM502",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-502-TOTTAM502"
+  ],
+  "after": []
+}

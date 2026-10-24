@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:d5c9aa84c1d69cba",
+  "lessonIds": [
+    "ML-C536-raktaparisodhana",
+    "ML-C536-narampu",
+    "ML-C536-pesi",
+    "ML-C536-svasakosam",
+    "ML-C536-visramikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch536.txt",
+  "json": "malayalam/narration/ch536.json",
+  "textHash": "fnv1a64:593d158f4f8e24be",
+  "jsonHash": "fnv1a64:70c1d674c94ecd39",
+  "findings": []
+}

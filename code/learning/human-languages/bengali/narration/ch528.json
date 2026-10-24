@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 528,
+  "title": "Ways and Means",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d3c9a9b4c111ad35",
+  "lessons": [
+    {
+      "id": "BN-C528-songgoti",
+      "sequence": 31840,
+      "title": "সঙ্গতি (sônggôti) — financial means",
+      "headword": "সঙ্গতি",
+      "romanization": "sônggôti",
+      "gloss": "financial means",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b259604c7528698",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a rehearsal, then the Bengali for applause."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সঙ্গতি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সঙ্গতি — sônggôti — \"financial means\"."
+            },
+            {
+              "kind": "speech",
+              "text": "যদি সঙ্গতি থাকত, তাহলে আমরা একটা বড় বাড়ি কিনতাম। Jôdi sônggôti thāktô, tāhôle āmrā ekṭā bôṛo bāṛi kintām. If we had the means, we would buy a big house."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সঙ্গতি (sônggôti) is Sanskrit saṃgati, \"coming together, meeting\" (Monier-Williams); the sense \"what one can afford\" is Bengali's own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sônggôti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sônggôti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sônggôti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sônggôti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Jôdi sônggôti thāktô, tāhôle āmrā ekṭā bôṛo bāṛi kintām. — If we had the means, we would buy a big house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Jôdi sônggôti thāktô, tāhôle āmrā ekṭā bôṛo bāṛi kintām.* — If we had the means, we would buy a big house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a rehearsal, then the Bengali for applause, then say sônggôti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a rehearsal, then the Bengali for applause, then say *sônggôti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সঙ্গতি (sônggôti) mean? (\"Financial means\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C528-phikir",
+      "sequence": 31850,
+      "title": "ফিকির (phikir) — a way out; a scheme to manage",
+      "headword": "ফিকির",
+      "romanization": "phikir",
+      "gloss": "a way out; a scheme to manage",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23d1eaf6cb66eda6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for applause, then the Bengali for financial means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফিকির",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফিকির — phikir — \"a way out; a scheme to manage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "একটা ফিকির পেলে আমরা ঝামেলাটা এড়াতে পারব। Ekṭā phikir pele āmrā jhāmelāṭā eṛāte pārbô. If we find a way out, we'll be able to get around the trouble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফিকির (phikir) is usually traced to Arabic fikr, \"thought\", through Persian: a clever thought that gets you out of a fix."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phikir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phikir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phikir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phikir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ekṭā phikir pele āmrā jhāmelāṭā eṛāte pārbô. — If we find a way out, we'll be able to get around the trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ekṭā phikir pele āmrā jhāmelāṭā eṛāte pārbô.* — If we find a way out, we'll be able to get around the trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for applause, then the Bengali for financial means, then say phikir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for applause, then the Bengali for financial means, then say *phikir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফিকির (phikir) mean? (\"A way out; a scheme to manage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C528-samorthyo",
+      "sequence": 31860,
+      "title": "সামর্থ্য (sāmôrthyô) — ability; the capacity (to do something)",
+      "headword": "সামর্থ্য",
+      "romanization": "sāmôrthyô",
+      "gloss": "ability; the capacity (to do something)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db3916a9f707d914",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for financial means, then the Bengali for a way out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সামর্থ্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সামর্থ্য — sāmôrthyô — \"ability; the capacity (to do something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই কঠিন কাজ করার সামর্থ্য তার আছে। Ei kôṭhin kāj kôrār sāmôrthyô tār āchhe. She has the ability to do this hard work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সামর্থ্য (sāmôrthyô) is a tatsama, Sanskrit sāmarthya, which Monier-Williams gives with a range of senses up to \"ability, power\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāmôrthyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāmôrthyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāmôrthyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāmôrthyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ei kôṭhin kāj kôrār sāmôrthyô tār āchhe. — She has the ability to do this hard work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ei kôṭhin kāj kôrār sāmôrthyô tār āchhe.* — She has the ability to do this hard work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for financial means, then the Bengali for a way out, then say sāmôrthyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for financial means, then the Bengali for a way out, then say *sāmôrthyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সামর্থ্য (sāmôrthyô) mean? (\"Ability; the capacity (to do something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C528-kulono",
+      "sequence": 31870,
+      "title": "কুলোনো (kulono) — to be enough; to suffice",
+      "headword": "কুলোনো",
+      "romanization": "kulono",
+      "gloss": "to be enough; to suffice",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efc3b937a0ef9f32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a way out, then the Bengali for capacity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কুলোনো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কুলোনো — kulono — \"to be enough; to suffice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই টাকায় মাস না কুলোলে আমি ধার নেব। Ei ṭākāy mās nā kulole āmi dhār nebô. If this money doesn't last the month, I'll borrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই টাকায় তার কুলোল না, sei ṭākāy tār kulolô nā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কুলোনো (kulono) is said of money, time or food that will or will not stretch far enough; where the word comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kulono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kulono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kulono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kulono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ei ṭākāy mās nā kulole āmi dhār nebô. — If this money doesn't last the month, I'll borrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ei ṭākāy mās nā kulole āmi dhār nebô.* — If this money doesn't last the month, I'll borrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a way out, then the Bengali for capacity, then say kulono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a way out, then the Bengali for capacity, then say *kulono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কুলোনো (kulono) mean? (\"To be enough; to suffice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C528-jotano",
+      "sequence": 31880,
+      "title": "জোটানো (joṭāno) — to scrape together; to manage to find",
+      "headword": "জোটানো",
+      "romanization": "joṭāno",
+      "gloss": "to scrape together; to manage to find",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a5008a088299c1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for capacity, then the Bengali for to suffice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জোটানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জোটানো — joṭāno — \"to scrape together; to manage to find\"."
+            },
+            {
+              "kind": "speech",
+              "text": "টাকা জোটাতে পারলে মজুরটা ছেলেকে স্কুলে পাঠাবে। Ṭākā joṭāte pārle mojurṭā chheleke skule pāṭhābe. If the labourer can scrape the money together, he will send his son to school."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি টিকিটের টাকা জোটালেন, tini ṭikiṭer ṭākā joṭālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জোটানো (joṭāno) is the causative of a verb CDIAL lists as Bengali juṭā, \"to come together, to come to hand\", under a reconstructed yuṭati, \"is joined\" (CDIAL 10496): making things come to hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joṭāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *joṭāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joṭāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *joṭāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ṭākā joṭāte pārle mojurṭā chheleke skule pāṭhābe. — If the labourer can scrape the money together, he will send his son to school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ṭākā joṭāte pārle mojurṭā chheleke skule pāṭhābe.* — If the labourer can scrape the money together, he will send his son to school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for capacity, then the Bengali for to suffice, then say joṭāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for capacity, then the Bengali for to suffice, then say *joṭāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জোটানো (joṭāno) mean? (\"To scrape together; to manage to find\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

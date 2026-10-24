@@ -1,0 +1,11 @@
+{
+  "id": "TE-C503-lalincu",
+  "pathSegment": "TE-PATH-503-PREMA503",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-503-PREMA503",
+      "order": 3
+    }
+  ]
+}

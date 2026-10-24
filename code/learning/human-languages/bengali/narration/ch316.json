@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 316,
+  "title": "The Siege",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7891b183e44660f8",
+  "lessons": [
+    {
+      "id": "BN-C316-ghera",
+      "sequence": 20050,
+      "title": "ঘেরা (gherā) — to surround; to besiege",
+      "headword": "ঘেরা",
+      "romanization": "gherā",
+      "gloss": "to surround; to besiege",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86731928ccae6101",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a gun, then the Bengali for a cannon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘেরা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘেরা — gherā — \"to surround; to besiege\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শত্রুর সৈন্যরা দুর্গটা ঘিরে ফেলল। shôtrur soinyôrā durgôṭā ghire phellô. The enemy soldiers surrounded the fort."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই সেনাবাহিনী শহরটা ঘিরল, sei senābāhinī shôhôrṭā ghirlô."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem vowel rises in the past: ঘিরল, surrounded."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘেরা (gherā) is filed in CDIAL 4474 under a Middle Indo-Aryan ghir-, 'go round', and ghēr-, 'surround', which list Bengali gherā, 'to surround'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gherā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gherā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gherā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gherā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôtrur soinyôrā durgôṭā ghire phellô. — The enemy soldiers surrounded the fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôtrur soinyôrā durgôṭā ghire phellô.* — The enemy soldiers surrounded the fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a gun, then the Bengali for a cannon, then say gherā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a gun, then the Bengali for a cannon, then say *gherā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘেরা (gherā) mean? (\"To surround; to besiege\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C316-prachir",
+      "sequence": 20060,
+      "title": "প্রাচীর (prāchīr) — a rampart; a city wall",
+      "headword": "প্রাচীর",
+      "romanization": "prāchīr",
+      "gloss": "a rampart; a city wall",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9b99587c8ff2f1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a cannon, then the Bengali for to surround."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রাচীর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রাচীর — prāchīr — \"a rampart; a city wall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শহরের চারপাশে একটা উঁচু প্রাচীর ছিল। shôhôrer chārpāshe ekṭā ũchu prāchīr chhilô. A high wall ran all round the city."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রাচীর (prāchīr) is Sanskrit prācīra, 'an enclosure, a fence, a wall' (Monier-Williams); a house wall is দেয়াল."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāchīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāchīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāchīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāchīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôhôrer chārpāshe ekṭā ũchu prāchīr chhilô. — A high wall ran all round the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôhôrer chārpāshe ekṭā ũchu prāchīr chhilô.* — A high wall ran all round the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a cannon, then the Bengali for to surround, then say prāchīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a cannon, then the Bengali for to surround, then say *prāchīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রাচীর (prāchīr) mean? (\"A rampart; a city wall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C316-porikha",
+      "sequence": 20070,
+      "title": "পরিখা (pôrikhā) — a moat; a trench",
+      "headword": "পরিখা",
+      "romanization": "pôrikhā",
+      "gloss": "a moat; a trench",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdcf92edb68866c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to surround, then the Bengali for a rampart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পরিখা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরিখা — pôrikhā — \"a moat; a trench\"."
+            },
+            {
+              "kind": "speech",
+              "text": "প্রাচীরের বাইরে জলে ভরা একটা পরিখা ছিল। prāchīrer bāire jôle bhôrā ekṭā pôrikhā chhilô. Outside the wall there was a moat full of water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরিখা (pôrikhā) is Sanskrit parikhā, 'a moat, a ditch round a fort' (Monier-Williams): pari-, 'around', and √khan, 'to dig'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrikhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrikhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrikhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrikhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāchīrer bāire jôle bhôrā ekṭā pôrikhā chhilô. — Outside the wall there was a moat full of water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāchīrer bāire jôle bhôrā ekṭā pôrikhā chhilô.* — Outside the wall there was a moat full of water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to surround, then the Bengali for a rampart, then say pôrikhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to surround, then the Bengali for a rampart, then say *pôrikhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পরিখা (pôrikhā) mean? (\"A moat; a trench\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C316-teka",
+      "sequence": 20080,
+      "title": "টেকা (ṭekā) — to hold out; to last",
+      "headword": "টেকা",
+      "romanization": "ṭekā",
+      "gloss": "to hold out; to last",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:863e4fb69e5d00e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a rampart, then the Bengali for a moat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: টেকা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "টেকা — ṭekā — \"to hold out; to last\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দুর্গটা তিন মাস টিকল। durgôṭā tin mās ṭiklô. The fort held out for three months."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই দুর্গ টিকল, sei durgô ṭiklô."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem vowel rises in the past: টিকল, held out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "টেকা (ṭekā) is filed in CDIAL 5420 under a Middle Indo-Aryan ṭakk-, 'remain, stop', which lists Bengali ṭẽkā and ṭikā, 'to remain'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭekā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭekā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭekā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭekā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durgôṭā tin mās ṭiklô. — The fort held out for three months.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durgôṭā tin mās ṭiklô.* — The fort held out for three months.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a rampart, then the Bengali for a moat, then say ṭekā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a rampart, then the Bengali for a moat, then say *ṭekā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does টেকা (ṭekā) mean? (\"To hold out; to last\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C316-pichhono",
+      "sequence": 20090,
+      "title": "পিছোনো (pichhono) — to fall back; to retreat",
+      "headword": "পিছোনো",
+      "romanization": "pichhono",
+      "gloss": "to fall back; to retreat",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb3bca5ffb970c0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a moat, then the Bengali for to hold out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পিছোনো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পিছোনো — pichhono — \"to fall back; to retreat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "খাবার শেষ হলে শত্রুরা পিছোল। khābār shesh hôle shôtrurā pichholô. When their food ran out, the enemy fell back."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই সেনাবাহিনী পিছোল, sei senābāhinī pichholô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পিছোনো (pichhono) is built on পিছে, behind — CDIAL 7990, a Middle Indo-Aryan paśca, 'the hinder part', which lists Bengali pichā, 'the rear' — as পিছনে is: to move to the back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pichhono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pichhono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pichhono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pichhono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khābār shesh hôle shôtrurā pichholô. — When their food ran out, the enemy fell back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khābār shesh hôle shôtrurā pichholô.* — When their food ran out, the enemy fell back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a moat, then the Bengali for to hold out, then say pichhono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a moat, then the Bengali for to hold out, then say *pichhono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পিছোনো (pichhono) mean? (\"To fall back; to retreat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

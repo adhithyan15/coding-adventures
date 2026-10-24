@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:8b83b1bf707475ed",
+  "lessonIds": [
+    "KA-C341-vamsa",
+    "KA-C341-purvaja",
+    "KA-C341-talemaru",
+    "KA-C341-manetana",
+    "KA-C341-arasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch341.txt",
+  "json": "kannada/narration/ch341.json",
+  "textHash": "fnv1a64:cb028c70e0e38c39",
+  "jsonHash": "fnv1a64:ed1800ed89237cad",
+  "findings": []
+}

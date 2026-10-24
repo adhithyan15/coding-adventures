@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:799604d6b19c3826",
+  "lessonIds": [
+    "HI-C544-qismat",
+    "HI-C544-samyog",
+    "HI-C544-mauqa",
+    "HI-C544-avsar",
+    "HI-C544-dav"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch544.txt",
+  "json": "hindi/narration/ch544.json",
+  "textHash": "fnv1a64:8d821756d9e4bdb6",
+  "jsonHash": "fnv1a64:e391db4f1a09eb00",
+  "findings": []
+}

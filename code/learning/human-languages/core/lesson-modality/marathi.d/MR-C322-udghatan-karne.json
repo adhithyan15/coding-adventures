@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C322-udghatan-karne",
+    "language": "marathi",
+    "chapter": 322,
+    "sequence": 18780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6eec0023f0edce7c"
+  },
+  "findings": []
+}

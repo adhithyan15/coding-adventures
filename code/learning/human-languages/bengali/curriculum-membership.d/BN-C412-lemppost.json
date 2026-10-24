@@ -1,0 +1,11 @@
+{
+  "id": "BN-C412-lemppost",
+  "pathSegment": "BN-PATH-412-PANCHIL412",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-412-PANCHIL412",
+      "order": 3
+    }
+  ]
+}

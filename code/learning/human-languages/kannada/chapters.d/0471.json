@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Crowds and Noise",
+  "label": "ch:ka-crowds-and-noise",
+  "canDo": "I can say a din, to gather, to stare, to tug and to spill over.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C471-tuluku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can say a din, to gather, to stare, to tug and to spill over.",
+    "assesses": [
+      "KA-LEX-C471-GADDALA471-03",
+      "KA-LEX-C471-GADDALA471-04",
+      "KA-LEX-C471-GADDALA471-05"
+    ]
+  }
+}

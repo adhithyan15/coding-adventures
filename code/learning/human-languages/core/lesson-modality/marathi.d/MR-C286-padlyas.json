@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C286-padlyas",
+    "language": "marathi",
+    "chapter": 286,
+    "sequence": 16420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:714281696940890a"
+  },
+  "findings": []
+}

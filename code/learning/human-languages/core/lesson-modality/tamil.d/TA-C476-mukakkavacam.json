@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C476-mukakkavacam",
+    "language": "tamil",
+    "chapter": 476,
+    "sequence": 27290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98cc1332a43c759a"
+  },
+  "findings": []
+}

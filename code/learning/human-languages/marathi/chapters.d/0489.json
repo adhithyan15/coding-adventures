@@ -1,0 +1,21 @@
+{
+  "chapter": 489,
+  "title": "Needles and Stitches",
+  "label": "ch:mr-needles-and-stitches",
+  "canDo": "I can talk about a vaccine, an operation, anaesthesia and stitches.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R489-review-482-489",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can talk about a vaccine, an operation, anaesthesia and stitches.",
+    "assesses": [
+      "MR-LEX-C489-LAS489-01",
+      "MR-LEX-C489-LAS489-02",
+      "MR-LEX-C489-LAS489-03",
+      "MR-LEX-C489-LAS489-04",
+      "MR-LEX-C489-LAS489-05"
+    ]
+  }
+}

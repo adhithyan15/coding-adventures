@@ -23,6 +23,9 @@ it("pins Bengali's writing ladder through its first A1 controlled composition", 
     ["BN-W26-kothay-controlled-question", "controlled-composition"],
     ["BN-W40-a1-timed-production", "timed-assessment-production"],
     ["BN-W263-a2-connected-composition", "connected-composition"],
+    // The B1 core's six connected lines about a trip, model-free, close the
+    // narrative chapters (BN-W275-six-lines, chapter 275).
+    ["BN-W275-six-lines", "connected-composition"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({

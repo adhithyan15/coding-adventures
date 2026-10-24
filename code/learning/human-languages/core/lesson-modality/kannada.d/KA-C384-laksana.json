@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C384-laksana",
+    "language": "kannada",
+    "chapter": 384,
+    "sequence": 19450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eabd4914095e4655"
+  },
+  "findings": []
+}

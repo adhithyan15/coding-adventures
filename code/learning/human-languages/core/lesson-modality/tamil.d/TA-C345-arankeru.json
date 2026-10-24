@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C345-arankeru",
+    "language": "tamil",
+    "chapter": 345,
+    "sequence": 19750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:321a4f961d898ea1"
+  },
+  "findings": []
+}

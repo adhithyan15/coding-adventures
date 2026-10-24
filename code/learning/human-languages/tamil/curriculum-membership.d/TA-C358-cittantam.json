@@ -1,0 +1,11 @@
+{
+  "id": "TA-C358-cittantam",
+  "pathSegment": "TA-PATH-358-KOTPATU358",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-358-KOTPATU358",
+      "order": 2
+    }
+  ]
+}

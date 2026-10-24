@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:fab3c7c98e2cf3a9",
+  "lessonIds": [
+    "KA-C429-asisu",
+    "KA-C429-apeksisu",
+    "KA-C429-prastapisu",
+    "KA-C429-sucisu",
+    "KA-C429-parihara"
+  ],
+  "tex": "kannada/book/chapters/ch429-hopes-and-proposals.tex"
+}

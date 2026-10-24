@@ -1,0 +1,11 @@
+{
+  "id": "KA-C441-kard",
+  "pathSegment": "KA-PATH-441-SHULKA441",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-441-SHULKA441",
+      "order": 4
+    }
+  ]
+}

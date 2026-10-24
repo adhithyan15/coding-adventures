@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C528-virangula",
+    "language": "marathi",
+    "chapter": 528,
+    "sequence": 30240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d977a9461a435ba7"
+  },
+  "findings": []
+}

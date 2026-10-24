@@ -1,0 +1,11 @@
+{
+  "id": "TA-R288-asking-the-way",
+  "pathSegment": "TA-PATH-288-ASK-THE-WAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-288-ASK-THE-WAY",
+      "order": 2
+    }
+  ]
+}

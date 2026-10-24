@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C480-imai",
+    "language": "tamil",
+    "chapter": 480,
+    "sequence": 27510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a56abf0f0af98268"
+  },
+  "findings": []
+}

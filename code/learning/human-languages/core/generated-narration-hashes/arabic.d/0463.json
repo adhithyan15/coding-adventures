@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:cc391bb71e40c62a",
+  "lessonIds": [
+    "AR-C463-munakh",
+    "AR-C463-ihtibas-harari",
+    "AR-C463-ghilaf-jawwi",
+    "AR-C463-inbiath",
+    "AR-C463-karbun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch463.txt",
+  "json": "arabic/narration/ch463.json",
+  "textHash": "fnv1a64:e4199aaaf9cfa111",
+  "jsonHash": "fnv1a64:ebf412e2c216ad37",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:8418b33219b6944c",
+  "lessonIds": [
+    "ML-C499-vanam",
+    "ML-C499-vanyajivi",
+    "ML-C499-sanketam",
+    "ML-C499-kattana",
+    "ML-C499-kattupottu"
+  ],
+  "tex": "malayalam/book/chapters/ch499-in-the-forest.tex"
+}

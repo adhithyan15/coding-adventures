@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:918db14981db59f0",
+  "lessonIds": [
+    "MR-C481-padse",
+    "MR-C481-kaph",
+    "MR-C481-sinkne",
+    "MR-C481-sinkarne",
+    "MR-C481-khakarne",
+    "MR-R481-review-474-481"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch481.txt",
+  "json": "marathi/narration/ch481.json",
+  "textHash": "fnv1a64:763be1c06a6b87b7",
+  "jsonHash": "fnv1a64:b36b06667eec7211",
+  "findings": []
+}

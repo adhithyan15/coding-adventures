@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C384-sipharsu-ceyu",
+    "language": "telugu",
+    "chapter": 384,
+    "sequence": 19130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0ee78b8e3b7ba01"
+  },
+  "findings": []
+}

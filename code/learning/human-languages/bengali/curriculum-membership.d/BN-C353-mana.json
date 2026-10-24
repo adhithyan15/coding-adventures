@@ -1,0 +1,11 @@
+{
+  "id": "BN-C353-mana",
+  "pathSegment": "BN-PATH-353-RITI353",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-353-RITI353",
+      "order": 4
+    }
+  ]
+}

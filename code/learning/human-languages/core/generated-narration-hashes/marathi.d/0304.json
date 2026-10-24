@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:8d318095f22ae453",
+  "lessonIds": [
+    "MR-C304-varnan-karne",
+    "MR-C304-prasang",
+    "MR-C304-ulgadne",
+    "MR-C304-gajne",
+    "MR-C304-pasarne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch304.txt",
+  "json": "marathi/narration/ch304.json",
+  "textHash": "fnv1a64:a41c3cb75b1eb989",
+  "jsonHash": "fnv1a64:a1e81356ae43bba2",
+  "findings": []
+}

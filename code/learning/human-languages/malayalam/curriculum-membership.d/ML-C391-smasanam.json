@@ -1,0 +1,11 @@
+{
+  "id": "ML-C391-smasanam",
+  "pathSegment": "ML-PATH-391-SAVAM391",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-391-SAVAM391",
+      "order": 1
+    }
+  ]
+}

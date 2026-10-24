@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-316-GHERA316",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a fort under siege: walls, moats, holding out.",
+  "prerequisites": []
+}

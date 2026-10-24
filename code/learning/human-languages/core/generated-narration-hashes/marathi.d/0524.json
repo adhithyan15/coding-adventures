@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:af1d94d5652087e7",
+  "lessonIds": [
+    "MR-C524-kacra",
+    "MR-C524-kersuni",
+    "MR-C524-potere",
+    "MR-C524-jhatakne",
+    "MR-C524-ghasne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch524.txt",
+  "json": "marathi/narration/ch524.json",
+  "textHash": "fnv1a64:33bc21bc63a421e6",
+  "jsonHash": "fnv1a64:e09d25deeeee377b",
+  "findings": []
+}

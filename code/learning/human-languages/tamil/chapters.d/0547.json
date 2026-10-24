@@ -1,0 +1,19 @@
+{
+  "chapter": 547,
+  "title": "When Plans Work Out",
+  "label": "ch:ta-when-plans-work-out",
+  "canDo": "I can talk about plans working out and dates being fixed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C547-nal-kuri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 547: I can talk about plans working out and dates being fixed.",
+    "assesses": [
+      "TA-LEX-C547-KAIKOODU547-03",
+      "TA-LEX-C547-KAIKOODU547-04",
+      "TA-LEX-C547-KAIKOODU547-05"
+    ]
+  }
+}

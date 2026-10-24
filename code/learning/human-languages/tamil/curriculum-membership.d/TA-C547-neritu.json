@@ -1,0 +1,11 @@
+{
+  "id": "TA-C547-neritu",
+  "pathSegment": "TA-PATH-547-KAIKOODU547",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-547-KAIKOODU547",
+      "order": 1
+    }
+  ]
+}

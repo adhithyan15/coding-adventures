@@ -1,0 +1,11 @@
+{
+  "id": "AR-C548-lakama",
+  "pathSegment": "AR-PATH-548-HALABA548",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-548-HALABA548",
+      "order": 4
+    }
+  ]
+}

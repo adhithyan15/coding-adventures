@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:cb5dc2a1494abf9a",
+  "lessonIds": [
+    "MR-C555-avadhi",
+    "MR-C555-dirangai",
+    "MR-C555-tatdi",
+    "MR-C555-dhandal",
+    "MR-C555-tarambal"
+  ],
+  "tex": "marathi/book/chapters/ch555-time-pressure.tex"
+}

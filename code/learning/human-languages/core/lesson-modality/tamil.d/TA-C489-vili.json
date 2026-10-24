@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C489-vili",
+    "language": "tamil",
+    "chapter": 489,
+    "sequence": 27970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09a5dbc5708edacb"
+  },
+  "findings": []
+}

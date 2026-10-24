@@ -63,8 +63,9 @@ native font-fallback subruns retain their own bindings in visual paint order.
   tiling are resolved in shared geometry. Intrinsic `cover`/`contain` image
   sizing remains host-resource-dependent; gradients fill their painting box.
 - **Host-owned image resources** — shared replaced metadata resolves fit and
-  intrinsic-ratio geometry, while URI fetching and decoding remain outside
-  this translator.
+  intrinsic-ratio geometry. Integrators may substitute decoded pixels during
+  diagram lowering; URI fetching, decoding, policy, and caching remain owned by
+  the host when decoded resources are unavailable.
 
 ## Text alignment
 

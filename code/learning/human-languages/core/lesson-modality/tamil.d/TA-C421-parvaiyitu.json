@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C421-parvaiyitu",
+    "language": "tamil",
+    "chapter": 421,
+    "sequence": 24200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8a97d9d10cde4b5"
+  },
+  "findings": []
+}

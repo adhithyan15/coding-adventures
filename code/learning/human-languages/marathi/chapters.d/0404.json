@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Traffic and Detours",
+  "label": "ch:mr-traffic-and-detours",
+  "canDo": "I can talk about traffic, signals, a detour and a crowd pressing in.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C404-datne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can talk about traffic, signals, a detour and a crowd pressing in.",
+    "assesses": [
+      "MR-LEX-C404-VALSA404-03",
+      "MR-LEX-C404-VALSA404-04",
+      "MR-LEX-C404-VALSA404-05"
+    ]
+  }
+}

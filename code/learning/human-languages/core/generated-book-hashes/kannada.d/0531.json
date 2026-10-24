@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:bf8ca717ea8cdc34",
+  "lessonIds": [
+    "KA-C531-pagade",
+    "KA-C531-keram",
+    "KA-C531-kannamuccale",
+    "KA-C531-uyyale",
+    "KA-C531-atike"
+  ],
+  "tex": "kannada/book/chapters/ch531-games-at-home.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C460-prayogikamaya",
+  "pathSegment": "ML-PATH-460-AGOLAM460",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-460-AGOLAM460",
+      "order": 2
+    }
+  ]
+}

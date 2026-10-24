@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C299-parriyeri",
+    "language": "tamil",
+    "chapter": 299,
+    "sequence": 17360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64e02af25ad3cfe1"
+  },
+  "findings": []
+}

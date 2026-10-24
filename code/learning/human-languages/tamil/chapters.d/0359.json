@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Twisting the Truth",
+  "label": "ch:ta-twisting-the-truth",
+  "canDo": "I can say that someone twists, exaggerates or rejects what was said.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C359-nirakari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can say that someone twists, exaggerates or rejects what was said.",
+    "assesses": [
+      "TA-LEX-C359-TIRI359-03",
+      "TA-LEX-C359-TIRI359-04",
+      "TA-LEX-C359-TIRI359-05"
+    ]
+  }
+}

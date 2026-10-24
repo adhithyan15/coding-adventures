@@ -1,0 +1,11 @@
+{
+  "id": "AR-C303-shirrir",
+  "pathSegment": "AR-PATH-303-USTURA303",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-303-USTURA303",
+      "order": 3
+    }
+  ]
+}

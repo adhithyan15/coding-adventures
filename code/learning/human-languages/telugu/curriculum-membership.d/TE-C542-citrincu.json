@@ -1,0 +1,11 @@
+{
+  "id": "TE-C542-citrincu",
+  "pathSegment": "TE-PATH-542-SILPAM542",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-542-SILPAM542",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:c25189f5d8ea6d0f",
+  "lessonIds": [
+    "MR-C365-vataghati-karne",
+    "MR-C365-vad-ghalne",
+    "MR-C365-retne",
+    "MR-C365-mitavne",
+    "MR-C365-sangharsa-karne",
+    "MR-R365-review-358-365"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch365.txt",
+  "json": "marathi/narration/ch365.json",
+  "textHash": "fnv1a64:85c0e6f060775a6e",
+  "jsonHash": "fnv1a64:ab6604d49b4b778f",
+  "findings": []
+}

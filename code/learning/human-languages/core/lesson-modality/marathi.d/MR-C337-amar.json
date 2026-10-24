@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C337-amar",
+    "language": "marathi",
+    "chapter": 337,
+    "sequence": 19530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ba21124be046202"
+  },
+  "findings": []
+}

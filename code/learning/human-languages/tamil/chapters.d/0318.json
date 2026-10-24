@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "An Opening Ceremony",
+  "label": "ch:ta-an-opening-ceremony",
+  "canDo": "I can describe the opening of a building or a festival.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C318-uraiyarru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can describe the opening of a building or a festival.",
+    "assesses": [
+      "TA-LEX-C318-VIZHA318-03",
+      "TA-LEX-C318-VIZHA318-04",
+      "TA-LEX-C318-VIZHA318-05"
+    ]
+  }
+}

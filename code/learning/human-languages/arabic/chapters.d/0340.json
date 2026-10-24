@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Rulers and tribes",
+  "label": "ch:ar-rulers-and-tribes",
+  "canDo": "I can say a ruler, a sultan, a tribe, a royal court and to take office.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R340-review-333-340",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can say a ruler, a sultan, a tribe, a royal court and to take office.",
+    "assesses": [
+      "AR-LEX-C340-HUKM340-03",
+      "AR-LEX-C340-HUKM340-04",
+      "AR-LEX-C340-HUKM340-05"
+    ]
+  }
+}

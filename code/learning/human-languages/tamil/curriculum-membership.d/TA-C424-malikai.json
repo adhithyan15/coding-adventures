@@ -1,0 +1,11 @@
+{
+  "id": "TA-C424-malikai",
+  "pathSegment": "TA-PATH-424-SILAI424",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-424-SILAI424",
+      "order": 3
+    }
+  ]
+}

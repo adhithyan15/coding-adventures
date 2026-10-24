@@ -1,0 +1,11 @@
+{
+  "id": "TA-C376-perani",
+  "pathSegment": "TA-PATH-376-PORATU376",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-376-PORATU376",
+      "order": 2
+    }
+  ]
+}

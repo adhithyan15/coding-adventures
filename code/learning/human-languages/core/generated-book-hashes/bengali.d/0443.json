@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:6192a20608be5b14",
+  "lessonIds": [
+    "BN-C443-khobh",
+    "BN-C443-khitkhite",
+    "BN-C443-khepano",
+    "BN-C443-phuse-otha",
+    "BN-C443-gojgoj-kora"
+  ],
+  "tex": "bengali/book/chapters/ch443-temper-and-grumbling.tex"
+}

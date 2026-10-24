@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:8018c092e8bca67d",
+  "lessonIds": [
+    "TE-C537-bongaram",
+    "TE-C537-golilu",
+    "TE-C537-dagudumutalu",
+    "TE-C537-cedugudu",
+    "TE-C537-gentu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch537.txt",
+  "json": "telugu/narration/ch537.json",
+  "textHash": "fnv1a64:0cccc033b75bc865",
+  "jsonHash": "fnv1a64:2a007cd7ce8eea74",
+  "findings": []
+}

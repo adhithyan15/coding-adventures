@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:2158e843ebeeee0b",
+  "lessonIds": [
+    "ML-C451-itapetuka",
+    "ML-C451-nirbandhikkuka",
+    "ML-C451-rekhappetuttuka",
+    "ML-C451-bhisanippetuttuka",
+    "ML-C451-matikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch451.txt",
+  "json": "malayalam/narration/ch451.json",
+  "textHash": "fnv1a64:15c6cd48a37aa26b",
+  "jsonHash": "fnv1a64:0997ee0b8871c566",
+  "findings": []
+}

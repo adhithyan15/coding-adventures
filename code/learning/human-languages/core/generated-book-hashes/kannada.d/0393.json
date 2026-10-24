@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:c5d8aa44e3a3b017",
+  "lessonIds": [
+    "KA-C393-samsattu",
+    "KA-C393-mantri",
+    "KA-C393-samvidhana",
+    "KA-C393-prajaprabhutva",
+    "KA-C393-pratinidhisu"
+  ],
+  "tex": "kannada/book/chapters/ch393-running-a-country.tex"
+}

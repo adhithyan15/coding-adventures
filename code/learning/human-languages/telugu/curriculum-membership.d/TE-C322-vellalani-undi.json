@@ -1,0 +1,11 @@
+{
+  "id": "TE-C322-vellalani-undi",
+  "pathSegment": "TE-PATH-322-FEELINGS-HOPES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-322-FEELINGS-HOPES",
+      "order": 3
+    }
+  ]
+}

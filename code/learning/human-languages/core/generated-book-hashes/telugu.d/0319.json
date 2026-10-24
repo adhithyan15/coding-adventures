@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:9e9bcb5ee742a955",
+  "lessonIds": [
+    "TE-C319-vellali",
+    "TE-C319-otu",
+    "TE-S175-letter-oo",
+    "TE-C319-nadavadam-valla",
+    "TE-R319-advice-and-reasons"
+  ],
+  "tex": "telugu/book/chapters/ch319-must-must-not-and-because.tex"
+}

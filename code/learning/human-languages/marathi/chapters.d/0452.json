@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "A Sudden Fright",
+  "label": "ch:mr-a-sudden-fright",
+  "canDo": "I can describe a shock and a sudden fright.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C452-habakne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can describe a shock and a sudden fright.",
+    "assesses": [
+      "MR-LEX-C452-DHAKKA452-03",
+      "MR-LEX-C452-DHAKKA452-04",
+      "MR-LEX-C452-DHAKKA452-05"
+    ]
+  }
+}

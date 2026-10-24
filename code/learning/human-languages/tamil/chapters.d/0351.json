@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "Making a Point",
+  "label": "ch:ta-making-a-point",
+  "canDo": "I can mention, point out and explain what I mean.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C351-etuttukkattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can mention, point out and explain what I mean.",
+    "assesses": [
+      "TA-LEX-C351-KURIPPITU351-03",
+      "TA-LEX-C351-KURIPPITU351-04",
+      "TA-LEX-C351-KURIPPITU351-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Heat and Cold",
+  "label": "ch:ml-heat-and-cold",
+  "canDo": "I can say temperature, humidity, sultry heat, a chill and to get hot.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C509-cutakuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can say temperature, humidity, sultry heat, a chill and to get hot.",
+    "assesses": [
+      "ML-LEX-C509-CUTU509-03",
+      "ML-LEX-C509-CUTU509-04",
+      "ML-LEX-C509-CUTU509-05"
+    ]
+  }
+}

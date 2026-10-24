@@ -1,0 +1,22 @@
+{
+  "chapter": 273,
+  "title": "Than, Most, and How Long",
+  "label": "ch:bn-than-most-and-how-long",
+  "canDo": "I can compare (-er cheye, sôbcheye), say how long something has gone on (dui bôchhôr dhôre, sôkāl theke rāt pôrjôntô), and read and write the sign ৈ in দৈনিক.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R273-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete BN-R273-comparing-and-time: compare things and say how long.",
+    "assesses": [
+      "BN-GRAMMAR-C273-CHEYE-01",
+      "BN-GRAMMAR-C273-DHORE-01",
+      "BN-LEX-C273-DOINIK-01",
+      "BN-SCRIPT-C273-OI-KAR-01",
+      "BN-GRAMMAR-C273-SOBCHEYE-01",
+      "BN-GRAMMAR-C273-THEKE-PORJONTO-01"
+    ]
+  }
+}

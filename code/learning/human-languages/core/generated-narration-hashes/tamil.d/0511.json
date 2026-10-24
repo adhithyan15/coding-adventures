@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:ee531502080ddabc",
+  "lessonIds": [
+    "TA-C511-errumati",
+    "TA-C511-irakkumati",
+    "TA-C511-vanikam",
+    "TA-C511-tolilatipar",
+    "TA-C511-kuttali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch511.txt",
+  "json": "tamil/narration/ch511.json",
+  "textHash": "fnv1a64:6c90610c43f96e92",
+  "jsonHash": "fnv1a64:f0b2a7fe42ddb4ef",
+  "findings": []
+}

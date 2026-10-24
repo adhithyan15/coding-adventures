@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-462-BOOKING462",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-462-BOOKING462"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C307-tunukku",
+  "pathSegment": "TA-PATH-307-SEYTHI307",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-307-SEYTHI307",
+      "order": 3
+    }
+  ]
+}

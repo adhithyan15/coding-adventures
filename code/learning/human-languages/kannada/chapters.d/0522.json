@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Craftspeople",
+  "label": "ch:ka-craftspeople",
+  "canDo": "I can say a blacksmith, a goldsmith, a weaver, a sculptor and to carve.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C522-kettu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can say a blacksmith, a goldsmith, a weaver, a sculptor and to carve.",
+    "assesses": [
+      "KA-LEX-C522-KASUBU522-03",
+      "KA-LEX-C522-KASUBU522-04",
+      "KA-LEX-C522-KASUBU522-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C539-moriya",
+    "language": "bengali",
+    "chapter": 539,
+    "sequence": 32430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be33299e5c455536"
+  },
+  "findings": []
+}

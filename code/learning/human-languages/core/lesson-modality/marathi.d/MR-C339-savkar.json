@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C339-savkar",
+    "language": "marathi",
+    "chapter": 339,
+    "sequence": 19650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14784a9b6f2e57ad"
+  },
+  "findings": []
+}

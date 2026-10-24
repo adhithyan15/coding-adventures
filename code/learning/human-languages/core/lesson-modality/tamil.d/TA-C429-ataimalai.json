@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C429-ataimalai",
+    "language": "tamil",
+    "chapter": 429,
+    "sequence": 24610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:818b1848a0a61c99"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C353-vastavik",
+  "pathSegment": "MR-PATH-353-PUSHTI353",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-353-PUSHTI353",
+      "order": 3
+    }
+  ]
+}

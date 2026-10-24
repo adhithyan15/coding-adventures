@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:8ed092789093ec6b",
+  "lessonIds": [
+    "AR-C335-sahir",
+    "AR-C335-ghul",
+    "AR-C335-tinnin",
+    "AR-C335-imlaq",
+    "AR-C335-qazam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch335.txt",
+  "json": "arabic/narration/ch335.json",
+  "textHash": "fnv1a64:dfc9201ecd92e1ed",
+  "jsonHash": "fnv1a64:087df2c4dc17a81f",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:280019507e084709",
+  "lessonIds": [
+    "ML-C495-kotumuti",
+    "ML-C495-malancerivu",
+    "ML-C495-curam",
+    "ML-C495-pulmetu",
+    "ML-C495-tanal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch495.txt",
+  "json": "malayalam/narration/ch495.json",
+  "textHash": "fnv1a64:14a54384bd90045b",
+  "jsonHash": "fnv1a64:fda037d4ac4d9cfa",
+  "findings": []
+}

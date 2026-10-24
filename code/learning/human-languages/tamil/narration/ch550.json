@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 550,
+  "title": "Building a House",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:55d20540fcdb37f1",
+  "lessons": [
+    {
+      "id": "TA-C550-astivaram",
+      "sequence": 31350,
+      "title": "அஸ்திவாரம் (astivāram) — a foundation",
+      "headword": "அஸ்திவாரம்",
+      "romanization": "astivāram",
+      "gloss": "a foundation",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c904e6bb7f238d60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for readiness, then the Tamil for to slip away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அஸ்திவாரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அஸ்திவாரம் — astivāram — \"a foundation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அஸ்திவாரம் பலமாக இல்லாவிட்டால் வீடு நிற்காது. astivāram palamāka illāviṭṭāl vīṭu niṟkātu. If the foundation is not strong, the house will not stand."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of ideas: நம்பிக்கைதான் உறவின் அஸ்திவாரம் (astivāram), trust is the foundation of a relationship."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of அஸ்திவாரம் (astivāram) is not settled: no dictionary we can check gives its source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "astivāram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *astivāram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "astivāram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *astivāram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "astivāram palamāka illāviṭṭāl vīṭu niṟkātu. — If the foundation is not strong, the house will not stand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *astivāram palamāka illāviṭṭāl vīṭu niṟkātu.* — If the foundation is not strong, the house will not stand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for readiness, then the Tamil for to slip away, then say astivāram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for readiness, then the Tamil for to slip away, then say *astivāram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அஸ்திவாரம் (astivāram) mean? (\"A foundation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C550-cenkal",
+      "sequence": 31360,
+      "title": "செங்கல் (ceṅkal) — a brick",
+      "headword": "செங்கல்",
+      "romanization": "ceṅkal",
+      "gloss": "a brick",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c4685fc2f7c4718",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to slip away, then the Tamil for a foundation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: செங்கல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செங்கல் — ceṅkal — \"a brick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "லாரியில் ஆயிரம் செங்கற்கள் வந்தன. lāriyil āyiram ceṅkaṟkaḷ vantaṉa. A thousand bricks came on the lorry."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: செங்கற்கள், ceṅkaṟkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Before -கள் the final -ல் becomes -ற்: செங்கற்கள், bricks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செங்கல் (ceṅkal) is a native compound: செம் (cem), \"red\" (DEDR 1931), and கல் (kal), \"a stone\" (DEDR 1298): a red stone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceṅkal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceṅkal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceṅkal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceṅkal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāriyil āyiram ceṅkaṟkaḷ vantaṉa. — A thousand bricks came on the lorry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāriyil āyiram ceṅkaṟkaḷ vantaṉa.* — A thousand bricks came on the lorry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to slip away, then the Tamil for a foundation, then say ceṅkal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to slip away, then the Tamil for a foundation, then say *ceṅkal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does செங்கல் (ceṅkal) mean? (\"A brick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C550-ciment",
+      "sequence": 31370,
+      "title": "சிமெண்ட் (cimeṇṭ) — cement",
+      "headword": "சிமெண்ட்",
+      "romanization": "cimeṇṭ",
+      "gloss": "cement",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbee7cbbcc2b30dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a foundation, then the Tamil for a brick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிமெண்ட்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிமெண்ட் — cimeṇṭ — \"cement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சுவர் கட்ட இன்னும் பத்து மூட்டை சிமெண்ட் வேண்டும். cuvar kaṭṭa iṉṉum pattu mūṭṭai cimeṇṭ vēṇṭum. We need ten more sacks of cement to build the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Written with the final ட் of the English word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிமெண்ட் (cimeṇṭ) is a loan from English cement."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cimeṇṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cimeṇṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cimeṇṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cimeṇṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuvar kaṭṭa iṉṉum pattu mūṭṭai cimeṇṭ vēṇṭum. — We need ten more sacks of cement to build the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuvar kaṭṭa iṉṉum pattu mūṭṭai cimeṇṭ vēṇṭum.* — We need ten more sacks of cement to build the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a foundation, then the Tamil for a brick, then say cimeṇṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a foundation, then the Tamil for a brick, then say *cimeṇṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிமெண்ட் (cimeṇṭ) mean? (\"Cement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C550-caram",
+      "sequence": 31380,
+      "title": "சாரம் (cāram) — scaffolding",
+      "headword": "சாரம்",
+      "romanization": "cāram",
+      "gloss": "scaffolding",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3363f8cf9ae5a436",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a brick, then the Tamil for cement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சாரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாரம் — cāram — \"scaffolding\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தொழிலாளர்கள் சாரத்தின் மேல் நின்று வேலை செய்தார்கள். toḻilāḷarkaḷ cārattiṉ mēl niṉṟu vēlai ceytārkaḷ. The workers stood on the scaffolding and worked."
+            },
+            {
+              "kind": "speech",
+              "text": "A -அம் noun: சாரத்தில், சாரத்தின் மேல்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of சாரம் (cāram) in this sense is not settled; it sounds the same as சாரம், \"essence\", a different word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilāḷarkaḷ cārattiṉ mēl niṉṟu vēlai ceytārkaḷ. — The workers stood on the scaffolding and worked.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilāḷarkaḷ cārattiṉ mēl niṉṟu vēlai ceytārkaḷ.* — The workers stood on the scaffolding and worked.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a brick, then the Tamil for cement, then say cāram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a brick, then the Tamil for cement, then say *cāram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சாரம் (cāram) mean? (\"Scaffolding\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C550-mestiri",
+      "sequence": 31390,
+      "title": "மேஸ்திரி (mēstiri) — a foreman; a head mason",
+      "headword": "மேஸ்திரி",
+      "romanization": "mēstiri",
+      "gloss": "a foreman; a head mason",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ab98b57aaf04da2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for cement, then the Tamil for scaffolding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மேஸ்திரி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேஸ்திரி — mēstiri — \"a foreman; a head mason\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மேஸ்திரி தொழிலாளர்களுக்கு வேலையைப் பிரித்துக் கொடுத்தார். mēstiri toḻilāḷarkaḷukku vēlaiyaip pirittuk koṭuttār. The foreman shared out the work among the workers."
+            },
+            {
+              "kind": "speech",
+              "text": "A head of a building gang; compare கொத்தனார் (kottaṉār), a mason."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேஸ்திரி (mēstiri) is a loan from Portuguese mestre, \"a master\", which also reached other Indian languages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēstiri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēstiri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēstiri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēstiri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēstiri toḻilāḷarkaḷukku vēlaiyaip pirittuk koṭuttār. — The foreman shared out the work among the workers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēstiri toḻilāḷarkaḷukku vēlaiyaip pirittuk koṭuttār.* — The foreman shared out the work among the workers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for cement, then the Tamil for scaffolding, then say mēstiri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for cement, then the Tamil for scaffolding, then say *mēstiri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மேஸ்திரி (mēstiri) mean? (\"A foreman; a head mason\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

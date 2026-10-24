@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C464-utsuk",
+    "language": "hindi",
+    "chapter": 464,
+    "sequence": 25630,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ddb6598686ba1a6b"
+  },
+  "findings": []
+}

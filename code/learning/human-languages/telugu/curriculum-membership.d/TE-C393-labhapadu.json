@@ -1,0 +1,11 @@
+{
+  "id": "TE-C393-labhapadu",
+  "pathSegment": "TE-PATH-393-PRAYOJANAM393",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-393-PRAYOJANAM393",
+      "order": 1
+    }
+  ]
+}

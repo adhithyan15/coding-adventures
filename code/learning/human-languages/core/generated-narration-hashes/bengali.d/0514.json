@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:ebd4f54008dae947",
+  "lessonIds": [
+    "BN-C514-photano",
+    "BN-C514-tatano",
+    "BN-C514-seka",
+    "BN-C514-bhapano",
+    "BN-C514-satlano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch514.txt",
+  "json": "bengali/narration/ch514.json",
+  "textHash": "fnv1a64:bf86fb27821cd4ad",
+  "jsonHash": "fnv1a64:1179afa928de56a1",
+  "findings": []
+}

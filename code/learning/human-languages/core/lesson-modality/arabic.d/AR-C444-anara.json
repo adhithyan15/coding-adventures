@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C444-anara",
+    "language": "arabic",
+    "chapter": 444,
+    "sequence": 24910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:699bed77e6d8331c"
+  },
+  "findings": []
+}

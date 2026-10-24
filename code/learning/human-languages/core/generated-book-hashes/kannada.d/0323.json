@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:5ffd39342c96bbf6",
+  "lessonIds": [
+    "KA-C323-aparadha",
+    "KA-C323-bandhisu",
+    "KA-C323-thane",
+    "KA-C323-tanikhe",
+    "KA-C323-sankisu"
+  ],
+  "tex": "kannada/book/chapters/ch323-a-crime-in-the-town.tex"
+}

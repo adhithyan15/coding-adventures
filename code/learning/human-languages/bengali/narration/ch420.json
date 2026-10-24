@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 420,
+  "title": "Sales, Hawkers and Markets",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cdd3a86682b9d4ac",
+  "lessons": [
+    {
+      "id": "BN-C420-bikri",
+      "sequence": 25840,
+      "title": "বিক্রি (bikri) — a sale; selling",
+      "headword": "বিক্রি",
+      "romanization": "bikri",
+      "gloss": "a sale; selling",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9955b9e3b74175ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a pledge (for a loan), then the Bengali for one's means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিক্রি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিক্রি — bikri — \"a sale; selling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শীতে কম্বলের বিক্রি ভালো হয়। shīte kômbôler bikri bhālo hôy. Blankets sell well in winter."
+            },
+            {
+              "kind": "speech",
+              "text": "বিক্রি (bikri) করা, to sell; বিক্রি (bikri) হওয়া, to be sold."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিক্রি (bikri) goes back to Sanskrit vikrayá, \"a sale\" (CDIAL 11638), under which CDIAL lists the older Bengali bikā and biki; বিক্রি is the half-learned form in use today."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shīte kômbôler bikri bhālo hôy. — Blankets sell well in winter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shīte kômbôler bikri bhālo hôy.* — Blankets sell well in winter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a pledge (for a loan), then the Bengali for one's means, then say bikri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a pledge (for a loan), then the Bengali for one's means, then say *bikri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিক্রি (bikri) mean? (\"A sale; selling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C420-pherioyala",
+      "sequence": 25850,
+      "title": "ফেরিওয়ালা (pherioyālā) — a hawker; a street seller",
+      "headword": "ফেরিওয়ালা",
+      "romanization": "pherioyālā",
+      "gloss": "a hawker; a street seller",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55ec65a01963a2b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for one's means, then the Bengali for a sale (selling)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফেরিওয়ালা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফেরিওয়ালা — pherioyālā — \"a hawker; a street seller\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দুপুরে গলিতে ফেরিওয়ালা হাঁকছিল। dupure gôlite pherioyālā hā̃kchhilô. At midday a hawker was crying his wares in the lane."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফেরিওয়ালা (pherioyālā) joins ফেরি, \"going round selling\", from the root of ফেরা, to turn (CDIAL 9078), to -ওয়ালা, the ending for one who deals in a thing: the man who goes round."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pherioyālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pherioyālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pherioyālā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pherioyālā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dupure gôlite pherioyālā hā̃kchhilô. — At midday a hawker was crying his wares in the lane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dupure gôlite pherioyālā hā̃kchhilô.* — At midday a hawker was crying his wares in the lane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for one's means, then the Bengali for a sale (selling), then say pherioyālā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for one's means, then the Bengali for a sale (selling), then say *pherioyālā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফেরিওয়ালা (pherioyālā) mean? (\"A hawker; a street seller\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C420-dalal",
+      "sequence": 25860,
+      "title": "দালাল (dālāl) — a broker; a middleman",
+      "headword": "দালাল",
+      "romanization": "dālāl",
+      "gloss": "a broker; a middleman",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e12ab2041176a57e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a sale (selling), then the Bengali for a hawker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দালাল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দালাল — dālāl — \"a broker; a middleman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দালাল বাসার জন্য অগ্রিম চাইল। dālāl bāsār jônyô ôgrim chāilô. The broker asked for an advance for the flat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দালাল (dālāl) is usually traced to Arabic dallāl, \"a broker, a guide\", through Persian; the word often carries a hint of distrust."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dālāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dālāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dālāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dālāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dālāl bāsār jônyô ôgrim chāilô. — The broker asked for an advance for the flat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dālāl bāsār jônyô ôgrim chāilô.* — The broker asked for an advance for the flat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a sale (selling), then the Bengali for a hawker, then say dālāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a sale (selling), then the Bengali for a hawker, then say *dālāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দালাল (dālāl) mean? (\"A broker; a middleman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C420-hat",
+      "sequence": 25870,
+      "title": "হাট (hāṭ) — a village market (on set days)",
+      "headword": "হাট",
+      "romanization": "hāṭ",
+      "gloss": "a village market (on set days)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54cdb5878d892a47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a hawker, then the Bengali for a broker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হাট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাট — hāṭ — \"a village market (on set days)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের গ্রামে বুধবার হাট বসে। āmāder grāme budhbār hāṭ bôse. In our village the market is held every Wednesday."
+            },
+            {
+              "kind": "speech",
+              "text": "A বাজার opens every day; a হাট (hāṭ) বসে, sits, on its own days of the week."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাট (hāṭ) is inherited: CDIAL lists Bengali hāṭ, \"a shop, a market\", under Sanskrit haṭṭa, \"a market, a fair\" (CDIAL 13944)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmāder grāme budhbār hāṭ bôse. — In our village the market is held every Wednesday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmāder grāme budhbār hāṭ bôse.* — In our village the market is held every Wednesday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a hawker, then the Bengali for a broker, then say hāṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a hawker, then the Bengali for a broker, then say *hāṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হাট (hāṭ) mean? (\"A village market (on set days)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C420-bikono",
+      "sequence": 25880,
+      "title": "বিকোনো (bikono) — to be sold; to sell (for a price)",
+      "headword": "বিকোনো",
+      "romanization": "bikono",
+      "gloss": "to be sold; to sell (for a price)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ff768a1f2800166",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a broker, then the Bengali for a village market."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিকোনো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিকোনো — bikono — \"to be sold; to sell (for a price)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "হাটে মাছটা ভালো দামে বিকোল। hāṭe māchhṭā bhālo dāme bikolô. At the market the fish sold for a good price."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই মাছ ভালো দামে বিকোল, sei māchh bhālo dāme bikolô."
+            },
+            {
+              "kind": "speech",
+              "text": "The goods are the subject: আম বিকোয়, mangoes sell."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিকোনো (bikono) is inherited: CDIAL lists Bengali bikā, \"to sell\", under Sanskrit vikrīyatē, \"is sold\" (CDIAL 11642)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāṭe māchhṭā bhālo dāme bikolô. — At the market the fish sold for a good price.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāṭe māchhṭā bhālo dāme bikolô.* — At the market the fish sold for a good price.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a broker, then the Bengali for a village market, then say bikono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a broker, then the Bengali for a village market, then say *bikono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিকোনো (bikono) mean? (\"To be sold; to sell (for a price)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

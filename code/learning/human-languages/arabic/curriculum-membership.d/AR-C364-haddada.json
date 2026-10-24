@@ -1,0 +1,11 @@
+{
+  "id": "AR-C364-haddada",
+  "pathSegment": "AR-PATH-364-TAHLIL364",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-364-TAHLIL364",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Who Said What",
+  "label": "ch:bn-who-said-what",
+  "canDo": "I can report what someone said, announced or mentioned.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C297-ullekh-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can report what someone said, announced or mentioned.",
+    "assesses": [
+      "BN-LEX-C297-KOTHA297-03",
+      "BN-LEX-C297-KOTHA297-04",
+      "BN-LEX-C297-KOTHA297-05"
+    ]
+  }
+}

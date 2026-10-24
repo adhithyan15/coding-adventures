@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Outcomes",
+  "label": "ch:ar-outcomes",
+  "canDo": "I can say that something stemmed from, followed from or was reflected in something, and talk about consequences and effects.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C414-tathir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can say that something stemmed from, followed from or was reflected in something, and talk about consequences and effects.",
+    "assesses": [
+      "AR-LEX-C414-NATIJA414-03",
+      "AR-LEX-C414-NATIJA414-04",
+      "AR-LEX-C414-NATIJA414-05"
+    ]
+  }
+}

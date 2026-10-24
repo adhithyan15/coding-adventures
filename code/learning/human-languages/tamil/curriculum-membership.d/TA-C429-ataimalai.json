@@ -1,0 +1,11 @@
+{
+  "id": "TA-C429-ataimalai",
+  "pathSegment": "TA-PATH-429-PUYAL429",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-429-PUYAL429",
+      "order": 3
+    }
+  ]
+}

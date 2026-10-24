@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C365-manano",
+    "language": "bengali",
+    "chapter": 365,
+    "sequence": 22820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d92e74516235f28"
+  },
+  "findings": []
+}

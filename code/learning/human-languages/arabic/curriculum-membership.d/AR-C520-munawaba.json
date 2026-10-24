@@ -1,0 +1,11 @@
+{
+  "id": "AR-C520-munawaba",
+  "pathSegment": "AR-PATH-520-DAWAM520",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-520-DAWAM520",
+      "order": 1
+    }
+  ]
+}

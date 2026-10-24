@@ -1,0 +1,11 @@
+{
+  "id": "BN-C532-ach-kora",
+  "pathSegment": "BN-PATH-532-BHOBITOBBO532",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-532-BHOBITOBBO532",
+      "order": 2
+    }
+  ]
+}

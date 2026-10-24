@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:00b528e3a8427ab7",
+  "lessonIds": [
+    "TE-C379-egabadu",
+    "TE-C379-padipovu",
+    "TE-C379-badhitudu",
+    "TE-C379-morapettuko",
+    "TE-C379-veduko"
+  ],
+  "tex": "telugu/book/chapters/ch379-crowds-and-cries.tex"
+}

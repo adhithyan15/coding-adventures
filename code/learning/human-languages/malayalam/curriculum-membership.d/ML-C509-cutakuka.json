@@ -1,0 +1,11 @@
+{
+  "id": "ML-C509-cutakuka",
+  "pathSegment": "ML-PATH-509-CUTU509",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-509-CUTU509",
+      "order": 4
+    }
+  ]
+}

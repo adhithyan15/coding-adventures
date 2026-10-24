@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C534-muqabla",
+    "language": "hindi",
+    "chapter": 534,
+    "sequence": 29440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c4caf3d89d89989"
+  },
+  "findings": []
+}

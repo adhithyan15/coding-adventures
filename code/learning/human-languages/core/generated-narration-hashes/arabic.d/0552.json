@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:834067048fb9e74d",
+  "lessonIds": [
+    "AR-C552-tila",
+    "AR-C552-rammama",
+    "AR-C552-zayyana",
+    "AR-C552-jaffafa",
+    "AR-C552-farasha",
+    "AR-R552-review-552-552",
+    "AR-R552-review-final-552"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch552.txt",
+  "json": "arabic/narration/ch552.json",
+  "textHash": "fnv1a64:ba74ab4c7521b392",
+  "jsonHash": "fnv1a64:766fa700a9242ff4",
+  "findings": []
+}

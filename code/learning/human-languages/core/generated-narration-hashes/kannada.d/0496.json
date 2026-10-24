@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:b0396423903eaa59",
+  "lessonIds": [
+    "KA-C496-hambalisu",
+    "KA-C496-halahalisu",
+    "KA-C496-bharavase",
+    "KA-C496-katara",
+    "KA-C496-nirala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch496.txt",
+  "json": "kannada/narration/ch496.json",
+  "textHash": "fnv1a64:ba95c14b9651e1eb",
+  "jsonHash": "fnv1a64:9ea4e38533e156cc",
+  "findings": []
+}

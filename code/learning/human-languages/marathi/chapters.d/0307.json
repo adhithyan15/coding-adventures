@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Beginnings and Endings",
+  "label": "ch:mr-beginnings-and-endings",
+  "canDo": "I can say how a story or a period began and ended.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C307-smrti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can say how a story or a period began and ended.",
+    "assesses": [
+      "MR-LEX-C307-ANT307-03",
+      "MR-LEX-C307-ANT307-04",
+      "MR-LEX-C307-ANT307-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:6c51f879b5c1e5b1",
+  "lessonIds": [
+    "MR-C504-sutar",
+    "MR-C504-simpi",
+    "MR-C504-gavandi",
+    "MR-C504-nhavi",
+    "MR-C504-thokne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch504.txt",
+  "json": "marathi/narration/ch504.json",
+  "textHash": "fnv1a64:276e337e66df53e2",
+  "jsonHash": "fnv1a64:6d830c13bcb9bcce",
+  "findings": []
+}

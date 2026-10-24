@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C420-istajaba",
+    "language": "arabic",
+    "chapter": 420,
+    "sequence": 23570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4de75b747adafa70"
+  },
+  "findings": []
+}

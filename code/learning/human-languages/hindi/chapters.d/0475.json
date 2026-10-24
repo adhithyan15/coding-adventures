@@ -1,0 +1,21 @@
+{
+  "chapter": 475,
+  "title": "Character and Conduct",
+  "label": "ch:hi-character-and-conduct",
+  "canDo": "I can describe someone's character and moods.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-R475-review-468-475",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can describe someone's character and moods.",
+    "assesses": [
+      "HI-LEX-C475-CHARITRA475-01",
+      "HI-LEX-C475-CHARITRA475-02",
+      "HI-LEX-C475-CHARITRA475-03",
+      "HI-LEX-C475-CHARITRA475-04",
+      "HI-LEX-C475-CHARITRA475-05"
+    ]
+  }
+}

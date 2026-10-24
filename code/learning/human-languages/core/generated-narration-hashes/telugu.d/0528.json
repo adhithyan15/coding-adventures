@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:ef0405af55aa0d79",
+  "lessonIds": [
+    "TE-C528-tobuttuvu",
+    "TE-C528-annadammulu",
+    "TE-C528-maridi",
+    "TE-C528-adapaducu",
+    "TE-C528-vadina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch528.txt",
+  "json": "telugu/narration/ch528.json",
+  "textHash": "fnv1a64:4084c4dc734d775b",
+  "jsonHash": "fnv1a64:5bfb8dd682ded6c4",
+  "findings": []
+}

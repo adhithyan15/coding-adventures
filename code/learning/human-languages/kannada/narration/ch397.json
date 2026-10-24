@@ -1,0 +1,857 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 397,
+  "title": "Citizens Together",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d28c24e19ce1583f",
+  "lessons": [
+    {
+      "id": "KA-C397-nagarika",
+      "sequence": 20070,
+      "title": "ನಾಗರಿಕ (nāgarika) — a citizen",
+      "headword": "ನಾಗರಿಕ",
+      "romanization": "nāgarika",
+      "gloss": "a citizen",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b016d56dc4d29db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a legislator, then the Kannada for to endorse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಾಗರಿಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಗರಿಕ — nāgarika — \"a citizen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಯೊಬ್ಬ ನಾಗರಿಕನೂ ತೆರಿಗೆ ಕಟ್ಟಬೇಕು. pratiyobba nāgarikanū terige kaṭṭabēku. Every citizen must pay taxes."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ನಾಗರಿಕರು, nāgarikaru."
+            },
+            {
+              "kind": "speech",
+              "text": "As an adjective it means civil, civilised."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಗರಿಕ (nāgarika) is borrowed from Sanskrit nāgarika, \"born or living in a town, civic\" (Monier-Williams), from nagara, \"a town\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāgarika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāgarika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāgarika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāgarika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiyobba nāgarikanū terige kaṭṭabēku. — Every citizen must pay taxes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiyobba nāgarikanū terige kaṭṭabēku.* — Every citizen must pay taxes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a legislator, then the Kannada for to endorse, then say nāgarika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a legislator, then the Kannada for to endorse, then say *nāgarika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಾಗರಿಕ (nāgarika) mean? (\"A citizen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C397-pauratva",
+      "sequence": 20080,
+      "title": "ಪೌರತ್ವ (pauratva) — citizenship",
+      "headword": "ಪೌರತ್ವ",
+      "romanization": "pauratva",
+      "gloss": "citizenship",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a45e0cc22b1f9e54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to endorse, then the Kannada for a citizen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪೌರತ್ವ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೌರತ್ವ — pauratva — \"citizenship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳಿಗೆ ಈ ದೇಶದ ಪೌರತ್ವ ಸಿಕ್ಕಿತು. avaḷige ī dēśada pauratva sikkitu. She got the citizenship of this country."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೌರ (citizen) + -ತ್ವ (-ship)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೌರತ್ವ (pauratva) is built on Sanskrit paura, \"a citizen\" (CDIAL 8419), with -tva, \"-ship\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pauratva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pauratva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pauratva, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pauratva*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷige ī dēśada pauratva sikkitu. — She got the citizenship of this country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷige ī dēśada pauratva sikkitu.* — She got the citizenship of this country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to endorse, then the Kannada for a citizen, then say pauratva again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to endorse, then the Kannada for a citizen, then say *pauratva* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪೌರತ್ವ (pauratva) mean? (\"Citizenship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C397-sarvajanika",
+      "sequence": 20090,
+      "title": "ಸಾರ್ವಜನಿಕ (sārvajanika) — public",
+      "headword": "ಸಾರ್ವಜನಿಕ",
+      "romanization": "sārvajanika",
+      "gloss": "public",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dda432d61a20adbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a citizen, then the Kannada for citizenship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಾರ್ವಜನಿಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಾರ್ವಜನಿಕ — sārvajanika — \"public\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇದು ಸಾರ್ವಜನಿಕ ಉದ್ಯಾನ. idu sārvajanika udyāna. This is a public park."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಾರ್ವಜನಿಕರು, the public."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಾರ್ವಜನಿಕ (sārvajanika) is borrowed from Sanskrit sārvajanika, \"belonging or suited to all people\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārvajanika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārvajanika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārvajanika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārvajanika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "idu sārvajanika udyāna. — This is a public park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *idu sārvajanika udyāna.* — This is a public park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a citizen, then the Kannada for citizenship, then say sārvajanika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a citizen, then the Kannada for citizenship, then say *sārvajanika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಾರ್ವಜನಿಕ (sārvajanika) mean? (\"Public\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C397-samudaya",
+      "sequence": 20100,
+      "title": "ಸಮುದಾಯ (samudāya) — a community",
+      "headword": "ಸಮುದಾಯ",
+      "romanization": "samudāya",
+      "gloss": "a community",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf8b04e1e5b7327e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for citizenship, then the Kannada for public."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಮುದಾಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮುದಾಯ — samudāya — \"a community\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಮ್ಮ ಸಮುದಾಯ ಒಟ್ಟಿಗೆ ಹಬ್ಬ ಆಚರಿಸುತ್ತದೆ. namma samudāya oṭṭige habba ācarisuttade. Our community celebrates the festival together."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಮುದಾಯ (samudāya) ಭವನ, a community hall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮುದಾಯ (samudāya) is borrowed from Sanskrit samudāya, \"a combination, a multitude, a whole\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samudāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samudāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samudāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samudāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namma samudāya oṭṭige habba ācarisuttade. — Our community celebrates the festival together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namma samudāya oṭṭige habba ācarisuttade.* — Our community celebrates the festival together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for citizenship, then the Kannada for public, then say samudāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for citizenship, then the Kannada for public, then say *samudāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಮುದಾಯ (samudāya) mean? (\"A community\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C397-oggudu",
+      "sequence": 20110,
+      "title": "ಒಗ್ಗೂಡು (oggūḍu) — to unite",
+      "headword": "ಒಗ್ಗೂಡು",
+      "romanization": "oggūḍu",
+      "gloss": "to unite",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:880d0854f7ab0fe5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for public, then the Kannada for a community."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒಗ್ಗೂಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಗ್ಗೂಡು — oggūḍu — \"to unite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊರಿನ ಜನರು ಕೆರೆ ಉಳಿಸಲು ಒಗ್ಗೂಡಿದರು. ūrina janaru kere uḷisalu oggūḍidaru. The townspeople came together to save the lake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಒಗ್ಗೂಡಿದೆ, oggūḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "ಒಗ್ಗೂಡಿಸು, to unite others."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಗ್ಗೂಡು (oggūḍu) is native Dravidian, built from oggu, \"to be one, to be united\" (DEDR 990), and kūḍu, \"to join, to come together\" (DEDR 1882)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oggūḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oggūḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oggūḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oggūḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrina janaru kere uḷisalu oggūḍidaru. — The townspeople came together to save the lake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrina janaru kere uḷisalu oggūḍidaru.* — The townspeople came together to save the lake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for public, then the Kannada for a community, then say oggūḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for public, then the Kannada for a community, then say *oggūḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒಗ್ಗೂಡು (oggūḍu) mean? (\"To unite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R397-review-391-397",
+      "sequence": 20120,
+      "title": "Looking back: from Fairness for All to Citizens Together",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Fairness for All to Citizens Together",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d53ad253b7ae12fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for equality and to discriminate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "equality, to discriminate, to exploit, empowerment, commitment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: equality, to discriminate, to exploit, empowerment, commitment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an election, a vote, a majority, to campaign, to address a crowd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an election, a vote, a majority, to campaign, to address a crowd]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a parliament, a minister, a constitution, democracy, to represent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a parliament, a minister, a constitution, democracy, to represent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "politics, a politician, a political party, to boycott, leadership",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: politics, a politician, a political party, to boycott, leadership]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "administration, a ministry, a village council, to implement, a committee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: administration, a ministry, a village council, to implement, a committee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a draft law, to approve, an amendment, a legislator, to endorse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a draft law, to approve, an amendment, a legislator, to endorse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a citizen, citizenship, public, a community, to unite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a citizen, citizenship, public, a community, to unite]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Equality? (ಸಮಾನತೆ, samānate.) To discriminate? (ತಾರತಮ್ಯ ಮಾಡು, tāratamya māḍu.) To exploit? (ಶೋಷಿಸು, śōṣisu.) Empowerment? (ಸಬಲೀಕರಣ, sabalīkaraṇa.) Commitment? (ಬದ್ಧತೆ, baddhate.) An election? (ಚುನಾವಣೆ, cunāvaṇe.) A vote? (ಮತ, mata.) A majority? (ಬಹುಮತ, bahumata.) To campaign? (ಪ್ರಚಾರ ಮಾಡು, pracāra māḍu.) To address a crowd? (ಸಂಬೋಧಿಸು, sambōdhisu.) A parliament? (ಸಂಸತ್ತು, saṃsattu.) A minister? (ಮಂತ್ರಿ, mantri.) A constitution? (ಸಂವಿಧಾನ, saṃvidhāna.) Democracy? (ಪ್ರಜಾಪ್ರಭುತ್ವ, prajāprabhutva.) To represent? (ಪ್ರತಿನಿಧಿಸು, pratinidhisu.) Politics? (ರಾಜಕೀಯ, rājakīya.) A politician? (ರಾಜಕಾರಣಿ, rājakāraṇi.) A political party? (ಪಕ್ಷ, pakṣa.) To boycott? (ಬಹಿಷ್ಕರಿಸು, bahiṣkarisu.) Leadership? (ನಾಯಕತ್ವ, nāyakatva.) Administration? (ಆಡಳಿತ, āḍaḷita.) A ministry? (ಸಚಿವಾಲಯ, sacivālaya.) A village council? (ಪಂಚಾಯಿತಿ, pañcāyiti.) To implement? (ಜಾರಿಗೊಳಿಸು, jārigoḷisu.) A committee? (ಸಮಿತಿ, samiti.) A draft law? (ಮಸೂದೆ, masūde.) To approve? (ಅಂಗೀಕರಿಸು, aṅgīkarisu.) An amendment? (ತಿದ್ದುಪಡಿ, tiddupaḍi.) A legislator? (ಶಾಸಕ, śāsaka.) To endorse? (ಅನುಮೋದಿಸು, anumōdisu.) A citizen? (ನಾಗರಿಕ, nāgarika.) Citizenship? (ಪೌರತ್ವ, pauratva.) Public? (ಸಾರ್ವಜನಿಕ, sārvajanika.) A community? (ಸಮುದಾಯ, samudāya.) To unite? (ಒಗ್ಗೂಡು, oggūḍu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

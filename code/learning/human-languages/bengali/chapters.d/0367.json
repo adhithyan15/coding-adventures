@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Making a Guess",
+  "label": "ch:bn-making-a-guess",
+  "canDo": "I can make a guess and say what I expect to happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C367-bhobishyot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can make a guess and say what I expect to happen.",
+    "assesses": [
+      "BN-LEX-C367-ANUMAN367-03",
+      "BN-LEX-C367-ANUMAN367-04",
+      "BN-LEX-C367-ANUMAN367-05"
+    ]
+  }
+}

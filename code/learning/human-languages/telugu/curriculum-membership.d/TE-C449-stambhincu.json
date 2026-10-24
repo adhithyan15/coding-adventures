@@ -1,0 +1,11 @@
+{
+  "id": "TE-C449-stambhincu",
+  "pathSegment": "TE-PATH-449-ADDANKI449",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-449-ADDANKI449",
+      "order": 3
+    }
+  ]
+}

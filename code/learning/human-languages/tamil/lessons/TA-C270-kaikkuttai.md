@@ -14,7 +14,7 @@ romanization: "kaikkuṭṭai"
 concept_tag: TA-PORUL270-KAIKKUTTAI
 prerequisites: [TA-C269-eliya, TA-C269-vacatiyana]
 sounds: []
-roots: [dravidian-talai-kai, dravidian-kuttai-cloth]
+roots: [dravidian-kai-hand, dravidian-kuttai-cloth]
 etymology_hook: "கைக்குட்டை — native: kai 'hand' (DEDR 2023) + kuṭṭai 'kerchief' (DEDR 1681)"
 duration:
   max_seconds: 200

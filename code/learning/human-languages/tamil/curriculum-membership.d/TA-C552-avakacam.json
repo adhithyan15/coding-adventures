@@ -1,0 +1,11 @@
+{
+  "id": "TA-C552-avakacam",
+  "pathSegment": "TA-PATH-552-PATHUKAPPU552",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-552-PATHUKAPPU552",
+      "order": 4
+    }
+  ]
+}

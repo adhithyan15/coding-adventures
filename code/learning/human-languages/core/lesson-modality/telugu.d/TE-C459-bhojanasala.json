@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C459-bhojanasala",
+    "language": "telugu",
+    "chapter": 459,
+    "sequence": 23080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9082488f9532309"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C545-mohra",
+    "language": "hindi",
+    "chapter": 545,
+    "sequence": 30020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea0646e810f3a2c1"
+  },
+  "findings": []
+}

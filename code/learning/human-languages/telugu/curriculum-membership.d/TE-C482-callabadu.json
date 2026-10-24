@@ -1,0 +1,11 @@
+{
+  "id": "TE-C482-callabadu",
+  "pathSegment": "TE-PATH-482-HIMAPATAM482",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-482-HIMAPATAM482",
+      "order": 4
+    }
+  ]
+}

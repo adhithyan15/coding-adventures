@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C503-apyayata",
+    "language": "telugu",
+    "chapter": 503,
+    "sequence": 25480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98ab7d2a504ee33e"
+  },
+  "findings": []
+}

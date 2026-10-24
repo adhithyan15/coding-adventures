@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-540-KLINIKKU540",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a clinic, a walking stick, a pimple, to go numb and to feel sore.",
+  "prerequisites": []
+}

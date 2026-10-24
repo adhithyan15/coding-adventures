@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:badcab41c8db36f5",
+  "lessonIds": [
+    "MR-C309-gamavne",
+    "MR-C309-sosne",
+    "MR-C309-mrtyu",
+    "MR-C309-maran-pavne",
+    "MR-C309-udbhavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch309.txt",
+  "json": "marathi/narration/ch309.json",
+  "textHash": "fnv1a64:4c046a93c9de3bbe",
+  "jsonHash": "fnv1a64:fc7c3d145f4bd391",
+  "findings": []
+}

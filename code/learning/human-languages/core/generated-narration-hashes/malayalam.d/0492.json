@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:b4c900babf8ecbd5",
+  "lessonIds": [
+    "ML-C492-alavu",
+    "ML-C492-gunamenma",
+    "ML-C492-ulppannam",
+    "ML-C492-yatharttha",
+    "ML-C492-mayam-cerkkuka",
+    "ML-R492-review-485-492"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch492.txt",
+  "json": "malayalam/narration/ch492.json",
+  "textHash": "fnv1a64:73ac6b33335d21df",
+  "jsonHash": "fnv1a64:cdd20a9aa0e1c62d",
+  "findings": []
+}

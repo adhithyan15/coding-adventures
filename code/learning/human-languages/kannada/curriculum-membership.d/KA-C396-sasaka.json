@@ -1,0 +1,11 @@
+{
+  "id": "KA-C396-sasaka",
+  "pathSegment": "KA-PATH-396-MASUDE396",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-396-MASUDE396",
+      "order": 3
+    }
+  ]
+}

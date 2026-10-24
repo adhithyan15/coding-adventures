@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 396,
+  "title": "Trains and Rails",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d294860805c6492c",
+  "lessons": [
+    {
+      "id": "MR-C396-aggadi",
+      "sequence": 23000,
+      "title": "आगगाडी (āggāḍī) — a train; a steam train",
+      "headword": "आगगाडी",
+      "romanization": "āggāḍī",
+      "gloss": "a train; a steam train",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1098016ec0e41ae5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for dance, then the Marathi for a stage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आगगाडी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आगगाडी — āggāḍī — \"a train; a steam train\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आगगाडी पुलावरून हळू जाते. āggāḍī pulāvarūn haḷū jāte. The train goes slowly over the bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Plural: आगगाड्या, āggāḍyā."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural is आगगाड्या; in everyday talk गाडी alone often means the train."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आगगाडी (āggāḍī) is a Marathi compound from the age of steam: आग, \"fire\", inherited from Sanskrit agni (CDIAL 55), and गाडी, \"a cart\", inherited from gāḍḍa (CDIAL 4116)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āggāḍī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āggāḍī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āggāḍī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āggāḍī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āggāḍī pulāvarūn haḷū jāte. — The train goes slowly over the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āggāḍī pulāvarūn haḷū jāte.* — The train goes slowly over the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for dance, then the Marathi for a stage, then say āggāḍī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for dance, then the Marathi for a stage, then say *āggāḍī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आगगाडी (āggāḍī) mean? (\"A train; a steam train\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C396-rul",
+      "sequence": 23010,
+      "title": "रूळ (rūḷ) — a rail; a railway track",
+      "headword": "रूळ",
+      "romanization": "rūḷ",
+      "gloss": "a rail; a railway track",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97519a575e0fadc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a stage, then the Marathi for a train."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रूळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रूळ — rūḷ — \"a rail; a railway track\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आगगाडी रुळावरून घसरली. āggāḍī ruḷāvarūn ghasarlī. The train came off the rails."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Before an ending the long ऊ shortens: रूळ (rūḷ), but रुळावर, on the rails."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रूळ (rūḷ) names one steel rail of a track, and in the plural the line itself; where the word comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āggāḍī ruḷāvarūn ghasarlī. — The train came off the rails.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āggāḍī ruḷāvarūn ghasarlī.* — The train came off the rails.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a stage, then the Marathi for a train, then say rūḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a stage, then the Marathi for a train, then say *rūḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रूळ (rūḷ) mean? (\"A rail; a railway track\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C396-lohmarga",
+      "sequence": 23020,
+      "title": "लोहमार्ग (lohmārga) — a railway line",
+      "headword": "लोहमार्ग",
+      "romanization": "lohmārga",
+      "gloss": "a railway line",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aaf3cdff26bfb680",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a train, then the Marathi for a rail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लोहमार्ग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लोहमार्ग — lohmārga — \"a railway line\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हा लोहमार्ग डोंगरातून जातो. hā lohmārga ḍoṅgarātūn jāto. This railway line runs through the hills."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word, common on signs and in the news; people say रेल्वे or गाडीचा रस्ता."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लोहमार्ग (lohmārga) is built from two tatsama words, Sanskrit loha, \"iron\", and mārga, \"road, way\" (Monier-Williams): the iron road."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lohmārga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lohmārga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lohmārga, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lohmārga*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā lohmārga ḍoṅgarātūn jāto. — This railway line runs through the hills.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā lohmārga ḍoṅgarātūn jāto.* — This railway line runs through the hills.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a train, then the Marathi for a rail, then say lohmārga again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a train, then the Marathi for a rail, then say *lohmārga* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लोहमार्ग (lohmārga) mean? (\"A railway line\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C396-malgadi",
+      "sequence": 23030,
+      "title": "मालगाडी (mālgāḍī) — a goods train",
+      "headword": "मालगाडी",
+      "romanization": "mālgāḍī",
+      "gloss": "a goods train",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e928e89ec42a50a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a rail, then the Marathi for a railway line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मालगाडी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मालगाडी — mālgāḍī — \"a goods train\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात्री एक लांब मालगाडी गेली. rātrī ek lāmb mālgāḍī gelī. A long goods train went past at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "It carries freight, not people; a passenger train is a प्रवासी गाडी."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मालगाडी (mālgāḍī) is a Marathi compound of माल, \"goods\", a loan usually traced to Arabic māl, \"property, goods\", and गाडी, \"a cart, a train\" (CDIAL 4116)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mālgāḍī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mālgāḍī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mālgāḍī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mālgāḍī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātrī ek lāmb mālgāḍī gelī. — A long goods train went past at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātrī ek lāmb mālgāḍī gelī.* — A long goods train went past at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a rail, then the Marathi for a railway line, then say mālgāḍī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a rail, then the Marathi for a railway line, then say *mālgāḍī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मालगाडी (mālgāḍī) mean? (\"A goods train\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C396-khadkhadne",
+      "sequence": 23040,
+      "title": "खडखडणे (khaḍkhaḍṇe) — to rattle",
+      "headword": "खडखडणे",
+      "romanization": "khaḍkhaḍṇe",
+      "gloss": "to rattle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ce743af156219ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a railway line, then the Marathi for a goods train."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खडखडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खडखडणे — khaḍkhaḍṇe — \"to rattle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जुना डबा रुळावर खडखडत होता. junā ḍabā ruḷāvar khaḍkhaḍat hotā. The old coach was rattling on the rails."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो खडखडला, to khaḍkhaḍlā."
+            },
+            {
+              "kind": "speech",
+              "text": "An echo word made into a verb: खड खड is the noise itself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खडखडणे (khaḍkhaḍṇe) is inherited and imitates its sound: CDIAL lists Marathi khaḍkhaḍṇẽ, \"to rattle\", under Sanskrit khaṭakhaṭāyate, \"crackles\" (CDIAL 3771)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaḍkhaḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaḍkhaḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaḍkhaḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaḍkhaḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "junā ḍabā ruḷāvar khaḍkhaḍat hotā. — The old coach was rattling on the rails.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *junā ḍabā ruḷāvar khaḍkhaḍat hotā.* — The old coach was rattling on the rails.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a railway line, then the Marathi for a goods train, then say khaḍkhaḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a railway line, then the Marathi for a goods train, then say *khaḍkhaḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खडखडणे (khaḍkhaḍṇe) mean? (\"To rattle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

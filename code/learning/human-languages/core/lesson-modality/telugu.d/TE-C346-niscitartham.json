@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C346-niscitartham",
+    "language": "telugu",
+    "chapter": 346,
+    "sequence": 17020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f83ffac6640ff090"
+  },
+  "findings": []
+}

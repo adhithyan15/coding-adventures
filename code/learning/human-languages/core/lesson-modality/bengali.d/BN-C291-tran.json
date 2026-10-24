@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C291-tran",
+    "language": "bengali",
+    "chapter": 291,
+    "sequence": 18760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea2692a334706cf4"
+  },
+  "findings": []
+}

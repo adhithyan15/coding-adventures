@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 508,
+  "title": "Pay and Leave",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:70b06076d9af8e95",
+  "lessons": [
+    {
+      "id": "TA-C508-utiyam",
+      "sequence": 29200,
+      "title": "ஊதியம் (ūtiyam) — wages; pay",
+      "headword": "ஊதியம்",
+      "romanization": "ūtiyam",
+      "gloss": "wages; pay",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b02109369155f6b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a file, then the Tamil for to supervise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஊதியம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஊதியம் — ūtiyam — \"wages; pay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த மாதம் ஊதியம் தாமதமாக வந்தது. inta mātam ūtiyam tāmatamāka vantatu. This month the pay came late."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word beside சம்பளம் (campaḷam); it is the second half of ஓய்வூதியம் (ōyvūtiyam), a pension, the pay of rest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of ஊதியம் (ūtiyam) is not settled: DEDR 609, under உதவு (utavu), \"to help, to be of use\", lists ஊதியம், \"profit, gain\", but marks the link with a question mark."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūtiyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūtiyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūtiyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūtiyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta mātam ūtiyam tāmatamāka vantatu. — This month the pay came late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta mātam ūtiyam tāmatamāka vantatu.* — This month the pay came late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a file, then the Tamil for to supervise, then say ūtiyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a file, then the Tamil for to supervise, then say *ūtiyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஊதியம் (ūtiyam) mean? (\"Wages; pay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C508-vituppu",
+      "sequence": 29210,
+      "title": "விடுப்பு (viṭuppu) — leave from work",
+      "headword": "விடுப்பு",
+      "romanization": "viṭuppu",
+      "gloss": "leave from work",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e481a211d4e33351",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to supervise, then the Tamil for wages."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விடுப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விடுப்பு — viṭuppu — \"leave from work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நான் நாளை ஒரு நாள் விடுப்பு எடுக்கிறேன். nāṉ nāḷai oru nāḷ viṭuppu eṭukkiṟēṉ. I am taking a day of leave tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "One takes leave with எடு (eṭu): விடுப்பு (viṭuppu) எடு. A holiday for everyone is விடுமுறை (viṭumuṟai)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விடுப்பு (viṭuppu) is native Dravidian, a noun made from விடு (viṭu), \"to leave, to let go, to release\" (DEDR 5393), with the ending -ப்பு."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṭuppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṭuppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṭuppu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṭuppu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṉ nāḷai oru nāḷ viṭuppu eṭukkiṟēṉ. — I am taking a day of leave tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṉ nāḷai oru nāḷ viṭuppu eṭukkiṟēṉ.* — I am taking a day of leave tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to supervise, then the Tamil for wages, then say viṭuppu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to supervise, then the Tamil for wages, then say *viṭuppu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விடுப்பு (viṭuppu) mean? (\"Leave from work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C508-kututal-neram",
+      "sequence": 29220,
+      "title": "கூடுதல் நேரம் (kūṭutal nēram) — overtime",
+      "headword": "கூடுதல் நேரம்",
+      "romanization": "kūṭutal nēram",
+      "gloss": "overtime",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2548278d636e4f38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for wages, then the Tamil for leave from work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கூடுதல் நேரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூடுதல் நேரம் — kūṭutal nēram — \"overtime\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த வாரம் நான் கூடுதல் நேரம் வேலை செய்தேன். inta vāram nāṉ kūṭutal nēram vēlai ceytēṉ. This week I worked overtime."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"extra time\": கூடுதல் \"extra, more\" + நேரம் \"time\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூடுதல் நேரம் (kūṭutal nēram) is a native phrase: கூடுதல் (kūṭutal), \"extra\", from கூடு (kūṭu), \"to come together, to increase\" (DEDR 1882), and நேரம் (nēram), \"time\" (DEDR 3774)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭutal nēram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭutal nēram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭutal nēram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭutal nēram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta vāram nāṉ kūṭutal nēram vēlai ceytēṉ. — This week I worked overtime.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta vāram nāṉ kūṭutal nēram vēlai ceytēṉ.* — This week I worked overtime.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for wages, then the Tamil for leave from work, then say kūṭutal nēram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for wages, then the Tamil for leave from work, then say *kūṭutal nēram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கூடுதல் நேரம் (kūṭutal nēram) mean? (\"Overtime\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C508-kanakkalar",
+      "sequence": 29230,
+      "title": "கணக்காளர் (kaṇakkāḷar) — an accountant",
+      "headword": "கணக்காளர்",
+      "romanization": "kaṇakkāḷar",
+      "gloss": "an accountant",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:355677ac238912ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for leave from work, then the Tamil for overtime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கணக்காளர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கணக்காளர் — kaṇakkāḷar — \"an accountant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கணக்காளர் எல்லா ரசீதுகளையும் சரிபார்த்தார். kaṇakkāḷar ellā racītukaḷaiyum caripārttār. The accountant checked all the receipts."
+            },
+            {
+              "kind": "speech",
+              "text": "கணக்கு \"an account, a sum\" + -ஆளர் \"one who …\". The plural is கணக்காளர்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கணக்காளர் (kaṇakkāḷar) is கணக்கு (kaṇakku), \"an account, a sum\", with -ஆளர், \"one who does it\". The origin of கணக்கு is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇakkāḷar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇakkāḷar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇakkāḷar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇakkāḷar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇakkāḷar ellā racītukaḷaiyum caripārttār. — The accountant checked all the receipts.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇakkāḷar ellā racītukaḷaiyum caripārttār.* — The accountant checked all the receipts.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for leave from work, then the Tamil for overtime, then say kaṇakkāḷar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for leave from work, then the Tamil for overtime, then say *kaṇakkāḷar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கணக்காளர் (kaṇakkāḷar) mean? (\"An accountant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C508-eluttar",
+      "sequence": 29240,
+      "title": "எழுத்தர் (eḻuttar) — a clerk",
+      "headword": "எழுத்தர்",
+      "romanization": "eḻuttar",
+      "gloss": "a clerk",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d0c57116c132028",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for overtime, then the Tamil for an accountant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எழுத்தர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எழுத்தர் — eḻuttar — \"a clerk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அலுவலகத்தில் ஒரு எழுத்தர் என் படிவத்தை வாங்கினார். aluvalakattil oru eḻuttar eṉ paṭivattai vāṅkiṉār. At the office a clerk took my form."
+            },
+            {
+              "kind": "speech",
+              "text": "எழுத்து \"writing\" + -அர் \"person\": the one who writes the papers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எழுத்தர் (eḻuttar) is native Dravidian: எழுத்து (eḻuttu), \"writing\", from எழுது (eḻutu), \"to write\" (DEDR 853), with the personal ending -அர்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eḻuttar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eḻuttar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eḻuttar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eḻuttar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aluvalakattil oru eḻuttar eṉ paṭivattai vāṅkiṉār. — At the office a clerk took my form.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aluvalakattil oru eḻuttar eṉ paṭivattai vāṅkiṉār.* — At the office a clerk took my form.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for overtime, then the Tamil for an accountant, then say eḻuttar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for overtime, then the Tamil for an accountant, then say *eḻuttar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எழுத்தர் (eḻuttar) mean? (\"A clerk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:f049da308bb153bb",
+  "lessonIds": [
+    "ML-C377-bhukampam",
+    "ML-C377-urulpottal",
+    "ML-C377-oliccupokuka",
+    "ML-C377-orrappetuka",
+    "ML-C377-kanatakuka"
+  ],
+  "tex": "malayalam/book/chapters/ch377-earthquake-and-landslide.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C294-adakne",
+    "language": "marathi",
+    "chapter": 294,
+    "sequence": 17340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e27cf23b64b77fa4"
+  },
+  "findings": []
+}

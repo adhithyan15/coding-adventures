@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:ec3b22802990cce5",
+  "lessonIds": [
+    "AR-C403-tayaqqana",
+    "AR-C403-irtaba",
+    "AR-C403-mustahil",
+    "AR-C403-ala-al-arjah",
+    "AR-C403-umuman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch403.txt",
+  "json": "arabic/narration/ch403.json",
+  "textHash": "fnv1a64:6108a1f81acbb23b",
+  "jsonHash": "fnv1a64:66eff42285bccdfd",
+  "findings": []
+}

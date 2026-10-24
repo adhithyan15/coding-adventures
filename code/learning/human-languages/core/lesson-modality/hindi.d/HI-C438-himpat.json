@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C438-himpat",
+    "language": "hindi",
+    "chapter": 438,
+    "sequence": 24080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f48f37c30fe4823"
+  },
+  "findings": []
+}

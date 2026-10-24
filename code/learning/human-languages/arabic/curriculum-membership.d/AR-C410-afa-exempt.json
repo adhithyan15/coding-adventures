@@ -1,0 +1,11 @@
+{
+  "id": "AR-C410-afa-exempt",
+  "pathSegment": "AR-PATH-410-IBAHA410",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-410-IBAHA410",
+      "order": 4
+    }
+  ]
+}

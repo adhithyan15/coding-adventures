@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:0ae0967b043e1cee",
+  "lessonIds": [
+    "BN-C435-ghas",
+    "BN-C435-lota",
+    "BN-C435-shakha",
+    "BN-C435-kath",
+    "BN-C435-chhata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch435.txt",
+  "json": "bengali/narration/ch435.json",
+  "textHash": "fnv1a64:953c803daf4928bc",
+  "jsonHash": "fnv1a64:d1f8c0a4a5a06b82",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Machines in the Home",
+  "label": "ch:ta-machines-in-the-home",
+  "canDo": "I can talk about machines that work for us.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C520-istiri-potu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about machines that work for us.",
+    "assesses": [
+      "TA-LEX-C520-KARUVI520-03",
+      "TA-LEX-C520-KARUVI520-04",
+      "TA-LEX-C520-KARUVI520-05"
+    ]
+  }
+}

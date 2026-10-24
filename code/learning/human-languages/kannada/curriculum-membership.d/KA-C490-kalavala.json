@@ -1,0 +1,11 @@
+{
+  "id": "KA-C490-kalavala",
+  "pathSegment": "KA-PATH-490-BHAYA490",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-490-BHAYA490",
+      "order": 4
+    }
+  ]
+}

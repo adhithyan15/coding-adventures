@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:151938565de2f603",
+  "lessonIds": [
+    "TE-C518-gayapadu",
+    "TE-C518-boppi",
+    "TE-C518-tulu",
+    "TE-C518-kuntu",
+    "TE-C518-raktasravam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch518.txt",
+  "json": "telugu/narration/ch518.json",
+  "textHash": "fnv1a64:1ffd90ba2073d5fb",
+  "jsonHash": "fnv1a64:063613533e452d9c",
+  "findings": []
+}

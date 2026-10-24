@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C431-pramanam",
+    "language": "telugu",
+    "chapter": 431,
+    "sequence": 21510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ea4f83e9842f7a2"
+  },
+  "findings": []
+}

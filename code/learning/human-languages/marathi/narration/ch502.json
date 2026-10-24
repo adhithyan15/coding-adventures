@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 502,
+  "title": "Drifting Apart",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9bf2b4f2aa4491fa",
+  "lessons": [
+    {
+      "id": "MR-C502-tatatut",
+      "sequence": 28660,
+      "title": "ताटातूट (tāṭātūṭ) — a separation (of people)",
+      "headword": "ताटातूट",
+      "romanization": "tāṭātūṭ",
+      "gloss": "a separation (of people)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5fb4ebbccd9c79d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to pat, then the Marathi for to caress."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ताटातूट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ताटातूट — tāṭātūṭ — \"a separation (of people)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नोकरीमुळे दोन भावांची ताटातूट झाली. nokrīmuḷe don bhāvāñcī tāṭātūṭ jhālī. Work separated the two brothers."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "ताटातूट (tāṭātūṭ) होणे, to be parted."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ताटातूट (tāṭātūṭ) is a Marathi noun whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāṭātūṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāṭātūṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāṭātūṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāṭātūṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nokrīmuḷe don bhāvāñcī tāṭātūṭ jhālī. — Work separated the two brothers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nokrīmuḷe don bhāvāñcī tāṭātūṭ jhālī.* — Work separated the two brothers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to pat, then the Marathi for to caress, then say tāṭātūṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to pat, then the Marathi for to caress, then say *tāṭātūṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ताटातूट (tāṭātūṭ) mean? (\"A separation (of people)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C502-kurbur",
+      "sequence": 28670,
+      "title": "कुरबुर (kurbur) — bickering",
+      "headword": "कुरबुर",
+      "romanization": "kurbur",
+      "gloss": "bickering",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:295751a51a4818cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to caress, then the Marathi for a separation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कुरबुर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुरबुर — kurbur — \"bickering\"."
+            },
+            {
+              "kind": "speech",
+              "text": "घरात लहान गोष्टींवरून कुरबुर चालते. gharāt lahān goṣṭīṁvarūn kurbur cālte. At home there is bickering over little things."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Petty grumbles and squabbles: कुरबुर (kurbur) करणे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुरबुर (kurbur) is a Marathi noun whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kurbur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kurbur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kurbur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kurbur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāt lahān goṣṭīṁvarūn kurbur cālte. — At home there is bickering over little things.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāt lahān goṣṭīṁvarūn kurbur cālte.* — At home there is bickering over little things.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to caress, then the Marathi for a separation, then say kurbur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to caress, then the Marathi for a separation, then say *kurbur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कुरबुर (kurbur) mean? (\"Bickering\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C502-duravne",
+      "sequence": 28680,
+      "title": "दुरावणे (durāvṇe) — to drift apart",
+      "headword": "दुरावणे",
+      "romanization": "durāvṇe",
+      "gloss": "to drift apart",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20d883e93e4bae70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a separation, then the Marathi for bickering."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुरावणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुरावणे — durāvṇe — \"to drift apart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शहर बदलल्यावर जुने मित्र दुरावले. śahar badallyāvar june mitra durāvle. After moving towns, old friends drifted apart."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो दुरावला, to durāvlā."
+            },
+            {
+              "kind": "speech",
+              "text": "From दूर, far: to grow distant. दुरावा, estrangement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुरावणे (durāvṇe) is a Marathi verb built on दूर, \"far\", from Sanskrit dūra, \"distant\" (CDIAL 6495), with -āvṇe."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durāvṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durāvṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durāvṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durāvṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śahar badallyāvar june mitra durāvle. — After moving towns, old friends drifted apart.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śahar badallyāvar june mitra durāvle.* — After moving towns, old friends drifted apart.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a separation, then the Marathi for bickering, then say durāvṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a separation, then the Marathi for bickering, then say *durāvṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुरावणे (durāvṇe) mean? (\"To drift apart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C502-dhusphusne",
+      "sequence": 28690,
+      "title": "धुसफुसणे (dhusphusṇe) — to seethe; to fume quietly",
+      "headword": "धुसफुसणे",
+      "romanization": "dhusphusṇe",
+      "gloss": "to seethe; to fume quietly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd8770e71cf6b200",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for bickering, then the Marathi for to drift apart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धुसफुसणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धुसफुसणे — dhusphusṇe — \"to seethe; to fume quietly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भावाने ऐकलं नाही म्हणून ती धुसफुसत होती. bhāvāne aiklaṁ nāhī mhaṇūn tī dhusphusat hotī. She was fuming because her brother did not listen."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो धुसफुसला, to dhusphuslā."
+            },
+            {
+              "kind": "speech",
+              "text": "Anger kept under the breath; धुसफूस, simmering discontent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धुसफुसणे (dhusphusṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhusphusṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhusphusṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhusphusṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhusphusṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāvāne aiklaṁ nāhī mhaṇūn tī dhusphusat hotī. — She was fuming because her brother did not listen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāvāne aiklaṁ nāhī mhaṇūn tī dhusphusat hotī.* — She was fuming because her brother did not listen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for bickering, then the Marathi for to drift apart, then say dhusphusṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for bickering, then the Marathi for to drift apart, then say *dhusphusṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धुसफुसणे (dhusphusṇe) mean? (\"To seethe; to fume quietly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C502-abola-dharne",
+      "sequence": 28700,
+      "title": "अबोला धरणे (abolā dharṇe) — to stop speaking to",
+      "headword": "अबोला धरणे",
+      "romanization": "abolā dharṇe",
+      "gloss": "to stop speaking to",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb5581a9f2653047",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to drift apart, then the Marathi for to seethe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अबोला धरणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अबोला धरणे — abolā dharṇe — \"to stop speaking to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भांडणानंतर तिने भावाशी अबोला धरला. bhāṇḍṇānantar tine bhāvāśī abolā dharlā. After the quarrel she stopped speaking to her brother."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने अबोला धरला, tyāne abolā dharlā."
+            },
+            {
+              "kind": "speech",
+              "text": "अबोला, silence kept out of hurt; the person takes -शी. अबोला सोडणे, to break the silence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अबोला धरणे (abolā dharṇe) is a Marathi phrase built on अबोला, \"not speaking\", the negative a- with bol-, the root of बोलणे, \"to speak\" (CDIAL 9321), and धरणे, \"to hold\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abolā dharṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abolā dharṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abolā dharṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abolā dharṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāṇḍṇānantar tine bhāvāśī abolā dharlā. — After the quarrel she stopped speaking to her brother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāṇḍṇānantar tine bhāvāśī abolā dharlā.* — After the quarrel she stopped speaking to her brother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to drift apart, then the Marathi for to seethe, then say abolā dharṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to drift apart, then the Marathi for to seethe, then say *abolā dharṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अबोला धरणे (abolā dharṇe) mean? (\"To stop speaking to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

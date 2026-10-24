@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C515-kuruda",
+    "language": "kannada",
+    "chapter": 515,
+    "sequence": 26280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a653a8c8d575dae"
+  },
+  "findings": []
+}

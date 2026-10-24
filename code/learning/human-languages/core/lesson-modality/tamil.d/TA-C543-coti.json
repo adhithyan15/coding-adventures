@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C543-coti",
+    "language": "tamil",
+    "chapter": 543,
+    "sequence": 31030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30d5a7adc1d5f6a5"
+  },
+  "findings": []
+}

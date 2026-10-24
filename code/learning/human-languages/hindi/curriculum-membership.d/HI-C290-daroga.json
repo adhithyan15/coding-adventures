@@ -1,0 +1,11 @@
+{
+  "id": "HI-C290-daroga",
+  "pathSegment": "HI-PATH-290-THANA290",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-290-THANA290",
+      "order": 3
+    }
+  ]
+}

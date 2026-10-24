@@ -1,0 +1,11 @@
+{
+  "id": "AR-C333-qursan",
+  "pathSegment": "AR-PATH-333-BAHR333",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-333-BAHR333",
+      "order": 3
+    }
+  ]
+}

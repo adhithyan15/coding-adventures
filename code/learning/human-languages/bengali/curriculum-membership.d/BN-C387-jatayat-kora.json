@@ -1,0 +1,11 @@
+{
+  "id": "BN-C387-jatayat-kora",
+  "pathSegment": "BN-PATH-387-POTH387",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-387-POTH387",
+      "order": 3
+    }
+  ]
+}

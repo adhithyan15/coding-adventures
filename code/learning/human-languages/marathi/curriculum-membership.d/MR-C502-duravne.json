@@ -1,0 +1,11 @@
+{
+  "id": "MR-C502-duravne",
+  "pathSegment": "MR-PATH-502-DURAVA502",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-502-DURAVA502",
+      "order": 2
+    }
+  ]
+}

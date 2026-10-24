@@ -1,0 +1,857 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 368,
+  "title": "Step by Step",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a288fa85c79383bb",
+  "lessons": [
+    {
+      "id": "KA-C368-kramena",
+      "sequence": 18510,
+      "title": "ಕ್ರಮೇಣ (kramēṇa) — gradually",
+      "headword": "ಕ್ರಮೇಣ",
+      "romanization": "kramēṇa",
+      "gloss": "gradually",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36d80c865caa710d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to destroy, then the Kannada for to disappear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕ್ರಮೇಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕ್ರಮೇಣ — kramēṇa — \"gradually\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕ್ರಮೇಣ ಹಳ್ಳಿ ಒಂದು ಪಟ್ಟಣವಾಯಿತು. kramēṇa haḷḷi ondu paṭṭaṇavāyitu. Gradually the village became a town."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal adverb; in talk people say ನಿಧಾನವಾಗಿ or ಸ್ವಲ್ಪ ಸ್ವಲ್ಪವಾಗಿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕ್ರಮೇಣ (kramēṇa) is borrowed from Sanskrit krameṇa, \"in regular course, gradually, by degrees\" (Monier-Williams), a case form of krama, \"a step, an order\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramēṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramēṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramēṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramēṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramēṇa haḷḷi ondu paṭṭaṇavāyitu. — Gradually the village became a town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramēṇa haḷḷi ondu paṭṭaṇavāyitu.* — Gradually the village became a town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to destroy, then the Kannada for to disappear, then say kramēṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to destroy, then the Kannada for to disappear, then say *kramēṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕ್ರಮೇಣ (kramēṇa) mean? (\"Gradually\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C368-taruvaya",
+      "sequence": 18520,
+      "title": "ತರುವಾಯ (taruvāya) — thereafter; after",
+      "headword": "ತರುವಾಯ",
+      "romanization": "taruvāya",
+      "gloss": "thereafter; after",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:054ab51eadaa7818",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to disappear, then the Kannada for gradually."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತರುವಾಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತರುವಾಯ — taruvāya — \"thereafter; after\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಯುದ್ಧದ ತರುವಾಯ ದೇಶ ನಿಧಾನವಾಗಿ ಬೆಳೆಯಿತು. yuddhada taruvāya dēśa nidhānavāgi beḷeyitu. After the war the country grew slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "A written partner of ನಂತರ: ಊಟದ ತರುವಾಯ (taruvāya), after the meal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತರುವಾಯ (taruvāya) is native Dravidian: DEDR 3142 lists Kannada taṟu-vāy beside Tamil taṟuvāy, \"an occasion, a particular juncture, a stage\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taruvāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taruvāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taruvāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taruvāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuddhada taruvāya dēśa nidhānavāgi beḷeyitu. — After the war the country grew slowly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuddhada taruvāya dēśa nidhānavāgi beḷeyitu.* — After the war the country grew slowly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to disappear, then the Kannada for gradually, then say taruvāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to disappear, then the Kannada for gradually, then say *taruvāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತರುವಾಯ (taruvāya) mean? (\"Thereafter; after\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C368-sarani",
+      "sequence": 18530,
+      "title": "ಸರಣಿ (saraṇi) — a series; a string",
+      "headword": "ಸರಣಿ",
+      "romanization": "saraṇi",
+      "gloss": "a series; a string",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7798cb15abd1b43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for gradually, then the Kannada for thereafter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸರಣಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸರಣಿ — saraṇi — \"a series; a string\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ತಿಂಗಳು ಊರಿನಲ್ಲಿ ಕಳ್ಳತನಗಳ ಸರಣಿ ನಡೆಯಿತು. ā tiṅgaḷu ūrinalli kaḷḷatanagaḷa saraṇi naḍeyitu. That month there was a series of thefts in the town."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸರಣಿಗಳು, saraṇigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a TV or book series, and a cricket series."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸರಣಿ (saraṇi) is borrowed from Sanskrit saraṇi, \"a road, a path, a straight or continuous line\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saraṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saraṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saraṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saraṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā tiṅgaḷu ūrinalli kaḷḷatanagaḷa saraṇi naḍeyitu. — That month there was a series of thefts in the town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā tiṅgaḷu ūrinalli kaḷḷatanagaḷa saraṇi naḍeyitu.* — That month there was a series of thefts in the town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for gradually, then the Kannada for thereafter, then say saraṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for gradually, then the Kannada for thereafter, then say *saraṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸರಣಿ (saraṇi) mean? (\"A series; a string\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C368-ghatta",
+      "sequence": 18540,
+      "title": "ಘಟ್ಟ (ghaṭṭa) — a turning point; a stage",
+      "headword": "ಘಟ್ಟ",
+      "romanization": "ghaṭṭa",
+      "gloss": "a turning point; a stage",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee511a0c7a7e30c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for thereafter, then the Kannada for a series."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಘಟ್ಟ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಘಟ್ಟ — ghaṭṭa — \"a turning point; a stage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಪರೀಕ್ಷೆ ಅವಳ ಜೀವನದ ಮುಖ್ಯ ಘಟ್ಟ. ā parīkṣe avaḷa jīvanada mukhya ghaṭṭa. That exam is a turning point in her life."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a hill slope or a mountain pass: ಘಟ್ಟದ ದಾರಿ, a road over the hills."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಘಟ್ಟ (ghaṭṭa) matches Sanskrit ghaṭṭa, \"a landing place, a quay, a ferry\" (CDIAL 4414). CDIAL and DEDR 1147 both compare it with Dravidian words for a bank or a dam, such as Kannada gaṭṭu, so its first source is not settled; \"a slope\" and \"a stage\" are later senses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaṭṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaṭṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaṭṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaṭṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā parīkṣe avaḷa jīvanada mukhya ghaṭṭa. — That exam is a turning point in her life.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā parīkṣe avaḷa jīvanada mukhya ghaṭṭa.* — That exam is a turning point in her life.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for thereafter, then the Kannada for a series, then say ghaṭṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for thereafter, then the Kannada for a series, then say *ghaṭṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಘಟ್ಟ (ghaṭṭa) mean? (\"A turning point; a stage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C368-jarugu",
+      "sequence": 18550,
+      "title": "ಜರುಗು (jarugu) — to take place; to shift",
+      "headword": "ಜರುಗು",
+      "romanization": "jarugu",
+      "gloss": "to take place; to shift",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6f338feee34f378",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a series, then the Kannada for a turning point."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಜರುಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜರುಗು — jarugu — \"to take place; to shift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಭೆ ಶಾಂತವಾಗಿ ಜರುಗಿತು. sabhe śāntavāgi jarugitu. The meeting took place peacefully."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಜರುಗಿತು, jarugitu."
+            },
+            {
+              "kind": "speech",
+              "text": "Events take place: ಸಮಾರಂಭ ಜರುಗಿತು. It also means to move aside, as ಸರಿ does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜರುಗು (jarugu) is native Dravidian: DEDR 2360 lists Kannada jarugu beside Tamil cari, \"to slip away, to slide, to give way\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarugu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarugu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabhe śāntavāgi jarugitu. — The meeting took place peacefully.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabhe śāntavāgi jarugitu.* — The meeting took place peacefully.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a series, then the Kannada for a turning point, then say jarugu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a series, then the Kannada for a turning point, then say *jarugu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಜರುಗು (jarugu) mean? (\"To take place; to shift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R368-review-362-368",
+      "sequence": 18560,
+      "title": "Looking back: from Builders of Old to Step by Step",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Builders of Old to Step by Step",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbc94031aebb414c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for a civilization and to found."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a civilization, to found, to construct, to demolish, a statue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a civilization, to found, to construct, to demolish, a statue]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dusk, to rise, to resound, to emerge, to become visible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dusk, to rise, to resound, to emerge, to become visible]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a diary, an autobiography, a biography, a preface, the gist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a diary, an autobiography, a biography, a preface, the gist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fistfight, violence, a prisoner, to shove, a patrol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fistfight, violence, a prisoner, to shove, a patrol]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an acquittal, a stain, dignity, an oath, to wail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an acquittal, a stain, dignity, an oath, to wail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a villain, a hero, an enemy, to destroy, to disappear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a villain, a hero, an enemy, to destroy, to disappear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gradually, thereafter, a series, a turning point, to take place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gradually, thereafter, a series, a turning point, to take place]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A civilization? (ನಾಗರಿಕತೆ, nāgarikate.) To found? (ಸ್ಥಾಪಿಸು, sthāpisu.) To construct? (ನಿರ್ಮಿಸು, nirmisu.) To demolish? (ಕೆಡವು, keḍavu.) A statue? (ಪ್ರತಿಮೆ, pratime.) Dusk? (ಮುಸ್ಸಂಜೆ, mussañje.) To rise? (ಮೂಡು, mūḍu.) To resound? (ಮೊಳಗು, moḷagu.) To emerge? (ಹೊರಹೊಮ್ಮು, horahommu.) To become visible? (ಗೋಚರಿಸು, gōcarisu.) A diary? (ದಿನಚರಿ, dinacari.) An autobiography? (ಆತ್ಮಕಥೆ, ātmakathe.) A biography? (ಜೀವನಚರಿತ್ರೆ, jīvanacaritre.) A preface? (ಪೀಠಿಕೆ, pīṭhike.) The gist? (ತಿರುಳು, tiruḷu.) A fistfight? (ಹೊಡೆದಾಟ, hoḍedāṭa.) Violence? (ಹಿಂಸೆ, hiṃse.) A prisoner? (ಕೈದಿ, kaidi.) To shove? (ನೂಕು, nūku.) A patrol? (ಗಸ್ತು, gastu.) An acquittal? (ಖುಲಾಸೆ, khulāse.) A stain? (ಕಳಂಕ, kaḷaṅka.) Dignity? (ಘನತೆ, ghanate.) An oath? (ಆಣೆ, āṇe.) To wail? (ಗೋಳಾಡು, gōḷāḍu.) A villain? (ಖಳನಾಯಕ, khaḷanāyaka.) A hero? (ವೀರ, vīra.) An enemy? (ಶತ್ರು, śatru.) To destroy? (ನಾಶಮಾಡು, nāśamāḍu.) To disappear? (ಕಣ್ಮರೆಯಾಗು, kaṇmareyāgu.) Gradually? (ಕ್ರಮೇಣ, kramēṇa.) Thereafter? (ತರುವಾಯ, taruvāya.) A series? (ಸರಣಿ, saraṇi.) A turning point? (ಘಟ್ಟ, ghaṭṭa.) To take place? (ಜರುಗು, jarugu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

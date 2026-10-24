@@ -1,0 +1,11 @@
+{
+  "id": "TE-C337-khaidi",
+  "pathSegment": "TE-PATH-337-ARESTU337",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-337-ARESTU337",
+      "order": 2
+    }
+  ]
+}

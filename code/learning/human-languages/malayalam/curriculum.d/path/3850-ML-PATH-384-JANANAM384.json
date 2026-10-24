@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-384-JANANAM384",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-384-JANANAM384"
+  ],
+  "after": []
+}

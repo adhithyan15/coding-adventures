@@ -1,0 +1,11 @@
+{
+  "id": "TA-C357-tavira",
+  "pathSegment": "TA-PATH-357-ENINUM357",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-357-ENINUM357",
+      "order": 2
+    }
+  ]
+}

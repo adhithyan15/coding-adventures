@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 367,
+  "title": "A Crime and a Confession",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ff2e5a0c7c3b07ad",
+  "lessons": [
+    {
+      "id": "ML-C367-kurrakrtyam",
+      "sequence": 17920,
+      "title": "കുറ്റകൃത്യം (kuṟṟakṛtyaṁ) — a crime",
+      "headword": "കുറ്റകൃത്യം",
+      "romanization": "kuṟṟakṛtyaṁ",
+      "gloss": "a crime",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b793db07bbc3b3ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a fingerprint, then the Malayalam for mysterious."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുറ്റകൃത്യം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറ്റകൃത്യം — kuṟṟakṛtyaṁ — \"a crime\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നഗരത്തിൽ കുറ്റകൃത്യങ്ങൾ കുറഞ്ഞു. nagarattil kuṟṟakṛtyaṅṅaḷ kuṟaññu. Crime fell in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: കുറ്റകൃത്യങ്ങൾ, kuṟṟakṛtyaṅṅaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "കുറ്റം, an offence, + കൃത്യം, a deed: a criminal act."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറ്റകൃത്യം (kuṟṟakṛtyaṁ) joins the native കുറ്റം (kuṟṟaṁ), \"an offence\" (DEDR 1851), and Sanskrit kṛtya, \"to be done; a deed\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟakṛtyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟakṛtyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟakṛtyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟakṛtyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagarattil kuṟṟakṛtyaṅṅaḷ kuṟaññu. — Crime fell in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagarattil kuṟṟakṛtyaṅṅaḷ kuṟaññu.* — Crime fell in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a fingerprint, then the Malayalam for mysterious, then say kuṟṟakṛtyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a fingerprint, then the Malayalam for mysterious, then say *kuṟṟakṛtyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുറ്റകൃത്യം (kuṟṟakṛtyaṁ) mean? (\"A crime\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C367-kurrasammatam",
+      "sequence": 17930,
+      "title": "കുറ്റസമ്മതം (kuṟṟasammataṁ) — a confession",
+      "headword": "കുറ്റസമ്മതം",
+      "romanization": "kuṟṟasammataṁ",
+      "gloss": "a confession",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36028b48e874dd76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for mysterious, then the Malayalam for a crime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുറ്റസമ്മതം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറ്റസമ്മതം — kuṟṟasammataṁ — \"a confession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒടുവിൽ കള്ളൻ കുറ്റസമ്മതം നടത്തി. oṭuvil kaḷḷan kuṟṟasammataṁ naṭatti. At last the thief made a confession."
+            },
+            {
+              "kind": "speech",
+              "text": "കുറ്റം, an offence, + സമ്മതം, consent: agreeing that you did it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറ്റസമ്മതം (kuṟṟasammataṁ) joins കുറ്റം (kuṟṟaṁ), \"an offence\" (DEDR 1851), and സമ്മതം (sammataṁ), \"consent\", borrowed from Sanskrit sammata, \"agreed\" (CDIAL 12973)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟasammataṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟasammataṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟasammataṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟasammataṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭuvil kaḷḷan kuṟṟasammataṁ naṭatti. — At last the thief made a confession.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭuvil kaḷḷan kuṟṟasammataṁ naṭatti.* — At last the thief made a confession.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for mysterious, then the Malayalam for a crime, then say kuṟṟasammataṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for mysterious, then the Malayalam for a crime, then say *kuṟṟasammataṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുറ്റസമ്മതം (kuṟṟasammataṁ) mean? (\"A confession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C367-pitikutuka",
+      "sequence": 17940,
+      "title": "പിടികൂടുക (piṭikūṭuka) — to capture; to catch",
+      "headword": "പിടികൂടുക",
+      "romanization": "piṭikūṭuka",
+      "gloss": "to capture; to catch",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9d80e09da45a6f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a crime, then the Malayalam for a confession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പിടികൂടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിടികൂടുക — piṭikūṭuka — \"to capture; to catch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട്ടുകാർ കള്ളനെ പിടികൂടി. nāṭṭukār kaḷḷane piṭikūṭi. The local people caught the thief."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പിടികൂടി, piṭikūṭi."
+            },
+            {
+              "kind": "speech",
+              "text": "Common in the news for catching a thief or a wild animal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിടികൂടുക (piṭikūṭuka) is a native Dravidian compound of പിടി (piṭi), \"a grip, a hold\" (DEDR 4148), and കൂടുക (kūṭuka), \"to come together\" (DEDR 1882): to close a grip on someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṭikūṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṭikūṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṭikūṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṭikūṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭukār kaḷḷane piṭikūṭi. — The local people caught the thief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭukār kaḷḷane piṭikūṭi.* — The local people caught the thief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a crime, then the Malayalam for a confession, then say piṭikūṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a crime, then the Malayalam for a confession, then say *piṭikūṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പിടികൂടുക (piṭikūṭuka) mean? (\"To capture; to catch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C367-tattikkontupokuka",
+      "sequence": 17950,
+      "title": "തട്ടിക്കൊണ്ടുപോകുക (taṭṭikkoṇṭupōkuka) — to kidnap",
+      "headword": "തട്ടിക്കൊണ്ടുപോകുക",
+      "romanization": "taṭṭikkoṇṭupōkuka",
+      "gloss": "to kidnap",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39e758d15c6d049a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a confession, then the Malayalam for to capture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തട്ടിക്കൊണ്ടുപോകുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തട്ടിക്കൊണ്ടുപോകുക — taṭṭikkoṇṭupōkuka — \"to kidnap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രണ്ട് പേർ കച്ചവടക്കാരനെ തട്ടിക്കൊണ്ടുപോയി. raṇṭŭ pēr kaccavaṭakkārane taṭṭikkoṇṭupōyi. Two men kidnapped the trader."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: തട്ടിക്കൊണ്ടുപോയി, taṭṭikkoṇṭupōyi."
+            },
+            {
+              "kind": "speech",
+              "text": "തട്ടി, snatching, + കൊണ്ടുപോകുക, to take away."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തട്ടിക്കൊണ്ടുപോകുക (taṭṭikkoṇṭupōkuka) joins the native തട്ടുക (taṭṭuka), \"to strike, to knock\" (DEDR 3039), and കൊണ്ടുപോകുക (koṇṭupōkuka), \"to take away\": to snatch someone and carry them off."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭṭikkoṇṭupōkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭṭikkoṇṭupōkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭṭikkoṇṭupōkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭṭikkoṇṭupōkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭŭ pēr kaccavaṭakkārane taṭṭikkoṇṭupōyi. — Two men kidnapped the trader.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭŭ pēr kaccavaṭakkārane taṭṭikkoṇṭupōyi.* — Two men kidnapped the trader.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a confession, then the Malayalam for to capture, then say taṭṭikkoṇṭupōkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a confession, then the Malayalam for to capture, then say *taṭṭikkoṇṭupōkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തട്ടിക്കൊണ്ടുപോകുക (taṭṭikkoṇṭupōkuka) mean? (\"To kidnap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C367-niriksikkuka",
+      "sequence": 17960,
+      "title": "നിരീക്ഷിക്കുക (nirīkṣikkuka) — to keep watch on; to observe",
+      "headword": "നിരീക്ഷിക്കുക",
+      "romanization": "nirīkṣikkuka",
+      "gloss": "to keep watch on; to observe",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40528bb7a4b775c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to capture, then the Malayalam for to kidnap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിരീക്ഷിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിരീക്ഷിക്കുക — nirīkṣikkuka — \"to keep watch on; to observe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് ദിവസങ്ങളോളം ആ വീട് നിരീക്ഷിച്ചു. pōlīsŭ divasaṅṅaḷōḷaṁ ā vīṭŭ nirīkṣiccu. The police watched that house for days."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നിരീക്ഷിച്ചു, nirīkṣiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is നിരീക്ഷണം, observation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിരീക്ഷിക്കുക (nirīkṣikkuka) is built from Sanskrit nirīkṣaṇa, \"looking at, observing\" (Monier-Williams), from nir-īkṣ, \"to behold, to observe\", with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirīkṣikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirīkṣikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirīkṣikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirīkṣikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ divasaṅṅaḷōḷaṁ ā vīṭŭ nirīkṣiccu. — The police watched that house for days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ divasaṅṅaḷōḷaṁ ā vīṭŭ nirīkṣiccu.* — The police watched that house for days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to capture, then the Malayalam for to kidnap, then say nirīkṣikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to capture, then the Malayalam for to kidnap, then say *nirīkṣikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിരീക്ഷിക്കുക (nirīkṣikkuka) mean? (\"To keep watch on; to observe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

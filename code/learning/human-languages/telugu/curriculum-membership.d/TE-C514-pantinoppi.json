@@ -1,0 +1,11 @@
+{
+  "id": "TE-C514-pantinoppi",
+  "pathSegment": "TE-PATH-514-NOPPI514",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-514-NOPPI514",
+      "order": 1
+    }
+  ]
+}

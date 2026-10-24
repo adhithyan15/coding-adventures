@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C446-rokkam",
+    "language": "tamil",
+    "chapter": 446,
+    "sequence": 25500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1eb42a391f3fd8a"
+  },
+  "findings": []
+}

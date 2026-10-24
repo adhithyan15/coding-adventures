@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C320-muhurta",
+    "language": "marathi",
+    "chapter": 320,
+    "sequence": 18680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2357fe816347d977"
+  },
+  "findings": []
+}

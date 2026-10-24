@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:ae32004d23ba5e9f",
+  "lessonIds": [
+    "HI-C472-phurtila",
+    "HI-C472-sust",
+    "HI-C472-nikamma",
+    "HI-C472-karmath",
+    "HI-C472-mustaid"
+  ],
+  "tex": "hindi/book/chapters/ch472-lazy-or-brisk.tex"
+}

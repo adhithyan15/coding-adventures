@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Holes and Stains",
+  "label": "ch:mr-holes-and-stains",
+  "canDo": "I can talk about holes and stains, and say things got messed up or oozed.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C432-pajharne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can talk about holes and stains, and say things got messed up or oozed.",
+    "assesses": [
+      "MR-LEX-C432-BHOK432-03",
+      "MR-LEX-C432-BHOK432-04",
+      "MR-LEX-C432-BHOK432-05"
+    ]
+  }
+}

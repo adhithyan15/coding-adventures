@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:ae13105af38518fe",
+  "lessonIds": [
+    "AR-C379-hizb",
+    "AR-C379-hamla",
+    "AR-C379-tarashshaha",
+    "AR-C379-nashit",
+    "AR-C379-dimuqratiyya"
+  ],
+  "tex": "arabic/book/chapters/ch379-parties-and-campaigns.tex"
+}

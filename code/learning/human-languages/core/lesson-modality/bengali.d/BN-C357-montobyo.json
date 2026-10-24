@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C357-montobyo",
+    "language": "bengali",
+    "chapter": 357,
+    "sequence": 22400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d05a8b92984e2554"
+  },
+  "findings": []
+}

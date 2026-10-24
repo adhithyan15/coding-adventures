@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:90faa3d75833c029",
+  "lessonIds": [
+    "TA-C375-katci",
+    "TA-C375-kuttani",
+    "TA-C375-atikaram",
+    "TA-C375-celvakku",
+    "TA-C375-kavar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch375.txt",
+  "json": "tamil/narration/ch375.json",
+  "textHash": "fnv1a64:cf5f8e432fc2fa2d",
+  "jsonHash": "fnv1a64:85ffcc84df0a88e9",
+  "findings": []
+}

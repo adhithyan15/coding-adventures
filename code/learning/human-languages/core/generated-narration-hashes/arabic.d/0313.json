@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:a687c428445dfc77",
+  "lessonIds": [
+    "AR-C313-ala-al-fawr",
+    "AR-C313-suraana-ma",
+    "AR-C313-tadrijiyyan",
+    "AR-C313-min-jadid",
+    "AR-C313-istaada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch313.txt",
+  "json": "arabic/narration/ch313.json",
+  "textHash": "fnv1a64:d15512c70f88fb89",
+  "jsonHash": "fnv1a64:4f23678b81697bcf",
+  "findings": []
+}

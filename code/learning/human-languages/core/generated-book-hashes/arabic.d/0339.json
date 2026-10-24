@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:3fdab37d8caffa6d",
+  "lessonIds": [
+    "AR-C339-ghaza",
+    "AR-C339-hajama",
+    "AR-C339-ihtalla",
+    "AR-C339-qada-lead",
+    "AR-C339-insahaba"
+  ],
+  "tex": "arabic/book/chapters/ch339-invasions.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:77596eb1343dfd33",
+  "lessonIds": [
+    "HI-C302-apda",
+    "HI-C302-cetavni",
+    "HI-C302-ailan",
+    "HI-C302-savdhan",
+    "HI-C302-ttalna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch302.txt",
+  "json": "hindi/narration/ch302.json",
+  "textHash": "fnv1a64:1dac0594c7ac48ab",
+  "jsonHash": "fnv1a64:436f42b08936b7c8",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C445-calisu",
+  "pathSegment": "KA-PATH-445-PARK445",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-445-PARK445",
+      "order": 3
+    }
+  ]
+}

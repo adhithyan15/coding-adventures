@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Treasure",
+  "label": "ch:te-treasure",
+  "canDo": "I can say a treasury, a treasure, a quest, a lord and to occupy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C366-akramincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can say a treasury, a treasure, a quest, a lord and to occupy.",
+    "assesses": [
+      "TE-LEX-C366-NIDHI366-03",
+      "TE-LEX-C366-NIDHI366-04",
+      "TE-LEX-C366-NIDHI366-05"
+    ]
+  }
+}

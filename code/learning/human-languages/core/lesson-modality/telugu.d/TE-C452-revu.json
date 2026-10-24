@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C452-revu",
+    "language": "telugu",
+    "chapter": 452,
+    "sequence": 22710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:495e95403468ca05"
+  },
+  "findings": []
+}

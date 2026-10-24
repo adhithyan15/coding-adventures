@@ -2,6 +2,46 @@
 
 ## Unreleased
 
+- LANG84 phase 4c: release profiles and the release sweep.
+  - `profiles.rs`: `ReleaseProfile { name, arithmetic }`, `Arithmetic::{Integer,
+    Double}`, `PERL_NV` (`perl_nv`, the 114 checked releases from 1.000 to
+    5.004_05) and `PERL_IV` (`perl_iv`, 5.38.0, 5.38.2, 5.44.0, 5.45.3), and
+    `profile_for(id)`, an exact-ID lookup. Every checked release has exactly
+    one profile; a release without one is `ReleaseNotAvailable { stage: "no
+    release profile" }`.
+  - Behaviour change: under `perl_nv` the compiler refuses to print a value
+    that is the IEEE negative zero in C-double arithmetic (`-0`, `0 * -3`,
+    `-0 - 0`, ...) with a typed `Unsupported`, because those releases print it
+    as `0` or `-0` depending on constant folding and the platform. Zero signs
+    are tracked under every profile, so accepted programs lower to the same
+    IIR either way.
+  - `pub const SUBSET` (`pl-int-print`) and `FrontendError::category()` (the
+    C6 category a corpus `.reject` names).
+  - New integration tests: `tests/release_subsets.rs` (stage I over the
+    corpus for every claiming release, CSV/profile agreement, host-`perl`
+    oracle) and `tests/release_sweep.rs` (IIR-identity classes, compared with
+    the committed `release_classes.csv`; 3 classes, representatives 1.000,
+    5.003_26 and 5.38.0). Shared readers in `tests/common/mod.rs`.
+  - Fix: the hostile-probe instruction counts assumed a one-instruction
+    `ret_void` epilogue; since 4a's `main` returns `i64` 0 (`const 0; ret`)
+    they are two, named `EPILOGUE`.
+  - Security-review follow-ups (sibling session; verdict PASS, every low
+    finding fixed): the sweep's `PERL_RELEASE_SWEEP_WRITE` run writes the CSV
+    and then fails on purpose, and refuses to run under `CI` or
+    `GITHUB_ACTIONS`, so the switch can never make the check pass; the corpus
+    readers require `corpus_dir` to be exactly `corpus/pl-int-print`, refuse
+    a non-file entry, refuse an override for a profile `profiles.rs` does not
+    define and refuse two overrides for one profile; every claiming release
+    must run the baseline `add` case; `the_crlf_case_keeps_its_carriage_returns`
+    pins the CRLF bytes and the `.gitattributes` line; the host-`perl` oracle
+    runs each corpus file with a cleared environment (only `PATH` and
+    Windows' `SYSTEMROOT`), a fresh scratch directory per run (`create_dir`,
+    so an existing or planted path fails), no stdin, both pipes drained on
+    threads, and a 20 s limit after which the child is killed and reaped.
+  - `the_selected_release_decides_what_lexes` pins the corrected bounds:
+    5.38.2 refuses a 251-digit literal; 5.44.0 and 5.45.3 lex 1018 digits and
+    refuse 1019.
+
 - LANG84 phase 2b: the `cst_contract` note now says that `iir_status`
   exists in `releases.csv` but is `-` until phase 4c. No code change; the
   tests pass against the reordered inventory.
@@ -34,6 +74,7 @@
   pins that untrusted source reaches diagnostics only escaped, and
   `resolve_release` is tested against near-miss spellings (`v5.38.0`,
   `5.038.0`, padded, NUL-suffixed, `perl5.38.0`), all `UnknownRelease`.
+
 - `main` returns `i64` 0 (`const 0; ret`) instead of `ret_void`. Every backend
   reads the entry function's result as the process status. CoreCLR rejected a
   void `int32 MccarthyEntry()` (CI's macOS and Windows CLR column), and on BEAM

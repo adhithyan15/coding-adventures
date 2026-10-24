@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:b139e17e16f559c7",
+  "lessonIds": [
+    "TE-C468-murugu",
+    "TE-C468-parisuddhyam",
+    "TE-C468-durvasana",
+    "TE-C468-murikivada",
+    "TE-C468-perukupovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch468.txt",
+  "json": "telugu/narration/ch468.json",
+  "textHash": "fnv1a64:388a43b5baae6e57",
+  "jsonHash": "fnv1a64:64c1470ac91c7946",
+  "findings": []
+}

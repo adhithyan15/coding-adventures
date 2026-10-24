@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C486-murgalne",
+    "language": "marathi",
+    "chapter": 486,
+    "sequence": 27870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf39fe7101941315"
+  },
+  "findings": []
+}

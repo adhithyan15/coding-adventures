@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 424,
+  "title": "Checks and Reviews",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:22adf434bedb313d",
+  "lessons": [
+    {
+      "id": "KA-C424-avalokisu",
+      "sequence": 21460,
+      "title": "ಅವಲೋಕಿಸು (avalōkisu) — to observe; to review",
+      "headword": "ಅವಲೋಕಿಸು",
+      "romanization": "avalōkisu",
+      "gloss": "to observe; to review",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6fdc44fb41209726",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a trick, then the Kannada for to divide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅವಲೋಕಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅವಲೋಕಿಸು — avalōkisu — \"to observe; to review\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವರ್ಷದ ಕೊನೆಯಲ್ಲಿ ನಾನು ನನ್ನ ಖರ್ಚನ್ನು ಅವಲೋಕಿಸಿದೆ. varṣada koneyalli nānu nanna kharcannu avalōkiside. At the end of the year I reviewed my spending."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಅವಲೋಕಿಸಿದೆ, avalōkiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಲೋಕನ, a review, an overview."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅವಲೋಕಿಸು (avalōkisu) is built on Sanskrit avalokana, \"seeing, viewing, observing\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avalōkisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avalōkisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avalōkisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avalōkisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṣada koneyalli nānu nanna kharcannu avalōkiside. — At the end of the year I reviewed my spending.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṣada koneyalli nānu nanna kharcannu avalōkiside.* — At the end of the year I reviewed my spending.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a trick, then the Kannada for to divide, then say avalōkisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a trick, then the Kannada for to divide, then say *avalōkisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅವಲೋಕಿಸು (avalōkisu) mean? (\"To observe; to review\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C424-vimarsisu",
+      "sequence": 21470,
+      "title": "ವಿಮರ್ಶಿಸು (vimarśisu) — to critique",
+      "headword": "ವಿಮರ್ಶಿಸು",
+      "romanization": "vimarśisu",
+      "gloss": "to critique",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:001ef94299e90369",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to divide, then the Kannada for to observe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿಮರ್ಶಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಮರ್ಶಿಸು — vimarśisu — \"to critique\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪತ್ರಿಕೆ ಹೊಸ ಪುಸ್ತಕವನ್ನು ವಿಮರ್ಶಿಸಿತು. patrike hosa pustakavannu vimarśisitu. The newspaper reviewed the new book."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವಿಮರ್ಶಿಸಿದೆ, vimarśiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿಮರ್ಶೆ, a review; ವಿಮರ್ಶಕ, a critic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಮರ್ಶಿಸು (vimarśisu) is built on Sanskrit vimarśa, \"consideration, critical test\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimarśisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimarśisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimarśisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimarśisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrike hosa pustakavannu vimarśisitu. — The newspaper reviewed the new book.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrike hosa pustakavannu vimarśisitu.* — The newspaper reviewed the new book.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to divide, then the Kannada for to observe, then say vimarśisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to divide, then the Kannada for to observe, then say *vimarśisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿಮರ್ಶಿಸು (vimarśisu) mean? (\"To critique\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C424-suttole",
+      "sequence": 21480,
+      "title": "ಸುತ್ತೋಲೆ (suttōle) — a circular",
+      "headword": "ಸುತ್ತೋಲೆ",
+      "romanization": "suttōle",
+      "gloss": "a circular",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91b9accb07a6db55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to observe, then the Kannada for to critique."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸುತ್ತೋಲೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸುತ್ತೋಲೆ — suttōle — \"a circular\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಜೆಯ ಬಗ್ಗೆ ಶಾಲೆ ಒಂದು ಸುತ್ತೋಲೆ ಕಳುಹಿಸಿತು. rajeya bagge śāle ondu suttōle kaḷuhisitu. The school sent a circular about the holiday."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸುತ್ತು (to go round) + ಓಲೆ (a letter)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸುತ್ತೋಲೆ (suttōle) is native Dravidian, built from suttu, \"to go round\" (DEDR 2715), and ōle, \"a palm leaf written on, a letter\" (DEDR 1070)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suttōle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suttōle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suttōle, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suttōle*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rajeya bagge śāle ondu suttōle kaḷuhisitu. — The school sent a circular about the holiday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rajeya bagge śāle ondu suttōle kaḷuhisitu.* — The school sent a circular about the holiday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to observe, then the Kannada for to critique, then say suttōle again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to observe, then the Kannada for to critique, then say *suttōle* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸುತ್ತೋಲೆ (suttōle) mean? (\"A circular\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C424-nirdista",
+      "sequence": 21490,
+      "title": "ನಿರ್ದಿಷ್ಟ (nirdiṣṭa) — specific; definite",
+      "headword": "ನಿರ್ದಿಷ್ಟ",
+      "romanization": "nirdiṣṭa",
+      "gloss": "specific; definite",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f598d762c77c8302",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to critique, then the Kannada for a circular."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿರ್ದಿಷ್ಟ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿರ್ದಿಷ್ಟ — nirdiṣṭa — \"specific; definite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನಿಗೆ ಯಾವುದೇ ನಿರ್ದಿಷ್ಟ ಗುರಿ ಇಲ್ಲ. avanige yāvudē nirdiṣṭa guri illa. He has no definite goal."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿರ್ದಿಷ್ಟವಾಗಿ, specifically."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿರ್ದಿಷ್ಟ (nirdiṣṭa) is borrowed from Sanskrit nirdiṣṭa, \"pointed out, indicated\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirdiṣṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirdiṣṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirdiṣṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirdiṣṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanige yāvudē nirdiṣṭa guri illa. — He has no definite goal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanige yāvudē nirdiṣṭa guri illa.* — He has no definite goal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to critique, then the Kannada for a circular, then say nirdiṣṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to critique, then the Kannada for a circular, then say *nirdiṣṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿರ್ದಿಷ್ಟ (nirdiṣṭa) mean? (\"Specific; definite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C424-parisodhane",
+      "sequence": 21500,
+      "title": "ಪರಿಶೋಧನೆ (pariśōdhane) — an audit; a scrutiny",
+      "headword": "ಪರಿಶೋಧನೆ",
+      "romanization": "pariśōdhane",
+      "gloss": "an audit; a scrutiny",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64ea4c185dfdc6a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a circular, then the Kannada for specific."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪರಿಶೋಧನೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಿಶೋಧನೆ — pariśōdhane — \"an audit; a scrutiny\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಂಪನಿಯ ಲೆಕ್ಕಗಳ ಪರಿಶೋಧನೆ ನಡೆಯಿತು. kampaniya lekkagaḷa pariśōdhane naḍeyitu. The company's accounts were audited."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪರಿಶೋಧಕ, an auditor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಿಶೋಧನೆ (pariśōdhane) is borrowed from Sanskrit pariśodhana, \"cleaning, purification; paying off\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariśōdhane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariśōdhane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariśōdhane, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariśōdhane*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampaniya lekkagaḷa pariśōdhane naḍeyitu. — The company's accounts were audited.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampaniya lekkagaḷa pariśōdhane naḍeyitu.* — The company's accounts were audited.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a circular, then the Kannada for specific, then say pariśōdhane again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a circular, then the Kannada for specific, then say *pariśōdhane* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪರಿಶೋಧನೆ (pariśōdhane) mean? (\"An audit; a scrutiny\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

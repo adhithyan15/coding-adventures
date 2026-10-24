@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-441-PASPORTU441",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-441-PASPORTU441"
+  ],
+  "after": []
+}

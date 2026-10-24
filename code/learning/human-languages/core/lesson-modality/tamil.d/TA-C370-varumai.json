@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C370-varumai",
+    "language": "tamil",
+    "chapter": 370,
+    "sequence": 21270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:348fb0df87a0385f"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:a214a859dc46a357",
+  "lessonIds": [
+    "TE-C453-oddu",
+    "TE-C453-vagu",
+    "TE-C453-teppa",
+    "TE-C453-telipovu",
+    "TE-C453-kottukupovu",
+    "TE-R453-review-446-453"
+  ],
+  "tex": "telugu/book/chapters/ch453-on-the-water.tex"
+}

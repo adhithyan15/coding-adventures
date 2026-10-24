@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C359-etantu",
+    "language": "malayalam",
+    "chapter": 359,
+    "sequence": 17530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73de8e2a99354559"
+  },
+  "findings": []
+}

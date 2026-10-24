@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:1944bb92e56f64e4",
+  "lessonIds": [
+    "TE-C473-dvipam",
+    "TE-C473-timingalam",
+    "TE-C473-pagadam",
+    "TE-C473-uppena",
+    "TE-C473-garjincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch473.txt",
+  "json": "telugu/narration/ch473.json",
+  "textHash": "fnv1a64:07837a3a2d846fd8",
+  "jsonHash": "fnv1a64:dde466bbed783f81",
+  "findings": []
+}

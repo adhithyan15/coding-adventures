@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:f06158d434a628a5",
+  "lessonIds": [
+    "AR-C511-jura",
+    "AR-C511-kabsula",
+    "AR-C511-qatra",
+    "AR-C511-jabira",
+    "AR-C511-dammada",
+    "AR-R511-review-504-511"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch511.txt",
+  "json": "arabic/narration/ch511.json",
+  "textHash": "fnv1a64:26367acb091a8778",
+  "jsonHash": "fnv1a64:b18615f6355c812d",
+  "findings": []
+}

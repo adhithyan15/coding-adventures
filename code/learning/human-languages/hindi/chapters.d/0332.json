@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Old Customs",
+  "label": "ch:hi-old-customs",
+  "canDo": "I can explain an old custom and how it is kept.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C332-putla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can explain an old custom and how it is kept.",
+    "assesses": [
+      "HI-LEX-C332-PARAMPARA332-03",
+      "HI-LEX-C332-PARAMPARA332-04",
+      "HI-LEX-C332-PARAMPARA332-05"
+    ]
+  }
+}

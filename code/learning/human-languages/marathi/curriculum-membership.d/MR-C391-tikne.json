@@ -1,0 +1,11 @@
+{
+  "id": "MR-C391-tikne",
+  "pathSegment": "MR-PATH-391-GHATNE391",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-391-GHATNE391",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R407-review-400-407",
+    "language": "bengali",
+    "chapter": 407,
+    "sequence": 25220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c643549bbdef2ca9"
+  },
+  "findings": []
+}

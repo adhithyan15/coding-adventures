@@ -1,0 +1,11 @@
+{
+  "id": "TE-C355-sastipurti",
+  "pathSegment": "TE-PATH-355-VARSHIKAM355",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-355-VARSHIKAM355",
+      "order": 2
+    }
+  ]
+}

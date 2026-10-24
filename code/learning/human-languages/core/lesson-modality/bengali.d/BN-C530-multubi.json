@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C530-multubi",
+    "language": "bengali",
+    "chapter": 530,
+    "sequence": 31940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18357751f0c4b9ad"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C302-bornona-kora",
+    "language": "bengali",
+    "chapter": 302,
+    "sequence": 19350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52d95650aba08058"
+  },
+  "findings": []
+}

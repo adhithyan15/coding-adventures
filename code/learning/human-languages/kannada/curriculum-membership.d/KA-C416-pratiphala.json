@@ -1,0 +1,11 @@
+{
+  "id": "KA-C416-pratiphala",
+  "pathSegment": "KA-PATH-416-PRATIJNE416",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-416-PRATIJNE416",
+      "order": 2
+    }
+  ]
+}

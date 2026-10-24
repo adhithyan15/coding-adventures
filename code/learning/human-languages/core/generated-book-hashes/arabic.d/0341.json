@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:f3fb235973c94c7e",
+  "lessonIds": [
+    "AR-C341-faris",
+    "AR-C341-khudha",
+    "AR-C341-hudna",
+    "AR-C341-muahada",
+    "AR-C341-khana"
+  ],
+  "tex": "arabic/book/chapters/ch341-knights-and-treaties.tex"
+}

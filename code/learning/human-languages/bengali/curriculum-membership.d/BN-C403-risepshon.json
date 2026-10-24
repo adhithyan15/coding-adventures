@@ -1,0 +1,11 @@
+{
+  "id": "BN-C403-risepshon",
+  "pathSegment": "BN-PATH-403-GHOR403",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-403-GHOR403",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C390-yatrayakkuka",
+    "language": "malayalam",
+    "chapter": 390,
+    "sequence": 19120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e292742d8701be94"
+  },
+  "findings": []
+}

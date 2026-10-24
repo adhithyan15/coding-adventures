@@ -1,0 +1,11 @@
+{
+  "id": "AR-C332-nazaha",
+  "pathSegment": "AR-PATH-332-HIJRA332",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-332-HIJRA332",
+      "order": 3
+    }
+  ]
+}

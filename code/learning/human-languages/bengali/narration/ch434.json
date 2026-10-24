@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 434,
+  "title": "Nature and the Environment",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:51ee139638a82fb8",
+  "lessons": [
+    {
+      "id": "BN-C434-prokriti",
+      "sequence": 26560,
+      "title": "প্রকৃতি (prôkriti) — nature; the natural world",
+      "headword": "প্রকৃতি",
+      "romanization": "prôkriti",
+      "gloss": "nature; the natural world",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72b6965473c0cd4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to sway, then the Bengali for to babble (of water)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রকৃতি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রকৃতি — prôkriti — \"nature; the natural world\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গ্রামে এসে মীরা প্রকৃতির শান্তি পেল। grāme ese mīrā prôkritir shānti pelô. Coming to the village, Mira found the peace of nature."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a person's nature, temperament."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রকৃতি (prôkriti) is Sanskrit prakṛti, \"the original or natural form of a thing, nature\" (Monier-Williams), taken over whole."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôkriti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôkriti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôkriti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôkriti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāme ese mīrā prôkritir shānti pelô. — Coming to the village, Mira found the peace of nature.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāme ese mīrā prôkritir shānti pelô.* — Coming to the village, Mira found the peace of nature.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to sway, then the Bengali for to babble (of water), then say prôkriti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to sway, then the Bengali for to babble (of water), then say *prôkriti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রকৃতি (prôkriti) mean? (\"Nature; the natural world\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C434-poribesh",
+      "sequence": 26570,
+      "title": "পরিবেশ (pôribesh) — the environment; surroundings",
+      "headword": "পরিবেশ",
+      "romanization": "pôribesh",
+      "gloss": "the environment; surroundings",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c8768d4fd55d453",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to babble (of water), then the Bengali for nature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পরিবেশ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরিবেশ — pôribesh — \"the environment; surroundings\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কারখানার ধোঁয়া পরিবেশের ক্ষতি করে। kārkhānār dhõyā pôribesher khôti kôre. Factory smoke harms the environment."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the surroundings of a place: শান্ত পরিবেশ (pôribesh), a calm setting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরিবেশ (pôribesh) is Sanskrit pariveṣa, \"a surrounding, a circle, a halo\" (Monier-Williams); the sense \"the environment\" is a modern use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôribesh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôribesh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôribesh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôribesh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārkhānār dhõyā pôribesher khôti kôre. — Factory smoke harms the environment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārkhānār dhõyā pôribesher khôti kôre.* — Factory smoke harms the environment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to babble (of water), then the Bengali for nature, then say pôribesh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to babble (of water), then the Bengali for nature, then say *pôribesh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পরিবেশ (pôribesh) mean? (\"The environment; surroundings\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C434-dushon",
+      "sequence": 26580,
+      "title": "দূষণ (dūshôn) — pollution",
+      "headword": "দূষণ",
+      "romanization": "dūshôn",
+      "gloss": "pollution",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24750b33987af91a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for nature, then the Bengali for the environment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দূষণ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দূষণ — dūshôn — \"pollution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শহরে গাড়ির ধোঁয়ায় দূষণ হয়। shôhôre gāṛir dhõyāy dūshôn hôy. In the city car fumes cause pollution."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দূষণ (dūshôn) is Sanskrit dūṣaṇa, \"spoiling, corrupting, vitiating\" (Monier-Williams); the sense \"pollution\" is a modern use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūshôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūshôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūshôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūshôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôhôre gāṛir dhõyāy dūshôn hôy. — In the city car fumes cause pollution.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôhôre gāṛir dhõyāy dūshôn hôy.* — In the city car fumes cause pollution.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for nature, then the Bengali for the environment, then say dūshôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for nature, then the Bengali for the environment, then say *dūshôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দূষণ (dūshôn) mean? (\"Pollution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C434-noshto-kora",
+      "sequence": 26590,
+      "title": "নষ্ট করা (nôshṭô kôrā) — to spoil; to waste; to ruin",
+      "headword": "নষ্ট করা",
+      "romanization": "nôshṭô kôrā",
+      "gloss": "to spoil; to waste; to ruin",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c67375daedfcf5cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for the environment, then the Bengali for pollution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নষ্ট করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নষ্ট করা — nôshṭô kôrā — \"to spoil; to waste; to ruin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বন্যা খেতের ধান নষ্ট করল। bônyā kheter dhān nôshṭô kôrlô. The flood ruined the rice in the fields."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই বন্যা ধান নষ্ট করল, sei bônyā dhān nôshṭô kôrlô."
+            },
+            {
+              "kind": "speech",
+              "text": "নষ্ট alone is spoiled, gone bad: খাবারটা নষ্ট, the food has gone off. সময় নষ্ট করা (nôshṭô kôrā), to waste time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নষ্ট করা (nôshṭô kôrā) joins Sanskrit naṣṭa, \"lost, perished, destroyed\" (Monier-Williams), to করা, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôshṭô kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôshṭô kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôshṭô kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôshṭô kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bônyā kheter dhān nôshṭô kôrlô. — The flood ruined the rice in the fields.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bônyā kheter dhān nôshṭô kôrlô.* — The flood ruined the rice in the fields.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for the environment, then the Bengali for pollution, then say nôshṭô kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for the environment, then the Bengali for pollution, then say *nôshṭô kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নষ্ট করা (nôshṭô kôrā) mean? (\"To spoil; to waste; to ruin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C434-songrokkhon-kora",
+      "sequence": 26600,
+      "title": "সংরক্ষণ করা (sôngrôkkhôn kôrā) — to conserve; to preserve",
+      "headword": "সংরক্ষণ করা",
+      "romanization": "sôngrôkkhôn kôrā",
+      "gloss": "to conserve; to preserve",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b961fb75551295f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for pollution, then the Bengali for to spoil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সংরক্ষণ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংরক্ষণ করা — sôngrôkkhôn kôrā — \"to conserve; to preserve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের বন আর নদী সংরক্ষণ করতে হবে। āmāder bôn ār nôdī sôngrôkkhôn kôrte hôbe. We must conserve our forests and rivers."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি পুরনো বই সংরক্ষণ করলেন, tini purôno bôi sôngrôkkhôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংরক্ষণ করা (sôngrôkkhôn kôrā) joins Sanskrit saṃrakṣaṇa, \"guarding, keeping, preservation\" (Monier-Williams), to করা, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngrôkkhôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngrôkkhôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngrôkkhôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngrôkkhôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmāder bôn ār nôdī sôngrôkkhôn kôrte hôbe. — We must conserve our forests and rivers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmāder bôn ār nôdī sôngrôkkhôn kôrte hôbe.* — We must conserve our forests and rivers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for pollution, then the Bengali for to spoil, then say sôngrôkkhôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for pollution, then the Bengali for to spoil, then say *sôngrôkkhôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সংরক্ষণ করা (sôngrôkkhôn kôrā) mean? (\"To conserve; to preserve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

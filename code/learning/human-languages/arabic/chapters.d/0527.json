@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Farmers, profits and savings",
+  "label": "ch:ar-farmers-profits-and-savings",
+  "canDo": "I can name a peasant farmer and a gardener, and say that someone made a profit, went bankrupt or put money aside.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-R527-review-520-527",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can name a peasant farmer and a gardener, and say that someone made a profit, went bankrupt or put money aside.",
+    "assesses": [
+      "AR-LEX-C527-MAL527-03",
+      "AR-LEX-C527-MAL527-04",
+      "AR-LEX-C527-MAL527-05"
+    ]
+  }
+}

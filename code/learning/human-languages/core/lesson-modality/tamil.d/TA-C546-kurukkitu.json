@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C546-kurukkitu",
+    "language": "tamil",
+    "chapter": 546,
+    "sequence": 31170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6f52a393c7a9103"
+  },
+  "findings": []
+}

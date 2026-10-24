@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 306,
+  "title": "Bit by Bit",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d95ff239877ead57",
+  "lessons": [
+    {
+      "id": "MR-C306-kramasah",
+      "sequence": 17920,
+      "title": "क्रमशः (kramaśaḥ) — step by step; gradually",
+      "headword": "क्रमशः",
+      "romanization": "kramaśaḥ",
+      "gloss": "step by step; gradually",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8acd77c5cc9ddfac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for over time, then the Marathi for to elapse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्रमशः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रमशः — kramaśaḥ — \"step by step; gradually\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नदीचं पाणी क्रमशः कमी झालं. nadīcaṁ pāṇī kramaśaḥ kamī jhālaṁ. The water in the river went down step by step."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; at the end of a serial story it means to be continued."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रमशः (kramaśaḥ) is a tatsama, taken from Sanskrit kramaśas, 'gradually, by degrees' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramaśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramaśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramaśaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramaśaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadīcaṁ pāṇī kramaśaḥ kamī jhālaṁ. — The water in the river went down step by step.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadīcaṁ pāṇī kramaśaḥ kamī jhālaṁ.* — The water in the river went down step by step.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for over time, then the Marathi for to elapse, then say kramaśaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for over time, then the Marathi for to elapse, then say *kramaśaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क्रमशः (kramaśaḥ) mean? (\"Step by step; gradually\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C306-anekda",
+      "sequence": 17930,
+      "title": "अनेकदा (anekdā) — many times",
+      "headword": "अनेकदा",
+      "romanization": "anekdā",
+      "gloss": "many times",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b3ae343b0b84a5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to elapse, then the Marathi for step by step."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनेकदा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनेकदा — anekdā — \"many times\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मी हा किल्ला अनेकदा पाहिला आहे. mī hā killā anekdā pāhilā āhe. I have seen this fort many times."
+            },
+            {
+              "kind": "speech",
+              "text": "Built from अनेक, many, and -दा, times."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनेकदा (anekdā) is built from Sanskrit aneka, 'not one, many' (Monier-Williams), and the ending -dā, 'times'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anekdā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anekdā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anekdā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anekdā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī hā killā anekdā pāhilā āhe. — I have seen this fort many times.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī hā killā anekdā pāhilā āhe.* — I have seen this fort many times.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to elapse, then the Marathi for step by step, then say anekdā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to elapse, then the Marathi for step by step, then say *anekdā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनेकदा (anekdā) mean? (\"Many times\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C306-adhunmadhun",
+      "sequence": 17940,
+      "title": "अधूनमधून (adhūnmadhūn) — now and then",
+      "headword": "अधूनमधून",
+      "romanization": "adhūnmadhūn",
+      "gloss": "now and then",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73b51e6f2ebb36b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for step by step, then the Marathi for many times."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अधूनमधून",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अधूनमधून — adhūnmadhūn — \"now and then\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजोबा अधूनमधून जुन्या गोष्टी सांगतात. ājobā adhūnmadhūn junyā goṣṭī sāṅgtāt. Grandpa tells old stories now and then."
+            },
+            {
+              "kind": "speech",
+              "text": "A rhyming pair; कधीकधी means much the same."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अधूनमधून (adhūnmadhūn) is a rhyming pair built on madhūn, 'from the middle'; the origin of the first half, adhūn, is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhūnmadhūn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhūnmadhūn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhūnmadhūn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhūnmadhūn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājobā adhūnmadhūn junyā goṣṭī sāṅgtāt. — Grandpa tells old stories now and then.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājobā adhūnmadhūn junyā goṣṭī sāṅgtāt.* — Grandpa tells old stories now and then.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for step by step, then the Marathi for many times, then say adhūnmadhūn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for step by step, then the Marathi for many times, then say *adhūnmadhūn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अधूनमधून (adhūnmadhūn) mean? (\"Now and then\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C306-apoap",
+      "sequence": 17950,
+      "title": "आपोआप (āpoāp) — by itself; automatically",
+      "headword": "आपोआप",
+      "romanization": "āpoāp",
+      "gloss": "by itself; automatically",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4942cd677f37a6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for many times, then the Marathi for now and then."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आपोआप",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आपोआप — āpoāp — \"by itself; automatically\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वारा आला आणि दार आपोआप बंद झालं. vārā ālā āṇi dār āpoāp band jhālaṁ. The wind blew and the door shut by itself."
+            },
+            {
+              "kind": "speech",
+              "text": "A doubling of आप, self."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आपोआप (āpoāp) is built from āp, 'self', said twice; CDIAL lists Marathi āplā, 'own', under Sanskrit ātman, 'self' (CDIAL 1135)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpoāp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpoāp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpoāp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpoāp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārā ālā āṇi dār āpoāp band jhālaṁ. — The wind blew and the door shut by itself.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārā ālā āṇi dār āpoāp band jhālaṁ.* — The wind blew and the door shut by itself.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for many times, then the Marathi for now and then, then say āpoāp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for many times, then the Marathi for now and then, then say *āpoāp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आपोआप (āpoāp) mean? (\"By itself; automatically\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C306-nuktac",
+      "sequence": 17960,
+      "title": "नुकताच (nuktāc) — lately; a moment ago",
+      "headword": "नुकताच",
+      "romanization": "nuktāc",
+      "gloss": "lately; a moment ago",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:831680450cf0339a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for now and then, then the Marathi for by itself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नुकताच",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नुकताच — nuktāc — \"lately; a moment ago\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तो नुकताच गावाहून परत आला. to nuktāc gāvāhūn parat ālā. He has recently come back from the village."
+            },
+            {
+              "kind": "speech",
+              "text": "It agrees like an adjective: तो नुकताच (nuktāc) आला, ती नुकतीच आली, ते नुकतंच आलं."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नुकताच (nuktāc) is a Marathi word for lately, made with the emphatic -c; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuktāc",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuktāc*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuktāc, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuktāc*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to nuktāc gāvāhūn parat ālā. — He has recently come back from the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *to nuktāc gāvāhūn parat ālā.* — He has recently come back from the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for now and then, then the Marathi for by itself, then say nuktāc again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for now and then, then the Marathi for by itself, then say *nuktāc* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नुकताच (nuktāc) mean? (\"Lately; a moment ago\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

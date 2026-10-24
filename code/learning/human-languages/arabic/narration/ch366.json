@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 366,
+  "title": "Claims and doubts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f4c955606eade338",
+  "lessons": [
+    {
+      "id": "AR-C366-iddaa",
+      "sequence": 20810,
+      "title": "ادعى (iddaʿā) — to claim",
+      "headword": "ادعى",
+      "romanization": "iddaʿā",
+      "gloss": "to claim",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:051d019ba81bbb20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to refute, then the Arabic for to be convinced."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ادعى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ادعى — iddaʿā — \"to claim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ادعى الرجل أنه طبيب. iddaʿā ar-rajul annahu ṭabīb. The man claimed that he was a doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يدعي, yaddaʿī."
+            },
+            {
+              "kind": "speech",
+              "text": "Followed by أن. The noun is ادعاء, iddiʿāʾ, a claim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ادعى (iddaʿā) is built on the native Arabic root d-ʿ-w, \"to call, to summon\" (Lane). It is Form VIII, to call a thing one's own: to claim."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iddaʿā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iddaʿā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iddaʿā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iddaʿā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iddaʿā ar-rajul annahu ṭabīb. — The man claimed that he was a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iddaʿā ar-rajul annahu ṭabīb.* — The man claimed that he was a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to refute, then the Arabic for to be convinced, then say iddaʿā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to refute, then the Arabic for to be convinced, then say *iddaʿā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ادعى (iddaʿā) mean? (\"To claim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C366-zaama",
+      "sequence": 20820,
+      "title": "زعم (zaʿama) — to allege",
+      "headword": "زعم",
+      "romanization": "zaʿama",
+      "gloss": "to allege",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ead51fbcf296b445",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be convinced, then the Arabic for to claim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: زعم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زعم — zaʿama — \"to allege\"."
+            },
+            {
+              "kind": "speech",
+              "text": "زعم التاجر أن الساعة من ذهب. zaʿama at-tājir anna as-sāʿa min dhahab. The merchant alleged that the watch was made of gold."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يزعم, yazʿum."
+            },
+            {
+              "kind": "speech",
+              "text": "زعم (zaʿama) suggests the speaker doubts the claim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زعم (zaʿama) is built on the native Arabic root z-ʿ-m, \"to assert\" (Lane). Zaʿama is a Form I verb; Lane notes that it often marks a claim that may be untrue."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaʿama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaʿama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaʿama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaʿama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaʿama at-tājir anna as-sāʿa min dhahab. — The merchant alleged that the watch was made of gold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaʿama at-tājir anna as-sāʿa min dhahab.* — The merchant alleged that the watch was made of gold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be convinced, then the Arabic for to claim, then say zaʿama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be convinced, then the Arabic for to claim, then say *zaʿama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does زعم (zaʿama) mean? (\"To allege\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C366-shakkaka",
+      "sequence": 20830,
+      "title": "شكك (shakkaka) — to cast doubt",
+      "headword": "شكك",
+      "romanization": "shakkaka",
+      "gloss": "to cast doubt",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51cf3346ca3372d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to claim, then the Arabic for to allege."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شكك",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شكك — shakkaka — \"to cast doubt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شكك الصحفي في الأرقام الرسمية. shakkaka aṣ-ṣaḥafī fī al-arqām ar-rasmiyya. The journalist cast doubt on the official figures."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يشكك, yushakkik."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes في: شكك (shakkaka) في …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شكك (shakkaka) is built on the native Arabic root sh-k-k, \"to doubt\" (Lane). It is Form II of shakka, \"to doubt\": to make others doubt."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shakkaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shakkaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shakkaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shakkaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shakkaka aṣ-ṣaḥafī fī al-arqām ar-rasmiyya. — The journalist cast doubt on the official figures.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shakkaka aṣ-ṣaḥafī fī al-arqām ar-rasmiyya.* — The journalist cast doubt on the official figures.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to claim, then the Arabic for to allege, then say shakkaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to claim, then the Arabic for to allege, then say *shakkaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شكك (shakkaka) mean? (\"To cast doubt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C366-saddaqa",
+      "sequence": 20840,
+      "title": "صدق (ṣaddaqa) — to believe someone",
+      "headword": "صدق",
+      "romanization": "ṣaddaqa",
+      "gloss": "to believe someone",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71e41505c5464986",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to allege, then the Arabic for to cast doubt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صدق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صدق — ṣaddaqa — \"to believe someone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لم يصدق أحد قصته. lam yuṣaddiq aḥad qiṣṣatah. Nobody believed his story."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يصدق, yuṣaddiq."
+            },
+            {
+              "kind": "speech",
+              "text": "Form I صدق (ṣaddaqa), ṣadaqa, with the same letters, means to tell the truth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صدق (ṣaddaqa) is built on the native Arabic root ṣ-d-q, \"to be truthful\" (Lane). It is Form II, to hold to be truthful: to believe someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣaddaqa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣaddaqa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣaddaqa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣaddaqa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lam yuṣaddiq aḥad qiṣṣatah. — Nobody believed his story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lam yuṣaddiq aḥad qiṣṣatah.* — Nobody believed his story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to allege, then the Arabic for to cast doubt, then say ṣaddaqa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to allege, then the Arabic for to cast doubt, then say *ṣaddaqa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صدق (ṣaddaqa) mean? (\"To believe someone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C366-istadalla",
+      "sequence": 20850,
+      "title": "استدل (istadalla) — to infer",
+      "headword": "استدل",
+      "romanization": "istadalla",
+      "gloss": "to infer",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07d482906c49ca8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to cast doubt, then the Arabic for to believe someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استدل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استدل — istadalla — \"to infer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استدل الطبيب على الزكام من السعال. istadalla aṭ-ṭabīb ʿalā az-zukām min as-suʿāl. The doctor inferred a cold from the cough."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستدل, yastadill."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على: استدل (istadalla) على …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استدل (istadalla) is built on the native Arabic root d-l-l, \"to guide, to show the way\" (Lane). It is Form X, to seek guidance: to infer one thing from another."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istadalla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istadalla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istadalla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istadalla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istadalla aṭ-ṭabīb ʿalā az-zukām min as-suʿāl. — The doctor inferred a cold from the cough.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istadalla aṭ-ṭabīb ʿalā az-zukām min as-suʿāl.* — The doctor inferred a cold from the cough.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to cast doubt, then the Arabic for to believe someone, then say istadalla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to cast doubt, then the Arabic for to believe someone, then say *istadalla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استدل (istadalla) mean? (\"To infer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

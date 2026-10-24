@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "Wear and Tear",
+  "label": "ch:te-wear-and-tear",
+  "canDo": "I can say to wear down, to go mouldy, to fade, to crack and to deteriorate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C491-ksinincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can say to wear down, to go mouldy, to fade, to crack and to deteriorate.",
+    "assesses": [
+      "TE-LEX-C491-TUPPU491-03",
+      "TE-LEX-C491-TUPPU491-04",
+      "TE-LEX-C491-TUPPU491-05"
+    ]
+  }
+}

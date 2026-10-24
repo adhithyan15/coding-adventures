@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C311-vartahar",
+    "language": "marathi",
+    "chapter": 311,
+    "sequence": 18170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:171261acc4b1cd20"
+  },
+  "findings": []
+}

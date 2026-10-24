@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:2ca1f1af826a61bc",
+  "lessonIds": [
+    "AR-C475-dabu",
+    "AR-C475-fahd",
+    "AR-C475-qunfudh",
+    "AR-C475-sinjab",
+    "AR-C475-khuffash"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch475.txt",
+  "json": "arabic/narration/ch475.json",
+  "textHash": "fnv1a64:edaf32f750d057ae",
+  "jsonHash": "fnv1a64:936c6087986025e0",
+  "findings": []
+}

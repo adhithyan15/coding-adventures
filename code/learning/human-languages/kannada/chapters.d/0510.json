@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Aches and Swellings",
+  "label": "ch:ka-aches-and-swellings",
+  "canDo": "I can say to ache, numbness, to swell, the gums and the jaw.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C510-davade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can say to ache, numbness, to swell, the gums and the jaw.",
+    "assesses": [
+      "KA-LEX-C510-NOVU510-03",
+      "KA-LEX-C510-NOVU510-04",
+      "KA-LEX-C510-NOVU510-05"
+    ]
+  }
+}

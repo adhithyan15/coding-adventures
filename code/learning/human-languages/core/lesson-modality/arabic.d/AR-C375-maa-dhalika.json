@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C375-maa-dhalika",
+    "language": "arabic",
+    "chapter": 375,
+    "sequence": 21270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:647a0dd8b81232d9"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Checking Claims",
+  "label": "ch:mr-checking-claims",
+  "canDo": "I can say how sure I am and check what I am told.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C346-phetalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can say how sure I am and check what I am told.",
+    "assesses": [
+      "MR-LEX-C346-KHATRI346-03",
+      "MR-LEX-C346-KHATRI346-04",
+      "MR-LEX-C346-KHATRI346-05"
+    ]
+  }
+}

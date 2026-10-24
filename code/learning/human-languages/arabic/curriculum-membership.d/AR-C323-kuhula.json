@@ -1,0 +1,11 @@
+{
+  "id": "AR-C323-kuhula",
+  "pathSegment": "AR-PATH-323-NASHAA323",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-323-NASHAA323",
+      "order": 4
+    }
+  ]
+}

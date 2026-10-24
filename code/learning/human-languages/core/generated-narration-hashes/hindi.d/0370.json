@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:b85fe32c876d7723",
+  "lessonIds": [
+    "HI-C370-sabha",
+    "HI-C370-pradhan",
+    "HI-C370-zila",
+    "HI-C370-parti",
+    "HI-C370-taykarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch370.txt",
+  "json": "hindi/narration/ch370.json",
+  "textHash": "fnv1a64:fdacaf684d3d880e",
+  "jsonHash": "fnv1a64:7044064913413ddd",
+  "findings": []
+}

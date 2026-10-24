@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:99a94f9ddb77a3ee",
+  "lessonIds": [
+    "MR-C457-khed",
+    "MR-C457-pascattap",
+    "MR-C457-hundka",
+    "MR-C457-halhalne",
+    "MR-C457-musmusne",
+    "MR-R457-review-450-457"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch457.txt",
+  "json": "marathi/narration/ch457.json",
+  "textHash": "fnv1a64:cf30a7e6d5d400f6",
+  "jsonHash": "fnv1a64:75123b2e574b751c",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C525-sampadana",
+    "language": "telugu",
+    "chapter": 525,
+    "sequence": 26590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:702d0a538279d144"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-287-MUST-BECAUSE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-287-MUST-BECAUSE"
+  ],
+  "after": []
+}

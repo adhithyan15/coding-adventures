@@ -1,0 +1,11 @@
+{
+  "id": "TA-C360-cakku",
+  "pathSegment": "TA-PATH-360-NIYAYAM360",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-360-NIYAYAM360",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "A trial",
+  "label": "ch:ar-a-trial",
+  "canDo": "I can say a trial, a hearing, the defence, to convict and innocence.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C334-baraa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can say a trial, a hearing, the defence, to convict and innocence.",
+    "assesses": [
+      "AR-LEX-C334-MUHAKAMA334-03",
+      "AR-LEX-C334-MUHAKAMA334-04",
+      "AR-LEX-C334-MUHAKAMA334-05"
+    ]
+  }
+}

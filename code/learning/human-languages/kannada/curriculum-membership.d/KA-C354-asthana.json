@@ -1,0 +1,11 @@
+{
+  "id": "KA-C354-asthana",
+  "pathSegment": "KA-PATH-354-SAMRAJYA354",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-354-SAMRAJYA354",
+      "order": 3
+    }
+  ]
+}

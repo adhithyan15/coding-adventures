@@ -1,0 +1,11 @@
+{
+  "id": "HI-C518-svic",
+  "pathSegment": "HI-PATH-518-TAAR518",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-518-TAAR518",
+      "order": 2
+    }
+  ]
+}

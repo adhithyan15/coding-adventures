@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-509-MANISHI509",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-509-MANISHI509"
+  ],
+  "after": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:4705504601b74839",
+  "lessonIds": [
+    "TE-C389-vislesincu",
+    "TE-C389-vislesana",
+    "TE-C389-parisilincu",
+    "TE-C389-polika",
+    "TE-C389-vyatyasam",
+    "TE-R389-review-382-389"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch389.txt",
+  "json": "telugu/narration/ch389.json",
+  "textHash": "fnv1a64:bc6a10d937999a6a",
+  "jsonHash": "fnv1a64:3efab2a0f8044abc",
+  "findings": []
+}

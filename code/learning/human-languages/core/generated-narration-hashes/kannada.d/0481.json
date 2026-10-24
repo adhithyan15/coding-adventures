@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:413abe4f5ec76436",
+  "lessonIds": [
+    "KA-C481-karavali",
+    "KA-C481-kolli",
+    "KA-C481-havala",
+    "KA-C481-cippu",
+    "KA-C481-nadimukha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch481.txt",
+  "json": "kannada/narration/ch481.json",
+  "textHash": "fnv1a64:9672f8123ae95ad8",
+  "jsonHash": "fnv1a64:50be529fd0bccc47",
+  "findings": []
+}

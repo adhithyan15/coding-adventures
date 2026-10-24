@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C533-mooka",
+    "language": "bengali",
+    "chapter": 533,
+    "sequence": 32120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da32a4ace4600319"
+  },
+  "findings": []
+}

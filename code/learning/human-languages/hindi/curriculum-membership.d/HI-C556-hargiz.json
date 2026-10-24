@@ -1,0 +1,11 @@
+{
+  "id": "HI-C556-hargiz",
+  "pathSegment": "HI-PATH-556-SANDEH556",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-556-SANDEH556",
+      "order": 2
+    }
+  ]
+}

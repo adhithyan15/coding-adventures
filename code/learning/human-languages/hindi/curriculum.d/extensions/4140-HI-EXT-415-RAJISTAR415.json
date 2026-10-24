@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-415-RAJISTAR415",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can speak to the manager, sign the register and send for tea.",
+  "prerequisites": []
+}

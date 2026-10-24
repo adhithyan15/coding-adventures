@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:f6b335ec3ee2efc9",
+  "lessonIds": [
+    "KA-C414-kattunittu",
+    "KA-C414-garistha",
+    "KA-C414-kanistha",
+    "KA-C414-nigadipadisu",
+    "KA-C414-nirbandhisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch414.txt",
+  "json": "kannada/narration/ch414.json",
+  "textHash": "fnv1a64:21f06f5500f7ba5c",
+  "jsonHash": "fnv1a64:828ba4e9ce32e8d7",
+  "findings": []
+}

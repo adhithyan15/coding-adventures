@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C456-muccu",
+    "language": "tamil",
+    "chapter": 456,
+    "sequence": 26250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0c81a6bc169c4e0"
+  },
+  "findings": []
+}

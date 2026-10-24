@@ -1,0 +1,20 @@
+{
+  "chapter": 313,
+  "title": "Asking the Way",
+  "label": "ch:ka-asking-the-way",
+  "canDo": "I can ask how to get somewhere with … hēge hōgabēku? and how far it is, and give the way with nēravāgi, eḍakke, balakke and pakkadalli.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-R313-asking-the-way",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: ask the way and how far it is, and give the way back.",
+    "assesses": [
+      "KA-GRAMMAR-C313-ASK-WAY-01",
+      "KA-GRAMMAR-C313-HOW-FAR-01",
+      "KA-GRAMMAR-C313-GIVE-WAY-01",
+      "KA-GRAMMAR-C313-LANDMARK-01"
+    ]
+  }
+}

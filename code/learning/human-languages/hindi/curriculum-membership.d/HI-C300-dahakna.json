@@ -1,0 +1,11 @@
+{
+  "id": "HI-C300-dahakna",
+  "pathSegment": "HI-PATH-300-DAHAK300",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-300-DAHAK300",
+      "order": 1
+    }
+  ]
+}

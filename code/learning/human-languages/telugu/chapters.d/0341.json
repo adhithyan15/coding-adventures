@@ -1,0 +1,21 @@
+{
+  "chapter": 341,
+  "title": "Today's Headlines",
+  "label": "ch:te-today-s-headlines",
+  "canDo": "I can say the main points, an editor, an editorial, a reader and to confirm.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-R341-review-334-341",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can say the main points, an editor, an editorial, a reader and to confirm.",
+    "assesses": [
+      "TE-LEX-C341-SAMPADAKUDU341-01",
+      "TE-LEX-C341-SAMPADAKUDU341-02",
+      "TE-LEX-C341-SAMPADAKUDU341-03",
+      "TE-LEX-C341-SAMPADAKUDU341-04",
+      "TE-LEX-C341-SAMPADAKUDU341-05"
+    ]
+  }
+}

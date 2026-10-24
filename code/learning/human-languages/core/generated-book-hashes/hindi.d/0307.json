@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:3f3b37cfcaed55f5",
+  "lessonIds": [
+    "HI-C307-phasna",
+    "HI-C307-pukarna",
+    "HI-C307-sannata",
+    "HI-C307-nikalna",
+    "HI-C307-behal"
+  ],
+  "tex": "hindi/book/chapters/ch307-trapped.tex"
+}

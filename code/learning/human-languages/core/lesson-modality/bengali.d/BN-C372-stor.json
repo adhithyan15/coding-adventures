@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C372-stor",
+    "language": "bengali",
+    "chapter": 372,
+    "sequence": 23180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63ff58dbf3f49c7e"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-494-MARAPU494",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-494-MARAPU494"
+  ],
+  "after": []
+}

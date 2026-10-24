@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:b59fd195fd98deea",
+  "lessonIds": [
+    "TA-C331-aracanai",
+    "TA-C331-ceppetu",
+    "TA-C331-vallal",
+    "TA-C331-kotai",
+    "TA-C331-celi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch331.txt",
+  "json": "tamil/narration/ch331.json",
+  "textHash": "fnv1a64:ae8bf35420b28f56",
+  "jsonHash": "fnv1a64:bb40a911c019c06a",
+  "findings": []
+}

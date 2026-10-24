@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C284-sutro",
+    "language": "bengali",
+    "chapter": 284,
+    "sequence": 18420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a1974f84a5cc62f"
+  },
+  "findings": []
+}

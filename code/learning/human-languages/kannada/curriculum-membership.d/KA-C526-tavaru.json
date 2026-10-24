@@ -1,0 +1,11 @@
+{
+  "id": "KA-C526-tavaru",
+  "pathSegment": "KA-PATH-526-BALAGA526",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-526-BALAGA526",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C445-bilap-kora",
+  "pathSegment": "BN-PATH-445-SHOK445",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-445-SHOK445",
+      "order": 4
+    }
+  ]
+}

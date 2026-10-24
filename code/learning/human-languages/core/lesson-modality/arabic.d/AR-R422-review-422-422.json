@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R422-review-422-422",
+    "language": "arabic",
+    "chapter": 422,
+    "sequence": 23730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:906f84ce9f7e8d27"
+  },
+  "findings": []
+}

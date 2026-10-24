@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "A flat tyre",
+  "label": "ch:ar-a-flat-tyre",
+  "canDo": "I can say a tyre, a wheel, a hole, a pump and to tow.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C433-jarra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can say a tyre, a wheel, a hole, a pump and to tow.",
+    "assesses": [
+      "AR-LEX-C433-AJALA433-03",
+      "AR-LEX-C433-AJALA433-04",
+      "AR-LEX-C433-AJALA433-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-R341-opinion-and-result",
+  "pathSegment": "ML-PATH-341-OPINION-SO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ML-EXT-341-OPINION-SO",
+      "order": 5
+    }
+  ]
+}

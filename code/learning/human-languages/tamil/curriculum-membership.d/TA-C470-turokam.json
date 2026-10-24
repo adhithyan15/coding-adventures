@@ -1,0 +1,11 @@
+{
+  "id": "TA-C470-turokam",
+  "pathSegment": "TA-PATH-470-VICUVACAM470",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-470-VICUVACAM470",
+      "order": 1
+    }
+  ]
+}

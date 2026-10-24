@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 419,
+  "title": "Neighbourhoods",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9fba38ed44c702bf",
+  "lessons": [
+    {
+      "id": "MR-C419-vasti",
+      "sequence": 24170,
+      "title": "वस्ती (vastī) — a settlement; a neighbourhood",
+      "headword": "वस्ती",
+      "romanization": "vastī",
+      "gloss": "a settlement; a neighbourhood",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94dd46cc79668e4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a small village, then the Marathi for a taluka."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वस्ती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वस्ती — vastī — \"a settlement; a neighbourhood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "डोंगराखाली एक लहान वस्ती आहे. ḍoṅgarākhālī ek lahān vastī āhe. There is a small settlement at the bottom of the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the people who live there: सगळी वस्ती (vastī) जमली, the whole neighbourhood gathered."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वस्ती (vastī) belongs with Marathi vasṇẽ, \"to settle\", inherited from Sanskrit vasati, \"stays, dwells\" (CDIAL 11435); how the noun was formed is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vastī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vastī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vastī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vastī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍoṅgarākhālī ek lahān vastī āhe. — There is a small settlement at the bottom of the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍoṅgarākhālī ek lahān vastī āhe.* — There is a small settlement at the bottom of the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a small village, then the Marathi for a taluka, then say vastī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a small village, then the Marathi for a taluka, then say *vastī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वस्ती (vastī) mean? (\"A settlement; a neighbourhood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C419-vasahat",
+      "sequence": 24180,
+      "title": "वसाहत (vasāhat) — a housing colony",
+      "headword": "वसाहत",
+      "romanization": "vasāhat",
+      "gloss": "a housing colony",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1796a67d5d6cf233",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a taluka, then the Marathi for a settlement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वसाहत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वसाहत — vasāhat — \"a housing colony\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आमची वसाहत शहराच्या बाहेर आहे. āmcī vasāhat śahrācyā bāher āhe. Our housing colony is outside the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a colony in history: a land settled and ruled from far away."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वसाहत (vasāhat) is a Marathi word for a planned settlement; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vasāhat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vasāhat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vasāhat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vasāhat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmcī vasāhat śahrācyā bāher āhe. — Our housing colony is outside the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmcī vasāhat śahrācyā bāher āhe.* — Our housing colony is outside the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a taluka, then the Marathi for a settlement, then say vasāhat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a taluka, then the Marathi for a settlement, then say *vasāhat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वसाहत (vasāhat) mean? (\"A housing colony\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C419-peth",
+      "sequence": 24190,
+      "title": "पेठ (peṭh) — an old town quarter",
+      "headword": "पेठ",
+      "romanization": "peṭh",
+      "gloss": "an old town quarter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a184269916aa6f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a settlement, then the Marathi for a housing colony."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पेठ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पेठ — peṭh — \"an old town quarter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुण्यात अनेक जुन्या पेठा आहेत. puṇyāt anek junyā peṭhā āhet. Pune has many old quarters."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Plural: पेठा, peṭhā."
+            },
+            {
+              "kind": "speech",
+              "text": "In Pune each old quarter is a पेठ (peṭh); the plural is पेठा."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पेठ (peṭh) is inherited: CDIAL lists Marathi peṭh, \"town, quarter of a town, market\", under Sanskrit pratiṣṭhā, \"foundation, homestead\" (CDIAL 8608)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṭh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṭh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṇyāt anek junyā peṭhā āhet. — Pune has many old quarters.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṇyāt anek junyā peṭhā āhet.* — Pune has many old quarters.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a settlement, then the Marathi for a housing colony, then say peṭh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a settlement, then the Marathi for a housing colony, then say *peṭh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पेठ (peṭh) mean? (\"An old town quarter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C419-bol",
+      "sequence": 24200,
+      "title": "बोळ (boḷ) — a narrow lane",
+      "headword": "बोळ",
+      "romanization": "boḷ",
+      "gloss": "a narrow lane",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9465a635ead5ead4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a housing colony, then the Marathi for an old town quarter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बोळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोळ — boḷ — \"a narrow lane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "या बोळातून बाजारात लवकर पोहोचता येतं. yā boḷātūn bājārāt lavkar pohoctā yetaṁ. You can reach the market quickly through this lane."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Narrower than a गल्ली, often a short cut."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोळ (boḷ) is a Marathi word for a narrow passage between houses; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā boḷātūn bājārāt lavkar pohoctā yetaṁ. — You can reach the market quickly through this lane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā boḷātūn bājārāt lavkar pohoctā yetaṁ.* — You can reach the market quickly through this lane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a housing colony, then the Marathi for an old town quarter, then say boḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a housing colony, then the Marathi for an old town quarter, then say *boḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बोळ (boḷ) mean? (\"A narrow lane\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C419-cal",
+      "sequence": 24210,
+      "title": "चाळ (cāḷ) — a tenement",
+      "headword": "चाळ",
+      "romanization": "cāḷ",
+      "gloss": "a tenement",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8d015b55543f03b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an old town quarter, then the Marathi for a narrow lane."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चाळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाळ — cāḷ — \"a tenement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शहरात अजून काही जुन्या चाळी आहेत. śahrāt ajūn kāhī junyā cāḷī āhet. There are still some old tenements in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Plural: चाळी, cāḷī."
+            },
+            {
+              "kind": "speech",
+              "text": "A long building of one-room homes along a shared balcony; the plural is चाळी."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाळ (cāḷ) is a Marathi word for a long tenement block; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śahrāt ajūn kāhī junyā cāḷī āhet. — There are still some old tenements in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śahrāt ajūn kāhī junyā cāḷī āhet.* — There are still some old tenements in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an old town quarter, then the Marathi for a narrow lane, then say cāḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an old town quarter, then the Marathi for a narrow lane, then say *cāḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चाळ (cāḷ) mean? (\"A tenement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R419-review-412-419",
+      "sequence": 24220,
+      "title": "Looking back: from Finding the Way to Neighbourhoods",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Finding the Way to Neighbourhoods",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f24a4df91cc8e280",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for a direction and a compass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a direction, a compass, a mark, to stray, to hang about",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a direction, a compass, a mark, to stray, to hang about]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lodging, a rest house, a guest house, an overnight stay, an eating house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: lodging, a rest house, a guest house, an overnight stay, an eating house]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an honoured guest, hospitality, a reception desk, to ask after, to drop by",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an honoured guest, hospitality, a reception desk, to ask after, to drop by]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an amenity, bedding, a woollen blanket, to spread out bedding, to cover oneself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an amenity, bedding, a woollen blanket, to spread out bedding, to cover oneself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a peg, a washerman, to wring, a porter, to sprinkle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a peg, a washerman, to wring, a porter, to sprinkle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a deposit, to settle down, a tenant, a strongbox, an elevator",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a deposit, to settle down, a tenant, a strongbox, an elevator]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a town, a metropolis, a municipal council, a small village, a taluka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a town, a metropolis, a municipal council, a small village, a taluka]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a settlement, a housing colony, an old town quarter, a narrow lane, a tenement",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a settlement, a housing colony, an old town quarter, a narrow lane, a tenement]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A direction? (दिशा, diśā.) A compass? (होकायंत्र, hokāyantra.) A mark? (खूण, khūṇ.) To stray? (भरकटणे, bharkaṭṇe.) To hang about? (घुटमळणे, ghuṭmaḷṇe.) Lodging? (निवास, nivās.) A rest house? (धर्मशाळा, dharmaśāḷā.) A guest house? (विश्रामगृह, viśrāmgṛh.) An overnight stay? (मुक्काम, mukkām.) An eating house? (खानावळ, khānāvaḷ.) An honoured guest? (अतिथी, atithī.) Hospitality? (आदरातिथ्य, ādarātithya.) A reception desk? (स्वागतकक्ष, svāgatkakṣa.) To ask after? (विचारपूस करणे, vicārpūs karṇe.) To drop by? (फिरकणे, phirakṇe.) An amenity? (सुविधा, suvidhā.) Bedding? (बिछाना, bichānā.) A woollen blanket? (घोंगडी, ghoṅgḍī.) To spread out bedding? (अंथरणे, antharṇe.) To cover oneself? (पांघरणे, pāṅgharṇe.) A peg? (खुंटी, khuṇṭī.) A washerman? (धोबी, dhobī.) To wring? (पिळणे, piḷṇe.) A porter? (हमाल, hamāl.) To sprinkle? (शिंपडणे, śimpaḍṇe.) A deposit? (अनामत, anāmat.) To settle down? (स्थायिक होणे, sthāyik hoṇe.) A tenant? (भाडेकरू, bhāḍekarū.) A strongbox? (तिजोरी, tijorī.) An elevator? (उद्वाहक, udvāhak.) A town? (नगर, nagar.) A metropolis? (महानगर, mahānagar.) A municipal council? (नगरपालिका, nagarpālikā.) A small village? (खेडे, kheḍe.) A taluka? (तालुका, tālukā.) A settlement? (वस्ती, vastī.) A housing colony? (वसाहत, vasāhat.) An old town quarter? (पेठ, peṭh.) A narrow lane? (बोळ, boḷ.) A tenement? (चाळ, cāḷ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

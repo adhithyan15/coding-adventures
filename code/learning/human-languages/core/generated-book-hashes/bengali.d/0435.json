@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:04b808aa0d6eaa35",
+  "lessonIds": [
+    "BN-C435-ghas",
+    "BN-C435-lota",
+    "BN-C435-shakha",
+    "BN-C435-kath",
+    "BN-C435-chhata"
+  ],
+  "tex": "bengali/book/chapters/ch435-grass-creepers-and-wood.tex"
+}

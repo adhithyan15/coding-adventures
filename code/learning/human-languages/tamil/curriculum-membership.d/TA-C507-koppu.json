@@ -1,0 +1,11 @@
+{
+  "id": "TA-C507-koppu",
+  "pathSegment": "TA-PATH-507-ALUVALAKAM507",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-507-ALUVALAKAM507",
+      "order": 3
+    }
+  ]
+}

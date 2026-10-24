@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C524-vevalati",
+    "language": "malayalam",
+    "chapter": 524,
+    "sequence": 26390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69c70441584467a3"
+  },
+  "findings": []
+}

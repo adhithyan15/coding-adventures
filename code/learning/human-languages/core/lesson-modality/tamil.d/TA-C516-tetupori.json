@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C516-tetupori",
+    "language": "tamil",
+    "chapter": 516,
+    "sequence": 29620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcaa888de54f1a43"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C492-svasth",
+    "language": "hindi",
+    "chapter": 492,
+    "sequence": 27060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6fda2d6cfabc1f2"
+  },
+  "findings": []
+}

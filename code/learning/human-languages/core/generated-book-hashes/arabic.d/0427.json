@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:da136fbedeb26632",
+  "lessonIds": [
+    "AR-C427-masafa",
+    "AR-C427-taakkada",
+    "AR-C427-addala",
+    "AR-C427-istajara",
+    "AR-C427-haqibat-zahr"
+  ],
+  "tex": "arabic/book/chapters/ch427-planning-a-trip.tex"
+}

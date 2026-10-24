@@ -1,0 +1,853 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 411,
+  "title": "Terms and Conditions",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:2c76d48928d746a5",
+  "lessons": [
+    {
+      "id": "KA-C411-sarattu",
+      "sequence": 20790,
+      "title": "ಷರತ್ತು (ṣarattu) — a condition; a term",
+      "headword": "ಷರತ್ತು",
+      "romanization": "ṣarattu",
+      "gloss": "a condition; a term",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aeb8ddbf77281b4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for above all, then the Kannada for not only that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಷರತ್ತು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಷರತ್ತು — ṣarattu — \"a condition; a term\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಒಂದು ಷರತ್ತಿನ ಮೇಲೆ ನಾನು ಒಪ್ಪುತ್ತೇನೆ. ondu ṣarattina mēle nānu opputtēne. I agree on one condition."
+            },
+            {
+              "kind": "speech",
+              "text": "ಷರತ್ತಿನ ಮೇಲೆ, on condition. ಷರತ್ತುಗಳು, terms."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಷರತ್ತು (ṣarattu) is a loan from Arabic sharṭ, \"a condition\", which reached Kannada through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣarattu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣarattu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣarattu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣarattu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ondu ṣarattina mēle nānu opputtēne. — I agree on one condition.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ondu ṣarattina mēle nānu opputtēne.* — I agree on one condition.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for above all, then the Kannada for not only that, then say ṣarattu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for above all, then the Kannada for not only that, then say *ṣarattu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಷರತ್ತು (ṣarattu) mean? (\"A condition; a term\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C411-oppanda",
+      "sequence": 20800,
+      "title": "ಒಪ್ಪಂದ (oppanda) — an agreement; a deal",
+      "headword": "ಒಪ್ಪಂದ",
+      "romanization": "oppanda",
+      "gloss": "an agreement; a deal",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a52edceeaab5805",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for not only that, then the Kannada for a condition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒಪ್ಪಂದ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಪ್ಪಂದ — oppanda — \"an agreement; a deal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎರಡು ಕಂಪನಿಗಳು ಒಂದು ಒಪ್ಪಂದ ಮಾಡಿಕೊಂಡವು. eraḍu kampanigaḷu ondu oppanda māḍikoṇḍavu. The two companies made an agreement."
+            },
+            {
+              "kind": "speech",
+              "text": "ಒಪ್ಪಂದ (oppanda) ಮಾಡಿಕೊ, to make a deal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಪ್ಪಂದ (oppanda) is native Dravidian: DEDR 924 lists Kannada oppanda, \"an agreement\", beside oppu, \"to agree\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oppanda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oppanda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oppanda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oppanda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraḍu kampanigaḷu ondu oppanda māḍikoṇḍavu. — The two companies made an agreement.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraḍu kampanigaḷu ondu oppanda māḍikoṇḍavu.* — The two companies made an agreement.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for not only that, then the Kannada for a condition, then say oppanda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for not only that, then the Kannada for a condition, then say *oppanda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒಪ್ಪಂದ (oppanda) mean? (\"An agreement; a deal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C411-odambadike",
+      "sequence": 20810,
+      "title": "ಒಡಂಬಡಿಕೆ (oḍambaḍike) — a pact; a treaty",
+      "headword": "ಒಡಂಬಡಿಕೆ",
+      "romanization": "oḍambaḍike",
+      "gloss": "a pact; a treaty",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52769eeb1848781b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a condition, then the Kannada for an agreement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒಡಂಬಡಿಕೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಡಂಬಡಿಕೆ — oḍambaḍike — \"a pact; a treaty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎರಡು ದೇಶಗಳ ನಡುವೆ ಹೊಸ ಒಡಂಬಡಿಕೆ ಆಯಿತು. eraḍu dēśagaḷa naḍuve hosa oḍambaḍike āyitu. A new treaty was made between the two countries."
+            },
+            {
+              "kind": "speech",
+              "text": "More formal than ಒಪ್ಪಂದ (oppanda)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಡಂಬಡಿಕೆ (oḍambaḍike) is native Dravidian: DEDR 945 lists Kannada oḍam-baḍu, \"to agree\", and oḍa-baḍike, \"an agreement, a treaty\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḍambaḍike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḍambaḍike*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḍambaḍike, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḍambaḍike*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraḍu dēśagaḷa naḍuve hosa oḍambaḍike āyitu. — A new treaty was made between the two countries.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraḍu dēśagaḷa naḍuve hosa oḍambaḍike āyitu.* — A new treaty was made between the two countries.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a condition, then the Kannada for an agreement, then say oḍambaḍike again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a condition, then the Kannada for an agreement, then say *oḍambaḍike* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒಡಂಬಡಿಕೆ (oḍambaḍike) mean? (\"A pact; a treaty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C411-iderisu",
+      "sequence": 20820,
+      "title": "ಈಡೇರಿಸು (īḍērisu) — to fulfil",
+      "headword": "ಈಡೇರಿಸು",
+      "romanization": "īḍērisu",
+      "gloss": "to fulfil",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b79d361bbe448a26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an agreement, then the Kannada for a pact."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಈಡೇರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಈಡೇರಿಸು — īḍērisu — \"to fulfil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಪ್ಪ ನನ್ನ ಆಸೆಯನ್ನು ಈಡೇರಿಸಿದರು. appa nanna āseyannu īḍērisidaru. Father fulfilled my wish."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಈಡೇರಿಸಿದೆ, īḍēriside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈಡೇರು, to come true: ಆಸೆ ಈಡೇರಿತು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಈಡೇರಿಸು (īḍērisu) is built as the causative of īḍēru, \"to be fulfilled\"; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īḍērisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īḍērisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īḍērisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īḍērisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appa nanna āseyannu īḍērisidaru. — Father fulfilled my wish.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appa nanna āseyannu īḍērisidaru.* — Father fulfilled my wish.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an agreement, then the Kannada for a pact, then say īḍērisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an agreement, then the Kannada for a pact, then say *īḍērisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಈಡೇರಿಸು (īḍērisu) mean? (\"To fulfil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C411-badhyate",
+      "sequence": 20830,
+      "title": "ಬಾಧ್ಯತೆ (bādhyate) — an obligation",
+      "headword": "ಬಾಧ್ಯತೆ",
+      "romanization": "bādhyate",
+      "gloss": "an obligation",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8fbbab3e2e4c8a77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a pact, then the Kannada for to fulfil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಾಧ್ಯತೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಧ್ಯತೆ — bādhyate — \"an obligation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಾಲ ತೀರಿಸುವುದು ನನ್ನ ಬಾಧ್ಯತೆ. sāla tīrisuvudu nanna bādhyate. Paying off the loan is my obligation."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಾಧ್ಯತೆ (bādhyate) ಇರು, to be bound to do."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಧ್ಯತೆ (bādhyate) is built on Sanskrit bādhya, \"to be pressed hard\" (Monier-Williams), with -tā, \"-ness\": what presses on one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhyate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhyate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhyate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhyate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāla tīrisuvudu nanna bādhyate. — Paying off the loan is my obligation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāla tīrisuvudu nanna bādhyate.* — Paying off the loan is my obligation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a pact, then the Kannada for to fulfil, then say bādhyate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a pact, then the Kannada for to fulfil, then say *bādhyate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಾಧ್ಯತೆ (bādhyate) mean? (\"An obligation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R411-review-405-411",
+      "sequence": 20840,
+      "title": "Looking back: from Settling Disputes to Terms and Conditions",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Settling Disputes to Terms and Conditions",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:272e6f3bf6bccab2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for an alliance and a negotiation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an alliance, a negotiation, mediation, a compromise, to incite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an alliance, a negotiation, mediation, a compromise, to incite]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a university, a degree, a lecture, a professor, to instruct",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a university, a degree, a lecture, a professor, to instruct]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "research, an experiment, a theory, to analyse, a survey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: research, an experiment, a theory, to analyse, a survey]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to focus, a study, optional, a syllabus, revision",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to focus, a study, optional, a syllabus, revision]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an essay, to summarise, a treatise, to present, a note",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an essay, to summarise, a treatise, to present, a note]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thus, however, on account of, above all, not only that",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thus, however, on account of, above all, not only that]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a condition, an agreement, a pact, to fulfil, an obligation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a condition, an agreement, a pact, to fulfil, an obligation]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An alliance? (ಮೈತ್ರಿ, maitri.) A negotiation? (ಸಂಧಾನ, sandhāna.) Mediation? (ಮಧ್ಯಸ್ಥಿಕೆ, madhyasthike.) A compromise? (ಹೊಂದಾಣಿಕೆ, hondāṇike.) To incite? (ಪ್ರಚೋದಿಸು, pracōdisu.) A university? (ವಿಶ್ವವಿದ್ಯಾಲಯ, viśvavidyālaya.) A degree? (ಪದವಿ, padavi.) A lecture? (ಉಪನ್ಯಾಸ, upanyāsa.) A professor? (ಪ್ರಾಧ್ಯಾಪಕ, prādhyāpaka.) To instruct? (ಬೋಧಿಸು, bōdhisu.) Research? (ಸಂಶೋಧನೆ, saṃśōdhane.) An experiment? (ಪ್ರಯೋಗ, prayōga.) A theory? (ಸಿದ್ಧಾಂತ, siddhānta.) To analyse? (ವಿಶ್ಲೇಷಿಸು, viślēṣisu.) A survey? (ಸಮೀಕ್ಷೆ, samīkṣe.) To focus? (ಕೇಂದ್ರೀಕರಿಸು, kēndrīkarisu.) A study? (ಅಧ್ಯಯನ, adhyayana.) Optional? (ಐಚ್ಛಿಕ, aicchika.) A syllabus? (ಪಠ್ಯಕ್ರಮ, paṭhyakrama.) Revision? (ಪುನರಾವರ್ತನೆ, punarāvartane.) An essay? (ಪ್ರಬಂಧ, prabandha.) To summarise? (ಸಂಕ್ಷೇಪಿಸು, saṅkṣēpisu.) A treatise? (ಗ್ರಂಥ, grantha.) To present? (ಮಂಡಿಸು, maṇḍisu.) A note? (ಟಿಪ್ಪಣಿ, ṭippaṇi.) Thus? (ಹೀಗಾಗಿ, hīgāgi.) However? (ಆದಾಗ್ಯೂ, ādāgyū.) On account of? (ನಿಮಿತ್ತ, nimitta.) Above all? (ಮೇಲಾಗಿ, mēlāgi.) Not only that? (ಮಾತ್ರವಲ್ಲದೆ, mātravallade.) A condition? (ಷರತ್ತು, ṣarattu.) An agreement? (ಒಪ್ಪಂದ, oppanda.) A pact? (ಒಡಂಬಡಿಕೆ, oḍambaḍike.) To fulfil? (ಈಡೇರಿಸು, īḍērisu.) An obligation? (ಬಾಧ್ಯತೆ, bādhyate.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

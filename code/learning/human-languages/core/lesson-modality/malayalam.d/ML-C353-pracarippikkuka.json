@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C353-pracarippikkuka",
+    "language": "malayalam",
+    "chapter": 353,
+    "sequence": 17240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46dd084260bdf06e"
+  },
+  "findings": []
+}

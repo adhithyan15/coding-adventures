@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Traffic",
+  "label": "ch:ar-traffic",
+  "canDo": "I can say a tunnel, a signal, traffic, congestion and to turn off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C431-inatafa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can say a tunnel, a signal, traffic, congestion and to turn off.",
+    "assesses": [
+      "AR-LEX-C431-MURUR431-03",
+      "AR-LEX-C431-MURUR431-04",
+      "AR-LEX-C431-MURUR431-05"
+    ]
+  }
+}

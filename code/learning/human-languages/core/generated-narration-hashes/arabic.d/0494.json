@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:c452a1be5ec3389f",
+  "lessonIds": [
+    "AR-C494-kaaba",
+    "AR-C494-hanin",
+    "AR-C494-ihbat",
+    "AR-C494-muhbat",
+    "AR-C494-malla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch494.txt",
+  "json": "arabic/narration/ch494.json",
+  "textHash": "fnv1a64:fdd6424457a348d3",
+  "jsonHash": "fnv1a64:f30472bae307d5c5",
+  "findings": []
+}

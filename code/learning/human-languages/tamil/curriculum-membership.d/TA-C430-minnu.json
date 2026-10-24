@@ -1,0 +1,11 @@
+{
+  "id": "TA-C430-minnu",
+  "pathSegment": "TA-PATH-430-VANAM430",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-430-VANAM430",
+      "order": 3
+    }
+  ]
+}

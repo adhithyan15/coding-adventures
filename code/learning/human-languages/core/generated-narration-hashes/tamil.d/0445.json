@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:537f32e5a1d4ec5a",
+  "lessonIds": [
+    "TA-C445-minvettu",
+    "TA-C445-pancam",
+    "TA-C445-turu-rust",
+    "TA-C445-ciramam",
+    "TA-C445-atir",
+    "TA-R445-review-439-445"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch445.txt",
+  "json": "tamil/narration/ch445.json",
+  "textHash": "fnv1a64:326f2d1b54c99a30",
+  "jsonHash": "fnv1a64:ece127e184f6d71f",
+  "findings": []
+}

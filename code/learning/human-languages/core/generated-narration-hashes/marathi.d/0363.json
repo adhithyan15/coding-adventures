@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:9846f370b8069f21",
+  "lessonIds": [
+    "MR-C363-satta",
+    "MR-C363-bhrastacar",
+    "MR-C363-pardarsakta",
+    "MR-C363-svartha",
+    "MR-C363-cithavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch363.txt",
+  "json": "marathi/narration/ch363.json",
+  "textHash": "fnv1a64:a7074610da1bb2a8",
+  "jsonHash": "fnv1a64:f29ee577049ad636",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:afa13480f3571e59",
+  "lessonIds": [
+    "AR-C483-buruda",
+    "AR-C483-barid",
+    "AR-C483-qaris",
+    "AR-C483-saqi",
+    "AR-C483-barada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch483.txt",
+  "json": "arabic/narration/ch483.json",
+  "textHash": "fnv1a64:08671457e3834381",
+  "jsonHash": "fnv1a64:9389394838547214",
+  "findings": []
+}

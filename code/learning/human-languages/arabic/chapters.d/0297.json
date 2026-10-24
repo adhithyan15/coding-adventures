@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "On the radio",
+  "label": "ch:ar-on-the-radio",
+  "canDo": "I can say a radio station, a channel, a radio set, to broadcast and on air.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C297-ala-al-hawa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can say a radio station, a channel, a radio set, to broadcast and on air.",
+    "assesses": [
+      "AR-LEX-C297-IDHAA297-03",
+      "AR-LEX-C297-IDHAA297-04",
+      "AR-LEX-C297-IDHAA297-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C389-polika",
+  "pathSegment": "TE-PATH-389-VISLESANA389",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-389-VISLESANA389",
+      "order": 3
+    }
+  ]
+}

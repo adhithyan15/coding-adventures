@@ -1,0 +1,11 @@
+{
+  "id": "HI-C416-basera",
+  "pathSegment": "HI-PATH-416-KHEMA416",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-416-KHEMA416",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C443-haranu",
+    "language": "telugu",
+    "chapter": 443,
+    "sequence": 22290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c3a39673f38fbe7"
+  },
+  "findings": []
+}

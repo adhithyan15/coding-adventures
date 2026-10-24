@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 457,
+  "title": "Wandering About",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e65260c002192b54",
+  "lessons": [
+    {
+      "id": "KA-C457-oni",
+      "sequence": 23230,
+      "title": "ಓಣಿ (ōṇi) — a lane; an alley",
+      "headword": "ಓಣಿ",
+      "romanization": "ōṇi",
+      "gloss": "a lane; an alley",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e7085acaa68c7e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a landmark, then the Kannada for to view."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಓಣಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಓಣಿ — ōṇi — \"a lane; an alley\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಳೆಯ ಊರಿನ ಓಣಿಗಳು ತುಂಬಾ ಕಿರಿದು. haḷeya ūrina ōṇigaḷu tumbā kiridu. The lanes of the old town are very narrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಓಣಿಗಳು, ōṇigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A narrow way between houses; ಬೀದಿ is a proper street."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಓಣಿ (ōṇi) is native Dravidian: DEDR 1046 lists Kannada ōṇi, \"a lane, an alley, a street\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḷeya ūrina ōṇigaḷu tumbā kiridu. — The lanes of the old town are very narrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḷeya ūrina ōṇigaḷu tumbā kiridu.* — The lanes of the old town are very narrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a landmark, then the Kannada for to view, then say ōṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a landmark, then the Kannada for to view, then say *ōṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಓಣಿ (ōṇi) mean? (\"A lane; an alley\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C457-haduhogu",
+      "sequence": 23240,
+      "title": "ಹಾದುಹೋಗು (hāduhōgu) — to pass through; to pass by",
+      "headword": "ಹಾದುಹೋಗು",
+      "romanization": "hāduhōgu",
+      "gloss": "to pass through; to pass by",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9dbde576248420cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to view, then the Kannada for a lane."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಾದುಹೋಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಾದುಹೋಗು — hāduhōgu — \"to pass through; to pass by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಮ್ಮ ರೈಲು ಸುರಂಗದ ಮೂಲಕ ಹಾದುಹೋಯಿತು. namma railu suraṅgada mūlaka hāduhōyitu. Our train passed through a tunnel."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಹಾದುಹೋದೆ, hāduhōde."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೂಲಕ ಹಾದುಹೋಗು (hāduhōgu), to pass through; ಪಕ್ಕದಿಂದ ಹಾದುಹೋಗು (hāduhōgu), to pass by."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಾದುಹೋಗು (hāduhōgu) is native Dravidian: hādu, the participle of hāy, \"to cross, to step over\" (DEDR 4087), with ಹೋಗು, to go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāduhōgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāduhōgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāduhōgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāduhōgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namma railu suraṅgada mūlaka hāduhōyitu. — Our train passed through a tunnel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namma railu suraṅgada mūlaka hāduhōyitu.* — Our train passed through a tunnel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to view, then the Kannada for a lane, then say hāduhōgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to view, then the Kannada for a lane, then say *hāduhōgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಾದುಹೋಗು (hāduhōgu) mean? (\"To pass through; to pass by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C457-anvesisu",
+      "sequence": 23250,
+      "title": "ಅನ್ವೇಷಿಸು (anvēṣisu) — to explore; to search out",
+      "headword": "ಅನ್ವೇಷಿಸು",
+      "romanization": "anvēṣisu",
+      "gloss": "to explore; to search out",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1b0a9cfe43af32d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a lane, then the Kannada for to pass through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅನ್ವೇಷಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನ್ವೇಷಿಸು — anvēṣisu — \"to explore; to search out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾವು ಕಾಡಿನ ಹೊಸ ದಾರಿಗಳನ್ನು ಅನ್ವೇಷಿಸಿದೆವು. nāvu kāḍina hosa dārigaḷannu anvēṣisidevu. We explored new paths in the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಅನ್ವೇಷಿಸಿದೆ, anvēṣiside."
+            },
+            {
+              "kind": "speech",
+              "text": "What is explored takes -ಅನ್ನು; ಅನ್ವೇಷಣೆ is exploration."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನ್ವೇಷಿಸು (anvēṣisu) is built from Sanskrit anvēṣaṇa, \"seeking, searching for\" (Monier-Williams), with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anvēṣisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anvēṣisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anvēṣisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anvēṣisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvu kāḍina hosa dārigaḷannu anvēṣisidevu. — We explored new paths in the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvu kāḍina hosa dārigaḷannu anvēṣisidevu.* — We explored new paths in the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a lane, then the Kannada for to pass through, then say anvēṣisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a lane, then the Kannada for to pass through, then say *anvēṣisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅನ್ವೇಷಿಸು (anvēṣisu) mean? (\"To explore; to search out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C457-tana",
+      "sequence": 23260,
+      "title": "ತಾಣ (tāṇa) — a spot; a haunt",
+      "headword": "ತಾಣ",
+      "romanization": "tāṇa",
+      "gloss": "a spot; a haunt",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd9391ae604b9a54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to pass through, then the Kannada for to explore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಾಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಾಣ — tāṇa — \"a spot; a haunt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಜಲಪಾತ ಪ್ರವಾಸಿಗರ ಅಚ್ಚುಮೆಚ್ಚಿನ ತಾಣ. ī jalapāta pravāsigara accumeccina tāṇa. This waterfall is a favourite spot for tourists."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರವಾಸಿ ತಾಣ (tāṇa), a tourist spot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಾಣ (tāṇa) is usually traced to Sanskrit sthāna, \"a place\", through a Prakrit form ṭhāṇa (CDIAL 13753)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī jalapāta pravāsigara accumeccina tāṇa. — This waterfall is a favourite spot for tourists.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī jalapāta pravāsigara accumeccina tāṇa.* — This waterfall is a favourite spot for tourists.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to pass through, then the Kannada for to explore, then say tāṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to pass through, then the Kannada for to explore, then say *tāṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಾಣ (tāṇa) mean? (\"A spot; a haunt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C457-kangolisu",
+      "sequence": 23270,
+      "title": "ಕಂಗೊಳಿಸು (kaṅgoḷisu) — to look splendid; to be a fine sight",
+      "headword": "ಕಂಗೊಳಿಸು",
+      "romanization": "kaṅgoḷisu",
+      "gloss": "to look splendid; to be a fine sight",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e8cb11079728e95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to explore, then the Kannada for a spot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಂಗೊಳಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂಗೊಳಿಸು — kaṅgoḷisu — \"to look splendid; to be a fine sight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಳೆಯ ನಂತರ ಬೆಟ್ಟಗಳು ಹಸಿರಾಗಿ ಕಂಗೊಳಿಸುತ್ತಿದ್ದವು. maḷeya nantara beṭṭagaḷu hasirāgi kaṅgoḷisuttiddavu. After the rain the hills looked splendid in green."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಕಂಗೊಳಿಸಿತು, kaṅgoḷisitu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of landscapes, lights and festivals: ಊರು ದೀಪಗಳಿಂದ ಕಂಗೊಳಿಸಿತು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂಗೊಳಿಸು (kaṅgoḷisu) is a Kannada verb whose origin is not settled; DEDR shows no clear source for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṅgoḷisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṅgoḷisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṅgoḷisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṅgoḷisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷeya nantara beṭṭagaḷu hasirāgi kaṅgoḷisuttiddavu. — After the rain the hills looked splendid in green.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷeya nantara beṭṭagaḷu hasirāgi kaṅgoḷisuttiddavu.* — After the rain the hills looked splendid in green.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to explore, then the Kannada for a spot, then say kaṅgoḷisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to explore, then the Kannada for a spot, then say *kaṅgoḷisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಂಗೊಳಿಸು (kaṅgoḷisu) mean? (\"To look splendid; to be a fine sight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

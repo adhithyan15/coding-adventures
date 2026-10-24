@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C438-miti",
+    "language": "kannada",
+    "chapter": 438,
+    "sequence": 22260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e6b97c41232ec0b"
+  },
+  "findings": []
+}

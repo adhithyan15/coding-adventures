@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C478-kavti",
+    "language": "marathi",
+    "chapter": 478,
+    "sequence": 27430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:373fb7c06ba77035"
+  },
+  "findings": []
+}

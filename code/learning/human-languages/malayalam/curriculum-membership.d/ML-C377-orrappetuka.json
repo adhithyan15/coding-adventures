@@ -1,0 +1,11 @@
+{
+  "id": "ML-C377-orrappetuka",
+  "pathSegment": "ML-PATH-377-BHUKAMPAM377",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-377-BHUKAMPAM377",
+      "order": 3
+    }
+  ]
+}

@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/x509-time",
   "capabilities": [],
-  "justification": "Pure allocation-free validation of already framed RFC 5280 time values. It performs no filesystem, network, process, environment, clock, trust-root, certificate-path, or cryptographic access."
+  "justification": "Pure allocation-free validation of already framed RFC 5280 certificate and OCSP time values. It performs no filesystem, network, process, environment, clock, trust-root, certificate-path, revocation-decision, or cryptographic access."
 }

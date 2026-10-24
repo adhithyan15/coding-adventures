@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:75aafd8972770e4b",
+  "lessonIds": [
+    "ML-C441-sadhyamaya",
+    "ML-C441-asadhyamaya",
+    "ML-C441-sadhyamakkuka",
+    "ML-C441-annaneyenkil",
+    "ML-C441-mikkavarum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch441.txt",
+  "json": "malayalam/narration/ch441.json",
+  "textHash": "fnv1a64:12e54876608af7b8",
+  "jsonHash": "fnv1a64:51af385586033306",
+  "findings": []
+}

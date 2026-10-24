@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C428-udhalne",
+    "language": "marathi",
+    "chapter": 428,
+    "sequence": 24640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f09b78efe1c69d1"
+  },
+  "findings": []
+}

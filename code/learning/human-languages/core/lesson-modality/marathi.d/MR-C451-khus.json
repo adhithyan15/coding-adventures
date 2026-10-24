@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C451-khus",
+    "language": "marathi",
+    "chapter": 451,
+    "sequence": 26070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb788d9be97e1822"
+  },
+  "findings": []
+}

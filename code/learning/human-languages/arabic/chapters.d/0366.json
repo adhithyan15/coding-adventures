@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Claims and doubts",
+  "label": "ch:ar-claims-and-doubts",
+  "canDo": "I can say that someone claimed, alleged, cast doubt, believed or inferred something.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C366-istadalla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can say that someone claimed, alleged, cast doubt, believed or inferred something.",
+    "assesses": [
+      "AR-LEX-C366-IDDIA366-03",
+      "AR-LEX-C366-IDDIA366-04",
+      "AR-LEX-C366-IDDIA366-05"
+    ]
+  }
+}

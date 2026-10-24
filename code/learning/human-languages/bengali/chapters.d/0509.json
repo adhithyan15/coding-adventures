@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Rugs and Quilts",
+  "label": "ch:bn-rugs-and-quilts",
+  "canDo": "I can talk about rugs, quilts and cushions and spreading things out.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C509-bichhano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about rugs, quilts and cushions and spreading things out.",
+    "assesses": [
+      "BN-LEX-C509-GALICHA509-03",
+      "BN-LEX-C509-GALICHA509-04",
+      "BN-LEX-C509-GALICHA509-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C292-jholse-jaoya",
+    "language": "bengali",
+    "chapter": 292,
+    "sequence": 18860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:772c5e3c42561bec"
+  },
+  "findings": []
+}

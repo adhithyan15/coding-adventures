@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:c3bb1f259848a20b",
+  "lessonIds": [
+    "KA-C494-mududu",
+    "KA-C494-tadavarisu",
+    "KA-C494-beragu",
+    "KA-C494-kangedu",
+    "KA-C494-digbhrame"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch494.txt",
+  "json": "kannada/narration/ch494.json",
+  "textHash": "fnv1a64:f4ff2307bfca83d0",
+  "jsonHash": "fnv1a64:d92c2fb6a70d93c6",
+  "findings": []
+}

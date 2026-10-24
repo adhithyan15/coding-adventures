@@ -1,0 +1,11 @@
+{
+  "id": "MR-C480-malmalne",
+  "pathSegment": "MR-PATH-480-TABYET480",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-480-TABYET480",
+      "order": 4
+    }
+  ]
+}

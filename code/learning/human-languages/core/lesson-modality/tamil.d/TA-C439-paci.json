@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C439-paci",
+    "language": "tamil",
+    "chapter": 439,
+    "sequence": 25110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:195dfb8fea8f3ec7"
+  },
+  "findings": []
+}

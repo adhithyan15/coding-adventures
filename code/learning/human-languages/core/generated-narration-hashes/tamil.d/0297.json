@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:d522a1137ae36f26",
+  "lessonIds": [
+    "TA-C297-katattu",
+    "TA-C297-tappiyotu",
+    "TA-C297-kallanottu",
+    "TA-C297-pulanayvu",
+    "TA-C297-kurrancattu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch297.txt",
+  "json": "tamil/narration/ch297.json",
+  "textHash": "fnv1a64:afb698fa37d6f3e9",
+  "jsonHash": "fnv1a64:1376864eeb1adbf2",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:83f7e4694e53050e",
+  "lessonIds": [
+    "TA-C493-anni",
+    "TA-C493-koluntan",
+    "TA-C493-nattanar",
+    "TA-C493-campanti",
+    "TA-C493-citti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch493.txt",
+  "json": "tamil/narration/ch493.json",
+  "textHash": "fnv1a64:83210937b25a0e5b",
+  "jsonHash": "fnv1a64:b163275212a4957a",
+  "findings": []
+}

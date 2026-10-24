@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:7e540d3c47c0f3a4",
+  "lessonIds": [
+    "BN-C422-daripalla",
+    "BN-C422-khati",
+    "BN-C422-phordo",
+    "BN-C422-grahok",
+    "BN-C422-porokh-kora"
+  ],
+  "tex": "bengali/book/chapters/ch422-weighing-and-testing.tex"
+}

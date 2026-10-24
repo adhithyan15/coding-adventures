@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C320-kotiyerru",
+    "language": "tamil",
+    "chapter": 320,
+    "sequence": 18430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95782b104050a4a9"
+  },
+  "findings": []
+}

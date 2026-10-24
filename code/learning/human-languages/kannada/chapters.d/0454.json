@@ -1,0 +1,21 @@
+{
+  "chapter": 454,
+  "title": "Crossing the River",
+  "label": "ch:ka-crossing-the-river",
+  "canDo": "I can say a coracle, a ferryman, a shore, high tide and a whirlpool.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-R454-review-448-454",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can say a coracle, a ferryman, a shore, high tide and a whirlpool.",
+    "assesses": [
+      "KA-LEX-C454-TEPPA454-01",
+      "KA-LEX-C454-TEPPA454-02",
+      "KA-LEX-C454-TEPPA454-03",
+      "KA-LEX-C454-TEPPA454-04",
+      "KA-LEX-C454-TEPPA454-05"
+    ]
+  }
+}

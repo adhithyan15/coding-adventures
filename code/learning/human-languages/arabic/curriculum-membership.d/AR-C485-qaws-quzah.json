@@ -1,0 +1,11 @@
+{
+  "id": "AR-C485-qaws-quzah",
+  "pathSegment": "AR-PATH-485-SAMA485",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-485-SAMA485",
+      "order": 1
+    }
+  ]
+}

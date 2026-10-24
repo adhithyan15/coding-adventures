@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:9cc565288c5b1094",
+  "lessonIds": [
+    "KA-C344-ayudha",
+    "KA-C344-banduku",
+    "KA-C344-ranaranga",
+    "KA-C344-ratha",
+    "KA-C344-kadadu"
+  ],
+  "tex": "kannada/book/chapters/ch344-weapons-of-old.tex"
+}

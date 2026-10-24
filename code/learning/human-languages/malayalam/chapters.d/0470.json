@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Fuel and Tyres",
+  "label": "ch:ml-fuel-and-tyres",
+  "canDo": "I can say petrol, fuel, a tyre, a brake and to get a puncture.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C470-pancarakuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can say petrol, fuel, a tyre, a brake and to get a puncture.",
+    "assesses": [
+      "ML-LEX-C470-INDHANAM470-03",
+      "ML-LEX-C470-INDHANAM470-04",
+      "ML-LEX-C470-INDHANAM470-05"
+    ]
+  }
+}

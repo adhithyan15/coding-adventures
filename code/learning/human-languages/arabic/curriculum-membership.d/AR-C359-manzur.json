@@ -1,0 +1,11 @@
+{
+  "id": "AR-C359-manzur",
+  "pathSegment": "AR-PATH-359-NAZAR359",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-359-NAZAR359",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C426-iraiccal",
+  "pathSegment": "TA-PATH-426-SANTHATI426",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-426-SANTHATI426",
+      "order": 1
+    }
+  ]
+}

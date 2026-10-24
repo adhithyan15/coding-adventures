@@ -1,0 +1,11 @@
+{
+  "id": "HI-C435-saiz",
+  "pathSegment": "HI-PATH-435-REZGARI435",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-435-REZGARI435",
+      "order": 1
+    }
+  ]
+}

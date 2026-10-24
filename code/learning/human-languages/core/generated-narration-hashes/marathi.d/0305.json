@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:1454a7dd62ceb7e2",
+  "lessonIds": [
+    "MR-C305-gatvarsi",
+    "MR-C305-magil",
+    "MR-C305-tatpurvi",
+    "MR-C305-kalantarane",
+    "MR-C305-lotne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch305.txt",
+  "json": "marathi/narration/ch305.json",
+  "textHash": "fnv1a64:264837d97ffb7974",
+  "jsonHash": "fnv1a64:66692689e4bd0655",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Myths, Fables and Heroes",
+  "label": "ch:ml-myths-fables-and-heroes",
+  "canDo": "I can say a myth, a fable, a folk tale, a hero and a moral.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C402-gunapatham",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can say a myth, a fable, a folk tale, a hero and a moral.",
+    "assesses": [
+      "ML-LEX-C402-PURANAM402-03",
+      "ML-LEX-C402-PURANAM402-04",
+      "ML-LEX-C402-PURANAM402-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C543-katumaiyana",
+    "language": "tamil",
+    "chapter": 543,
+    "sequence": 31000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04c78d18b311f2e4"
+  },
+  "findings": []
+}

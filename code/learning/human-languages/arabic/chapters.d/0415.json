@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "Leaving a mark",
+  "label": "ch:ar-leaving-a-mark",
+  "canDo": "I can talk about an achievement and a level, and say that something was affected, became clear or was arrived at.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C415-mustawa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can talk about an achievement and a level, and say that something was affected, became clear or was arrived at.",
+    "assesses": [
+      "AR-LEX-C415-INJAZ415-03",
+      "AR-LEX-C415-INJAZ415-04",
+      "AR-LEX-C415-INJAZ415-05"
+    ]
+  }
+}

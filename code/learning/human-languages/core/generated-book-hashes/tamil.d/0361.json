@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:eff327d760ad32a4",
+  "lessonIds": [
+    "TA-C361-tirmani",
+    "TA-C361-paricili",
+    "TA-C361-alavukol",
+    "TA-C361-poruttam",
+    "TA-C361-campantam"
+  ],
+  "tex": "tamil/book/chapters/ch361-weighing-it-up.tex"
+}

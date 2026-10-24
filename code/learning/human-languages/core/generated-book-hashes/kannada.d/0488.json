@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:54463a7730f9c84c",
+  "lessonIds": [
+    "KA-C488-bisigali",
+    "KA-C488-uribisilu",
+    "KA-C488-battu",
+    "KA-C488-biruku",
+    "KA-C488-taggu"
+  ],
+  "tex": "kannada/book/chapters/ch488-heat-and-dry-spells.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C493-desk",
+  "pathSegment": "BN-PATH-493-OPHIS493",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "BN-EXT-493-OPHIS493",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Grudges and Memories",
+  "label": "ch:ml-grudges-and-memories",
+  "canDo": "I can say a state of mind, a grudge, to mutter, petty spite and to admire.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C523-aradhikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can say a state of mind, a grudge, to mutter, petty spite and to admire.",
+    "assesses": [
+      "ML-LEX-C523-PAKA523-03",
+      "ML-LEX-C523-PAKA523-04",
+      "ML-LEX-C523-PAKA523-05"
+    ]
+  }
+}

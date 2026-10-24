@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C353-vyaja",
+    "language": "malayalam",
+    "chapter": 353,
+    "sequence": 17220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99b96096a5147bbd"
+  },
+  "findings": []
+}

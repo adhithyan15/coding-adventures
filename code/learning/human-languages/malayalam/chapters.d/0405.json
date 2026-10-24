@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Arguing a Point",
+  "label": "ch:ml-arguing-a-point",
+  "canDo": "I can say to argue, logic, a fact, to admit and a conclusion.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C405-nigamanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can say to argue, logic, a fact, to admit and a conclusion.",
+    "assesses": [
+      "ML-LEX-C405-VADAM405-03",
+      "ML-LEX-C405-VADAM405-04",
+      "ML-LEX-C405-VADAM405-05"
+    ]
+  }
+}

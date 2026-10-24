@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C393-prayojanam",
+    "language": "telugu",
+    "chapter": 393,
+    "sequence": 19560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6566e9236465137e"
+  },
+  "findings": []
+}

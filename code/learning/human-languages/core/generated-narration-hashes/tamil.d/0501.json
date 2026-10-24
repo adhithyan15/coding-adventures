@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:95e9ff42994b18a3",
+  "lessonIds": [
+    "TA-C501-caccaravu",
+    "TA-C501-takararu",
+    "TA-C501-manastapam",
+    "TA-C501-pinanku",
+    "TA-C501-vivakarattu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch501.txt",
+  "json": "tamil/narration/ch501.json",
+  "textHash": "fnv1a64:034a17ba3a2fcc33",
+  "jsonHash": "fnv1a64:4531a56c1c6893b9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:5972b1c5d5703bb5",
+  "lessonIds": [
+    "MR-C324-nidhan",
+    "MR-C324-sraddhanjali",
+    "MR-C324-ayojan-karne",
+    "MR-C324-par-padne",
+    "MR-C324-racne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch324.txt",
+  "json": "marathi/narration/ch324.json",
+  "textHash": "fnv1a64:62f2a149a32adb8f",
+  "jsonHash": "fnv1a64:d840da4dec00a084",
+  "findings": []
+}

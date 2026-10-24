@@ -1,0 +1,11 @@
+{
+  "id": "TA-C352-takkam",
+  "pathSegment": "TA-PATH-352-ERPATUTTU352",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-352-ERPATUTTU352",
+      "order": 1
+    }
+  ]
+}

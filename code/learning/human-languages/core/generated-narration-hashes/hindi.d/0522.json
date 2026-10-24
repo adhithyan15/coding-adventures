@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:5c3e1a18ece65cf9",
+  "lessonIds": [
+    "HI-C522-chach",
+    "HI-C522-mathna",
+    "HI-C522-jaman",
+    "HI-C522-khaulna",
+    "HI-C522-nitharna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch522.txt",
+  "json": "hindi/narration/ch522.json",
+  "textHash": "fnv1a64:1ac01690bc663fbc",
+  "jsonHash": "fnv1a64:57bcdb82f63ba331",
+  "findings": []
+}

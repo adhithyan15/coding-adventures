@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C358-pantupantu",
+    "language": "malayalam",
+    "chapter": 358,
+    "sequence": 17460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1423315ccd172cbe"
+  },
+  "findings": []
+}

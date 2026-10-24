@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:6b908da8edf6bfb5",
+  "lessonIds": [
+    "ML-C386-atitheyan",
+    "ML-C386-atithyam",
+    "ML-C386-svikaranam",
+    "ML-C386-ksanikkuka",
+    "ML-C386-svikarikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch386-hosts-and-guests.tex"
+}

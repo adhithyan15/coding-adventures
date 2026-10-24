@@ -1,0 +1,11 @@
+{
+  "id": "TA-C526-kilaru",
+  "pathSegment": "TA-PATH-526-THALIPPU526",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-526-THALIPPU526",
+      "order": 2
+    }
+  ]
+}

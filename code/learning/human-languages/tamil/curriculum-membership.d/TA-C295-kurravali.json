@@ -1,0 +1,11 @@
+{
+  "id": "TA-C295-kurravali",
+  "pathSegment": "TA-PATH-295-THUPPU295",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-295-THUPPU295",
+      "order": 4
+    }
+  ]
+}

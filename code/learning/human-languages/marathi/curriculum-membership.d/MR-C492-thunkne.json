@@ -1,0 +1,11 @@
+{
+  "id": "MR-C492-thunkne",
+  "pathSegment": "MR-PATH-492-UCAKI492",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-492-UCAKI492",
+      "order": 2
+    }
+  ]
+}

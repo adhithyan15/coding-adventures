@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:0f1069a916767c3b",
+  "lessonIds": [
+    "TE-C416-pathyapustakam",
+    "TE-C416-vyasam",
+    "TE-C416-grantham",
+    "TE-C416-pathyamsam",
+    "TE-C416-samiksincu"
+  ],
+  "tex": "telugu/book/chapters/ch416-books-and-essays.tex"
+}

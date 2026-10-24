@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:af72510f778035b7",
+  "lessonIds": [
+    "HI-C316-upadrav",
+    "HI-C316-fasad",
+    "HI-C316-phutna",
+    "HI-C316-lathi",
+    "HI-C316-karfyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch316.txt",
+  "json": "hindi/narration/ch316.json",
+  "textHash": "fnv1a64:f9367145d0d6ccc1",
+  "jsonHash": "fnv1a64:ffecdbc04efda4ab",
+  "findings": []
+}

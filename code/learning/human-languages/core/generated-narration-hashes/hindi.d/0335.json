@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:8ffa3aecdbc4712f",
+  "lessonIds": [
+    "HI-C335-raksas",
+    "HI-C335-devta",
+    "HI-C335-vardan",
+    "HI-C335-amar",
+    "HI-C335-nigalna",
+    "HI-R335-review-328-335"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch335.txt",
+  "json": "hindi/narration/ch335.json",
+  "textHash": "fnv1a64:1e4c79ea6b9eff2e",
+  "jsonHash": "fnv1a64:668694f7b1ae6d3b",
+  "findings": []
+}

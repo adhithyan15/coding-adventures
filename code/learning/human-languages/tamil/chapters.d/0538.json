@@ -1,0 +1,19 @@
+{
+  "chapter": 538,
+  "title": "Threads and Beads",
+  "label": "ch:ta-threads-and-beads",
+  "canDo": "I can talk about plaiting, weaving and stringing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C538-pattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can talk about plaiting, weaving and stringing.",
+    "assesses": [
+      "TA-LEX-C538-NOOL538-03",
+      "TA-LEX-C538-NOOL538-04",
+      "TA-LEX-C538-NOOL538-05"
+    ]
+  }
+}

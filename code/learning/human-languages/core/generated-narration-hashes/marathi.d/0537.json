@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:4cf63d88446ca83d",
+  "lessonIds": [
+    "MR-C537-abhinay",
+    "MR-C537-bhumika",
+    "MR-C537-talim",
+    "MR-C537-vesbhusa",
+    "MR-C537-sakarne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch537.txt",
+  "json": "marathi/narration/ch537.json",
+  "textHash": "fnv1a64:60198e5b2c6e28b4",
+  "jsonHash": "fnv1a64:c13883da5fc85844",
+  "findings": []
+}

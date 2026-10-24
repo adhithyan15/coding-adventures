@@ -1,0 +1,11 @@
+{
+  "id": "ML-C404-nasippikkuka",
+  "pathSegment": "ML-PATH-404-CHARITHRAM404",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-404-CHARITHRAM404",
+      "order": 4
+    }
+  ]
+}

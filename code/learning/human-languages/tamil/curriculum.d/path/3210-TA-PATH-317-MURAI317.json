@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-317-MURAI317",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-317-MURAI317"
+  ],
+  "after": []
+}

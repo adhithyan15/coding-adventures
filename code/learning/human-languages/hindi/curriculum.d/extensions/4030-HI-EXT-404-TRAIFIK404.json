@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-404-TRAIFIK404",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say the traffic is heavy, that we got caught in a jam and that the cars crawled.",
+  "prerequisites": []
+}

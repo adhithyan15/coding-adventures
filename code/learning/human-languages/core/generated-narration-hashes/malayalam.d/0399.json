@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:8393ddca1310ee82",
+  "lessonIds": [
+    "ML-C399-samrajyam",
+    "ML-C399-kotta",
+    "ML-C399-sainyam",
+    "ML-C399-pattalakkaran",
+    "ML-C399-kilatakkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch399.txt",
+  "json": "malayalam/narration/ch399.json",
+  "textHash": "fnv1a64:46302e790e651be0",
+  "jsonHash": "fnv1a64:3a9d0aa9a5ee538d",
+  "findings": []
+}

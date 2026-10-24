@@ -1,0 +1,11 @@
+{
+  "id": "BN-R270-asking-the-way",
+  "pathSegment": "BN-PATH-270-ASK-WAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-270-ASK-WAY",
+      "order": 3
+    }
+  ]
+}

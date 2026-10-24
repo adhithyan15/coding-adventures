@@ -1,0 +1,11 @@
+{
+  "id": "TA-C460-malaippu",
+  "pathSegment": "TA-PATH-460-VIYAPPU460",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-460-VIYAPPU460",
+      "order": 1
+    }
+  ]
+}

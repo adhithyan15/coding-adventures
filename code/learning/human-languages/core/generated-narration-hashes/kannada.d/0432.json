@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:6e29679831bef6dc",
+  "lessonIds": [
+    "KA-C432-hattikku",
+    "KA-C432-talebagu",
+    "KA-C432-takararu",
+    "KA-C432-adacane",
+    "KA-C432-sukta",
+    "KA-R432-review-426-432",
+    "KA-R432-review-final-432"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch432.txt",
+  "json": "kannada/narration/ch432.json",
+  "textHash": "fnv1a64:f197d82d56b5c090",
+  "jsonHash": "fnv1a64:a809c447726206ef",
+  "findings": []
+}

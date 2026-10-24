@@ -1,0 +1,11 @@
+{
+  "id": "MR-C332-parakram",
+  "pathSegment": "MR-PATH-332-SHAURYA332",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-332-SHAURYA332",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C507-tulavarsam",
+  "pathSegment": "ML-PATH-507-MAZHA507",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-507-MAZHA507",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:ca65a87e2a2a8948",
+  "lessonIds": [
+    "AR-C328-aqama",
+    "AR-C328-ahya",
+    "AR-C328-mawkib",
+    "AR-C328-walima",
+    "AR-C328-maduww"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch328.txt",
+  "json": "arabic/narration/ch328.json",
+  "textHash": "fnv1a64:77c8ecefb766eb00",
+  "jsonHash": "fnv1a64:21ce2f5ab097d60b",
+  "findings": []
+}

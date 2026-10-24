@@ -1,0 +1,11 @@
+{
+  "id": "KA-C469-varanti",
+  "pathSegment": "KA-PATH-469-VARANTI469",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-469-VARANTI469",
+      "order": 2
+    }
+  ]
+}

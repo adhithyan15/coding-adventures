@@ -1,0 +1,11 @@
+{
+  "id": "AR-C328-walima",
+  "pathSegment": "AR-PATH-328-HAFL328",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-328-HAFL328",
+      "order": 3
+    }
+  ]
+}

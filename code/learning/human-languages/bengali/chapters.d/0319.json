@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Digging Up the Past",
+  "label": "ch:bn-digging-up-the-past",
+  "canDo": "I can talk about ruins, statues, digs and old inscriptions.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C319-mudra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can talk about ruins, statues, digs and old inscriptions.",
+    "assesses": [
+      "BN-LEX-C319-PURATON319-03",
+      "BN-LEX-C319-PURATON319-04",
+      "BN-LEX-C319-PURATON319-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "On the Road for Days",
+  "label": "ch:ml-on-the-road-for-days",
+  "canDo": "I can say to wander, to stay over, a fellow traveller, a stopover and to pass by.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C479-pinnituka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can say to wander, to stay over, a fellow traveller, a stopover and to pass by.",
+    "assesses": [
+      "ML-LEX-C479-ALACCIL479-03",
+      "ML-LEX-C479-ALACCIL479-04",
+      "ML-LEX-C479-ALACCIL479-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:c1d55391019b9dcb",
+  "lessonIds": [
+    "HI-C501-nata",
+    "HI-C501-byahna",
+    "HI-C501-talaq",
+    "HI-C501-nibhana",
+    "HI-C501-sulah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch501.txt",
+  "json": "hindi/narration/ch501.json",
+  "textHash": "fnv1a64:6792bf01cd72cb6c",
+  "jsonHash": "fnv1a64:64749f8edb4b4fd6",
+  "findings": []
+}

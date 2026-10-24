@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:66aebb9e1ce38a33",
+  "lessonIds": [
+    "AR-C425-mudif",
+    "AR-C425-rakib",
+    "AR-C425-wijha",
+    "AR-C425-shadda",
+    "AR-C425-wusul"
+  ],
+  "tex": "arabic/book/chapters/ch425-on-board.tex"
+}

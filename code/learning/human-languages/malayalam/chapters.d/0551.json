@@ -1,0 +1,19 @@
+{
+  "chapter": 551,
+  "title": "Taking On the Work",
+  "label": "ch:ml-taking-on-the-work",
+  "canDo": "I can say to entrust, to take on, to attain, to put in work and to toil.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C551-adhvanikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 551: I can say to entrust, to take on, to attain, to put in work and to toil.",
+    "assesses": [
+      "ML-LEX-C551-ADHVANAM551-03",
+      "ML-LEX-C551-ADHVANAM551-04",
+      "ML-LEX-C551-ADHVANAM551-05"
+    ]
+  }
+}

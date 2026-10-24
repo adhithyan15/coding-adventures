@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C466-kathib",
+    "language": "arabic",
+    "chapter": 466,
+    "sequence": 26030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4018d28791bbcb0"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C318-iddiddare",
+  "pathSegment": "KA-PATH-318-WOULD-DEPENDS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-318-WOULD-DEPENDS",
+      "order": 2
+    }
+  ]
+}

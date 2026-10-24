@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C492-ucki-lagne",
+    "language": "marathi",
+    "chapter": 492,
+    "sequence": 28150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efdcc7ee7c72639d"
+  },
+  "findings": []
+}

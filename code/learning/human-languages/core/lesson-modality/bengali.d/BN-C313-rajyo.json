@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C313-rajyo",
+    "language": "bengali",
+    "chapter": 313,
+    "sequence": 19890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:221672787bcf981e"
+  },
+  "findings": []
+}

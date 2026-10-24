@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:7fac7ed7d2054b0f",
+  "lessonIds": [
+    "ML-C400-satru",
+    "ML-C400-yoddhavu",
+    "ML-C400-caran",
+    "ML-C400-tolppikkuka",
+    "ML-C400-kilatannuka"
+  ],
+  "tex": "malayalam/book/chapters/ch400-enemies-and-spies.tex"
+}

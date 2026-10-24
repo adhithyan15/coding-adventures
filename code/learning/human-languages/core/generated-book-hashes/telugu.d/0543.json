@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:18ac19619363f91c",
+  "lessonIds": [
+    "TE-C543-kaceri",
+    "TE-C543-cappatlu",
+    "TE-C543-abhinandincu",
+    "TE-C543-asvadincu",
+    "TE-C543-kolatam"
+  ],
+  "tex": "telugu/book/chapters/ch543-at-a-performance.tex"
+}

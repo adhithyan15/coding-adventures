@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Turning Points",
+  "label": "ch:bn-turning-points",
+  "canDo": "I can talk about revolutions, movements and what people founded.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C318-mukti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can talk about revolutions, movements and what people founded.",
+    "assesses": [
+      "BN-LEX-C318-BIPLOB318-03",
+      "BN-LEX-C318-BIPLOB318-04",
+      "BN-LEX-C318-BIPLOB318-05"
+    ]
+  }
+}

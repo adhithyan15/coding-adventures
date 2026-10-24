@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:ee0b32d5ad4f4b73",
+  "lessonIds": [
+    "ML-C377-bhukampam",
+    "ML-C377-urulpottal",
+    "ML-C377-oliccupokuka",
+    "ML-C377-orrappetuka",
+    "ML-C377-kanatakuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch377.txt",
+  "json": "malayalam/narration/ch377.json",
+  "textHash": "fnv1a64:5224e9976c83552b",
+  "jsonHash": "fnv1a64:904b9fbf8ca5a652",
+  "findings": []
+}

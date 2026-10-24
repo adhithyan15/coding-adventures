@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-380-NILAVILI380",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-380-NILAVILI380"
+  ],
+  "after": []
+}

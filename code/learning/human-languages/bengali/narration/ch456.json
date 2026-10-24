@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 456,
+  "title": "A Person's Character",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6e7a9ccddd62b63c",
+  "lessons": [
+    {
+      "id": "BN-C456-choritro",
+      "sequence": 27920,
+      "title": "চরিত্র (chôritrô) — character; moral nature",
+      "headword": "চরিত্র",
+      "romanization": "chôritrô",
+      "gloss": "character; moral nature",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0309f36f6437acfb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for eager, then the Bengali for to be able to wait."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চরিত্র",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চরিত্র — chôritrô — \"character; moral nature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "লোকটার চরিত্র ভালো নয়। lokṭār chôritrô bhālo nôy. That man does not have a good character."
+            },
+            {
+              "kind": "speech",
+              "text": "চরিত্র (chôritrô) is also a character in a story: গল্পের চরিত্র (chôritrô)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চরিত্র (chôritrô) is a tatsama, Sanskrit caritra, \"going\", then \"behaviour, deeds\" and \"nature, disposition\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chôritrô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chôritrô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chôritrô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chôritrô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokṭār chôritrô bhālo nôy. — That man does not have a good character.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokṭār chôritrô bhālo nôy.* — That man does not have a good character.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for eager, then the Bengali for to be able to wait, then say chôritrô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for eager, then the Bengali for to be able to wait, then say *chôritrô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চরিত্র (chôritrô) mean? (\"Character; moral nature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C456-gun",
+      "sequence": 27930,
+      "title": "গুণ (gun) — a virtue; a good quality",
+      "headword": "গুণ",
+      "romanization": "gun",
+      "gloss": "a virtue; a good quality",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48a1b1385561756b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to be able to wait, then the Bengali for character."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গুণ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গুণ — gun — \"a virtue; a good quality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ধৈর্য মীরার সবচেয়ে বড় গুণ। dhoirjô mīrār sôbcheye bôṛo gun. Patience is Mira's greatest virtue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গুণ (gun) is a tatsama, Sanskrit guṇa, first \"a single strand of a cord\" and then \"a quality, a virtue\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gun, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gun*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhoirjô mīrār sôbcheye bôṛo gun. — Patience is Mira's greatest virtue.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhoirjô mīrār sôbcheye bôṛo gun.* — Patience is Mira's greatest virtue.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to be able to wait, then the Bengali for character, then say gun again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to be able to wait, then the Bengali for character, then say *gun* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গুণ (gun) mean? (\"A virtue; a good quality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C456-obhyas",
+      "sequence": 27940,
+      "title": "অভ্যাস (ôbhyās) — a habit",
+      "headword": "অভ্যাস",
+      "romanization": "ôbhyās",
+      "gloss": "a habit",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:600594534633eba9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for character, then the Bengali for a good quality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অভ্যাস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভ্যাস — ôbhyās — \"a habit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রোজ ভোরে হাঁটা দাদুর পুরনো অভ্যাস। roj bhore hā̃ṭā dādur purôno ôbhyās. Walking at dawn every day is an old habit of my grandfather's."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভ্যাস (ôbhyās) is a tatsama, Sanskrit abhyāsa, \"repetition, practice, habit\" (Monier-Williams): what you do again and again."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhyās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhyās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhyās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhyās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roj bhore hā̃ṭā dādur purôno ôbhyās. — Walking at dawn every day is an old habit of my grandfather's.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roj bhore hā̃ṭā dādur purôno ôbhyās.* — Walking at dawn every day is an old habit of my grandfather's.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for character, then the Bengali for a good quality, then say ôbhyās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for character, then the Bengali for a good quality, then say *ôbhyās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অভ্যাস (ôbhyās) mean? (\"A habit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C456-achoron",
+      "sequence": 27950,
+      "title": "আচরণ (āchôrôn) — conduct; the way someone behaves",
+      "headword": "আচরণ",
+      "romanization": "āchôrôn",
+      "gloss": "conduct; the way someone behaves",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5506ec60540ed133",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a good quality, then the Bengali for a habit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আচরণ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আচরণ — āchôrôn — \"conduct; the way someone behaves\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ছেলেটির ভদ্র আচরণ আমার ভালো লাগল। chheleṭir bhôdrô āchôrôn āmār bhālo lāglô. I liked the boy's polite conduct."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আচরণ (āchôrôn) is a tatsama, Sanskrit ācaraṇa, \"undertaking, practising, conduct\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āchôrôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āchôrôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āchôrôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āchôrôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chheleṭir bhôdrô āchôrôn āmār bhālo lāglô. — I liked the boy's polite conduct.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chheleṭir bhôdrô āchôrôn āmār bhālo lāglô.* — I liked the boy's polite conduct.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a good quality, then the Bengali for a habit, then say āchôrôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a good quality, then the Bengali for a habit, then say *āchôrôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আচরণ (āchôrôn) mean? (\"Conduct; the way someone behaves\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C456-ropto-kora",
+      "sequence": 27960,
+      "title": "রপ্ত করা (rôptô kôrā) — to master (a skill); to get the hang of",
+      "headword": "রপ্ত করা",
+      "romanization": "rôptô kôrā",
+      "gloss": "to master (a skill); to get the hang of",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f4c5e6b3cc03d0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a habit, then the Bengali for conduct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রপ্ত করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রপ্ত করা — rôptô kôrā — \"to master (a skill); to get the hang of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অরুণ তিন মাসে সাঁতার রপ্ত করল। ôrun tin māse sā̃tār rôptô kôrlô. Arun mastered swimming in three months."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি কাজটা রপ্ত করলেন, tini kājṭā rôptô kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রপ্ত করা (rôptô kôrā) is rôptô, \"practised, mastered\", whose origin is not settled, with kôrā, \"to do\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rôptô kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rôptô kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rôptô kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rôptô kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôrun tin māse sā̃tār rôptô kôrlô. — Arun mastered swimming in three months.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôrun tin māse sā̃tār rôptô kôrlô.* — Arun mastered swimming in three months.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a habit, then the Bengali for conduct, then say rôptô kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a habit, then the Bengali for conduct, then say *rôptô kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does রপ্ত করা (rôptô kôrā) mean? (\"To master (a skill); to get the hang of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

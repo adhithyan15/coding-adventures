@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:a225ada44715eb05",
+  "lessonIds": [
+    "BN-C351-shroddha-kora",
+    "BN-C351-obohela-kora",
+    "BN-C351-obogya",
+    "BN-C351-kodor",
+    "BN-C351-khatir-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch351.txt",
+  "json": "bengali/narration/ch351.json",
+  "textHash": "fnv1a64:ba460584ea1b9766",
+  "jsonHash": "fnv1a64:0ac517894d50defd",
+  "findings": []
+}

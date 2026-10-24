@@ -4,7 +4,7 @@
   "chapter": 154,
   "title": "Elbow, Knee, Tongue, Skin, Forehead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:abb344fc8e3d9c9d",
+  "sourceHash": "fnv1a64:85a0dc9f552e9870",
   "lessons": [
     {
       "id": "ML-C154-kaimuttu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c6684826e18416f",
+      "sourceHash": "fnv1a64:0516873364cce084",
       "notice": null,
       "blocks": [
         {

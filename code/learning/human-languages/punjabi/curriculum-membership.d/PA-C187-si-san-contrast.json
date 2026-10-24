@@ -1,0 +1,11 @@
+{
+  "id": "PA-C187-si-san-contrast",
+  "pathSegment": "PA-PATH-187-A2-PAST-COPULA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-187-A2-PAST-COPULA",
+      "order": 4
+    }
+  ]
+}

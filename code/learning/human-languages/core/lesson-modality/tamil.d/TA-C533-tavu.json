@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C533-tavu",
+    "language": "tamil",
+    "chapter": 533,
+    "sequence": 30510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6ff640cf3b38f60"
+  },
+  "findings": []
+}

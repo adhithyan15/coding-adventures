@@ -1,0 +1,11 @@
+{
+  "id": "TE-C417-vartincu",
+  "pathSegment": "TE-PATH-417-NIBANDHANA417",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-417-NIBANDHANA417",
+      "order": 4
+    }
+  ]
+}

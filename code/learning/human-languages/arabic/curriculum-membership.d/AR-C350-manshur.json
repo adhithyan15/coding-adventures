@@ -1,0 +1,11 @@
+{
+  "id": "AR-C350-manshur",
+  "pathSegment": "AR-PATH-350-NASHIR350",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-350-NASHIR350",
+      "order": 3
+    }
+  ]
+}

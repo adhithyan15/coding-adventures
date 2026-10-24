@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C347-viruddha",
+    "language": "marathi",
+    "chapter": 347,
+    "sequence": 20290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53783a73ca624dc6"
+  },
+  "findings": []
+}

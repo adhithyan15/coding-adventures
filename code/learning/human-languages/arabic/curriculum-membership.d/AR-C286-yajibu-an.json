@@ -1,0 +1,11 @@
+{
+  "id": "AR-C286-yajibu-an",
+  "pathSegment": "AR-PATH-286-REASONS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-286-REASONS",
+      "order": 1
+    }
+  ]
+}

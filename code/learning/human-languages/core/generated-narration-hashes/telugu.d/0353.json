@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:73d8f752b475be56",
+  "lessonIds": [
+    "TE-C353-adrsyam",
+    "TE-C353-mayamavu",
+    "TE-C353-kanumarugavu",
+    "TE-C353-pratyaksamavu",
+    "TE-C353-kanipettu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch353.txt",
+  "json": "telugu/narration/ch353.json",
+  "textHash": "fnv1a64:b22e82b8dc72ccdd",
+  "jsonHash": "fnv1a64:71f4cfe141a52f31",
+  "findings": []
+}

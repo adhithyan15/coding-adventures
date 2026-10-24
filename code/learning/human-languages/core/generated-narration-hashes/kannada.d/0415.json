@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:eaa4d9dfbeb11635",
+  "lessonIds": [
+    "KA-C415-amanatu",
+    "KA-C415-horagidu",
+    "KA-C415-vinayiti",
+    "KA-C415-manjuru-madu",
+    "KA-C415-adesa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch415.txt",
+  "json": "kannada/narration/ch415.json",
+  "textHash": "fnv1a64:95bb738d6e83342b",
+  "jsonHash": "fnv1a64:f22f3760f13adc38",
+  "findings": []
+}

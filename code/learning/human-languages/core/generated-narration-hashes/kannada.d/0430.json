@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:c2152adcfff7410f",
+  "lessonIds": [
+    "KA-C430-paristhiti",
+    "KA-C430-sandarbha",
+    "KA-C430-udbhavisu",
+    "KA-C430-nibandhane",
+    "KA-C430-avasyakate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch430.txt",
+  "json": "kannada/narration/ch430.json",
+  "textHash": "fnv1a64:f4c0b87df1b20dd5",
+  "jsonHash": "fnv1a64:3c9d3c199843c40a",
+  "findings": []
+}

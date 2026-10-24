@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C396-adevidhanga",
+    "language": "telugu",
+    "chapter": 396,
+    "sequence": 19750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de3d4d8d61545296"
+  },
+  "findings": []
+}

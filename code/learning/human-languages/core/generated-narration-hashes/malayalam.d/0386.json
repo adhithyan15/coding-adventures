@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:7017c211d9964a51",
+  "lessonIds": [
+    "ML-C386-atitheyan",
+    "ML-C386-atithyam",
+    "ML-C386-svikaranam",
+    "ML-C386-ksanikkuka",
+    "ML-C386-svikarikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch386.txt",
+  "json": "malayalam/narration/ch386.json",
+  "textHash": "fnv1a64:c4dfbdb818f12690",
+  "jsonHash": "fnv1a64:0f4885048891002a",
+  "findings": []
+}

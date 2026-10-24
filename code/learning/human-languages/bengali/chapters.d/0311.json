@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "At the Village Fair",
+  "label": "ch:bn-at-the-village-fair",
+  "canDo": "I can describe the rides, shows and stalls of a fair.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C311-thasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can describe the rides, shows and stalls of a fair.",
+    "assesses": [
+      "BN-LEX-C311-MELA311-03",
+      "BN-LEX-C311-MELA311-04",
+      "BN-LEX-C311-MELA311-05"
+    ]
+  }
+}

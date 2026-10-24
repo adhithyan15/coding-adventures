@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:63b43e8700535678",
+  "lessonIds": [
+    "MR-C406-padpath",
+    "MR-C406-padcari",
+    "MR-C406-phalak",
+    "MR-C406-uddanpul",
+    "MR-C406-nyahalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch406.txt",
+  "json": "marathi/narration/ch406.json",
+  "textHash": "fnv1a64:79dd7ab576d0c267",
+  "jsonHash": "fnv1a64:c4cc077b698080b3",
+  "findings": []
+}

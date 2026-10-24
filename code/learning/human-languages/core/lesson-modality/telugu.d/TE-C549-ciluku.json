@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C549-ciluku",
+    "language": "telugu",
+    "chapter": 549,
+    "sequence": 27840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6432a909c5818d49"
+  },
+  "findings": []
+}

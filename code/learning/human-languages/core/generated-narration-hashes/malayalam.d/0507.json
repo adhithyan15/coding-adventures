@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:22352a8e86294e29",
+  "lessonIds": [
+    "ML-C507-mansun",
+    "ML-C507-kalavarsam",
+    "ML-C507-tulavarsam",
+    "ML-C507-toruka",
+    "ML-C507-carralmala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch507.txt",
+  "json": "malayalam/narration/ch507.json",
+  "textHash": "fnv1a64:8ccb568f912ae011",
+  "jsonHash": "fnv1a64:36492dcbd9625cd0",
+  "findings": []
+}

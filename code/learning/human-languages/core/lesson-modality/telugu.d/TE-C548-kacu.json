@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C548-kacu",
+    "language": "telugu",
+    "chapter": 548,
+    "sequence": 27760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aaf360056f9bec3d"
+  },
+  "findings": []
+}

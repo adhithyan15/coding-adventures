@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:e46adbf4fc289ef2",
+  "lessonIds": [
+    "KA-C454-teppa",
+    "KA-C454-ambiga",
+    "KA-C454-tira",
+    "KA-C454-ubbara",
+    "KA-C454-suli",
+    "KA-R454-review-448-454"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch454.txt",
+  "json": "kannada/narration/ch454.json",
+  "textHash": "fnv1a64:605e1b5b71e5b460",
+  "jsonHash": "fnv1a64:be10fb91e911d4fc",
+  "findings": []
+}

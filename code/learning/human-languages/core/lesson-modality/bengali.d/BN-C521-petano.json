@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C521-petano",
+    "language": "bengali",
+    "chapter": 521,
+    "sequence": 31520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35a5fe7f1853a1f3"
+  },
+  "findings": []
+}

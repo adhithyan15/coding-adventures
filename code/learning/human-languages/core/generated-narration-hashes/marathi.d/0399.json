@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:5779ac464c7e49df",
+  "lessonIds": [
+    "MR-C399-calak",
+    "MR-C399-vahak",
+    "MR-C399-calavne",
+    "MR-C399-sahapravasi",
+    "MR-C399-vatsaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch399.txt",
+  "json": "marathi/narration/ch399.json",
+  "textHash": "fnv1a64:96bbb3275632290a",
+  "jsonHash": "fnv1a64:aba30c952fc1732c",
+  "findings": []
+}

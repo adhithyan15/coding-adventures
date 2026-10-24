@@ -1,0 +1,11 @@
+{
+  "id": "BN-C273-dhore",
+  "pathSegment": "BN-PATH-273-COMPARE-TIME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-273-COMPARE-TIME",
+      "order": 3
+    }
+  ]
+}

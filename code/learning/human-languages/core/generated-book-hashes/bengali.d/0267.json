@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:0f1e61c547f9256a",
+  "lessonIds": [
+    "BN-C267-giye",
+    "BN-C267-prothome-tarpor",
+    "BN-C267-hothat",
+    "BN-W267-letter-khanda-ta",
+    "BN-C267-ek-shonibar",
+    "BN-R267-a-story-in-order"
+  ],
+  "tex": "bengali/book/chapters/ch267-first-then-suddenly.tex"
+}

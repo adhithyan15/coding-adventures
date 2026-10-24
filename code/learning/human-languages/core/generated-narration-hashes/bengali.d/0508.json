@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:3d693f0cafc44e4a",
+  "lessonIds": [
+    "BN-C508-boithokkhana",
+    "BN-C508-chilekotha",
+    "BN-C508-rannaghor",
+    "BN-C508-choukath",
+    "BN-C508-tangano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch508.txt",
+  "json": "bengali/narration/ch508.json",
+  "textHash": "fnv1a64:d0fd331aeaef79d4",
+  "jsonHash": "fnv1a64:e2be5cb571a35986",
+  "findings": []
+}

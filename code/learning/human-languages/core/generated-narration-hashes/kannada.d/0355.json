@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:175601721636cadf",
+  "lessonIds": [
+    "KA-C355-utkhanana",
+    "KA-C355-puratatva",
+    "KA-C355-avasesa",
+    "KA-C355-sasana",
+    "KA-C355-hastaprati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch355.txt",
+  "json": "kannada/narration/ch355.json",
+  "textHash": "fnv1a64:5f6943dbd93ce2cc",
+  "jsonHash": "fnv1a64:af034d8f7b74f5d1",
+  "findings": []
+}

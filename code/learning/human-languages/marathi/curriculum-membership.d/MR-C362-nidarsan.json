@@ -1,0 +1,11 @@
+{
+  "id": "MR-C362-nidarsan",
+  "pathSegment": "MR-PATH-362-ANDOLAN362",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-362-ANDOLAN362",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "A Baby in the Family",
+  "label": "ch:ka-a-baby-in-the-family",
+  "canDo": "I can say a new mother, a birth, a naming ceremony, a baby shower and a successor.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C334-uttaradhikari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can say a new mother, a birth, a naming ceremony, a baby shower and a successor.",
+    "assesses": [
+      "KA-LEX-C334-JANANA334-03",
+      "KA-LEX-C334-JANANA334-04",
+      "KA-LEX-C334-JANANA334-05"
+    ]
+  }
+}

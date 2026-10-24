@@ -1,0 +1,11 @@
+{
+  "id": "PA-C189-chahunde-ho",
+  "pathSegment": "PA-PATH-189-A2-WANT-PLURAL",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-189-A2-WANT-PLURAL",
+      "order": 5
+    }
+  ]
+}

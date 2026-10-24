@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-348-WOULD-DEPENDS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that something depends on something else, say what would happen or would have happened if things were different, and write six connected lines about a trip.",
+  "prerequisites": []
+}

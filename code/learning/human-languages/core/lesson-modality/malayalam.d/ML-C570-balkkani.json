@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C570-balkkani",
+    "language": "malayalam",
+    "chapter": 570,
+    "sequence": 28720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b105ec361e83401"
+  },
+  "findings": []
+}

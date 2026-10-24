@@ -1,0 +1,11 @@
+{
+  "id": "KA-C390-kayde",
+  "pathSegment": "KA-PATH-390-KANUNU390",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-390-KANUNU390",
+      "order": 1
+    }
+  ]
+}

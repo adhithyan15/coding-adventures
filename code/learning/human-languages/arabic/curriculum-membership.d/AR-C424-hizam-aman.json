@@ -1,0 +1,11 @@
+{
+  "id": "AR-C424-hizam-aman",
+  "pathSegment": "AR-PATH-424-IQLA424",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-424-IQLA424",
+      "order": 3
+    }
+  ]
+}

@@ -13,6 +13,17 @@
 //! host `perl` appears only in tests, as an oracle that says what the right
 //! output is.
 //!
+//! ## Which semantics apply
+//!
+//! The release also names a [`ReleaseProfile`] ([`profiles`]): the semantic
+//! switches that differ between releases whose trees are the same. The only
+//! one this subset needs is how arithmetic is evaluated. Perl 1.000 through
+//! 5.004_05 compute in C doubles, so `-0` is the IEEE negative zero, which
+//! those releases print as `0` or `-0` depending on constant folding and the
+//! platform; the compiler tracks every value's zero sign and refuses to print
+//! a negative zero there. The 5.38+ releases compute in integers and print
+//! `0`. Everything else lowers identically under both profiles.
+//!
 //! ## Which grammar runs
 //!
 //! Exactly one row of `code/grammars/perl/releases.csv` (LANG84 C4). A caller
@@ -59,8 +70,13 @@ use std::fmt;
 use std::sync::{Arc, Mutex};
 use vm_core::{errors::VMError, value::Value, VMCore};
 
+pub mod profiles;
 mod release;
+pub use profiles::{profile_for, Arithmetic, ReleaseProfile};
 pub use release::{resolve_release, Release, DEFAULT_RELEASE, DEFAULT_RELEASE_ID};
+
+/// The LANG84 subset this compiler lowers, as `subsets.csv` names it.
+pub const SUBSET: &str = "pl-int-print";
 
 /// The CST contract (LANG84 C8): every name this compiler dispatches on.
 ///
@@ -274,6 +290,22 @@ impl fmt::Display for FrontendError {
 
 impl std::error::Error for FrontendError {}
 
+impl FrontendError {
+    /// The LANG84 C6 category: `UnknownRelease`, `ReleaseNotAvailable`,
+    /// `Budget`, `Lex`, `Parse` or `Unsupported`. A corpus `.reject` file
+    /// names one of these.
+    pub fn category(&self) -> &'static str {
+        match self {
+            FrontendError::UnknownRelease { .. } => "UnknownRelease",
+            FrontendError::ReleaseNotAvailable { .. } => "ReleaseNotAvailable",
+            FrontendError::Budget { .. } => "Budget",
+            FrontendError::Lex { .. } => "Lex",
+            FrontendError::Parse { .. } => "Parse",
+            FrontendError::Unsupported { .. } => "Unsupported",
+        }
+    }
+}
+
 /// Parse and compile Perl source against exactly one release (LANG84).
 ///
 /// `release` is `None` for [`DEFAULT_RELEASE`], or an exact inventory ID such
@@ -371,13 +403,23 @@ pub fn compile_ast_at(
         )));
     }
     check_ast_budget(tree).map_err(|message| unsupported(Refusal::bare(message)))?;
+    // LANG84 C1.3: the release's profile is an input. Every checked release
+    // has one (`profiles::tests` pins that), so this is unreachable today; a
+    // pair added without a reviewed profile is refused rather than compiled
+    // under some other release's semantics.
+    let Some(profile) = profile_for(release.id()) else {
+        return Err(FrontendError::ReleaseNotAvailable {
+            release: release.id().to_string(),
+            stage: "no release profile",
+        });
+    };
     if tree.rule_name != cst::PROGRAM || tree.children.is_empty() {
         return Err(unsupported(Refusal::at(
             tree,
             "expected a Perl print program",
         )));
     }
-    let mut compiler = Compiler::default();
+    let mut compiler = Compiler::new(profile);
     for child in &tree.children {
         let ASTNodeOrToken::Node(statement) = child else {
             return Err(unsupported(Refusal::at(
@@ -552,18 +594,65 @@ fn checked_i32(node: &GrammarASTNode, value: i64) -> Result<i32, Refusal> {
     i32::try_from(value).map_err(|_| Refusal::at(node, "Perl integer exceeds native pilot range"))
 }
 
+/// One lowered subexpression: where its value lives, the value itself (the
+/// compiler knows it, because the subset has no variables), and whether it
+/// would be the IEEE negative zero under C-double arithmetic.
 struct Compiled {
     operand: Operand,
     value: i32,
+    /// `value == 0` and the C-double evaluation of this expression is
+    /// `-0.0`. Tracked under every profile (it costs nothing and keeps the
+    /// IIR independent of the profile); read only under
+    /// [`Arithmetic::Double`].
+    negative_zero: bool,
 }
 
-#[derive(Default)]
+impl Compiled {
+    /// The IEEE sign bit of this value as a C double: negative numbers and
+    /// the negative zero.
+    fn sign_bit(&self) -> bool {
+        self.value < 0 || self.negative_zero
+    }
+}
+
+/// IEEE 754 zero-sign rules for the subset's operators, under the default
+/// round-to-nearest mode, given the operands and the exact result:
+///
+/// | op | the result is `-0.0` exactly when |
+/// |----|-----------------------------------|
+/// | `-a`    | `a` is `+0.0` |
+/// | `a + b` | both are `-0.0` |
+/// | `a - b` | `a` is `-0.0` and `b` is `+0.0` |
+/// | `a * b` | the result is zero and exactly one operand has its sign bit set |
+///
+/// (`x + -x` for non-zero `x` is `+0.0`, and so is `3 - 3`.)
+fn negative_zero_after(opcode: &str, left: &Compiled, right: &Compiled, result: i64) -> bool {
+    if result != 0 {
+        return false;
+    }
+    match opcode {
+        "add" => left.negative_zero && right.negative_zero,
+        "sub" => left.negative_zero && right.value == 0 && !right.negative_zero,
+        "mul" => left.sign_bit() != right.sign_bit(),
+        _ => false,
+    }
+}
+
 struct Compiler {
     instructions: Vec<IIRInstr>,
     next_register: usize,
+    profile: &'static ReleaseProfile,
 }
 
 impl Compiler {
+    fn new(profile: &'static ReleaseProfile) -> Self {
+        Self {
+            instructions: Vec::new(),
+            next_register: 0,
+            profile,
+        }
+    }
+
     fn emit(&mut self, op: &str, dest: Option<String>, srcs: Vec<Operand>, type_hint: &str) {
         self.instructions
             .push(IIRInstr::new(op, dest, srcs, type_hint));
@@ -593,6 +682,17 @@ impl Compiler {
             ));
         }
         let value = self.compile_expression(expr)?;
+        if self.profile.arithmetic == Arithmetic::Double && value.negative_zero {
+            return Err(Refusal::at(
+                expr,
+                format!(
+                    "this zero is the C double -0.0 under profile {}, which the release \
+                     prints as 0 or -0 depending on constant folding and the platform; \
+                     printing it is outside the pl-int-print subset",
+                    self.profile.name
+                ),
+            ));
+        }
         self.emit(
             "call_builtin",
             None,
@@ -619,6 +719,8 @@ impl Compiler {
                     Ok(Compiled {
                         operand: Operand::Var(dest),
                         value: checked,
+                        // IEEE negation flips the sign bit, zero included.
+                        negative_zero: checked == 0 && !value.negative_zero,
                     })
                 }
                 _ => Err(Refusal::at(node, "unsupported Perl unary expression")),
@@ -645,6 +747,7 @@ impl Compiler {
                     Ok(Compiled {
                         operand: Operand::Var(dest),
                         value,
+                        negative_zero: false,
                     })
                 }
                 [open, ASTNodeOrToken::Node(expr), close]
@@ -685,13 +788,14 @@ impl Compiler {
                 return Err(Refusal::at(node, "unsupported Perl arithmetic chain"));
             }
             let rhs = self.compile_expression(right)?;
-            let (opcode, value) = match (node.rule_name.as_str(), token_value(operator)) {
+            let (opcode, exact) = match (node.rule_name.as_str(), token_value(operator)) {
                 (cst::EXPR, Some("+")) => ("add", i64::from(acc.value) + i64::from(rhs.value)),
                 (cst::EXPR, Some("-")) => ("sub", i64::from(acc.value) - i64::from(rhs.value)),
                 (cst::TERM, Some("*")) => ("mul", i64::from(acc.value) * i64::from(rhs.value)),
                 _ => return Err(Refusal::at(node, "unsupported Perl arithmetic operator")),
             };
-            let value = checked_i32(node, value)?;
+            let value = checked_i32(node, exact)?;
+            let negative_zero = negative_zero_after(opcode, &acc, &rhs, exact);
             let dest = self.register();
             self.emit(
                 opcode,
@@ -702,6 +806,7 @@ impl Compiler {
             acc = Compiled {
                 operand: Operand::Var(dest),
                 value,
+                negative_zero,
             };
         }
         if !remainder.is_empty() {

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C418-baki",
+    "language": "bengali",
+    "chapter": 418,
+    "sequence": 25780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ea0c3d377f75bc5"
+  },
+  "findings": []
+}

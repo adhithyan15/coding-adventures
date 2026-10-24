@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:cce867256110df01",
+  "lessonIds": [
+    "TA-C463-tukkam",
+    "TA-C463-vetanai",
+    "TA-C463-tunpam",
+    "TA-C463-verumai",
+    "TA-C463-irankal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch463.txt",
+  "json": "tamil/narration/ch463.json",
+  "textHash": "fnv1a64:ccb57c8bfbeb13e8",
+  "jsonHash": "fnv1a64:846b7b28c42a6b3d",
+  "findings": []
+}

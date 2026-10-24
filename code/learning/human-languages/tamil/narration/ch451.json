@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 451,
+  "title": "At the Shopping Complex",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1665e42c953e0242",
+  "lessons": [
+    {
+      "id": "TA-C451-valakam",
+      "sequence": 25710,
+      "title": "வளாகம் (vaḷākam) — a complex; a campus",
+      "headword": "வளாகம்",
+      "romanization": "vaḷākam",
+      "gloss": "a complex; a campus",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08117c9a29ac814b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the cost of living, then the Tamil for a banknote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வளாகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வளாகம் — vaḷākam — \"a complex; a campus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புதிய வணிக வளாகத்தில் நிறைய கடைகள் இருக்கின்றன. putiya vaṇika vaḷākattil niṟaiya kaṭaikaḷ irukkiṉṟaṉa. There are many shops in the new shopping complex."
+            },
+            {
+              "kind": "speech",
+              "text": "வணிக வளாகம் (vaḷākam) is a shopping complex, and பல்கலைக்கழக வளாகம் (vaḷākam) a campus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வளாகம் (vaḷākam) is native Dravidian (DEDR 5313), \"enclosing, surrounding\", in the article of வளை, \"to surround\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷākam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷākam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷākam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷākam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya vaṇika vaḷākattil niṟaiya kaṭaikaḷ irukkiṉṟaṉa. — There are many shops in the new shopping complex.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya vaṇika vaḷākattil niṟaiya kaṭaikaḷ irukkiṉṟaṉa.* — There are many shops in the new shopping complex.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the cost of living, then the Tamil for a banknote, then say vaḷākam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the cost of living, then the Tamil for a banknote, then say *vaḷākam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வளாகம் (vaḷākam) mean? (\"A complex; a campus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C451-kilo",
+      "sequence": 25720,
+      "title": "கிலோ (kilō) — a kilo",
+      "headword": "கிலோ",
+      "romanization": "kilō",
+      "gloss": "a kilo",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3176c9ff3b9a4f55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a banknote, then the Tamil for a complex."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கிலோ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கிலோ — kilō — \"a kilo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒரு கிலோ தக்காளி எவ்வளவு? oru kilō takkāḷi evvaḷavu? How much is a kilo of tomatoes?"
+            },
+            {
+              "kind": "speech",
+              "text": "Numbers come before it: இரண்டு கிலோ (kilō) அரிசி."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கிலோ (kilō) is a loan from English kilo."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kilō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kilō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kilō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kilō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru kilō takkāḷi evvaḷavu? — How much is a kilo of tomatoes?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru kilō takkāḷi evvaḷavu?* — How much is a kilo of tomatoes?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a banknote, then the Tamil for a complex, then say kilō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a banknote, then the Tamil for a complex, then say *kilō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கிலோ (kilō) mean? (\"A kilo\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C451-canta",
+      "sequence": 25730,
+      "title": "சந்தா (cantā) — a subscription; a membership fee",
+      "headword": "சந்தா",
+      "romanization": "cantā",
+      "gloss": "a subscription; a membership fee",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b1cf70160706a85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a complex, then the Tamil for a kilo."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சந்தா",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சந்தா — cantā — \"a subscription; a membership fee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாளிதழுக்கு மாதச் சந்தா கட்டினேன். nāḷitaḻukku mātac cantā kaṭṭiṉēṉ. I paid the monthly subscription for the newspaper."
+            },
+            {
+              "kind": "speech",
+              "text": "சந்தா (cantā) கட்டு is to pay a subscription."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சந்தா (cantā) is usually traced to Hindustani candā, \"a subscription, a contribution\"; the path into Tamil is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḷitaḻukku mātac cantā kaṭṭiṉēṉ. — I paid the monthly subscription for the newspaper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḷitaḻukku mātac cantā kaṭṭiṉēṉ.* — I paid the monthly subscription for the newspaper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a complex, then the Tamil for a kilo, then say cantā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a complex, then the Tamil for a kilo, then say *cantā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சந்தா (cantā) mean? (\"A subscription; a membership fee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C451-ilappitu",
+      "sequence": 25740,
+      "title": "இழப்பீடு (iḻappīṭu) — compensation",
+      "headword": "இழப்பீடு",
+      "romanization": "iḻappīṭu",
+      "gloss": "compensation",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21470742d152216e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a kilo, then the Tamil for a subscription."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இழப்பீடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இழப்பீடு — iḻappīṭu — \"compensation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "விமானம் தாமதமானதால் பயணிகளுக்கு இழப்பீடு கொடுத்தார்கள். vimāṉam tāmatamāṉatāl payaṇikaḷukku iḻappīṭu koṭuttārkaḷ. Because the flight was late, they gave the passengers compensation."
+            },
+            {
+              "kind": "speech",
+              "text": "இழப்பு, a loss, + īṭu, making good."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இழப்பீடு (iḻappīṭu) is built from இழப்பு, \"a loss\" (DEDR 501, the family of இழ, to lose), and īṭu, \"putting in, making good\" (DEDR 442)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḻappīṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḻappīṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḻappīṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḻappīṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimāṉam tāmatamāṉatāl payaṇikaḷukku iḻappīṭu koṭuttārkaḷ. — Because the flight was late, they gave the passengers compensation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimāṉam tāmatamāṉatāl payaṇikaḷukku iḻappīṭu koṭuttārkaḷ.* — Because the flight was late, they gave the passengers compensation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a kilo, then the Tamil for a subscription, then say iḻappīṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a kilo, then the Tamil for a subscription, then say *iḻappīṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இழப்பீடு (iḻappīṭu) mean? (\"Compensation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C451-cetamatai",
+      "sequence": 25750,
+      "title": "சேதமடை (cētamaṭai) — to get damaged",
+      "headword": "சேதமடை",
+      "romanization": "cētamaṭai",
+      "gloss": "to get damaged",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e822f7b04420202",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a subscription, then the Tamil for compensation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சேதமடை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சேதமடை — cētamaṭai — \"to get damaged\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெள்ளத்தில் பல வீடுகள் சேதமடைந்தன. veḷḷattil pala vīṭukaḷ cētamaṭaintaṉa. Many houses were damaged in the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): சேதமடைந்தது, cētamaṭaintatu."
+            },
+            {
+              "kind": "speech",
+              "text": "சேதம், damage, + அடை, to get."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சேதமடை (cētamaṭai) is built from சேதம், \"damage\", borrowed from Sanskrit cheda, \"cutting, loss\" (CDIAL 5064), and அடை, \"to reach, to get\" (DEDR 79)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cētamaṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cētamaṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cētamaṭai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cētamaṭai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷattil pala vīṭukaḷ cētamaṭaintaṉa. — Many houses were damaged in the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷattil pala vīṭukaḷ cētamaṭaintaṉa.* — Many houses were damaged in the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a subscription, then the Tamil for compensation, then say cētamaṭai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a subscription, then the Tamil for compensation, then say *cētamaṭai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சேதமடை (cētamaṭai) mean? (\"To get damaged\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

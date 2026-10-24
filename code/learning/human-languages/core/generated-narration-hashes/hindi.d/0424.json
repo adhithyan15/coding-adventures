@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:e02b8ea569199a04",
+  "lessonIds": [
+    "HI-C424-dhaba",
+    "HI-C424-halvai",
+    "HI-C424-thela",
+    "HI-C424-pherivala",
+    "HI-C424-pan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch424.txt",
+  "json": "hindi/narration/ch424.json",
+  "textHash": "fnv1a64:a32ab2b9cc3f874d",
+  "jsonHash": "fnv1a64:9cb74cd877316840",
+  "findings": []
+}

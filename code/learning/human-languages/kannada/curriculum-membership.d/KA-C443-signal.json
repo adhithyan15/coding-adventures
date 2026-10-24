@@ -1,0 +1,11 @@
+{
+  "id": "KA-C443-signal",
+  "pathSegment": "KA-PATH-443-SANCHARA443",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-443-SANCHARA443",
+      "order": 1
+    }
+  ]
+}

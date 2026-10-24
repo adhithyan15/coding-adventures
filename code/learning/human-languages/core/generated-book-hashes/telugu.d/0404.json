@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:a8ef399570f9ecee",
+  "lessonIds": [
+    "TE-C404-pedarikam",
+    "TE-C404-dhanika",
+    "TE-C404-sampada",
+    "TE-C404-svatantra",
+    "TE-C404-nirudyogam"
+  ],
+  "tex": "telugu/book/chapters/ch404-rich-and-poor.tex"
+}

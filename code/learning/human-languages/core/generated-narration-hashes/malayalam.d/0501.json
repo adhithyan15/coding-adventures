@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:39c4dc46b7639741",
+  "lessonIds": [
+    "ML-C501-mrgasala",
+    "ML-C501-udyanam",
+    "ML-C501-timimgalam",
+    "ML-C501-pravesanaphisu",
+    "ML-C501-olukiyettuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch501.txt",
+  "json": "malayalam/narration/ch501.json",
+  "textHash": "fnv1a64:0be535af244a3614",
+  "jsonHash": "fnv1a64:164c7a65f851947a",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C506-hode-cover",
+    "language": "kannada",
+    "chapter": 506,
+    "sequence": 25820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22d9233da3297f58"
+  },
+  "findings": []
+}

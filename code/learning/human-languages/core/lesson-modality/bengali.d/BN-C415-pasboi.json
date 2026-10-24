@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C415-pasboi",
+    "language": "bengali",
+    "chapter": 415,
+    "sequence": 25590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a17a4b4bca9a9b97"
+  },
+  "findings": []
+}

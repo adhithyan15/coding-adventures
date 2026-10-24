@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:9535622dd384c88f",
+  "lessonIds": [
+    "BN-C444-obhiman",
+    "BN-C444-onujog",
+    "BN-C444-mukh-bhar-kora",
+    "BN-C444-khoma-kora",
+    "BN-C444-monomalinyo"
+  ],
+  "tex": "bengali/book/chapters/ch444-sulking-and-making-up.tex"
+}

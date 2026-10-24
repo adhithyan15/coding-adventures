@@ -1,0 +1,11 @@
+{
+  "id": "KA-C378-paksapata",
+  "pathSegment": "KA-PATH-378-NILUVU378",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-378-NILUVU378",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-520-KARUVI520",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-520-KARUVI520"
+  ],
+  "after": []
+}

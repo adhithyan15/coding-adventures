@@ -1,0 +1,11 @@
+{
+  "id": "KA-C426-kadeganisu",
+  "pathSegment": "KA-PATH-426-HIMMETTU426",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-426-HIMMETTU426",
+      "order": 1
+    }
+  ]
+}

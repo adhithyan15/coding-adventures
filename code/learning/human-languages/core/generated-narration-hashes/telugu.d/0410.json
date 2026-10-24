@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:cac4fe7cadd4bf79",
+  "lessonIds": [
+    "TE-C410-seva",
+    "TE-C410-viralam",
+    "TE-C410-svacchanda",
+    "TE-C410-karyakarta",
+    "TE-C410-data"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch410.txt",
+  "json": "telugu/narration/ch410.json",
+  "textHash": "fnv1a64:b129d41b900162cf",
+  "jsonHash": "fnv1a64:1915ed75e9d40676",
+  "findings": []
+}

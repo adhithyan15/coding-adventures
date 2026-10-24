@@ -1,0 +1,21 @@
+{
+  "chapter": 392,
+  "title": "Clean Government",
+  "label": "ch:ta-clean-government",
+  "canDo": "I can talk about corruption, bribes and keeping watch.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-R392-review-386-392",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can talk about corruption, bribes and keeping watch.",
+    "assesses": [
+      "TA-LEX-C392-ULAL392-01",
+      "TA-LEX-C392-ULAL392-02",
+      "TA-LEX-C392-ULAL392-03",
+      "TA-LEX-C392-ULAL392-04",
+      "TA-LEX-C392-ULAL392-05"
+    ]
+  }
+}

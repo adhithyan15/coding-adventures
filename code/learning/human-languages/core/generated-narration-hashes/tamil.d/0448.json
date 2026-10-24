@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:6859233e73523f1f",
+  "lessonIds": [
+    "TA-C448-cemi",
+    "TA-C448-celavali",
+    "TA-C448-vinakku",
+    "TA-C448-mincu",
+    "TA-C448-varumanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch448.txt",
+  "json": "tamil/narration/ch448.json",
+  "textHash": "fnv1a64:bbbbc9b9d5a8ad7f",
+  "jsonHash": "fnv1a64:87ef4adc9731315e",
+  "findings": []
+}

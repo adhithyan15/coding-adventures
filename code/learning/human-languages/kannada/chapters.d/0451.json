@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Lorries, Jeeps and Taxis",
+  "label": "ch:ka-lorries-jeeps-and-taxis",
+  "canDo": "I can say a lorry, a jeep, a taxi, a motorbike and a bullock cart.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C451-ettinagadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can say a lorry, a jeep, a taxi, a motorbike and a bullock cart.",
+    "assesses": [
+      "KA-LEX-C451-VAHANA451-03",
+      "KA-LEX-C451-VAHANA451-04",
+      "KA-LEX-C451-VAHANA451-05"
+    ]
+  }
+}

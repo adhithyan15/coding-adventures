@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:49739ed25bb09a5b",
+  "lessonIds": [
+    "KA-C512-raktadottada",
+    "KA-C512-hrdayaghata",
+    "KA-C512-raktasrava",
+    "KA-C512-parsvavayu",
+    "KA-C512-prajne-tappu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch512.txt",
+  "json": "kannada/narration/ch512.json",
+  "textHash": "fnv1a64:de131c67b911010c",
+  "jsonHash": "fnv1a64:b8651f2525d1d361",
+  "findings": []
+}

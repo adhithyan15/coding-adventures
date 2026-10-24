@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C441-istiqbal",
+    "language": "arabic",
+    "chapter": 441,
+    "sequence": 24720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:363de9327a2db9c0"
+  },
+  "findings": []
+}

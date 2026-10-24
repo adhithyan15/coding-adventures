@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:d702fc7449416f30",
+  "lessonIds": [
+    "MR-C335-utkhanan",
+    "MR-C335-avases",
+    "MR-C335-puratan",
+    "MR-C335-khodne",
+    "MR-C335-korne"
+  ],
+  "tex": "marathi/book/chapters/ch335-digging-up-the-past.tex"
+}

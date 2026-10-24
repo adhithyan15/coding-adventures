@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:44b9ff2207317088",
+  "lessonIds": [
+    "TE-C496-badhapadu",
+    "TE-C496-badhapettu",
+    "TE-C496-kungipovu",
+    "TE-C496-kumilipovu",
+    "TE-C496-nisprha"
+  ],
+  "tex": "telugu/book/chapters/ch496-sorrow.tex"
+}

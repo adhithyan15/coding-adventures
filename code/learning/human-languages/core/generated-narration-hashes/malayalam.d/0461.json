@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:624e39c277c1042a",
+  "lessonIds": [
+    "ML-C461-plarrphom",
+    "ML-C461-kantaktar",
+    "ML-C461-yatrakkuli",
+    "ML-C461-kyu",
+    "ML-C461-sancarikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch461.txt",
+  "json": "malayalam/narration/ch461.json",
+  "textHash": "fnv1a64:6ec8d42ac1c0cbdf",
+  "jsonHash": "fnv1a64:284e73adb1588a60",
+  "findings": []
+}

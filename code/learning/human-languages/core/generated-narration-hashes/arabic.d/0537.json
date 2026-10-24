@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:5df402367a9f0376",
+  "lessonIds": [
+    "AR-C537-takhyim",
+    "AR-C537-ghaws",
+    "AR-C537-taswir",
+    "AR-C537-fakhkhar",
+    "AR-C537-kalimat-mutaqatia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch537.txt",
+  "json": "arabic/narration/ch537.json",
+  "textHash": "fnv1a64:7a2461ed56ebb792",
+  "jsonHash": "fnv1a64:f831381efcbd4a15",
+  "findings": []
+}

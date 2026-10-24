@@ -1,0 +1,11 @@
+{
+  "id": "HI-C296-raftar",
+  "pathSegment": "HI-PATH-296-TAKKAR296",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-296-TAKKAR296",
+      "order": 0
+    }
+  ]
+}

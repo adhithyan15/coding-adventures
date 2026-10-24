@@ -1,0 +1,11 @@
+{
+  "id": "AR-C301-istadama",
+  "pathSegment": "AR-PATH-301-TARIQ301",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-301-TARIQ301",
+      "order": 0
+    }
+  ]
+}

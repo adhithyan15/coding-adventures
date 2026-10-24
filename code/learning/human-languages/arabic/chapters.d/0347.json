@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "A kidnapping",
+  "label": "ch:ar-a-kidnapping",
+  "canDo": "I can say to kidnap, to catch up with, a hostage, a ransom and a kidnapper.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C347-khatif",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can say to kidnap, to catch up with, a hostage, a ransom and a kidnapper.",
+    "assesses": [
+      "AR-LEX-C347-KHATF347-03",
+      "AR-LEX-C347-KHATF347-04",
+      "AR-LEX-C347-KHATF347-05"
+    ]
+  }
+}

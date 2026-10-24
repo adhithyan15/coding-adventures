@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:c35b81b41c864720",
+  "lessonIds": [
+    "TE-C518-gayapadu",
+    "TE-C518-boppi",
+    "TE-C518-tulu",
+    "TE-C518-kuntu",
+    "TE-C518-raktasravam"
+  ],
+  "tex": "telugu/book/chapters/ch518-slips-and-falls.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C416-metano",
+    "language": "bengali",
+    "chapter": 416,
+    "sequence": 25680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c45c36db042b9086"
+  },
+  "findings": []
+}

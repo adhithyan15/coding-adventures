@@ -1,0 +1,11 @@
+{
+  "id": "TA-C379-tirattu",
+  "pathSegment": "TA-PATH-379-TANNARVALAR379",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-379-TANNARVALAR379",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:c8b7f89f14b0b31d",
+  "lessonIds": [
+    "MR-C531-phalandaj",
+    "MR-C531-golandaj",
+    "MR-C531-dhavpatu",
+    "MR-C531-tolavne",
+    "MR-C531-jhelne"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch531.txt",
+  "json": "marathi/narration/ch531.json",
+  "textHash": "fnv1a64:31ee6bd2b63941e6",
+  "jsonHash": "fnv1a64:ce99320a1b6ae74c",
+  "findings": []
+}

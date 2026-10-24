@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C518-kerom",
+    "language": "bengali",
+    "chapter": 518,
+    "sequence": 31370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41973dfd1817d347"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Wise, skilled and sure",
+  "label": "ch:ar-wise-skilled-and-sure",
+  "canDo": "I can describe a person as wise, skilful, creative or sensible, and talk about confidence.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C501-thiqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can describe a person as wise, skilful, creative or sensible, and talk about confidence.",
+    "assesses": [
+      "AR-LEX-C501-HIKMA501-03",
+      "AR-LEX-C501-HIKMA501-04",
+      "AR-LEX-C501-HIKMA501-05"
+    ]
+  }
+}

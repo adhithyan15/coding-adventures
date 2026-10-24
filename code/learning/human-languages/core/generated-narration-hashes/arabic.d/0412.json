@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:401c500d87dc5e1a",
+  "lessonIds": [
+    "AR-C412-izdada",
+    "AR-C412-taqallasa",
+    "AR-C412-tadaafa",
+    "AR-C412-qallala",
+    "AR-C412-nisba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch412.txt",
+  "json": "arabic/narration/ch412.json",
+  "textHash": "fnv1a64:3f802b20a6f1005e",
+  "jsonHash": "fnv1a64:b8bebf907cf27f0c",
+  "findings": []
+}

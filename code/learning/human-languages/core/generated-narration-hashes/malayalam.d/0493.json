@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:2a76d1584bebaf5e",
+  "lessonIds": [
+    "ML-C493-upabhoktavu",
+    "ML-C493-itapatukaran",
+    "ML-C493-varanri",
+    "ML-C493-pariksikkuka",
+    "ML-C493-marriyetukkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch493.txt",
+  "json": "malayalam/narration/ch493.json",
+  "textHash": "fnv1a64:0fb7672785bcfd2d",
+  "jsonHash": "fnv1a64:a7317ccec782b25e",
+  "findings": []
+}

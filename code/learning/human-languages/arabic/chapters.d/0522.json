@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Starting and stopping work",
+  "label": "ch:ar-starting-and-stopping-work",
+  "canDo": "I can say that someone set to work or toiled, and talk about a resignation, a retired person and someone out of work.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C522-atil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can say that someone set to work or toiled, and talk about a resignation, a retired person and someone out of work.",
+    "assesses": [
+      "AR-LEX-C522-AMAL522-03",
+      "AR-LEX-C522-AMAL522-04",
+      "AR-LEX-C522-AMAL522-05"
+    ]
+  }
+}

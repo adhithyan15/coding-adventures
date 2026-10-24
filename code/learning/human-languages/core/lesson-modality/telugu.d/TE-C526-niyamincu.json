@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C526-niyamincu",
+    "language": "telugu",
+    "chapter": 526,
+    "sequence": 26640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90a50b0ace12c790"
+  },
+  "findings": []
+}

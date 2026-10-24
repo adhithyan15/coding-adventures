@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:e5cffc0be90af218",
+  "lessonIds": [
+    "BN-C329-arombho",
+    "BN-C329-somapti",
+    "BN-C329-chirokal",
+    "BN-C329-obismoroniyo",
+    "BN-C329-utsorgo-kora",
+    "BN-R329-review-323-329",
+    "BN-R329-review-final-329"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch329.txt",
+  "json": "bengali/narration/ch329.json",
+  "textHash": "fnv1a64:14ade733a85a5eff",
+  "jsonHash": "fnv1a64:dd60fbb710651a4b",
+  "findings": []
+}

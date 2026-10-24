@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C553-hulkavni-dene",
+    "language": "marathi",
+    "chapter": 553,
+    "sequence": 31520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6270826b50ac000d"
+  },
+  "findings": []
+}

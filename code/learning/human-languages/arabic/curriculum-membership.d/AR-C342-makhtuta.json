@@ -1,0 +1,11 @@
+{
+  "id": "AR-C342-makhtuta",
+  "pathSegment": "AR-PATH-342-TURATH342",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-342-TURATH342",
+      "order": 1
+    }
+  ]
+}

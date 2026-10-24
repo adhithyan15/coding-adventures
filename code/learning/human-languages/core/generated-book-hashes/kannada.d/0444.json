@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:59031bac66cccf98",
+  "lessonIds": [
+    "KA-C444-anusarisu",
+    "KA-C444-ullanghisu",
+    "KA-C444-palisu",
+    "KA-C444-nisedhisu",
+    "KA-C444-ekamukha"
+  ],
+  "tex": "kannada/book/chapters/ch444-rules-of-the-road.tex"
+}

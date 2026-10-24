@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:7d3a3f5f422f2bd7",
+  "lessonIds": [
+    "BN-C526-setar",
+    "BN-C526-dhol",
+    "BN-C526-harmoniyam",
+    "BN-C526-behala",
+    "BN-C526-tungtang-kora"
+  ],
+  "tex": "bengali/book/chapters/ch526-instruments.tex"
+}

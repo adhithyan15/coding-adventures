@@ -1,0 +1,11 @@
+{
+  "id": "TE-C532-garabam",
+  "pathSegment": "TE-PATH-532-PENPAKAM532",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-532-PENPAKAM532",
+      "order": 1
+    }
+  ]
+}

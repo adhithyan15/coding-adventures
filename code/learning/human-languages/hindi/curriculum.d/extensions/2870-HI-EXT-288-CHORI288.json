@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-288-CHORI288",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what was stolen and who saw it.",
+  "prerequisites": []
+}

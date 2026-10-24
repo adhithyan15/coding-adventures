@@ -1,0 +1,931 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 452,
+  "title": "Heading Home",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:272fc5f99b65f372",
+  "lessons": [
+    {
+      "id": "TA-C452-miti-pedal",
+      "sequence": 25760,
+      "title": "மிதி (miti) — to pedal; to tread on",
+      "headword": "மிதி",
+      "romanization": "miti",
+      "gloss": "to pedal; to tread on",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0accf5334dfb041b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for compensation, then the Tamil for to get damaged."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மிதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மிதி — miti — \"to pedal; to tread on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நான் மிதிவண்டியை வேகமாக மிதித்தேன். nāṉ mitivaṇṭiyai vēkamāka mitittēṉ. I pedalled the bicycle fast."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): மிதித்தேன், mitittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "மிதிவண்டி, a bicycle, is a vehicle you tread on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மிதி (miti) is native Dravidian (DEDR 4861), \"to tread on, to trample\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṉ mitivaṇṭiyai vēkamāka mitittēṉ. — I pedalled the bicycle fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṉ mitivaṇṭiyai vēkamāka mitittēṉ.* — I pedalled the bicycle fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for compensation, then the Tamil for to get damaged, then say miti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for compensation, then the Tamil for to get damaged, then say *miti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மிதி (miti) mean? (\"To pedal; to tread on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C452-carakku",
+      "sequence": 25770,
+      "title": "சரக்கு (carakku) — goods; cargo",
+      "headword": "சரக்கு",
+      "romanization": "carakku",
+      "gloss": "goods; cargo",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5bc5e24959355fbe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to get damaged, then the Tamil for to pedal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சரக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சரக்கு — carakku — \"goods; cargo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சரக்கு ரயில் மெதுவாகப் போனது. carakku rayil metuvākap pōṉatu. The goods train went slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "சரக்கு (carakku) ரயில் is a goods train; சரக்கு (carakku) வண்டி, a goods vehicle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சரக்கு (carakku) is native Dravidian (DEDR 2353), \"goods, articles of merchandise\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carakku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carakku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carakku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carakku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carakku rayil metuvākap pōṉatu. — The goods train went slowly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carakku rayil metuvākap pōṉatu.* — The goods train went slowly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to get damaged, then the Tamil for to pedal, then say carakku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to get damaged, then the Tamil for to pedal, then say *carakku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சரக்கு (carakku) mean? (\"Goods; cargo\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C452-piratecam",
+      "sequence": 25780,
+      "title": "பிரதேசம் (piratēcam) — a region; a territory",
+      "headword": "பிரதேசம்",
+      "romanization": "piratēcam",
+      "gloss": "a region; a territory",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05f444f88b4b3732",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to pedal, then the Tamil for goods."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பிரதேசம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிரதேசம் — piratēcam — \"a region; a territory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தப் பிரதேசத்தில் மழை குறைவு. intap piratēcattil maḻai kuṟaivu. There is little rain in this region."
+            },
+            {
+              "kind": "speech",
+              "text": "A -அம் noun: பிரதேசத்தில், in the region."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிரதேசம் (piratēcam) is borrowed from Sanskrit pradeśa, \"a region, a country\" (CDIAL 8668)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piratēcam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piratēcam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piratēcam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piratēcam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intap piratēcattil maḻai kuṟaivu. — There is little rain in this region.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intap piratēcattil maḻai kuṟaivu.* — There is little rain in this region.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to pedal, then the Tamil for goods, then say piratēcam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to pedal, then the Tamil for goods, then say *piratēcam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பிரதேசம் (piratēcam) mean? (\"A region; a territory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C452-pakuti",
+      "sequence": 25790,
+      "title": "பகுதி (pakuti) — an area; a part",
+      "headword": "பகுதி",
+      "romanization": "pakuti",
+      "gloss": "an area; a part",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b50f0bcddf55dbda",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for goods, then the Tamil for a region."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பகுதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பகுதி — pakuti — \"an area; a part\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நகரத்தின் பழைய பகுதியில் குறுகிய தெருக்கள் இருக்கின்றன. nakarattiṉ paḻaiya pakutiyil kuṟukiya terukkaḷ irukkiṉṟaṉa. There are narrow streets in the old part of the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a part of a book or a whole: முதல் பகுதி (pakuti), the first part."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பகுதி (pakuti) is native Dravidian (DEDR 3808), from பகு, \"to divide, to share\": a portion."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakuti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakuti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakuti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakuti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakarattiṉ paḻaiya pakutiyil kuṟukiya terukkaḷ irukkiṉṟaṉa. — There are narrow streets in the old part of the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakarattiṉ paḻaiya pakutiyil kuṟukiya terukkaḷ irukkiṉṟaṉa.* — There are narrow streets in the old part of the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for goods, then the Tamil for a region, then say pakuti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for goods, then the Tamil for a region, then say *pakuti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பகுதி (pakuti) mean? (\"An area; a part\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C452-urul",
+      "sequence": 25800,
+      "title": "உருள் (uruḷ) — to roll along; to roll",
+      "headword": "உருள்",
+      "romanization": "uruḷ",
+      "gloss": "to roll along; to roll",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55195b5e0e62104f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a region, then the Tamil for an area."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உருள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உருள் — uruḷ — \"to roll along; to roll\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கல் மலையிலிருந்து கீழே உருண்டது. kal malaiyiliruntu kīḻē uruṇṭatu. A stone rolled down the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): உருண்டது, uruṇṭatu."
+            },
+            {
+              "kind": "speech",
+              "text": "ள் meets the past -ந்த- as ண்ட: உருண்டது. உருட்டு is to roll something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உருள் (uruḷ) is native Dravidian (DEDR 664), \"to roll, to tumble, to revolve\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uruḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uruḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uruḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uruḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kal malaiyiliruntu kīḻē uruṇṭatu. — A stone rolled down the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kal malaiyiliruntu kīḻē uruṇṭatu.* — A stone rolled down the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a region, then the Tamil for an area, then say uruḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a region, then the Tamil for an area, then say *uruḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உருள் (uruḷ) mean? (\"To roll along; to roll\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R452-review-446-452",
+      "sequence": 25810,
+      "title": "Getting around, second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from At the Bank to Heading Home",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3afa1ec03d89f7aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for an account and a balance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an account, a balance, interest on money, a cheque, cash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an account, a balance, interest on money, a cheque, cash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an advance payment, an instalment, an amount due, the remainder, a sum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an advance payment, an instalment, an amount due, the remainder, a sum]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to save up, to spend money, to waste, to be left over, income",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to save up, to spend money, to waste, to be left over, income]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an auction, a lease, a transaction, an investment, to pawn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an auction, a lease, a transaction, an investment, to pawn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the original, a fake, luxury, the cost of living, a banknote",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the original, a fake, luxury, the cost of living, a banknote]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a complex, a kilo, a subscription, compensation, to get damaged",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a complex, a kilo, a subscription, compensation, to get damaged]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to pedal, goods, a region, an area, to roll along",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to pedal, goods, a region, an area, to roll along]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An account? (கணக்கு, kaṇakku.) A balance? (இருப்பு, iruppu.) Interest on money? (வட்டி, vaṭṭi.) A cheque? (காசோலை, kācōlai.) Cash? (ரொக்கம், rokkam.) An advance payment? (முன்பணம், muṉpaṇam.) An instalment? (தவணை, tavaṇai.) An amount due? (பாக்கி, pākki.) The remainder? (மீதி, mīti.) A sum? (தொகை, tokai.) To save up? (சேமி, cēmi.) To spend money? (செலவழி, celavaḻi.) To waste? (வீணாக்கு, vīṇākku.) To be left over? (மிஞ்சு, miñcu.) Income? (வருமானம், varumāṉam.) An auction? (ஏலம், ēlam.) A lease? (குத்தகை, kuttakai.) A transaction? (பரிவர்த்தனை, parivarttaṉai.) An investment? (முதலீடு, mutalīṭu.) To pawn? (அடகு வை, aṭaku vai.) The original? (அசல், acal.) A fake? (போலி, pōli.) Luxury? (ஆடம்பரம், āṭamparam.) The cost of living? (விலைவாசி, vilaivāci.) A banknote? (நோட்டு, nōṭṭu.) A complex? (வளாகம், vaḷākam.) A kilo? (கிலோ, kilō.) A subscription? (சந்தா, cantā.) Compensation? (இழப்பீடு, iḻappīṭu.) To get damaged? (சேதமடை, cētamaṭai.) To pedal? (மிதி, miti.) Goods? (சரக்கு, carakku.) A region? (பிரதேசம், piratēcam.) An area? (பகுதி, pakuti.) To roll along? (உருள், uruḷ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R452-review-final-452",
+      "sequence": 25820,
+      "title": "Heading Home — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:675b83d0c49a6710",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for to pedal and goods."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to pedal, goods, a region, an area, to roll along",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to pedal, goods, a region, an area, to roll along]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To pedal? (மிதி, miti.) Goods? (சரக்கு, carakku.) A region? (பிரதேசம், piratēcam.) An area? (பகுதி, pakuti.) To roll along? (உருள், uruḷ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

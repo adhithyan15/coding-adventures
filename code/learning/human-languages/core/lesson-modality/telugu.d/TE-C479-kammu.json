@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C479-kammu",
+    "language": "telugu",
+    "chapter": 479,
+    "sequence": 24120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2029175ab23c99e1"
+  },
+  "findings": []
+}

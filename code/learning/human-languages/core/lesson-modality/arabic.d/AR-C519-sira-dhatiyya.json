@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C519-sira-dhatiyya",
+    "language": "arabic",
+    "chapter": 519,
+    "sequence": 28780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23e97b3f8f8b7574"
+  },
+  "findings": []
+}

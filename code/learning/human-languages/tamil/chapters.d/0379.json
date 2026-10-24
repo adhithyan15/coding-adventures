@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Helping Others",
+  "label": "ch:ta-helping-others",
+  "canDo": "I can talk about volunteers, funds and welfare.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C379-nalan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can talk about volunteers, funds and welfare.",
+    "assesses": [
+      "TA-LEX-C379-TANNARVALAR379-03",
+      "TA-LEX-C379-TANNARVALAR379-04",
+      "TA-LEX-C379-TANNARVALAR379-05"
+    ]
+  }
+}

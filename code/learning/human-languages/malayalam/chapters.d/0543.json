@@ -1,0 +1,19 @@
+{
+  "chapter": 543,
+  "title": "Hired and Fired",
+  "label": "ch:ml-hired-and-fired",
+  "canDo": "I can say a bonus, to apply, to take on staff, to dismiss and an employer.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C543-tolilutama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 543: I can say a bonus, to apply, to take on staff, to dismiss and an employer.",
+    "assesses": [
+      "ML-LEX-C543-NIYAMANAM543-03",
+      "ML-LEX-C543-NIYAMANAM543-04",
+      "ML-LEX-C543-NIYAMANAM543-05"
+    ]
+  }
+}

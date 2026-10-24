@@ -1,0 +1,11 @@
+{
+  "id": "ML-C547-ilaktrisyan",
+  "pathSegment": "ML-PATH-547-PROFESSION547",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-547-PROFESSION547",
+      "order": 3
+    }
+  ]
+}

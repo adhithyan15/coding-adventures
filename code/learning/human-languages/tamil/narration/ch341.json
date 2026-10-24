@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 341,
+  "title": "Digging Up the Past",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0de5f985d544f82c",
+  "lessons": [
+    {
+      "id": "TA-C341-akalvaraycci",
+      "sequence": 19510,
+      "title": "அகழ்வாராய்ச்சி (akaḻvārāycci) — an excavation",
+      "headword": "அகழ்வாராய்ச்சி",
+      "romanization": "akaḻvārāycci",
+      "gloss": "an excavation",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:013762a321c2b641",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a golden age, then the Tamil for a civilization."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அகழ்வாராய்ச்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அகழ்வாராய்ச்சி — akaḻvārāycci — \"an excavation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அகழ்வாராய்ச்சியில் பழைய நாணயங்கள் கிடைத்தன. akaḻvārāycciyil paḻaiya nāṇayaṅkaḷ kiṭaittaṉa. Old coins were found in the excavation."
+            },
+            {
+              "kind": "speech",
+              "text": "A dig made to learn about the past; அகழ், to dig, is in it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அகழ்வாராய்ச்சி (akaḻvārāycci) is a Tamil compound built from அகழ்வு, \"digging\", from அகழ் (DEDR 11), and ஆராய்ச்சி, \"research\" (DEDR 377)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akaḻvārāycci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akaḻvārāycci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akaḻvārāycci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akaḻvārāycci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akaḻvārāycciyil paḻaiya nāṇayaṅkaḷ kiṭaittaṉa. — Old coins were found in the excavation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akaḻvārāycciyil paḻaiya nāṇayaṅkaḷ kiṭaittaṉa.* — Old coins were found in the excavation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a golden age, then the Tamil for a civilization, then say akaḻvārāycci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a golden age, then the Tamil for a civilization, then say *akaḻvārāycci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அகழ்வாராய்ச்சி (akaḻvārāycci) mean? (\"An excavation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C341-tolporul",
+      "sequence": 19520,
+      "title": "தொல்பொருள் (tolporuḷ) — an antiquity; an ancient object",
+      "headword": "தொல்பொருள்",
+      "romanization": "tolporuḷ",
+      "gloss": "an antiquity; an ancient object",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0c566e5ab7ebb47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a civilization, then the Tamil for an excavation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தொல்பொருள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொல்பொருள் — tolporuḷ — \"an antiquity; an ancient object\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அருங்காட்சியகத்தில் பல தொல்பொருள்கள் இருக்கின்றன. aruṅkāṭciyakattil pala tolporuḷkaḷ irukkiṉṟaṉa. There are many antiquities in the museum."
+            },
+            {
+              "kind": "speech",
+              "text": "தொல், ancient + பொருள், thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொல்பொருள் (tolporuḷ) is a Tamil compound built from தொல், \"old, ancient\" (DEDR 3516), and பொருள், \"thing\" (DEDR 4544)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tolporuḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tolporuḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tolporuḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tolporuḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruṅkāṭciyakattil pala tolporuḷkaḷ irukkiṉṟaṉa. — There are many antiquities in the museum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruṅkāṭciyakattil pala tolporuḷkaḷ irukkiṉṟaṉa.* — There are many antiquities in the museum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a civilization, then the Tamil for an excavation, then say tolporuḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a civilization, then the Tamil for an excavation, then say *tolporuḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தொல்பொருள் (tolporuḷ) mean? (\"An antiquity; an ancient object\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C341-putaiyal",
+      "sequence": 19530,
+      "title": "புதையல் (putaiyal) — a treasure; buried treasure",
+      "headword": "புதையல்",
+      "romanization": "putaiyal",
+      "gloss": "a treasure; buried treasure",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba7b83935fd748c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an excavation, then the Tamil for an antiquity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புதையல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புதையல் — putaiyal — \"a treasure; buried treasure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒரு விவசாயி தன் நிலத்தில் புதையலைக் கண்டுபிடித்தார். oru vivacāyi taṉ nilattil putaiyalaik kaṇṭupiṭittār. A farmer found treasure in his field."
+            },
+            {
+              "kind": "speech",
+              "text": "From புதை, to bury: buried treasure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புதையல் (putaiyal) is native Dravidian: DEDR 4509 gives it under புதை, \"to be buried\", as \"hidden treasure\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putaiyal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putaiyal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putaiyal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putaiyal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru vivacāyi taṉ nilattil putaiyalaik kaṇṭupiṭittār. — A farmer found treasure in his field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru vivacāyi taṉ nilattil putaiyalaik kaṇṭupiṭittār.* — A farmer found treasure in his field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an excavation, then the Tamil for an antiquity, then say putaiyal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an excavation, then the Tamil for an antiquity, then say *putaiyal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புதையல் (putaiyal) mean? (\"A treasure; buried treasure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C341-tontiyetu",
+      "sequence": 19540,
+      "title": "தோண்டியெடு (tōṇṭiyeṭu) — to dig out; to unearth",
+      "headword": "தோண்டியெடு",
+      "romanization": "tōṇṭiyeṭu",
+      "gloss": "to dig out; to unearth",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d8445a6ae4de0ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an antiquity, then the Tamil for a treasure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தோண்டியெடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தோண்டியெடு — tōṇṭiyeṭu — \"to dig out; to unearth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர்கள் ஒரு பழைய பானையைத் தோண்டியெடுத்தார்கள். avarkaḷ oru paḻaiya pāṉaiyait tōṇṭiyeṭuttārkaḷ. They dug out an old pot."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தோண்டியெடுத்தேன், tōṇṭiyeṭuttēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "தோண்டு, to dig + எடு, to take out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தோண்டியெடு (tōṇṭiyeṭu) is a Tamil compound built from தோண்டு, \"to dig, excavate\" (DEDR 3549), and எடு, \"to take up\" (DEDR 851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōṇṭiyeṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōṇṭiyeṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōṇṭiyeṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōṇṭiyeṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avarkaḷ oru paḻaiya pāṉaiyait tōṇṭiyeṭuttārkaḷ. — They dug out an old pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avarkaḷ oru paḻaiya pāṉaiyait tōṇṭiyeṭuttārkaḷ.* — They dug out an old pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an antiquity, then the Tamil for a treasure, then say tōṇṭiyeṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an antiquity, then the Tamil for a treasure, then say *tōṇṭiyeṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தோண்டியெடு (tōṇṭiyeṭu) mean? (\"To dig out; to unearth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C341-kantetu",
+      "sequence": 19550,
+      "title": "கண்டெடு (kaṇṭeṭu) — to come upon; to find",
+      "headword": "கண்டெடு",
+      "romanization": "kaṇṭeṭu",
+      "gloss": "to come upon; to find",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:463533b6f6fb2c45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a treasure, then the Tamil for to dig out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கண்டெடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கண்டெடு — kaṇṭeṭu — \"to come upon; to find\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சிறுவன் ஆற்றங்கரையில் ஒரு பழைய நாணயத்தைக் கண்டெடுத்தான். ciṟuvaṉ āṟṟaṅkaraiyil oru paḻaiya nāṇayattaik kaṇṭeṭuttāṉ. The boy came upon an old coin on the river bank."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கண்டெடுத்தேன், kaṇṭeṭuttēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "To find something by chance; news says கண்டெடுக்கப்பட்டது, was found."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கண்டெடு (kaṇṭeṭu) is a Tamil compound built from கண்டு, \"having seen\", from காண் (DEDR 1443), and எடு, \"to take up\" (DEDR 851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭeṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭeṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭeṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭeṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṟuvaṉ āṟṟaṅkaraiyil oru paḻaiya nāṇayattaik kaṇṭeṭuttāṉ. — The boy came upon an old coin on the river bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṟuvaṉ āṟṟaṅkaraiyil oru paḻaiya nāṇayattaik kaṇṭeṭuttāṉ.* — The boy came upon an old coin on the river bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a treasure, then the Tamil for to dig out, then say kaṇṭeṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a treasure, then the Tamil for to dig out, then say *kaṇṭeṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கண்டெடு (kaṇṭeṭu) mean? (\"To come upon; to find\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 520,
+  "title": "Teamwork",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:798b82aff08929ba",
+  "lessons": [
+    {
+      "id": "KA-C520-todagu",
+      "sequence": 26540,
+      "title": "ತೊಡಗು (toḍagu) — to get involved; to set to work",
+      "headword": "ತೊಡಗು",
+      "romanization": "toḍagu",
+      "gloss": "to get involved; to set to work",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d52cd4975f24a01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to assign, then the Kannada for to save up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತೊಡಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೊಡಗು — toḍagu — \"to get involved; to set to work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊರಿನ ಯುವಕರು ಕೆರೆಯ ಕೆಲಸದಲ್ಲಿ ತೊಡಗಿದರು. ūrina yuvakaru kereya kelasadalli toḍagidaru. The young men of the town set to work on the tank."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತೊಡಗಿದೆ, toḍagide."
+            },
+            {
+              "kind": "speech",
+              "text": "In what: -ಅಲ್ಲಿ. ತೊಡಗಿಸಿಕೊ, to get yourself involved."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೊಡಗು (toḍagu) is native Dravidian: DEDR 3481 lists Kannada toḍagu, \"to engage (as in work), begin, undertake\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḍagu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḍagu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḍagu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḍagu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrina yuvakaru kereya kelasadalli toḍagidaru. — The young men of the town set to work on the tank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrina yuvakaru kereya kelasadalli toḍagidaru.* — The young men of the town set to work on the tank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to assign, then the Kannada for to save up, then say toḍagu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to assign, then the Kannada for to save up, then say *toḍagu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತೊಡಗು (toḍagu) mean? (\"To get involved; to set to work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C520-vahisu",
+      "sequence": 26550,
+      "title": "ವಹಿಸು (vahisu) — to take charge of; to take on",
+      "headword": "ವಹಿಸು",
+      "romanization": "vahisu",
+      "gloss": "to take charge of; to take on",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17553c245481fd88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to save up, then the Kannada for to get involved."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಹಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಹಿಸು — vahisu — \"to take charge of; to take on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಬ್ಬದ ಊಟದ ಜವಾಬ್ದಾರಿಯನ್ನು ಮಾವ ವಹಿಸಿದರು. habbada ūṭada javābdāriyannu māva vahisidaru. Uncle took charge of the festival meal."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವಹಿಸಿದೆ, vahiside."
+            },
+            {
+              "kind": "speech",
+              "text": "Often with ಜವಾಬ್ದಾರಿ or ಕಾಳಜಿ: ಕಾಳಜಿ ವಹಿಸು (vahisu), to take care."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಹಿಸು (vahisu) is built on the Sanskrit root vah, \"to carry, to bear\" (Monier-Williams), with the verb ending -isu: to shoulder a task."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vahisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vahisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vahisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vahisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "habbada ūṭada javābdāriyannu māva vahisidaru. — Uncle took charge of the festival meal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *habbada ūṭada javābdāriyannu māva vahisidaru.* — Uncle took charge of the festival meal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to save up, then the Kannada for to get involved, then say vahisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to save up, then the Kannada for to get involved, then say *vahisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಹಿಸು (vahisu) mean? (\"To take charge of; to take on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C520-palagu",
+      "sequence": 26560,
+      "title": "ಪಳಗು (paḷagu) — to get practised; to become skilled",
+      "headword": "ಪಳಗು",
+      "romanization": "paḷagu",
+      "gloss": "to get practised; to become skilled",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:176923aaeb8924ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to get involved, then the Kannada for to take charge of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಳಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಳಗು — paḷagu — \"to get practised; to become skilled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎರಡು ವರ್ಷದಲ್ಲಿ ಅವನು ಈ ಕೆಲಸದಲ್ಲಿ ಚೆನ್ನಾಗಿ ಪಳಗಿದನು. eraḍu varṣadalli avanu ī kelasadalli cennāgi paḷagidanu. In two years he became well practised in this work."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪಳಗಿದೆ, paḷagide."
+            },
+            {
+              "kind": "speech",
+              "text": "In what: -ಅಲ್ಲಿ. ಪಳಗಿಸು, to tame or train an animal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಳಗು (paḷagu) is native Dravidian: DEDR 4000 lists older Kannada paḻagu, \"to become used to, to be trained\", and paḻaka, \"use, practice, habit\", beside Tamil paḻaku."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḷagu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḷagu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḷagu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḷagu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraḍu varṣadalli avanu ī kelasadalli cennāgi paḷagidanu. — In two years he became well practised in this work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraḍu varṣadalli avanu ī kelasadalli cennāgi paḷagidanu.* — In two years he became well practised in this work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to get involved, then the Kannada for to take charge of, then say paḷagu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to get involved, then the Kannada for to take charge of, then say *paḷagu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಳಗು (paḷagu) mean? (\"To get practised; to become skilled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C520-melvicarane",
+      "sequence": 26570,
+      "title": "ಮೇಲ್ವಿಚಾರಣೆ (mēlvicāraṇe) — supervision",
+      "headword": "ಮೇಲ್ವಿಚಾರಣೆ",
+      "romanization": "mēlvicāraṇe",
+      "gloss": "supervision",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24463592205a83af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to take charge of, then the Kannada for to get practised."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೇಲ್ವಿಚಾರಣೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೇಲ್ವಿಚಾರಣೆ — mēlvicāraṇe — \"supervision\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎಂಜಿನಿಯರ್ ಮೇಲ್ವಿಚಾರಣೆಯಲ್ಲಿ ಕೆಲಸ ನಡೆಯಿತು. eñjiniyar mēlvicāraṇeyalli kelasa naḍeyitu. The work went on under the engineer's supervision."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೇಲ್, over + ವಿಚಾರಣೆ, looking into: overseeing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೇಲ್ವಿಚಾರಣೆ (mēlvicāraṇe) joins native mēl, \"above, over\" (DEDR 5086), and Sanskrit vicāraṇa, \"consideration, examination\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēlvicāraṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēlvicāraṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēlvicāraṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēlvicāraṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eñjiniyar mēlvicāraṇeyalli kelasa naḍeyitu. — The work went on under the engineer's supervision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eñjiniyar mēlvicāraṇeyalli kelasa naḍeyitu.* — The work went on under the engineer's supervision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to take charge of, then the Kannada for to get practised, then say mēlvicāraṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to take charge of, then the Kannada for to get practised, then say *mēlvicāraṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೇಲ್ವಿಚಾರಣೆ (mēlvicāraṇe) mean? (\"Supervision\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C520-samayapalane",
+      "sequence": 26580,
+      "title": "ಸಮಯಪಾಲನೆ (samayapālane) — punctuality",
+      "headword": "ಸಮಯಪಾಲನೆ",
+      "romanization": "samayapālane",
+      "gloss": "punctuality",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b66ff57356d85d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to get practised, then the Kannada for supervision."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಮಯಪಾಲನೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಯಪಾಲನೆ — samayapālane — \"punctuality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಮಯಪಾಲನೆ ಒಳ್ಳೆಯ ನೌಕರನ ಗುಣ. samayapālane oḷḷeya naukarana guṇa. Punctuality is the mark of a good employee."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಮಯ, time + ಪಾಲನೆ, keeping."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಯಪಾಲನೆ (samayapālane) is a learned compound built from Sanskrit samaya, \"a meeting, an agreed time\" (Monier-Williams), and pālana, \"protecting, keeping\" (CDIAL 8128)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samayapālane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samayapālane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samayapālane, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samayapālane*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samayapālane oḷḷeya naukarana guṇa. — Punctuality is the mark of a good employee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samayapālane oḷḷeya naukarana guṇa.* — Punctuality is the mark of a good employee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to get practised, then the Kannada for supervision, then say samayapālane again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to get practised, then the Kannada for supervision, then say *samayapālane* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಮಯಪಾಲನೆ (samayapālane) mean? (\"Punctuality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

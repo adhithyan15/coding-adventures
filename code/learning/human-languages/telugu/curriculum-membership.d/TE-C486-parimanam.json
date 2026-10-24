@@ -1,0 +1,11 @@
+{
+  "id": "TE-C486-parimanam",
+  "pathSegment": "TE-PATH-486-KOLATA486",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-486-KOLATA486",
+      "order": 1
+    }
+  ]
+}

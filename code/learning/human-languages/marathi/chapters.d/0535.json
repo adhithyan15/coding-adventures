@@ -1,0 +1,21 @@
+{
+  "chapter": 535,
+  "title": "Painting and Sculpture",
+  "label": "ch:mr-painting-and-sculpture",
+  "canDo": "I can talk about painting, sculpture and artists.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R535-review-528-535",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can talk about painting, sculpture and artists.",
+    "assesses": [
+      "MR-LEX-C535-CHITRA535-01",
+      "MR-LEX-C535-CHITRA535-02",
+      "MR-LEX-C535-CHITRA535-03",
+      "MR-LEX-C535-CHITRA535-04",
+      "MR-LEX-C535-CHITRA535-05"
+    ]
+  }
+}

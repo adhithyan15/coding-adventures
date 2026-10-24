@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:e06943020af633ed",
+  "lessonIds": [
+    "BN-C440-bismoy",
+    "BN-C440-koutuhol",
+    "BN-C440-mugdho",
+    "BN-C440-obak-hooya",
+    "BN-C440-chomkano"
+  ],
+  "tex": "bengali/book/chapters/ch440-surprise-and-wonder.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C433-pravesanapariksa",
+    "language": "malayalam",
+    "chapter": 433,
+    "sequence": 21440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d65f9e9ffd3bd6d5"
+  },
+  "findings": []
+}

@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 513,
+  "title": "Getting Better",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:726f58f86d10b2d5",
+  "lessons": [
+    {
+      "id": "KA-C513-cetarisiko",
+      "sequence": 26180,
+      "title": "ಚೇತರಿಸಿಕೊ (cētarisiko) — to recover; to pick up",
+      "headword": "ಚೇತರಿಸಿಕೊ",
+      "romanization": "cētarisiko",
+      "gloss": "to recover; to pick up",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c02bf28e4c38f3ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a stroke, then the Kannada for to faint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚೇತರಿಸಿಕೊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚೇತರಿಸಿಕೊ — cētarisiko — \"to recover; to pick up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆಪರೇಷನ್ ನಂತರ ಅಮ್ಮ ಬೇಗ ಚೇತರಿಸಿಕೊಂಡರು. āparēṣan nantara amma bēga cētarisikoṇḍaru. After the operation mother recovered quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಚೇತರಿಸಿಕೊಂಡೆ, cētarisikoṇḍe."
+            },
+            {
+              "kind": "speech",
+              "text": "From what: -ಇಂದ. ಚೇತರಿಕೆ is recovery."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚೇತರಿಸಿಕೊ (cētarisiko) is usually traced to Sanskrit cetana, \"conscious, sentient; the mind\" (Monier-Williams), with -isi-ko: to bring life back into oneself. The exact path is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cētarisiko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cētarisiko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cētarisiko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cētarisiko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āparēṣan nantara amma bēga cētarisikoṇḍaru. — After the operation mother recovered quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āparēṣan nantara amma bēga cētarisikoṇḍaru.* — After the operation mother recovered quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a stroke, then the Kannada for to faint, then say cētarisiko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a stroke, then the Kannada for to faint, then say *cētarisiko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚೇತರಿಸಿಕೊ (cētarisiko) mean? (\"To recover; to pick up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C513-unisu",
+      "sequence": 26190,
+      "title": "ಉಣಿಸು (uṇisu) — to feed (a child or the sick)",
+      "headword": "ಉಣಿಸು",
+      "romanization": "uṇisu",
+      "gloss": "to feed (a child or the sick)",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bce4bbf93f5c453",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to faint, then the Kannada for to recover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉಣಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಣಿಸು — uṇisu — \"to feed (a child or the sick)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಮ್ಮ ಜ್ವರ ಬಂದ ಮಗನಿಗೆ ಮೆತ್ತಗಿನ ಅನ್ನ ಉಣಿಸಿದರು. amma jvara banda maganige mettagina anna uṇisidaru. Mother fed her feverish son soft rice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಉಣಿಸಿದೆ, uṇiside."
+            },
+            {
+              "kind": "speech",
+              "text": "The one fed takes -ಗೆ. It is the causative of the old verb ಉಣ್, to eat a meal, as in ಊಟ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಣಿಸು (uṇisu) is native Dravidian: DEDR 600 lists Kannada uṇ, uṇṇu, \"to eat a meal; of children, to take mother's milk\"; -isu makes \"to make someone eat\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amma jvara banda maganige mettagina anna uṇisidaru. — Mother fed her feverish son soft rice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amma jvara banda maganige mettagina anna uṇisidaru.* — Mother fed her feverish son soft rice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to faint, then the Kannada for to recover, then say uṇisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to faint, then the Kannada for to recover, then say *uṇisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉಣಿಸು (uṇisu) mean? (\"To feed (a child or the sick)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C513-badita",
+      "sequence": 26200,
+      "title": "ಬಡಿತ (baḍita) — a heartbeat; a throb",
+      "headword": "ಬಡಿತ",
+      "romanization": "baḍita",
+      "gloss": "a heartbeat; a throb",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:965d997072eb125d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to recover, then the Kannada for to feed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಡಿತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಡಿತ — baḍita — \"a heartbeat; a throb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವೈದ್ಯರು ಮಗುವಿನ ಹೃದಯದ ಬಡಿತ ಕೇಳಿದರು. vaidyaru maguvina hṛdayada baḍita kēḷidaru. The doctor listened to the baby's heartbeat."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎದೆ ಬಡಿತ (baḍita), the beating of the heart; fear makes it ಜೋರು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಡಿತ (baḍita) is native Dravidian: DEDR 5224 lists Kannada baḍi, \"to beat, strike\", with nouns for beating; -ta makes the noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baḍita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baḍita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baḍita, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baḍita*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaidyaru maguvina hṛdayada baḍita kēḷidaru. — The doctor listened to the baby's heartbeat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaidyaru maguvina hṛdayada baḍita kēḷidaru.* — The doctor listened to the baby's heartbeat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to recover, then the Kannada for to feed, then say baḍita again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to recover, then the Kannada for to feed, then say *baḍita* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಡಿತ (baḍita) mean? (\"A heartbeat; a throb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C513-araike",
+      "sequence": 26210,
+      "title": "ಆರೈಕೆ (āraike) — nursing; looking after",
+      "headword": "ಆರೈಕೆ",
+      "romanization": "āraike",
+      "gloss": "nursing; looking after",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4dd3193a6d8699d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to feed, then the Kannada for a heartbeat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆರೈಕೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆರೈಕೆ — āraike — \"nursing; looking after\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಮ್ಮನ ಆರೈಕೆಯಿಂದ ನಾನು ಬೇಗ ಗುಣವಾದೆ. ammana āraikeyinda nānu bēga guṇavāde. With mother's nursing, I got well quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆರೈಕೆ (āraike) ಮಾಡು, to nurse, to tend."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆರೈಕೆ (āraike) is native Dravidian: DEDR 377 lists Kannada āray, ārayu, \"to search, to take care of\", with the nouns ārayike, ārayke."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āraike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āraike*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āraike, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āraike*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammana āraikeyinda nānu bēga guṇavāde. — With mother's nursing, I got well quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammana āraikeyinda nānu bēga guṇavāde.* — With mother's nursing, I got well quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to feed, then the Kannada for a heartbeat, then say āraike again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to feed, then the Kannada for a heartbeat, then say *āraike* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆರೈಕೆ (āraike) mean? (\"Nursing; looking after\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C513-kasaya",
+      "sequence": 26220,
+      "title": "ಕಷಾಯ (kaṣāya) — a herbal decoction",
+      "headword": "ಕಷಾಯ",
+      "romanization": "kaṣāya",
+      "gloss": "a herbal decoction",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c3089e35205c95e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a heartbeat, then the Kannada for nursing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಷಾಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಷಾಯ — kaṣāya — \"a herbal decoction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಶೀತಕ್ಕೆ ಅಜ್ಜಿ ಶುಂಠಿಯ ಕಷಾಯ ಮಾಡಿದರು. śītakke ajji śuṇṭhiya kaṣāya māḍidaru. Grandmother made a ginger decoction for the cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Boiled from ginger, pepper or tulasi leaves and drunk hot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಷಾಯ (kaṣāya) is borrowed from Sanskrit kaṣāya, \"astringent; an astringent juice\" (CDIAL 2974)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṣāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṣāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṣāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṣāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śītakke ajji śuṇṭhiya kaṣāya māḍidaru. — Grandmother made a ginger decoction for the cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śītakke ajji śuṇṭhiya kaṣāya māḍidaru.* — Grandmother made a ginger decoction for the cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a heartbeat, then the Kannada for nursing, then say kaṣāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a heartbeat, then the Kannada for nursing, then say *kaṣāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಷಾಯ (kaṣāya) mean? (\"A herbal decoction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

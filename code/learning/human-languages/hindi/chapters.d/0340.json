@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "A Novel",
+  "label": "ch:hi-a-novel",
+  "canDo": "I can say what a novel is about and who is in it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C340-anjam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can say what a novel is about and who is in it.",
+    "assesses": [
+      "HI-LEX-C340-UPANYAS340-03",
+      "HI-LEX-C340-UPANYAS340-04",
+      "HI-LEX-C340-UPANYAS340-05"
+    ]
+  }
+}

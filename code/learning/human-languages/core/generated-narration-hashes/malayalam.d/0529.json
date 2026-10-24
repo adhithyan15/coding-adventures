@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:1add7c199bdd4e25",
+  "lessonIds": [
+    "ML-C529-vivekam",
+    "ML-C529-tanretam",
+    "ML-C529-niskalankamaya",
+    "ML-C529-dussilam",
+    "ML-C529-sahisnuta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch529.txt",
+  "json": "malayalam/narration/ch529.json",
+  "textHash": "fnv1a64:2185af0e9c43770c",
+  "jsonHash": "fnv1a64:d4963eb22cb27ad4",
+  "findings": []
+}

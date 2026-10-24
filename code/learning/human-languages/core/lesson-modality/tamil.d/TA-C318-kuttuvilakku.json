@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C318-kuttuvilakku",
+    "language": "tamil",
+    "chapter": 318,
+    "sequence": 18340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38013e50a8b43e16"
+  },
+  "findings": []
+}

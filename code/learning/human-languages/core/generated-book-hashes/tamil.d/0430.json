@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:181ef0375392c6c3",
+  "lessonIds": [
+    "TA-C430-utayam",
+    "TA-C430-veliccam",
+    "TA-C430-ativanam",
+    "TA-C430-minnu",
+    "TA-C430-oli"
+  ],
+  "tex": "tamil/book/chapters/ch430-light-in-the-sky.tex"
+}

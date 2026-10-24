@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:e892db2f78729e4b",
+  "lessonIds": [
+    "AR-C387-hijra",
+    "AR-C387-umma",
+    "AR-C387-jinsiyya",
+    "AR-C387-aghlabiyya",
+    "AR-C387-aqalliyya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch387.txt",
+  "json": "arabic/narration/ch387.json",
+  "textHash": "fnv1a64:8c411088dbde5cad",
+  "jsonHash": "fnv1a64:802527e1d26979cc",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:8044b7a6e8350580",
+  "lessonIds": [
+    "AR-C545-shair",
+    "AR-C545-qafiya",
+    "AR-C545-anshada",
+    "AR-C545-abdaa",
+    "AR-C545-akhraja"
+  ],
+  "tex": "arabic/book/chapters/ch545-poets-and-directors.tex"
+}

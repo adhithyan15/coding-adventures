@@ -1,0 +1,11 @@
+{
+  "id": "AR-C538-haka-knit",
+  "pathSegment": "AR-PATH-538-IBRA538",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-538-IBRA538",
+      "order": 3
+    }
+  ]
+}

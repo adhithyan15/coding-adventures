@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 382,
+  "title": "On One Condition",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:387a8e484a636b2e",
+  "lessons": [
+    {
+      "id": "TA-C382-nipantanai",
+      "sequence": 21890,
+      "title": "நிபந்தனை (nipantaṉai) — a condition",
+      "headword": "நிபந்தனை",
+      "romanization": "nipantaṉai",
+      "gloss": "a condition",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a72eb38345d2d5ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to unite, then the Tamil for a representative."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிபந்தனை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிபந்தனை — nipantaṉai — \"a condition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒரு நிபந்தனையின் பேரில் நான் வருகிறேன். oru nipantaṉaiyiṉ pēril nāṉ varukiṟēṉ. I will come on one condition."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: நிபந்தனைகள், nipantaṉaikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "நிபந்தனையின் பேரில், on condition; நிபந்தனையின்றி, unconditionally."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிபந்தனை (nipantaṉai) is borrowed from Sanskrit nibandhana, \"tying, binding; a band, a fetter\" (Monier-Williams): what an agreement is tied to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nipantaṉai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nipantaṉai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nipantaṉai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nipantaṉai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru nipantaṉaiyiṉ pēril nāṉ varukiṟēṉ. — I will come on one condition.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru nipantaṉaiyiṉ pēril nāṉ varukiṟēṉ.* — I will come on one condition.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to unite, then the Tamil for a representative, then say nipantaṉai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to unite, then the Tamil for a representative, then say *nipantaṉai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிபந்தனை (nipantaṉai) mean? (\"A condition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C382-utpatu",
+      "sequence": 21900,
+      "title": "உட்படு (uṭpaṭu) — to be subject to; to come under",
+      "headword": "உட்படு",
+      "romanization": "uṭpaṭu",
+      "gloss": "to be subject to; to come under",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4781e314778a7698",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a representative, then the Tamil for a condition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உட்படு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உட்படு — uṭpaṭu — \"to be subject to; to come under\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த அனுமதி சில நிபந்தனைகளுக்கு உட்பட்டது. inta aṉumati cila nipantaṉaikaḷukku uṭpaṭṭatu. This permission is subject to some conditions."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): உட்பட்டேன், uṭpaṭṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "With -க்கு: விதிகளுக்கு உட்பட்டு, subject to the rules. உட்பட, including."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உட்படு (uṭpaṭu) is native: uḷ, \"inside\" (DEDR 698), whose ḷ becomes ட் before p, and paṭu, \"to undergo\": to come inside a rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭpaṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭpaṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭpaṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭpaṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta aṉumati cila nipantaṉaikaḷukku uṭpaṭṭatu. — This permission is subject to some conditions.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta aṉumati cila nipantaṉaikaḷukku uṭpaṭṭatu.* — This permission is subject to some conditions.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a representative, then the Tamil for a condition, then say uṭpaṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a representative, then the Tamil for a condition, then say *uṭpaṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உட்படு (uṭpaṭu) mean? (\"To be subject to; to come under\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C382-takuti",
+      "sequence": 21910,
+      "title": "தகுதி (takuti) — eligibility; a qualification",
+      "headword": "தகுதி",
+      "romanization": "takuti",
+      "gloss": "eligibility; a qualification",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55ca4ab2b1a19748",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a condition, then the Tamil for to be subject to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தகுதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தகுதி — takuti — \"eligibility; a qualification\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த வேலைக்கு உங்களுக்குத் தகுதி இருந்தால் விண்ணப்பிக்கலாம். inta vēlaikku uṅkaḷukkut takuti iruntāl viṇṇappikkalām. If you are qualified for this job, you may apply."
+            },
+            {
+              "kind": "speech",
+              "text": "X-க்குத் தகுதி (takuti), eligibility for X. தகுதியான, deserving, suitable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தகுதி (takuti) is native Dravidian: DEDR 3005 lists Tamil taku, \"to be fit, proper, worthy, adequate\", and takuti, \"fitness, worth\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takuti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takuti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takuti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takuti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta vēlaikku uṅkaḷukkut takuti iruntāl viṇṇappikkalām. — If you are qualified for this job, you may apply.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta vēlaikku uṅkaḷukkut takuti iruntāl viṇṇappikkalām.* — If you are qualified for this job, you may apply.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a condition, then the Tamil for to be subject to, then say takuti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a condition, then the Tamil for to be subject to, then say *takuti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தகுதி (takuti) mean? (\"Eligibility; a qualification\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C382-vitivilakku",
+      "sequence": 21920,
+      "title": "விதிவிலக்கு (vitivilakku) — an exception",
+      "headword": "விதிவிலக்கு",
+      "romanization": "vitivilakku",
+      "gloss": "an exception",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00b3954b61eda309",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to be subject to, then the Tamil for eligibility."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விதிவிலக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விதிவிலக்கு — vitivilakku — \"an exception\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த விதிக்கு ஒரு விதிவிலக்கு இருக்கிறது. inta vitikku oru vitivilakku irukkiṟatu. There is one exception to this rule."
+            },
+            {
+              "kind": "speech",
+              "text": "விதி, rule + விலக்கு, a setting aside."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விதிவிலக்கு (vitivilakku) is built from viti, \"rule\", borrowed from Sanskrit vidhi (CDIAL 11755), and native vilakku, \"to turn aside, avert\" (DEDR 5423): a rule turned aside."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vitivilakku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vitivilakku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vitivilakku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vitivilakku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta vitikku oru vitivilakku irukkiṟatu. — There is one exception to this rule.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta vitikku oru vitivilakku irukkiṟatu.* — There is one exception to this rule.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to be subject to, then the Tamil for eligibility, then say vitivilakku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to be subject to, then the Tamil for eligibility, then say *vitivilakku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விதிவிலக்கு (vitivilakku) mean? (\"An exception\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C382-ventumanal",
+      "sequence": 21930,
+      "title": "வேண்டுமானால் (vēṇṭumāṉāl) — if need be; if you like",
+      "headword": "வேண்டுமானால்",
+      "romanization": "vēṇṭumāṉāl",
+      "gloss": "if need be; if you like",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:739606ff2e6caf00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for eligibility, then the Tamil for an exception."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வேண்டுமானால்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேண்டுமானால் — vēṇṭumāṉāl — \"if need be; if you like\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வேண்டுமானால் நீ என் கைப்பேசியைப் பயன்படுத்தலாம். vēṇṭumāṉāl nī eṉ kaippēciyaip payaṉpaṭuttalām. If you like, you can use my phone."
+            },
+            {
+              "kind": "speech",
+              "text": "வேண்டும், want, + ஆனால், if it is: the conditional of வேண்டும்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேண்டுமானால் (vēṇṭumāṉāl) is native: vēṇṭum, \"it is wanted\", from vēṇṭu (DEDR 5528), and āṉāl, \"if it becomes\", the conditional of āku (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṇṭumāṉāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṇṭumāṉāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṇṭumāṉāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṇṭumāṉāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṇṭumāṉāl nī eṉ kaippēciyaip payaṉpaṭuttalām. — If you like, you can use my phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṇṭumāṉāl nī eṉ kaippēciyaip payaṉpaṭuttalām.* — If you like, you can use my phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for eligibility, then the Tamil for an exception, then say vēṇṭumāṉāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for eligibility, then the Tamil for an exception, then say *vēṇṭumāṉāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வேண்டுமானால் (vēṇṭumāṉāl) mean? (\"If need be; if you like\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Raising Children",
+  "label": "ch:bn-raising-children",
+  "canDo": "I can talk about bringing up, feeding and putting a child to sleep.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C486-hamaguri-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can talk about bringing up, feeding and putting a child to sleep.",
+    "assesses": [
+      "BN-LEX-C486-LALON486-03",
+      "BN-LEX-C486-LALON486-04",
+      "BN-LEX-C486-LALON486-05"
+    ]
+  }
+}

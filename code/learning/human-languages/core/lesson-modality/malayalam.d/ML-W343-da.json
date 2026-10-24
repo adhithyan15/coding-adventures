@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "ML-W343-da",
+    "language": "malayalam",
+    "chapter": 343,
+    "sequence": 16320,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e663fd41560f1efd",
+    "detachableSegments": [
+      "Script you'll notice: ഡ",
+      "Writing: ഡ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

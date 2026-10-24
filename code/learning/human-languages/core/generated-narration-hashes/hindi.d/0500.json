@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:4522f0f194688f9c",
+  "lessonIds": [
+    "HI-C500-dulha",
+    "HI-C500-mehndi",
+    "HI-C500-sagai",
+    "HI-C500-barat",
+    "HI-C500-vidai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch500.txt",
+  "json": "hindi/narration/ch500.json",
+  "textHash": "fnv1a64:9e77a82d87fa2d1f",
+  "jsonHash": "fnv1a64:a0a1dedf5d63b854",
+  "findings": []
+}

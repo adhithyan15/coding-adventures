@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:9abecc46ba7778b5",
+  "lessonIds": [
+    "AR-C375-maa-dhalika",
+    "AR-C375-illa-anna",
+    "AR-C375-amma",
+    "AR-C375-kadhalika",
+    "AR-C375-ilawatan-ala"
+  ],
+  "tex": "arabic/book/chapters/ch375-contrast-and-addition.tex"
+}

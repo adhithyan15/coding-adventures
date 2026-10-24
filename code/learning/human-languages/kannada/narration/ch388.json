@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 388,
+  "title": "Right and Wrong",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f0971f83d81ce2bb",
+  "lessons": [
+    {
+      "id": "KA-C388-naitika",
+      "sequence": 19610,
+      "title": "ನೈತಿಕ (naitika) — ethical; moral",
+      "headword": "ನೈತಿಕ",
+      "romanization": "naitika",
+      "gloss": "ethical; moral",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d25edf89c525fc0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a priority, then the Kannada for a value."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನೈತಿಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೈತಿಕ — naitika — \"ethical; moral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇದು ಹಣದ ಪ್ರಶ್ನೆ ಅಲ್ಲ, ನೈತಿಕ ಪ್ರಶ್ನೆ. idu haṇada praśne alla, naitika praśne. This is not a question of money but a moral one."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೈತಿಕತೆ, morality."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೈತಿಕ (naitika) is built on Sanskrit nīti, \"conduct, right behaviour\" (CDIAL 7546), with the adjective ending -ika."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naitika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naitika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naitika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naitika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "idu haṇada praśne alla, naitika praśne. — This is not a question of money but a moral one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *idu haṇada praśne alla, naitika praśne.* — This is not a question of money but a moral one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a priority, then the Kannada for a value, then say naitika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a priority, then the Kannada for a value, then say *naitika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನೈತಿಕ (naitika) mean? (\"Ethical; moral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C388-tyaga",
+      "sequence": 19620,
+      "title": "ತ್ಯಾಗ (tyāga) — a sacrifice",
+      "headword": "ತ್ಯಾಗ",
+      "romanization": "tyāga",
+      "gloss": "a sacrifice",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ef71425e29826af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a value, then the Kannada for ethical."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತ್ಯಾಗ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತ್ಯಾಗ — tyāga — \"a sacrifice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ತಾಯಿ ಮಕ್ಕಳಿಗಾಗಿ ತುಂಬಾ ತ್ಯಾಗ ಮಾಡಿದಳು. tāyi makkaḷigāgi tumbā tyāga māḍidaḷu. The mother made many sacrifices for her children."
+            },
+            {
+              "kind": "speech",
+              "text": "ತ್ಯಾಗ (tyāga) ಮಾಡು, to make a sacrifice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತ್ಯಾಗ (tyāga) is borrowed from Sanskrit tyāga, \"leaving, giving up\" (CDIAL 5985)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāga, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāga*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāyi makkaḷigāgi tumbā tyāga māḍidaḷu. — The mother made many sacrifices for her children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāyi makkaḷigāgi tumbā tyāga māḍidaḷu.* — The mother made many sacrifices for her children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a value, then the Kannada for ethical, then say tyāga again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a value, then the Kannada for ethical, then say *tyāga* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತ್ಯಾಗ (tyāga) mean? (\"A sacrifice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C388-manassaksi",
+      "sequence": 19630,
+      "title": "ಮನಸ್ಸಾಕ್ಷಿ (manassākṣi) — a conscience",
+      "headword": "ಮನಸ್ಸಾಕ್ಷಿ",
+      "romanization": "manassākṣi",
+      "gloss": "a conscience",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bbccfc9bbe7cf70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for ethical, then the Kannada for a sacrifice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮನಸ್ಸಾಕ್ಷಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮನಸ್ಸಾಕ್ಷಿ — manassākṣi — \"a conscience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಮನಸ್ಸಾಕ್ಷಿ ಸುಳ್ಳು ಹೇಳಲು ಬಿಡಲಿಲ್ಲ. nanna manassākṣi suḷḷu hēḷalu biḍalilla. My conscience did not let me lie."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮನಸ್ಸು (mind) + ಸಾಕ್ಷಿ (witness)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮನಸ್ಸಾಕ್ಷಿ (manassākṣi) is built from Sanskrit manas, \"mind\" (CDIAL 9822), and sākṣin, \"a witness\" (CDIAL 13321): the mind as witness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manassākṣi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manassākṣi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manassākṣi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manassākṣi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna manassākṣi suḷḷu hēḷalu biḍalilla. — My conscience did not let me lie.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna manassākṣi suḷḷu hēḷalu biḍalilla.* — My conscience did not let me lie.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for ethical, then the Kannada for a sacrifice, then say manassākṣi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for ethical, then the Kannada for a sacrifice, then say *manassākṣi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮನಸ್ಸಾಕ್ಷಿ (manassākṣi) mean? (\"A conscience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C388-hita",
+      "sequence": 19640,
+      "title": "ಹಿತ (hita) — well-being; good",
+      "headword": "ಹಿತ",
+      "romanization": "hita",
+      "gloss": "well-being; good",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:493980998ec48987",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a sacrifice, then the Kannada for a conscience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಿತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಿತ — hita — \"well-being; good\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊರಿನ ಹಿತಕ್ಕಾಗಿ ಎಲ್ಲರೂ ಕೆಲಸ ಮಾಡಿದರು. ūrina hitakkāgi ellarū kelasa māḍidaru. Everyone worked for the good of the village."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಿತವಾದ, pleasant; ಅಹಿತ, harmful."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಿತ (hita) is borrowed from Sanskrit hita, \"beneficial, good, welfare\" (CDIAL 14091)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hita, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hita*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrina hitakkāgi ellarū kelasa māḍidaru. — Everyone worked for the good of the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrina hitakkāgi ellarū kelasa māḍidaru.* — Everyone worked for the good of the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a sacrifice, then the Kannada for a conscience, then say hita again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a sacrifice, then the Kannada for a conscience, then say *hita* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಿತ (hita) mean? (\"Well-being; good\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C388-khandisu",
+      "sequence": 19650,
+      "title": "ಖಂಡಿಸು (khaṇḍisu) — to condemn",
+      "headword": "ಖಂಡಿಸು",
+      "romanization": "khaṇḍisu",
+      "gloss": "to condemn",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa96e05ba3d9fed4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a conscience, then the Kannada for well-being."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಖಂಡಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಖಂಡಿಸು — khaṇḍisu — \"to condemn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎಲ್ಲರೂ ಆ ಕೆಟ್ಟ ಕೆಲಸವನ್ನು ಖಂಡಿಸಿದರು. ellarū ā keṭṭa kelasavannu khaṇḍisidaru. Everyone condemned that wicked act."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಖಂಡಿಸಿದೆ, khaṇḍiside."
+            },
+            {
+              "kind": "speech",
+              "text": "What you condemn takes -ಅನ್ನು. ಖಂಡನೆ, condemnation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಖಂಡಿಸು (khaṇḍisu) is built on Sanskrit khaṇḍana, \"breaking, refuting\" (CDIAL 3796), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṇḍisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṇḍisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṇḍisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṇḍisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellarū ā keṭṭa kelasavannu khaṇḍisidaru. — Everyone condemned that wicked act.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellarū ā keṭṭa kelasavannu khaṇḍisidaru.* — Everyone condemned that wicked act.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a conscience, then the Kannada for well-being, then say khaṇḍisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a conscience, then the Kannada for well-being, then say *khaṇḍisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಖಂಡಿಸು (khaṇḍisu) mean? (\"To condemn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

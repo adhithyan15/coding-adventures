@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C286-varna",
+    "language": "hindi",
+    "chapter": 286,
+    "sequence": 15730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:207392226eba36e5"
+  },
+  "findings": []
+}

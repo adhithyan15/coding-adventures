@@ -1,0 +1,11 @@
+{
+  "id": "HI-C428-phukna",
+  "pathSegment": "HI-PATH-428-KAMANA428",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-428-KAMANA428",
+      "order": 1
+    }
+  ]
+}

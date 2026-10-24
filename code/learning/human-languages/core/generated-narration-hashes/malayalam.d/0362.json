@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:544749a37d2d0872",
+  "lessonIds": [
+    "ML-C362-tipitittam",
+    "ML-C362-agnisamanasena",
+    "ML-C362-campal",
+    "ML-C362-tipitikkuka",
+    "ML-C362-kattinasikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch362.txt",
+  "json": "malayalam/narration/ch362.json",
+  "textHash": "fnv1a64:a9e0a36b21f2a1a0",
+  "jsonHash": "fnv1a64:b15dd1fdb2c1aa9f",
+  "findings": []
+}

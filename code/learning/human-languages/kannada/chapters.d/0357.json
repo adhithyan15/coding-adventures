@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "A Hidden Fraud",
+  "label": "ch:ka-a-hidden-fraud",
+  "canDo": "I can say to swindle, confidential, to cover up, to reveal and a plot.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C357-sancu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can say to swindle, confidential, to cover up, to reveal and a plot.",
+    "assesses": [
+      "KA-LEX-C357-VANCHANE357-03",
+      "KA-LEX-C357-VANCHANE357-04",
+      "KA-LEX-C357-VANCHANE357-05"
+    ]
+  }
+}

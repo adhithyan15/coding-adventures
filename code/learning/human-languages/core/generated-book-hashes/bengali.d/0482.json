@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:22ac91b8efd6e1e1",
+  "lessonIds": [
+    "BN-C482-jetha",
+    "BN-C482-meso",
+    "BN-C482-bhagne",
+    "BN-C482-bhaijhi",
+    "BN-C482-beyai"
+  ],
+  "tex": "bengali/book/chapters/ch482-more-relatives.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:330132d5098c9e2b",
+  "lessonIds": [
+    "BN-C441-atongko",
+    "BN-C441-atke-otha",
+    "BN-C441-shiure-otha",
+    "BN-C441-ghabrano",
+    "BN-C441-dhorphor-kora"
+  ],
+  "tex": "bengali/book/chapters/ch441-a-sudden-fright.tex"
+}

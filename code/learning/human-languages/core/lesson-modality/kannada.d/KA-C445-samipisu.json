@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C445-samipisu",
+    "language": "kannada",
+    "chapter": 445,
+    "sequence": 22650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7ac0b0600cffd0c"
+  },
+  "findings": []
+}

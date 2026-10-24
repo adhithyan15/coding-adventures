@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Shame and Disgust",
+  "label": "ch:ta-shame-and-disgust",
+  "canDo": "I can talk about humiliation, embarrassment, shyness and disgust.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C462-mukam-culi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can talk about humiliation, embarrassment, shyness and disgust.",
+    "assesses": [
+      "TA-LEX-C462-VETKAM462-03",
+      "TA-LEX-C462-VETKAM462-04",
+      "TA-LEX-C462-VETKAM462-05"
+    ]
+  }
+}

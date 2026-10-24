@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Chances and discoveries",
+  "label": "ch:ar-chances-and-discoveries",
+  "canDo": "I can talk about a chance, a discovery, intelligence and diligence, and say it may be that.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-R421-review-414-421",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can talk about a chance, a discovery, intelligence and diligence, and say it may be that.",
+    "assesses": [
+      "AR-LEX-C421-FURSA421-03",
+      "AR-LEX-C421-FURSA421-04",
+      "AR-LEX-C421-FURSA421-05"
+    ]
+  }
+}

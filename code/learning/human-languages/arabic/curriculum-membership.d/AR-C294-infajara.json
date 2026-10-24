@@ -1,0 +1,11 @@
+{
+  "id": "AR-C294-infajara",
+  "pathSegment": "AR-PATH-294-FAJATAN294",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-294-FAJATAN294",
+      "order": 2
+    }
+  ]
+}

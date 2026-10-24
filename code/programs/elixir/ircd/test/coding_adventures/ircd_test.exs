@@ -12,11 +12,22 @@ defmodule CodingAdventures.IrcdTest do
 
   # Unregister DriverHandler name if currently registered. Safe to call
   # multiple times.
+  #
+  # Unregister first and treat "not registered" as success, rather than
+  # asking `Process.whereis/1` and then unregistering. The handler is
+  # started (and so linked) by the test process. When a test ends, ExUnit
+  # shuts the test process down and runs `on_exit` callbacks in a separate
+  # process, so the handler can be dying from that exit signal *between*
+  # the two calls; a dead process's name is released automatically, and
+  # `Process.unregister/1` on a name nobody holds raises `ArgumentError`
+  # ("not a pid"). That race failed `clients can join a channel and chat`
+  # from its `on_exit` cleanup on a CI shard. Either way the outcome we
+  # want — the name is free — is what `ArgumentError` tells us.
   defp unregister_driver_handler do
-    case Process.whereis(CodingAdventures.Ircd.DriverHandler) do
-      nil -> :ok
-      _pid -> Process.unregister(CodingAdventures.Ircd.DriverHandler)
-    end
+    Process.unregister(CodingAdventures.Ircd.DriverHandler)
+    :ok
+  rescue
+    ArgumentError -> :ok
   end
 
   # Start an ircd stack on a random port. Returns {loop, port}.

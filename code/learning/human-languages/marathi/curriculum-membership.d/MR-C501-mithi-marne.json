@@ -1,0 +1,11 @@
+{
+  "id": "MR-C501-mithi-marne",
+  "pathSegment": "MR-PATH-501-MITHI501",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-501-MITHI501",
+      "order": 1
+    }
+  ]
+}

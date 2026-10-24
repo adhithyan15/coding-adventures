@@ -1,0 +1,11 @@
+{
+  "id": "MR-C516-citraphit",
+  "pathSegment": "MR-PATH-516-PHON516",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-516-PHON516",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "A Speech and Its Applause",
+  "label": "ch:ml-a-speech-and-its-applause",
+  "canDo": "I can say a speech, a medium, to give a speech, to applaud and to mention.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C354-paramarsikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say a speech, a medium, to give a speech, to applaud and to mention.",
+    "assesses": [
+      "ML-LEX-C354-PRASAMGAM354-03",
+      "ML-LEX-C354-PRASAMGAM354-04",
+      "ML-LEX-C354-PRASAMGAM354-05"
+    ]
+  }
+}

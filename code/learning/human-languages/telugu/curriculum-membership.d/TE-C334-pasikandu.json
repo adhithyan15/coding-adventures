@@ -1,0 +1,11 @@
+{
+  "id": "TE-C334-pasikandu",
+  "pathSegment": "TE-PATH-334-JANANAM334",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-334-JANANAM334",
+      "order": 1
+    }
+  ]
+}

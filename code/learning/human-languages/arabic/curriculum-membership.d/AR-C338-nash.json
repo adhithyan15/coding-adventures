@@ -1,0 +1,11 @@
+{
+  "id": "AR-C338-nash",
+  "pathSegment": "AR-PATH-338-MAWTA338",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-338-MAWTA338",
+      "order": 4
+    }
+  ]
+}

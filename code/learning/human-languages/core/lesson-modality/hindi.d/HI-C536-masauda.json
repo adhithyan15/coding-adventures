@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C536-masauda",
+    "language": "hindi",
+    "chapter": 536,
+    "sequence": 29570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7635fa86a960483b"
+  },
+  "findings": []
+}

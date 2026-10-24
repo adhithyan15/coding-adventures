@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Running a Business",
+  "label": "ch:ka-running-a-business",
+  "canDo": "I can say an entrepreneur, a manager, an assistant, to assign and to save up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C519-kudidu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can say an entrepreneur, a manager, an assistant, to assign and to save up.",
+    "assesses": [
+      "KA-LEX-C519-HANAKASU519-03",
+      "KA-LEX-C519-HANAKASU519-04",
+      "KA-LEX-C519-HANAKASU519-05"
+    ]
+  }
+}

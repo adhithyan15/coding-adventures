@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 391,
+  "title": "A Funeral",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b8a997b51ba19139",
+  "lessons": [
+    {
+      "id": "ML-C391-savasamskaram",
+      "sequence": 19150,
+      "title": "ശവസംസ്കാരം (śavasaṁskāraṁ) — a funeral",
+      "headword": "ശവസംസ്കാരം",
+      "romanization": "śavasaṁskāraṁ",
+      "gloss": "a funeral",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c270a1cd91e2f27b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to say goodbye, then the Malayalam for to leave one's homeland."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശവസംസ്കാരം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശവസംസ്കാരം — śavasaṁskāraṁ — \"a funeral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മുത്തച്ഛന്റെ ശവസംസ്കാരം ഇന്നലെ വൈകുന്നേരം നടന്നു. muttacchanṟe śavasaṁskāraṁ innale vaikunnēraṁ naṭannu. Grandfather's funeral took place yesterday evening."
+            },
+            {
+              "kind": "speech",
+              "text": "ശവം, a body, + സംസ്കാരം, rites: the last rites."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശവസംസ്കാരം (śavasaṁskāraṁ) is built from two Sanskrit words, śava, \"a corpse\" (CDIAL 12356), and saṁskāra, \"preparation, a rite\" (CDIAL 13038), which also gave സംസ്കാരം (saṁskāraṁ), \"culture\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śavasaṁskāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śavasaṁskāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śavasaṁskāraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śavasaṁskāraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttacchanṟe śavasaṁskāraṁ innale vaikunnēraṁ naṭannu. — Grandfather's funeral took place yesterday evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttacchanṟe śavasaṁskāraṁ innale vaikunnēraṁ naṭannu.* — Grandfather's funeral took place yesterday evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to say goodbye, then the Malayalam for to leave one's homeland, then say śavasaṁskāraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to say goodbye, then the Malayalam for to leave one's homeland, then say *śavasaṁskāraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശവസംസ്കാരം (śavasaṁskāraṁ) mean? (\"A funeral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C391-smasanam",
+      "sequence": 19160,
+      "title": "ശ്മശാനം (śmaśānaṁ) — a cremation ground",
+      "headword": "ശ്മശാനം",
+      "romanization": "śmaśānaṁ",
+      "gloss": "a cremation ground",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e42f1c53b144a86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to leave one's homeland, then the Malayalam for a funeral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശ്മശാനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശ്മശാനം — śmaśānaṁ — \"a cremation ground\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഗ്രാമത്തിന്റെ അറ്റത്ത് ഒരു ശ്മശാനം ഉണ്ട്. grāmattinṟe aṟṟattŭ oru śmaśānaṁ uṇṭŭ. There is a cremation ground at the edge of the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Also any burial ground."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശ്മശാനം (śmaśānaṁ) is borrowed from Sanskrit śmaśāna, \"a place where the dead are burnt\" (CDIAL 12658)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śmaśānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śmaśānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śmaśānaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śmaśānaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāmattinṟe aṟṟattŭ oru śmaśānaṁ uṇṭŭ. — There is a cremation ground at the edge of the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāmattinṟe aṟṟattŭ oru śmaśānaṁ uṇṭŭ.* — There is a cremation ground at the edge of the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to leave one's homeland, then the Malayalam for a funeral, then say śmaśānaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to leave one's homeland, then the Malayalam for a funeral, then say *śmaśānaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശ്മശാനം (śmaśānaṁ) mean? (\"A cremation ground\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C391-savappetti",
+      "sequence": 19170,
+      "title": "ശവപ്പെട്ടി (śavappeṭṭi) — a coffin",
+      "headword": "ശവപ്പെട്ടി",
+      "romanization": "śavappeṭṭi",
+      "gloss": "a coffin",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e7aab11588949f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a funeral, then the Malayalam for a cremation ground."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശവപ്പെട്ടി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശവപ്പെട്ടി — śavappeṭṭi — \"a coffin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആറ് പേർ ശവപ്പെട്ടി പള്ളിയിലേക്ക് ചുമന്നു. āṟŭ pēr śavappeṭṭi paḷḷiyilēkkŭ cumannu. Six men carried the coffin to the church."
+            },
+            {
+              "kind": "speech",
+              "text": "ശവം, a body, + പെട്ടി, a box."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശവപ്പെട്ടി (śavappeṭṭi) joins Sanskrit śava, \"a corpse\" (CDIAL 12356), and the native പെട്ടി (peṭṭi), \"a box\" (DEDR 4388)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śavappeṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śavappeṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śavappeṭṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śavappeṭṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṟŭ pēr śavappeṭṭi paḷḷiyilēkkŭ cumannu. — Six men carried the coffin to the church.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṟŭ pēr śavappeṭṭi paḷḷiyilēkkŭ cumannu.* — Six men carried the coffin to the church.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a funeral, then the Malayalam for a cremation ground, then say śavappeṭṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a funeral, then the Malayalam for a cremation ground, then say *śavappeṭṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശവപ്പെട്ടി (śavappeṭṭi) mean? (\"A coffin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C391-dahippikkuka",
+      "sequence": 19180,
+      "title": "ദഹിപ്പിക്കുക (dahippikkuka) — to cremate",
+      "headword": "ദഹിപ്പിക്കുക",
+      "romanization": "dahippikkuka",
+      "gloss": "to cremate",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebabcec395f066a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a cremation ground, then the Malayalam for a coffin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ദഹിപ്പിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദഹിപ്പിക്കുക — dahippikkuka — \"to cremate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവർ മുത്തശ്ശിയുടെ ശരീരം വൈകുന്നേരം ദഹിപ്പിച്ചു. avar muttaśśiyuṭe śarīraṁ vaikunnēraṁ dahippiccu. They cremated grandmother's body in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ദഹിപ്പിച്ചു, dahippiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "A causative verb built on a Sanskrit root meaning to burn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദഹിപ്പിക്കുക (dahippikkuka) is built from Sanskrit dahana, \"burning by fire\" (CDIAL 6246), from the root dah, \"to burn\", with the Malayalam causative ending -ിപ്പിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dahippikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dahippikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dahippikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dahippikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar muttaśśiyuṭe śarīraṁ vaikunnēraṁ dahippiccu. — They cremated grandmother's body in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar muttaśśiyuṭe śarīraṁ vaikunnēraṁ dahippiccu.* — They cremated grandmother's body in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a cremation ground, then the Malayalam for a coffin, then say dahippikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a cremation ground, then the Malayalam for a coffin, then say *dahippikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ദഹിപ്പിക്കുക (dahippikkuka) mean? (\"To cremate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C391-kuliccituka",
+      "sequence": 19190,
+      "title": "കുഴിച്ചിടുക (kuḻicciṭuka) — to bury",
+      "headword": "കുഴിച്ചിടുക",
+      "romanization": "kuḻicciṭuka",
+      "gloss": "to bury",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b6b22a00452c2ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a coffin, then the Malayalam for to cremate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുഴിച്ചിടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുഴിച്ചിടുക — kuḻicciṭuka — \"to bury\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കള്ളൻ സ്വർണ്ണം പറമ്പിൽ കുഴിച്ചിട്ടു. kaḷḷan svarṇṇaṁ paṟampil kuḻicciṭṭu. The thief buried the gold in the grounds."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കുഴിച്ചിട്ടു, kuḻicciṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "കുഴിച്ച്, having dug, + ഇടുക, to put: to dig and put in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുഴിച്ചിടുക (kuḻicciṭuka) is a native Dravidian compound of കുഴിക്കുക, \"to dig\", from കുഴി, \"a pit, a hole\" (DEDR 1818), and ഇടുക, \"to put, to place\" (DEDR 442)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻicciṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻicciṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻicciṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻicciṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷan svarṇṇaṁ paṟampil kuḻicciṭṭu. — The thief buried the gold in the grounds.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷan svarṇṇaṁ paṟampil kuḻicciṭṭu.* — The thief buried the gold in the grounds.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a coffin, then the Malayalam for to cremate, then say kuḻicciṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a coffin, then the Malayalam for to cremate, then say *kuḻicciṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുഴിച്ചിടുക (kuḻicciṭuka) mean? (\"To bury\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

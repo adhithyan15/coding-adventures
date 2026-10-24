@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:d77ef2d1a4410d58",
+  "lessonIds": [
+    "BN-C318-biplob",
+    "BN-C318-andolon",
+    "BN-C318-songgram",
+    "BN-C318-protishtha-kora",
+    "BN-C318-mukti"
+  ],
+  "tex": "bengali/book/chapters/ch318-turning-points.tex"
+}

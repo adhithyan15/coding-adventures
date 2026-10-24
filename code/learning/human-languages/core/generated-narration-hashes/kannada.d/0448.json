@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:161481e4cc3e5662",
+  "lessonIds": [
+    "KA-C448-indhana",
+    "KA-C448-disel",
+    "KA-C448-bank",
+    "KA-C448-byatari",
+    "KA-C448-savari-madu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch448.txt",
+  "json": "kannada/narration/ch448.json",
+  "textHash": "fnv1a64:3b4a7294d0894624",
+  "jsonHash": "fnv1a64:cc10960b32bdc111",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C489-khurak",
+    "language": "hindi",
+    "chapter": 489,
+    "sequence": 26910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4b5a712976d9ca3"
+  },
+  "findings": []
+}

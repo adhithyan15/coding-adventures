@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C384-huisol-deoya",
+    "language": "bengali",
+    "chapter": 384,
+    "sequence": 24040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c713dacb01a402b3"
+  },
+  "findings": []
+}

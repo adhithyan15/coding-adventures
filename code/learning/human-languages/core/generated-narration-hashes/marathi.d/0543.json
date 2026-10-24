@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:67faf728f919df3f",
+  "lessonIds": [
+    "MR-C543-manjuri",
+    "MR-C543-sammati",
+    "MR-C543-hokar",
+    "MR-C543-vaidh",
+    "MR-C543-olakhpatra",
+    "MR-R543-review-536-543"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch543.txt",
+  "json": "marathi/narration/ch543.json",
+  "textHash": "fnv1a64:8fac3037662006c4",
+  "jsonHash": "fnv1a64:f0c860be0102fbd9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "At the Bank",
+  "label": "ch:bn-at-the-bank",
+  "canDo": "I can deposit money, queue at a counter and pay by cheque or in cash.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C414-nogod",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can deposit money, queue at a counter and pay by cheque or in cash.",
+    "assesses": [
+      "BN-LEX-C414-BANK414-03",
+      "BN-LEX-C414-BANK414-04",
+      "BN-LEX-C414-BANK414-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C354-janta",
+  "pathSegment": "MR-PATH-354-NAGARIK354",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-354-NAGARIK354",
+      "order": 1
+    }
+  ]
+}

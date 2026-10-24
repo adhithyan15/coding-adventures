@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Fixed: raised that same CBR01 portable-conformance test's timeout from 15s
+  to 60s. On `build (windows-2025)` with ~490 packages building at once
+  (#17972) it took 18.4s and timed out; it takes ~3.4s on an idle machine.
 - Fixed: the CBR01 portable-conformance test (all 55 fixture cases,
   round-tripped through decode/encode/error-path checks) was failing CI
   intermittently by exceeding vitest's 5s default per-test timeout on loaded

@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 362,
+  "title": "Making Sense of It",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:331c9756e4bdb942",
+  "lessons": [
+    {
+      "id": "BN-C362-monojog",
+      "sequence": 22640,
+      "title": "মনোযোগ (mônojog) — attention; concentration",
+      "headword": "মনোযোগ",
+      "romanization": "mônojog",
+      "gloss": "attention; concentration",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:667a2ad669a5faf4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a university degree, then the Bengali for to tutor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মনোযোগ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মনোযোগ — mônojog — \"attention; concentration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মনোযোগ দিয়ে শোনো। mônojog diye shono. Listen carefully."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মনোযোগ (mônojog) is a learned compound of Sanskrit manas, mind, and yoga, joining (Monier-Williams): joining your mind to the task. The compound itself is not in the dictionary. মনোযোগ দিয়ে means 'carefully, with attention'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mônojog",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mônojog*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mônojog, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mônojog*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mônojog diye shono. — Listen carefully.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mônojog diye shono.* — Listen carefully.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a university degree, then the Bengali for to tutor, then say mônojog again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a university degree, then the Bengali for to tutor, then say *mônojog* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মনোযোগ (mônojog) mean? (\"Attention; concentration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C362-bibhranto",
+      "sequence": 22650,
+      "title": "বিভ্রান্ত (bibhrāntô) — confused; misled",
+      "headword": "বিভ্রান্ত",
+      "romanization": "bibhrāntô",
+      "gloss": "confused; misled",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87b094756bac911d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to tutor, then the Bengali for concentration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিভ্রান্ত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিভ্রান্ত — bibhrāntô — \"confused; misled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ভুল খবর শুনে অনেকে বিভ্রান্ত হল। bhul khôbôr shune ôneke bibhrāntô hôlô. Many people were misled by the false news."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিভ্রান্ত (bibhrāntô) is Sanskrit vibhrānta, wandering about, and also confused or bewildered (Monier-Williams): a mind that has lost its way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bibhrāntô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bibhrāntô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bibhrāntô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bibhrāntô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhul khôbôr shune ôneke bibhrāntô hôlô. — Many people were misled by the false news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhul khôbôr shune ôneke bibhrāntô hôlô.* — Many people were misled by the false news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to tutor, then the Bengali for concentration, then say bibhrāntô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to tutor, then the Bengali for concentration, then say *bibhrāntô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিভ্রান্ত (bibhrāntô) mean? (\"Confused; misled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C362-upolobdhi-kora",
+      "sequence": 22660,
+      "title": "উপলব্ধি করা (upôlôbdhi kôrā) — to realise; to grasp",
+      "headword": "উপলব্ধি করা",
+      "romanization": "upôlôbdhi kôrā",
+      "gloss": "to realise; to grasp",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82c8fd6bff835ee5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for concentration, then the Bengali for misled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপলব্ধি করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপলব্ধি করা — upôlôbdhi kôrā — \"to realise; to grasp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পরে আমি আমার ভুল উপলব্ধি করলাম। pôre āmi āmār bhul upôlôbdhi kôrlām. Later I realised my mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি কথাটার গুরুত্ব উপলব্ধি করলেন, tini kôthāṭār gurutvô upôlôbdhi kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপলব্ধি করা (upôlôbdhi kôrā) is Sanskrit upalabdhi, becoming aware, understanding (Monier-Williams), with করা: to come to see a thing clearly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôlôbdhi kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôlôbdhi kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôlôbdhi kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôlôbdhi kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôre āmi āmār bhul upôlôbdhi kôrlām. — Later I realised my mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôre āmi āmār bhul upôlôbdhi kôrlām.* — Later I realised my mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for concentration, then the Bengali for misled, then say upôlôbdhi kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for concentration, then the Bengali for misled, then say *upôlôbdhi kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপলব্ধি করা (upôlôbdhi kôrā) mean? (\"To realise; to grasp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C362-bodh-kora",
+      "sequence": 22670,
+      "title": "বোধ করা (bodh kôrā) — to feel (a state); to sense",
+      "headword": "বোধ করা",
+      "romanization": "bodh kôrā",
+      "gloss": "to feel (a state); to sense",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2120d5ddac270d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for misled, then the Bengali for to realise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বোধ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বোধ করা — bodh kôrā — \"to feel (a state); to sense\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সারাদিন কাজ করে আমি ক্লান্ত বোধ করছি। sārādin kāj kôre āmi klāntô bodh kôrchhi. After working all day I feel tired."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ক্লান্ত বোধ করলেন, tini klāntô bodh kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বোধ করা (bodh kôrā) is Sanskrit bodha, knowing or understanding (Monier-Williams), with করা: to become aware of a state in yourself, tiredness or relief. It is a little more formal than মনে হওয়া."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bodh kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bodh kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bodh kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bodh kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārādin kāj kôre āmi klāntô bodh kôrchhi. — After working all day I feel tired.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārādin kāj kôre āmi klāntô bodh kôrchhi.* — After working all day I feel tired.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for misled, then the Bengali for to realise, then say bodh kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for misled, then the Bengali for to realise, then say *bodh kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বোধ করা (bodh kôrā) mean? (\"To feel (a state); to sense\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C362-sposhto",
+      "sequence": 22680,
+      "title": "স্পষ্ট (spôshṭô) — clear; distinct",
+      "headword": "স্পষ্ট",
+      "romanization": "spôshṭô",
+      "gloss": "clear; distinct",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ede3414487ed103",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to realise, then the Bengali for to sense."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: স্পষ্ট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্পষ্ট — spôshṭô — \"clear; distinct\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তোমার কথাটা আমার কাছে স্পষ্ট নয়। tomār kôthāṭā āmār kāchhe spôshṭô nôy. What you said isn't clear to me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্পষ্ট (spôshṭô) is Sanskrit spaṣṭa, clearly seen, distinct (Monier-Williams). Speech, writing or a picture can be স্পষ্ট."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spôshṭô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spôshṭô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spôshṭô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spôshṭô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomār kôthāṭā āmār kāchhe spôshṭô nôy. — What you said isn't clear to me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomār kôthāṭā āmār kāchhe spôshṭô nôy.* — What you said isn't clear to me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to realise, then the Bengali for to sense, then say spôshṭô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to realise, then the Bengali for to sense, then say *spôshṭô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does স্পষ্ট (spôshṭô) mean? (\"Clear; distinct\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

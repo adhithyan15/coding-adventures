@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C384-pec",
+    "language": "marathi",
+    "chapter": 384,
+    "sequence": 22180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f30c0d382414551a"
+  },
+  "findings": []
+}

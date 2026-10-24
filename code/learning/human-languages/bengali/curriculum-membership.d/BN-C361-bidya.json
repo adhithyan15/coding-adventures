@@ -1,0 +1,11 @@
+{
+  "id": "BN-C361-bidya",
+  "pathSegment": "BN-PATH-361-SHIKKHA361",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-361-SHIKKHA361",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-485-KAVATAM485",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a lift, a staircase, a gateway, a waiting room and a roadside food stall.",
+  "prerequisites": []
+}

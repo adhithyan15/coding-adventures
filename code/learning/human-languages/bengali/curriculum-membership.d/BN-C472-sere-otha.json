@@ -1,0 +1,11 @@
+{
+  "id": "BN-C472-sere-otha",
+  "pathSegment": "BN-PATH-472-OSHUDH472",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-472-OSHUDH472",
+      "order": 4
+    }
+  ]
+}

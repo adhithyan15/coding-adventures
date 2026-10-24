@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C485-eggottu",
+    "language": "telugu",
+    "chapter": 485,
+    "sequence": 24440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dc153ff9635812d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C399-sveccha",
+    "language": "telugu",
+    "chapter": 399,
+    "sequence": 19880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa526ffdee4b370e"
+  },
+  "findings": []
+}

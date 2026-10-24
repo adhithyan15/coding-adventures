@@ -1,0 +1,11 @@
+{
+  "id": "BN-C322-pori",
+  "pathSegment": "BN-PATH-322-RAKKHOSH322",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-322-RAKKHOSH322",
+      "order": 1
+    }
+  ]
+}

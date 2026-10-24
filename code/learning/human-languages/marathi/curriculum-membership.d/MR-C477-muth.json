@@ -1,0 +1,11 @@
+{
+  "id": "MR-C477-muth",
+  "pathSegment": "MR-PATH-477-HAT477",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-477-HAT477",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "Fact and fancy",
+  "label": "ch:ar-fact-and-fancy",
+  "canDo": "I can talk about fact, reality and imagination, and say that someone refuted a claim or was convinced.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-R365-review-358-365",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can talk about fact, reality and imagination, and say that someone refuted a claim or was convinced.",
+    "assesses": [
+      "AR-LEX-C365-HAQIQA365-03",
+      "AR-LEX-C365-HAQIQA365-04",
+      "AR-LEX-C365-HAQIQA365-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-R286-opinion-and-result",
+  "pathSegment": "TA-PATH-286-OPINION-SO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-286-OPINION-SO",
+      "order": 2
+    }
+  ]
+}

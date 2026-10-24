@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Camping Gear",
+  "label": "ch:ta-camping-gear",
+  "canDo": "I can talk about a camp, a torch, a flask and binoculars, and untying a bundle.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C422-avil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can talk about a camp, a torch, a flask and binoculars, and untying a bundle.",
+    "assesses": [
+      "TA-LEX-C422-MUKAM422-03",
+      "TA-LEX-C422-MUKAM422-04",
+      "TA-LEX-C422-MUKAM422-05"
+    ]
+  }
+}

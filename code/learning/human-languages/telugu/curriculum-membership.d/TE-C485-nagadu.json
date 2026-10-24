@@ -1,0 +1,11 @@
+{
+  "id": "TE-C485-nagadu",
+  "pathSegment": "TE-PATH-485-NAGADU485",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-485-NAGADU485",
+      "order": 1
+    }
+  ]
+}

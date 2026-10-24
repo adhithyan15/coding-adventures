@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:ce8c423124b824a2",
+  "lessonIds": [
+    "TE-C462-kauntaru",
+    "TE-C462-sakha",
+    "TE-C462-purincu",
+    "TE-C462-jari-ceyu",
+    "TE-C462-manjuru-ceyu"
+  ],
+  "tex": "telugu/book/chapters/ch462-at-the-office-counter.tex"
+}

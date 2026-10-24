@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C365-manvana",
+    "language": "hindi",
+    "chapter": 365,
+    "sequence": 20160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c448c746a90a7b20"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:5d6b0bc2d2eb17e2",
+  "lessonIds": [
+    "TA-C494-pankali",
+    "TA-C494-paramparai",
+    "TA-C494-talaimurai",
+    "TA-C494-cantati",
+    "TA-C494-varicu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch494.txt",
+  "json": "tamil/narration/ch494.json",
+  "textHash": "fnv1a64:d6b78bd630bab7fe",
+  "jsonHash": "fnv1a64:dfec5de313f00078",
+  "findings": []
+}

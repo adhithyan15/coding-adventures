@@ -1,0 +1,11 @@
+{
+  "id": "BN-W273-letter-oi-kar",
+  "pathSegment": "BN-PATH-273-COMPARE-TIME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-273-COMPARE-TIME",
+      "order": 1
+    }
+  ]
+}

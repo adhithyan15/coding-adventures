@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Patience and Eagerness",
+  "label": "ch:ta-patience-and-eagerness",
+  "canDo": "I can talk about patience, calm, interest and eagerness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C461-aval",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can talk about patience, calm, interest and eagerness.",
+    "assesses": [
+      "TA-LEX-C461-PORUMAI461-03",
+      "TA-LEX-C461-PORUMAI461-04",
+      "TA-LEX-C461-PORUMAI461-05"
+    ]
+  }
+}

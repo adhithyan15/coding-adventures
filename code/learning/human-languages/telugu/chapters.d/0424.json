@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Pressure and Resistance",
+  "label": "ch:te-pressure-and-resistance",
+  "canDo": "I can talk about pressure, force, appeals and resistance.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C424-upasamharincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about pressure, force, appeals and resistance.",
+    "assesses": [
+      "TE-LEX-C424-OTTIDI424-03",
+      "TE-LEX-C424-OTTIDI424-04",
+      "TE-LEX-C424-OTTIDI424-05"
+    ]
+  }
+}

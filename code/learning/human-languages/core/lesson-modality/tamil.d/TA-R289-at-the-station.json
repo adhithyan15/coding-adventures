@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R289-at-the-station",
+    "language": "tamil",
+    "chapter": 289,
+    "sequence": 16320,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e7076a61d3f92332"
+  },
+  "findings": []
+}

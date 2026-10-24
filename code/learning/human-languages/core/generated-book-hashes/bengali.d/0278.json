@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:ba475686c68e1def",
+  "lessonIds": [
+    "BN-C278-dhakka",
+    "BN-C278-chola",
+    "BN-C278-bhanga",
+    "BN-C278-ultano",
+    "BN-C278-ahoto"
+  ],
+  "tex": "bengali/book/chapters/ch278-a-crash-on-the-road.tex"
+}

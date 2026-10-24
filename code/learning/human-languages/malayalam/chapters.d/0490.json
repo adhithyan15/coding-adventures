@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Post and Parcels",
+  "label": "ch:ml-post-and-parcels",
+  "canDo": "I can say a post box, a courier, to receive officially, to send back and to contact.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C490-bandhappetuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can say a post box, a courier, to receive officially, to send back and to contact.",
+    "assesses": [
+      "ML-LEX-C490-TAPAL490-03",
+      "ML-LEX-C490-TAPAL490-04",
+      "ML-LEX-C490-TAPAL490-05"
+    ]
+  }
+}

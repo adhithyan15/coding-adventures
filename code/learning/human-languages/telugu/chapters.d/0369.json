@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Palaces and Chariots",
+  "label": "ch:te-palaces-and-chariots",
+  "canDo": "I can say a palace, a chariot, heritage, to demolish and to build.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C369-nirmincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can say a palace, a chariot, heritage, to demolish and to build.",
+    "assesses": [
+      "TE-LEX-C369-RAJABHAVANAM369-03",
+      "TE-LEX-C369-RAJABHAVANAM369-04",
+      "TE-LEX-C369-RAJABHAVANAM369-05"
+    ]
+  }
+}

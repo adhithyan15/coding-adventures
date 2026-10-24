@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:0efe76dbb4a4a7ce",
+  "lessonIds": [
+    "TA-C472-catu",
+    "TA-C472-vekuli",
+    "TA-C472-emali",
+    "TA-C472-kancan",
+    "TA-C472-utari"
+  ],
+  "tex": "tamil/book/chapters/ch472-kinds-of-people.tex"
+}

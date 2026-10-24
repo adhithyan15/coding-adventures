@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C419-nisan",
+    "language": "hindi",
+    "chapter": 419,
+    "sequence": 23090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82ed9e071d80ae6b"
+  },
+  "findings": []
+}

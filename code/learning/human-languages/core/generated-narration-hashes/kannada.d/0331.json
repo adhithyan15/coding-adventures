@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:640d06bf6c942e34",
+  "lessonIds": [
+    "KA-C331-hindomme",
+    "KA-C331-andu",
+    "KA-C331-bahukala",
+    "KA-C331-pracina",
+    "KA-C331-yuga"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch331.txt",
+  "json": "kannada/narration/ch331.json",
+  "textHash": "fnv1a64:da4dc244fc408be7",
+  "jsonHash": "fnv1a64:17a18de944b29d42",
+  "findings": []
+}

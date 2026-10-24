@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:334faf60870ff342",
+  "lessonIds": [
+    "BN-C414-bengk",
+    "BN-C414-kauntar",
+    "BN-C414-keshiyar",
+    "BN-C414-chek",
+    "BN-C414-nogod"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch414.txt",
+  "json": "bengali/narration/ch414.json",
+  "textHash": "fnv1a64:3e2d3183d99edf38",
+  "jsonHash": "fnv1a64:93498000b3375a77",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C318-athar",
+    "language": "arabic",
+    "chapter": 318,
+    "sequence": 18290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11e0e9723360e385"
+  },
+  "findings": []
+}

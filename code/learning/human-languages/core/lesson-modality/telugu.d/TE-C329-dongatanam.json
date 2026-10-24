@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C329-dongatanam",
+    "language": "telugu",
+    "chapter": 329,
+    "sequence": 16150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01b41b940e70da12"
+  },
+  "findings": []
+}

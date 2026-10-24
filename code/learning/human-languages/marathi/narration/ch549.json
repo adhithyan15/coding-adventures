@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 549,
+  "title": "Losses and Protection",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1e2fe64472d331de",
+  "lessons": [
+    {
+      "id": "MR-C549-bharpai-dene",
+      "sequence": 31300,
+      "title": "भरपाई देणे (bharpāī deṇe) — to compensate",
+      "headword": "भरपाई देणे",
+      "romanization": "bharpāī deṇe",
+      "gloss": "to compensate",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb062a6124206706",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to sort out, then the Marathi for to waver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भरपाई देणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भरपाई देणे — bharpāī deṇe — \"to compensate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "विमा कंपनीने पुरात बुडालेल्या गाडीची भरपाई दिली. vimā kampanīne purāt buḍālelyā gāḍīcī bharpāī dilī. The insurance company paid for the car that sank in the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने भरपाई दिली, tyāne bharpāī dilī."
+            },
+            {
+              "kind": "speech",
+              "text": "What is lost takes -ची: गाडीची भरपाई देणे (bharpāī deṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भरपाई देणे (bharpāī deṇe) is भरपाई, \"making good\", built on भरणे, \"to fill\", inherited from Sanskrit bharati (CDIAL 9397), with देणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharpāī deṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharpāī deṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharpāī deṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharpāī deṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimā kampanīne purāt buḍālelyā gāḍīcī bharpāī dilī. — The insurance company paid for the car that sank in the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimā kampanīne purāt buḍālelyā gāḍīcī bharpāī dilī.* — The insurance company paid for the car that sank in the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to sort out, then the Marathi for to waver, then say bharpāī deṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to sort out, then the Marathi for to waver, then say *bharpāī deṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भरपाई देणे (bharpāī deṇe) mean? (\"To compensate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C549-mukne",
+      "sequence": 31310,
+      "title": "मुकणे (mukṇe) — to miss out on",
+      "headword": "मुकणे",
+      "romanization": "mukṇe",
+      "gloss": "to miss out on",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:665e92918c8b0e1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to waver, then the Marathi for to compensate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मुकणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुकणे — mukṇe — \"to miss out on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजारपणामुळे तो अंतिम सामन्याला मुकला. ājārpaṇāmuḷe to antim sāmnyālā muklā. Because of illness he missed the final match."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो संधीला मुकला, to sandhīlā muklā."
+            },
+            {
+              "kind": "speech",
+              "text": "What is missed takes -ला: संधीला मुकणे (mukṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुकणे (mukṇe) is inherited: CDIAL lists Marathi mukṇẽ, \"to lose\", under mukna, \"loosed\" (CDIAL 10157)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājārpaṇāmuḷe to antim sāmnyālā muklā. — Because of illness he missed the final match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājārpaṇāmuḷe to antim sāmnyālā muklā.* — Because of illness he missed the final match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to waver, then the Marathi for to compensate, then say mukṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to waver, then the Marathi for to compensate, then say *mukṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मुकणे (mukṇe) mean? (\"To miss out on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C549-kavac",
+      "sequence": 31320,
+      "title": "कवच (kavac) — a shield; armour; a shell",
+      "headword": "कवच",
+      "romanization": "kavac",
+      "gloss": "a shield; armour; a shell",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc27838bb092ed73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to compensate, then the Marathi for to miss out on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कवच",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कवच — kavac — \"a shield; armour; a shell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कासवाचं कवच खूप कठीण असतं. kāsvācaṁ kavac khūp kaṭhīṇ astaṁ. A tortoise's shell is very hard."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कवच (kavac) is a tatsama, taken from Sanskrit kavaca, \"a coat of mail\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kavac",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kavac*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kavac, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kavac*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāsvācaṁ kavac khūp kaṭhīṇ astaṁ. — A tortoise's shell is very hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāsvācaṁ kavac khūp kaṭhīṇ astaṁ.* — A tortoise's shell is very hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to compensate, then the Marathi for to miss out on, then say kavac again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to compensate, then the Marathi for to miss out on, then say *kavac* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कवच (kavac) mean? (\"A shield; armour; a shell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C549-samraksan",
+      "sequence": 31330,
+      "title": "संरक्षण (saṁrakṣaṇ) — protection",
+      "headword": "संरक्षण",
+      "romanization": "saṁrakṣaṇ",
+      "gloss": "protection",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6db8af1b6882847e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to miss out on, then the Marathi for a shield."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संरक्षण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संरक्षण — saṁrakṣaṇ — \"protection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "किल्ल्याच्या संरक्षणासाठी उंच भिंती होत्या. killyācyā saṁrakṣaṇāsāṭhī uñc bhintī hotyā. There were high walls to protect the fort."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संरक्षण (saṁrakṣaṇ) is a tatsama, taken from Sanskrit saṁrakṣaṇa, \"guarding, protection\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁrakṣaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁrakṣaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁrakṣaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁrakṣaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "killyācyā saṁrakṣaṇāsāṭhī uñc bhintī hotyā. — There were high walls to protect the fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *killyācyā saṁrakṣaṇāsāṭhī uñc bhintī hotyā.* — There were high walls to protect the fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to miss out on, then the Marathi for a shield, then say saṁrakṣaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to miss out on, then the Marathi for a shield, then say *saṁrakṣaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संरक्षण (saṁrakṣaṇ) mean? (\"Protection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C549-bharavsa",
+      "sequence": 31340,
+      "title": "भरवसा (bharavsā) — reliance; trust",
+      "headword": "भरवसा",
+      "romanization": "bharavsā",
+      "gloss": "reliance; trust",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4548244db6933190",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a shield, then the Marathi for protection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भरवसा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भरवसा — bharavsā — \"reliance; trust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मला माझ्या मित्रांवर पूर्ण भरवसा आहे. malā mājhyā mitrāṁvar pūrṇa bharavsā āhe. I fully rely on my friends."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The one trusted takes -वर: मित्रांवर भरवसा (bharavsā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भरवसा (bharavsā) is inherited: CDIAL lists Marathi bharvasā, \"confidence\", under bharavaśya, \"dependence on support\" (CDIAL 9398)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharavsā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharavsā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharavsā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharavsā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malā mājhyā mitrāṁvar pūrṇa bharavsā āhe. — I fully rely on my friends.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malā mājhyā mitrāṁvar pūrṇa bharavsā āhe.* — I fully rely on my friends.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a shield, then the Marathi for protection, then say bharavsā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a shield, then the Marathi for protection, then say *bharavsā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भरवसा (bharavsā) mean? (\"Reliance; trust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

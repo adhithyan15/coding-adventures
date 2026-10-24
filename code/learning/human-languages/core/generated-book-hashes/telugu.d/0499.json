@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:a876eea86f66e02c",
+  "lessonIds": [
+    "TE-C499-asuyapadu",
+    "TE-C499-dvesincu",
+    "TE-C499-asahyincuko",
+    "TE-C499-paga",
+    "TE-C499-cinnacupu"
+  ],
+  "tex": "telugu/book/chapters/ch499-envy-and-dislike.tex"
+}

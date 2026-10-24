@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C521-ran",
+    "language": "bengali",
+    "chapter": 521,
+    "sequence": 31500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:405e8f21376b7150"
+  },
+  "findings": []
+}

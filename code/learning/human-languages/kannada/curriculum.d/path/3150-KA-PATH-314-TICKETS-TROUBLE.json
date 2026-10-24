@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-314-TICKETS-TROUBLE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "KA-EXT-314-TICKETS-TROUBLE"
+  ],
+  "after": []
+}

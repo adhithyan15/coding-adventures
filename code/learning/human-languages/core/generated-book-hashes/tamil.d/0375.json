@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:ef73f32d5d82bb14",
+  "lessonIds": [
+    "TA-C375-katci",
+    "TA-C375-kuttani",
+    "TA-C375-atikaram",
+    "TA-C375-celvakku",
+    "TA-C375-kavar"
+  ],
+  "tex": "tamil/book/chapters/ch375-parties-and-power.tex"
+}

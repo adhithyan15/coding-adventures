@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:74cc21a0eb6d84bc",
+  "lessonIds": [
+    "ML-C395-purvikan",
+    "ML-C395-pingami",
+    "ML-C395-acaram",
+    "ML-C395-utbhavam",
+    "ML-C395-muttassikkatha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch395.txt",
+  "json": "malayalam/narration/ch395.json",
+  "textHash": "fnv1a64:ad203dbffce196f5",
+  "jsonHash": "fnv1a64:981886b2f0cee42d",
+  "findings": []
+}

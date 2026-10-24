@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Inside the Body",
+  "label": "ch:te-inside-the-body",
+  "canDo": "I can name the brain, nerves, liver, spine and breath.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C515-svasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can name the brain, nerves, liver, spine and breath.",
+    "assesses": [
+      "TE-LEX-C515-SARIRAM515-03",
+      "TE-LEX-C515-SARIRAM515-04",
+      "TE-LEX-C515-SARIRAM515-05"
+    ]
+  }
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 479,
+  "title": "On the Road for Days",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8bd6fba2b79fdc76",
+  "lessons": [
+    {
+      "id": "ML-C479-alayuka",
+      "sequence": 23920,
+      "title": "അലയുക (alayuka) — to wander; to roam",
+      "headword": "അലയുക",
+      "romanization": "alayuka",
+      "gloss": "to wander; to roam",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afc5272834d669f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an itinerary, then the Malayalam for to roam around."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അലയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അലയുക — alayuka — \"to wander; to roam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വഴി അറിയാതെ ഞങ്ങൾ ഒരു മണിക്കൂർ അലഞ്ഞു. vaḻi aṟiyāte ñaṅṅaḷ oru maṇikkūr alaññu. Not knowing the way, we wandered for an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അലഞ്ഞു, alaññu."
+            },
+            {
+              "kind": "speech",
+              "text": "It means wandering without a plan, often tired or lost."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അലയുക (alayuka) is native Dravidian; DEDR gives the Malayalam verb as to be tossed about and to roam (DEDR 240)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alayuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alayuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alayuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alayuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḻi aṟiyāte ñaṅṅaḷ oru maṇikkūr alaññu. — Not knowing the way, we wandered for an hour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḻi aṟiyāte ñaṅṅaḷ oru maṇikkūr alaññu.* — Not knowing the way, we wandered for an hour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an itinerary, then the Malayalam for to roam around, then say alayuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an itinerary, then the Malayalam for to roam around, then say *alayuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അലയുക (alayuka) mean? (\"To wander; to roam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C479-tannuka",
+      "sequence": 23930,
+      "title": "തങ്ങുക (taṅṅuka) — to stay over; to halt",
+      "headword": "തങ്ങുക",
+      "romanization": "taṅṅuka",
+      "gloss": "to stay over; to halt",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c348a43e6cabbfc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to roam around, then the Malayalam for to wander."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തങ്ങുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തങ്ങുക — taṅṅuka — \"to stay over; to halt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "യാത്രയ്ക്കിടെ ഞങ്ങൾ ഒരു രാത്രി ബന്ധുവിന്റെ വീട്ടിൽ തങ്ങി. yātraykkiṭe ñaṅṅaḷ oru rātri bandhuvinṟe vīṭṭil taṅṅi. On the journey we stayed a night at a relative's house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: തങ്ങി, taṅṅi."
+            },
+            {
+              "kind": "speech",
+              "text": "താമസിക്കുക is to live somewhere; തങ്ങുക (taṅṅuka) is to stop for a short while on the way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തങ്ങുക (taṅṅuka) is native Dravidian, \"to stay, to stop, to rest\" (DEDR 3014)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṅṅuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṅṅuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṅṅuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṅṅuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātraykkiṭe ñaṅṅaḷ oru rātri bandhuvinṟe vīṭṭil taṅṅi. — On the journey we stayed a night at a relative's house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātraykkiṭe ñaṅṅaḷ oru rātri bandhuvinṟe vīṭṭil taṅṅi.* — On the journey we stayed a night at a relative's house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to roam around, then the Malayalam for to wander, then say taṅṅuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to roam around, then the Malayalam for to wander, then say *taṅṅuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തങ്ങുക (taṅṅuka) mean? (\"To stay over; to halt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C479-sahayatrikan",
+      "sequence": 23940,
+      "title": "സഹയാത്രികൻ (sahayātrikan) — a fellow traveller",
+      "headword": "സഹയാത്രികൻ",
+      "romanization": "sahayātrikan",
+      "gloss": "a fellow traveller",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e83b0027b4618cb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to wander, then the Malayalam for to stay over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സഹയാത്രികൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഹയാത്രികൻ — sahayātrikan — \"a fellow traveller\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തീവണ്ടിയിലെ സഹയാത്രികൻ എനിക്ക് ഒരു പഴം തന്നു. tīvaṇṭiyile sahayātrikan enikkŭ oru paḻaṁ tannu. My fellow traveller on the train gave me a banana."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: സഹയാത്രികർ, sahayātrikar."
+            },
+            {
+              "kind": "speech",
+              "text": "സഹ- means with, as in സഹപാഠി, a classmate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഹയാത്രികൻ (sahayātrikan) is built from Sanskrit saha, \"with\", and yātrika, \"relating to a journey\" (Monier-Williams), with the masculine ending -ൻ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahayātrikan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahayātrikan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahayātrikan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahayātrikan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīvaṇṭiyile sahayātrikan enikkŭ oru paḻaṁ tannu. — My fellow traveller on the train gave me a banana.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīvaṇṭiyile sahayātrikan enikkŭ oru paḻaṁ tannu.* — My fellow traveller on the train gave me a banana.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to wander, then the Malayalam for to stay over, then say sahayātrikan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to wander, then the Malayalam for to stay over, then say *sahayātrikan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സഹയാത്രികൻ (sahayātrikan) mean? (\"A fellow traveller\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C479-itattavalam",
+      "sequence": 23950,
+      "title": "ഇടത്താവളം (iṭattāvaḷaṁ) — a stopover; a halting place",
+      "headword": "ഇടത്താവളം",
+      "romanization": "iṭattāvaḷaṁ",
+      "gloss": "a stopover; a halting place",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:428acc75ac368834",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to stay over, then the Malayalam for a fellow traveller."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇടത്താവളം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇടത്താവളം — iṭattāvaḷaṁ — \"a stopover; a halting place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ചെറിയ ഗ്രാമം ഞങ്ങളുടെ യാത്രയിലെ ഇടത്താവളമായിരുന്നു. ā ceṟiya grāmaṁ ñaṅṅaḷuṭe yātrayile iṭattāvaḷamāyirunnu. That small village was the stopover on our journey."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇട means the middle, as in ഇടയിൽ, between; താവളം is a camp or a place to stay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇടത്താവളം (iṭattāvaḷaṁ) is a Malayalam compound built from the native ഇട, the middle or interval (DEDR 448), and താവളം, a camp or lodging; the origin of താവളം is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭattāvaḷaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭattāvaḷaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭattāvaḷaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭattāvaḷaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā ceṟiya grāmaṁ ñaṅṅaḷuṭe yātrayile iṭattāvaḷamāyirunnu. — That small village was the stopover on our journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā ceṟiya grāmaṁ ñaṅṅaḷuṭe yātrayile iṭattāvaḷamāyirunnu.* — That small village was the stopover on our journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to stay over, then the Malayalam for a fellow traveller, then say iṭattāvaḷaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to stay over, then the Malayalam for a fellow traveller, then say *iṭattāvaḷaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇടത്താവളം (iṭattāvaḷaṁ) mean? (\"A stopover; a halting place\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C479-pinnituka",
+      "sequence": 23960,
+      "title": "പിന്നിടുക (pinniṭuka) — to pass by; to leave behind",
+      "headword": "പിന്നിടുക",
+      "romanization": "pinniṭuka",
+      "gloss": "to pass by; to leave behind",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e91b6d7012907c80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a fellow traveller, then the Malayalam for a stopover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പിന്നിടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിന്നിടുക — pinniṭuka — \"to pass by; to leave behind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തീവണ്ടി രണ്ട് സ്റ്റേഷനുകൾ പിന്നിട്ടു. tīvaṇṭi raṇṭŭ sṟṟēṣanukaḷ pinniṭṭu. The train passed two stations."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പിന്നിട്ടു, pinniṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally to put behind: പിൻ, behind, plus ഇടുക, to put. A distance or a time can be passed too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിന്നിടുക (pinniṭuka) is a native Dravidian compound of പിൻ, behind (DEDR 4205), and ഇടുക, to put (DEDR 442)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pinniṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pinniṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pinniṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pinniṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīvaṇṭi raṇṭŭ sṟṟēṣanukaḷ pinniṭṭu. — The train passed two stations.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīvaṇṭi raṇṭŭ sṟṟēṣanukaḷ pinniṭṭu.* — The train passed two stations.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a fellow traveller, then the Malayalam for a stopover, then say pinniṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a fellow traveller, then the Malayalam for a stopover, then say *pinniṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പിന്നിടുക (pinniṭuka) mean? (\"To pass by; to leave behind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C345-smasanam",
+  "pathSegment": "TE-PATH-345-SMRTI345",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-345-SMRTI345",
+      "order": 0
+    }
+  ]
+}

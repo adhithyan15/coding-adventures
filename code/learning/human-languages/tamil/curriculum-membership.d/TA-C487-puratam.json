@@ -1,0 +1,11 @@
+{
+  "id": "TA-C487-puratam",
+  "pathSegment": "TA-PATH-487-UNAVU487",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-487-UNAVU487",
+      "order": 1
+    }
+  ]
+}

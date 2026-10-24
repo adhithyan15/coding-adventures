@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C406-bodhisu",
+    "language": "kannada",
+    "chapter": 406,
+    "sequence": 20580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a27a3c43fc68aff2"
+  },
+  "findings": []
+}

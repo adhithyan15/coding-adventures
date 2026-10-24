@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Shortcuts and Detours",
+  "label": "ch:ka-shortcuts-and-detours",
+  "canDo": "I can say a footpath, a shortcut, a detour, to lose one's way and a footstep.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C446-hejje",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can say a footpath, a shortcut, a detour, to lose one's way and a footstep.",
+    "assesses": [
+      "KA-LEX-C446-DARI446-03",
+      "KA-LEX-C446-DARI446-04",
+      "KA-LEX-C446-DARI446-05"
+    ]
+  }
+}

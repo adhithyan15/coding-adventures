@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C472-sust",
+    "language": "hindi",
+    "chapter": 472,
+    "sequence": 26030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e31a5d4232a7e54"
+  },
+  "findings": []
+}

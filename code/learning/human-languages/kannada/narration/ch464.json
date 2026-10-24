@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 464,
+  "title": "Breakfast at the Hotel",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5b69ed1563ff423f",
+  "lessons": [
+    {
+      "id": "KA-C464-upahara",
+      "sequence": 23590,
+      "title": "ಉಪಹಾರ (upahāra) — breakfast; a light meal",
+      "headword": "ಉಪಹಾರ",
+      "romanization": "upahāra",
+      "gloss": "breakfast; a light meal",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2da9781d94e8a1a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a water heater, then the Kannada for a resort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉಪಹಾರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಪಹಾರ — upahāra — \"breakfast; a light meal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೋಟೆಲ್ನಲ್ಲಿ ಉಪಹಾರಕ್ಕೆ ಇಡ್ಲಿ ಮತ್ತು ದೋಸೆ ಇತ್ತು. hōṭelnalli upahārakke iḍli mattu dōse ittu. At the hotel there were idlis and dosas for breakfast."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೆಳಗಿನ ಉಪಹಾರ (upahāra), morning breakfast; ತಿಂಡಿ is the everyday word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಪಹಾರ (upahāra) is borrowed from Sanskrit: Monier-Williams gives upahāra as \"an offering, a present\". The sense of a light meal is a later Indian one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upahāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upahāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upahāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upahāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōṭelnalli upahārakke iḍli mattu dōse ittu. — At the hotel there were idlis and dosas for breakfast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōṭelnalli upahārakke iḍli mattu dōse ittu.* — At the hotel there were idlis and dosas for breakfast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a water heater, then the Kannada for a resort, then say upahāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a water heater, then the Kannada for a resort, then say *upahāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉಪಹಾರ (upahāra) mean? (\"Breakfast; a light meal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C464-menu",
+      "sequence": 23600,
+      "title": "ಮೆನು (menu) — a menu",
+      "headword": "ಮೆನು",
+      "romanization": "menu",
+      "gloss": "a menu",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cda30f3d6357936",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a resort, then the Kannada for breakfast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೆನು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆನು — menu — \"a menu\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೆನುವಿನಲ್ಲಿ ತುಂಬಾ ದೋಸೆಗಳಿವೆ. menuvinalli tumbā dōsegaḷive. There are lots of dosas on the menu."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending -ವಿನಲ್ಲಿ: ಮೆನು (menu) takes -ವ- before a case ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆನು (menu) is a loan from English menu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "menu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *menu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "menu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *menu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "menuvinalli tumbā dōsegaḷive. — There are lots of dosas on the menu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *menuvinalli tumbā dōsegaḷive.* — There are lots of dosas on the menu.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a resort, then the Kannada for breakfast, then say menu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a resort, then the Kannada for breakfast, then say *menu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೆನು mean? (\"A menu\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C464-paricaraka",
+      "sequence": 23610,
+      "title": "ಪರಿಚಾರಕ (paricāraka) — a waiter; an attendant",
+      "headword": "ಪರಿಚಾರಕ",
+      "romanization": "paricāraka",
+      "gloss": "a waiter; an attendant",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea0df5df1108e3b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for breakfast, then the Kannada for a menu."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪರಿಚಾರಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಿಚಾರಕ — paricāraka — \"a waiter; an attendant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪರಿಚಾರಕ ನಮಗೆ ಬಿಸಿ ಕಾಫಿ ತಂದನು. paricāraka namage bisi kāphi tandanu. The waiter brought us hot coffee."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಪರಿಚಾರಕರು, paricārakaru."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word; people often call out ಸರ್ or ಅಣ್ಣ to a waiter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಿಚಾರಕ (paricāraka) is borrowed from Sanskrit paricāraka, \"an assistant, an attendant\" (Monier-Williams), from pari-car, \"to move about, to attend on\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricāraka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricāraka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricāraka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricāraka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricāraka namage bisi kāphi tandanu. — The waiter brought us hot coffee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricāraka namage bisi kāphi tandanu.* — The waiter brought us hot coffee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for breakfast, then the Kannada for a menu, then say paricāraka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for breakfast, then the Kannada for a menu, then say *paricāraka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪರಿಚಾರಕ (paricāraka) mean? (\"A waiter; an attendant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C464-bhaksisu",
+      "sequence": 23620,
+      "title": "ಭಕ್ಷೀಸು (bhakṣīsu) — a gratuity; a tip",
+      "headword": "ಭಕ್ಷೀಸು",
+      "romanization": "bhakṣīsu",
+      "gloss": "a gratuity; a tip",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4771e9d2438531e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a menu, then the Kannada for a waiter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಭಕ್ಷೀಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭಕ್ಷೀಸು — bhakṣīsu — \"a gratuity; a tip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾವು ಪರಿಚಾರಕನಿಗೆ ಹತ್ತು ರೂಪಾಯಿ ಭಕ್ಷೀಸು ಕೊಟ್ಟೆವು. nāvu paricārakanige hattu rūpāyi bhakṣīsu koṭṭevu. We gave the waiter a ten rupee tip."
+            },
+            {
+              "kind": "speech",
+              "text": "ಭಕ್ಷೀಸು (bhakṣīsu) ಕೊಡು, to tip."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭಕ್ಷೀಸು (bhakṣīsu) is usually traced to Persian bakhshish, \"a gift, a present\", which reached Kannada through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhakṣīsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhakṣīsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhakṣīsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhakṣīsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvu paricārakanige hattu rūpāyi bhakṣīsu koṭṭevu. — We gave the waiter a ten rupee tip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvu paricārakanige hattu rūpāyi bhakṣīsu koṭṭevu.* — We gave the waiter a ten rupee tip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a menu, then the Kannada for a waiter, then say bhakṣīsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a menu, then the Kannada for a waiter, then say *bhakṣīsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಭಕ್ಷೀಸು (bhakṣīsu) mean? (\"A gratuity; a tip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C464-ardar-madu",
+      "sequence": 23630,
+      "title": "ಆರ್ಡರ್ ಮಾಡು (ārḍar māḍu) — to order",
+      "headword": "ಆರ್ಡರ್ ಮಾಡು",
+      "romanization": "ārḍar māḍu",
+      "gloss": "to order",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf6eb4636ed55d82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a waiter, then the Kannada for a gratuity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆರ್ಡರ್ ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆರ್ಡರ್ ಮಾಡು — ārḍar māḍu — \"to order\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಎರಡು ಕಾಫಿ ಆರ್ಡರ್ ಮಾಡಿದೆ. nānu eraḍu kāphi ārḍar māḍide. I ordered two coffees."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಆರ್ಡರ್ ಮಾಡಿದೆ, ārḍar māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "Food in a hotel, or goods online: ಆನ್ಲೈನ್ನಲ್ಲಿ ಆರ್ಡರ್ ಮಾಡು (ārḍar māḍu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆರ್ಡರ್ ಮಾಡು (ārḍar māḍu) joins a loan from English order and the native verb ಮಾಡು, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārḍar māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārḍar māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārḍar māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārḍar māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu eraḍu kāphi ārḍar māḍide. — I ordered two coffees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu eraḍu kāphi ārḍar māḍide.* — I ordered two coffees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a waiter, then the Kannada for a gratuity, then say ārḍar māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a waiter, then the Kannada for a gratuity, then say *ārḍar māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆರ್ಡರ್ ಮಾಡು (ārḍar māḍu) mean? (\"To order\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

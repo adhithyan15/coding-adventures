@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 397,
+  "title": "Held Up on the Way",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f17d80d472199afc",
+  "lessons": [
+    {
+      "id": "MR-C397-vilamb",
+      "sequence": 23050,
+      "title": "विलंब (vilamb) — a delay",
+      "headword": "विलंब",
+      "romanization": "vilamb",
+      "gloss": "a delay",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54890fbab0c578c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a goods train, then the Marathi for to rattle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विलंब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विलंब — vilamb — \"a delay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पावसामुळे गाडीला विलंब झाला. pāvsāmuḷe gāḍīlā vilamb jhālā. The train was delayed because of the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "विलंब (vilamb) होणे, to be delayed: what is late takes -ला, गाडीला विलंब (vilamb) झाला."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विलंब (vilamb) is a tatsama, taken from Sanskrit vilamba, \"hanging down; slowness, delay\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilamb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilamb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilamb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilamb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvsāmuḷe gāḍīlā vilamb jhālā. — The train was delayed because of the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvsāmuḷe gāḍīlā vilamb jhālā.* — The train was delayed because of the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a goods train, then the Marathi for to rattle, then say vilamb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a goods train, then the Marathi for to rattle, then say *vilamb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विलंब (vilamb) mean? (\"A delay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C397-kholambne",
+      "sequence": 23060,
+      "title": "खोळंबणे (khoḷambṇe) — to be held up",
+      "headword": "खोळंबणे",
+      "romanization": "khoḷambṇe",
+      "gloss": "to be held up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dda9d95de333a522",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to rattle, then the Marathi for a delay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खोळंबणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोळंबणे — khoḷambṇe — \"to be held up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मी स्टेशनवर दोन तास खोळंबलो. mī sṭeśanvar don tās khoḷamblo. I was held up at the station for two hours."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो खोळंबला, to khoḷamblā."
+            },
+            {
+              "kind": "speech",
+              "text": "Work can be held up too: काम खोळंबलं, the work got held up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोळंबणे (khoḷambṇe) is a Marathi verb whose origin is not settled; it says that someone or something is stuck waiting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoḷambṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoḷambṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoḷambṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoḷambṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī sṭeśanvar don tās khoḷamblo. — I was held up at the station for two hours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī sṭeśanvar don tās khoḷamblo.* — I was held up at the station for two hours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to rattle, then the Marathi for a delay, then say khoḷambṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to rattle, then the Marathi for a delay, then say *khoḷambṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खोळंबणे (khoḷambṇe) mean? (\"To be held up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C397-tatkalne",
+      "sequence": 23070,
+      "title": "ताटकळणे (tāṭkaḷṇe) — to be kept waiting",
+      "headword": "ताटकळणे",
+      "romanization": "tāṭkaḷṇe",
+      "gloss": "to be kept waiting",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:859a915708e26c5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a delay, then the Marathi for to be held up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ताटकळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ताटकळणे — tāṭkaḷṇe — \"to be kept waiting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पाहुणे दारात बराच वेळ ताटकळले. pāhuṇe dārāt barāc veḷ tāṭkaḷle. The guests were kept waiting at the door for a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो ताटकळला, to tāṭkaḷlā."
+            },
+            {
+              "kind": "speech",
+              "text": "It stresses a long, tiring wait; a woman says मी ताटकळले."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ताटकळणे (tāṭkaḷṇe) is a Marathi verb for waiting a long time against your will; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāṭkaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāṭkaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāṭkaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāṭkaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāhuṇe dārāt barāc veḷ tāṭkaḷle. — The guests were kept waiting at the door for a long time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāhuṇe dārāt barāc veḷ tāṭkaḷle.* — The guests were kept waiting at the door for a long time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a delay, then the Marathi for to be held up, then say tāṭkaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a delay, then the Marathi for to be held up, then say *tāṭkaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ताटकळणे (tāṭkaḷṇe) mean? (\"To be kept waiting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C397-rakhadne",
+      "sequence": 23080,
+      "title": "रखडणे (rakhaḍṇe) — to be stalled",
+      "headword": "रखडणे",
+      "romanization": "rakhaḍṇe",
+      "gloss": "to be stalled",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4470fd35030a5870",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to be held up, then the Marathi for to be kept waiting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रखडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रखडणे — rakhaḍṇe — \"to be stalled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुलाचं काम दोन वर्षं रखडलं. pulācaṁ kām don varṣaṁ rakhaḍlaṁ. Work on the bridge was stalled for two years."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो रखडला, to rakhaḍlā."
+            },
+            {
+              "kind": "speech",
+              "text": "काम रखडणे (rakhaḍṇe) is the usual pair: work that stopped and drags on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रखडणे (rakhaḍṇe) is a Marathi verb for work or plans that stop and drag on; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakhaḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakhaḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakhaḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakhaḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulācaṁ kām don varṣaṁ rakhaḍlaṁ. — Work on the bridge was stalled for two years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulācaṁ kām don varṣaṁ rakhaḍlaṁ.* — Work on the bridge was stalled for two years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to be held up, then the Marathi for to be kept waiting, then say rakhaḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to be held up, then the Marathi for to be kept waiting, then say *rakhaḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रखडणे (rakhaḍṇe) mean? (\"To be stalled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C397-ravana-hone",
+      "sequence": 23090,
+      "title": "रवाना होणे (ravānā hoṇe) — to set off; to depart",
+      "headword": "रवाना होणे",
+      "romanization": "ravānā hoṇe",
+      "gloss": "to set off; to depart",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c29abbc7259c09a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to be kept waiting, then the Marathi for to be stalled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रवाना होणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रवाना होणे — ravānā hoṇe — \"to set off; to depart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शेवटी बस पुण्याकडे रवाना झाली. śevṭī bas puṇyākaḍe ravānā jhālī. At last the bus set off for Pune."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो रवाना झाला, to ravānā jhālā."
+            },
+            {
+              "kind": "speech",
+              "text": "The place you head for takes -कडे or -ला: पुण्याला रवाना होणे (ravānā hoṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रवाना होणे (ravānā hoṇe) joins रवाना, \"sent off, on the way\", a loan usually traced to Persian ravāna, to the light verb होणे, \"to become\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ravānā hoṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ravānā hoṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ravānā hoṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ravānā hoṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śevṭī bas puṇyākaḍe ravānā jhālī. — At last the bus set off for Pune.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śevṭī bas puṇyākaḍe ravānā jhālī.* — At last the bus set off for Pune.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to be kept waiting, then the Marathi for to be stalled, then say ravānā hoṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to be kept waiting, then the Marathi for to be stalled, then say *ravānā hoṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रवाना होणे (ravānā hoṇe) mean? (\"To set off; to depart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

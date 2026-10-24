@@ -1,0 +1,11 @@
+{
+  "id": "TA-C506-cuyavivaram",
+  "pathSegment": "TA-PATH-506-VELAI506",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-506-VELAI506",
+      "order": 1
+    }
+  ]
+}

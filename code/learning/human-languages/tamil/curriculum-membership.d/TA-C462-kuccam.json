@@ -1,0 +1,11 @@
+{
+  "id": "TA-C462-kuccam",
+  "pathSegment": "TA-PATH-462-VETKAM462",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-462-VETKAM462",
+      "order": 2
+    }
+  ]
+}

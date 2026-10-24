@@ -1,0 +1,11 @@
+{
+  "id": "AR-C291-idha-amtarat",
+  "pathSegment": "AR-PATH-291-IF",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-291-IF",
+      "order": 1
+    }
+  ]
+}

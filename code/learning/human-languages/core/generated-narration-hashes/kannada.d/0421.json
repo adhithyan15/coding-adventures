@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:14a79abae13cb395",
+  "lessonIds": [
+    "KA-C421-bedike",
+    "KA-C421-puraisu",
+    "KA-C421-korate",
+    "KA-C421-raphtu",
+    "KA-C421-hanadubbara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch421.txt",
+  "json": "kannada/narration/ch421.json",
+  "textHash": "fnv1a64:1bde0ba26030aa93",
+  "jsonHash": "fnv1a64:ffc3f0b4ed2cc9f7",
+  "findings": []
+}

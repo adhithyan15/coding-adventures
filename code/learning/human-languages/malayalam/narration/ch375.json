@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 375,
+  "title": "Rescue",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:afe2f9954547778b",
+  "lessons": [
+    {
+      "id": "ML-C375-raksakan",
+      "sequence": 18330,
+      "title": "രക്ഷകൻ (rakṣakan) — a rescuer; a saviour",
+      "headword": "രക്ഷകൻ",
+      "romanization": "rakṣakan",
+      "gloss": "a rescuer; a saviour",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01bd99fd32ef7590",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a state of emergency, then the Malayalam for to evacuate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: രക്ഷകൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രക്ഷകൻ — rakṣakan — \"a rescuer; a saviour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ചെറുപ്പക്കാരൻ ഗ്രാമത്തിന്റെ രക്ഷകനായി. ā ceṟuppakkāran grāmattinṟe rakṣakanāyi. That young man became the village's saviour."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun രക്ഷ means protection; a woman rescuer is രക്ഷക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രക്ഷകൻ (rakṣakan) is borrowed from Sanskrit rakṣaka, \"protecting, guarding\" (Monier-Williams), with the Malayalam masculine ending -ൻ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakṣakan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakṣakan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakṣakan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakṣakan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā ceṟuppakkāran grāmattinṟe rakṣakanāyi. — That young man became the village's saviour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā ceṟuppakkāran grāmattinṟe rakṣakanāyi.* — That young man became the village's saviour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a state of emergency, then the Malayalam for to evacuate, then say rakṣakan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a state of emergency, then the Malayalam for to evacuate, then say *rakṣakan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does രക്ഷകൻ (rakṣakan) mean? (\"A rescuer; a saviour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C375-sannaddhapravarttakan",
+      "sequence": 18340,
+      "title": "സന്നദ്ധപ്രവർത്തകൻ (sannaddhapravarttakan) — a volunteer",
+      "headword": "സന്നദ്ധപ്രവർത്തകൻ",
+      "romanization": "sannaddhapravarttakan",
+      "gloss": "a volunteer",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88eed88902173166",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to evacuate, then the Malayalam for a rescuer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സന്നദ്ധപ്രവർത്തകൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സന്നദ്ധപ്രവർത്തകൻ — sannaddhapravarttakan — \"a volunteer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സന്നദ്ധപ്രവർത്തകർ ആളുകൾക്ക് ഭക്ഷണം കൊടുത്തു. sannaddhapravarttakar āḷukaḷkkŭ bhakṣaṇaṁ koṭuttu. Volunteers gave people food."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: സന്നദ്ധപ്രവർത്തകർ, sannaddhapravarttakar."
+            },
+            {
+              "kind": "speech",
+              "text": "സന്നദ്ധ, ready, + പ്രവർത്തകൻ, a worker: one ready to work without pay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സന്നദ്ധപ്രവർത്തകൻ (sannaddhapravarttakan) is built from Sanskrit saṁnaddha, \"girt, bound, armed\" (CDIAL 12923), so ready for action, and പ്രവർത്തകൻ, \"a worker\", from pravartaka (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sannaddhapravarttakan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sannaddhapravarttakan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sannaddhapravarttakan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sannaddhapravarttakan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sannaddhapravarttakar āḷukaḷkkŭ bhakṣaṇaṁ koṭuttu. — Volunteers gave people food.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sannaddhapravarttakar āḷukaḷkkŭ bhakṣaṇaṁ koṭuttu.* — Volunteers gave people food.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to evacuate, then the Malayalam for a rescuer, then say sannaddhapravarttakan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to evacuate, then the Malayalam for a rescuer, then say *sannaddhapravarttakan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സന്നദ്ധപ്രവർത്തകൻ (sannaddhapravarttakan) mean? (\"A volunteer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C375-raksikkuka",
+      "sequence": 18350,
+      "title": "രക്ഷിക്കുക (rakṣikkuka) — to rescue; to save",
+      "headword": "രക്ഷിക്കുക",
+      "romanization": "rakṣikkuka",
+      "gloss": "to rescue; to save",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09b164e3fdbb5b40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a rescuer, then the Malayalam for a volunteer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: രക്ഷിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രക്ഷിക്കുക — rakṣikkuka — \"to rescue; to save\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട്ടുകാർ പുഴയിൽ വീണ കുട്ടിയെ രക്ഷിച്ചു. nāṭṭukār puḻayil vīṇa kuṭṭiye rakṣiccu. The local people rescued the child who fell into the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: രക്ഷിച്ചു, rakṣiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The one saved takes -എ. Help! is രക്ഷിക്കണേ!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രക്ഷിക്കുക (rakṣikkuka) is built from Sanskrit rakṣā, \"protection, preservation\" (CDIAL 10551), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakṣikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakṣikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakṣikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakṣikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭukār puḻayil vīṇa kuṭṭiye rakṣiccu. — The local people rescued the child who fell into the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭukār puḻayil vīṇa kuṭṭiye rakṣiccu.* — The local people rescued the child who fell into the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a rescuer, then the Malayalam for a volunteer, then say rakṣikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a rescuer, then the Malayalam for a volunteer, then say *rakṣikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does രക്ഷിക്കുക (rakṣikkuka) mean? (\"To rescue; to save\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C375-raksappetuka",
+      "sequence": 18360,
+      "title": "രക്ഷപ്പെടുക (rakṣappeṭuka) — to escape; to be saved",
+      "headword": "രക്ഷപ്പെടുക",
+      "romanization": "rakṣappeṭuka",
+      "gloss": "to escape; to be saved",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd6cadd46ff15fd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a volunteer, then the Malayalam for to rescue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: രക്ഷപ്പെടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രക്ഷപ്പെടുക — rakṣappeṭuka — \"to escape; to be saved\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തീപിടിത്തത്തിൽ നിന്ന് എല്ലാവരും രക്ഷപ്പെട്ടു. tīpiṭittattil ninnŭ ellāvaruṁ rakṣappeṭṭu. Everyone escaped from the fire."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: രക്ഷപ്പെട്ടു, rakṣappeṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "From what takes -ഇൽ നിന്ന്. -പ്പെടുക makes the saving happen to the subject."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രക്ഷപ്പെടുക (rakṣappeṭuka) is built from Sanskrit rakṣā, \"protection\" (CDIAL 10551), with -പ്പെടുക, \"to come to be\": to come into safety."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakṣappeṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakṣappeṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakṣappeṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakṣappeṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīpiṭittattil ninnŭ ellāvaruṁ rakṣappeṭṭu. — Everyone escaped from the fire.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīpiṭittattil ninnŭ ellāvaruṁ rakṣappeṭṭu.* — Everyone escaped from the fire.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a volunteer, then the Malayalam for to rescue, then say rakṣappeṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a volunteer, then the Malayalam for to rescue, then say *rakṣappeṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does രക്ഷപ്പെടുക (rakṣappeṭuka) mean? (\"To escape; to be saved\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C375-kutunnuka",
+      "sequence": 18370,
+      "title": "കുടുങ്ങുക (kuṭuṅṅuka) — to get stuck; to be trapped",
+      "headword": "കുടുങ്ങുക",
+      "romanization": "kuṭuṅṅuka",
+      "gloss": "to get stuck; to be trapped",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:620b878a5af0073e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to rescue, then the Malayalam for to escape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുടുങ്ങുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുടുങ്ങുക — kuṭuṅṅuka — \"to get stuck; to be trapped\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മൂന്ന് പേർ കെട്ടിടത്തിനുള്ളിൽ കുടുങ്ങി. mūnnŭ pēr keṭṭiṭattinuḷḷil kuṭuṅṅi. Three people were trapped inside the building."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കുടുങ്ങി, kuṭuṅṅi."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of traffic: ട്രാഫിക്കിൽ കുടുങ്ങി, stuck in traffic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുടുങ്ങുക (kuṭuṅṅuka) is a native Malayalam verb whose origin is not settled. It is said of people, vehicles and things caught where they cannot move."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭuṅṅuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭuṅṅuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭuṅṅuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭuṅṅuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūnnŭ pēr keṭṭiṭattinuḷḷil kuṭuṅṅi. — Three people were trapped inside the building.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūnnŭ pēr keṭṭiṭattinuḷḷil kuṭuṅṅi.* — Three people were trapped inside the building.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to rescue, then the Malayalam for to escape, then say kuṭuṅṅuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to rescue, then the Malayalam for to escape, then say *kuṭuṅṅuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുടുങ്ങുക (kuṭuṅṅuka) mean? (\"To get stuck; to be trapped\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

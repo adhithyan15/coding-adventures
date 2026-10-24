@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:22c9152342931a7e",
+  "lessonIds": [
+    "MR-C448-sandpani",
+    "MR-C448-durgandhi",
+    "MR-C448-pradusit",
+    "MR-C448-kujne",
+    "MR-C448-sadne"
+  ],
+  "tex": "marathi/book/chapters/ch448-sewage-and-stench.tex"
+}

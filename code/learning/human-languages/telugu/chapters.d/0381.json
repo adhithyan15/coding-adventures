@@ -1,0 +1,21 @@
+{
+  "chapter": 381,
+  "title": "Daring Deeds",
+  "label": "ch:te-daring-deeds",
+  "canDo": "I can say to dare, to abduct, to interrogate, to confiscate and an invasion.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-R381-review-final-381",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can say to dare, to abduct, to interrogate, to confiscate and an invasion.",
+    "assesses": [
+      "TE-LEX-C381-SAHASAM381-01",
+      "TE-LEX-C381-SAHASAM381-02",
+      "TE-LEX-C381-SAHASAM381-03",
+      "TE-LEX-C381-SAHASAM381-04",
+      "TE-LEX-C381-SAHASAM381-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Food and Digestion",
+  "label": "ch:ta-food-and-digestion",
+  "canDo": "I can talk about fat, protein, vitamins, digestion and burping.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C487-eppam-vitu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about fat, protein, vitamins, digestion and burping.",
+    "assesses": [
+      "TA-LEX-C487-UNAVU487-03",
+      "TA-LEX-C487-UNAVU487-04",
+      "TA-LEX-C487-UNAVU487-05"
+    ]
+  }
+}

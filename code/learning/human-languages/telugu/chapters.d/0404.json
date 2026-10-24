@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Rich and Poor",
+  "label": "ch:te-rich-and-poor",
+  "canDo": "I can talk about poverty, wealth and unemployment.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C404-nirudyogam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can talk about poverty, wealth and unemployment.",
+    "assesses": [
+      "TE-LEX-C404-PEDARIKAM404-03",
+      "TE-LEX-C404-PEDARIKAM404-04",
+      "TE-LEX-C404-PEDARIKAM404-05"
+    ]
+  }
+}

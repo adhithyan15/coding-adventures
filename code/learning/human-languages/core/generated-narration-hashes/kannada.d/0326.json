@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:11a6c073c8602289",
+  "lessonIds": [
+    "KA-C326-kaneyagu",
+    "KA-C326-patte-haccu",
+    "KA-C326-kuruhu",
+    "KA-C326-apaharisu",
+    "KA-C326-otteyalu",
+    "KA-R326-review-319-326"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch326.txt",
+  "json": "kannada/narration/ch326.json",
+  "textHash": "fnv1a64:37cea7bae1faf722",
+  "jsonHash": "fnv1a64:398a89dcafb3a9ba",
+  "findings": []
+}

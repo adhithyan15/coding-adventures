@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C344-capi",
+    "language": "tamil",
+    "chapter": 344,
+    "sequence": 19690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db1a36e82965ed61"
+  },
+  "findings": []
+}

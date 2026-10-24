@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:3763517c2c0b728f",
+  "lessonIds": [
+    "TA-C525-erivayu",
+    "TA-C525-viraku",
+    "TA-C525-kari",
+    "TA-C525-avi",
+    "TA-C525-veku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch525.txt",
+  "json": "tamil/narration/ch525.json",
+  "textHash": "fnv1a64:4020691480956c04",
+  "jsonHash": "fnv1a64:1fc07aea432f07d6",
+  "findings": []
+}

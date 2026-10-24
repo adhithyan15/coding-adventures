@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:72a06857fb53cc66",
+  "lessonIds": [
+    "MR-C376-tolne",
+    "MR-C376-parakhne",
+    "MR-C376-mulyamapan-karne",
+    "MR-C376-gunvatta",
+    "MR-C376-darja"
+  ],
+  "tex": "marathi/book/chapters/ch376-weighing-things-up.tex"
+}

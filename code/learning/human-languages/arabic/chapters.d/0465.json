@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Energy",
+  "label": "ch:ar-energy",
+  "canDo": "I can say energy, gas, crude oil, coal and to consume.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C465-istahlaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can say energy, gas, crude oil, coal and to consume.",
+    "assesses": [
+      "AR-LEX-C465-TAQA465-03",
+      "AR-LEX-C465-TAQA465-04",
+      "AR-LEX-C465-TAQA465-05"
+    ]
+  }
+}

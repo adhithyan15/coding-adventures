@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:af93fec238f158c9",
+  "lessonIds": [
+    "ML-C392-anusocanam",
+    "ML-C392-adaranjali",
+    "ML-C392-caramavarsikam",
+    "ML-C392-semitteri",
+    "ML-C392-anusocikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch392-mourning.tex"
+}

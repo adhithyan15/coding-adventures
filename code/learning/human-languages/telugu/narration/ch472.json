@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 472,
+  "title": "Wildlife",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:960afab0cb4e3785",
+  "lessons": [
+    {
+      "id": "TE-C472-vanyaprani",
+      "sequence": 23740,
+      "title": "వన్యప్రాణి (vanyaprāṇi) — a wild animal",
+      "headword": "వన్యప్రాణి",
+      "romanization": "vanyaprāṇi",
+      "gloss": "a wild animal",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2253b1f1bb063488",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to damage, then the Telugu for to conserve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వన్యప్రాణి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వన్యప్రాణి — vanyaprāṇi — \"a wild animal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అడవిలో వన్యప్రాణులను చూడడానికి వెళ్ళాం. aḍavilō vanyaprāṇulanu cūḍaḍāniki veḷḷāṁ. We went to the forest to watch wild animals."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: వన్యప్రాణులు, vanyaprāṇulu."
+            },
+            {
+              "kind": "speech",
+              "text": "వన్య, of the forest, + ప్రాణి, a living being. Plural వన్యప్రాణులు, wildlife."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వన్యప్రాణి (vanyaprāṇi) is a compound of two words borrowed from Sanskrit: vanya, \"growing in a forest\" (CDIAL 11277), and prāṇin, \"a breathing, living creature\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vanyaprāṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vanyaprāṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vanyaprāṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vanyaprāṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḍavilō vanyaprāṇulanu cūḍaḍāniki veḷḷāṁ. — We went to the forest to watch wild animals.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḍavilō vanyaprāṇulanu cūḍaḍāniki veḷḷāṁ.* — We went to the forest to watch wild animals.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to damage, then the Telugu for to conserve, then say vanyaprāṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to damage, then the Telugu for to conserve, then say *vanyaprāṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వన్యప్రాణి (vanyaprāṇi) mean? (\"A wild animal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C472-abhayaranyam",
+      "sequence": 23750,
+      "title": "అభయారణ్యం (abhayāraṇyaṁ) — a wildlife sanctuary",
+      "headword": "అభయారణ్యం",
+      "romanization": "abhayāraṇyaṁ",
+      "gloss": "a wildlife sanctuary",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:954b02ef8e243a45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to conserve, then the Telugu for a wild animal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అభయారణ్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభయారణ్యం — abhayāraṇyaṁ — \"a wildlife sanctuary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ అభయారణ్యంలో పులులు ఉన్నాయి. ā abhayāraṇyaṁlō pululu unnāyi. There are tigers in that sanctuary."
+            },
+            {
+              "kind": "speech",
+              "text": "అభయ, freedom from fear, + అరణ్యం, a forest: a forest where animals need not fear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభయారణ్యం (abhayāraṇyaṁ) is a compound of two words borrowed from Sanskrit: abhaya, \"fearlessness, safety\", and araṇya, \"a wild place, a forest\" (CDIAL 600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhayāraṇyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhayāraṇyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhayāraṇyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhayāraṇyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā abhayāraṇyaṁlō pululu unnāyi. — There are tigers in that sanctuary.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā abhayāraṇyaṁlō pululu unnāyi.* — There are tigers in that sanctuary.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to conserve, then the Telugu for a wild animal, then say abhayāraṇyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to conserve, then the Telugu for a wild animal, then say *abhayāraṇyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అభయారణ్యం (abhayāraṇyaṁ) mean? (\"A wildlife sanctuary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C472-vetadu",
+      "sequence": 23760,
+      "title": "వేటాడు (vēṭāḍu) — to hunt",
+      "headword": "వేటాడు",
+      "romanization": "vēṭāḍu",
+      "gloss": "to hunt",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a965c0c042716af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a wild animal, then the Telugu for a wildlife sanctuary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వేటాడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేటాడు — vēṭāḍu — \"to hunt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇప్పుడు పులులను వేటాడకూడదు. ippuḍu pululanu vēṭāḍakūḍadu. Tigers must not be hunted now."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వేటాడాను, vēṭāḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "వేట, a hunt, + ఆడు, to play, to do. The hunter is వేటగాడు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేటాడు (vēṭāḍu) is native Dravidian: DEDR 5527 lists Telugu vēṭa, \"hunting, the chase\", and vēṭāḍu, \"to hunt\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṭāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṭāḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṭāḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṭāḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ippuḍu pululanu vēṭāḍakūḍadu. — Tigers must not be hunted now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ippuḍu pululanu vēṭāḍakūḍadu.* — Tigers must not be hunted now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a wild animal, then the Telugu for a wildlife sanctuary, then say vēṭāḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a wild animal, then the Telugu for a wildlife sanctuary, then say *vēṭāḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వేటాడు (vēṭāḍu) mean? (\"To hunt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C472-antarincipovu",
+      "sequence": 23770,
+      "title": "అంతరించిపోవు (antariñcipōvu) — to die out; to vanish",
+      "headword": "అంతరించిపోవు",
+      "romanization": "antariñcipōvu",
+      "gloss": "to die out; to vanish",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5e2c1e7daa42651",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a wildlife sanctuary, then the Telugu for to hunt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అంతరించిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంతరించిపోవు — antariñcipōvu — \"to die out; to vanish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చాలా రకాల పక్షులు అంతరించిపోయాయి. cālā rakāla pakṣulu antariñcipōyāyi. Many kinds of birds have died out."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): అంతరించిపోయింది, antariñcipōyindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of species, languages and old customs that disappear for good. Its subject is a thing, so the past shown is the third person: అంతరించిపోయింది, it died out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంతరించిపోవు (antariñcipōvu) is a Telugu verb built from Sanskrit antarita, \"gone within, hidden, vanished\" (Monier-Williams), with -ఇంచు and the native పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antariñcipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antariñcipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antariñcipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antariñcipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālā rakāla pakṣulu antariñcipōyāyi. — Many kinds of birds have died out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālā rakāla pakṣulu antariñcipōyāyi.* — Many kinds of birds have died out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a wildlife sanctuary, then the Telugu for to hunt, then say antariñcipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a wildlife sanctuary, then the Telugu for to hunt, then say *antariñcipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అంతరించిపోవు (antariñcipōvu) mean? (\"To die out; to vanish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C472-valasapovu",
+      "sequence": 23780,
+      "title": "వలసపోవు (valasapōvu) — to migrate",
+      "headword": "వలసపోవు",
+      "romanization": "valasapōvu",
+      "gloss": "to migrate",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8bf31ec42496b81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to hunt, then the Telugu for to die out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వలసపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వలసపోవు — valasapōvu — \"to migrate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చలికాలంలో చాలా పక్షులు దక్షిణానికి వలసపోతాయి. calikālaṁlō cālā pakṣulu dakṣiṇāniki valasapōtāyi. In winter many birds migrate south."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వలసపోయాను, valasapōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "వలస, migration, + పోవు. Also said of villagers who move to the cities for work: పనుల కోసం వలసపోయారు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వలసపోవు (valasapōvu) is native Dravidian: వలస, \"emigration, migration\" (DEDR 5278), with పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valasapōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valasapōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valasapōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valasapōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calikālaṁlō cālā pakṣulu dakṣiṇāniki valasapōtāyi. — In winter many birds migrate south.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calikālaṁlō cālā pakṣulu dakṣiṇāniki valasapōtāyi.* — In winter many birds migrate south.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to hunt, then the Telugu for to die out, then say valasapōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to hunt, then the Telugu for to die out, then say *valasapōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వలసపోవు (valasapōvu) mean? (\"To migrate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

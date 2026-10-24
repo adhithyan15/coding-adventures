@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C527-visvastan",
+    "language": "malayalam",
+    "chapter": 527,
+    "sequence": 26550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c42767951e81faf7"
+  },
+  "findings": []
+}

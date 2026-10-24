@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:74cd356fbb240092",
+  "lessonIds": [
+    "TE-C424-ottidi",
+    "TE-C424-balavantam",
+    "TE-C424-abhyarthincu",
+    "TE-C424-edirincu",
+    "TE-C424-upasamharincu"
+  ],
+  "tex": "telugu/book/chapters/ch424-pressure-and-resistance.tex"
+}

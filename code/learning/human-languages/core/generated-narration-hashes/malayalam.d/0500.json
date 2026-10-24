@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:75fa8aac7cfa400f",
+  "lessonIds": [
+    "ML-C500-velampal",
+    "ML-C500-maramkotti",
+    "ML-C500-desatanam",
+    "ML-C500-cekkeruka",
+    "ML-C500-kutukuttuka",
+    "ML-R500-review-493-500"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch500.txt",
+  "json": "malayalam/narration/ch500.json",
+  "textHash": "fnv1a64:bbbc3d083156d0b5",
+  "jsonHash": "fnv1a64:7a54fdd8131142ba",
+  "findings": []
+}

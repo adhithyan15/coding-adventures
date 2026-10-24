@@ -1,0 +1,11 @@
+{
+  "id": "KA-C520-palagu",
+  "pathSegment": "KA-PATH-520-TANDA520",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-520-TANDA520",
+      "order": 2
+    }
+  ]
+}

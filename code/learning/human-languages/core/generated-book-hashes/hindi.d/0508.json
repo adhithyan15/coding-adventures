@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:d82c53e80d9ca32a",
+  "lessonIds": [
+    "HI-C508-intarvyu",
+    "HI-C508-niyukti",
+    "HI-C508-avedan",
+    "HI-C508-dakhila",
+    "HI-C508-vetan"
+  ],
+  "tex": "hindi/book/chapters/ch508-looking-for-a-job.tex"
+}

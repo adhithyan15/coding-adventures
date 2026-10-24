@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:ea98e36e786ed0d1",
+  "lessonIds": [
+    "MR-C347-virodh-karne",
+    "MR-C347-pathimba-dene",
+    "MR-C347-samarthan-karne",
+    "MR-C347-tatastha",
+    "MR-C347-viruddha"
+  ],
+  "tex": "marathi/book/chapters/ch347-for-and-against.tex"
+}

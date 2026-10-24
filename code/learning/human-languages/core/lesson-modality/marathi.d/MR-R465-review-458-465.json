@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R465-review-458-465",
+    "language": "marathi",
+    "chapter": 465,
+    "sequence": 26810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12b7cc885d9239c6"
+  },
+  "findings": []
+}

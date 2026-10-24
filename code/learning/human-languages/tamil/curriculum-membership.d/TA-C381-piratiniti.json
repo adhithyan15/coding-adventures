@@ -1,0 +1,11 @@
+{
+  "id": "TA-C381-piratiniti",
+  "pathSegment": "TA-PATH-381-TECAM381",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-381-TECAM381",
+      "order": 4
+    }
+  ]
+}

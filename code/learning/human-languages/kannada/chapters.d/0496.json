@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Hope and Longing",
+  "label": "ch:ka-hope-and-longing",
+  "canDo": "I can say to long for, to rue a loss, hope, eagerness and relieved.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C496-nirala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can say to long for, to rue a loss, hope, eagerness and relieved.",
+    "assesses": [
+      "KA-LEX-C496-ASHE496-03",
+      "KA-LEX-C496-ASHE496-04",
+      "KA-LEX-C496-ASHE496-05"
+    ]
+  }
+}

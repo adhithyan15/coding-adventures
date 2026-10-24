@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:f0bd3f73c04a2e20",
+  "lessonIds": [
+    "AR-C457-takhfid",
+    "AR-C457-qasima",
+    "AR-C457-khaffada",
+    "AR-C457-rakhusa",
+    "AR-C457-anfaqa"
+  ],
+  "tex": "arabic/book/chapters/ch457-the-sales.tex"
+}

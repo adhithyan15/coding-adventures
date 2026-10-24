@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Orders and Departments",
+  "label": "ch:bn-orders-and-departments",
+  "canDo": "I can talk about departments, instructions and getting work done.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C500-todarok-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about departments, instructions and getting work done.",
+    "assesses": [
+      "BN-LEX-C500-BIBHAG500-03",
+      "BN-LEX-C500-BIBHAG500-04",
+      "BN-LEX-C500-BIBHAG500-05"
+    ]
+  }
+}

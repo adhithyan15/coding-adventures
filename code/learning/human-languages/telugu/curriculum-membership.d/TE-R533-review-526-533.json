@@ -1,0 +1,11 @@
+{
+  "id": "TE-R533-review-526-533",
+  "pathSegment": "TE-PATH-533-SAMSARAM533",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TE-EXT-533-SAMSARAM533",
+      "order": 5
+    }
+  ]
+}

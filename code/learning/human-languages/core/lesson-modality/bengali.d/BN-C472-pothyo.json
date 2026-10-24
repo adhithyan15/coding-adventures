@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C472-pothyo",
+    "language": "bengali",
+    "chapter": 472,
+    "sequence": 28760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d20708f19eae568"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C418-vilaite",
+    "language": "telugu",
+    "chapter": 418,
+    "sequence": 20880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c85cdf8cfcedc366"
+  },
+  "findings": []
+}

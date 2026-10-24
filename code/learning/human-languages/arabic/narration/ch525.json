@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 525,
+  "title": "Design and code",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9603b141b5d43716",
+  "lessons": [
+    {
+      "id": "AR-C525-antaja",
+      "sequence": 29090,
+      "title": "أنتج (antaja) — to produce",
+      "headword": "أنتج",
+      "romanization": "antaja",
+      "gloss": "to produce",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9af7c4b4459abff1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be promoted, then the Arabic for headquarters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أنتج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنتج — antaja — \"to produce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ينتج المصنع ألف سيارة كل شهر. yuntiju al-maṣnaʿ alf sayyāra kull shahr. The factory produces a thousand cars every month."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينتج, yuntij."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنتج (antaja) is built on the native Arabic root n-t-j, \"to bring forth young\" (Lane). Natīja, a result, which you know, is from the same root: what a thing brings forth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antaja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antaja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antaja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antaja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuntiju al-maṣnaʿ alf sayyāra kull shahr. — The factory produces a thousand cars every month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuntiju al-maṣnaʿ alf sayyāra kull shahr.* — The factory produces a thousand cars every month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be promoted, then the Arabic for headquarters, then say antaja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be promoted, then the Arabic for headquarters, then say *antaja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أنتج (antaja) mean? (\"To produce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C525-sammama",
+      "sequence": 29100,
+      "title": "صمم (ṣammama) — to design",
+      "headword": "صمم",
+      "romanization": "ṣammama",
+      "gloss": "to design",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55c7e43ed526e1fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for headquarters, then the Arabic for to produce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صمم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صمم — ṣammama — \"to design\"."
+            },
+            {
+              "kind": "speech",
+              "text": "صممت أختي فستان العروس. ṣammamat ukhtī fustān al-ʿarūs. My sister designed the bride's dress."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يصمم, yuṣammim."
+            },
+            {
+              "kind": "speech",
+              "text": "With على it means to be determined: صمم (ṣammama) على السفر."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صمم (ṣammama) is usually traced to the native Arabic root ṣ-m-m, \"to be solid, closed up\". Its older sense is to be firmly resolved; the sense of designing is modern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣammama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣammama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣammama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣammama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣammamat ukhtī fustān al-ʿarūs. — My sister designed the bride's dress.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣammamat ukhtī fustān al-ʿarūs.* — My sister designed the bride's dress.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for headquarters, then the Arabic for to produce, then say ṣammama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for headquarters, then the Arabic for to produce, then say *ṣammama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صمم (ṣammama) mean? (\"To design\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C525-musammim",
+      "sequence": 29110,
+      "title": "مصمم (muṣammim) — a designer",
+      "headword": "مصمم",
+      "romanization": "muṣammim",
+      "gloss": "a designer",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e78e09754e339e56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to produce, then the Arabic for to design."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مصمم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصمم — muṣammim — \"a designer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يعمل ابن خالتي مصمما في شركة. yaʿmalu ibn khālatī muṣammiman fī sharika. My cousin works as a designer in a company."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصمم (muṣammim) is the participle of Form II ṣammama, \"to design\", which is usually traced to the native Arabic root ṣ-m-m, \"to be solid\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṣammim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṣammim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṣammim, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṣammim*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaʿmalu ibn khālatī muṣammiman fī sharika. — My cousin works as a designer in a company.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaʿmalu ibn khālatī muṣammiman fī sharika.* — My cousin works as a designer in a company.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to produce, then the Arabic for to design, then say muṣammim again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to produce, then the Arabic for to design, then say *muṣammim* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مصمم (muṣammim) mean? (\"A designer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C525-barmaja",
+      "sequence": 29120,
+      "title": "برمج (barmaja) — to program (a computer)",
+      "headword": "برمج",
+      "romanization": "barmaja",
+      "gloss": "to program (a computer)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40fb10a1dfb894c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to design, then the Arabic for a designer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: برمج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "برمج — barmaja — \"to program (a computer)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "برمج أخي لعبة على الحاسوب. barmaja akhī luʿba ʿalā al-ḥāsūb. My brother programmed a game on the computer."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يبرمج, yubarmij."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "برمج (barmaja) is a modern Arabic verb built from barnāmaj, \"a programme\", which you know; barnāmaj is usually traced to Persian barnāma. Arabic made a new four-letter root b-r-m-j from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barmaja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barmaja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barmaja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barmaja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barmaja akhī luʿba ʿalā al-ḥāsūb. — My brother programmed a game on the computer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barmaja akhī luʿba ʿalā al-ḥāsūb.* — My brother programmed a game on the computer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to design, then the Arabic for a designer, then say barmaja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to design, then the Arabic for a designer, then say *barmaja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does برمج (barmaja) mean? (\"To program (a computer)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C525-mubarmij",
+      "sequence": 29130,
+      "title": "مبرمج (mubarmij) — a programmer",
+      "headword": "مبرمج",
+      "romanization": "mubarmij",
+      "gloss": "a programmer",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e73ba69991a7d795",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a designer, then the Arabic for to program."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مبرمج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مبرمج — mubarmij — \"a programmer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعمل أختي مبرمجة في بنك. taʿmalu ukhtī mubarmija fī bank. My sister works as a programmer in a bank."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مبرمج (mubarmij) is the participle of barmaja, \"to program\", a modern verb built from barnāmaj, \"a programme\", which is usually traced to Persian barnāma."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mubarmij",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mubarmij*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mubarmij, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mubarmij*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿmalu ukhtī mubarmija fī bank. — My sister works as a programmer in a bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿmalu ukhtī mubarmija fī bank.* — My sister works as a programmer in a bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a designer, then the Arabic for to program, then say mubarmij again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a designer, then the Arabic for to program, then say *mubarmij* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مبرمج (mubarmij) mean? (\"A programmer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

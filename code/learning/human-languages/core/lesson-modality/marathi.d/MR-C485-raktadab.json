@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C485-raktadab",
+    "language": "marathi",
+    "chapter": 485,
+    "sequence": 27800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd504f270e495f1d"
+  },
+  "findings": []
+}

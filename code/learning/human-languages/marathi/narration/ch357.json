@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 357,
+  "title": "Who Governs",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a25736f0b8471db3",
+  "lessons": [
+    {
+      "id": "MR-C357-prasasan",
+      "sequence": 20760,
+      "title": "प्रशासन (praśāsan) — administration",
+      "headword": "प्रशासन",
+      "romanization": "praśāsan",
+      "gloss": "administration",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:895bb9a6ea8bcaa4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for public opinion, then the Marathi for to give a mandate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रशासन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रशासन — praśāsan — \"administration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुरानंतर प्रशासनाने लोकांना मदत केली. purānantar praśāsnāne lokānnā madat kelī. After the flood the administration helped people."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter; प्रशासकीय, administrative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रशासन (praśāsan) is a tatsama, taken from Sanskrit praśāsana, \"instruction, government\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśāsan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśāsan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśāsan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśāsan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purānantar praśāsnāne lokānnā madat kelī. — After the flood the administration helped people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purānantar praśāsnāne lokānnā madat kelī.* — After the flood the administration helped people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for public opinion, then the Marathi for to give a mandate, then say praśāsan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for public opinion, then the Marathi for to give a mandate, then say *praśāsan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रशासन (praśāsan) mean? (\"Administration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C357-samsad",
+      "sequence": 20770,
+      "title": "संसद (saṁsad) — parliament",
+      "headword": "संसद",
+      "romanization": "saṁsad",
+      "gloss": "parliament",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd6655dcfbb3abe9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to give a mandate, then the Marathi for administration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संसद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संसद — saṁsad — \"parliament\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संसदेत नव्या कायद्यावर चर्चा झाली. saṁsdet navyā kāyadyāvar carcā jhālī. The new law was discussed in parliament."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine; its oblique is संसदे-: संसदेत, in parliament."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संसद (saṁsad) is a tatsama, taken from Sanskrit saṁsad, \"an assembly, a session\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁsad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁsad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁsad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁsad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁsdet navyā kāyadyāvar carcā jhālī. — The new law was discussed in parliament.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁsdet navyā kāyadyāvar carcā jhālī.* — The new law was discussed in parliament.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to give a mandate, then the Marathi for administration, then say saṁsad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to give a mandate, then the Marathi for administration, then say *saṁsad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संसद (saṁsad) mean? (\"Parliament\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C357-mantri",
+      "sequence": 20780,
+      "title": "मंत्री (mantrī) — a cabinet minister; a minister",
+      "headword": "मंत्री",
+      "romanization": "mantrī",
+      "gloss": "a cabinet minister; a minister",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc55f42d8e00f1b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for administration, then the Marathi for parliament."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मंत्री",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंत्री — mantrī — \"a cabinet minister; a minister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मंत्र्यांनी नव्या पुलाचं उद्घाटन केलं. mantryānnī navyā pulācaṁ udghāṭan kelaṁ. The minister opened the new bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Respect takes the plural: मंत्री (mantrī) आले, the minister came."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंत्री (mantrī) is a tatsama, taken from Sanskrit mantrin, \"a counsellor, a minister\" (Monier-Williams). Marathi drops the final -n."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantryānnī navyā pulācaṁ udghāṭan kelaṁ. — The minister opened the new bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantryānnī navyā pulācaṁ udghāṭan kelaṁ.* — The minister opened the new bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for administration, then the Marathi for parliament, then say mantrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for administration, then the Marathi for parliament, then say *mantrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मंत्री (mantrī) mean? (\"A cabinet minister; a minister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C357-neta",
+      "sequence": 20790,
+      "title": "नेता (netā) — a leader",
+      "headword": "नेता",
+      "romanization": "netā",
+      "gloss": "a leader",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abb44dee5c639a2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for parliament, then the Marathi for a cabinet minister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नेता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नेता — netā — \"a leader\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चांगला नेता लोकांचं ऐकतो. cāṅglā netā lokāñcaṁ aikto. A good leader listens to people."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Plural: नेते, nete."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural नेते; नेतृत्व, leadership."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नेता (netā) is a tatsama, taken from Sanskrit netṛ, \"a leader, a guide\" (Monier-Williams). The Sanskrit nominative is netā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "netā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *netā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "netā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *netā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāṅglā netā lokāñcaṁ aikto. — A good leader listens to people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāṅglā netā lokāñcaṁ aikto.* — A good leader listens to people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for parliament, then the Marathi for a cabinet minister, then say netā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for parliament, then the Marathi for a cabinet minister, then say *netā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नेता (netā) mean? (\"A leader\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C357-nemne",
+      "sequence": 20800,
+      "title": "नेमणे (nemṇe) — to appoint",
+      "headword": "नेमणे",
+      "romanization": "nemṇe",
+      "gloss": "to appoint",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5365f3fc5baf9b56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a cabinet minister, then the Marathi for a leader."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नेमणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नेमणे — nemṇe — \"to appoint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कंपनीने नवा व्यवस्थापक नेमला. kampnīne navā vyavasthāpak nemlā. The company appointed a new manager."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने नेमलं, tyāne nemlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "X म्हणून नेमणे (nemṇe), to appoint as X; नेमणूक, an appointment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नेमणे (nemṇe) is built on नेम, \"a fixed rule, an aim\", usually traced to Sanskrit niyama, \"restraint, fixed rule\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nemṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nemṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nemṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nemṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampnīne navā vyavasthāpak nemlā. — The company appointed a new manager.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampnīne navā vyavasthāpak nemlā.* — The company appointed a new manager.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a cabinet minister, then the Marathi for a leader, then say nemṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a cabinet minister, then the Marathi for a leader, then say *nemṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नेमणे (nemṇe) mean? (\"To appoint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R357-review-350-357",
+      "sequence": 20810,
+      "title": "Looking back: from Accepting and Blaming to Who Governs",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Accepting and Blaming to Who Governs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ecd84b9bac10869",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for to accept and to acknowledge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to accept, to acknowledge, to treat as valid, to blame, to accuse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to accept, to acknowledge, to treat as valid, to blame, to accuse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "however, likewise, in fact, nevertheless, for example",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: however, likewise, in fact, nevertheless, for example]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to mention, to state, to emphasize, especially, leading",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to mention, to state, to emphasize, especially, leading]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to confirm, to corroborate, to refute, actual, to react",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to confirm, to corroborate, to refute, actual, to react]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a citizen, the general public, common, population, rural",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a citizen, the general public, common, population, rural]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voting, a representative, a candidate, canvassing, to be elected",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: voting, a representative, a candidate, canvassing, to be elected]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "democracy, a majority, a minority, public opinion, to give a mandate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: democracy, a majority, a minority, public opinion, to give a mandate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "administration, parliament, a cabinet minister, a leader, to appoint",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: administration, parliament, a cabinet minister, a leader, to appoint]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To accept? (स्वीकारणे, svīkārṇe.) To acknowledge? (मान्य करणे, mānya karṇe.) To treat as valid? (ग्राह्य धरणे, grāhya dharṇe.) To blame? (दोष देणे, doṣ deṇe.) To accuse? (आरोप करणे, ārop karṇe.) However? (मात्र, mātra.) Likewise? (तसेच, tasec.) In fact? (किंबहुना, kimbahunā.) Nevertheless? (तथापि, tathāpi.) For example? (उदाहरणार्थ, udāharaṇārtha.) To mention? (उल्लेख करणे, ullekh karṇe.) To state? (नमूद करणे, namūd karṇe.) To emphasize? (भर देणे, bhar deṇe.) Especially? (विशेषतः, viśeṣataḥ.) Leading? (प्रमुख, pramukh.) To confirm? (पुष्टी करणे, puṣṭī karṇe.) To corroborate? (दुजोरा देणे, dujorā deṇe.) To refute? (खंडन करणे, khaṇḍan karṇe.) Actual? (वास्तविक, vāstavik.) To react? (प्रतिक्रिया देणे, pratikriyā deṇe.) A citizen? (नागरिक, nāgarik.) The general public? (जनता, jantā.) Common? (सर्वसामान्य, sarvasāmānya.) Population? (लोकसंख्या, loksaṅkhyā.) Rural? (ग्रामीण, grāmīṇ.) Voting? (मतदान, matdān.) A representative? (प्रतिनिधी, pratinidhī.) A candidate? (उमेदवार, umedvār.) Canvassing? (प्रचार, pracār.) To be elected? (निवडून येणे, nivḍūn yeṇe.) Democracy? (लोकशाही, lokśāhī.) A majority? (बहुमत, bahumat.) A minority? (अल्पसंख्याक, alpasaṅkhyāk.) Public opinion? (जनमत, janmat.) To give a mandate? (कौल देणे, kaul deṇe.) Administration? (प्रशासन, praśāsan.) Parliament? (संसद, saṁsad.) A cabinet minister? (मंत्री, mantrī.) A leader? (नेता, netā.) To appoint? (नेमणे, nemṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

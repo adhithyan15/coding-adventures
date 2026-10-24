@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Formal Conditions",
+  "label": "ch:hi-formal-conditions",
+  "canDo": "I can understand conditions in a formal notice.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C379-patakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can understand conditions in a formal notice.",
+    "assesses": [
+      "HI-LEX-C379-YADI379-03",
+      "HI-LEX-C379-YADI379-04",
+      "HI-LEX-C379-YADI379-05"
+    ]
+  }
+}

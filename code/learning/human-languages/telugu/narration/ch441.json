@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 441,
+  "title": "Papers at the Border",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0a39472f7a8202dd",
+  "lessons": [
+    {
+      "id": "TE-C441-pasportu",
+      "sequence": 22150,
+      "title": "పాస్పోర్టు (pāspōrṭu) — a passport",
+      "headword": "పాస్పోర్టు",
+      "romanization": "pāspōrṭu",
+      "gloss": "a passport",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3814a2a30861400a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an interval, then the Telugu for to hurry up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పాస్పోర్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాస్పోర్టు — pāspōrṭu — \"a passport\"."
+            },
+            {
+              "kind": "speech",
+              "text": "విదేశాలకు వెళ్ళాలంటే పాస్పోర్టు కావాలి. vidēśālaku veḷḷālaṇṭē pāspōrṭu kāvāli. To go abroad you need a passport."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in -ఉ, like most English loans in Telugu: పాస్పోర్టు (pāspōrṭu), బస్సు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాస్పోర్టు (pāspōrṭu) is a loan from English passport, with the usual Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāspōrṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāspōrṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāspōrṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāspōrṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidēśālaku veḷḷālaṇṭē pāspōrṭu kāvāli. — To go abroad you need a passport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidēśālaku veḷḷālaṇṭē pāspōrṭu kāvāli.* — To go abroad you need a passport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an interval, then the Telugu for to hurry up, then say pāspōrṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an interval, then the Telugu for to hurry up, then say *pāspōrṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పాస్పోర్టు (pāspōrṭu) mean? (\"A passport\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C441-gurtimpu",
+      "sequence": 22160,
+      "title": "గుర్తింపు (gurtimpu) — identification; recognition",
+      "headword": "గుర్తింపు",
+      "romanization": "gurtimpu",
+      "gloss": "identification; recognition",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7821b45bbf15513",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to hurry up, then the Telugu for a passport."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గుర్తింపు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గుర్తింపు — gurtimpu — \"identification; recognition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నా గుర్తింపు కార్డు సంచిలో ఉంది. nā gurtimpu kārḍu sañcilō undi. My identity card is in the bag."
+            },
+            {
+              "kind": "speech",
+              "text": "గుర్తు, a mark, a sign, + the noun ending -ఇంపు. గుర్తింపు (gurtimpu) కార్డు is an identity card; the word also means being recognised for good work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గుర్తింపు (gurtimpu) is native Dravidian, built on గుర్తు, \"a mark, a sign\", which belongs to the family of Tamil kuṟi, \"a mark\" (DEDR 1847), with the noun ending -ఇంపు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gurtimpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gurtimpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gurtimpu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gurtimpu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nā gurtimpu kārḍu sañcilō undi. — My identity card is in the bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nā gurtimpu kārḍu sañcilō undi.* — My identity card is in the bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to hurry up, then the Telugu for a passport, then say gurtimpu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to hurry up, then the Telugu for a passport, then say *gurtimpu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గుర్తింపు (gurtimpu) mean? (\"Identification; recognition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C441-sunkam",
+      "sequence": 22170,
+      "title": "సుంకం (suṅkaṁ) — a customs duty; a toll",
+      "headword": "సుంకం",
+      "romanization": "suṅkaṁ",
+      "gloss": "a customs duty; a toll",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1384443b0c3b980b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a passport, then the Telugu for identification."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సుంకం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సుంకం — suṅkaṁ — \"a customs duty; a toll\"."
+            },
+            {
+              "kind": "speech",
+              "text": "విదేశీ సరుకుల మీద సుంకం ఎక్కువ. vidēśī sarukula mīda suṅkaṁ ekkuva. The duty on foreign goods is high."
+            },
+            {
+              "kind": "speech",
+              "text": "పన్ను is a tax in general; సుంకం (suṅkaṁ) is the duty paid on goods that cross a border or a toll gate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సుంకం (suṅkaṁ) is borrowed from Sanskrit śulka, \"price, toll\", in its Middle Indo-Aryan shape suṅka (CDIAL 12543); CDIAL notes that the Dravidian forms come from that spoken shape."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suṅkaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suṅkaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suṅkaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suṅkaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidēśī sarukula mīda suṅkaṁ ekkuva. — The duty on foreign goods is high.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidēśī sarukula mīda suṅkaṁ ekkuva.* — The duty on foreign goods is high.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a passport, then the Telugu for identification, then say suṅkaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a passport, then the Telugu for identification, then say *suṅkaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సుంకం (suṅkaṁ) mean? (\"A customs duty; a toll\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C441-bhadrata",
+      "sequence": 22180,
+      "title": "భద్రత (bhadrata) — security; safety",
+      "headword": "భద్రత",
+      "romanization": "bhadrata",
+      "gloss": "security; safety",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b9290fc6370b6c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for identification, then the Telugu for a customs duty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: భద్రత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "భద్రత — bhadrata — \"security; safety\"."
+            },
+            {
+              "kind": "speech",
+              "text": "విమానాశ్రయంలో భద్రత కోసం సామాను తనిఖీ చేశారు. vimānāśrayaṁlō bhadrata kōsaṁ sāmānu tanikhī cēśāru. At the airport they checked the luggage for security."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending -త makes an abstract noun of a Sanskrit adjective: భద్ర, safe, gives భద్రత (bhadrata), safety."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "భద్రత (bhadrata) is borrowed from Sanskrit bhadratā (Monier-Williams), the abstract noun of bhadra, \"fortunate, good\" (CDIAL 9377). In Telugu it came to mean safety and security."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhadrata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhadrata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhadrata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhadrata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimānāśrayaṁlō bhadrata kōsaṁ sāmānu tanikhī cēśāru. — At the airport they checked the luggage for security.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimānāśrayaṁlō bhadrata kōsaṁ sāmānu tanikhī cēśāru.* — At the airport they checked the luggage for security.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for identification, then the Telugu for a customs duty, then say bhadrata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for identification, then the Telugu for a customs duty, then say *bhadrata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does భద్రత (bhadrata) mean? (\"Security; safety\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C441-dhruvapatram",
+      "sequence": 22190,
+      "title": "ధ్రువపత్రం (dhruvapatraṁ) — a certificate",
+      "headword": "ధ్రువపత్రం",
+      "romanization": "dhruvapatraṁ",
+      "gloss": "a certificate",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ca788d77182a497",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a customs duty, then the Telugu for security."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ధ్రువపత్రం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ధ్రువపత్రం — dhruvapatraṁ — \"a certificate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పాస్పోర్టు కోసం నా ధ్రువపత్రాలు అన్నీ ఇచ్చాను. pāspōrṭu kōsaṁ nā dhruvapatrālu annī iccānu. I handed in all my certificates for the passport."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ధ్రువపత్రాలు, dhruvapatrālu."
+            },
+            {
+              "kind": "speech",
+              "text": "ధ్రువ, firm, + పత్రం, a document: a paper that makes a fact firm. Plural ధ్రువపత్రాలు, the -ం noun plural in -ాలు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ధ్రువపత్రం (dhruvapatraṁ) is built from two words borrowed from Sanskrit: dhruva, \"fixed, firm\" (CDIAL 6892), and patra, \"a leaf, a written document\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhruvapatraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhruvapatraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhruvapatraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhruvapatraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāspōrṭu kōsaṁ nā dhruvapatrālu annī iccānu. — I handed in all my certificates for the passport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāspōrṭu kōsaṁ nā dhruvapatrālu annī iccānu.* — I handed in all my certificates for the passport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a customs duty, then the Telugu for security, then say dhruvapatraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a customs duty, then the Telugu for security, then say *dhruvapatraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ధ్రువపత్రం (dhruvapatraṁ) mean? (\"A certificate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

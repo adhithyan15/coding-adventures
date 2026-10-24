@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:266c600dd848ad1c",
+  "lessonIds": [
+    "BN-C518-ludo",
+    "BN-C518-pasha",
+    "BN-C518-sapludo",
+    "BN-C518-shobdojobdo",
+    "BN-C518-kerom"
+  ],
+  "tex": "bengali/book/chapters/ch518-games-indoors.tex"
+}

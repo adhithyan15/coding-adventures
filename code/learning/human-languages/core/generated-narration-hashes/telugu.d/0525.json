@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:05c3141b90b35e0a",
+  "lessonIds": [
+    "TE-C525-upadhi",
+    "TE-C525-sampadana",
+    "TE-C525-adayam",
+    "TE-C525-vetanam",
+    "TE-C525-sramincu",
+    "TE-R525-review-518-525"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch525.txt",
+  "json": "telugu/narration/ch525.json",
+  "textHash": "fnv1a64:30541f733d3e50ca",
+  "jsonHash": "fnv1a64:c4ffef9a5c969cbd",
+  "findings": []
+}

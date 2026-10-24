@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C417-minaha",
+    "language": "telugu",
+    "chapter": 417,
+    "sequence": 20820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a12150bda75d1f82"
+  },
+  "findings": []
+}

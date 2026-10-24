@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C280-moi",
+    "language": "bengali",
+    "chapter": 280,
+    "sequence": 18220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f611f2dca2276138"
+  },
+  "findings": []
+}

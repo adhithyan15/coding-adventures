@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 505,
+  "title": "Bones and joints",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6aa4470bb3c18df4",
+  "lessons": [
+    {
+      "id": "AR-C505-jumjuma",
+      "sequence": 28070,
+      "title": "جمجمة (jumjuma) — a skull",
+      "headword": "جمجمة",
+      "romanization": "jumjuma",
+      "gloss": "a skull",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9bf7b59ce535e819",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for the intestines, then the Arabic for the pulse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جمجمة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جمجمة — jumjuma — \"a skull\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الجمجمة تحمي الدماغ. al-jumjuma taḥmī ad-dimāgh. The skull protects the brain."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: جماجم, jamājim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جمجمة (jumjuma) is a native Arabic word on a doubled four-letter shape, j-m-j-m. EtymDB sets it beside Hebrew gulgolet and Aramaic gulgaltā, \"a skull\", but how they are related is not settled. Its plural jamājim follows the usual four-letter pattern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jumjuma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jumjuma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jumjuma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jumjuma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-jumjuma taḥmī ad-dimāgh. — The skull protects the brain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-jumjuma taḥmī ad-dimāgh.* — The skull protects the brain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for the intestines, then the Arabic for the pulse, then say jumjuma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for the intestines, then the Arabic for the pulse, then say *jumjuma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جمجمة (jumjuma) mean? (\"A skull\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C505-dil",
+      "sequence": 28080,
+      "title": "ضلع (ḍilʿ) — a rib",
+      "headword": "ضلع",
+      "romanization": "ḍilʿ",
+      "gloss": "a rib",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f9115030604f0c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for the pulse, then the Arabic for a skull."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ضلع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضلع — ḍilʿ — \"a rib\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كسر اللاعب ضلعا في المباراة. kasara al-lāʿib ḍilʿan fī al-mubārā. The player broke a rib in the match."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أضلاع, aḍlāʿ."
+            },
+            {
+              "kind": "speech",
+              "text": "In geometry ضلع (ḍilʿ) is also the side of a triangle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضلع (ḍilʿ) is built on the native Arabic root ḍ-l-ʿ, \"a rib; to be crooked\" (Lane). Lane links the rib to the sense of being bent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍilʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍilʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍilʿ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍilʿ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasara al-lāʿib ḍilʿan fī al-mubārā. — The player broke a rib in the match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasara al-lāʿib ḍilʿan fī al-mubārā.* — The player broke a rib in the match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for the pulse, then the Arabic for a skull, then say ḍilʿ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for the pulse, then the Arabic for a skull, then say *ḍilʿ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ضلع (ḍilʿ) mean? (\"A rib\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C505-fakhidh",
+      "sequence": 28090,
+      "title": "فخذ (fakhidh) — a thigh",
+      "headword": "فخذ",
+      "romanization": "fakhidh",
+      "gloss": "a thigh",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a9814c96852cee9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a skull, then the Arabic for a rib."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فخذ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فخذ — fakhidh — \"a thigh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أكلنا فخذ الدجاج المشوي. akalnā fakhidh ad-dajāj al-mashwī. We ate the grilled chicken thigh."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أفخاذ, afkhādh."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فخذ (fakhidh) is built on the native Arabic root f-kh-dh, \"the thigh\" (Lane). Lane also gives fakhidh as a branch of a tribe, below the clan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fakhidh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fakhidh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fakhidh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fakhidh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akalnā fakhidh ad-dajāj al-mashwī. — We ate the grilled chicken thigh.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akalnā fakhidh ad-dajāj al-mashwī.* — We ate the grilled chicken thigh.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a skull, then the Arabic for a rib, then say fakhidh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a skull, then the Arabic for a rib, then say *fakhidh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فخذ (fakhidh) mean? (\"A thigh\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C505-wirk",
+      "sequence": 28100,
+      "title": "ورك (wirk) — a hip",
+      "headword": "ورك",
+      "romanization": "wirk",
+      "gloss": "a hip",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dfc55002e685f67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a rib, then the Arabic for a thigh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ورك",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ورك — wirk — \"a hip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تشعر جدتي بألم في الورك. tashʿuru jaddatī bi-alam fī al-wirk. My grandmother feels a pain in her hip."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ورك (wirk) is built on the native Arabic root w-r-k, \"the hip, the haunch\" (Lane). The word is old and common to the language."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wirk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wirk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wirk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wirk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tashʿuru jaddatī bi-alam fī al-wirk. — My grandmother feels a pain in her hip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tashʿuru jaddatī bi-alam fī al-wirk.* — My grandmother feels a pain in her hip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a rib, then the Arabic for a thigh, then say wirk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a rib, then the Arabic for a thigh, then say *wirk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ورك (wirk) mean? (\"A hip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C505-mafsil",
+      "sequence": 28110,
+      "title": "مفصل (mafṣil) — a joint",
+      "headword": "مفصل",
+      "romanization": "mafṣil",
+      "gloss": "a joint",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8c5e864b886b1e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a thigh, then the Arabic for a hip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مفصل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مفصل — mafṣil — \"a joint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عند جدي ألم في المفاصل. ʿinda jaddī alam fī al-mafāṣil. My grandfather has pain in his joints."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: مفاصل, mafāṣil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مفصل (mafṣil) is built on the native Arabic root f-ṣ-l, \"to separate, to divide\" (Lane). Faṣl, a season, which you know, shares the root: both name a division. A mafṣil is where the body divides."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mafṣil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mafṣil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mafṣil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mafṣil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿinda jaddī alam fī al-mafāṣil. — My grandfather has pain in his joints.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿinda jaddī alam fī al-mafāṣil.* — My grandfather has pain in his joints.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a thigh, then the Arabic for a hip, then say mafṣil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a thigh, then the Arabic for a hip, then say *mafṣil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مفصل (mafṣil) mean? (\"A joint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

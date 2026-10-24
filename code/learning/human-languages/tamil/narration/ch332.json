@@ -1,0 +1,857 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 332,
+  "title": "War",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:61eee52803a79af3",
+  "lessons": [
+    {
+      "id": "TA-C332-por",
+      "sequence": 19040,
+      "title": "போர் (pōr) — a war; a battle",
+      "headword": "போர்",
+      "romanization": "pōr",
+      "gloss": "a war; a battle",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:febdd52bacd64f74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a donation, then the Tamil for to prosper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: போர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போர் — pōr — \"a war; a battle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தப் போர் பத்து ஆண்டுகள் நடந்தது. antap pōr pattu āṇṭukaḷ naṭantatu. That war went on for ten years."
+            },
+            {
+              "kind": "speech",
+              "text": "போர் (pōr) புரி, to wage war."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போர் (pōr) is native Dravidian: DEDR 4540 gives it under பொரு, \"to fight, engage in battle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antap pōr pattu āṇṭukaḷ naṭantatu. — That war went on for ten years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antap pōr pattu āṇṭukaḷ naṭantatu.* — That war went on for ten years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a donation, then the Tamil for to prosper, then say pōr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a donation, then the Tamil for to prosper, then say *pōr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does போர் (pōr) mean? (\"A war; a battle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C332-patai",
+      "sequence": 19050,
+      "title": "படை (paṭai) — an army; a force",
+      "headword": "படை",
+      "romanization": "paṭai",
+      "gloss": "an army; a force",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3fe7adff9e47363a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to prosper, then the Tamil for a war."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: படை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "படை — paṭai — \"an army; a force\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மன்னரின் படை ஆற்றைக் கடந்தது. maṉṉariṉ paṭai āṟṟaik kaṭantatu. The king's army crossed the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a band of people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "படை (paṭai) is native Dravidian (DEDR 3860): army, crowd, weapons, battle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṉṉariṉ paṭai āṟṟaik kaṭantatu. — The king's army crossed the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṉṉariṉ paṭai āṟṟaik kaṭantatu.* — The king's army crossed the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to prosper, then the Tamil for a war, then say paṭai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to prosper, then the Tamil for a war, then say *paṭai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does படை (paṭai) mean? (\"An army; a force\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C332-pataiyetu",
+      "sequence": 19060,
+      "title": "படையெடு (paṭaiyeṭu) — to march against; to invade",
+      "headword": "படையெடு",
+      "romanization": "paṭaiyeṭu",
+      "gloss": "to march against; to invade",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50692c9a0047c03c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a war, then the Tamil for an army."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: படையெடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "படையெடு — paṭaiyeṭu — \"to march against; to invade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பக்கத்து நாட்டு மன்னர் நம் நாட்டின் மீது படையெடுத்தார். pakkattu nāṭṭu maṉṉar nam nāṭṭiṉ mītu paṭaiyeṭuttār. The neighbouring king marched against our country."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): படையெடுத்தேன், paṭaiyeṭuttēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The target takes மீது: நாட்டின் மீது படையெடு (paṭaiyeṭu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "படையெடு (paṭaiyeṭu) is a Tamil compound built from படை (paṭai), \"army\" (DEDR 3860), and எடு, \"to take up, raise\" (DEDR 851): to raise an army against."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭaiyeṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭaiyeṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭaiyeṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭaiyeṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakkattu nāṭṭu maṉṉar nam nāṭṭiṉ mītu paṭaiyeṭuttār. — The neighbouring king marched against our country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakkattu nāṭṭu maṉṉar nam nāṭṭiṉ mītu paṭaiyeṭuttār.* — The neighbouring king marched against our country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a war, then the Tamil for an army, then say paṭaiyeṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a war, then the Tamil for an army, then say *paṭaiyeṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does படையெடு (paṭaiyeṭu) mean? (\"To march against; to invade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C332-takku",
+      "sequence": 19070,
+      "title": "தாக்கு (tākku) — to attack; to strike",
+      "headword": "தாக்கு",
+      "romanization": "tākku",
+      "gloss": "to attack; to strike",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03d6c08e2ff3e082",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an army, then the Tamil for to march against."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தாக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தாக்கு — tākku — \"to attack; to strike\"."
+            },
+            {
+              "kind": "speech",
+              "text": "படைவீரர்கள் இரவில் கோட்டையைத் தாக்கினார்கள். paṭaivīrarkaḷ iravil kōṭṭaiyait tākkiṉārkaḷ. The soldiers attacked the fort at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தாக்கினேன், tākkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of illness or weather: காய்ச்சல் அவனைத் தாக்கியது."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தாக்கு (tākku) is native Dravidian (DEDR 3150): to collide, strike, attack."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tākku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tākku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tākku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tākku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭaivīrarkaḷ iravil kōṭṭaiyait tākkiṉārkaḷ. — The soldiers attacked the fort at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭaivīrarkaḷ iravil kōṭṭaiyait tākkiṉārkaḷ.* — The soldiers attacked the fort at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an army, then the Tamil for to march against, then say tākku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an army, then the Tamil for to march against, then say *tākku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தாக்கு (tākku) mean? (\"To attack; to strike\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C332-katarpatai",
+      "sequence": 19080,
+      "title": "கடற்படை (kaṭaṟpaṭai) — a navy",
+      "headword": "கடற்படை",
+      "romanization": "kaṭaṟpaṭai",
+      "gloss": "a navy",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2fa662fa608842a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to march against, then the Tamil for to attack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கடற்படை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடற்படை — kaṭaṟpaṭai — \"a navy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்த மன்னரிடம் பெரிய கடற்படை இருந்தது. anta maṉṉariṭam periya kaṭaṟpaṭai iruntatu. That king had a large navy."
+            },
+            {
+              "kind": "speech",
+              "text": "கடல், sea + படை (paṭai), army; ல் turns to ற் before ப."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடற்படை (kaṭaṟpaṭai) is a Tamil compound built from கடல், \"sea\" (DEDR 1118), and படை (paṭai), \"army\" (DEDR 3860)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaṟpaṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaṟpaṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaṟpaṭai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaṟpaṭai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anta maṉṉariṭam periya kaṭaṟpaṭai iruntatu. — That king had a large navy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anta maṉṉariṭam periya kaṭaṟpaṭai iruntatu.* — That king had a large navy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to march against, then the Tamil for to attack, then say kaṭaṟpaṭai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to march against, then the Tamil for to attack, then say *kaṭaṟpaṭai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கடற்படை (kaṭaṟpaṭai) mean? (\"A navy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R332-review-326-332",
+      "sequence": 19090,
+      "title": "Looking back: from The Past to War",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from The Past to War",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2a90052f499fbd3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for history and the past."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "history, the past, ancient times, a period, a decade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: history, the past, ancient times, a period, a decade]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ancestors, a dynasty, to settle, a long time, ancestral roots",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ancestors, a dynasty, to settle, a long time, ancestral roots]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a king, a queen, a prince, a princess, a throne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a king, a queen, a prince, a princess, a throne]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a royal court, a crown, to crown a king, a reign, an envoy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a royal court, a crown, to crown a king, a reign, an envoy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an empire, an emperor, a treasury, a royal tribute, to flourish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an empire, an emperor, a treasury, a royal tribute, to flourish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a royal decree, a copper-plate grant, a patron, a donation, to prosper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a royal decree, a copper-plate grant, a patron, a donation, to prosper]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a war, an army, to march against, to attack, a navy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a war, an army, to march against, to attack, a navy]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "History? (வரலாறு, varalāṟu.) The past? (கடந்த காலம், kaṭanta kālam.) Ancient times? (பழங்காலம், paḻaṅkālam.) A period? (காலகட்டம், kālakaṭṭam.) A decade? (தசாப்தம், tacāptam.) Ancestors? (முன்னோர், muṉṉōr.) A dynasty? (வம்சம், vamcam.) To settle? (குடியேறு, kuṭiyēṟu.) A long time? (நெடுங்காலம், neṭuṅkālam.) Ancestral roots? (பூர்வீகம், pūrvīkam.) A king? (மன்னர், maṉṉar.) A queen? (ராணி, rāṇi.) A prince? (இளவரசன், iḷavaracaṉ.) A princess? (இளவரசி, iḷavaraci.) A throne? (அரியணை, ariyaṇai.) A royal court? (அரசவை, aracavai.) A crown? (மகுடம், makuṭam.) To crown a king? (முடிசூட்டு, muṭicūṭṭu.) A reign? (ஆட்சி, āṭci.) An envoy? (தூதர், tūtar.) An empire? (பேரரசு, pēraracu.) An emperor? (சக்கரவர்த்தி, cakkaravartti.) A treasury? (கருவூலம், karuvūlam.) A royal tribute? (கப்பம், kappam.) To flourish? (ஓங்கு, ōṅku.) A royal decree? (அரசாணை, aracāṇai.) A copper-plate grant? (செப்பேடு, ceppēṭu.) A patron? (வள்ளல், vaḷḷal.) A donation? (கொடை, koṭai.) To prosper? (செழி, ceḻi.) A war? (போர், pōr.) An army? (படை, paṭai.) To march against? (படையெடு, paṭaiyeṭu.) To attack? (தாக்கு, tākku.) A navy? (கடற்படை, kaṭaṟpaṭai.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

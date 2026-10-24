@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C476-katrano",
+    "language": "bengali",
+    "chapter": 476,
+    "sequence": 28980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c8a068188497784"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C328-pandulipi",
+  "pathSegment": "BN-PATH-328-PRISHTHA328",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-328-PRISHTHA328",
+      "order": 2
+    }
+  ]
+}

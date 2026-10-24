@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C427-vargikarisu",
+    "language": "kannada",
+    "chapter": 427,
+    "sequence": 21640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5bc940474b48fd5"
+  },
+  "findings": []
+}

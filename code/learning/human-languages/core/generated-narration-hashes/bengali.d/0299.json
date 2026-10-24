@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:ada2028ed4ac86ba",
+  "lessonIds": [
+    "BN-C299-somprochar",
+    "BN-C299-chenel",
+    "BN-C299-uposthapok",
+    "BN-C299-sorasori",
+    "BN-C299-dorshok",
+    "BN-R299-review-292-299"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch299.txt",
+  "json": "bengali/narration/ch299.json",
+  "textHash": "fnv1a64:4e7ab06c26b053c4",
+  "jsonHash": "fnv1a64:78e72536a0012bbe",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C535-phurti",
+  "pathSegment": "HI-PATH-535-DAUR535",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-535-DAUR535",
+      "order": 1
+    }
+  ]
+}

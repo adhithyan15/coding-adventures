@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:d949d8229c188764",
+  "lessonIds": [
+    "HI-C486-dukhna",
+    "HI-C486-pindli",
+    "HI-C486-kasakna",
+    "HI-C486-rirh",
+    "HI-C486-sujna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch486.txt",
+  "json": "hindi/narration/ch486.json",
+  "textHash": "fnv1a64:a19543d856a8932e",
+  "jsonHash": "fnv1a64:e7cd1016d8724b08",
+  "findings": []
+}

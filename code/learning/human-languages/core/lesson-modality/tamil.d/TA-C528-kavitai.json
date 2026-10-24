@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C528-kavitai",
+    "language": "tamil",
+    "chapter": 528,
+    "sequence": 30240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:077fbf7e22a0c9b1"
+  },
+  "findings": []
+}

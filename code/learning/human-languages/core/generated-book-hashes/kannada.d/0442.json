@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:82aa0ecdd79755bf",
+  "lessonIds": [
+    "KA-C442-heddari",
+    "KA-C442-tol",
+    "KA-C442-melsetuve",
+    "KA-C442-ghati",
+    "KA-C442-marga"
+  ],
+  "tex": "kannada/book/chapters/ch442-on-the-highway.tex"
+}

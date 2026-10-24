@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:81509fbb19484d55",
+  "lessonIds": [
+    "TE-C539-pallavi",
+    "TE-C539-caranam",
+    "TE-C539-padyam",
+    "TE-C539-geyam",
+    "TE-C539-janapadam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch539.txt",
+  "json": "telugu/narration/ch539.json",
+  "textHash": "fnv1a64:2b1763c97b626848",
+  "jsonHash": "fnv1a64:469be9dc0a395adb",
+  "findings": []
+}

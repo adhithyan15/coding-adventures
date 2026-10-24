@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-424-AVALOKISU424",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "KA-EXT-424-AVALOKISU424"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:9e61edac581a62ce",
+  "lessonIds": [
+    "ML-C373-akramanam",
+    "ML-C373-bhisani",
+    "ML-C373-akramikkuka",
+    "ML-C373-kollayatikkuka",
+    "ML-C373-takarkkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch373-an-attack.tex"
+}

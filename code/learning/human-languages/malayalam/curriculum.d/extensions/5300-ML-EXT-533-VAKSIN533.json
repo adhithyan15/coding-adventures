@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-533-VAKSIN533",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a vaccine, immunity, a prescription, to grow weak and breathlessness.",
+  "prerequisites": []
+}

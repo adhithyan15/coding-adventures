@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:0ecc2ff998a6c732",
+  "lessonIds": [
+    "TE-C404-pedarikam",
+    "TE-C404-dhanika",
+    "TE-C404-sampada",
+    "TE-C404-svatantra",
+    "TE-C404-nirudyogam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch404.txt",
+  "json": "telugu/narration/ch404.json",
+  "textHash": "fnv1a64:999b4286f1167904",
+  "jsonHash": "fnv1a64:2e72174aaedffa6a",
+  "findings": []
+}

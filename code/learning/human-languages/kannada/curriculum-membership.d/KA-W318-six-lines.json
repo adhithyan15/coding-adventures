@@ -1,0 +1,11 @@
+{
+  "id": "KA-W318-six-lines",
+  "pathSegment": "KA-PATH-318-WOULD-DEPENDS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-318-WOULD-DEPENDS",
+      "order": 3
+    }
+  ]
+}

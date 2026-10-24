@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C382-drkpatham",
+    "language": "telugu",
+    "chapter": 382,
+    "sequence": 19010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78f48679fba14927"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-352-MUKHALAFA352",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-352-MUKHALAFA352"
+  ],
+  "after": []
+}

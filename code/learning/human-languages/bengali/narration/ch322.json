@@ -1,0 +1,829 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 322,
+  "title": "Ogres, Fairies and Ghosts",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:7cd14698f959c5c9",
+  "lessons": [
+    {
+      "id": "BN-C322-rakkhos",
+      "sequence": 20350,
+      "title": "রাক্ষস (rākkhôs) — an ogre; a demon who eats people",
+      "headword": "রাক্ষস",
+      "romanization": "rākkhôs",
+      "gloss": "an ogre; a demon who eats people",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9aef21718155371",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for magic, then the Bengali for to sleep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রাক্ষস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রাক্ষস — rākkhôs — \"an ogre; a demon who eats people\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাক্ষসটা রাতে গ্রামে এসে মানুষ খেত। rākkhôsṭā rāte grāme ese mānush khetô. The ogre used to come to the village at night and eat people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রাক্ষস (rākkhôs) is Sanskrit rākṣasa, a Rakṣas, a malignant demon of the old epics (Monier-Williams). Its ক্ষ is read kkh."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rākkhôs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rākkhôs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rākkhôs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rākkhôs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rākkhôsṭā rāte grāme ese mānush khetô. — The ogre used to come to the village at night and eat people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rākkhôsṭā rāte grāme ese mānush khetô.* — The ogre used to come to the village at night and eat people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for magic, then the Bengali for to sleep, then say rākkhôs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for magic, then the Bengali for to sleep, then say *rākkhôs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does রাক্ষস (rākkhôs) mean? (\"An ogre; a demon who eats people\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C322-pori",
+      "sequence": 20360,
+      "title": "পরী (pôrī) — a fairy",
+      "headword": "পরী",
+      "romanization": "pôrī",
+      "gloss": "a fairy",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f52ee23a2bfd6dce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to sleep, then the Bengali for an ogre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পরী",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরী — pôrī — \"a fairy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গল্পে একটা পরী শিশুটিকে বাঁচাল। gôlpe ekṭā pôrī shishuṭike bā̃chālô. In the story a fairy saved the child."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরী (pôrī) is usually traced to Persian parī, 'a fairy', the winged spirit of Persian stories."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôlpe ekṭā pôrī shishuṭike bā̃chālô. — In the story a fairy saved the child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôlpe ekṭā pôrī shishuṭike bā̃chālô.* — In the story a fairy saved the child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to sleep, then the Bengali for an ogre, then say pôrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to sleep, then the Bengali for an ogre, then say *pôrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পরী (pôrī) mean? (\"A fairy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C322-daini",
+      "sequence": 20370,
+      "title": "ডাইনি (ḍāini) — a witch",
+      "headword": "ডাইনি",
+      "romanization": "ḍāini",
+      "gloss": "a witch",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14d15f99fe423dc7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an ogre, then the Bengali for a fairy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ডাইনি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ডাইনি — ḍāini — \"a witch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রূপকথার ডাইনিটা বনের ভিতরে একা থাকত। rūpkôthār ḍāiniṭā bôner bhitôre ekā thāktô. The witch in the fairy tale lived alone deep in the forest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ডাইনি (ḍāini) comes down from Sanskrit ḍākinī, a female spirit in the train of the goddess Kālī (CDIAL 5542, which lists Bengali ḍāin and ḍāini, 'a witch')."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāini",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāini*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāini, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāini*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūpkôthār ḍāiniṭā bôner bhitôre ekā thāktô. — The witch in the fairy tale lived alone deep in the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūpkôthār ḍāiniṭā bôner bhitôre ekā thāktô.* — The witch in the fairy tale lived alone deep in the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an ogre, then the Bengali for a fairy, then say ḍāini again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an ogre, then the Bengali for a fairy, then say *ḍāini* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ডাইনি (ḍāini) mean? (\"A witch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C322-obhishap",
+      "sequence": 20380,
+      "title": "অভিশাপ (ôbhishāp) — a curse",
+      "headword": "অভিশাপ",
+      "romanization": "ôbhishāp",
+      "gloss": "a curse",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0429b8388d997d0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a fairy, then the Bengali for a witch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অভিশাপ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভিশাপ — ôbhishāp — \"a curse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ডাইনির অভিশাপে রাজকুমার পাথর হলেন। ḍāinir ôbhishāpe rājkumār pāthôr hôlen. By the witch's curse the prince was turned to stone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভিশাপ (ôbhishāp) is Sanskrit abhiśāpa, 'a curse; a charge' (Monier-Williams). অভিশাপ দেওয়া, to put a curse on someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhishāp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhishāp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhishāp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhishāp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāinir ôbhishāpe rājkumār pāthôr hôlen. — By the witch's curse the prince was turned to stone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāinir ôbhishāpe rājkumār pāthôr hôlen.* — By the witch's curse the prince was turned to stone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a fairy, then the Bengali for a witch, then say ôbhishāp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a fairy, then the Bengali for a witch, then say *ôbhishāp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অভিশাপ (ôbhishāp) mean? (\"A curse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C322-bhut",
+      "sequence": 20390,
+      "title": "ভূত (bhūt) — a ghost",
+      "headword": "ভূত",
+      "romanization": "bhūt",
+      "gloss": "a ghost",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b9cd362e82f65fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a witch, then the Bengali for a curse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভূত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভূত — bhūt — \"a ghost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "লোকে বলে যে পুরনো বাড়িটায় একটা ভূত থাকে। loke bôle je purôno bāṛiṭāy ekṭā bhūt thāke. People say a ghost lives in the old house."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভূত (bhūt) is Sanskrit bhūta, 'become, been, past' (Monier-Williams), and so a being, a spirit: one who has been."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loke bôle je purôno bāṛiṭāy ekṭā bhūt thāke. — People say a ghost lives in the old house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loke bôle je purôno bāṛiṭāy ekṭā bhūt thāke.* — People say a ghost lives in the old house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a witch, then the Bengali for a curse, then say bhūt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a witch, then the Bengali for a curse, then say *bhūt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভূত (bhūt) mean? (\"A ghost\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R322-review-316-322",
+      "sequence": 20400,
+      "title": "Looking back: from The Siege to Ogres, Fairies and Ghosts",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from The Siege to Ogres, Fairies and Ghosts",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc0b60391175d70e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for to surround and a rampart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to surround, a rampart, a moat, to hold out, to fall back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to surround, a rampart, a moat, to hold out, to fall back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a warrior, self-sacrifice, a martyr, to surrender, defeat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a warrior, self-sacrifice, a martyr, to surrender, defeat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a revolution, a movement, a struggle, to found, liberation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a revolution, a movement, a struggle, to found, liberation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ruins, a statue, to excavate, an inscription, currency",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ruins, a statue, to excavate, an inscription, currency]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a memorial, to construct, a tomb, a dome, architecture",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a memorial, to construct, a tomb, a dome, architecture]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a legend, a fairy tale, a giant, magic, to sleep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a legend, a fairy tale, a giant, magic, to sleep]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an ogre, a fairy, a witch, a curse, a ghost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an ogre, a fairy, a witch, a curse, a ghost]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To surround? (ঘেরা, gherā.) A rampart? (প্রাচীর, prāchīr.) A moat? (পরিখা, pôrikhā.) To hold out? (টেকা, ṭekā.) To fall back? (পিছোনো, pichhono.) A warrior? (বীর, bīr.) Self-sacrifice? (আত্মত্যাগ, ātmôtyāg.) A martyr? (শহিদ, shôhid.) To surrender? (আত্মসমর্পণ করা, ātmôsômôrpôn kôrā.) Defeat? (পরাজয়, pôrājôy.) A revolution? (বিপ্লব, biplôb.) A movement? (আন্দোলন, āndolôn.) A struggle? (সংগ্রাম, sônggrām.) To found? (প্রতিষ্ঠা করা, prôtishṭhā kôrā.) Liberation? (মুক্তি, mukti.) Ruins? (ধ্বংসাবশেষ, dhvôngsābôshesh.) A statue? (মূর্তি, mūrti.) To excavate? (খনন করা, khônôn kôrā.) An inscription? (শিলালিপি, shilālipi.) Currency? (মুদ্রা, mudrā.) A memorial? (স্মৃতিস্তম্ভ, smritistômbhô.) To construct? (নির্মাণ করা, nirmān kôrā.) A tomb? (সমাধি, sômādhi.) A dome? (গম্বুজ, gômbuj.) Architecture? (স্থাপত্য, sthāpôtyô.) A legend? (কিংবদন্তি, kingbôdônti.) A fairy tale? (রূপকথা, rūpkôthā.) A giant? (দৈত্য, doityô.) Magic? (জাদু, jādu.) To sleep? (ঘুমানো, ghumāno.) An ogre? (রাক্ষস, rākkhôs.) A fairy? (পরী, pôrī.) A witch? (ডাইনি, ḍāini.) A curse? (অভিশাপ, ôbhishāp.) A ghost? (ভূত, bhūt.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

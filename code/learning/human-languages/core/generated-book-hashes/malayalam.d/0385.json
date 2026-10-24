@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:529bab2fc0ad62d7",
+  "lessonIds": [
+    "ML-C385-vivaham",
+    "ML-C385-vivahaniscayam",
+    "ML-C385-tali",
+    "ML-C385-ksanakkattu",
+    "ML-C385-vivaham-kalikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch385-a-wedding.tex"
+}

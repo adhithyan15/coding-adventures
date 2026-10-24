@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:9c142d21b1b505fb",
+  "lessonIds": [
+    "BN-C462-olos",
+    "BN-C462-kormoth",
+    "BN-C462-elomelo",
+    "BN-C462-phaki-deoya",
+    "BN-C462-gorimosi-kora"
+  ],
+  "tex": "bengali/book/chapters/ch462-lazy-and-industrious.tex"
+}

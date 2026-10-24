@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Taking a Stand",
+  "label": "ch:ka-taking-a-stand",
+  "canDo": "I can say a point of view, a stance, neutral, bias and to advocate.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C378-pratipadisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can say a point of view, a stance, neutral, bias and to advocate.",
+    "assesses": [
+      "KA-LEX-C378-NILUVU378-03",
+      "KA-LEX-C378-NILUVU378-04",
+      "KA-LEX-C378-NILUVU378-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C321-pahuncar",
+    "language": "marathi",
+    "chapter": 321,
+    "sequence": 18700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27291a2de408aaa3"
+  },
+  "findings": []
+}

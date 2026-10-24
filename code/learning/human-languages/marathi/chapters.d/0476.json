@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "The Face Up Close",
+  "label": "ch:mr-the-face-up-close",
+  "canDo": "I can name the eyeball, a nostril, the gums, a beard and a moustache.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C476-misi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can name the eyeball, a nostril, the gums, a beard and a moustache.",
+    "assesses": [
+      "MR-LEX-C476-CEHRA476-03",
+      "MR-LEX-C476-CEHRA476-04",
+      "MR-LEX-C476-CEHRA476-05"
+    ]
+  }
+}

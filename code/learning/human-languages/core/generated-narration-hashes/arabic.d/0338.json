@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:1e7bc0bdd718e63c",
+  "lessonIds": [
+    "AR-C338-tabin",
+    "AR-C338-darih",
+    "AR-C338-wafah",
+    "AR-C338-maqbara",
+    "AR-C338-nash"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch338.txt",
+  "json": "arabic/narration/ch338.json",
+  "textHash": "fnv1a64:98dbe62e88dbf02b",
+  "jsonHash": "fnv1a64:dffd151eb98e5fd7",
+  "findings": []
+}

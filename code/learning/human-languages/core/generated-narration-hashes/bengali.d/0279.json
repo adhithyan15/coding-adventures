@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:04330c121ea2b9b4",
+  "lessonIds": [
+    "BN-C279-jvola",
+    "BN-C279-shikha",
+    "BN-C279-sphulinggo",
+    "BN-C279-pure-jaoya",
+    "BN-C279-bisphoron"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch279.txt",
+  "json": "bengali/narration/ch279.json",
+  "textHash": "fnv1a64:b4fcaa4c174cd0ab",
+  "jsonHash": "fnv1a64:0ef17c6ef53b1a67",
+  "findings": []
+}

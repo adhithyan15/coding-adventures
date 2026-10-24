@@ -1,0 +1,11 @@
+{
+  "id": "KA-C481-havala",
+  "pathSegment": "KA-PATH-481-KARAVALI481",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-481-KARAVALI481",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "The Senses",
+  "label": "ch:hi-the-senses",
+  "canDo": "I can say how something tastes, smells or feels.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C480-catna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can say how something tastes, smells or feels.",
+    "assesses": [
+      "HI-LEX-C480-SPARSH480-03",
+      "HI-LEX-C480-SPARSH480-04",
+      "HI-LEX-C480-SPARSH480-05"
+    ]
+  }
+}

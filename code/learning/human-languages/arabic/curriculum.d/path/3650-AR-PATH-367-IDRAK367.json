@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-367-IDRAK367",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "AR-EXT-367-IDRAK367"
+  ],
+  "after": []
+}

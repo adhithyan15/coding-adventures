@@ -1,0 +1,11 @@
+{
+  "id": "AR-R519-review-512-519",
+  "pathSegment": "AR-PATH-519-WAZIFA519",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-519-WAZIFA519",
+      "order": 5
+    }
+  ]
+}

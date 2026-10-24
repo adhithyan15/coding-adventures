@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C347-ponchayet",
+    "language": "bengali",
+    "chapter": 347,
+    "sequence": 21890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ad80a3c283f2613"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C443-mulaa",
+  "pathSegment": "AR-PATH-443-MULAA443",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-443-MULAA443",
+      "order": 1
+    }
+  ]
+}

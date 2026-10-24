@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C390-hastaksepa",
+    "language": "kannada",
+    "chapter": 390,
+    "sequence": 19750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e5971536078d357"
+  },
+  "findings": []
+}

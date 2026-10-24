@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "The Monsoon",
+  "label": "ch:ml-the-monsoon",
+  "canDo": "I can say the monsoon, the southwest monsoon, the northeast monsoon, to stop raining and a light drizzle.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C507-carralmala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can say the monsoon, the southwest monsoon, the northeast monsoon, to stop raining and a light drizzle.",
+    "assesses": [
+      "ML-LEX-C507-MAZHA507-03",
+      "ML-LEX-C507-MAZHA507-04",
+      "ML-LEX-C507-MAZHA507-05"
+    ]
+  }
+}

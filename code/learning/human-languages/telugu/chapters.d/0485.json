@@ -1,0 +1,21 @@
+{
+  "chapter": 485,
+  "title": "Paying Up",
+  "label": "ch:te-paying-up",
+  "canDo": "I can say a payment, cash, money owed, an exchange rate and to dodge.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-R485-review-478-485",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can say a payment, cash, money owed, an exchange rate and to dodge.",
+    "assesses": [
+      "TE-LEX-C485-NAGADU485-01",
+      "TE-LEX-C485-NAGADU485-02",
+      "TE-LEX-C485-NAGADU485-03",
+      "TE-LEX-C485-NAGADU485-04",
+      "TE-LEX-C485-NAGADU485-05"
+    ]
+  }
+}

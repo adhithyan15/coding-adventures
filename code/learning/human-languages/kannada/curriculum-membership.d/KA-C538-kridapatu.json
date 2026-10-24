@@ -1,0 +1,11 @@
+{
+  "id": "KA-C538-kridapatu",
+  "pathSegment": "KA-PATH-538-PADAKA538",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-538-PADAKA538",
+      "order": 1
+    }
+  ]
+}

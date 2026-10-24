@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:bc8c800a460660b8",
+  "lessonIds": [
+    "KA-C519-udyami",
+    "KA-C519-vyavasthapaka",
+    "KA-C519-sahayaka",
+    "KA-C519-niyojisu",
+    "KA-C519-kudidu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch519.txt",
+  "json": "kannada/narration/ch519.json",
+  "textHash": "fnv1a64:52bc5305052aead3",
+  "jsonHash": "fnv1a64:36027110cdbf4bd7",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:67041a1c8a451c26",
+  "lessonIds": [
+    "MR-C351-matra",
+    "MR-C351-tasec",
+    "MR-C351-kimbahuna",
+    "MR-C351-tathapi",
+    "MR-C351-udaharanartha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch351.txt",
+  "json": "marathi/narration/ch351.json",
+  "textHash": "fnv1a64:cfb2031bfd1523b0",
+  "jsonHash": "fnv1a64:a5126b6579fb0c7f",
+  "findings": []
+}

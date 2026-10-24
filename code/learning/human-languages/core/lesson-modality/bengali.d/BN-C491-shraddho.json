@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C491-shraddho",
+    "language": "bengali",
+    "chapter": 491,
+    "sequence": 29730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:726204c211174b42"
+  },
+  "findings": []
+}

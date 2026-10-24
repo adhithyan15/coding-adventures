@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:aebd367a1b4a955e",
+  "lessonIds": [
+    "BN-C409-elaka",
+    "BN-C409-bosti",
+    "BN-C409-koloni",
+    "BN-C409-basinda",
+    "BN-C409-adda-deoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch409.txt",
+  "json": "bengali/narration/ch409.json",
+  "textHash": "fnv1a64:9d12087c84f9b090",
+  "jsonHash": "fnv1a64:ff601def92b5d62f",
+  "findings": []
+}

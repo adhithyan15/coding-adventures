@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:b59878d4435c62e2",
+  "lessonIds": [
+    "KA-C484-tapamana",
+    "KA-C484-ardrate",
+    "KA-C484-havaguna",
+    "KA-C484-teva",
+    "KA-C484-hadagedu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch484.txt",
+  "json": "kannada/narration/ch484.json",
+  "textHash": "fnv1a64:3567b9f3dab5f3bf",
+  "jsonHash": "fnv1a64:a6b390df91035515",
+  "findings": []
+}

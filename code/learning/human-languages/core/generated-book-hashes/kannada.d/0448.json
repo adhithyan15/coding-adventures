@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:dbf19afa0bbee2a1",
+  "lessonIds": [
+    "KA-C448-indhana",
+    "KA-C448-disel",
+    "KA-C448-bank",
+    "KA-C448-byatari",
+    "KA-C448-savari-madu"
+  ],
+  "tex": "kannada/book/chapters/ch448-filling-the-tank.tex"
+}

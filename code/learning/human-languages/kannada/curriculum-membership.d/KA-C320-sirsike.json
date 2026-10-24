@@ -1,0 +1,11 @@
+{
+  "id": "KA-C320-sirsike",
+  "pathSegment": "KA-PATH-320-VARADI320",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-320-VARADI320",
+      "order": 4
+    }
+  ]
+}

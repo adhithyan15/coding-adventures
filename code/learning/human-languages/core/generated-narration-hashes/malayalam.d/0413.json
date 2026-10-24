@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:a997ebb7ceb8ce88",
+  "lessonIds": [
+    "ML-C413-suparsa-ceyyuka",
+    "ML-C413-abhiprayappetuka",
+    "ML-C413-prasamsikkuka",
+    "ML-C413-prerippikkuka",
+    "ML-C413-prakatippikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch413.txt",
+  "json": "malayalam/narration/ch413.json",
+  "textHash": "fnv1a64:128532bdc42e2a15",
+  "jsonHash": "fnv1a64:f571c8e263a7b35a",
+  "findings": []
+}

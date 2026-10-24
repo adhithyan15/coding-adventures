@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:ec4d8755303c33eb",
+  "lessonIds": [
+    "ML-C398-simhasanam",
+    "ML-C398-kiritam",
+    "ML-C398-pattabhisekam",
+    "ML-C398-bharanadhikari",
+    "ML-C398-valuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch398.txt",
+  "json": "malayalam/narration/ch398.json",
+  "textHash": "fnv1a64:c72dadc1c18c6170",
+  "jsonHash": "fnv1a64:6d892a9a904bfde8",
+  "findings": []
+}

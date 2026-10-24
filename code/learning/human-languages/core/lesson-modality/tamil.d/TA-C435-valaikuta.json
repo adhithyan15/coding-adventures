@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C435-valaikuta",
+    "language": "tamil",
+    "chapter": 435,
+    "sequence": 24900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1777b433c5ca3ff8"
+  },
+  "findings": []
+}

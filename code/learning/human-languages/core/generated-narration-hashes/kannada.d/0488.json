@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:94b820089dbec319",
+  "lessonIds": [
+    "KA-C488-bisigali",
+    "KA-C488-uribisilu",
+    "KA-C488-battu",
+    "KA-C488-biruku",
+    "KA-C488-taggu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch488.txt",
+  "json": "kannada/narration/ch488.json",
+  "textHash": "fnv1a64:a29a644e3fcefed7",
+  "jsonHash": "fnv1a64:b91148d84714c06f",
+  "findings": []
+}

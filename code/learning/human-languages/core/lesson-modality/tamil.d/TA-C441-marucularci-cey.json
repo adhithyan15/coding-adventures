@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C441-marucularci-cey",
+    "language": "tamil",
+    "chapter": 441,
+    "sequence": 25230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:698a8c7b8139b838"
+  },
+  "findings": []
+}

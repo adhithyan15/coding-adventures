@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "A Crash at the Junction",
+  "label": "ch:ml-a-crash-at-the-junction",
+  "canDo": "I can say a throng, to crash into, to collide, to overturn and to trip and fall.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C379-tattiviluka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can say a throng, to crash into, to collide, to overturn and to trip and fall.",
+    "assesses": [
+      "ML-LEX-C379-KOOTTAM379-03",
+      "ML-LEX-C379-KOOTTAM379-04",
+      "ML-LEX-C379-KOOTTAM379-05"
+    ]
+  }
+}

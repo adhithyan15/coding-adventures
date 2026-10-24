@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C458-taguniru",
+    "language": "telugu",
+    "chapter": 458,
+    "sequence": 23060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2b4eba3e1cca25f"
+  },
+  "findings": []
+}

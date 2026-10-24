@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:526b817f72c1a30c",
+  "lessonIds": [
+    "AR-C494-kaaba",
+    "AR-C494-hanin",
+    "AR-C494-ihbat",
+    "AR-C494-muhbat",
+    "AR-C494-malla"
+  ],
+  "tex": "arabic/book/chapters/ch494-feeling-low.tex"
+}

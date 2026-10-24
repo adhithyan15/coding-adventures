@@ -12,8 +12,10 @@ Kannada script is taught **inline**, inside the word lessons, never as a gated
 reading course. Grammar is introduced piece by piece, on the first word that
 needs it.
 
-Coverage note: canonical lessons now continue through Chapter 73, while the
-narrative sequence below is complete only through Chapter 6. `HL-M03` tracks
+Coverage note: canonical lessons now continue through Chapter 546 (the B1
+core in chapters 309–318 and the 1,140-word B1 vocabulary in chapters
+319–546; Kannada attains B1 on the level gate), while the narrative sequence
+below is complete only through Chapter 6. `HL-M03` tracks
 bringing this roadmap and the session map up to the canonical prerequisite
 order; `HL-B24` tracks publishing Chapters 6–31 from the same source.
 

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C486-chosha",
+  "pathSegment": "BN-PATH-486-LALON486",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-486-LALON486",
+      "order": 2
+    }
+  ]
+}

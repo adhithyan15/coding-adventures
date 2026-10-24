@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 338,
+  "title": "Rumours in the Town",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5b4f0beef96c6d3a",
+  "lessons": [
+    {
+      "id": "KA-C338-vadanti",
+      "sequence": 16970,
+      "title": "ವದಂತಿ (vadanti) — a rumour",
+      "headword": "ವದಂತಿ",
+      "romanization": "vadanti",
+      "gloss": "a rumour",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccb312358f47e632",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a tribute, then the Kannada for to comfort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವದಂತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವದಂತಿ — vadanti — \"a rumour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಶಾಲೆ ಮುಚ್ಚುತ್ತಾರೆ ಎಂಬ ವದಂತಿ ಊರಿನಲ್ಲಿ ಇತ್ತು. śāle muccuttāre emba vadanti ūrinalli ittu. There was a rumour in town that the school would close."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ವದಂತಿಗಳು, vadantigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A rumour \"spreads\": ವದಂತಿ (vadanti) ಹಬ್ಬಿತು. ಎಂಬ, \"called, that says\", links it to its content."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವದಂತಿ (vadanti) is borrowed from Sanskrit vadanti, a noun that Monier-Williams gives beside kiṃvadantī, \"the common saying, a rumour\", literally \"what do they say\", from vad, \"to speak\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vadanti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vadanti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vadanti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vadanti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāle muccuttāre emba vadanti ūrinalli ittu. — There was a rumour in town that the school would close.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāle muccuttāre emba vadanti ūrinalli ittu.* — There was a rumour in town that the school would close.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a tribute, then the Kannada for to comfort, then say vadanti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a tribute, then the Kannada for to comfort, then say *vadanti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವದಂತಿ (vadanti) mean? (\"A rumour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C338-pasarisu",
+      "sequence": 16980,
+      "title": "ಪಸರಿಸು (pasarisu) — to spread far",
+      "headword": "ಪಸರಿಸು",
+      "romanization": "pasarisu",
+      "gloss": "to spread far",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0232768f9ab3c8ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to comfort, then the Kannada for a rumour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಸರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಸರಿಸು — pasarisu — \"to spread far\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಸುದ್ದಿ ನಗರದ ತುಂಬಾ ಪಸರಿಸಿತು. ā suddi nagarada tumbā pasarisitu. That news spread all over the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಪಸರಿಸಿತು, pasarisitu."
+            },
+            {
+              "kind": "speech",
+              "text": "News, fame and fragrance spread far: ಸುಗಂಧ ಪಸರಿಸಿತು, a fragrance spread."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಸರಿಸು (pasarisu) is built on Sanskrit prasara, \"advance, extension\", in its Prakrit shape pasara (CDIAL 8824), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pasarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pasarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pasarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pasarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā suddi nagarada tumbā pasarisitu. — That news spread all over the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā suddi nagarada tumbā pasarisitu.* — That news spread all over the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to comfort, then the Kannada for a rumour, then say pasarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to comfort, then the Kannada for a rumour, then say *pasarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಸರಿಸು (pasarisu) mean? (\"To spread far\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C338-uhapoha",
+      "sequence": 16990,
+      "title": "ಊಹಾಪೋಹ (ūhāpōha) — speculation",
+      "headword": "ಊಹಾಪೋಹ",
+      "romanization": "ūhāpōha",
+      "gloss": "speculation",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd47f4a55fff7458",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a rumour, then the Kannada for to spread far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಊಹಾಪೋಹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಊಹಾಪೋಹ — ūhāpōha — \"speculation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಘಟನೆಯ ಬಗ್ಗೆ ತುಂಬಾ ಊಹಾಪೋಹ ಇತ್ತು. ā ghaṭaneya bagge tumbā ūhāpōha ittu. There was a lot of speculation about that incident."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊಹೆ, a guess, and ಅಪೋಹ, a denial: guesses for and against."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಊಹಾಪೋಹ (ūhāpōha) is borrowed from Sanskrit, a compound of ūha, \"consideration\" (CDIAL 2443), and apoha, \"reasoning, denying\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūhāpōha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūhāpōha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūhāpōha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūhāpōha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā ghaṭaneya bagge tumbā ūhāpōha ittu. — There was a lot of speculation about that incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā ghaṭaneya bagge tumbā ūhāpōha ittu.* — There was a lot of speculation about that incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a rumour, then the Kannada for to spread far, then say ūhāpōha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a rumour, then the Kannada for to spread far, then say *ūhāpōha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಊಹಾಪೋಹ (ūhāpōha) mean? (\"Speculation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C338-satya",
+      "sequence": 17000,
+      "title": "ಸತ್ಯ (satya) — the truth; true",
+      "headword": "ಸತ್ಯ",
+      "romanization": "satya",
+      "gloss": "the truth; true",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99da5057a88a9c47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to spread far, then the Kannada for speculation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸತ್ಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸತ್ಯ — satya — \"the truth; true\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೊನೆಗೆ ಸತ್ಯ ಎಲ್ಲರಿಗೂ ಗೊತ್ತಾಯಿತು. konege satya ellarigū gottāyitu. In the end everyone came to know the truth."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿಜ is the everyday word for \"true\"; ಸತ್ಯ (satya) is weightier: ಸತ್ಯ (satya) ಹೇಳು, to tell the truth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸತ್ಯ (satya) is borrowed from Sanskrit satya, \"true\", and as a noun \"truth\" (CDIAL 13112)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konege satya ellarigū gottāyitu. — In the end everyone came to know the truth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konege satya ellarigū gottāyitu.* — In the end everyone came to know the truth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to spread far, then the Kannada for speculation, then say satya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to spread far, then the Kannada for speculation, then say *satya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸತ್ಯ (satya) mean? (\"The truth; true\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C338-alisu-listen",
+      "sequence": 17010,
+      "title": "ಆಲಿಸು (ālisu) — to listen closely",
+      "headword": "ಆಲಿಸು",
+      "romanization": "ālisu",
+      "gloss": "to listen closely",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14227c12c40e8db8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for speculation, then the Kannada for the truth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆಲಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಲಿಸು — ālisu — \"to listen closely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎಲ್ಲರೂ ಅಜ್ಜನ ಕಥೆಯನ್ನು ಗಮನವಿಟ್ಟು ಆಲಿಸಿದರು. ellarū ajjana katheyannu gamanaviṭṭu ālisidaru. Everyone listened closely to Grandfather's story."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಆಲಿಸಿದೆ, āliside."
+            },
+            {
+              "kind": "speech",
+              "text": "A more careful listening than ಕೇಳು; what one listens to takes -ಅನ್ನು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಲಿಸು (ālisu) is native Dravidian: DEDR 383 lists Kannada ālisu, ālaysu, \"to listen, to attend to\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellarū ajjana katheyannu gamanaviṭṭu ālisidaru. — Everyone listened closely to Grandfather's story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellarū ajjana katheyannu gamanaviṭṭu ālisidaru.* — Everyone listened closely to Grandfather's story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for speculation, then the Kannada for the truth, then say ālisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for speculation, then the Kannada for the truth, then say *ālisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆಲಿಸು (ālisu) mean? (\"To listen closely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:501e93d08993eb23",
+  "lessonIds": [
+    "HI-C510-randa",
+    "HI-C510-cheni",
+    "HI-C510-ghisna",
+    "HI-C510-thokna",
+    "HI-C510-chedna"
+  ],
+  "tex": "hindi/book/chapters/ch510-in-the-carpenter-s-shop.tex"
+}

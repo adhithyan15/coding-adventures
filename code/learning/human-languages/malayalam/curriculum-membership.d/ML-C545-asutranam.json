@@ -1,0 +1,11 @@
+{
+  "id": "ML-C545-asutranam",
+  "pathSegment": "ML-PATH-545-CUMATALA545",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-545-CUMATALA545",
+      "order": 3
+    }
+  ]
+}

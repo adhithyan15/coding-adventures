@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:30927fe6ca23112c",
+  "lessonIds": [
+    "HI-C526-fursat",
+    "HI-C526-sangrah",
+    "HI-C526-kasida",
+    "HI-C526-ikka",
+    "HI-C526-satranj"
+  ],
+  "tex": "hindi/book/chapters/ch526-free-time.tex"
+}

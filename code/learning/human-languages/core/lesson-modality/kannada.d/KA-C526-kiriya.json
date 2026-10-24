@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C526-kiriya",
+    "language": "kannada",
+    "chapter": 526,
+    "sequence": 26890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b17994e299ef47da"
+  },
+  "findings": []
+}

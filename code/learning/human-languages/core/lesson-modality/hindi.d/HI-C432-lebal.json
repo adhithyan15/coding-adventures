@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C432-lebal",
+    "language": "hindi",
+    "chapter": 432,
+    "sequence": 23770,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8221deec3ec32754"
+  },
+  "findings": []
+}

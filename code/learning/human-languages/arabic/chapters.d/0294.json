@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "Suddenly, it happened",
+  "label": "ch:ar-suddenly-it-happened",
+  "canDo": "I can say suddenly, at first, thereupon, to happen and to explode.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C294-fi-tilka-al-lahza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say suddenly, at first, thereupon, to happen and to explode.",
+    "assesses": [
+      "AR-LEX-C294-FAJATAN294-03",
+      "AR-LEX-C294-FAJATAN294-04",
+      "AR-LEX-C294-FAJATAN294-05"
+    ]
+  }
+}

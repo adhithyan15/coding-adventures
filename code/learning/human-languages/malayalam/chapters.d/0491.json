@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "At the Mall",
+  "label": "ch:ml-at-the-mall",
+  "canDo": "I can say a shopping mall, a special offer, a clearance sale, a salesman and to try on.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C491-ittunokkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can say a shopping mall, a special offer, a clearance sale, a salesman and to try on.",
+    "assesses": [
+      "ML-LEX-C491-KATA491-03",
+      "ML-LEX-C491-KATA491-04",
+      "ML-LEX-C491-KATA491-05"
+    ]
+  }
+}

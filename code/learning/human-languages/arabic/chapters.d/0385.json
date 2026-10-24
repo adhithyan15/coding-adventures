@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "Organizations",
+  "label": "ch:ar-organizations",
+  "canDo": "I can talk about an organization, an association, a trade union, a council and a member.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C385-udw",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can talk about an organization, an association, a trade union, a council and a member.",
+    "assesses": [
+      "AR-LEX-C385-MUNAZZAMA385-03",
+      "AR-LEX-C385-MUNAZZAMA385-04",
+      "AR-LEX-C385-MUNAZZAMA385-05"
+    ]
+  }
+}

@@ -15,10 +15,11 @@
 // - Linux: Nothing needed — ELF shared objects allow undefined symbols by
 //   default. The dynamic linker resolves them when Node.js calls dlopen().
 //
-// - Windows: N-API symbols come from node.exe at runtime. Providing node.lib
-//   requires finding the Node.js installation, which is non-trivial in CI.
-//   This is handled via BUILD_windows stubs that skip the native build on
-//   Windows CI. Full Windows support can be added later by resolving node.lib.
+// - Windows: N-API symbols come from node.exe at runtime, and a PE/COFF DLL
+//   must name the module behind every import.  src/lib.rs marks its
+//   `extern "C"` block `#[link(name = "node.exe", kind = "raw-dylib")]`, so
+//   rustc writes that import table itself — no node.lib, nothing for this
+//   script to find or download.
 
 fn main() {
     let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
@@ -32,7 +33,7 @@ fn main() {
         }
         _ => {
             // Linux: ELF allows undefined symbols in shared objects by default.
-            // Windows: handled via BUILD_windows skip (see comment above).
+            // Windows: handled by the raw-dylib `#[link]` in src/lib.rs.
         }
     }
 }

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:f655b9b6d9c430e7",
+  "lessonIds": [
+    "BN-C503-oyebsait",
+    "BN-C503-lingk",
+    "BN-C503-onlain",
+    "BN-C503-skrin",
+    "BN-C503-daunlod-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch503.txt",
+  "json": "bengali/narration/ch503.json",
+  "textHash": "fnv1a64:b82bb9e36067215d",
+  "jsonHash": "fnv1a64:adadffa0d96a8928",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "An Explosion and a Shock",
+  "label": "ch:ka-an-explosion-and-a-shock",
+  "canDo": "I can say an explosion, to reel, to tremble, a deluge and an injured person.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C346-gayalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can say an explosion, to reel, to tremble, a deluge and an injured person.",
+    "assesses": [
+      "KA-LEX-C346-SPHOTA346-03",
+      "KA-LEX-C346-SPHOTA346-04",
+      "KA-LEX-C346-SPHOTA346-05"
+    ]
+  }
+}

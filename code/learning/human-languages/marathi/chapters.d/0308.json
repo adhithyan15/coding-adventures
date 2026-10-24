@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "Generations",
+  "label": "ch:mr-generations",
+  "canDo": "I can talk about ancestors, heritage and what a family keeps.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C308-jatan-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can talk about ancestors, heritage and what a family keeps.",
+    "assesses": [
+      "MR-LEX-C308-PIDHI308-03",
+      "MR-LEX-C308-PIDHI308-04",
+      "MR-LEX-C308-PIDHI308-05"
+    ]
+  }
+}

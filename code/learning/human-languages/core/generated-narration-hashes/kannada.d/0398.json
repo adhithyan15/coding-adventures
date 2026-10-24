@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:4578061d9a96f998",
+  "lessonIds": [
+    "KA-C398-pratibhatisu",
+    "KA-C398-horata",
+    "KA-C398-manavi",
+    "KA-C398-sanghatisu",
+    "KA-C398-karyakarta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch398.txt",
+  "json": "kannada/narration/ch398.json",
+  "textHash": "fnv1a64:218a8c26bfef235a",
+  "jsonHash": "fnv1a64:95db8c8028f8a7f0",
+  "findings": []
+}

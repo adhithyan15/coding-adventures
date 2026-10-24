@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C531-krom",
+    "language": "bengali",
+    "chapter": 531,
+    "sequence": 32010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:196883a4245ed46b"
+  },
+  "findings": []
+}

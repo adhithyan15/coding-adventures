@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 556,
+  "title": "Betrayal and Care",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:85cf5a084093eba0",
+  "lessons": [
+    {
+      "id": "ML-C556-pinakkam",
+      "sequence": 27990,
+      "title": "പിണക്കം (piṇakkaṁ) — a falling-out; a sulk",
+      "headword": "പിണക്കം",
+      "romanization": "piṇakkaṁ",
+      "gloss": "a falling-out; a sulk",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a31163eb41d0641b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to split up, then the Malayalam for to be reconciled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പിണക്കം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിണക്കം — piṇakkaṁ — \"a falling-out; a sulk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ചെറിയ പിണക്കം കാരണം അവർ രണ്ട് ദിവസം സംസാരിച്ചില്ല. ceṟiya piṇakkaṁ kāraṇaṁ avar raṇṭŭ divasaṁ saṁsāriccilla. Because of a small falling-out they did not talk for two days."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of പിണങ്ങുക, to sulk, already familiar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിണക്കം (piṇakkaṁ) is native Dravidian, the noun of പിണങ്ങുക, \"to fall out\" (DEDR 4160)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṇakkaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṇakkaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṇakkaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṇakkaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceṟiya piṇakkaṁ kāraṇaṁ avar raṇṭŭ divasaṁ saṁsāriccilla. — Because of a small falling-out they did not talk for two days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceṟiya piṇakkaṁ kāraṇaṁ avar raṇṭŭ divasaṁ saṁsāriccilla.* — Because of a small falling-out they did not talk for two days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to split up, then the Malayalam for to be reconciled, then say piṇakkaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to split up, then the Malayalam for to be reconciled, then say *piṇakkaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പിണക്കം (piṇakkaṁ) mean? (\"A falling-out; a sulk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C556-catikkuka",
+      "sequence": 28000,
+      "title": "ചതിക്കുക (catikkuka) — to betray; to cheat",
+      "headword": "ചതിക്കുക",
+      "romanization": "catikkuka",
+      "gloss": "to betray; to cheat",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dba49d6b3d6b180f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to be reconciled, then the Malayalam for a falling-out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചതിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചതിക്കുക — catikkuka — \"to betray; to cheat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വിശ്വസിച്ച സുഹൃത്ത് അവനെ ചതിച്ചു. viśvasicca suhṛttŭ avane caticcu. The friend he trusted cheated him."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചതിച്ചു, caticcu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ചതി, a trick; one who cheats is ചതിയൻ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചതിക്കുക (catikkuka) is native Dravidian: DEDR 2323 lists ചതി, \"deceit, treachery\", and the verb, to cheat and betray (DEDR 2323)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "catikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *catikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "catikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *catikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśvasicca suhṛttŭ avane caticcu. — The friend he trusted cheated him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśvasicca suhṛttŭ avane caticcu.* — The friend he trusted cheated him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to be reconciled, then the Malayalam for a falling-out, then say catikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to be reconciled, then the Malayalam for a falling-out, then say *catikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചതിക്കുക (catikkuka) mean? (\"To betray; to cheat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C556-vancana",
+      "sequence": 28010,
+      "title": "വഞ്ചന (vañcana) — betrayal; deceit",
+      "headword": "വഞ്ചന",
+      "romanization": "vañcana",
+      "gloss": "betrayal; deceit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2b61f66693c6b0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a falling-out, then the Malayalam for to betray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വഞ്ചന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വഞ്ചന — vañcana — \"betrayal; deceit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പണം എടുത്ത് ഓടിപ്പോയത് വലിയ വഞ്ചനയായിരുന്നു. paṇaṁ eṭuttŭ ōṭippōyatŭ valiya vañcanayāyirunnu. Running off with the money was a great betrayal."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; വഞ്ചിക്കുക is to deceive."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വഞ്ചന (vañcana) is borrowed from Sanskrit vañcana, \"cheating, deception, fraud\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañcana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañcana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañcana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañcana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇaṁ eṭuttŭ ōṭippōyatŭ valiya vañcanayāyirunnu. — Running off with the money was a great betrayal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇaṁ eṭuttŭ ōṭippōyatŭ valiya vañcanayāyirunnu.* — Running off with the money was a great betrayal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a falling-out, then the Malayalam for to betray, then say vañcana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a falling-out, then the Malayalam for to betray, then say *vañcana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വഞ്ചന (vañcana) mean? (\"Betrayal; deceit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C556-karutal",
+      "sequence": 28020,
+      "title": "കരുതൽ (karutal) — care; concern",
+      "headword": "കരുതൽ",
+      "romanization": "karutal",
+      "gloss": "care; concern",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de3656730b8d2479",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to betray, then the Malayalam for betrayal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കരുതൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കരുതൽ — karutal — \"care; concern\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രോഗിയായ അച്ഛനോട് മകൾ വലിയ കരുതൽ കാണിച്ചു. rōgiyāya acchanōṭŭ makaḷ valiya karutal kāṇiccu. The daughter showed great care for her sick father."
+            },
+            {
+              "kind": "speech",
+              "text": "From കരുതുക, to keep in mind; കരുതലോടെ means carefully."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കരുതൽ (karutal) is native Dravidian: DEDR 1283 gives it as care and regard, beside കരുതുക, \"to think, to attend to\" (DEDR 1283)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karutal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karutal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karutal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karutal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rōgiyāya acchanōṭŭ makaḷ valiya karutal kāṇiccu. — The daughter showed great care for her sick father.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rōgiyāya acchanōṭŭ makaḷ valiya karutal kāṇiccu.* — The daughter showed great care for her sick father.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to betray, then the Malayalam for betrayal, then say karutal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to betray, then the Malayalam for betrayal, then say *karutal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കരുതൽ (karutal) mean? (\"Care; concern\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C556-pariganana",
+      "sequence": 28030,
+      "title": "പരിഗണന (parigaṇana) — consideration",
+      "headword": "പരിഗണന",
+      "romanization": "parigaṇana",
+      "gloss": "consideration",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e179474cea2ce64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for betrayal, then the Malayalam for care."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പരിഗണന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരിഗണന — parigaṇana — \"consideration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രായമായവർക്ക് ബസിൽ പ്രത്യേക പരിഗണന കിട്ടണം. prāyamāyavarkkŭ basil pratyēka parigaṇana kiṭṭaṇaṁ. Elderly people should get special consideration on the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "പരിഗണിക്കുക is to consider."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരിഗണന (parigaṇana) is borrowed from Sanskrit parigaṇana, a reckoning or counting over (Monier-Williams): to consider someone is to count them in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parigaṇana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parigaṇana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parigaṇana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parigaṇana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāyamāyavarkkŭ basil pratyēka parigaṇana kiṭṭaṇaṁ. — Elderly people should get special consideration on the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāyamāyavarkkŭ basil pratyēka parigaṇana kiṭṭaṇaṁ.* — Elderly people should get special consideration on the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for betrayal, then the Malayalam for care, then say parigaṇana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for betrayal, then the Malayalam for care, then say *parigaṇana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പരിഗണന (parigaṇana) mean? (\"Consideration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R556-review-549-556",
+      "sequence": 28040,
+      "title": "Words from chapters 549–556 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 549-556",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:157d2bd9d701b8e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for proficiency and a fee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "proficiency, a fee, a career, a pay rise, to bear a load",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: proficiency, a fee, a career, a pay rise, to bear a load]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a workplace, supervision, to coordinate, to consult, an interval",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a workplace, supervision, to coordinate, to consult, an interval]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to entrust, to take on, to attain, to put in work, to toil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to entrust, to take on, to attain, to put in work, to toil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a relationship, married life, a love letter, a boyfriend, to be in love",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a relationship, married life, a love letter, a boyfriend, to be in love]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cradle, to adopt, a stepmother, a sibling, a brother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cradle, to adopt, a stepmother, a sibling, a brother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sister, parents, a brother-in-law, a sister-in-law, a family member",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sister, parents, a brother-in-law, a sister-in-law, a family member]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lullaby, a joint family, a nuclear family, to split up, to be reconciled",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lullaby, a joint family, a nuclear family, to split up, to be reconciled]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a falling-out, to betray, betrayal, care, consideration",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a falling-out, to betray, betrayal, care, consideration]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Proficiency? (നൈപുണ്യം, naipuṇyaṁ.) A fee? (പ്രതിഫലം, pratiphalaṁ.) A career? (കരിയർ, kariyar.) A pay rise? (ശമ്പളവർദ്ധന, śampaḷavarddhana.) To bear a load? (വഹിക്കുക, vahikkuka.) A workplace? (ജോലിസ്ഥലം, jōlisthalaṁ.) Supervision? (മേൽനോട്ടം, mēlnōṭṭaṁ.) To coordinate? (ഏകോപിപ്പിക്കുക, ēkōpippikkuka.) To consult? (കൂടിയാലോചിക്കുക, kūṭiyālōcikkuka.) An interval? (ഇടവേള, iṭavēḷa.) To entrust? (ഏൽപ്പിക്കുക, ēlppikkuka.) To take on? (ഏറ്റെടുക്കുക, ēṟṟeṭukkuka.) To attain? (കൈവരിക്കുക, kaivarikkuka.) To put in work? (പണിയെടുക്കുക, paṇiyeṭukkuka.) To toil? (അധ്വാനിക്കുക, adhvānikkuka.) A relationship? (ബന്ധം, bandhaṁ.) Married life? (ദാമ്പത്യം, dāmpatyaṁ.) A love letter? (പ്രണയലേഖനം, praṇayalēkhanaṁ.) A boyfriend? (കാമുകൻ, kāmukan.) To be in love? (പ്രണയിക്കുക, praṇayikkuka.) A cradle? (തൊട്ടിൽ, toṭṭil.) To adopt? (ദത്തെടുക്കുക, datteṭukkuka.) A stepmother? (രണ്ടാനമ്മ, raṇṭānamma.) A sibling? (കൂടപ്പിറപ്പ്, kūṭappiṟappŭ.) A brother? (സഹോദരൻ, sahōdaran.) A sister? (സഹോദരി, sahōdari.) Parents? (മാതാപിതാക്കൾ, mātāpitākkaḷ.) A brother-in-law? (അളിയൻ, aḷiyan.) A sister-in-law? (നാത്തൂൻ, nāttūn.) A family member? (കുടുംബാംഗം, kuṭumbāṁgaṁ.) A lullaby? (താരാട്ട്, tārāṭṭŭ.) A joint family? (കൂട്ടുകുടുംബം, kūṭṭukuṭumbaṁ.) A nuclear family? (അണുകുടുംബം, aṇukuṭumbaṁ.) To split up? (വേർപിരിയുക, vērpiriyuka.) To be reconciled? (ഇണങ്ങുക, iṇaṅṅuka.) A falling-out? (പിണക്കം, piṇakkaṁ.) To betray? (ചതിക്കുക, catikkuka.) Betrayal? (വഞ്ചന, vañcana.) Care? (കരുതൽ, karutal.) Consideration? (പരിഗണന, parigaṇana.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

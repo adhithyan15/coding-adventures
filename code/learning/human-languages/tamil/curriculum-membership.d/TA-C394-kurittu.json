@@ -1,0 +1,11 @@
+{
+  "id": "TA-C394-kurittu",
+  "pathSegment": "TA-PATH-394-ORUTALAIPPAT394",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-394-ORUTALAIPPAT394",
+      "order": 4
+    }
+  ]
+}

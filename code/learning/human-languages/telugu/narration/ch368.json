@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 368,
+  "title": "Written in Stone",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f0f2688253ea86bc",
+  "lessons": [
+    {
+      "id": "TE-C368-sasanam",
+      "sequence": 18150,
+      "title": "శాసనం (śāsanaṁ) — an inscription; an edict",
+      "headword": "శాసనం",
+      "romanization": "śāsanaṁ",
+      "gloss": "an inscription; an edict",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22d1ea80ed1341f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for remains, then the Telugu for to unearth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శాసనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శాసనం — śāsanaṁ — \"an inscription; an edict\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ రాతి మీద ఒక పాత శాసనం ఉంది. ā rāti mīda oka pāta śāsanaṁ undi. There is an old inscription on that stone."
+            },
+            {
+              "kind": "speech",
+              "text": "Kings carved their orders and gifts on stone and copper."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శాసనం (śāsanaṁ) is borrowed from Sanskrit śāsana, \"a command; a royal edict\" (CDIAL 12420)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāsanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāsanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāsanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāsanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rāti mīda oka pāta śāsanaṁ undi. — There is an old inscription on that stone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rāti mīda oka pāta śāsanaṁ undi.* — There is an old inscription on that stone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for remains, then the Telugu for to unearth, then say śāsanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for remains, then the Telugu for to unearth, then say *śāsanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శాసనం (śāsanaṁ) mean? (\"An inscription; an edict\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C368-talapatram",
+      "sequence": 18160,
+      "title": "తాళపత్రం (tāḷapatraṁ) — a palm-leaf manuscript",
+      "headword": "తాళపత్రం",
+      "romanization": "tāḷapatraṁ",
+      "gloss": "a palm-leaf manuscript",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc74c52bba684d5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to unearth, then the Telugu for an inscription."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తాళపత్రం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తాళపత్రం — tāḷapatraṁ — \"a palm-leaf manuscript\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా తాతగారి దగ్గర పాత తాళపత్రాలు ఉన్నాయి. mā tātagāri daggara pāta tāḷapatrālu unnāyi. Grandfather has old palm-leaf manuscripts."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: తాళపత్రాలు, tāḷapatrālu."
+            },
+            {
+              "kind": "speech",
+              "text": "తాళ, the palmyra palm, and పత్రం, a leaf: the books of the days before paper."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తాళపత్రం (tāḷapatraṁ) is borrowed from Sanskrit: tāla, \"the palmyra palm\", and pattra, \"a leaf\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḷapatraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḷapatraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḷapatraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḷapatraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā tātagāri daggara pāta tāḷapatrālu unnāyi. — Grandfather has old palm-leaf manuscripts.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā tātagāri daggara pāta tāḷapatrālu unnāyi.* — Grandfather has old palm-leaf manuscripts.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to unearth, then the Telugu for an inscription, then say tāḷapatraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to unearth, then the Telugu for an inscription, then say *tāḷapatraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తాళపత్రం (tāḷapatraṁ) mean? (\"A palm-leaf manuscript\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C368-caritrakarudu",
+      "sequence": 18170,
+      "title": "చరిత్రకారుడు (caritrakāruḍu) — a historian",
+      "headword": "చరిత్రకారుడు",
+      "romanization": "caritrakāruḍu",
+      "gloss": "a historian",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0496f1a6d7e94f10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an inscription, then the Telugu for a palm-leaf manuscript."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చరిత్రకారుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చరిత్రకారుడు — caritrakāruḍu — \"a historian\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చరిత్రకారుడు ఆ శాసనం చదివాడు. caritrakāruḍu ā śāsanaṁ cadivāḍu. The historian read the inscription."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: చరిత్రకారులు, caritrakārulu."
+            },
+            {
+              "kind": "speech",
+              "text": "చరిత్ర, history, with -కారుడు, one who makes: compare కళాకారుడు, an artist."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చరిత్రకారుడు (caritrakāruḍu) is built on Sanskrit caritra, \"going; behaviour\" (CDIAL 4691), the source of చరిత్ర, with -kāruḍu, \"one who does\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caritrakāruḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caritrakāruḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caritrakāruḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caritrakāruḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caritrakāruḍu ā śāsanaṁ cadivāḍu. — The historian read the inscription.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caritrakāruḍu ā śāsanaṁ cadivāḍu.* — The historian read the inscription.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an inscription, then the Telugu for a palm-leaf manuscript, then say caritrakāruḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an inscription, then the Telugu for a palm-leaf manuscript, then say *caritrakāruḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చరిత్రకారుడు (caritrakāruḍu) mean? (\"A historian\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C368-nagarikata",
+      "sequence": 18180,
+      "title": "నాగరికత (nāgarikata) — a civilisation",
+      "headword": "నాగరికత",
+      "romanization": "nāgarikata",
+      "gloss": "a civilisation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89b3d272970bce0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a palm-leaf manuscript, then the Telugu for a historian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నాగరికత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నాగరికత — nāgarikata — \"a civilisation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ నది ఒడ్డున ఒక పురాతన నాగరికత ఉండేది. ā nadi oḍḍuna oka purātana nāgarikata uṇḍēdi. An ancient civilisation once stood on the bank of that river."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on నగరం, a city: the life of cities."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నాగరికత (nāgarikata) is built on Sanskrit nāgarika, \"born or living in a town, civic\" (Monier-Williams), from nagara, \"a city\", with the noun ending -ta."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāgarikata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāgarikata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāgarikata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāgarikata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā nadi oḍḍuna oka purātana nāgarikata uṇḍēdi. — An ancient civilisation once stood on the bank of that river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā nadi oḍḍuna oka purātana nāgarikata uṇḍēdi.* — An ancient civilisation once stood on the bank of that river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a palm-leaf manuscript, then the Telugu for a historian, then say nāgarikata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a palm-leaf manuscript, then the Telugu for a historian, then say *nāgarikata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నాగరికత (nāgarikata) mean? (\"A civilisation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C368-yugam",
+      "sequence": 18190,
+      "title": "యుగం (yugaṁ) — an era; an age",
+      "headword": "యుగం",
+      "romanization": "yugaṁ",
+      "gloss": "an era; an age",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2784f1353e2741b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a historian, then the Telugu for a civilisation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: యుగం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "యుగం — yugaṁ — \"an era; an age\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇది కంప్యూటర్ల యుగం. idi kampyūṭarla yugaṁ. This is the age of computers."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: యుగాలు, yugālu."
+            },
+            {
+              "kind": "speech",
+              "text": "The old stories count time in యుగాలు, ages; today the word also names an era of history."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "యుగం (yugaṁ) is borrowed from Sanskrit yuga (CDIAL 10482), whose first sense is \"a yoke\"; it came to mean an age of the world."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yugaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yugaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yugaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yugaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "idi kampyūṭarla yugaṁ. — This is the age of computers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *idi kampyūṭarla yugaṁ.* — This is the age of computers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a historian, then the Telugu for a civilisation, then say yugaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a historian, then the Telugu for a civilisation, then say *yugaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does యుగం (yugaṁ) mean? (\"An era; an age\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

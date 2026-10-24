@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C292-rakh",
+    "language": "marathi",
+    "chapter": 292,
+    "sequence": 17230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0614fa6dcdafc231"
+  },
+  "findings": []
+}

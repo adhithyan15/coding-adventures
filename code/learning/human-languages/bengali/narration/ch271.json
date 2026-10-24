@@ -1,0 +1,702 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 271,
+  "title": "Tickets, and When Things Go Wrong",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:162a370f2ef010e6",
+  "lessons": [
+    {
+      "id": "BN-C271-nouka",
+      "sequence": 16850,
+      "title": "নৌকা (noukā) — a boat",
+      "headword": "নৌকা",
+      "romanization": "noukā",
+      "gloss": "a boat",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe79ced3d646f073",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ask \"How do I get to the station?\" (sṭeshône kībhābe jābô?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নৌকা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নৌকা — noukā — \"a boat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমরা নৌকায় নদী পার হলাম। āmrā noukāy nôdī pār hôlām. — \"We crossed the river by boat.\""
+            },
+            {
+              "kind": "speech",
+              "text": "নৌকায়, with -য়, is \"in a boat, by boat\", as বাসে is \"by bus\". A নৌকা (noukā) is small, rowed or sailed on a river; the big ship is জাহাজ, which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নৌকা (noukā) is a tatsama: Sanskrit naukā, which Monier-Williams gives as \"a small boat or ship\". Beside it Monier-Williams lists nau, \"a ship, boat\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noukā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noukā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We crossed the river by boat\" — āmrā noukāy nôdī pār hôlām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We crossed the river by boat\" — *āmrā noukāy nôdī pār hôlām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"A boat is small; a ship is big\" — noukā chhoṭo; jāhāj bôṛo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"A boat is small; a ship is big\" — *noukā chhoṭo; jāhāj bôṛo*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নৌকা (noukā) mean? (\"A boat\".) \"By boat\"? (নৌকায়.) The big ship? (জাহাজ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W271-letter-au-kar",
+      "sequence": 16860,
+      "title": "ৌ (-ou) — the sign around the ন of নৌকা (noukā)",
+      "headword": "ৌ",
+      "romanization": "-ou",
+      "gloss": "the vowel sign ৌ — ou, written on both sides of its consonant, as in নৌকা",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:9da5bb835a9fd68e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ৌ",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ৌ, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say নৌকা (noukā), \"a boat\". Then write নো (no): ে in front of the ন, া after it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ৌ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ৌ — -ou, the vowel of নৌকা (noukā). Like ো, it is written on both sides of its consonant: one part in front, one after."
+            },
+            {
+              "kind": "speech",
+              "text": "Set the print of নৌ beside নো. In front of the ন, both have ে. After it, নো has an upright stroke like া. নৌ has an upright stroke too, but its top stands above the headline in a hook, bent over to the left, its tip at the upper left."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ৌ — copy the printed shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen beside নৌ and copy the shape you can see, slowly and large: the ে in front, the ন, then the stroke after it with its hook above the headline. Check the copy against নো: only the hook differs."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start ৌ (-ou) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ৌ (-ou) around the ন of নৌকা (noukā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ৌ around the ন of **নৌকা**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "নো, then নৌ, from the print",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **নো**, then **নৌ**, from the print]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "নৌকা (noukā), then নৌকায়",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **নৌকা**, then **নৌকায়**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "দূর, from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **দূর**, from memory]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which sign is around the ন of নৌকা (noukā)? (ৌ (-ou).) How is it unlike ো? (The stroke after the consonant has a hook above the headline.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "BN-W271-letter-au-kar-r1",
+              "prompt": "With no model, write noukā, 'a boat'.",
+              "assesses": [
+                "BN-SCRIPT-C271-AU-KAR-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "নৌকা"
+              ],
+              "feedback": {
+                "correct": "ে in front, the hooked stroke after: ou.",
+                "incorrect": "Reopen নৌ beside নো: the stroke after ন has a hook above the headline. Then write নৌকা again."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C271-tikit-deben",
+      "sequence": 16870,
+      "title": "একটা টিকিট দেবেন? (ekṭā ṭikiṭ deben?) — at the ticket window",
+      "headword": "একটা টিকিট দেবেন?",
+      "romanization": "ekṭā ṭikiṭ deben?",
+      "gloss": "will you give me a ticket? — buying a ticket, and asking the fare and the time",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a481b4f0737d9404",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"We crossed the river by boat\". (āmrā noukāy nôdī pār hôlām.) Then টিকিট, \"a ticket\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: asking for a ticket",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "একটা টিকিট দেবেন? ekṭā ṭikiṭ deben? — \"Could I have a ticket, please?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Bengali often asks politely with the respectful future, \"will you give?\", where English says \"could I have\". দেবেন is দেওয়া in that form. To say where to, put the place in the -র form: গ্রামের একটা টিকিট, \"a ticket to the village\". To ask for a seat: জানালার পাশে একটা আসন পাব? (jānālār pāshe ekṭā āsôn pābô?), \"can I get a seat by the window?\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the fare and the time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাড়া কত? ট্রেন কখন ছাড়বে? bhāṛā kôtô? ṭren kôkhôn chhāṛbe? — \"What's the fare? When does the train leave?\""
+            },
+            {
+              "kind": "speech",
+              "text": "কত, \"how much\", asks the fare. কখন, \"when?\", asks the time. ছাড়বে, \"will leave\", is ছাড়া, \"to leave, to let go\", in the future."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Could I have a ticket to the village, please?\" — grāmer ekṭā ṭikiṭ deben?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Could I have a ticket to the village, please?\" — *grāmer ekṭā ṭikiṭ deben?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What's the fare?\" — bhāṛā kôtô?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What's the fare?\" — *bhāṛā kôtô?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When does the train leave?\" — ṭren kôkhôn chhāṛbe?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When does the train leave?\" — *ṭren kôkhôn chhāṛbe?*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C271-tikit-deben-r1",
+              "prompt": "Ask for a ticket, then ask the fare and when the train leaves.",
+              "assesses": [
+                "BN-GRAMMAR-C271-TICKET-ASK-01",
+                "BN-GRAMMAR-C271-FARE-TIME-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "ekṭā ṭikiṭ deben? bhāṛā kôtô? ṭren kôkhôn chhāṛbe?",
+                "একটা টিকিট দেবেন? ভাড়া কত? ট্রেন কখন ছাড়বে?"
+              ],
+              "feedback": {
+                "correct": "deben for the polite ask; kôtô and kôkhôn for the fare and the time.",
+                "incorrect": "Ask with deben?; the fare with kôtô; the time with kôkhôn."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The polite \"could I have\"? (দেবেন?) \"How much is the fare?\" (ভাড়া কত?) \"When will it leave?\" (কখন ছাড়বে?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C271-hariye-gechhe",
+      "sequence": 16880,
+      "title": "আমার ব্যাগ হারিয়ে গেছে (āmār byāg hāriye gechhe) — when something goes wrong",
+      "headword": "আমার ব্যাগ হারিয়ে গেছে",
+      "romanization": "āmār byāg hāriye gechhe",
+      "gloss": "my bag has gone missing — reporting a loss, and a train that has left",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0fba3165be03e287",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask \"When does the train leave?\" (ṭren kôkhôn chhāṛbe?) Then say হারিয়ে যাওয়া, \"to get lost\", which you know."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: something is lost",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমার মানিব্যাগ হারিয়ে গেছে। āmār mānibyāg hāriye gechhe. — \"My wallet has gone missing.\""
+            },
+            {
+              "kind": "speech",
+              "text": "গেছে is a form of যাওয়া that says something happened and still matters now: the wallet went, and it is still gone. This book teaches it only in these set phrases. Whose it is goes in the -র form: আমার ব্যাগ, মীরার পাসপোর্ট. Then what you will do: পুলিশকে জানাব (pulishke jānābô), \"I'll tell the police\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the train has left",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছাড়া, \"to leave\", which you know, makes the same phrase: ছেড়ে গেছে, \"has left\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার ট্রেন ছেড়ে গেছে। পরের ট্রেন কখন? āmār ṭren chheṛe gechhe. pôrer ṭren kôkhôn? — \"My train has left. When is the next train?\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My passport has gone missing\" — āmār pāsporṭ hāriye gechhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My passport has gone missing\" — *āmār pāsporṭ hāriye gechhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I'll tell the police\" — pulishke jānābô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I'll tell the police\" — *pulishke jānābô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My train has left. When is the next train?\" — āmār ṭren chheṛe gechhe. pôrer ṭren kôkhôn?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My train has left. When is the next train?\" — *āmār ṭren chheṛe gechhe. pôrer ṭren kôkhôn?*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C271-hariye-gechhe-r1",
+              "prompt": "Say that your bag has gone missing, then that your train has left.",
+              "assesses": [
+                "BN-GRAMMAR-C271-LOST-01",
+                "BN-GRAMMAR-C271-MISSED-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "āmār byāg hāriye gechhe; āmār ṭren chheṛe gechhe",
+                "আমার ব্যাগ হারিয়ে গেছে। আমার ট্রেন ছেড়ে গেছে।"
+              ],
+              "feedback": {
+                "correct": "hāriye gechhe for a loss, chheṛe gechhe for a train gone.",
+                "incorrect": "The -e form (hāriye, chheṛe), then gechhe."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"My bag has gone missing\"? (আমার ব্যাগ হারিয়ে গেছে (āmār byāg hāriye gechhe).) \"The train has left\"? (ট্রেন ছেড়ে গেছে.) What does গেছে add? (It happened, and it still matters now.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R271-at-the-station",
+      "sequence": 16890,
+      "title": "Review — at the station",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "buying a ticket and reporting a problem",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d7e3a35fbe3c91f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for a ticket. (ekṭā ṭikiṭ deben?) Then say \"My wallet has gone missing\". (āmār mānibyāg hāriye gechhe.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Could I have a ticket to the village, please? What's the fare?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Could I have a ticket to the village, please? What's the fare?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "When will the boat leave?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: When will the boat leave?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Excuse me, my bag has gone missing. I was sitting on the platform.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Excuse me, my bag has gone missing. I was sitting on the platform.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Our train has left. That's why we have to take the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Our train has left. That's why we have to take the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "How do I get to the airport? How far is it?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: How do I get to the airport? How far is it?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "নৌকা (noukā), then দূর",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **নৌকা**, then **দূর**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The polite ask? (দেবেন?) \"Has gone missing\"? (হারিয়ে গেছে.) \"Has left\"? (ছেড়ে গেছে.) Which sign is around the ন of নৌকা (noukā)? (ৌ (-ou).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

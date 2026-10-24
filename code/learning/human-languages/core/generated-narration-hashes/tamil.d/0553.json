@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:3dbe656421d1d2a9",
+  "lessonIds": [
+    "TA-C553-tarkalika",
+    "TA-C553-nirantara",
+    "TA-C553-inriyamaiyata",
+    "TA-C553-marruvali",
+    "TA-C553-torayamaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch553.txt",
+  "json": "tamil/narration/ch553.json",
+  "textHash": "fnv1a64:758fffdd76d7af2e",
+  "jsonHash": "fnv1a64:019a9c30b65f8abe",
+  "findings": []
+}

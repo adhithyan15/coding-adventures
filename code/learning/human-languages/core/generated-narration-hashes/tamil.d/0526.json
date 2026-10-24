@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:839007c63959e6d7",
+  "lessonIds": [
+    "TA-C526-tali",
+    "TA-C526-vatakku-saute",
+    "TA-C526-kilaru",
+    "TA-C526-turuvu",
+    "TA-C526-tuvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch526.txt",
+  "json": "tamil/narration/ch526.json",
+  "textHash": "fnv1a64:c9a6910bb71abfc2",
+  "jsonHash": "fnv1a64:b6521f647cee93de",
+  "findings": []
+}

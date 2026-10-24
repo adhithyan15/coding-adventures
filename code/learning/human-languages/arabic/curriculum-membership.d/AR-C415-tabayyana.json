@@ -1,0 +1,11 @@
+{
+  "id": "AR-C415-tabayyana",
+  "pathSegment": "AR-PATH-415-INJAZ415",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-415-INJAZ415",
+      "order": 2
+    }
+  ]
+}

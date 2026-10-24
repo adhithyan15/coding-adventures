@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:51e0b24e5dc0740d",
+  "lessonIds": [
+    "ML-C527-dayayulla",
+    "ML-C527-ksamayulla",
+    "ML-C527-pisukkan",
+    "ML-C527-udaramaya",
+    "ML-C527-visvastan"
+  ],
+  "tex": "malayalam/book/chapters/ch527-kind-and-stingy.tex"
+}

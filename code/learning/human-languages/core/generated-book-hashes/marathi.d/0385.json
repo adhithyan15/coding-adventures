@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:879abe5e8adc3bcc",
+  "lessonIds": [
+    "MR-C385-cighalne",
+    "MR-C385-uphalne",
+    "MR-C385-nivalne",
+    "MR-C385-talne-averted",
+    "MR-C385-samore-jane"
+  ],
+  "tex": "marathi/book/chapters/ch385-when-things-get-worse.tex"
+}

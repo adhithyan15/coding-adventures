@@ -1,0 +1,11 @@
+{
+  "id": "BN-C304-pujo",
+  "pathSegment": "BN-PATH-304-UTSOB304",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-304-UTSOB304",
+      "order": 1
+    }
+  ]
+}

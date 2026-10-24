@@ -1,0 +1,11 @@
+{
+  "id": "TA-C394-carpaka",
+  "pathSegment": "TA-PATH-394-ORUTALAIPPAT394",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-394-ORUTALAIPPAT394",
+      "order": 3
+    }
+  ]
+}

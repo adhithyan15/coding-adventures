@@ -23,6 +23,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the strongest consuming composition, which also requires
   certificate-bound data-driven algorithm-policy evidence for that same issuer
   and retains all three proofs without treating the profile as verifier routing.
+- Added an authenticated-intermediate binding that retains the strongest
+  selected issuer link and complete intermediate policy only when both refer to
+  the identical decoded issuer object.
+- Added a consuming authenticated path-length composition that advances only
+  from the retained exact-intermediate policy and retains both the authenticated
+  link evidence and resulting state.
+- Added a consuming constructed-path adjacency composition that authenticates
+  the exact projected target-or-candidate child and selected issuer without
+  rerunning Name policy, then retains both path order and the validated issuer
+  key in distinct non-copyable evidence.
+- Added a stronger construction-bound composition that also consumes and
+  retains complete intermediate policy for the exact projected non-terminal
+  issuer, rejecting terminal adjacency and object mismatch before RSA work.
+- Added a consuming construction-bound path-length composition that advances
+  only from the retained intermediate policy and keeps the ordered authenticated
+  proof attached to the resulting state.
 
 ### Security
 
@@ -38,3 +54,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full-policy composition rejects role or algorithm evidence for another
   certificate before RSA parsing or signature verification; encoded key-size
   policy remains distinct from RSA modulus-strength validation.
+- Authenticated-intermediate composition rejects byte-equal policy evidence
+  from a separately decoded issuer and grants no path-length, parent-link,
+  complete-path, trust, revocation, TLS, HTTP, or network authority.
+- Authenticated path-length composition cannot advance from detached policy or
+  discard its adjacent-link proof, while still granting no parent-link, path
+  order, complete-path, trust, revocation, TLS, HTTP, or network authority.
+- Construction-bound authentication cannot substitute either endpoint or
+  silently discard the retained path order, while still granting no algorithm
+  routing, complete issuer policy, other-link authentication, complete-path,
+  trust, revocation, TLS, HTTP, or network authority.
+- Construction-bound complete-policy authentication rejects a detached or
+  byte-equal re-decoded intermediate before RSA key or signature work, while
+  still granting no path-length, other-link, trust, revocation, TLS, HTTP, or
+  network authority.
+- Construction-bound path-length accounting cannot discard the retained path
+  order or apply detached intermediate policy, while the caller-supplied
+  starting state remains outside that construction binding.

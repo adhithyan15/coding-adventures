@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-392-MULAM392",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TE-EXT-392-MULAM392"
+  ],
+  "after": []
+}

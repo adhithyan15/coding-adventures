@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:413c45f5023fc00d",
+  "lessonIds": [
+    "KA-C490-hedaru",
+    "KA-C490-nacu",
+    "KA-C490-atanka",
+    "KA-C490-mujugara",
+    "KA-C490-kalavala"
+  ],
+  "tex": "kannada/book/chapters/ch490-fear-and-shyness.tex"
+}

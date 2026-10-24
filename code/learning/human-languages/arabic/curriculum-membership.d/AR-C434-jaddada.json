@@ -1,0 +1,11 @@
+{
+  "id": "AR-C434-jaddada",
+  "pathSegment": "AR-PATH-434-RUKHSA434",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-434-RUKHSA434",
+      "order": 2
+    }
+  ]
+}

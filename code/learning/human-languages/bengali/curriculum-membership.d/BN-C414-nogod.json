@@ -1,0 +1,11 @@
+{
+  "id": "BN-C414-nogod",
+  "pathSegment": "BN-PATH-414-BANK414",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-414-BANK414",
+      "order": 4
+    }
+  ]
+}

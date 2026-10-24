@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-301-BIBORON301",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "BN-EXT-301-BIBORON301"
+  ],
+  "after": []
+}

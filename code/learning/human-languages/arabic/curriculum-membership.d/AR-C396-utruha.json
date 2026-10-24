@@ -1,0 +1,11 @@
+{
+  "id": "AR-C396-utruha",
+  "pathSegment": "AR-PATH-396-MUSTALAH396",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-396-MUSTALAH396",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C453-cidne",
+    "language": "marathi",
+    "chapter": 453,
+    "sequence": 26170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7ce7e74ab89756a"
+  },
+  "findings": []
+}

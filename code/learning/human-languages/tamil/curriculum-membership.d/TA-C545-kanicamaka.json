@@ -1,0 +1,11 @@
+{
+  "id": "TA-C545-kanicamaka",
+  "pathSegment": "TA-PATH-545-PANKU545",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-545-PANKU545",
+      "order": 3
+    }
+  ]
+}

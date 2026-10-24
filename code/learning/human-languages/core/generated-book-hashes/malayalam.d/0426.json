@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:18da5e82f2bd6fed",
+  "lessonIds": [
+    "ML-C426-bahiskarikkuka",
+    "ML-C426-avasyappetuka",
+    "ML-C426-nivedanam",
+    "ML-C426-samarppikkuka",
+    "ML-C426-harji"
+  ],
+  "tex": "malayalam/book/chapters/ch426-demands.tex"
+}

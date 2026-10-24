@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C437-himvarsav",
+    "language": "marathi",
+    "chapter": 437,
+    "sequence": 25110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59de5f7426894cb1"
+  },
+  "findings": []
+}

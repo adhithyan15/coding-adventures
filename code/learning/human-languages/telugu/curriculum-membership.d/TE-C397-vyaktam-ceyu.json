@@ -1,0 +1,11 @@
+{
+  "id": "TE-C397-vyaktam-ceyu",
+  "pathSegment": "TE-PATH-397-SANKSIPTAM397",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-397-SANKSIPTAM397",
+      "order": 4
+    }
+  ]
+}

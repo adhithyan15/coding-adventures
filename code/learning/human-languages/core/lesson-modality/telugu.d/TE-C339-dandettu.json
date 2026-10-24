@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C339-dandettu",
+    "language": "telugu",
+    "chapter": 339,
+    "sequence": 16700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58b1def70a4b4496"
+  },
+  "findings": []
+}

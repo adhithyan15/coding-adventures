@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C414-upanyasam",
+    "language": "telugu",
+    "chapter": 414,
+    "sequence": 20650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d96bf5c111c532e3"
+  },
+  "findings": []
+}

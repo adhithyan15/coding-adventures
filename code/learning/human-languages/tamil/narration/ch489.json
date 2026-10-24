@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 489,
+  "title": "A Restless Night",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1152f7ccc957dd4c",
+  "lessons": [
+    {
+      "id": "TA-C489-uranku",
+      "sequence": 27940,
+      "title": "உறங்கு (uṟaṅku) — to slumber",
+      "headword": "உறங்கு",
+      "romanization": "uṟaṅku",
+      "gloss": "to slumber",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b7cfbbebd01be62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a hunch, then the Tamil for starvation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உறங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உறங்கு — uṟaṅku — \"to slumber\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குழந்தை அமைதியாக உறங்கியது. kuḻantai amaitiyāka uṟaṅkiyatu. The baby slept peacefully."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): உறங்கினேன், uṟaṅkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "A softer, more written word than தூங்கு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உறங்கு (uṟaṅku) is native Dravidian (DEDR 707); the entry also gives உறக்கு uṟakku, \"to put to sleep\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟaṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟaṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟaṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟaṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻantai amaitiyāka uṟaṅkiyatu. — The baby slept peacefully.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻantai amaitiyāka uṟaṅkiyatu.* — The baby slept peacefully.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a hunch, then the Tamil for starvation, then say uṟaṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a hunch, then the Tamil for starvation, then say *uṟaṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உறங்கு (uṟaṅku) mean? (\"To slumber\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C489-kurattai-vitu",
+      "sequence": 27950,
+      "title": "குறட்டை விடு (kuṟaṭṭai viṭu) — to snore",
+      "headword": "குறட்டை விடு",
+      "romanization": "kuṟaṭṭai viṭu",
+      "gloss": "to snore",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3eceffebae47ec0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for starvation, then the Tamil for to slumber."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குறட்டை விடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறட்டை விடு — kuṟaṭṭai viṭu — \"to snore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அப்பா இரவு முழுவதும் குறட்டை விட்டார். appā iravu muḻuvatum kuṟaṭṭai viṭṭār. Father snored all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): குறட்டை விட்டேன், kuṟaṭṭai viṭṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "குறட்டை \"snoring\" + விடு \"to let out\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறட்டை விடு (kuṟaṭṭai viṭu) is native: குறட்டை kuṟaṭṭai, \"snoring\" (DEDR 1852), with விடு \"to let out\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟaṭṭai viṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟaṭṭai viṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟaṭṭai viṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟaṭṭai viṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appā iravu muḻuvatum kuṟaṭṭai viṭṭār. — Father snored all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appā iravu muḻuvatum kuṟaṭṭai viṭṭār.* — Father snored all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for starvation, then the Tamil for to slumber, then say kuṟaṭṭai viṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for starvation, then the Tamil for to slumber, then say *kuṟaṭṭai viṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குறட்டை விடு (kuṟaṭṭai viṭu) mean? (\"To snore\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C489-pural",
+      "sequence": 27960,
+      "title": "புரள் (puraḷ) — to toss and turn; to roll",
+      "headword": "புரள்",
+      "romanization": "puraḷ",
+      "gloss": "to toss and turn; to roll",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2500586f4cb1b40e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to slumber, then the Tamil for to snore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புரள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புரள் — puraḷ — \"to toss and turn; to roll\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தூக்கம் வராமல் நான் இரவு முழுவதும் புரண்டேன். tūkkam varāmal nāṉ iravu muḻuvatum puraṇṭēṉ. Unable to sleep, I tossed and turned all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): புரண்டேன், puraṇṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Past புரண்டேன், with ள் + ந் written ண்ட."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புரள் (puraḷ) is native Dravidian (DEDR 4285), of rolling waves and rolling bodies."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puraḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puraḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puraḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puraḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūkkam varāmal nāṉ iravu muḻuvatum puraṇṭēṉ. — Unable to sleep, I tossed and turned all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūkkam varāmal nāṉ iravu muḻuvatum puraṇṭēṉ.* — Unable to sleep, I tossed and turned all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to slumber, then the Tamil for to snore, then say puraḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to slumber, then the Tamil for to snore, then say *puraḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புரள் (puraḷ) mean? (\"To toss and turn; to roll\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C489-vili",
+      "sequence": 27970,
+      "title": "விழி (viḻi) — to wake up; to open one’s eyes",
+      "headword": "விழி",
+      "romanization": "viḻi",
+      "gloss": "to wake up; to open one’s eyes",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09a5dbc5708edacb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to snore, then the Tamil for to toss and turn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விழி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விழி — viḻi — \"to wake up; to open one’s eyes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நள்ளிரவில் சத்தம் கேட்டு நான் விழித்தேன். naḷḷiravil cattam kēṭṭu nāṉ viḻittēṉ. I woke up at midnight on hearing a noise."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): விழித்தேன், viḻittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "As a noun, the eye: விழிகள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விழி (viḻi) is native Dravidian (DEDR 5429), both the eye and the opening of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naḷḷiravil cattam kēṭṭu nāṉ viḻittēṉ. — I woke up at midnight on hearing a noise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naḷḷiravil cattam kēṭṭu nāṉ viḻittēṉ.* — I woke up at midnight on hearing a noise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to snore, then the Tamil for to toss and turn, then say viḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to snore, then the Tamil for to toss and turn, then say *viḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விழி (viḻi) mean? (\"To wake up; to open one’s eyes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C489-viyar",
+      "sequence": 27980,
+      "title": "வியர் (viyar) — to perspire; to sweat",
+      "headword": "வியர்",
+      "romanization": "viyar",
+      "gloss": "to perspire; to sweat",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d04200a2a732afd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to toss and turn, then the Tamil for to wake up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வியர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வியர் — viyar — \"to perspire; to sweat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெயிலில் நடந்ததால் எனக்கு வியர்த்தது. veyilil naṭantatāl eṉakku viyarttatu. I sweated because I walked in the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): வியர்த்தது, viyarttatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Dative experiencer: எனக்கு வியர்த்தது. வியர்வை, sweat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வியர் (viyar) is native Dravidian (DEDR 5486), which also lists the form வெயர் veyar."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viyar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viyar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viyar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viyar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veyilil naṭantatāl eṉakku viyarttatu. — I sweated because I walked in the sun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veyilil naṭantatāl eṉakku viyarttatu.* — I sweated because I walked in the sun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to toss and turn, then the Tamil for to wake up, then say viyar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to toss and turn, then the Tamil for to wake up, then say *viyar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வியர் (viyar) mean? (\"To perspire; to sweat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

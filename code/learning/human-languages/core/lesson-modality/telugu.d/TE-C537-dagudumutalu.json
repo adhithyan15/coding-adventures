@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C537-dagudumutalu",
+    "language": "telugu",
+    "chapter": 537,
+    "sequence": 27220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db6b278d59b76887"
+  },
+  "findings": []
+}

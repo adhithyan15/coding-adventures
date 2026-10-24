@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C498-mannisu",
+    "language": "kannada",
+    "chapter": 498,
+    "sequence": 25420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4509b291f6060384"
+  },
+  "findings": []
+}

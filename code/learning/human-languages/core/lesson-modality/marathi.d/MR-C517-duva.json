@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C517-duva",
+    "language": "marathi",
+    "chapter": 517,
+    "sequence": 29690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd916d2d56ba00f3"
+  },
+  "findings": []
+}

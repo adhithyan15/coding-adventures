@@ -1,0 +1,11 @@
+{
+  "id": "TE-C389-vyatyasam",
+  "pathSegment": "TE-PATH-389-VISLESANA389",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-389-VISLESANA389",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER statement-keyword attribute names vertical slice",
+  "fixtures": [
+    {
+      "name": "statement-keywords-inside-attribute-block",
+      "source": "erDiagram\nSETTINGS {\n  string title\n  string direction\n  string classDef\n  string class\n  string style\n}"
+    }
+  ]
+}

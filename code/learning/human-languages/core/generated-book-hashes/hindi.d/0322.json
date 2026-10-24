@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:91b76e12e4561312",
+  "lessonIds": [
+    "HI-C322-talvar",
+    "HI-C322-dhal",
+    "HI-C322-bhala",
+    "HI-C322-tir",
+    "HI-C322-prayah"
+  ],
+  "tex": "hindi/book/chapters/ch322-swords-and-shields.tex"
+}

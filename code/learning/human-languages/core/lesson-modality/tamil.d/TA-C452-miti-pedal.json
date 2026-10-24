@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C452-miti-pedal",
+    "language": "tamil",
+    "chapter": 452,
+    "sequence": 25760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0accf5334dfb041b"
+  },
+  "findings": []
+}

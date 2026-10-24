@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Fields of study",
+  "label": "ch:ar-fields-of-study",
+  "canDo": "I can name philosophy and linguistics, and talk about a branch of learning, an expert and academic life.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C376-akadimi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can name philosophy and linguistics, and talk about a branch of learning, an expert and academic life.",
+    "assesses": [
+      "AR-LEX-C376-ILM376-03",
+      "AR-LEX-C376-ILM376-04",
+      "AR-LEX-C376-ILM376-05"
+    ]
+  }
+}

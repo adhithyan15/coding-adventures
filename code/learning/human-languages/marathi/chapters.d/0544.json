@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "Outlines and Drafts",
+  "label": "ch:mr-outlines-and-drafts",
+  "canDo": "I can talk about outlines, drafts and seeing plans through.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C544-tadis-nene",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can talk about outlines, drafts and seeing plans through.",
+    "assesses": [
+      "MR-LEX-C544-AARAKHDA544-03",
+      "MR-LEX-C544-AARAKHDA544-04",
+      "MR-LEX-C544-AARAKHDA544-05"
+    ]
+  }
+}

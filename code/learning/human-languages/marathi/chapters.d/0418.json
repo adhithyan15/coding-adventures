@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Town and Metropolis",
+  "label": "ch:mr-town-and-metropolis",
+  "canDo": "I can talk about a town, a big city, the town council, a hamlet and a taluka.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C418-taluka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can talk about a town, a big city, the town council, a hamlet and a taluka.",
+    "assesses": [
+      "MR-LEX-C418-NAGAR418-03",
+      "MR-LEX-C418-NAGAR418-04",
+      "MR-LEX-C418-NAGAR418-05"
+    ]
+  }
+}

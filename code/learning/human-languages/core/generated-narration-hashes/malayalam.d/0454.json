@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:26c87fee962c2177",
+  "lessonIds": [
+    "ML-C454-unnayikkuka",
+    "ML-C454-pratirodhikkuka",
+    "ML-C454-sarivekkuka",
+    "ML-C454-bodhyappetuka",
+    "ML-C454-sthirikarikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch454.txt",
+  "json": "malayalam/narration/ch454.json",
+  "textHash": "fnv1a64:bad9927f55bca122",
+  "jsonHash": "fnv1a64:0bb71d524245de88",
+  "findings": []
+}

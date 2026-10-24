@@ -1,0 +1,11 @@
+{
+  "id": "HI-C374-amuman",
+  "pathSegment": "HI-PATH-374-ANDAZA374",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-374-ANDAZA374",
+      "order": 3
+    }
+  ]
+}

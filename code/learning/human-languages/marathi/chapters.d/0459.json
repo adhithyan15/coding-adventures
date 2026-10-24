@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Longing",
+  "label": "ch:mr-longing",
+  "canDo": "I can talk about longing, eagerness and pining.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C459-jhurne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can talk about longing, eagerness and pining.",
+    "assesses": [
+      "MR-LEX-C459-ODH459-03",
+      "MR-LEX-C459-ODH459-04",
+      "MR-LEX-C459-ODH459-05"
+    ]
+  }
+}

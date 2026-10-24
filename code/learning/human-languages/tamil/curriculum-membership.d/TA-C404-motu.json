@@ -1,0 +1,11 @@
+{
+  "id": "TA-C404-motu",
+  "pathSegment": "TA-PATH-404-VAKANAM404",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-404-VAKANAM404",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C330-srishti-kora",
+  "pathSegment": "BN-PATH-330-UTSO330",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-330-UTSO330",
+      "order": 1
+    }
+  ]
+}

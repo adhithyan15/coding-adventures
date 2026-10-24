@@ -1,0 +1,11 @@
+{
+  "id": "BN-C302-kromosh",
+  "pathSegment": "BN-PATH-302-KAHINI302",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-302-KAHINI302",
+      "order": 4
+    }
+  ]
+}

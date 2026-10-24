@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:c91143d75a42003b",
+  "lessonIds": [
+    "AR-C322-qala",
+    "AR-C322-hisn",
+    "AR-C322-sur",
+    "AR-C322-hasara",
+    "AR-C322-dafaa-defend"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch322.txt",
+  "json": "arabic/narration/ch322.json",
+  "textHash": "fnv1a64:2a72a5053021ab89",
+  "jsonHash": "fnv1a64:6813b92aca809d5e",
+  "findings": []
+}

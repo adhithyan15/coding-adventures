@@ -1,0 +1,11 @@
+{
+  "id": "MR-C517-antarjal",
+  "pathSegment": "MR-PATH-517-JAL517",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-517-JAL517",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C519-rephari",
+  "pathSegment": "BN-PATH-519-KHELA519",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-519-KHELA519",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C547-gajar-alarm",
+  "pathSegment": "MR-PATH-547-ANIBANI547",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-547-ANIBANI547",
+      "order": 2
+    }
+  ]
+}

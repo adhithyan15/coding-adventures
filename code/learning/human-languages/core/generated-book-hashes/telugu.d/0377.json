@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:b2adfb65b74d7107",
+  "lessonIds": [
+    "TE-C377-vipattu",
+    "TE-C377-alajadi",
+    "TE-C377-raksana",
+    "TE-C377-gasti",
+    "TE-C377-carya"
+  ],
+  "tex": "telugu/book/chapters/ch377-disaster.tex"
+}

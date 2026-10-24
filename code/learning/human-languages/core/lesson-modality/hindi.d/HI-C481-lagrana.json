@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C481-lagrana",
+    "language": "hindi",
+    "chapter": 481,
+    "sequence": 26500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a7b145296dfcbc0"
+  },
+  "findings": []
+}

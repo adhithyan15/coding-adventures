@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C456-arutal",
+    "language": "tamil",
+    "chapter": 456,
+    "sequence": 26280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e859b03792c6fcc"
+  },
+  "findings": []
+}

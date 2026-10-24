@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 436,
+  "title": "Taking Part",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:881e32c347564891",
+  "lessons": [
+    {
+      "id": "TE-C436-palgonu",
+      "sequence": 21760,
+      "title": "పాల్గొను (pālgonu) — to take part; to participate",
+      "headword": "పాల్గొను",
+      "romanization": "pālgonu",
+      "gloss": "to take part; to participate",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0e7756eca4060fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a reformer, then the Telugu for to inspire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పాల్గొను",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాల్గొను — pālgonu — \"to take part; to participate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చాలా మంది విద్యార్థులు ఆ పోటీలో పాల్గొన్నారు. cālā mandi vidyārthulu ā pōṭīlō pālgonnāru. Many students took part in that competition."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పాల్గొన్నాను, pālgonnānu."
+            },
+            {
+              "kind": "speech",
+              "text": "What you take part in takes -లో."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాల్గొను (pālgonu) is native Dravidian, a compound of pālu, \"a part, a share, a lot\" (DEDR 4097), and konu, \"to take\" (DEDR 2151): to take one’s share."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pālgonu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pālgonu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pālgonu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pālgonu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālā mandi vidyārthulu ā pōṭīlō pālgonnāru. — Many students took part in that competition.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālā mandi vidyārthulu ā pōṭīlō pālgonnāru.* — Many students took part in that competition.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a reformer, then the Telugu for to inspire, then say pālgonu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a reformer, then the Telugu for to inspire, then say *pālgonu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పాల్గొను (pālgonu) mean? (\"To take part; to participate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C436-todpadu",
+      "sequence": 21770,
+      "title": "తోడ్పడు (tōḍpaḍu) — to contribute; to help along",
+      "headword": "తోడ్పడు",
+      "romanization": "tōḍpaḍu",
+      "gloss": "to contribute; to help along",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:124a47a74aac7511",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to inspire, then the Telugu for to take part."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తోడ్పడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తోడ్పడు — tōḍpaḍu — \"to contribute; to help along\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పథకం గ్రామ అభివృద్ధికి తోడ్పడింది. ā pathakaṁ grāma abhivṛddhiki tōḍpaḍindi. That scheme helped the village develop."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తోడ్పడ్డాను, tōḍpaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "What it helps takes -కి. The noun is తోడ్పాటు, a contribution."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తోడ్పడు (tōḍpaḍu) is native Telugu, a compound of tōḍu, \"a companion, help\", and the verb paḍu (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōḍpaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōḍpaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōḍpaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōḍpaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pathakaṁ grāma abhivṛddhiki tōḍpaḍindi. — That scheme helped the village develop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pathakaṁ grāma abhivṛddhiki tōḍpaḍindi.* — That scheme helped the village develop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to inspire, then the Telugu for to take part, then say tōḍpaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to inspire, then the Telugu for to take part, then say *tōḍpaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తోడ్పడు (tōḍpaḍu) mean? (\"To contribute; to help along\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C436-kudagattu",
+      "sequence": 21780,
+      "title": "కూడగట్టు (kūḍagaṭṭu) — to rally; to gather (support)",
+      "headword": "కూడగట్టు",
+      "romanization": "kūḍagaṭṭu",
+      "gloss": "to rally; to gather (support)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14affec13a97f343",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to take part, then the Telugu for to contribute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కూడగట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కూడగట్టు — kūḍagaṭṭu — \"to rally; to gather (support)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె గ్రామస్తుల మద్దతు కూడగట్టింది. āme grāmastula maddatu kūḍagaṭṭindi. She rallied the villagers’ support."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కూడగట్టాను, kūḍagaṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "కూడ, together, + కట్టు, to tie, sounded గట్టు after it: to tie people together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కూడగట్టు (kūḍagaṭṭu) is native Dravidian, a compound of kūḍu, \"to join, to gather, to collect\" (DEDR 1882), and kaṭṭu, \"to tie, to bind\" (DEDR 1147), whose k sounds as g after the first word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūḍagaṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūḍagaṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūḍagaṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūḍagaṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme grāmastula maddatu kūḍagaṭṭindi. — She rallied the villagers’ support.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme grāmastula maddatu kūḍagaṭṭindi.* — She rallied the villagers’ support.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to take part, then the Telugu for to contribute, then say kūḍagaṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to take part, then the Telugu for to contribute, then say *kūḍagaṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కూడగట్టు (kūḍagaṭṭu) mean? (\"To rally; to gather (support)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C436-akarsincu",
+      "sequence": 21790,
+      "title": "ఆకర్షించు (ākarṣiñcu) — to attract",
+      "headword": "ఆకర్షించు",
+      "romanization": "ākarṣiñcu",
+      "gloss": "to attract",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbf5e67d1dd26a0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to contribute, then the Telugu for to rally."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆకర్షించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆకర్షించు — ākarṣiñcu — \"to attract\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ కొత్త పథకం చాలా మందిని ఆకర్షించింది. ā kotta pathakaṁ cālā mandini ākarṣiñcindi. That new scheme attracted many people."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఆకర్షించాను, ākarṣiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ఆకర్షణ, attraction."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆకర్షించు (ākarṣiñcu) is built on Sanskrit ākarṣaṇa, \"pulling, drawing near, attracting\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākarṣiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākarṣiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākarṣiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākarṣiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kotta pathakaṁ cālā mandini ākarṣiñcindi. — That new scheme attracted many people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kotta pathakaṁ cālā mandini ākarṣiñcindi.* — That new scheme attracted many people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to contribute, then the Telugu for to rally, then say ākarṣiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to contribute, then the Telugu for to rally, then say *ākarṣiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆకర్షించు (ākarṣiñcu) mean? (\"To attract\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C436-vibhajincu",
+      "sequence": 21800,
+      "title": "విభజించు (vibhajiñcu) — to divide; to split",
+      "headword": "విభజించు",
+      "romanization": "vibhajiñcu",
+      "gloss": "to divide; to split",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:675fe05ae9916f53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to rally, then the Telugu for to attract."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విభజించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విభజించు — vibhajiñcu — \"to divide; to split\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అమ్మ రొట్టెను నాలుగు ముక్కలుగా విభజించింది. amma roṭṭenu nālugu mukkalugā vibhajiñcindi. Mother divided the bread into four pieces."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): విభజించాను, vibhajiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is విభజన, a division."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విభజించు (vibhajiñcu) is built on Sanskrit vibhajana, \"separation, distinction\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vibhajiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vibhajiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vibhajiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vibhajiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amma roṭṭenu nālugu mukkalugā vibhajiñcindi. — Mother divided the bread into four pieces.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amma roṭṭenu nālugu mukkalugā vibhajiñcindi.* — Mother divided the bread into four pieces.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to rally, then the Telugu for to attract, then say vibhajiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to rally, then the Telugu for to attract, then say *vibhajiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విభజించు (vibhajiñcu) mean? (\"To divide; to split\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

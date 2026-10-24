@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:5552bd2f0a69c5ab",
+  "lessonIds": [
+    "TE-C383-vadana",
+    "TE-C383-saksyam",
+    "TE-C383-nirupincu",
+    "TE-C383-tarkam",
+    "TE-C383-sahetukamaina"
+  ],
+  "tex": "telugu/book/chapters/ch383-making-a-case.tex"
+}

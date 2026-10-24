@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Moving Up",
+  "label": "ch:mr-moving-up",
+  "canDo": "I can talk about posts, seniors and juniors and moving up at work.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C509-jhatne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about posts, seniors and juniors and moving up at work.",
+    "assesses": [
+      "MR-LEX-C509-BADHATI509-03",
+      "MR-LEX-C509-BADHATI509-04",
+      "MR-LEX-C509-BADHATI509-05"
+    ]
+  }
+}

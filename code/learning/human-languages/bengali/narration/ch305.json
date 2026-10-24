@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 305,
+  "title": "Lights and Fireworks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:63d4684ce0b25024",
+  "lessons": [
+    {
+      "id": "BN-C305-prodip",
+      "sequence": 19480,
+      "title": "প্রদীপ (prôdīp) — an oil lamp",
+      "headword": "প্রদীপ",
+      "romanization": "prôdīp",
+      "gloss": "an oil lamp",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b44ba0af75af4629",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a pandal, then the Bengali for to celebrate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রদীপ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রদীপ — prôdīp — \"an oil lamp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সন্ধ্যায় দিদিমা বারান্দায় একটা প্রদীপ জ্বালালেন। sôndhyāy didimā bārāndāy ekṭā prôdīp jvālālen. In the evening my grandmother lit an oil lamp on the veranda."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রদীপ (prôdīp) is Sanskrit pradīpa, 'a light, a lamp' (Monier-Williams), from pra-√dīp, 'to blaze forth'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôdīp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôdīp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôdīp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôdīp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôndhyāy didimā bārāndāy ekṭā prôdīp jvālālen. — In the evening my grandmother lit an oil lamp on the veranda.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôndhyāy didimā bārāndāy ekṭā prôdīp jvālālen.* — In the evening my grandmother lit an oil lamp on the veranda.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a pandal, then the Bengali for to celebrate, then say prôdīp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a pandal, then the Bengali for to celebrate, then say *prôdīp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রদীপ (prôdīp) mean? (\"An oil lamp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C305-atoshbaji",
+      "sequence": 19490,
+      "title": "আতশবাজি (ātôshbāji) — fireworks",
+      "headword": "আতশবাজি",
+      "romanization": "ātôshbāji",
+      "gloss": "fireworks",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c0b5ef21d1cce19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to celebrate, then the Bengali for an oil lamp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আতশবাজি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আতশবাজি — ātôshbāji — \"fireworks\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাতে আকাশে আতশবাজি জ্বলছিল। rāte ākāshe ātôshbāji jvôlchhilô. Fireworks were going off in the night sky."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আতশবাজি (ātôshbāji) is usually traced to Persian ātash-bāzī: ātash, 'fire', and bāzī, 'play'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātôshbāji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātôshbāji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātôshbāji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātôshbāji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāte ākāshe ātôshbāji jvôlchhilô. — Fireworks were going off in the night sky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāte ākāshe ātôshbāji jvôlchhilô.* — Fireworks were going off in the night sky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to celebrate, then the Bengali for an oil lamp, then say ātôshbāji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to celebrate, then the Bengali for an oil lamp, then say *ātôshbāji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আতশবাজি (ātôshbāji) mean? (\"Fireworks\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C305-alpona",
+      "sequence": 19500,
+      "title": "আলপনা (ālpônā) — a floor painting (alpona)",
+      "headword": "আলপনা",
+      "romanization": "ālpônā",
+      "gloss": "a floor painting (alpona)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59a2174ca80dfb8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an oil lamp, then the Bengali for fireworks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আলপনা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আলপনা — ālpônā — \"a floor painting (alpona)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পুজোর আগে মেয়েরা দরজার সামনে আলপনা আঁকল। pujor āge meyerā dôrjār sāmne ālpônā ā̃klô. Before the puja the girls painted an alpona in front of the door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আলপনা (ālpônā) comes down from Sanskrit ālimpana, 'whitening, painting' (CDIAL 1385, which lists Bengali ālpanā): the white patterns drawn on a floor for a festival."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālpônā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālpônā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālpônā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālpônā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pujor āge meyerā dôrjār sāmne ālpônā ā̃klô. — Before the puja the girls painted an alpona in front of the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pujor āge meyerā dôrjār sāmne ālpônā ā̃klô.* — Before the puja the girls painted an alpona in front of the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an oil lamp, then the Bengali for fireworks, then say ālpônā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an oil lamp, then the Bengali for fireworks, then say *ālpônā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আলপনা (ālpônā) mean? (\"A floor painting (alpona)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C305-jholmol-kora",
+      "sequence": 19510,
+      "title": "ঝলমল করা (jhôlmôl kôrā) — to glitter; to sparkle",
+      "headword": "ঝলমল করা",
+      "romanization": "jhôlmôl kôrā",
+      "gloss": "to glitter; to sparkle",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e50d27e656c8bc2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for fireworks, then the Bengali for a floor painting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঝলমল করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঝলমল করা — jhôlmôl kôrā — \"to glitter; to sparkle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আলোয় পুরো শহরটা ঝলমল করছিল। āloy puro shôhôrṭā jhôlmôl kôrchhilô. The whole town was glittering with lights."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই শহর আলোয় ঝলমল করল, sei shôhôr āloy jhôlmôl kôrlô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঝলমল করা (jhôlmôl kôrā) puts ঝলমল, an expressive word whose doubled sound is the flicker of light, before করা. No dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhôlmôl kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhôlmôl kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhôlmôl kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhôlmôl kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āloy puro shôhôrṭā jhôlmôl kôrchhilô. — The whole town was glittering with lights.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āloy puro shôhôrṭā jhôlmôl kôrchhilô.* — The whole town was glittering with lights.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for fireworks, then the Bengali for a floor painting, then say jhôlmôl kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for fireworks, then the Bengali for a floor painting, then say *jhôlmôl kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঝলমল করা (jhôlmôl kôrā) mean? (\"To glitter; to sparkle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C305-phanus",
+      "sequence": 19520,
+      "title": "ফানুস (phānus) — a sky lantern",
+      "headword": "ফানুস",
+      "romanization": "phānus",
+      "gloss": "a sky lantern",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b519bbea3ed6552",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a floor painting, then the Bengali for to glitter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফানুস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফানুস — phānus — \"a sky lantern\"."
+            },
+            {
+              "kind": "speech",
+              "text": "উৎসবের রাতে আকাশে অনেক ফানুস উড়ছিল। utsôber rāte ākāshe ônek phānus uṛchhilô. On the night of the festival many sky lanterns were floating in the sky."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফানুস (phānus) is usually traced to Persian fānūs, 'a lantern'; in Bengal it is the paper lantern sent up into the sky."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phānus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phānus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phānus, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phānus*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsôber rāte ākāshe ônek phānus uṛchhilô. — On the night of the festival many sky lanterns were floating in the sky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsôber rāte ākāshe ônek phānus uṛchhilô.* — On the night of the festival many sky lanterns were floating in the sky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a floor painting, then the Bengali for to glitter, then say phānus again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a floor painting, then the Bengali for to glitter, then say *phānus* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফানুস (phānus) mean? (\"A sky lantern\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

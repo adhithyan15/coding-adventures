@@ -1,0 +1,11 @@
+{
+  "id": "TA-C316-atanpin",
+  "pathSegment": "TA-PATH-316-ANNAAL316",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-316-ANNAAL316",
+      "order": 3
+    }
+  ]
+}

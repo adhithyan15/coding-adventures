@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Crime and Punishment",
+  "label": "ch:te-crime-and-punishment",
+  "canDo": "I can say a crime, a criminal, a guilty person, an innocent person and to punish.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C350-siksincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can say a crime, a criminal, a guilty person, an innocent person and to punish.",
+    "assesses": [
+      "TE-LEX-C350-NERAM350-03",
+      "TE-LEX-C350-NERAM350-04",
+      "TE-LEX-C350-NERAM350-05"
+    ]
+  }
+}

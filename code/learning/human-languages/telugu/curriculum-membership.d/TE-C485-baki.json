@@ -1,0 +1,11 @@
+{
+  "id": "TE-C485-baki",
+  "pathSegment": "TE-PATH-485-NAGADU485",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-485-NAGADU485",
+      "order": 2
+    }
+  ]
+}

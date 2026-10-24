@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Duties and Rules",
+  "label": "ch:mr-duties-and-rules",
+  "canDo": "I can talk about following rules, breaking them and doing one's duty.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C368-hatalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can talk about following rules, breaking them and doing one's duty.",
+    "assesses": [
+      "MR-LEX-C368-PALAN368-03",
+      "MR-LEX-C368-PALAN368-04",
+      "MR-LEX-C368-PALAN368-05"
+    ]
+  }
+}

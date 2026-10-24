@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Loyalty and Betrayal",
+  "label": "ch:ta-loyalty-and-betrayal",
+  "canDo": "I can talk about loyalty, betrayal, sacrifice and forgiveness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C470-paramukam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can talk about loyalty, betrayal, sacrifice and forgiveness.",
+    "assesses": [
+      "TA-LEX-C470-VICUVACAM470-03",
+      "TA-LEX-C470-VICUVACAM470-04",
+      "TA-LEX-C470-VICUVACAM470-05"
+    ]
+  }
+}

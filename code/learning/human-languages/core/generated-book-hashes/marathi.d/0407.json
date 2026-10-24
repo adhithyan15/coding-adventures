@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:70114444fb490ce8",
+  "lessonIds": [
+    "MR-C407-antar",
+    "MR-C407-veg",
+    "MR-C407-brek",
+    "MR-C407-disadarsak",
+    "MR-C407-paypit"
+  ],
+  "tex": "marathi/book/chapters/ch407-distance-and-speed.tex"
+}

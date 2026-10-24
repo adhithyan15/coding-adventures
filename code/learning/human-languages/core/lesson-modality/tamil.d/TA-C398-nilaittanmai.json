@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C398-nilaittanmai",
+    "language": "tamil",
+    "chapter": 398,
+    "sequence": 22740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33948f5af25be492"
+  },
+  "findings": []
+}

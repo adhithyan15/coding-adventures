@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C496-irtaha",
+    "language": "arabic",
+    "chapter": 496,
+    "sequence": 27650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db470fd09eaf45a6"
+  },
+  "findings": []
+}

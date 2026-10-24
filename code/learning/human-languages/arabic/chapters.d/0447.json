@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Fixing the room",
+  "label": "ch:ar-fixing-the-room",
+  "canDo": "I can say a shower, a clothes iron, a dryer, to break down and to check on.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C447-tafaqqada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can say a shower, a clothes iron, a dryer, to break down and to check on.",
+    "assesses": [
+      "AR-LEX-C447-DUSH447-03",
+      "AR-LEX-C447-DUSH447-04",
+      "AR-LEX-C447-DUSH447-05"
+    ]
+  }
+}

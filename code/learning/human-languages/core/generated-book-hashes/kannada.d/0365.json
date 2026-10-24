@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:da25611d093fc9b0",
+  "lessonIds": [
+    "KA-C365-hodedata",
+    "KA-C365-himse",
+    "KA-C365-kaidi",
+    "KA-C365-nuku",
+    "KA-C365-gastu"
+  ],
+  "tex": "kannada/book/chapters/ch365-a-fight-breaks-out.tex"
+}

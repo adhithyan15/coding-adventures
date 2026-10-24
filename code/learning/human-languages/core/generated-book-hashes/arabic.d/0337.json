@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:1e57ac7d830f4577",
+  "lessonIds": [
+    "AR-C337-wasiyya",
+    "AR-C337-mirath",
+    "AR-C337-waritha",
+    "AR-C337-warith",
+    "AR-C337-armala"
+  ],
+  "tex": "arabic/book/chapters/ch337-wills-and-inheritance.tex"
+}

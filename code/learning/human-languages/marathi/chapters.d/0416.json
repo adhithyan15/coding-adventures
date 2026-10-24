@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Washermen and Porters",
+  "label": "ch:mr-washermen-and-porters",
+  "canDo": "I can talk about pegs, washermen and porters, and wringing and sprinkling clothes.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C416-simpadne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can talk about pegs, washermen and porters, and wringing and sprinkling clothes.",
+    "assesses": [
+      "MR-LEX-C416-HAMAL416-03",
+      "MR-LEX-C416-HAMAL416-04",
+      "MR-LEX-C416-HAMAL416-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C403-samanvayam",
+  "pathSegment": "TE-PATH-403-PARIPALANA403",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-403-PARIPALANA403",
+      "order": 2
+    }
+  ]
+}

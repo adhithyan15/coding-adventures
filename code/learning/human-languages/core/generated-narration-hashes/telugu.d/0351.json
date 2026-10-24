@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:78cc3f41c76f8808",
+  "lessonIds": [
+    "TE-C351-bandi",
+    "TE-C351-nirbandhincu",
+    "TE-C351-bandhincu",
+    "TE-C351-vidudala-ceyu",
+    "TE-C351-vidipincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch351.txt",
+  "json": "telugu/narration/ch351.json",
+  "textHash": "fnv1a64:d7666683e07129ea",
+  "jsonHash": "fnv1a64:b11f938909822080",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Nerves before a big day",
+  "label": "ch:ar-nerves-before-a-big-day",
+  "canDo": "I can say that someone is tense, unsettled or hesitant, and that someone got flustered or held back a feeling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C497-katama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can say that someone is tense, unsettled or hesitant, and that someone got flustered or held back a feeling.",
+    "assesses": [
+      "AR-LEX-C497-TAWATTUR497-03",
+      "AR-LEX-C497-TAWATTUR497-04",
+      "AR-LEX-C497-TAWATTUR497-05"
+    ]
+  }
+}

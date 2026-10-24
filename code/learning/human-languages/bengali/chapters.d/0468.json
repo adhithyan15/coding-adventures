@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Inside the Body",
+  "label": "ch:bn-inside-the-body",
+  "canDo": "I can name the heart, the liver, the stomach and the veins.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C468-dhukpuk-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can name the heart, the liver, the stomach and the veins.",
+    "assesses": [
+      "BN-LEX-C468-HRITPINDO468-03",
+      "BN-LEX-C468-HRITPINDO468-04",
+      "BN-LEX-C468-HRITPINDO468-05"
+    ]
+  }
+}

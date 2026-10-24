@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:90a87eb74ead2bf4",
+  "lessonIds": [
+    "KA-C401-abhivrddhi",
+    "KA-C401-arthika",
+    "KA-C401-hanakasu",
+    "KA-C401-uttejisu",
+    "KA-C401-hudu"
+  ],
+  "tex": "kannada/book/chapters/ch401-growth-and-finance.tex"
+}

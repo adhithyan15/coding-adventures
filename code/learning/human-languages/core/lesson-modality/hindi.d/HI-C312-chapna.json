@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C312-chapna",
+    "language": "hindi",
+    "chapter": 312,
+    "sequence": 17270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f625890fe760690"
+  },
+  "findings": []
+}

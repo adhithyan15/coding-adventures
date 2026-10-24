@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:4ffa384741c0d835",
+  "lessonIds": [
+    "AR-C309-amir",
+    "AR-C309-qasr",
+    "AR-C309-taj",
+    "AR-C309-arsh",
+    "AR-C309-tawwaja"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch309.txt",
+  "json": "arabic/narration/ch309.json",
+  "textHash": "fnv1a64:ab42f99c206d4114",
+  "jsonHash": "fnv1a64:aff1394fe6133391",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C548-phottographar",
+  "pathSegment": "ML-PATH-548-PANIKKAR548",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-548-PANIKKAR548",
+      "order": 4
+    }
+  ]
+}

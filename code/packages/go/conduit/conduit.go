@@ -341,11 +341,25 @@ func New() *Application {
 	return &Application{app: C.conduit_app_new()}
 }
 
+// live returns the native app, or panics if Bind or Free has already given
+// it up. Bind moves the app into the server (Rust frees it whether the bind
+// succeeds or fails), so any later use of the old pointer would be a
+// use-after-free in native code; a registration made then would also never
+// be served. It is checked before any cgo.Handle is created, so a refused
+// call leaks nothing.
+func (a *Application) live() *C.ConduitApp {
+	if a.consumed || a.app == nil {
+		panic("conduit: Application already bound or freed; create a new Application")
+	}
+	return a.app
+}
+
 // Route registers a handler for an arbitrary method.
 func (a *Application) Route(method, pattern string, h HandlerFunc) *Application {
+	app := a.live()
 	handle := cgo.NewHandle(h)
 	cm, cp := C.CString(method), C.CString(pattern)
-	C.conduitGoAddRoute(a.app, cm, cp, C.uintptr_t(handle))
+	C.conduitGoAddRoute(app, cm, cp, C.uintptr_t(handle))
 	C.free(unsafe.Pointer(cm))
 	C.free(unsafe.Pointer(cp))
 	return a
@@ -359,32 +373,37 @@ func (a *Application) Patch(p string, h HandlerFunc) *Application  { return a.Ro
 
 // Before registers a before-filter.
 func (a *Application) Before(h BeforeFunc) *Application {
-	C.conduitGoAddBefore(a.app, C.uintptr_t(cgo.NewHandle(h)))
+	app := a.live()
+	C.conduitGoAddBefore(app, C.uintptr_t(cgo.NewHandle(h)))
 	return a
 }
 
 // After registers a transforming after-hook.
 func (a *Application) After(h AfterFunc) *Application {
-	C.conduitGoAddAfter(a.app, C.uintptr_t(cgo.NewHandle(h)))
+	app := a.live()
+	C.conduitGoAddAfter(app, C.uintptr_t(cgo.NewHandle(h)))
 	return a
 }
 
 // NotFound registers a custom not-found handler.
 func (a *Application) NotFound(h HandlerFunc) *Application {
-	C.conduitGoSetNotFound(a.app, C.uintptr_t(cgo.NewHandle(h)))
+	app := a.live()
+	C.conduitGoSetNotFound(app, C.uintptr_t(cgo.NewHandle(h)))
 	return a
 }
 
 // OnError registers a custom error handler (called when a handler panics).
 func (a *Application) OnError(h HandlerFunc) *Application {
-	C.conduitGoSetError(a.app, C.uintptr_t(cgo.NewHandle(h)))
+	app := a.live()
+	C.conduitGoSetError(app, C.uintptr_t(cgo.NewHandle(h)))
 	return a
 }
 
 // Set stores an application setting.
 func (a *Application) Set(key, value string) *Application {
+	app := a.live()
 	ck, cv := C.CString(key), C.CString(value)
-	C.conduit_app_set_setting(a.app, ck, cv)
+	C.conduit_app_set_setting(app, ck, cv)
 	C.free(unsafe.Pointer(ck))
 	C.free(unsafe.Pointer(cv))
 	return a
@@ -394,7 +413,7 @@ func (a *Application) Set(key, value string) *Application {
 func (a *Application) GetSetting(key string) (string, bool) {
 	ck := C.CString(key)
 	defer C.free(unsafe.Pointer(ck))
-	v := C.conduit_app_get_setting(a.app, ck)
+	v := C.conduit_app_get_setting(a.live(), ck)
 	if v == nil {
 		return "", false
 	}
@@ -407,8 +426,11 @@ func (a *Application) GetSetting(key string) (string, bool) {
 func (a *Application) Bind(host string, port uint16) (*Server, error) {
 	ch := C.CString(host)
 	defer C.free(unsafe.Pointer(ch))
-	srv := C.conduit_server_bind(ch, C.uint16_t(port), a.app)
-	a.consumed = true // bind frees the app on success AND failure
+	srv := C.conduit_server_bind(ch, C.uint16_t(port), a.live())
+	// Bind frees the app on success AND failure: forget the pointer so no
+	// later call can reach the freed app.
+	a.consumed = true
+	a.app = nil
 	if srv == nil {
 		return nil, fmt.Errorf("conduit bind failed: %s", C.GoString(C.conduit_last_error()))
 	}

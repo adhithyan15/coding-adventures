@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Taking Sides",
+  "label": "ch:ta-taking-sides",
+  "canDo": "I can talk about bias, hidden motives and staying neutral.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C394-kurittu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can talk about bias, hidden motives and staying neutral.",
+    "assesses": [
+      "TA-LEX-C394-ORUTALAIPPAT394-03",
+      "TA-LEX-C394-ORUTALAIPPAT394-04",
+      "TA-LEX-C394-ORUTALAIPPAT394-05"
+    ]
+  }
+}

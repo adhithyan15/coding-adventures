@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "War Comes",
+  "label": "ch:bn-war-comes",
+  "canDo": "I can tell of enemies, soldiers, raids and attacks.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C314-dokhol-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can tell of enemies, soldiers, raids and attacks.",
+    "assesses": [
+      "BN-LEX-C314-SHOTRU314-03",
+      "BN-LEX-C314-SHOTRU314-04",
+      "BN-LEX-C314-SHOTRU314-05"
+    ]
+  }
+}

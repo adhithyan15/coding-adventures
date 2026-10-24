@@ -1,0 +1,11 @@
+{
+  "id": "TA-C528-patippi",
+  "pathSegment": "TA-PATH-528-VASIPPU528",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-528-VASIPPU528",
+      "order": 3
+    }
+  ]
+}

@@ -1,8 +1,10 @@
 import { expect } from "vitest";
 import type { GlyphEvidence } from "./types";
 
-// Bengali reaches the app as a script tab of its own: the track's 30 letters,
+// Bengali reaches the app as a script tab of its own: the track's 39 letters
+// (30 through A2, plus the nine the B1 core adds: ঘ ষ ঠ ৎ ণ উ অ ঢ ঙ),
 // recognition-only except where native writers' pen traces cite an order.
+// The B1 letters are copy-only, so the cited list below does not grow.
 export default [
   {
     suite: "independent (word-initial) vowels",
@@ -13,8 +15,8 @@ export default [
       // Bengali was the last tab until Gurmukhi, then Latin, joined after it.
       expect(SCRIPTS.at(-3)!.script).toBe("bengali");
       const bengali = SCRIPTS.find((script) => script.script === "bengali")!;
-      expect(bengali.letters).toHaveLength(30);
-      expect(bengali.letters.slice(0, 4).map((letter) => letter.glyph)).toEqual(["আ", "ই", "এ", "ও"]);
+      expect(bengali.letters).toHaveLength(39);
+      expect(bengali.letters.slice(0, 4).map((letter) => letter.glyph)).toEqual(["অ", "আ", "ই", "উ"]);
       const cited = bengali.letters.filter((letter) => letter.strokeOrderSource !== undefined);
       expect(cited.map((letter) => letter.glyph)).toEqual([
         "ই", "এ", "ও", "খ", "চ", "ছ", "জ", "ঞ", "ড", "ত", "থ", "দ", "ন", "ফ", "ব", "ভ", "ম", "য", "র", "ল", "হ",

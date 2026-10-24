@@ -1,0 +1,11 @@
+{
+  "id": "TE-C379-morapettuko",
+  "pathSegment": "TE-PATH-379-BADHITUDU379",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-379-BADHITUDU379",
+      "order": 3
+    }
+  ]
+}

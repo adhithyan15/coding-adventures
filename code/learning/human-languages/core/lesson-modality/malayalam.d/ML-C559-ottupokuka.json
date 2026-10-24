@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C559-ottupokuka",
+    "language": "malayalam",
+    "chapter": 559,
+    "sequence": 28170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6a4d6c42a8e142d"
+  },
+  "findings": []
+}

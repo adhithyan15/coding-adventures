@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C449-prem",
+    "language": "bengali",
+    "chapter": 449,
+    "sequence": 27590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4255a2b5418f16ec"
+  },
+  "findings": []
+}

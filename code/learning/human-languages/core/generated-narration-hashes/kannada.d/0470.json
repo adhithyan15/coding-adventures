@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:c6593e80092ba120",
+  "lessonIds": [
+    "KA-C470-vistarisu",
+    "KA-C470-pravesadvara",
+    "KA-C470-kadita",
+    "KA-C470-sarabaraju",
+    "KA-C470-duravani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch470.txt",
+  "json": "kannada/narration/ch470.json",
+  "textHash": "fnv1a64:c7f8f7bd87c8055a",
+  "jsonHash": "fnv1a64:3e90ae045d4f4999",
+  "findings": []
+}

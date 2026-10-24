@@ -1,0 +1,11 @@
+{
+  "id": "TA-C482-muri",
+  "pathSegment": "TA-PATH-482-KAYAM482",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-482-KAYAM482",
+      "order": 3
+    }
+  ]
+}

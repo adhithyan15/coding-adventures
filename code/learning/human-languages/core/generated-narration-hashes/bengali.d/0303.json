@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:40a2f0b4d79ca6e1",
+  "lessonIds": [
+    "BN-C303-sedin",
+    "BN-C303-otit",
+    "BN-C303-perono",
+    "BN-C303-kalokrome",
+    "BN-C303-smoron-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch303.txt",
+  "json": "bengali/narration/ch303.json",
+  "textHash": "fnv1a64:92afbfdc40b2d464",
+  "jsonHash": "fnv1a64:a5868b13f7c578ac",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "A Crash on the Road",
+  "label": "ch:mr-a-crash-on-the-road",
+  "canDo": "I can describe a road accident and how someone came through it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C296-hukne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can describe a road accident and how someone came through it.",
+    "assesses": [
+      "MR-LEX-C296-DHADAK296-03",
+      "MR-LEX-C296-DHADAK296-04",
+      "MR-LEX-C296-DHADAK296-05"
+    ]
+  }
+}

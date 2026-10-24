@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C343-ksatagatrulu",
+    "language": "telugu",
+    "chapter": 343,
+    "sequence": 16870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b66bd9fa631b9094"
+  },
+  "findings": []
+}

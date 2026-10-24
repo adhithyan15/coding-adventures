@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:d78f58e03beca379",
+  "lessonIds": [
+    "MR-C293-bhukamp",
+    "MR-C293-hadarne",
+    "MR-C293-kosalne",
+    "MR-C293-khacne",
+    "MR-C293-darad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch293.txt",
+  "json": "marathi/narration/ch293.json",
+  "textHash": "fnv1a64:186e6698ac955c32",
+  "jsonHash": "fnv1a64:2d70c9c0301c3156",
+  "findings": []
+}

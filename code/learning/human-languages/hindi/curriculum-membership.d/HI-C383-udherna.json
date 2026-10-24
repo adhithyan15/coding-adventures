@@ -1,0 +1,11 @@
+{
+  "id": "HI-C383-udherna",
+  "pathSegment": "HI-PATH-383-SANKAT383",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-383-SANKAT383",
+      "order": 3
+    }
+  ]
+}

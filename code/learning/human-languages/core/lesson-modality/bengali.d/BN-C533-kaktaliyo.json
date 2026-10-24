@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C533-kaktaliyo",
+    "language": "bengali",
+    "chapter": 533,
+    "sequence": 32110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a0e25cf3544e6f9"
+  },
+  "findings": []
+}

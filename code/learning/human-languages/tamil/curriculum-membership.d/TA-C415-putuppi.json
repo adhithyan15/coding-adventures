@@ -1,0 +1,11 @@
+{
+  "id": "TA-C415-putuppi",
+  "pathSegment": "TA-PATH-415-AVANAM415",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-415-AVANAM415",
+      "order": 1
+    }
+  ]
+}

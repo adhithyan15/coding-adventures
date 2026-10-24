@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Size and Quality",
+  "label": "ch:ml-size-and-quality",
+  "canDo": "I can say a measurement, quality, a product, genuine and to adulterate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-R492-review-485-492",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can say a measurement, quality, a product, genuine and to adulterate.",
+    "assesses": [
+      "ML-LEX-C492-GUNAM492-03",
+      "ML-LEX-C492-GUNAM492-04",
+      "ML-LEX-C492-GUNAM492-05"
+    ]
+  }
+}

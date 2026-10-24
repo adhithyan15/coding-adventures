@@ -1,0 +1,31 @@
+{
+  "lesson": {
+    "id": "BN-W274-letter-ddha",
+    "language": "bengali",
+    "chapter": 274,
+    "sequence": 17030,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:86c7a56e8c3896e0",
+    "detachableSegments": [
+      "Script you'll notice: ঢ",
+      "Writing: ঢ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

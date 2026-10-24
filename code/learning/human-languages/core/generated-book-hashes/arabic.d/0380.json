@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:5bd8a67a7c836d7b",
+  "lessonIds": [
+    "AR-C380-adala",
+    "AR-C380-musawah",
+    "AR-C380-zalim",
+    "AR-C380-adil",
+    "AR-C380-istahaqqa"
+  ],
+  "tex": "arabic/book/chapters/ch380-justice-and-fairness.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C385-jamiyya",
+    "language": "arabic",
+    "chapter": 385,
+    "sequence": 21790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8896549476445247"
+  },
+  "findings": []
+}

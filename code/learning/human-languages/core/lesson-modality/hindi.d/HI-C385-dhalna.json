@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C385-dhalna",
+    "language": "hindi",
+    "chapter": 385,
+    "sequence": 21180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1e5d3df2610d5d67"
+  },
+  "findings": []
+}

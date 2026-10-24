@@ -1,0 +1,11 @@
+{
+  "id": "MR-C456-gangarne",
+  "pathSegment": "MR-PATH-456-SANKOC456",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-456-SANKOC456",
+      "order": 3
+    }
+  ]
+}

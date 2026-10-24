@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C411-sarattu",
+    "language": "kannada",
+    "chapter": 411,
+    "sequence": 20790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aeb8ddbf77281b4d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Waiting on the Platform",
+  "label": "ch:te-waiting-on-the-platform",
+  "canDo": "I can say a delay, to wait, punctuality, a break and to hurry.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C440-tvarapadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can say a delay, to wait, punctuality, a break and to hurry.",
+    "assesses": [
+      "TE-LEX-C440-ALASYAM440-03",
+      "TE-LEX-C440-ALASYAM440-04",
+      "TE-LEX-C440-ALASYAM440-05"
+    ]
+  }
+}

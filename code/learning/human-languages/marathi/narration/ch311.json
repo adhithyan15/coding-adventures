@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 311,
+  "title": "Who Makes the News",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:7304b83f33900b9a",
+  "lessons": [
+    {
+      "id": "MR-C311-vartahar",
+      "sequence": 18170,
+      "title": "वार्ताहर (vārtāhar) — a reporter; a correspondent",
+      "headword": "वार्ताहर",
+      "romanization": "vārtāhar",
+      "gloss": "a reporter; a correspondent",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:171261acc4b1cd20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a headline, then the Marathi for to print."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वार्ताहर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वार्ताहर — vārtāhar — \"a reporter; a correspondent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वार्ताहराने अपघाताची माहिती फोनवर दिली. vārtāharāne apghātācī māhitī phonvar dilī. The reporter gave the details of the accident over the phone."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Built from वार्ता, news, and -हर, carrier."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वार्ताहर (vārtāhar) is a tatsama, taken from Sanskrit vārttāhara, 'a carrier of tidings, a messenger' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārtāhar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārtāhar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārtāhar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārtāhar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārtāharāne apghātācī māhitī phonvar dilī. — The reporter gave the details of the accident over the phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārtāharāne apghātācī māhitī phonvar dilī.* — The reporter gave the details of the accident over the phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a headline, then the Marathi for to print, then say vārtāhar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a headline, then the Marathi for to print, then say *vārtāhar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वार्ताहर (vārtāhar) mean? (\"A reporter; a correspondent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C311-sampadak",
+      "sequence": 18180,
+      "title": "संपादक (sampādak) — an editor",
+      "headword": "संपादक",
+      "romanization": "sampādak",
+      "gloss": "an editor",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:648fb4e4dd33cb7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to print, then the Marathi for a reporter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संपादक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संपादक — sampādak — \"an editor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संपादकांनी लेखात काही बदल केले. sampādakānnī lekhāt kāhī badal kele. The editor made some changes to the article."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The respectful plural संपादकांनी, by the editor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संपादक (sampādak) is a tatsama, taken from Sanskrit sampādaka, 'one who brings about, accomplishes' (Monier-Williams); the sense 'editor' is modern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādakānnī lekhāt kāhī badal kele. — The editor made some changes to the article.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādakānnī lekhāt kāhī badal kele.* — The editor made some changes to the article.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to print, then the Marathi for a reporter, then say sampādak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to print, then the Marathi for a reporter, then say *sampādak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संपादक (sampādak) mean? (\"An editor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C311-lekh",
+      "sequence": 18190,
+      "title": "लेख (lekh) — an article",
+      "headword": "लेख",
+      "romanization": "lekh",
+      "gloss": "an article",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e30ccec28c2527bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a reporter, then the Marathi for an editor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लेख",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लेख — lekh — \"an article\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तिचा लेख आजच्या वृत्तपत्रात आला. ticā lekh ājacyā vṛttapatrāt ālā. Her article appeared in today's newspaper."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "लेख (lekh) लिहिणे, to write an article."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लेख (lekh) is a tatsama, taken from Sanskrit lekha, 'a line, a writing' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lekh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lekh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lekh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lekh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ticā lekh ājacyā vṛttapatrāt ālā. — Her article appeared in today's newspaper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ticā lekh ājacyā vṛttapatrāt ālā.* — Her article appeared in today's newspaper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a reporter, then the Marathi for an editor, then say lekh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a reporter, then the Marathi for an editor, then say *lekh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लेख (lekh) mean? (\"An article\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C311-agralekh",
+      "sequence": 18200,
+      "title": "अग्रलेख (agralekh) — an editorial",
+      "headword": "अग्रलेख",
+      "romanization": "agralekh",
+      "gloss": "an editorial",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d3450fe68c2ca1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an editor, then the Marathi for an article."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अग्रलेख",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अग्रलेख — agralekh — \"an editorial\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजचा अग्रलेख पाण्याच्या प्रश्नावर आहे. ājcā agralekh pāṇyācyā praśnāvar āhe. Today's editorial is about the water problem."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "अग्र-, front, + लेख (lekh): the leading article."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अग्रलेख (agralekh) is a modern compound built from Sanskrit agra, 'front, foremost', and lekha, 'a writing' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agralekh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agralekh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agralekh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agralekh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājcā agralekh pāṇyācyā praśnāvar āhe. — Today's editorial is about the water problem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājcā agralekh pāṇyācyā praśnāvar āhe.* — Today's editorial is about the water problem.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an editor, then the Marathi for an article, then say agralekh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an editor, then the Marathi for an article, then say *agralekh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अग्रलेख (agralekh) mean? (\"An editorial\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C311-prakasit-karne",
+      "sequence": 18210,
+      "title": "प्रकाशित करणे (prakāśit karṇe) — to publish",
+      "headword": "प्रकाशित करणे",
+      "romanization": "prakāśit karṇe",
+      "gloss": "to publish",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4217f80154caf474",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an article, then the Marathi for an editorial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रकाशित करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रकाशित करणे — prakāśit karṇe — \"to publish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्या लेखकाने नवं पुस्तक प्रकाशित केलं. tyā lekhkāne navaṁ pustak prakāśit kelaṁ. That writer published a new book."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने प्रकाशित केलं, tyāne prakāśit kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is published agrees; प्रकाशित होणे, to be published."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रकाशित करणे (prakāśit karṇe) joins prakāśit, a tatsama taken from Sanskrit prakāśita, 'brought to light, made public' (Monier-Williams), to karṇe, 'to do'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakāśit karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakāśit karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakāśit karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakāśit karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyā lekhkāne navaṁ pustak prakāśit kelaṁ. — That writer published a new book.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyā lekhkāne navaṁ pustak prakāśit kelaṁ.* — That writer published a new book.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an article, then the Marathi for an editorial, then say prakāśit karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an article, then the Marathi for an editorial, then say *prakāśit karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रकाशित करणे (prakāśit karṇe) mean? (\"To publish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R311-review-304-311",
+      "sequence": 18220,
+      "title": "Looking back: from Telling It Well to Who Makes the News",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Telling It Well to Who Makes the News",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb2aea9541b493a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for to describe and an occasion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to describe, an occasion, to unfold, to make a stir, to spread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to describe, an occasion, to unfold, to make a stir, to spread]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "last year, previous, before that, over time, to elapse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: last year, previous, before that, over time, to elapse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "step by step, many times, now and then, by itself, lately",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: step by step, many times, now and then, by itself, lately]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a commencement, an ending, at last, a period, a remembrance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a commencement, an ending, at last, a period, a remembrance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a generation, an ancestor, heritage, a lineage, to preserve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a generation, an ancestor, heritage, a lineage, to preserve]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lose forever, to endure, death, to pass away, to arise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lose forever, to endure, death, to pass away, to arise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a newspaper, a daily paper, a weekly, a headline, to print",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a newspaper, a daily paper, a weekly, a headline, to print]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reporter, an editor, an article, an editorial, to publish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reporter, an editor, an article, an editorial, to publish]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To describe? (वर्णन करणे, varṇan karṇe.) An occasion? (प्रसंग, prasaṅg.) To unfold? (उलगडणे, ulgaḍṇe.) To make a stir? (गाजणे, gājṇe.) To spread? (पसरणे, pasarṇe.) Last year? (गतवर्षी, gatvarṣī.) Previous? (मागील, māgīl.) Before that? (तत्पूर्वी, tatpūrvī.) Over time? (कालांतराने, kālāntarāne.) To elapse? (लोटणे, loṭṇe.) Step by step? (क्रमशः, kramaśaḥ.) Many times? (अनेकदा, anekdā.) Now and then? (अधूनमधून, adhūnmadhūn.) By itself? (आपोआप, āpoāp.) Lately? (नुकताच, nuktāc.) A commencement? (प्रारंभ, prārambh.) An ending? (अंत, ant.) At last? (अखेर, akher.) A period? (कालखंड, kālkhaṇḍ.) A remembrance? (स्मृती, smṛtī.) A generation? (पिढी, piḍhī.) An ancestor? (पूर्वज, pūrvaj.) Heritage? (वारसा, vārsā.) A lineage? (वंश, vaṁś.) To preserve? (जतन करणे, jatan karṇe.) To lose forever? (गमावणे, gamāvṇe.) To endure? (सोसणे, sosṇe.) Death? (मृत्यू, mṛtyū.) To pass away? (मरण पावणे, maraṇ pāvṇe.) To arise? (उद्भवणे, udbhavṇe.) A newspaper? (वृत्तपत्र, vṛttapatra.) A daily paper? (दैनिक, dainik.) A weekly? (साप्ताहिक, sāptāhik.) A headline? (मथळा, mathḷā.) To print? (छापणे, chāpṇe.) A reporter? (वार्ताहर, vārtāhar.) An editor? (संपादक, sampādak.) An article? (लेख, lekh.) An editorial? (अग्रलेख, agralekh.) To publish? (प्रकाशित करणे, prakāśit karṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

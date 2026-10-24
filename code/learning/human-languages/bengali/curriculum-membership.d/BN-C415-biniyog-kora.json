@@ -1,0 +1,11 @@
+{
+  "id": "BN-C415-biniyog-kora",
+  "pathSegment": "BN-PATH-415-SUD415",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-415-SUD415",
+      "order": 3
+    }
+  ]
+}

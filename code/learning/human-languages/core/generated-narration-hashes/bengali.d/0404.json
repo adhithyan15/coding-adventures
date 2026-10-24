@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:a38bf3c54013ee11",
+  "lessonIds": [
+    "BN-C404-aram",
+    "BN-C404-ayesh",
+    "BN-C404-jolkhabar",
+    "BN-C404-jirono",
+    "BN-C404-helan-deoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch404.txt",
+  "json": "bengali/narration/ch404.json",
+  "textHash": "fnv1a64:5d92f0fec59a0568",
+  "jsonHash": "fnv1a64:e7a67a5f58bf3f40",
+  "findings": []
+}

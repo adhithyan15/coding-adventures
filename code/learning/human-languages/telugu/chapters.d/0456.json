@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Strolling Around",
+  "label": "ch:te-strolling-around",
+  "canDo": "I can say a jaunt, to stroll, a view, dusk and a stopover.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C456-majili",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can say a jaunt, to stroll, a view, dusk and a stopover.",
+    "assesses": [
+      "TE-LEX-C456-SHIKARU456-03",
+      "TE-LEX-C456-SHIKARU456-04",
+      "TE-LEX-C456-SHIKARU456-05"
+    ]
+  }
+}

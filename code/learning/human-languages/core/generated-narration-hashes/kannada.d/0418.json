@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:855162e1483b8f25",
+  "lessonIds": [
+    "KA-C418-paryaya",
+    "KA-C418-ayke",
+    "KA-C418-tatkalika",
+    "KA-C418-sasvata",
+    "KA-C418-marpadisu",
+    "KA-R418-review-412-418"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch418.txt",
+  "json": "kannada/narration/ch418.json",
+  "textHash": "fnv1a64:17e6b0aa842d089e",
+  "jsonHash": "fnv1a64:01587278c9936831",
+  "findings": []
+}

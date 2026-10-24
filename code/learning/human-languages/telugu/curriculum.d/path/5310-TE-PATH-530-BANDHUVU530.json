@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-530-BANDHUVU530",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-530-BANDHUVU530"
+  ],
+  "after": []
+}

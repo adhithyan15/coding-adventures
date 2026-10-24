@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:f1f28d08d4e1b30f",
+  "lessonIds": [
+    "MR-C394-bhan",
+    "MR-C394-janiv",
+    "MR-C394-jagarukta",
+    "MR-C394-vivek",
+    "MR-C394-umagne"
+  ],
+  "tex": "marathi/book/chapters/ch394-being-aware.tex"
+}

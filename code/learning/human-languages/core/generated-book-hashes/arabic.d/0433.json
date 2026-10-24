@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:6e26b00936c3db8f",
+  "lessonIds": [
+    "AR-C433-itar",
+    "AR-C433-ajala",
+    "AR-C433-thuqb",
+    "AR-C433-midakhkha",
+    "AR-C433-jarra"
+  ],
+  "tex": "arabic/book/chapters/ch433-a-flat-tyre.tex"
+}

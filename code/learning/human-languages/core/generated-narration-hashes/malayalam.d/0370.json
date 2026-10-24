@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:bbc77fc340da8526",
+  "lessonIds": [
+    "ML-C370-moli",
+    "ML-C370-drksaksi",
+    "ML-C370-kallam",
+    "ML-C370-moli-nalkuka",
+    "ML-C370-satyam-ceyyuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch370.txt",
+  "json": "malayalam/narration/ch370.json",
+  "textHash": "fnv1a64:88605e81b39ac909",
+  "jsonHash": "fnv1a64:2887f86034cee4e4",
+  "findings": []
+}

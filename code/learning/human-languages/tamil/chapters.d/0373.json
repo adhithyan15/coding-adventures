@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "Government",
+  "label": "ch:ta-government",
+  "canDo": "I can talk about politics, ministers and parliament.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C373-natalumanram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can talk about politics, ministers and parliament.",
+    "assesses": [
+      "TA-LEX-C373-ARACIYAL373-03",
+      "TA-LEX-C373-ARACIYAL373-04",
+      "TA-LEX-C373-ARACIYAL373-05"
+    ]
+  }
+}

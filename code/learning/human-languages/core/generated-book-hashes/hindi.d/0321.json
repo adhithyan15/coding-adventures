@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:7ad42562aff101a1",
+  "lessonIds": [
+    "HI-C321-hamla",
+    "HI-C321-gherna",
+    "HI-C321-top",
+    "HI-C321-bhirna",
+    "HI-C321-jujhna"
+  ],
+  "tex": "hindi/book/chapters/ch321-the-attack.tex"
+}

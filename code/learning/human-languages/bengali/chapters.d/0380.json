@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "The Right Conditions",
+  "label": "ch:bn-the-right-conditions",
+  "canDo": "I can say when conditions are right and what to do if they are not.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C380-obhyosto-hooya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can say when conditions are right and what to do if they are not.",
+    "assesses": [
+      "BN-LEX-C380-OPOJUKTO380-03",
+      "BN-LEX-C380-OPOJUKTO380-04",
+      "BN-LEX-C380-OPOJUKTO380-05"
+    ]
+  }
+}

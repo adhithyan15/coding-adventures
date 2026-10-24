@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:c5c35541c9fc3c4f",
+  "lessonIds": [
+    "BN-C410-math",
+    "BN-C410-park",
+    "BN-C410-uthon",
+    "BN-C410-chotvor",
+    "BN-C410-paychari-kora"
+  ],
+  "tex": "bengali/book/chapters/ch410-fields-and-parks.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Praise and Criticism",
+  "label": "ch:te-praise-and-criticism",
+  "canDo": "I can praise, criticise and find fault.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C387-tappubattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can praise, criticise and find fault.",
+    "assesses": [
+      "TE-LEX-C387-VIMARSA387-03",
+      "TE-LEX-C387-VIMARSA387-04",
+      "TE-LEX-C387-VIMARSA387-05"
+    ]
+  }
+}

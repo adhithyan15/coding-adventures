@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C499-asuyapadu",
+    "language": "telugu",
+    "chapter": 499,
+    "sequence": 25250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1df93632c8d220fc"
+  },
+  "findings": []
+}

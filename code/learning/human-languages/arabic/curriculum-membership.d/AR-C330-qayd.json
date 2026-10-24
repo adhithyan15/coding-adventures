@@ -1,0 +1,11 @@
+{
+  "id": "AR-C330-qayd",
+  "pathSegment": "AR-PATH-330-SIJN330",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-330-SIJN330",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C518-raktasravam",
+    "language": "telugu",
+    "chapter": 518,
+    "sequence": 26270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7042029cd5503fcf"
+  },
+  "findings": []
+}

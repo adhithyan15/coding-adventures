@@ -1,0 +1,11 @@
+{
+  "id": "AR-C480-inkhafada",
+  "pathSegment": "AR-PATH-480-NASHRA480",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-480-NASHRA480",
+      "order": 3
+    }
+  ]
+}

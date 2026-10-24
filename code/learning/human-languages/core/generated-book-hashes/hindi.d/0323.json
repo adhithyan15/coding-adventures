@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:09b7e688d35c13bf",
+  "lessonIds": [
+    "HI-C323-harana",
+    "HI-C323-pacharna",
+    "HI-C323-vijay",
+    "HI-C323-sahid",
+    "HI-C323-sandhi"
+  ],
+  "tex": "hindi/book/chapters/ch323-victory-and-defeat.tex"
+}

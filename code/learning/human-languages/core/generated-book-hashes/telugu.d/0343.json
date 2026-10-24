@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:40309f4f31a1d5a3",
+  "lessonIds": [
+    "TE-C343-ksatagatrulu",
+    "TE-C343-durghatana",
+    "TE-C343-tokkisalata",
+    "TE-C343-trutilo",
+    "TE-C343-bayatapadu"
+  ],
+  "tex": "telugu/book/chapters/ch343-a-narrow-escape.tex"
+}

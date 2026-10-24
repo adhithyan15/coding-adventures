@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:bcf6dc91b452a613",
+  "lessonIds": [
+    "TA-C311-mulakkam",
+    "TA-C311-unnaviratam",
+    "TA-C311-kilarntelu",
+    "TA-C311-elucci",
+    "TA-C311-pirakatanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch311.txt",
+  "json": "tamil/narration/ch311.json",
+  "textHash": "fnv1a64:0155687305c570f6",
+  "jsonHash": "fnv1a64:1fecd7af76c4e912",
+  "findings": []
+}

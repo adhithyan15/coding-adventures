@@ -117,6 +117,16 @@ export interface CodeBlockNode {
   readonly value: string;
 }
 
+/** TE04 GFM fence: inert full info, first-token name and literal payload.
+ * Separate from legacy/indented code so transforms can retain source hints.
+ */
+export interface FencedBlockNode {
+  readonly type: "fenced_block";
+  readonly name: string | null;
+  readonly info: string | null;
+  readonly value: string;
+}
+
 /**
  * A block of content set apart as a quotation or aside.
  *
@@ -290,6 +300,7 @@ export type BlockNode =
   | HeadingNode
   | ParagraphNode
   | CodeBlockNode
+  | FencedBlockNode
   | BlockquoteNode
   | ListNode
   | ListItemNode

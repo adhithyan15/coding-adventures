@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:a02a21ff2a7d5a64",
+  "lessonIds": [
+    "HI-C416-khema",
+    "HI-C416-sulana",
+    "HI-C416-basera",
+    "HI-C416-guzaarna",
+    "HI-C416-bitana"
+  ],
+  "tex": "hindi/book/chapters/ch416-camping-out.tex"
+}

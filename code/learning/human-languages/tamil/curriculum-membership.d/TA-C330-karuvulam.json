@@ -1,0 +1,11 @@
+{
+  "id": "TA-C330-karuvulam",
+  "pathSegment": "TA-PATH-330-PERARASU330",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-330-PERARASU330",
+      "order": 2
+    }
+  ]
+}

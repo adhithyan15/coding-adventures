@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:8e81e17cc9ef1943",
+  "lessonIds": [
+    "KA-C502-sabhya",
+    "KA-C502-vidheya",
+    "KA-C502-sistu",
+    "KA-C502-gamanisu",
+    "KA-C502-spandisu"
+  ],
+  "tex": "kannada/book/chapters/ch502-good-manners.tex"
+}

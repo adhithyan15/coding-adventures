@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:078fb4a1154da5a8",
+  "lessonIds": [
+    "KA-C511-tagulu",
+    "KA-C511-mamparu",
+    "KA-C511-ulbanisu",
+    "KA-C511-rogalaksana",
+    "KA-C511-lasike",
+    "KA-R511-review-505-511"
+  ],
+  "tex": "kannada/book/chapters/ch511-catching-something.tex"
+}

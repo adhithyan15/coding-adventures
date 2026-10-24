@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 517,
+  "title": "Feelings Run High",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0305600722ba31b7",
+  "lessons": [
+    {
+      "id": "ML-C517-vikaram",
+      "sequence": 26000,
+      "title": "വികാരം (vikāraṁ) — an emotion; a feeling",
+      "headword": "വികാരം",
+      "romanization": "vikāraṁ",
+      "gloss": "an emotion; a feeling",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:522ada69cf7d48ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a principal, then the Malayalam for tuition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വികാരം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വികാരം — vikāraṁ — \"an emotion; a feeling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ പാട്ട് എന്നിൽ ഒരു വലിയ വികാരം ഉണ്ടാക്കി. ā pāṭṭŭ ennil oru valiya vikāraṁ uṇṭākki. That song stirred a strong feeling in me."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: വികാരങ്ങൾ, vikāraṅṅaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: വികാരങ്ങൾ. A word for any feeling, mild or strong; വികാരം (vikāraṁ) കൊള്ളുക is to be carried away by one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വികാരം (vikāraṁ) is borrowed from Sanskrit vikāra, \"a change, a disturbance of body or mind, a passion\" (CDIAL 11624). The sense of an emotion grew from the idea of the mind being moved out of its usual state."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vikāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vikāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vikāraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vikāraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pāṭṭŭ ennil oru valiya vikāraṁ uṇṭākki. — That song stirred a strong feeling in me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pāṭṭŭ ennil oru valiya vikāraṁ uṇṭākki.* — That song stirred a strong feeling in me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a principal, then the Malayalam for tuition, then say vikāraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a principal, then the Malayalam for tuition, then say *vikāraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വികാരം (vikāraṁ) mean? (\"An emotion; a feeling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C517-ahladam",
+      "sequence": 26010,
+      "title": "ആഹ്ലാദം (āhlādaṁ) — delight; glee",
+      "headword": "ആഹ്ലാദം",
+      "romanization": "āhlādaṁ",
+      "gloss": "delight; glee",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:406d9a04de723fa5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for tuition, then the Malayalam for an emotion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആഹ്ലാദം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആഹ്ലാദം — āhlādaṁ — \"delight; glee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പരീക്ഷയിൽ ജയിച്ചപ്പോൾ കുട്ടികൾ ആഹ്ലാദത്തോടെ ചാടി. parīkṣayil jayiccappōḷ kuṭṭikaḷ āhlādattōṭe cāṭi. When they passed the exam, the children jumped for joy."
+            },
+            {
+              "kind": "speech",
+              "text": "With -ഓടെ it makes a manner phrase: ആഹ്ലാദത്തോടെ, with delight. A -ം noun takes -ത്ത- before an ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആഹ്ലാദം (āhlādaṁ) is borrowed from Sanskrit āhlāda, \"refreshment, joy, delight\" (Monier-Williams). Like many Sanskrit nouns in -a, it ends in -ം in Malayalam."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āhlādaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āhlādaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āhlādaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āhlādaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parīkṣayil jayiccappōḷ kuṭṭikaḷ āhlādattōṭe cāṭi. — When they passed the exam, the children jumped for joy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parīkṣayil jayiccappōḷ kuṭṭikaḷ āhlādattōṭe cāṭi.* — When they passed the exam, the children jumped for joy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for tuition, then the Malayalam for an emotion, then say āhlādaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for tuition, then the Malayalam for an emotion, then say *āhlādaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആഹ്ലാദം (āhlādaṁ) mean? (\"Delight; glee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C517-alaruka",
+      "sequence": 26020,
+      "title": "അലറുക (alaṟuka) — to bellow; to roar",
+      "headword": "അലറുക",
+      "romanization": "alaṟuka",
+      "gloss": "to bellow; to roar",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fdbc06c447fd593",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an emotion, then the Malayalam for delight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അലറുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അലറുക — alaṟuka — \"to bellow; to roar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ദേഷ്യം വന്നപ്പോൾ അയാൾ അലറി. dēṣyaṁ vannappōḷ ayāḷ alaṟi. When he got angry, he bellowed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അലറി, alaṟi."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of an angry person, a tiger or a storm; the past is അലറി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അലറുക (alaṟuka) is native Dravidian: DEDR 245 gives the Malayalam verb as to roar or bellow, as an elephant or a tiger does (DEDR 245)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alaṟuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alaṟuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alaṟuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alaṟuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēṣyaṁ vannappōḷ ayāḷ alaṟi. — When he got angry, he bellowed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēṣyaṁ vannappōḷ ayāḷ alaṟi.* — When he got angry, he bellowed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an emotion, then the Malayalam for delight, then say alaṟuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an emotion, then the Malayalam for delight, then say *alaṟuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അലറുക (alaṟuka) mean? (\"To bellow; to roar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C517-kopam",
+      "sequence": 26030,
+      "title": "കോപം (kōpaṁ) — wrath; anger",
+      "headword": "കോപം",
+      "romanization": "kōpaṁ",
+      "gloss": "wrath; anger",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed878c1b1008154a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for delight, then the Malayalam for to bellow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കോപം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കോപം — kōpaṁ — \"wrath; anger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അച്ഛന്റെ കോപം പെട്ടെന്ന് മാറി. acchanṟe kōpaṁ peṭṭennŭ māṟi. Father's anger passed quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "More formal than ദേഷ്യം, and common in stories and old songs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കോപം (kōpaṁ) is borrowed from Sanskrit kopa, \"fury, anger\", from the root kup, \"to be agitated, to be angry\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōpaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōpaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōpaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōpaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acchanṟe kōpaṁ peṭṭennŭ māṟi. — Father's anger passed quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acchanṟe kōpaṁ peṭṭennŭ māṟi.* — Father's anger passed quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for delight, then the Malayalam for to bellow, then say kōpaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for delight, then the Malayalam for to bellow, then say *kōpaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കോപം (kōpaṁ) mean? (\"Wrath; anger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C517-visamikkuka",
+      "sequence": 26040,
+      "title": "വിഷമിക്കുക (viṣamikkuka) — to be upset; to feel bad",
+      "headword": "വിഷമിക്കുക",
+      "romanization": "viṣamikkuka",
+      "gloss": "to be upset; to feel bad",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:560c57e92527b084",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to bellow, then the Malayalam for wrath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിഷമിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിഷമിക്കുക — viṣamikkuka — \"to be upset; to feel bad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലി പോയതിൽ അവൻ വളരെ വിഷമിച്ചു. jōli pōyatil avan vaḷare viṣamiccu. He was very upset at losing his job."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വിഷമിച്ചു, viṣamiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is വിഷമം, distress. What upsets you takes -ഇൽ: ജോലി പോയതിൽ, at the job going."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിഷമിക്കുക (viṣamikkuka) is built from Sanskrit viṣama, \"uneven, difficult, dangerous\" (CDIAL 11972), with the Malayalam verb ending -ിക്കുക. To be upset is to be in an uneven, difficult state."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṣamikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṣamikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṣamikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṣamikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōli pōyatil avan vaḷare viṣamiccu. — He was very upset at losing his job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōli pōyatil avan vaḷare viṣamiccu.* — He was very upset at losing his job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to bellow, then the Malayalam for wrath, then say viṣamikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to bellow, then the Malayalam for wrath, then say *viṣamikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിഷമിക്കുക (viṣamikkuka) mean? (\"To be upset; to feel bad\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

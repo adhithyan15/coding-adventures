@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C301-nirakhne",
+    "language": "marathi",
+    "chapter": 301,
+    "sequence": 17700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd825983fc4c2549"
+  },
+  "findings": []
+}

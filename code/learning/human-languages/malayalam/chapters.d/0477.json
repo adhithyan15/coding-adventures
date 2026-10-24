@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "By the River",
+  "label": "ch:ml-by-the-river",
+  "canDo": "I can say a landing place, a riverbank, a canal, to swim across and to dash forward.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C477-kutikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can say a landing place, a riverbank, a canal, to swim across and to dash forward.",
+    "assesses": [
+      "ML-LEX-C477-KATAVU477-03",
+      "ML-LEX-C477-KATAVU477-04",
+      "ML-LEX-C477-KATAVU477-05"
+    ]
+  }
+}

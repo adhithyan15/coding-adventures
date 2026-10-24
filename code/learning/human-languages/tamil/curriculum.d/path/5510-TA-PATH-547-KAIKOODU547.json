@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-547-KAIKOODU547",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TA-EXT-547-KAIKOODU547"
+  ],
+  "after": []
+}

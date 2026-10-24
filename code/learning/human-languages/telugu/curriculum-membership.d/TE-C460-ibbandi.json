@@ -1,0 +1,11 @@
+{
+  "id": "TE-C460-ibbandi",
+  "pathSegment": "TE-PATH-460-ASAUKARYAM460",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-460-ASAUKARYAM460",
+      "order": 1
+    }
+  ]
+}

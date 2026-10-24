@@ -1,0 +1,21 @@
+{
+  "chapter": 415,
+  "title": "Renewing the Papers",
+  "label": "ch:ta-renewing-the-papers",
+  "canDo": "I can talk about papers that expire and get renewed, running around, receipts and arrangements.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-R415-review-408-415",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can talk about papers that expire and get renewed, running around, receipts and arrangements.",
+    "assesses": [
+      "TA-LEX-C415-AVANAM415-01",
+      "TA-LEX-C415-AVANAM415-02",
+      "TA-LEX-C415-AVANAM415-03",
+      "TA-LEX-C415-AVANAM415-04",
+      "TA-LEX-C415-AVANAM415-05"
+    ]
+  }
+}

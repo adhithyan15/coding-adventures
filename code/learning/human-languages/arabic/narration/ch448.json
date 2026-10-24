@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 448,
+  "title": "A noisy night",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:14d7640db7373039",
+  "lessons": [
+    {
+      "id": "AR-C448-dajij",
+      "sequence": 25080,
+      "title": "ضجيج (ḍajīj) — noise; a din",
+      "headword": "ضجيج",
+      "romanization": "ḍajīj",
+      "gloss": "noise; a din",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d43d83c24051e35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to break down, then the Arabic for to check on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ضجيج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضجيج — ḍajīj — \"noise; a din\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سمعنا ضجيجا من الشارع في الليل. samiʿnā ḍajījan min ash-shāriʿ fī al-layl. We heard noise from the street at night."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضجيج (ḍajīj) is built on the native Arabic root ḍ-j-j, \"to cry out, to clamour\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍajīj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍajīj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍajīj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍajīj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samiʿnā ḍajījan min ash-shāriʿ fī al-layl. — We heard noise from the street at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samiʿnā ḍajījan min ash-shāriʿ fī al-layl.* — We heard noise from the street at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to break down, then the Arabic for to check on, then say ḍajīj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to break down, then the Arabic for to check on, then say *ḍajīj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ضجيج (ḍajīj) mean? (\"Noise; a din\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C448-azaja",
+      "sequence": 25090,
+      "title": "أزعج (azʿaja) — to disturb; to bother",
+      "headword": "أزعج",
+      "romanization": "azʿaja",
+      "gloss": "to disturb; to bother",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bceee04768d055f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to check on, then the Arabic for noise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أزعج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أزعج — azʿaja — \"to disturb; to bother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أزعجنا ضجيج الشارع. azʿajanā ḍajīj ash-shāriʿ. The noise of the street disturbed us."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يزعج, yuzʿij."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أزعج (azʿaja) is built on the native Arabic root z-ʿ-j, \"to unsettle, to disquiet\" (Lane). It is Form IV; muzʿij, \"annoying\", is its participle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "azʿaja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *azʿaja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "azʿaja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *azʿaja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "azʿajanā ḍajīj ash-shāriʿ. — The noise of the street disturbed us.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *azʿajanā ḍajīj ash-shāriʿ.* — The noise of the street disturbed us.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to check on, then the Arabic for noise, then say azʿaja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to check on, then the Arabic for noise, then say *azʿaja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أزعج (azʿaja) mean? (\"To disturb; to bother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C448-ayqaza",
+      "sequence": 25100,
+      "title": "أيقظ (ayqaẓa) — to wake (someone) up",
+      "headword": "أيقظ",
+      "romanization": "ayqaẓa",
+      "gloss": "to wake (someone) up",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f119954c230b1b3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for noise, then the Arabic for to disturb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أيقظ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أيقظ — ayqaẓa — \"to wake (someone) up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أيقظتني أمي مبكرا. ayqaẓatnī ummī mubakkiran. My mother woke me up early."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يوقظ, yūqiẓ."
+            },
+            {
+              "kind": "speech",
+              "text": "istayqaẓa is to wake up oneself; ayqaẓa wakes someone else."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أيقظ (ayqaẓa) is built on the native Arabic root y-q-ẓ, \"to be awake\" (Lane). It is Form IV, \"to make awake\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ayqaẓa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ayqaẓa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ayqaẓa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ayqaẓa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ayqaẓatnī ummī mubakkiran. — My mother woke me up early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ayqaẓatnī ummī mubakkiran.* — My mother woke me up early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for noise, then the Arabic for to disturb, then say ayqaẓa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for noise, then the Arabic for to disturb, then say *ayqaẓa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أيقظ (ayqaẓa) mean? (\"To wake (someone) up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C448-hadaa",
+      "sequence": 25110,
+      "title": "هدأ (hadaʾa) — to calm down; to grow quiet",
+      "headword": "هدأ",
+      "romanization": "hadaʾa",
+      "gloss": "to calm down; to grow quiet",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ec5188e5221726e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to disturb, then the Arabic for to wake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: هدأ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هدأ — hadaʾa — \"to calm down; to grow quiet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هدأ الشارع بعد منتصف الليل. hadaʾa ash-shāriʿ baʿda muntaṣaf al-layl. The street grew quiet after midnight."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يهدأ, yahdaʾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هدأ (hadaʾa) is built on the native Arabic root h-d-ʾ, \"to be still, quiet\" (Lane). It is the plain verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hadaʾa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hadaʾa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hadaʾa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hadaʾa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hadaʾa ash-shāriʿ baʿda muntaṣaf al-layl. — The street grew quiet after midnight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hadaʾa ash-shāriʿ baʿda muntaṣaf al-layl.* — The street grew quiet after midnight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to disturb, then the Arabic for to wake, then say hadaʾa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to disturb, then the Arabic for to wake, then say *hadaʾa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does هدأ (hadaʾa) mean? (\"To calm down; to grow quiet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C448-ishtaka",
+      "sequence": 25120,
+      "title": "اشتكى (ishtakā) — to complain",
+      "headword": "اشتكى",
+      "romanization": "ishtakā",
+      "gloss": "to complain",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6ec886cfc95c09b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to wake, then the Arabic for to calm down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اشتكى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اشتكى — ishtakā — \"to complain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اشتكى النزيل من الضجيج. ishtakā an-nazīl min aḍ-ḍajīj. The guest complained about the noise."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يشتكي, yashtakī."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes min before the cause: ishtakā min."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اشتكى (ishtakā) is built on the native Arabic root sh-k-w, \"to complain\" (Lane). It is Form VIII."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtakā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtakā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtakā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtakā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtakā an-nazīl min aḍ-ḍajīj. — The guest complained about the noise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtakā an-nazīl min aḍ-ḍajīj.* — The guest complained about the noise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to wake, then the Arabic for to calm down, then say ishtakā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to wake, then the Arabic for to calm down, then say *ishtakā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اشتكى (ishtakā) mean? (\"To complain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

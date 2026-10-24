@@ -1,0 +1,11 @@
+{
+  "id": "KA-C459-bidara",
+  "pathSegment": "KA-PATH-459-CARANA459",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-459-CARANA459",
+      "order": 4
+    }
+  ]
+}

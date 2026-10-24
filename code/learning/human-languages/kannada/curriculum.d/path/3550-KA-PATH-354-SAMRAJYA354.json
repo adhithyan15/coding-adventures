@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-354-SAMRAJYA354",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-354-SAMRAJYA354"
+  ],
+  "after": []
+}

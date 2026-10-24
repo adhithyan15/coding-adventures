@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:5454e900f6158dd4",
+  "lessonIds": [
+    "TE-C477-rtupavanam",
+    "TE-C477-varsapatam",
+    "TE-C477-musuru",
+    "TE-C477-jallu",
+    "TE-C477-tadisipovu",
+    "TE-R477-review-470-477"
+  ],
+  "tex": "telugu/book/chapters/ch477-the-monsoon.tex"
+}

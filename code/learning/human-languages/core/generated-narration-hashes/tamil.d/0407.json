@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:d9492675a976429b",
+  "lessonIds": [
+    "TA-C407-urimam",
+    "TA-C407-kilomittar",
+    "TA-C407-mailkal",
+    "TA-C407-valittatam",
+    "TA-C407-orankattu",
+    "TA-R407-review-400-407"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch407.txt",
+  "json": "tamil/narration/ch407.json",
+  "textHash": "fnv1a64:7c5c30e8abb8d5ef",
+  "jsonHash": "fnv1a64:90fa3679e83513d1",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C531-nadija",
+  "pathSegment": "AR-PATH-531-KIBAR531",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-531-KIBAR531",
+      "order": 2
+    }
+  ]
+}

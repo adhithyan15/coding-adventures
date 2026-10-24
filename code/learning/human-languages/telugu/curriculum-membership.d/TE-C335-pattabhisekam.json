@@ -1,0 +1,11 @@
+{
+  "id": "TE-C335-pattabhisekam",
+  "pathSegment": "TE-PATH-335-KIRITAM335",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-335-KIRITAM335",
+      "order": 2
+    }
+  ]
+}

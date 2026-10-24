@@ -1,0 +1,11 @@
+{
+  "id": "AR-C508-hakka",
+  "pathSegment": "AR-PATH-508-JILD508",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-508-JILD508",
+      "order": 2
+    }
+  ]
+}

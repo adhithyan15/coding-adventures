@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C547-tagilincu",
+    "language": "telugu",
+    "chapter": 547,
+    "sequence": 27750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c98951d67acd9695"
+  },
+  "findings": []
+}

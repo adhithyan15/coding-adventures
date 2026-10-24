@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:c9b67a2c7780363b",
+  "lessonIds": [
+    "AR-C330-sajana",
+    "AR-C330-sajin",
+    "AR-C330-zinzana",
+    "AR-C330-qayd",
+    "AR-C330-afraja"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch330.txt",
+  "json": "arabic/narration/ch330.json",
+  "textHash": "fnv1a64:883eba90516b0c8a",
+  "jsonHash": "fnv1a64:75bdbddcff1a0f03",
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:253a1c4cecc99369",
+  "lessonIds": [
+    "KA-C316-maneginta",
+    "KA-C316-tingalinda",
+    "KA-R316-comparing-and-time"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "kannada/narration/ch316.txt",
+  "json": "kannada/narration/ch316.json",
+  "textHash": "fnv1a64:b1b42f93ce57c915",
+  "jsonHash": "fnv1a64:5aa132175a88fc9d",
+  "findings": []
+}

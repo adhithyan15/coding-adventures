@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C494-bekar",
+    "language": "bengali",
+    "chapter": 494,
+    "sequence": 30100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c3909530f5da10b"
+  },
+  "findings": []
+}

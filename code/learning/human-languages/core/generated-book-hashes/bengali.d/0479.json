@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:102ec5aa740022ee",
+  "lessonIds": [
+    "BN-C479-ghum",
+    "BN-C479-onidra",
+    "BN-C479-tondra",
+    "BN-C479-jhimano",
+    "BN-C479-armora-bhanga"
+  ],
+  "tex": "bengali/book/chapters/ch479-sleep.tex"
+}

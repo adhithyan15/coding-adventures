@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C526-vatakku-saute",
+    "language": "tamil",
+    "chapter": 526,
+    "sequence": 30130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0c913b08e159d81"
+  },
+  "findings": []
+}

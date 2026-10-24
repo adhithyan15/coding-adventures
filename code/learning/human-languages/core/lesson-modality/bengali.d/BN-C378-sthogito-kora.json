@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C378-sthogito-kora",
+    "language": "bengali",
+    "chapter": 378,
+    "sequence": 23490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5e804fb61d9c088"
+  },
+  "findings": []
+}

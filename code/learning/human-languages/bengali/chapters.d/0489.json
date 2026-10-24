@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Weddings and Households",
+  "label": "ch:bn-weddings-and-households",
+  "canDo": "I can talk about an engagement, a household and a blessing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C489-pronam-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can talk about an engagement, a household and a blessing.",
+    "assesses": [
+      "BN-LEX-C489-SONGSAR489-03",
+      "BN-LEX-C489-SONGSAR489-04",
+      "BN-LEX-C489-SONGSAR489-05"
+    ]
+  }
+}

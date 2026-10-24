@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:c6c15fd050f0bdd3",
+  "lessonIds": [
+    "TA-C431-varru",
+    "TA-C431-ular",
+    "TA-C431-aviyaku",
+    "TA-C431-karuku",
+    "TA-C431-nirmattam",
+    "TA-R431-review-424-431"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch431.txt",
+  "json": "tamil/narration/ch431.json",
+  "textHash": "fnv1a64:11864702cee5f489",
+  "jsonHash": "fnv1a64:9d0ec55c09be1349",
+  "findings": []
+}

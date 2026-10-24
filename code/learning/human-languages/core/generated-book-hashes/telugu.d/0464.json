@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:753a761452bf5dc8",
+  "lessonIds": [
+    "TE-C464-andincu",
+    "TE-C464-samakurcu",
+    "TE-C464-erpatu-ceyu",
+    "TE-C464-saraphara",
+    "TE-C464-vasulu-ceyu"
+  ],
+  "tex": "telugu/book/chapters/ch464-arranging-things.tex"
+}

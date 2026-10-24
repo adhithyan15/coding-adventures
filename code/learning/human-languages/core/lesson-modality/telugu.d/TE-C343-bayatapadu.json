@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C343-bayatapadu",
+    "language": "telugu",
+    "chapter": 343,
+    "sequence": 16910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00da61136d30d959"
+  },
+  "findings": []
+}

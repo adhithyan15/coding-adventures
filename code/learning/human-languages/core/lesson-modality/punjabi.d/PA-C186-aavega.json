@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C186-aavega",
+    "language": "punjabi",
+    "chapter": 186,
+    "sequence": 9950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b1816a9841fadd7"
+  },
+  "findings": []
+}

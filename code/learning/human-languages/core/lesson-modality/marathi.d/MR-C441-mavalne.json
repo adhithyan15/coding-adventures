@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C441-mavalne",
+    "language": "marathi",
+    "chapter": 441,
+    "sequence": 25330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:005fcc28e47e8153"
+  },
+  "findings": []
+}

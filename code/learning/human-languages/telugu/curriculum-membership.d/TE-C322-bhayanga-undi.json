@@ -1,0 +1,11 @@
+{
+  "id": "TE-C322-bhayanga-undi",
+  "pathSegment": "TE-PATH-322-FEELINGS-HOPES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-322-FEELINGS-HOPES",
+      "order": 2
+    }
+  ]
+}

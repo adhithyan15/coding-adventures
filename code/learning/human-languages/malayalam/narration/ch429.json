@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 429,
+  "title": "Welfare",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f6484b6d5a72c1c7",
+  "lessons": [
+    {
+      "id": "ML-C429-ksemam",
+      "sequence": 21230,
+      "title": "ക്ഷേമം (kṣēmaṁ) — welfare; well-being",
+      "headword": "ക്ഷേമം",
+      "romanization": "kṣēmaṁ",
+      "gloss": "welfare; well-being",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:620df2c9b7b7c384",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a budget, then the Malayalam for statistics."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ക്ഷേമം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷേമം — kṣēmaṁ — \"welfare; well-being\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തൊഴിലാളികളുടെ ക്ഷേമത്തിന് പുതിയ പദ്ധതി വന്നു. toḻilāḷikaḷuṭe kṣēmattinŭ putiya paddhati vannu. A new scheme has come for the workers' welfare."
+            },
+            {
+              "kind": "speech",
+              "text": "As a greeting in letters: ക്ഷേമം (kṣēmaṁ) തന്നെയല്ലേ, all well, I hope."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷേമം (kṣēmaṁ) is borrowed from Sanskrit kṣema, \"giving rest or ease; safety, well-being\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣēmaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣēmaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣēmaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣēmaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilāḷikaḷuṭe kṣēmattinŭ putiya paddhati vannu. — A new scheme has come for the workers' welfare.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilāḷikaḷuṭe kṣēmattinŭ putiya paddhati vannu.* — A new scheme has come for the workers' welfare.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a budget, then the Malayalam for statistics, then say kṣēmaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a budget, then the Malayalam for statistics, then say *kṣēmaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്ഷേമം (kṣēmaṁ) mean? (\"Welfare; well-being\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C429-resan",
+      "sequence": 21240,
+      "title": "റേഷൻ (ṟēṣan) — a ration",
+      "headword": "റേഷൻ",
+      "romanization": "ṟēṣan",
+      "gloss": "a ration",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4ec1335f1932df4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for statistics, then the Malayalam for welfare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: റേഷൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "റേഷൻ — ṟēṣan — \"a ration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "റേഷൻ കടയിൽ ഇന്ന് അരി വന്നു. ṟēṣan kaṭayil innŭ ari vannu. Rice came to the ration shop today."
+            },
+            {
+              "kind": "speech",
+              "text": "The ration shop, റേഷൻ (ṟēṣan) കട, sells rice and sugar at fixed prices."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "റേഷൻ (ṟēṣan) was borrowed from English ration."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṟēṣan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṟēṣan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṟēṣan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṟēṣan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṟēṣan kaṭayil innŭ ari vannu. — Rice came to the ration shop today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṟēṣan kaṭayil innŭ ari vannu.* — Rice came to the ration shop today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for statistics, then the Malayalam for welfare, then say ṟēṣan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for statistics, then the Malayalam for welfare, then say *ṟēṣan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does റേഷൻ (ṟēṣan) mean? (\"A ration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C429-dhanasahayam",
+      "sequence": 21250,
+      "title": "ധനസഹായം (dhanasahāyaṁ) — financial aid",
+      "headword": "ധനസഹായം",
+      "romanization": "dhanasahāyaṁ",
+      "gloss": "financial aid",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95101f900b86e869",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for welfare, then the Malayalam for a ration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ധനസഹായം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ധനസഹായം — dhanasahāyaṁ — \"financial aid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വീട് നഷ്ടപ്പെട്ടവർക്ക് സർക്കാർ ധനസഹായം നൽകി. vīṭŭ naṣṭappeṭṭavarkkŭ sarkkār dhanasahāyaṁ nalki. The government gave financial aid to those who lost their homes."
+            },
+            {
+              "kind": "speech",
+              "text": "സഹായം alone is help."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ധനസഹായം (dhanasahāyaṁ) is built from Sanskrit dhana, \"property, wealth\" (CDIAL 6717), and sahāya, \"a companion, a helper\" (CDIAL 13309): help in money."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanasahāyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanasahāyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanasahāyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanasahāyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīṭŭ naṣṭappeṭṭavarkkŭ sarkkār dhanasahāyaṁ nalki. — The government gave financial aid to those who lost their homes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīṭŭ naṣṭappeṭṭavarkkŭ sarkkār dhanasahāyaṁ nalki.* — The government gave financial aid to those who lost their homes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for welfare, then the Malayalam for a ration, then say dhanasahāyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for welfare, then the Malayalam for a ration, then say *dhanasahāyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ധനസഹായം (dhanasahāyaṁ) mean? (\"Financial aid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C429-anukulyam",
+      "sequence": 21260,
+      "title": "ആനുകൂല്യം (ānukūlyaṁ) — a benefit; a concession",
+      "headword": "ആനുകൂല്യം",
+      "romanization": "ānukūlyaṁ",
+      "gloss": "a benefit; a concession",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4fe7c8c86967cd85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a ration, then the Malayalam for financial aid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആനുകൂല്യം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആനുകൂല്യം — ānukūlyaṁ — \"a benefit; a concession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രായമായവർക്ക് ബസിൽ ചില ആനുകൂല്യങ്ങൾ ഉണ്ട്. prāyamāyavarkkŭ basil cila ānukūlyaṅṅaḷ uṇṭŭ. Elderly people get some concessions on the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ആനുകൂല്യങ്ങൾ, benefits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആനുകൂല്യം (ānukūlyaṁ) is borrowed from Sanskrit ānukūlya, \"conformity, suitableness, favour\" (Monier-Williams), made from anukūla, \"favourable\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānukūlyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānukūlyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānukūlyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānukūlyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāyamāyavarkkŭ basil cila ānukūlyaṅṅaḷ uṇṭŭ. — Elderly people get some concessions on the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāyamāyavarkkŭ basil cila ānukūlyaṅṅaḷ uṇṭŭ.* — Elderly people get some concessions on the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a ration, then the Malayalam for financial aid, then say ānukūlyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a ration, then the Malayalam for financial aid, then say *ānukūlyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആനുകൂല്യം (ānukūlyaṁ) mean? (\"A benefit; a concession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C429-vitaranam-ceyyuka",
+      "sequence": 21270,
+      "title": "വിതരണം ചെയ്യുക (vitaraṇaṁ ceyyuka) — to distribute",
+      "headword": "വിതരണം ചെയ്യുക",
+      "romanization": "vitaraṇaṁ ceyyuka",
+      "gloss": "to distribute",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2257f19811775159",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for financial aid, then the Malayalam for a benefit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിതരണം ചെയ്യുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിതരണം ചെയ്യുക — vitaraṇaṁ ceyyuka — \"to distribute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അധ്യാപകർ കുട്ടികൾക്ക് പുസ്തകങ്ങൾ വിതരണം ചെയ്തു. adhyāpakar kuṭṭikaḷkkŭ pustakaṅṅaḷ vitaraṇaṁ ceytu. The teachers distributed books to the children."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വിതരണം ചെയ്തു, vitaraṇaṁ ceytu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun വിതരണം is distribution."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിതരണം ചെയ്യുക (vitaraṇaṁ ceyyuka) is a phrase verb built on Sanskrit vitaraṇa, \"giving away, granting\" (Monier-Williams), with ചെയ്യുക, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vitaraṇaṁ ceyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vitaraṇaṁ ceyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vitaraṇaṁ ceyyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vitaraṇaṁ ceyyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhyāpakar kuṭṭikaḷkkŭ pustakaṅṅaḷ vitaraṇaṁ ceytu. — The teachers distributed books to the children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhyāpakar kuṭṭikaḷkkŭ pustakaṅṅaḷ vitaraṇaṁ ceytu.* — The teachers distributed books to the children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for financial aid, then the Malayalam for a benefit, then say vitaraṇaṁ ceyyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for financial aid, then the Malayalam for a benefit, then say *vitaraṇaṁ ceyyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിതരണം ചെയ്യുക (vitaraṇaṁ ceyyuka) mean? (\"To distribute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

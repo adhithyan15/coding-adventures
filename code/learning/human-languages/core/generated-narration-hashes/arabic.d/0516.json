@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:f7293b3bc471f77e",
+  "lessonIds": [
+    "AR-C516-tamaddada",
+    "AR-C516-inhana",
+    "AR-C516-irtajafa",
+    "AR-C516-saala",
+    "AR-C516-iltiwa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch516.txt",
+  "json": "arabic/narration/ch516.json",
+  "textHash": "fnv1a64:29f982eebdda5782",
+  "jsonHash": "fnv1a64:e8ecdd63c4a9e5a8",
+  "findings": []
+}

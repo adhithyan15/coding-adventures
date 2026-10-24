@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C564-racikkuka",
+    "language": "malayalam",
+    "chapter": 564,
+    "sequence": 28410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:642c614534e32538"
+  },
+  "findings": []
+}

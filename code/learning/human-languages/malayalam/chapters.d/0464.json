@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "At the Border",
+  "label": "ch:ml-at-the-border",
+  "canDo": "I can say customs, passport control, a checkpost, an inspection and a foreigner.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C464-videsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can say customs, passport control, a checkpost, an inspection and a foreigner.",
+    "assesses": [
+      "ML-LEX-C464-ATIRTTI464-03",
+      "ML-LEX-C464-ATIRTTI464-04",
+      "ML-LEX-C464-ATIRTTI464-05"
+    ]
+  }
+}

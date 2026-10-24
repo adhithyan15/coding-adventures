@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 302,
+  "title": "Telling It Well",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e76d1c33aa7fc085",
+  "lessons": [
+    {
+      "id": "BN-C302-kahini",
+      "sequence": 19330,
+      "title": "কাহিনি (kāhini) — a tale; a narrative",
+      "headword": "কাহিনি",
+      "romanization": "kāhini",
+      "gloss": "a tale; a narrative",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abef4cc56ad76fbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for detailed, then the Bengali for to verify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কাহিনি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাহিনি — kāhini — \"a tale; a narrative\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দাদু রাতে আমাদের একটা পুরনো কাহিনি বললেন। dādu rāte āmāder ekṭā purôno kāhini bôllen. At night my grandfather told us an old tale."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাহিনি (kāhini) comes down from Sanskrit kathana, 'narration' (CDIAL 2702, which lists Bengali kahinī, 'a story'); it is a cousin of কথা, talk."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāhini",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāhini*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāhini, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāhini*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādu rāte āmāder ekṭā purôno kāhini bôllen. — At night my grandfather told us an old tale.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādu rāte āmāder ekṭā purôno kāhini bôllen.* — At night my grandfather told us an old tale.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for detailed, then the Bengali for to verify, then say kāhini again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for detailed, then the Bengali for to verify, then say *kāhini* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কাহিনি (kāhini) mean? (\"A tale; a narrative\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C302-shonano",
+      "sequence": 19340,
+      "title": "শোনানো (shonāno) — to tell a story to; to recite",
+      "headword": "শোনানো",
+      "romanization": "shonāno",
+      "gloss": "to tell a story to; to recite",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ff0a8ffa99b59c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to verify, then the Bengali for a tale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শোনানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শোনানো — shonāno — \"to tell a story to; to recite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দিদিমা আমাদের রাজা আর রানির গল্প শোনালেন। didimā āmāder rājā ār rānir gôlpo shonālen. Grandmother told us the story of a king and a queen."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি একটা গান শোনালেন, tini ekṭā gān shonālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শোনানো (shonāno) is শোনা, to hear — CDIAL 12598, Sanskrit śṛṇōti, 'hears' — with the -ānō ending that makes someone else hear: to tell a story to someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shonāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shonāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shonāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shonāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "didimā āmāder rājā ār rānir gôlpo shonālen. — Grandmother told us the story of a king and a queen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *didimā āmāder rājā ār rānir gôlpo shonālen.* — Grandmother told us the story of a king and a queen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to verify, then the Bengali for a tale, then say shonāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to verify, then the Bengali for a tale, then say *shonāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শোনানো (shonāno) mean? (\"To tell a story to; to recite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C302-bornona-kora",
+      "sequence": 19350,
+      "title": "বর্ণনা করা (bôrnônā kôrā) — to describe",
+      "headword": "বর্ণনা করা",
+      "romanization": "bôrnônā kôrā",
+      "gloss": "to describe",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52d95650aba08058",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a tale, then the Bengali for to tell a story."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বর্ণনা করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বর্ণনা করা — bôrnônā kôrā — \"to describe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সাক্ষী চোরের চেহারা বর্ণনা করল। sākkhī chorer chehārā bôrnônā kôrlô. The witness described what the thief looked like."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি জায়গাটা বর্ণনা করলেন, tini jāygāṭā bôrnônā kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বর্ণনা করা (bôrnônā kôrā) puts Sanskrit varṇanā, which Monier-Williams gives as 'praise, commendation', before করা; it is built on varṇa, 'colour', and to describe is to give a thing its colours."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôrnônā kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôrnônā kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôrnônā kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôrnônā kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākkhī chorer chehārā bôrnônā kôrlô. — The witness described what the thief looked like.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākkhī chorer chehārā bôrnônā kôrlô.* — The witness described what the thief looked like.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a tale, then the Bengali for to tell a story, then say bôrnônā kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a tale, then the Bengali for to tell a story, then say *bôrnônā kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বর্ণনা করা (bôrnônā kôrā) mean? (\"To describe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C302-ghotano",
+      "sequence": 19360,
+      "title": "ঘটানো (ghôṭāno) — to bring about; to cause",
+      "headword": "ঘটানো",
+      "romanization": "ghôṭāno",
+      "gloss": "to bring about; to cause",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86fa07e396d587a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to tell a story, then the Bengali for to describe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘটানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘটানো — ghôṭāno — \"to bring about; to cause\"."
+            },
+            {
+              "kind": "speech",
+              "text": "একটা ছোট ভুল বড় দুর্ঘটনা ঘটাল। ekṭā chhoṭo bhul bôṛo durghôṭônā ghôṭālô. One small mistake caused a big accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই ভুল দুর্ঘটনা ঘটাল, sei bhul durghôṭônā ghôṭālô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘটানো (ghôṭāno) is ঘটা, to happen — Sanskrit ghaṭatē, 'is busy with; happens' (CDIAL 4407) — with the -ānō ending: to make something happen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghôṭāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghôṭāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghôṭāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghôṭāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekṭā chhoṭo bhul bôṛo durghôṭônā ghôṭālô. — One small mistake caused a big accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekṭā chhoṭo bhul bôṛo durghôṭônā ghôṭālô.* — One small mistake caused a big accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to tell a story, then the Bengali for to describe, then say ghôṭāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to tell a story, then the Bengali for to describe, then say *ghôṭāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘটানো (ghôṭāno) mean? (\"To bring about; to cause\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C302-kromosh",
+      "sequence": 19370,
+      "title": "ক্রমশ (krômôsh) — gradually; little by little",
+      "headword": "ক্রমশ",
+      "romanization": "krômôsh",
+      "gloss": "gradually; little by little",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cbfdef2b5ba1186",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to describe, then the Bengali for to bring about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ক্রমশ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক্রমশ — krômôsh — \"gradually; little by little\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ঝড়টা ক্রমশ দুর্বল হল। jhôṛṭā krômôsh durbôl hôlô. The storm gradually grew weaker."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক্রমশ (krômôsh) is Sanskrit kramaśas, 'gradually, by degrees' (Monier-Williams), built on krama, 'a step', the word in ভাগ্যক্রমে."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krômôsh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krômôsh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krômôsh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krômôsh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhôṛṭā krômôsh durbôl hôlô. — The storm gradually grew weaker.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhôṛṭā krômôsh durbôl hôlô.* — The storm gradually grew weaker.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to describe, then the Bengali for to bring about, then say krômôsh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to describe, then the Bengali for to bring about, then say *krômôsh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ক্রমশ (krômôsh) mean? (\"Gradually; little by little\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

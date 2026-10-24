@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:f4a28839c08d64e8",
+  "lessonIds": [
+    "KA-C328-darode",
+    "KA-C328-docu",
+    "KA-C328-esagu",
+    "KA-C328-parariyagu",
+    "KA-C328-jadu"
+  ],
+  "tex": "kannada/book/chapters/ch328-a-robbery-at-night.tex"
+}

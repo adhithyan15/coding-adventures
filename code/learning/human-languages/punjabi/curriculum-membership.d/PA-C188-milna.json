@@ -1,0 +1,11 @@
+{
+  "id": "PA-C188-milna",
+  "pathSegment": "PA-PATH-188-A2-MEETING-FAMILY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-188-A2-MEETING-FAMILY",
+      "order": 1
+    }
+  ]
+}

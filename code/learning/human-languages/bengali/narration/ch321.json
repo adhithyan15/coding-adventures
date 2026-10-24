@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 321,
+  "title": "Legends",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cb89547dd9d826f0",
+  "lessons": [
+    {
+      "id": "BN-C321-kingbodonti",
+      "sequence": 20300,
+      "title": "কিংবদন্তি (kingbôdônti) — a legend",
+      "headword": "কিংবদন্তি",
+      "romanization": "kingbôdônti",
+      "gloss": "a legend",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ff63852b986df51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a dome, then the Bengali for architecture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কিংবদন্তি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কিংবদন্তি — kingbôdônti — \"a legend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গ্রামের একটা কিংবদন্তি আছে যে পাহাড়ের গুহায় এক রাজা থাকতেন। grāmer ekṭā kingbôdônti āchhe je pāhāṛer guhāy ek rājā thākten. There's a village legend that a king once lived in the cave in the hills."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কিংবদন্তি (kingbôdônti) is Sanskrit kiṃvadantī, 'what do they say?' — a common saying, a rumour, a tradition (Monier-Williams). A legend is what people say."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kingbôdônti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kingbôdônti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kingbôdônti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kingbôdônti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāmer ekṭā kingbôdônti āchhe je pāhāṛer guhāy ek rājā thākten. — There's a village legend that a king once lived in the cave in the hills.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāmer ekṭā kingbôdônti āchhe je pāhāṛer guhāy ek rājā thākten.* — There's a village legend that a king once lived in the cave in the hills.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a dome, then the Bengali for architecture, then say kingbôdônti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a dome, then the Bengali for architecture, then say *kingbôdônti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কিংবদন্তি (kingbôdônti) mean? (\"A legend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C321-rupkotha",
+      "sequence": 20310,
+      "title": "রূপকথা (rūpkôthā) — a fairy tale",
+      "headword": "রূপকথা",
+      "romanization": "rūpkôthā",
+      "gloss": "a fairy tale",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91063dd5f89ae747",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for architecture, then the Bengali for a legend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রূপকথা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রূপকথা — rūpkôthā — \"a fairy tale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দিদিমা রোজ রাতে আমাদের একটা রূপকথা শোনাতেন। didimā roj rāte āmāder ekṭā rūpkôthā shonāten. Every night my grandmother used to tell us a fairy tale."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রূপকথা (rūpkôthā) is usually explained as রূপ, 'form, beauty' — Sanskrit rūpa, 'outward appearance' (Monier-Williams) — joined to কথা, a story: a tale of wonders."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūpkôthā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūpkôthā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūpkôthā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūpkôthā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "didimā roj rāte āmāder ekṭā rūpkôthā shonāten. — Every night my grandmother used to tell us a fairy tale.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *didimā roj rāte āmāder ekṭā rūpkôthā shonāten.* — Every night my grandmother used to tell us a fairy tale.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for architecture, then the Bengali for a legend, then say rūpkôthā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for architecture, then the Bengali for a legend, then say *rūpkôthā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does রূপকথা (rūpkôthā) mean? (\"A fairy tale\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C321-doityo",
+      "sequence": 20320,
+      "title": "দৈত্য (doityô) — a giant; a demon",
+      "headword": "দৈত্য",
+      "romanization": "doityô",
+      "gloss": "a giant; a demon",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f6c03f1fc1bff92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a legend, then the Bengali for a fairy tale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দৈত্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দৈত্য — doityô — \"a giant; a demon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রূপকথায় একটা দৈত্য রাজকুমারকে বনে আটকাল। rūpkôthāy ekṭā doityô rājkumārke bône āṭkālô. In the fairy tale a giant trapped the prince in the forest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দৈত্য (doityô) is Sanskrit daitya, a son of Diti, one of the demons of the old stories (Monier-Williams); in a Bengali fairy tale it is a huge, rough giant."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doityô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doityô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doityô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doityô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūpkôthāy ekṭā doityô rājkumārke bône āṭkālô. — In the fairy tale a giant trapped the prince in the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūpkôthāy ekṭā doityô rājkumārke bône āṭkālô.* — In the fairy tale a giant trapped the prince in the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a legend, then the Bengali for a fairy tale, then say doityô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a legend, then the Bengali for a fairy tale, then say *doityô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দৈত্য (doityô) mean? (\"A giant; a demon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C321-jadu",
+      "sequence": 20330,
+      "title": "জাদু (jādu) — magic",
+      "headword": "জাদু",
+      "romanization": "jādu",
+      "gloss": "magic",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:662b3f720d336da6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a fairy tale, then the Bengali for a giant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জাদু",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জাদু — jādu — \"magic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "জাদু দিয়ে দৈত্যটা রাজকুমারকে একটা পাখি বানাল। jādu diye doityôṭā rājkumārke ekṭā pākhi bānālô. With magic the giant turned the prince into a bird."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জাদু (jādu) is usually traced to Persian jādū, 'magic, sorcery'. জাদুকর is a magician."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jādu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jādu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jādu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jādu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jādu diye doityôṭā rājkumārke ekṭā pākhi bānālô. — With magic the giant turned the prince into a bird.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jādu diye doityôṭā rājkumārke ekṭā pākhi bānālô.* — With magic the giant turned the prince into a bird.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a fairy tale, then the Bengali for a giant, then say jādu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a fairy tale, then the Bengali for a giant, then say *jādu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জাদু (jādu) mean? (\"Magic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C321-ghumano",
+      "sequence": 20340,
+      "title": "ঘুমানো (ghumāno) — to sleep",
+      "headword": "ঘুমানো",
+      "romanization": "ghumāno",
+      "gloss": "to sleep",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a7b871e2551fcc3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a giant, then the Bengali for magic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘুমানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘুমানো — ghumāno — \"to sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "জাদুর জন্য রাজকুমার একশো বছর ঘুমালেন। jādur jônyô rājkumār eksho bôchhôr ghumālen. Because of the magic the prince slept for a hundred years."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই শিশু ঘুমাল, sei shishu ghumālô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘুমানো (ghumāno) is filed in CDIAL 4485 under a Middle Indo-Aryan ghummati, 'revolves', which lists Bengali ghumā, 'to doze'; how the sense moved is not set out there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghumāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghumāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghumāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghumāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jādur jônyô rājkumār eksho bôchhôr ghumālen. — Because of the magic the prince slept for a hundred years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jādur jônyô rājkumār eksho bôchhôr ghumālen.* — Because of the magic the prince slept for a hundred years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a giant, then the Bengali for magic, then say ghumāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a giant, then the Bengali for magic, then say *ghumāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘুমানো (ghumāno) mean? (\"To sleep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 565,
+  "title": "Painters, Dancers and Writers",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c08e893562d8a202",
+  "lessons": [
+    {
+      "id": "ML-C565-citrakaran",
+      "sequence": 28460,
+      "title": "ചിത്രകാരൻ (citrakāran) — a painter",
+      "headword": "ചിത്രകാരൻ",
+      "romanization": "citrakāran",
+      "gloss": "a painter",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b70c0c56f5b56444",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to strum, then the Malayalam for to train in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചിത്രകാരൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചിത്രകാരൻ — citrakāran — \"a painter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ചിത്രകാരന്റെ ചിത്രങ്ങൾ പ്രദർശനത്തിൽ ഉണ്ടായിരുന്നു. ā citrakāranṟe citraṅṅaḷ pradarśanattil uṇṭāyirunnu. That painter's pictures were in the exhibition."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman painter is ചിത്രകാരി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചിത്രകാരൻ (citrakāran) is borrowed from Sanskrit citrakāra, \"a painter\" (CDIAL 4807), citra, \"a picture\", and kāra, \"a maker\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citrakāran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citrakāran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citrakāran, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citrakāran*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā citrakāranṟe citraṅṅaḷ pradarśanattil uṇṭāyirunnu. — That painter's pictures were in the exhibition.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā citrakāranṟe citraṅṅaḷ pradarśanattil uṇṭāyirunnu.* — That painter's pictures were in the exhibition.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to strum, then the Malayalam for to train in, then say citrakāran again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to strum, then the Malayalam for to train in, then say *citrakāran* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചിത്രകാരൻ (citrakāran) mean? (\"A painter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C565-samgitajnan",
+      "sequence": 28470,
+      "title": "സംഗീതജ്ഞൻ (saṁgītajñan) — a musician",
+      "headword": "സംഗീതജ്ഞൻ",
+      "romanization": "saṁgītajñan",
+      "gloss": "a musician",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7c2eeeb755e0a57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to train in, then the Malayalam for a painter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സംഗീതജ്ഞൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംഗീതജ്ഞൻ — saṁgītajñan — \"a musician\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒരു പ്രശസ്ത സംഗീതജ്ഞൻ കച്ചേരിയിൽ പാടി. oru praśasta saṁgītajñan kaccēriyil pāṭi. A famous musician sang at the concert."
+            },
+            {
+              "kind": "speech",
+              "text": "സംഗീതം music + -ജ്ഞൻ, one who knows, as in ശാസ്ത്രജ്ഞൻ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംഗീതജ്ഞൻ (saṁgītajñan) is a learned compound built from സംഗീതം, from Sanskrit saṁgīta, \"a chorus, a concert\" (CDIAL 12849), and -jña, \"knowing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁgītajñan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁgītajñan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁgītajñan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁgītajñan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru praśasta saṁgītajñan kaccēriyil pāṭi. — A famous musician sang at the concert.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru praśasta saṁgītajñan kaccēriyil pāṭi.* — A famous musician sang at the concert.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to train in, then the Malayalam for a painter, then say saṁgītajñan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to train in, then the Malayalam for a painter, then say *saṁgītajñan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സംഗീതജ്ഞൻ (saṁgītajñan) mean? (\"A musician\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C565-narttaki",
+      "sequence": 28480,
+      "title": "നർത്തകി (narttaki) — a dancer",
+      "headword": "നർത്തകി",
+      "romanization": "narttaki",
+      "gloss": "a dancer",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67ec712a193578f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a painter, then the Malayalam for a musician."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നർത്തകി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നർത്തകി — narttaki — \"a dancer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ നർത്തകി വേദിയിൽ മനോഹരമായി നൃത്തം ചെയ്തു. ā narttaki vēdiyil manōharamāyi nṛttaṁ ceytu. That dancer danced beautifully on the stage."
+            },
+            {
+              "kind": "speech",
+              "text": "A male dancer is നർത്തകൻ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നർത്തകി (narttaki) is borrowed from Sanskrit nartakī, \"a female dancer, an actress\" (Monier-Williams), from the root nṛt, \"to dance\", the root of നൃത്തം."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narttaki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narttaki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narttaki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narttaki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā narttaki vēdiyil manōharamāyi nṛttaṁ ceytu. — That dancer danced beautifully on the stage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā narttaki vēdiyil manōharamāyi nṛttaṁ ceytu.* — That dancer danced beautifully on the stage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a painter, then the Malayalam for a musician, then say narttaki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a painter, then the Malayalam for a musician, then say *narttaki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നർത്തകി (narttaki) mean? (\"A dancer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C565-eluttukaran",
+      "sequence": 28490,
+      "title": "എഴുത്തുകാരൻ (eḻuttukāran) — a writer; an author",
+      "headword": "എഴുത്തുകാരൻ",
+      "romanization": "eḻuttukāran",
+      "gloss": "a writer; an author",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9327740a11227387",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a musician, then the Malayalam for a dancer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: എഴുത്തുകാരൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എഴുത്തുകാരൻ — eḻuttukāran — \"a writer; an author\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എന്റെ ഇഷ്ട എഴുത്തുകാരന്റെ പുതിയ നോവൽ ഇറങ്ങി. enṟe iṣṭa eḻuttukāranṟe putiya nōval iṟaṅṅi. My favourite writer's new novel has come out."
+            },
+            {
+              "kind": "speech",
+              "text": "എഴുത്ത് writing + -കാരൻ, one who does it; a woman writer is എഴുത്തുകാരി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എഴുത്തുകാരൻ (eḻuttukāran) is native Dravidian, built from എഴുത്ത്, \"writing, a letter\" (DEDR 853), with the ending -കാരൻ, \"one who does it\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eḻuttukāran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eḻuttukāran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eḻuttukāran, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eḻuttukāran*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enṟe iṣṭa eḻuttukāranṟe putiya nōval iṟaṅṅi. — My favourite writer's new novel has come out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enṟe iṣṭa eḻuttukāranṟe putiya nōval iṟaṅṅi.* — My favourite writer's new novel has come out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a musician, then the Malayalam for a dancer, then say eḻuttukāran again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a musician, then the Malayalam for a dancer, then say *eḻuttukāran* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does എഴുത്തുകാരൻ (eḻuttukāran) mean? (\"A writer; an author\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C565-nirmmikkuka",
+      "sequence": 28500,
+      "title": "നിർമ്മിക്കുക (nirmmikkuka) — to produce a film; to make",
+      "headword": "നിർമ്മിക്കുക",
+      "romanization": "nirmmikkuka",
+      "gloss": "to produce a film; to make",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8a8518c099ea7e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a dancer, then the Malayalam for a writer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിർമ്മിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിർമ്മിക്കുക — nirmmikkuka — \"to produce a film; to make\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ കമ്പനി ഒരുപാട് സിനിമകൾ നിർമ്മിച്ചു. ā kampani orupāṭŭ sinimakaḷ nirmmiccu. That company produced many films."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നിർമ്മിച്ചു, nirmmiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "To produce a film, to build a road or a bridge; a producer is നിർമ്മാതാവ്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിർമ്മിക്കുക (nirmmikkuka) is built from Sanskrit nirmāṇa, \"measuring, making\" (CDIAL 7368), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirmmikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirmmikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirmmikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirmmikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kampani orupāṭŭ sinimakaḷ nirmmiccu. — That company produced many films.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kampani orupāṭŭ sinimakaḷ nirmmiccu.* — That company produced many films.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a dancer, then the Malayalam for a writer, then say nirmmikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a dancer, then the Malayalam for a writer, then say *nirmmikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിർമ്മിക്കുക (nirmmikkuka) mean? (\"To produce a film; to make\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

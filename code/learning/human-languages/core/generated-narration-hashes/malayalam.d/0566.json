@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 566,
+  "sourceHash": "fnv1a64:56e6eb36f445d21c",
+  "lessonIds": [
+    "ML-C566-kalimannu",
+    "ML-C566-cessu",
+    "ML-C566-cittukali",
+    "ML-C566-tottappani",
+    "ML-C566-dhyanikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch566.txt",
+  "json": "malayalam/narration/ch566.json",
+  "textHash": "fnv1a64:012e48b4e350cfac",
+  "jsonHash": "fnv1a64:02c7899af42913c4",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C494-varicu",
+  "pathSegment": "TA-PATH-494-MARAPU494",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-494-MARAPU494",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:2401945b35b28a3a",
+  "lessonIds": [
+    "AR-C352-mukhalafa",
+    "AR-C352-gharama",
+    "AR-C352-shijar",
+    "AR-C352-dajja",
+    "AR-C352-hashd"
+  ],
+  "tex": "arabic/book/chapters/ch352-fines-and-quarrels.tex"
+}

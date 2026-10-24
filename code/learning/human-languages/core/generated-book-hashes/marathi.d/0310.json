@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:68f155b98f932e4a",
+  "lessonIds": [
+    "MR-C310-vrttapatra",
+    "MR-C310-dainik",
+    "MR-C310-saptahik",
+    "MR-C310-mathla",
+    "MR-C310-chapne"
+  ],
+  "tex": "marathi/book/chapters/ch310-the-morning-paper.tex"
+}

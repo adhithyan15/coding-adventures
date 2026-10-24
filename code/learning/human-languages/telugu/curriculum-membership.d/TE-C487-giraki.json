@@ -1,0 +1,11 @@
+{
+  "id": "TE-C487-giraki",
+  "pathSegment": "TE-PATH-487-KHARCU487",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-487-KHARCU487",
+      "order": 2
+    }
+  ]
+}

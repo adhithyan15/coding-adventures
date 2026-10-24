@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C567-poruttappetuka",
+    "language": "malayalam",
+    "chapter": 567,
+    "sequence": 28600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9a1f1ad8b8094f8"
+  },
+  "findings": []
+}

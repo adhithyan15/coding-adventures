@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C386-azma",
+    "language": "arabic",
+    "chapter": 386,
+    "sequence": 21870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c0ee1090058e588"
+  },
+  "findings": []
+}

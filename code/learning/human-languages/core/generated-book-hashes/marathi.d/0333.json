@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:e141733e804edc39",
+  "lessonIds": [
+    "MR-C333-mohim",
+    "MR-C333-svari",
+    "MR-C333-maghar-ghene",
+    "MR-C333-mukta-karne",
+    "MR-C333-hakalne"
+  ],
+  "tex": "marathi/book/chapters/ch333-campaigns.tex"
+}

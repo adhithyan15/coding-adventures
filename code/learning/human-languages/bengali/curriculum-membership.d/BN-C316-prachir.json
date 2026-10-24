@@ -1,0 +1,11 @@
+{
+  "id": "BN-C316-prachir",
+  "pathSegment": "BN-PATH-316-GHERA316",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-316-GHERA316",
+      "order": 1
+    }
+  ]
+}

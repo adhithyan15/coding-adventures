@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 529,
+  "title": "A Play in the Village",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:ab9c01c1c094ca4f",
+  "lessons": [
+    {
+      "id": "HI-C529-natak",
+      "sequence": 29170,
+      "title": "नाटक (nāṭak) — a play; a drama",
+      "headword": "नाटक",
+      "romanization": "nāṭak",
+      "gloss": "a play; a drama",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac6d6791e2e57197",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to prick, to tattoo, then the Hindi for an exhibition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाटक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाटक — nāṭak — \"a play; a drama\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेले में बच्चों ने एक नाटक किया। Mele meṁ baccoṁ ne ek nāṭak kiyā. At the fair the children put on a play."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाटक (nāṭak) is a tatsama, taken whole from Sanskrit nāṭaka, \"acting, dancing; a play\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mele meṁ baccoṁ ne ek nāṭak kiyā. — At the fair the children put on a play.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mele meṁ baccoṁ ne ek nāṭak kiyā.* — At the fair the children put on a play.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to prick, to tattoo, then the Hindi for an exhibition, then say nāṭak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to prick, to tattoo, then the Hindi for an exhibition, then say *nāṭak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नाटक (nāṭak) mean? (\"A play; a drama\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C529-manc",
+      "sequence": 29180,
+      "title": "मंच (mañc) — a stage; a platform",
+      "headword": "मंच",
+      "romanization": "mañc",
+      "gloss": "a stage; a platform",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc9545bacf2863b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an exhibition, then the Hindi for a play."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मंच",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंच — mañc — \"a stage; a platform\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गायक मंच पर खड़ा होकर गा रहा था। Gāyak mañc par khaṛā hokar gā rahā thā. The singer was standing on the stage and singing."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंच (mañc) is a tatsama, taken whole from Sanskrit mañca, \"a stage, a platform, a raised seat\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañc",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañc*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañc, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañc*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Gāyak mañc par khaṛā hokar gā rahā thā. — The singer was standing on the stage and singing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Gāyak mañc par khaṛā hokar gā rahā thā.* — The singer was standing on the stage and singing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an exhibition, then the Hindi for a play, then say mañc again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an exhibition, then the Hindi for a play, then say *mañc* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मंच (mañc) mean? (\"A stage; a platform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C529-abhinay",
+      "sequence": 29190,
+      "title": "अभिनय (abhinay) — acting; a performance",
+      "headword": "अभिनय",
+      "romanization": "abhinay",
+      "gloss": "acting; a performance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37ca9e825a6ea64c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a play, then the Hindi for a stage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अभिनय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अभिनय — abhinay — \"acting; a performance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोगों को मीरा का अभिनय बहुत अच्छा लगा। Logoṁ ko Mīrā kā abhinay bahut acchā lagā. People liked Mira's acting very much."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अभिनय (abhinay) is a tatsama, taken whole from Sanskrit abhinaya, \"acting, dramatic action\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhinay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhinay*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhinay, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhinay*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Logoṁ ko Mīrā kā abhinay bahut acchā lagā. — People liked Mira's acting very much.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Logoṁ ko Mīrā kā abhinay bahut acchā lagā.* — People liked Mira's acting very much.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a play, then the Hindi for a stage, then say abhinay again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a play, then the Hindi for a stage, then say *abhinay* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अभिनय (abhinay) mean? (\"Acting; a performance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C529-kirdar",
+      "sequence": 29200,
+      "title": "किरदार (kirdār) — a character; a role",
+      "headword": "किरदार",
+      "romanization": "kirdār",
+      "gloss": "a character; a role",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40523c16dc2edb15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a stage, then the Hindi for acting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किरदार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किरदार — kirdār — \"a character; a role\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नाटक (nāṭak) में अरुण का किरदार एक बूढ़े किसान का है। Nāṭak meṁ Aruṇ kā kirdār ek būṛhe kisān kā hai. In the play Arun's role is an old farmer."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किरदार (kirdār) is usually traced to Persian kirdār, \"a deed, conduct\". The sense \"a role in a play\" is the one Hindi uses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirdār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirdār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirdār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirdār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Nāṭak meṁ Aruṇ kā kirdār ek būṛhe kisān kā hai. — In the play Arun's role is an old farmer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Nāṭak meṁ Aruṇ kā kirdār ek būṛhe kisān kā hai.* — In the play Arun's role is an old farmer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a stage, then the Hindi for acting, then say kirdār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a stage, then the Hindi for acting, then say *kirdār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does किरदार (kirdār) mean? (\"A character; a role\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C529-darsak",
+      "sequence": 29210,
+      "title": "दर्शक (darśak) — a spectator; a member of the audience",
+      "headword": "दर्शक",
+      "romanization": "darśak",
+      "gloss": "a spectator; a member of the audience",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ce474b06ce2e622",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for acting, then the Hindi for a character."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दर्शक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दर्शक — darśak — \"a spectator; a member of the audience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नाटक (nāṭak) देखकर दर्शक बहुत हँसे। Nāṭak dekhkar darśak bahut hãse. The audience laughed a lot at the play."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दर्शक (darśak) is a tatsama, taken whole from Sanskrit darśaka, \"seeing, looking at\" (Monier-Williams): the one who watches."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darśak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darśak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darśak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darśak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Nāṭak dekhkar darśak bahut hãse. — The audience laughed a lot at the play.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Nāṭak dekhkar darśak bahut hãse.* — The audience laughed a lot at the play.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for acting, then the Hindi for a character, then say darśak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for acting, then the Hindi for a character, then say *darśak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दर्शक (darśak) mean? (\"A spectator; a member of the audience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R529-review-522-529",
+      "sequence": 29220,
+      "title": "Looking back: from Milk and Curd to A Play in the Village",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Milk and Curd to A Play in the Village",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42ab74189de700a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for buttermilk and to churn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buttermilk, to churn, a starter (for setting curd), to seethe, to drain off (liquid)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: buttermilk, to churn, a starter (for setting curd), to seethe, to drain off (liquid)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pocket knife, to peel, to pound, to sprinkle (a powder), to grind coarsely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pocket knife, to peel, to pound, to sprinkle (a powder), to grind coarsely]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cook soft, to serve (food), to grind into a paste, to set (curd), to rinse out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cook soft, to serve (food), to grind into a paste, to set (curd), to rinse out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to winnow (grain), a sprout, manure, to plant (a sapling), to pull up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to winnow (grain), a sprout, manure, to plant (a sapling), to pull up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "free time, a collection, embroidery (a pattern sewn in thread), an ace (in cards), chess",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: free time, a collection, embroidery (a pattern sewn in thread), an ace (in cards), chess]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "art, a picture, a painting, a paintbrush, a line (drawn), to colour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: art, a picture, a painting, a paintbrush, a line (drawn), to colour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to carve, carving, a craft, to prick, to tattoo, an exhibition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to carve, carving, a craft, to prick, to tattoo, an exhibition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a play, a stage, acting, a character, a spectator",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a play, a stage, acting, a character, a spectator]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Buttermilk? (छाछ, chāch.) To churn? (मथना, mathnā.) A starter (for setting curd)? (जामन, jāman.) To seethe? (खौलना, khaulnā.) To drain off (liquid)? (निथारना, nithārnā.) A pocket knife? (चाकू, cākū.) To peel? (छीलना, chīlnā.) To pound? (कूटना, kūṭnā.) To sprinkle (a powder)? (बुरकना, buraknā.) To grind coarsely? (दलना, dalnā.) To cook soft? (गलाना, galānā.) To serve (food)? (परोसना, parosnā.) To grind into a paste? (घोंटना, ghõṭnā.) To set (curd)? (जमाना, jamānā.) To rinse out? (खँगालना, khãgālnā.) To winnow (grain)? (फटकना, phaṭaknā.) A sprout? (अंकुर, aṅkur.) Manure? (खाद, khād.) To plant (a sapling)? (रोपना, ropnā.) To pull up? (उखाड़ना, ukhāṛnā.) Free time? (फ़ुरसत, fursat.) A collection? (संग्रह, saṅgrah.) Embroidery (a pattern sewn in thread)? (कसीदा, kasīdā.) An ace (in cards)? (इक्का, ikkā.) Chess? (शतरंज, śatrañj.) Art? (कला, kalā.) A picture, a painting? (चित्र, citra.) A paintbrush? (कूची, kūcī.) A line (drawn)? (रेखा, rekhā.) To colour? (रंगना, raṅgnā.) To carve? (तराशना, tarāśnā.) Carving? (नक़्क़ाशी, naqqāśī.) A craft? (शिल्प, śilp.) To prick, to tattoo? (गोदना, godnā.) An exhibition? (प्रदर्शनी, pradarśanī.) A play? (नाटक, nāṭak.) A stage? (मंच, mañc.) Acting? (अभिनय, abhinay.) A character? (किरदार, kirdār.) A spectator? (दर्शक, darśak.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

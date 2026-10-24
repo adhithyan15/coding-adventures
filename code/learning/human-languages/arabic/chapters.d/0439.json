@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Landmarks",
+  "label": "ch:ar-landmarks",
+  "canDo": "I can say a view, a tower, a monument, to explore and to take along.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C439-istahaba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can say a view, a tower, a monument, to explore and to take along.",
+    "assesses": [
+      "AR-LEX-C439-MANZAR439-03",
+      "AR-LEX-C439-MANZAR439-04",
+      "AR-LEX-C439-MANZAR439-05"
+    ]
+  }
+}

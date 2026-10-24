@@ -1,0 +1,11 @@
+{
+  "id": "BN-C493-taip-kora",
+  "pathSegment": "BN-PATH-493-OPHIS493",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-493-OPHIS493",
+      "order": 4
+    }
+  ]
+}

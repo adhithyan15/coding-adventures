@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:c16a2c686ad37ba1",
+  "lessonIds": [
+    "TE-C412-parisodhana",
+    "TE-C412-parisodhincu",
+    "TE-C412-parisodhakudu",
+    "TE-C412-samacaram",
+    "TE-C412-anvesincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch412.txt",
+  "json": "telugu/narration/ch412.json",
+  "textHash": "fnv1a64:6de028d55c939eca",
+  "jsonHash": "fnv1a64:5ac411abaae1e94b",
+  "findings": []
+}

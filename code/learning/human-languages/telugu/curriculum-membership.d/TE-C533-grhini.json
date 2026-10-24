@@ -1,0 +1,11 @@
+{
+  "id": "TE-C533-grhini",
+  "pathSegment": "TE-PATH-533-SAMSARAM533",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-533-SAMSARAM533",
+      "order": 2
+    }
+  ]
+}

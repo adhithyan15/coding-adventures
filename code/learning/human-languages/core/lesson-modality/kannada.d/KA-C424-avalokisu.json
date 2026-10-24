@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C424-avalokisu",
+    "language": "kannada",
+    "chapter": 424,
+    "sequence": 21460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fdc44fb41209726"
+  },
+  "findings": []
+}

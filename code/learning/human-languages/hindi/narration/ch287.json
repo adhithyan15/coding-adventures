@@ -1,0 +1,727 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 287,
+  "title": "It Depends, and What Would Be",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:6299d0eb37bf0fbc",
+  "lessons": [
+    {
+      "id": "HI-C287-nirbharkarna",
+      "sequence": 15750,
+      "title": "निर्भर करना (nirbhar karnā) — to depend",
+      "headword": "निर्भर करना",
+      "romanization": "nirbhar karnā",
+      "gloss": "to depend (on)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b43e384ce5b5d62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: \"Will we go tomorrow? If it rains, we will stay at home.\" (अगर बारिश होगी, तो हम घर पर रहेंगे.) There is a shorter answer: \"it depends on the weather\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निर्भर करना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निर्भर करना — nirbhar karnā — \"to depend (on)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यह मौसम पर निर्भर करता है। yah mausam par nirbhar kartā hai. — \"It depends on the weather.\""
+            },
+            {
+              "kind": "speech",
+              "text": "What it depends on takes पर, \"on\". निर्भर stays as it is, and करना carries the ending."
+            },
+            {
+              "kind": "speech",
+              "text": "सब कुछ तुम पर निर्भर करता है। (sab kuch tum par nirbhar kartā hai.) — Everything depends on you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निर्भर (nirbhar) is a tatsama. Monier-Williams gives Sanskrit nirbhara as \"full of; excessive\"; how it came to mean \"depending on\" in Hindi is not recorded there. करना is the everyday \"to do\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirbhar karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirbhar karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It depends on the weather\" — yah mausam par nirbhar kartā hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It depends on the weather\" — *yah mausam par nirbhar kartā hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Everything depends on you\" — sab kuch tum par nirbhar kartā hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Everything depends on you\" — *sab kuch tum par nirbhar kartā hai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निर्भर करना (nirbhar karnā) mean? (\"To depend\".) What does the thing it depends on take? (पर.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C287-nirbharkartahai",
+      "sequence": 15760,
+      "title": "… पर निर्भर करता है (… par nirbhar kartā hai) — it depends",
+      "headword": "… पर निर्भर करता है",
+      "romanization": "… par nirbhar kartā hai",
+      "gloss": "it depends on … — what a thing depends on, and it depends whether …",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7df07906faa086f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it depends on the weather\". (यह मौसम पर निर्भर करता है.) Then \"if it rains, we will stay at home\". (अगर बारिश होगी, तो हम घर पर रहेंगे.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: X पर निर्भर करता है",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हमारी यात्रा मौसम पर निर्भर करती है। hamārī yātrā mausam par nirbhar kartī hai. — \"Our trip depends on the weather.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The subject is what depends, and करता follows it: यात्रा is feminine, so करती है. What it depends on takes पर."
+            },
+            {
+              "kind": "speech",
+              "text": "यह तुम पर निर्भर करता है। (yah tum par nirbhar kartā hai.) — It's up to you."
+            },
+            {
+              "kind": "speech",
+              "text": "किस पर निर्भर करता है? (kis par nirbhar kartā hai?) — What does it depend on? किस is the form क्या and कौन take before a postposition."
+            },
+            {
+              "kind": "speech",
+              "text": "टिकट का दाम ट्रेन पर निर्भर करता है। (ṭikaṭ kā dām ṭren par nirbhar kartā hai.) — The price of a ticket depends on the train."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: it depends whether …",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यह इस पर निर्भर करता है कि बारिश होगी या नहीं। yah is par nirbhar kartā hai ki bāriś hogī yā nahīṃ. — \"It depends on whether it rains or not.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When what it depends on is a whole sentence, Hindi says इस पर, \"on this\", and then gives the sentence after कि. It is often a question with या नहीं, \"or not\", in the future."
+            },
+            {
+              "kind": "speech",
+              "text": "यह इस पर निर्भर करता है कि तुम कब आओगे। (yah is par nirbhar kartā hai ki tum kab āoge.) — It depends on when you come."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It's up to you\" — yah tum par nirbhar kartā hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It's up to you\" — *yah tum par nirbhar kartā hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It depends on when you come\" — yah is par nirbhar kartā hai ki tum kab āoge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It depends on when you come\" — *yah is par nirbhar kartā hai ki tum kab āoge*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C287-nirbharkartahai-r1",
+              "prompt": "Say that your trip depends on the weather, then that it depends on whether it rains or not.",
+              "assesses": [
+                "HI-GRAMMAR-C287-DEPENDS-ON-01",
+                "HI-GRAMMAR-C287-DEPENDS-KI-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "merī yātrā mausam par nirbhar kartī hai; yah is par nirbhar kartā hai ki bāriś hogī yā nahīṃ",
+                "मेरी यात्रा मौसम पर निर्भर करती है। यह इस पर निर्भर करता है कि बारिश होगी या नहीं।"
+              ],
+              "feedback": {
+                "correct": "kartī for yātrā; is par … ki for a whole sentence.",
+                "incorrect": "yātrā is feminine: nirbhar kartī hai. For a sentence, say is par nirbhar kartā hai ki …."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on the weather\"? (यह मौसम पर निर्भर करता है.) Why करती in हमारी यात्रा मौसम पर निर्भर करती है? (यात्रा is feminine.) \"It depends on whether …\"? (यह इस पर निर्भर करता है कि …)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C287-hotatoata",
+      "sequence": 15770,
+      "title": "अगर समय होता, तो मैं आता (agar samay hotā, to maiṁ ātā) — what would be",
+      "headword": "अगर समय होता, तो मैं आता",
+      "romanization": "agar samay hotā, to maiṁ ātā",
+      "gloss": "if there were time, I would come — what would be, and what would have been",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34b37353a44b0ea8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains, we will stay at home\". (अगर बारिश होगी, तो हम घर पर रहेंगे.) Then \"used to speak\". (बोलता था.) The new form looks like that बोलता with its था taken away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: if it were so",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अगर मेरे पास समय होता, तो मैं आता। agar mere pās samay hotā, to maiṁ ātā. — \"If I had time, I would come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When the condition is not true, both halves take the -ता form with nothing after it: होता, आता. It agrees as the present does: आती for a woman, आते for several, and होती for a feminine thing."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर मेरे पास पैसे होते, तो मैं यह घर ख़रीदता। (agar mere pās paise hote, to maiṁ yah ghar kharīdtā.) — If I had the money, I would buy this house."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर मैं तुम्हारी जगह होता, तो मैं डाक्टर के पास जाता। (agar maiṁ tumhārī jagah hotā, to maiṁ ḍākṭar ke pās jātā.) — If I were you, I would go to the doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no ने with this form, even with a thing: मैं घर ख़रीदता, never मैंने."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: if it had been so",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अगर मुझे पता होता, तो मैं तुम्हें बताता। agar mujhe patā hotā, to maiṁ tumhẽ batātā. — \"If I had known, I would have told you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The same form looks back at a past that did not happen. Only the sense tells you which it is: \"if I knew\" or \"if I had known\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम कल आते, तो अच्छा होता। (agar tum kal āte, to acchā hotā.) — If you had come yesterday, it would have been nice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had the money, I would buy this house\" — agar mere pās paise hote, to maiṁ yah ghar kharīdtā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had the money, I would buy this house\" — *agar mere pās paise hote, to maiṁ yah ghar kharīdtā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If you had come yesterday, it would have been nice\" — agar tum kal āte, to acchā hotā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If you had come yesterday, it would have been nice\" — *agar tum kal āte, to acchā hotā*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C287-hotatoata-r1",
+              "prompt": "Say that if you had time you would come, then that if you had known you would have told her.",
+              "assesses": [
+                "HI-GRAMMAR-C287-COUNTERFACTUAL-01",
+                "HI-GRAMMAR-C287-UNREAL-PAST-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "agar mere pās samay hotā, to maiṁ ātā; agar mujhe patā hotā, to maiṁ use batātā",
+                "अगर मेरे पास समय होता, तो मैं आता। अगर मुझे पता होता, तो मैं उसे बताता।",
+                "अगर मेरे पास समय होता, तो मैं आती। अगर मुझे पता होता, तो मैं उसे बताती।"
+              ],
+              "feedback": {
+                "correct": "-tā in both halves, and no ne.",
+                "incorrect": "Put both halves in the -tā form: hotā … ātā; patā hotā … batātā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If I had time\"? (अगर मेरे पास समय होता.) \"I would come\"? (मैं आता, or आती.) Does this form take ने? (No: मैं घर ख़रीदता.) \"If I had known\"? (अगर मुझे पता होता.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W287-six-lines",
+      "sequence": 15780,
+      "title": "Six lines about a trip",
+      "headword": "(six lines)",
+      "romanization": "",
+      "gloss": "six connected lines about a trip: what happened, a reason, a feeling, and what would have been",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:2403d152df855a54",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first written message gave a reader a few practised lines. This task asks for six lines, and they tell a story: a trip, to a village or anywhere else."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one reader: Mira, or a friend you name. Say ऐसा and अतः aloud; one of them will go in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A told story is not a list of events. It has a scene, in -रहा था or with जब … तब …. It has events in the plain past, kept in order with पहले, फिर, उसके बाद and आख़िर में, and joined with -कर. It has a reason, with इसलिए, क्योंकि or की वजह से, and a feeling, with मुझे … लगा or मैं ख़ुश हुआ."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A good one ends by looking at what might have been: अगर …, तो …, with -ता in both halves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On paper, in Devanagari, write six lines to your reader about a trip, real or invented, one line for each of these:"
+            },
+            {
+              "kind": "speech",
+              "text": "the scene: when it was, with पिछले (पिछले साल, पिछले हफ़्ते), and what you were doing as it began, with -रहा था or जब … तब …;"
+            },
+            {
+              "kind": "speech",
+              "text": "the first thing that happened, with पहले: buying a ticket, with टिकट, and when the train left, with बजे;"
+            },
+            {
+              "kind": "speech",
+              "text": "what happened next, with फिर or a -कर form, and one thing that went wrong: खो गया or छूट गई;"
+            },
+            {
+              "kind": "speech",
+              "text": "why, with इसलिए, क्योंकि, की वजह से or वजह यह है कि;"
+            },
+            {
+              "kind": "speech",
+              "text": "how it ended and how you felt, with आख़िर में and मुझे … लगा, मैं ख़ुश हुआ or मैं उदास हो गया;"
+            },
+            {
+              "kind": "speech",
+              "text": "what might have been, with अगर …, तो … and the -ता form (अगर मुझे पता होता …), and one word with ऐ or ः: ऐसा, अतः."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "There is no model in this lesson. Use only words you already write. The work is choosing the right past for each line, and joining the lines."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read your lines as you read Mira's holiday. Mark every past verb s for scene and e for event. Line one should be mostly s; lines two and three mostly e."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then three checks. A plain past with a thing takes ने on its doer and follows the thing: मैंने टिकट लिया, मैंने चाय पी. A -रहा था verb does not take ने. ऐ has one arc above its head-line, and ः has its upper dot drawn first."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last, read line six alone. Do both halves wear -ता?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R287-depends-and-would",
+      "sequence": 15790,
+      "title": "Review — it depends, and what would have been",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "it depends, and what would have been",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efabebe0a0817e8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"leave early, or you'll be late\". (jaldī niklo, varnā der ho jāegī.) Then \"of all fruits I like mangoes the most\". (mujhe phaloṁ meṁ ām sabse zyādā pasand hai.) Then read aloud one of your six lines that has ऐ or ः."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Will we go tomorrow? It depends on the weather.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Will we go tomorrow? It depends on the weather.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Is the bus cheaper than the train? It depends on the day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Is the bus cheaper than the train? It depends on the day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If I had worked all day, I would have been tired.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If I had worked all day, I would have been tired.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If I had time, I would come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If I had time, I would come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If it hadn't rained, we would have gone to the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If it hadn't rained, we would have gone to the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one trip that depends on something, and one that would have gone better if …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one trip that depends on something, and one that would have gone better if …]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on\"? (… पर निर्भर करता है (… par nirbhar kartā hai).) \"It depends on whether …\"? (यह इस पर निर्भर करता है कि …) \"I would come\"? (मैं आता.) \"If I had known\"? (अगर मुझे पता होता.) Which letters did ऐसा and अतः bring? (ऐ and ः.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

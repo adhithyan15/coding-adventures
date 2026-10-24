@@ -1,0 +1,11 @@
+{
+  "id": "MR-C432-chidra",
+  "pathSegment": "MR-PATH-432-BHOK432",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-432-BHOK432",
+      "order": 1
+    }
+  ]
+}

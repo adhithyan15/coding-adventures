@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 570,
+  "sourceHash": "fnv1a64:54d86e584558b818",
+  "lessonIds": [
+    "ML-C570-pharniccar",
+    "ML-C570-balkkani",
+    "ML-C570-vatakakkaran",
+    "ML-C570-alakkuka-laundry",
+    "ML-C570-minukkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch570-furniture-and-laundry.tex"
+}

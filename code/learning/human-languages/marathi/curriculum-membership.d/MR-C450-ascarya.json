@@ -1,0 +1,11 @@
+{
+  "id": "MR-C450-ascarya",
+  "pathSegment": "MR-PATH-450-MAN450",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-450-MAN450",
+      "order": 3
+    }
+  ]
+}

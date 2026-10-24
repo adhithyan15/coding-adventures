@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:4e9a47edc4591b1c",
+  "lessonIds": [
+    "ML-C513-kyampu",
+    "ML-C513-duritasvasam",
+    "ML-C513-itiyuka",
+    "ML-C513-katapulakuka",
+    "ML-C513-valayuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch513.txt",
+  "json": "malayalam/narration/ch513.json",
+  "textHash": "fnv1a64:97feb918417edf32",
+  "jsonHash": "fnv1a64:1efd8621ca489147",
+  "findings": []
+}

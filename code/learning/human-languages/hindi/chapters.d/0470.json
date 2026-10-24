@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Courage",
+  "label": "ch:hi-courage",
+  "canDo": "I can say that someone was brave.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C470-jokhim",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can say that someone was brave.",
+    "assesses": [
+      "HI-LEX-C470-SAHAS470-03",
+      "HI-LEX-C470-SAHAS470-04",
+      "HI-LEX-C470-SAHAS470-05"
+    ]
+  }
+}

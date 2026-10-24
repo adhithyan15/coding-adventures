@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C542-sahmati",
+    "language": "hindi",
+    "chapter": 542,
+    "sequence": 29860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4a6ade35a615fa1"
+  },
+  "findings": []
+}

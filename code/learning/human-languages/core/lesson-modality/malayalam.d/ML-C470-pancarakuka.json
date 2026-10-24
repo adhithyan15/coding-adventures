@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C470-pancarakuka",
+    "language": "malayalam",
+    "chapter": 470,
+    "sequence": 23500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c93ddefa545fdfc8"
+  },
+  "findings": []
+}

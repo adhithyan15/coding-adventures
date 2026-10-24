@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:d78402e07660452b",
+  "lessonIds": [
+    "MR-C456-atmavisvas",
+    "MR-C456-sankoc",
+    "MR-C456-bicakne",
+    "MR-C456-gangarne",
+    "MR-C456-bujne"
+  ],
+  "tex": "marathi/book/chapters/ch456-shyness-and-confidence.tex"
+}

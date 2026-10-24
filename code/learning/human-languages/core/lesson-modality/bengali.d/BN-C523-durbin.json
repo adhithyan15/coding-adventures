@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C523-durbin",
+    "language": "bengali",
+    "chapter": 523,
+    "sequence": 31590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb821baed0acbe22"
+  },
+  "findings": []
+}

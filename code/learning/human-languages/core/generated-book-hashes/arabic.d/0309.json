@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:82ccfbe681c8edea",
+  "lessonIds": [
+    "AR-C309-amir",
+    "AR-C309-qasr",
+    "AR-C309-taj",
+    "AR-C309-arsh",
+    "AR-C309-tawwaja"
+  ],
+  "tex": "arabic/book/chapters/ch309-princes-and-palaces.tex"
+}

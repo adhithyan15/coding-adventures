@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C349-uki",
+    "language": "tamil",
+    "chapter": 349,
+    "sequence": 20210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0e10f50c877f32b"
+  },
+  "findings": []
+}

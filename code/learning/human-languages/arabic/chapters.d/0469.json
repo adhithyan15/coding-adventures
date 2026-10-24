@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Soil and crops",
+  "label": "ch:ar-soil-and-crops",
+  "canDo": "I can say soil, fertiliser, a crop, fertile and to uproot.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C469-iqtalaa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can say soil, fertiliser, a crop, fertile and to uproot.",
+    "assesses": [
+      "AR-LEX-C469-TURBA469-03",
+      "AR-LEX-C469-TURBA469-04",
+      "AR-LEX-C469-TURBA469-05"
+    ]
+  }
+}

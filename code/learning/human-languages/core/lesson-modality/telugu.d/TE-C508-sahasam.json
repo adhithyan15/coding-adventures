@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C508-sahasam",
+    "language": "telugu",
+    "chapter": 508,
+    "sequence": 25740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30bf119002ecd020"
+  },
+  "findings": []
+}

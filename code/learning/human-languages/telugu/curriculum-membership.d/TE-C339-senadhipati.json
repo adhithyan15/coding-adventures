@@ -1,0 +1,11 @@
+{
+  "id": "TE-C339-senadhipati",
+  "pathSegment": "TE-PATH-339-SAINYAM339",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-339-SAINYAM339",
+      "order": 2
+    }
+  ]
+}

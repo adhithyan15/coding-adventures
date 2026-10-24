@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C440-nibandhana",
+    "language": "malayalam",
+    "chapter": 440,
+    "sequence": 21800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:061d2331c1c3069b"
+  },
+  "findings": []
+}

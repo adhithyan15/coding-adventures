@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 382,
+  "title": "A Riot in the Town",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e932833f52581fb4",
+  "lessons": [
+    {
+      "id": "ML-C382-kalapam",
+      "sequence": 18690,
+      "title": "കലാപം (kalāpaṁ) — a riot",
+      "headword": "കലാപം",
+      "romanization": "kalāpaṁ",
+      "gloss": "a riot",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a7879ed0178252c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to whisper, then the Malayalam for to disappear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കലാപം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കലാപം — kalāpaṁ — \"a riot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കലാപം കാരണം കടകൾ അടച്ചു. kalāpaṁ kāraṇaṁ kaṭakaḷ aṭaccu. Shops closed because of the riot."
+            },
+            {
+              "kind": "speech",
+              "text": "Also an uproar at a meeting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of കലാപം (kalāpaṁ) in the sense of a riot is not settled. In the news it is violent disorder in a town."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalāpaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalāpaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalāpaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalāpaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalāpaṁ kāraṇaṁ kaṭakaḷ aṭaccu. — Shops closed because of the riot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalāpaṁ kāraṇaṁ kaṭakaḷ aṭaccu.* — Shops closed because of the riot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to whisper, then the Malayalam for to disappear, then say kalāpaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to whisper, then the Malayalam for to disappear, then say *kalāpaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കലാപം (kalāpaṁ) mean? (\"A riot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C382-ayudham",
+      "sequence": 18700,
+      "title": "ആയുധം (āyudhaṁ) — a weapon",
+      "headword": "ആയുധം",
+      "romanization": "āyudhaṁ",
+      "gloss": "a weapon",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4986cc085398bf4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to disappear, then the Malayalam for a riot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആയുധം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആയുധം — āyudhaṁ — \"a weapon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് കള്ളന്റെ കയ്യിൽ നിന്ന് ആയുധം പിടിച്ചെടുത്തു. pōlīsŭ kaḷḷanṟe kayyil ninnŭ āyudhaṁ piṭicceṭuttu. The police seized a weapon from the robber's hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ആയുധങ്ങൾ, āyudhaṅṅaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "A tool is ഉപകരണം; a weapon is ആയുധം (āyudhaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആയുധം (āyudhaṁ) is borrowed from Sanskrit āyudha, \"a weapon\" (CDIAL 1291), from the root yudh, \"to fight\", the root of യുദ്ധം (yuddhaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyudhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyudhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyudhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyudhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ kaḷḷanṟe kayyil ninnŭ āyudhaṁ piṭicceṭuttu. — The police seized a weapon from the robber's hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ kaḷḷanṟe kayyil ninnŭ āyudhaṁ piṭicceṭuttu.* — The police seized a weapon from the robber's hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to disappear, then the Malayalam for a riot, then say āyudhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to disappear, then the Malayalam for a riot, then say *āyudhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആയുധം (āyudhaṁ) mean? (\"A weapon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C382-valayuka-surround",
+      "sequence": 18710,
+      "title": "വളയുക (vaḷayuka) — to surround",
+      "headword": "വളയുക",
+      "romanization": "vaḷayuka",
+      "gloss": "to surround",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9eed39a42f331c10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a riot, then the Malayalam for a weapon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വളയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വളയുക — vaḷayuka — \"to surround\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് ആ വീട് വളഞ്ഞു. pōlīsŭ ā vīṭŭ vaḷaññu. The police surrounded the house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വളഞ്ഞു, vaḷaññu."
+            },
+            {
+              "kind": "speech",
+              "text": "The same form also means to bend, as in വളവ്, a bend."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വളയുക (vaḷayuka) is native Dravidian: DEDR 5313 lists Malayalam vaḷayuka, \"to surround\", with വള, \"a ring, a bangle\": to make a ring round something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷayuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷayuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷayuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷayuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ ā vīṭŭ vaḷaññu. — The police surrounded the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ ā vīṭŭ vaḷaññu.* — The police surrounded the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a riot, then the Malayalam for a weapon, then say vaḷayuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a riot, then the Malayalam for a weapon, then say *vaḷayuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വളയുക (vaḷayuka) mean? (\"To surround\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C382-turattuka",
+      "sequence": 18720,
+      "title": "തുരത്തുക (turattuka) — to drive away; to chase off",
+      "headword": "തുരത്തുക",
+      "romanization": "turattuka",
+      "gloss": "to drive away; to chase off",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b068eee1b3cbd294",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a weapon, then the Malayalam for to surround."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തുരത്തുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തുരത്തുക — turattuka — \"to drive away; to chase off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട്ടുകാർ ആനയെ കാട്ടിലേക്ക് തുരത്തി. nāṭṭukār ānaye kāṭṭilēkkŭ turatti. The locals drove the elephant back into the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: തുരത്തി, turatti."
+            },
+            {
+              "kind": "speech",
+              "text": "Of animals and of enemies."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തുരത്തുക (turattuka) is native Dravidian: DEDR 3340 lists Malayalam turattuka, \"to drive away\", beside Tamil tura, \"to drive, to beat away\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turattuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *turattuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turattuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *turattuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭukār ānaye kāṭṭilēkkŭ turatti. — The locals drove the elephant back into the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭukār ānaye kāṭṭilēkkŭ turatti.* — The locals drove the elephant back into the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a weapon, then the Malayalam for to surround, then say turattuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a weapon, then the Malayalam for to surround, then say *turattuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തുരത്തുക (turattuka) mean? (\"To drive away; to chase off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C382-santamakuka",
+      "sequence": 18730,
+      "title": "ശാന്തമാകുക (śāntamākuka) — to calm down",
+      "headword": "ശാന്തമാകുക",
+      "romanization": "śāntamākuka",
+      "gloss": "to calm down",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd427aee24f3c817",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to surround, then the Malayalam for to drive away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശാന്തമാകുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശാന്തമാകുക — śāntamākuka — \"to calm down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കുറച്ച് കഴിഞ്ഞപ്പോൾ നഗരം ശാന്തമായി. kuṟaccŭ kaḻiññappōḷ nagaraṁ śāntamāyi. After a while the city calmed down."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ശാന്തമായി, śāntamāyi."
+            },
+            {
+              "kind": "speech",
+              "text": "ശാന്തം, calm, + ആകുക, to become."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശാന്തമാകുക (śāntamākuka) is built from Sanskrit śānta, \"abated, calm\" (CDIAL 12390), borrowed as ശാന്തം, and the Malayalam ആകുക, \"to become\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāntamākuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāntamākuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāntamākuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāntamākuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟaccŭ kaḻiññappōḷ nagaraṁ śāntamāyi. — After a while the city calmed down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟaccŭ kaḻiññappōḷ nagaraṁ śāntamāyi.* — After a while the city calmed down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to surround, then the Malayalam for to drive away, then say śāntamākuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to surround, then the Malayalam for to drive away, then say *śāntamākuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശാന്തമാകുക (śāntamākuka) mean? (\"To calm down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

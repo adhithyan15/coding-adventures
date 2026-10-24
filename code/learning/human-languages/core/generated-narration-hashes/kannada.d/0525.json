@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:8523b44d7200085d",
+  "lessonIds": [
+    "KA-C525-bhava",
+    "KA-C525-nadini",
+    "KA-C525-maiduna",
+    "KA-C525-sodarasambandhi",
+    "KA-C525-sahodara",
+    "KA-R525-review-519-525"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch525.txt",
+  "json": "kannada/narration/ch525.json",
+  "textHash": "fnv1a64:bd4e53b1ec45b38c",
+  "jsonHash": "fnv1a64:8620391fa84cbb68",
+  "findings": []
+}

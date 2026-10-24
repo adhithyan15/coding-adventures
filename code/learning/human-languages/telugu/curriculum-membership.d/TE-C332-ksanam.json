@@ -1,0 +1,11 @@
+{
+  "id": "TE-C332-ksanam",
+  "pathSegment": "TE-PATH-332-KSHANAM332",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-332-KSHANAM332",
+      "order": 3
+    }
+  ]
+}

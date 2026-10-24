@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-362-MANTIQ362",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about logic, a fallacy, the mind and a contradiction, and say what someone concluded.",
+  "prerequisites": []
+}

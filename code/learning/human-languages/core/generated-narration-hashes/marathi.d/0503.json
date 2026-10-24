@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:0e41a27f9c082eeb",
+  "lessonIds": [
+    "MR-C503-visvasghat",
+    "MR-C503-bocne",
+    "MR-C503-divacne",
+    "MR-C503-khadsavne",
+    "MR-C503-maph-karne",
+    "MR-R503-review-497-503",
+    "MR-R503-review-final-503"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch503.txt",
+  "json": "marathi/narration/ch503.json",
+  "textHash": "fnv1a64:ff02643c5685a49e",
+  "jsonHash": "fnv1a64:60f3b3188750b952",
+  "findings": []
+}

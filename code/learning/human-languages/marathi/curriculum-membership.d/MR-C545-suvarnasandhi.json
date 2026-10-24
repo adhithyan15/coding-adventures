@@ -1,0 +1,11 @@
+{
+  "id": "MR-C545-suvarnasandhi",
+  "pathSegment": "MR-PATH-545-BHAVISHYA545",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-545-BHAVISHYA545",
+      "order": 1
+    }
+  ]
+}

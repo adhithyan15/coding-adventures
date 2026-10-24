@@ -1,0 +1,11 @@
+{
+  "id": "AR-C435-istadara",
+  "pathSegment": "AR-PATH-435-MASAR435",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-435-MASAR435",
+      "order": 4
+    }
+  ]
+}

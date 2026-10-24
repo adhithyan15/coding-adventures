@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "Torn Between Two",
+  "label": "ch:bn-torn-between-two",
+  "canDo": "I can say that I am torn, what I like and which way I lean.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C529-morji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can say that I am torn, what I like and which way I lean.",
+    "assesses": [
+      "BN-LEX-C529-DOTANA529-03",
+      "BN-LEX-C529-DOTANA529-04",
+      "BN-LEX-C529-DOTANA529-05"
+    ]
+  }
+}

@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 502,
+  "title": "Screens and Phones",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:baa4884d4e4e6bf2",
+  "lessons": [
+    {
+      "id": "BN-C502-kompiutar",
+      "sequence": 30510,
+      "title": "কম্পিউটার (kômpiuṭār) — a computer",
+      "headword": "কম্পিউটার",
+      "romanization": "kômpiuṭār",
+      "gloss": "a computer",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56f8f419ff2b1f3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an architect, then the Bengali for to diagnose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কম্পিউটার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কম্পিউটার — kômpiuṭār — \"a computer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি অফিসে সারাদিন কম্পিউটারে কাজ করি। Āmi ôphise sārādin kômpiuṭāre kāj kôri. I work at a computer all day at the office."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কম্পিউটার (kômpiuṭār) is borrowed from English computer."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kômpiuṭār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kômpiuṭār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kômpiuṭār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kômpiuṭār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmi ôphise sārādin kômpiuṭāre kāj kôri. — I work at a computer all day at the office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmi ôphise sārādin kômpiuṭāre kāj kôri.* — I work at a computer all day at the office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an architect, then the Bengali for to diagnose, then say kômpiuṭār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an architect, then the Bengali for to diagnose, then say *kômpiuṭār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কম্পিউটার (kômpiuṭār) mean? (\"A computer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C502-mobail",
+      "sequence": 30520,
+      "title": "মোবাইল (mobāil) — a mobile phone",
+      "headword": "মোবাইল",
+      "romanization": "mobāil",
+      "gloss": "a mobile phone",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b3c525afe4689c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to diagnose, then the Bengali for a computer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মোবাইল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মোবাইল — mobāil — \"a mobile phone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার মোবাইলের ব্যাটারি খারাপ। Āmār mobāiler bæṭāri khārāp. My mobile's battery is bad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মোবাইল (mobāil) is borrowed from English mobile, short for a mobile phone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mobāil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mobāil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mobāil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mobāil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmār mobāiler bæṭāri khārāp. — My mobile's battery is bad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmār mobāiler bæṭāri khārāp.* — My mobile's battery is bad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to diagnose, then the Bengali for a computer, then say mobāil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to diagnose, then the Bengali for a computer, then say *mobāil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মোবাইল (mobāil) mean? (\"A mobile phone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C502-selphi",
+      "sequence": 30530,
+      "title": "সেলফি (selphi) — a selfie",
+      "headword": "সেলফি",
+      "romanization": "selphi",
+      "gloss": "a selfie",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87e094d42b67996b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a computer, then the Bengali for a mobile phone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সেলফি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সেলফি — selphi — \"a selfie\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মেয়েটা ফোনে একটা সেলফি তুলল। Meyeṭā phone ekṭā selphi tullô. The girl took a selfie with her phone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সেলফি (selphi) is borrowed from English selfie."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "selphi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *selphi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "selphi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *selphi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meyeṭā phone ekṭā selphi tullô. — The girl took a selfie with her phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Meyeṭā phone ekṭā selphi tullô.* — The girl took a selfie with her phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a computer, then the Bengali for a mobile phone, then say selphi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a computer, then the Bengali for a mobile phone, then say *selphi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সেলফি (selphi) mean? (\"A selfie\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C502-ghata",
+      "sequence": 30540,
+      "title": "ঘাঁটা (ghā̃ṭā) — to rummage; to fiddle with",
+      "headword": "ঘাঁটা",
+      "romanization": "ghā̃ṭā",
+      "gloss": "to rummage; to fiddle with",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:345d475005f40713",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a mobile phone, then the Bengali for a selfie."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘাঁটা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘাঁটা — ghā̃ṭā — \"to rummage; to fiddle with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ছেলেটা সারাদিন ফোন ঘাঁটে। Chheleṭā sārādin phon ghā̃ṭe. The boy fiddles with his phone all day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি আলমারি ঘাঁটলেন, tini ālmāri ghā̃ṭlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘাঁটা (ghā̃ṭā) is a tadbhava: CDIAL lists Bengali ghā̃ṭā, \"to stir with the fingers\", under Sanskrit ghaṭṭayati (CDIAL 4417)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghā̃ṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghā̃ṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghā̃ṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghā̃ṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chheleṭā sārādin phon ghā̃ṭe. — The boy fiddles with his phone all day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chheleṭā sārādin phon ghā̃ṭe.* — The boy fiddles with his phone all day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a mobile phone, then the Bengali for a selfie, then say ghā̃ṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a mobile phone, then the Bengali for a selfie, then say *ghā̃ṭā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘাঁটা (ghā̃ṭā) mean? (\"To rummage; to fiddle with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C502-charj-deoya",
+      "sequence": 30550,
+      "title": "চার্জ দেওয়া (chārj deoyā) — to charge a phone; to charge (a battery)",
+      "headword": "চার্জ দেওয়া",
+      "romanization": "chārj deoyā",
+      "gloss": "to charge a phone; to charge (a battery)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:778f8aa0129cea8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a selfie, then the Bengali for to rummage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চার্জ দেওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চার্জ দেওয়া — chārj deoyā — \"to charge a phone; to charge (a battery)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাতে আমি ফোনে চার্জ দিলাম। Rāte āmi phone chārj dilām. I charged my phone at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ল্যাপটপে চার্জ দিলেন, tini læpṭôpe chārj dilen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চার্জ দেওয়া (chārj deoyā) joins charge, borrowed from English, to দেওয়া, \"to give\": giving the battery its charge."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chārj deoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chārj deoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chārj deoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chārj deoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Rāte āmi phone chārj dilām. — I charged my phone at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Rāte āmi phone chārj dilām.* — I charged my phone at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a selfie, then the Bengali for to rummage, then say chārj deoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a selfie, then the Bengali for to rummage, then say *chārj deoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চার্জ দেওয়া (chārj deoyā) mean? (\"To charge a phone; to charge (a battery)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

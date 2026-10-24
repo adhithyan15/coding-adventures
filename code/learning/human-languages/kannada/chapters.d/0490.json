@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Fear and Shyness",
+  "label": "ch:ka-fear-and-shyness",
+  "canDo": "I can say to be afraid, to feel shy, anxiety, embarrassment and unease.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C490-kalavala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can say to be afraid, to feel shy, anxiety, embarrassment and unease.",
+    "assesses": [
+      "KA-LEX-C490-BHAYA490-03",
+      "KA-LEX-C490-BHAYA490-04",
+      "KA-LEX-C490-BHAYA490-05"
+    ]
+  }
+}

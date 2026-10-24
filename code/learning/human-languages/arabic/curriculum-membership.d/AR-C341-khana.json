@@ -1,0 +1,11 @@
+{
+  "id": "AR-C341-khana",
+  "pathSegment": "AR-PATH-341-FARIS341",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-341-FARIS341",
+      "order": 4
+    }
+  ]
+}

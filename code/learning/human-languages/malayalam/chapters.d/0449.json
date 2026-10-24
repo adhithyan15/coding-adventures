@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Up and Down",
+  "label": "ch:ml-up-and-down",
+  "canDo": "I can say to control, to go up, to increase, to rise and to raise.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C449-uyarttuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can say to control, to go up, to increase, to rise and to raise.",
+    "assesses": [
+      "ML-LEX-C449-VARDDHANA449-03",
+      "ML-LEX-C449-VARDDHANA449-04",
+      "ML-LEX-C449-VARDDHANA449-05"
+    ]
+  }
+}

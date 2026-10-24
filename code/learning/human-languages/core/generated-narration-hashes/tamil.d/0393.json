@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:051cfaa76cfe8f4f",
+  "lessonIds": [
+    "TA-C393-arikkai",
+    "TA-C393-kanakketuppu",
+    "TA-C393-kantari",
+    "TA-C393-cumar",
+    "TA-C393-perumpalum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch393.txt",
+  "json": "tamil/narration/ch393.json",
+  "textHash": "fnv1a64:2a270ec80b7bc149",
+  "jsonHash": "fnv1a64:1d6db99ef22646f9",
+  "findings": []
+}

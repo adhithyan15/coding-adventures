@@ -1,0 +1,853 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 468,
+  "title": "Size and Quality",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:18157a492c7a9399",
+  "lessons": [
+    {
+      "id": "KA-C468-gatra",
+      "sequence": 23790,
+      "title": "ಗಾತ್ರ (gātra) — size",
+      "headword": "ಗಾತ್ರ",
+      "romanization": "gātra",
+      "gloss": "size",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:552a63f180008862",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a sale, then the Kannada for to buy for oneself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗಾತ್ರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಾತ್ರ — gātra — \"size\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಅಂಗಿ ನನ್ನ ಗಾತ್ರಕ್ಕೆ ಸರಿಯಾಗಿಲ್ಲ. ī aṅgi nanna gātrakke sariyāgilla. This shirt is not my size."
+            },
+            {
+              "kind": "speech",
+              "text": "In Sanskrit a limb or the body; Kannada uses it for the size of things."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಾತ್ರ (gātra) is borrowed from Sanskrit gātra, \"a limb, the body\" (CDIAL 4124); in Kannada it came to mean bulk and size."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gātra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gātra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gātra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gātra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī aṅgi nanna gātrakke sariyāgilla. — This shirt is not my size.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī aṅgi nanna gātrakke sariyāgilla.* — This shirt is not my size.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a sale, then the Kannada for to buy for oneself, then say gātra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a sale, then the Kannada for to buy for oneself, then say *gātra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗಾತ್ರ (gātra) mean? (\"Size\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C468-asali",
+      "sequence": 23800,
+      "title": "ಅಸಲಿ (asali) — genuine; real",
+      "headword": "ಅಸಲಿ",
+      "romanization": "asali",
+      "gloss": "genuine; real",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39a27da3f32dea30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to buy for oneself, then the Kannada for size."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಸಲಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಸಲಿ — asali — \"genuine; real\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇದು ಅಸಲಿ ರೇಷ್ಮೆ ಅಂತ ಅಂಗಡಿಯವನು ಹೇಳಿದನು. idu asali rēṣme anta aṅgaḍiyavanu hēḷidanu. The shopkeeper said this is genuine silk."
+            },
+            {
+              "kind": "speech",
+              "text": "Its opposite is ನಕಲಿ, a fake, from ನಕಲು, a copy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಸಲಿ (asali) is usually traced to Arabic aṣl, \"root, origin\", through Hindustani aslī, \"original, genuine\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asali",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asali*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asali, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asali*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "idu asali rēṣme anta aṅgaḍiyavanu hēḷidanu. — The shopkeeper said this is genuine silk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *idu asali rēṣme anta aṅgaḍiyavanu hēḷidanu.* — The shopkeeper said this is genuine silk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to buy for oneself, then the Kannada for size, then say asali again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to buy for oneself, then the Kannada for size, then say *asali* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಸಲಿ (asali) mean? (\"Genuine; real\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C468-gunamatta",
+      "sequence": 23810,
+      "title": "ಗುಣಮಟ್ಟ (guṇamaṭṭa) — quality; standard",
+      "headword": "ಗುಣಮಟ್ಟ",
+      "romanization": "guṇamaṭṭa",
+      "gloss": "quality; standard",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6c247a3a2725e8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for size, then the Kannada for genuine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗುಣಮಟ್ಟ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗುಣಮಟ್ಟ — guṇamaṭṭa — \"quality; standard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಅಂಗಡಿಯ ಬಟ್ಟೆಗಳ ಗುಣಮಟ್ಟ ಚೆನ್ನಾಗಿದೆ. ī aṅgaḍiya baṭṭegaḷa guṇamaṭṭa cennāgide. The quality of the clothes in this shop is good."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗುಣ, a quality, plus ಮಟ್ಟ, a level."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗುಣಮಟ್ಟ (guṇamaṭṭa) joins Sanskrit guṇa, \"a quality\" (CDIAL 4190), and native maṭṭa, \"measure, level, limit\" (DEDR 4660)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guṇamaṭṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guṇamaṭṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guṇamaṭṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guṇamaṭṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī aṅgaḍiya baṭṭegaḷa guṇamaṭṭa cennāgide. — The quality of the clothes in this shop is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī aṅgaḍiya baṭṭegaḷa guṇamaṭṭa cennāgide.* — The quality of the clothes in this shop is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for size, then the Kannada for genuine, then say guṇamaṭṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for size, then the Kannada for genuine, then say *guṇamaṭṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗುಣಮಟ್ಟ (guṇamaṭṭa) mean? (\"Quality; standard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C468-khatari",
+      "sequence": 23820,
+      "title": "ಖಾತರಿ (khātari) — a guarantee; an assurance",
+      "headword": "ಖಾತರಿ",
+      "romanization": "khātari",
+      "gloss": "a guarantee; an assurance",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fff126887f1e4303",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for genuine, then the Kannada for quality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಖಾತರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಖಾತರಿ — khātari — \"a guarantee; an assurance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಫ್ಯಾನಿಗೆ ಎರಡು ವರ್ಷದ ಖಾತರಿ ಇದೆ. ī phyānige eraḍu varṣada khātari ide. This fan has a two-year guarantee."
+            },
+            {
+              "kind": "speech",
+              "text": "ಖಾತರಿ (khātari) ಕೊಡು, to give an assurance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಖಾತರಿ (khātari) came into Kannada through Hindustani; it is usually traced to Arabic khāṭir, \"the mind, regard\", but how it came to mean an assurance is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khātari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khātari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khātari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khātari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī phyānige eraḍu varṣada khātari ide. — This fan has a two-year guarantee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī phyānige eraḍu varṣada khātari ide.* — This fan has a two-year guarantee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for genuine, then the Kannada for quality, then say khātari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for genuine, then the Kannada for quality, then say *khātari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಖಾತರಿ (khātari) mean? (\"A guarantee; an assurance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C468-masu",
+      "sequence": 23830,
+      "title": "ಮಾಸು (māsu) — to fade; to grow dull",
+      "headword": "ಮಾಸು",
+      "romanization": "māsu",
+      "gloss": "to fade; to grow dull",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ff082618ad369a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for quality, then the Kannada for a guarantee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಾಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾಸು — māsu — \"to fade; to grow dull\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎರಡು ಸಲ ತೊಳೆದ ಮೇಲೆ ಅಂಗಿಯ ಬಣ್ಣ ಮಾಸಿತು. eraḍu sala toḷeda mēle aṅgiya baṇṇa māsitu. After two washes the colour of the shirt faded."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಮಾಸಿತು, māsitu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of colours, cloth and old paint."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾಸು (māsu) is native Dravidian: DEDR 4781 lists Kannada māsu, \"to grow dim, to be obscured, to fade\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraḍu sala toḷeda mēle aṅgiya baṇṇa māsitu. — After two washes the colour of the shirt faded.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraḍu sala toḷeda mēle aṅgiya baṇṇa māsitu.* — After two washes the colour of the shirt faded.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for quality, then the Kannada for a guarantee, then say māsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for quality, then the Kannada for a guarantee, then say *māsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಾಸು (māsu) mean? (\"To fade; to grow dull\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R468-review-462-468",
+      "sequence": 23840,
+      "title": "Looking back: from In the Hotel Room to Size and Quality",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from In the Hotel Room to Size and Quality",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e537b0b472cd75d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for a balcony and an elevator."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a balcony, an elevator, a mosquito net, a heater, to creak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a balcony, an elevator, a mosquito net, a heater, to creak]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a service, a facility, to provide, a water heater, a resort",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a service, a facility, to provide, a water heater, a resort]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "breakfast, a menu, a waiter, a gratuity, to order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: breakfast, a menu, a waiter, a gratuity, to order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a small town, a capital city, a region, a place, a centre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a small town, a capital city, a region, a place, a centre]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a suburb, to reside, a town council, a streetlight, a drain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a suburb, to reside, a town council, a streetlight, a drain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a marketplace, a bazaar, a store, a sale, to buy for oneself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a marketplace, a bazaar, a store, a sale, to buy for oneself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "size, genuine, quality, a guarantee, to fade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: size, genuine, quality, a guarantee, to fade]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A balcony? (ಬಾಲ್ಕನಿ, bālkani.) An elevator? (ಲಿಫ್ಟ್, liphṭ.) A mosquito net? (ಸೊಳ್ಳೆಪರದೆ, soḷḷeparade.) A heater? (ಹೀಟರ್, hīṭar.) To creak? (ಕಿರುಗುಟ್ಟು, kiruguṭṭu.) A service? (ಸೇವೆ, sēve.) A facility? (ಸೌಲಭ್ಯ, saulabhya.) To provide? (ಒದಗಿಸು, odagisu.) A water heater? (ಗೀಸರ್, gīsar.) A resort? (ರೆಸಾರ್ಟ್, resārṭ.) Breakfast? (ಉಪಹಾರ, upahāra.) A menu? (ಮೆನು, menu.) A waiter? (ಪರಿಚಾರಕ, paricāraka.) A gratuity? (ಭಕ್ಷೀಸು, bhakṣīsu.) To order? (ಆರ್ಡರ್ ಮಾಡು, ārḍar māḍu.) A small town? (ಪಟ್ಟಣ, paṭṭaṇa.) A capital city? (ರಾಜಧಾನಿ, rājadhāni.) A region? (ಪ್ರದೇಶ, pradēśa.) A place? (ಸ್ಥಳ, sthaḷa.) A centre? (ಕೇಂದ್ರ, kēndra.) A suburb? (ಉಪನಗರ, upanagara.) To reside? (ವಾಸಿಸು, vāsisu.) A town council? (ಪುರಸಭೆ, purasabhe.) A streetlight? (ಬೀದಿದೀಪ, bīdidīpa.) A drain? (ಚರಂಡಿ, caraṇḍi.) A marketplace? (ಮಾರುಕಟ್ಟೆ, mārukaṭṭe.) A bazaar? (ಪೇಟೆ, pēṭe.) A store? (ಮಳಿಗೆ, maḷige.) A sale? (ಮಾರಾಟ, mārāṭa.) To buy for oneself? (ಕೊಂಡುಕೊ, koṇḍuko.) Size? (ಗಾತ್ರ, gātra.) Genuine? (ಅಸಲಿ, asali.) Quality? (ಗುಣಮಟ್ಟ, guṇamaṭṭa.) A guarantee? (ಖಾತರಿ, khātari.) To fade? (ಮಾಸು, māsu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

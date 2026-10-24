@@ -1,0 +1,11 @@
+{
+  "id": "TA-C348-vatitu",
+  "pathSegment": "TA-PATH-348-ETIR348",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-348-ETIR348",
+      "order": 2
+    }
+  ]
+}

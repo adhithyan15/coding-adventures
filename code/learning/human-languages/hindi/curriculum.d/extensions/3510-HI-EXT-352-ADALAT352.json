@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-352-ADALAT352",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow what happens in a court case.",
+  "prerequisites": []
+}

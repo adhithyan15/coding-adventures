@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "People Power",
+  "label": "ch:ta-people-power",
+  "canDo": "I can talk about democracy, debate and reasoned thinking.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C397-pakuttarivu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can talk about democracy, debate and reasoned thinking.",
+    "assesses": [
+      "TA-LEX-C397-MAKKALATCI397-03",
+      "TA-LEX-C397-MAKKALATCI397-04",
+      "TA-LEX-C397-MAKKALATCI397-05"
+    ]
+  }
+}

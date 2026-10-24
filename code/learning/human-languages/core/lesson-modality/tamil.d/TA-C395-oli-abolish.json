@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C395-oli-abolish",
+    "language": "tamil",
+    "chapter": 395,
+    "sequence": 22590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adeffd936f20a382"
+  },
+  "findings": []
+}

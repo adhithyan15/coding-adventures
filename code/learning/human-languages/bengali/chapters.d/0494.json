@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Looking for Work",
+  "label": "ch:bn-looking-for-work",
+  "canDo": "I can talk about looking for work, CVs and joining a new job.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C494-jog-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about looking for work, CVs and joining a new job.",
+    "assesses": [
+      "BN-LEX-C494-KAJKHOJA494-03",
+      "BN-LEX-C494-KAJKHOJA494-04",
+      "BN-LEX-C494-KAJKHOJA494-05"
+    ]
+  }
+}

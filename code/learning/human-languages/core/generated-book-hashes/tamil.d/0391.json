@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:2f796f59986ace70",
+  "lessonIds": [
+    "TA-C391-porulataram",
+    "TA-C391-maniyam",
+    "TA-C391-parrakkurai",
+    "TA-C391-viniyoki",
+    "TA-C391-nirnayi"
+  ],
+  "tex": "tamil/book/chapters/ch391-public-money.tex"
+}

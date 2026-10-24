@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C426-pratikula",
+    "language": "kannada",
+    "chapter": 426,
+    "sequence": 21610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a59b4538cdd0e69"
+  },
+  "findings": []
+}

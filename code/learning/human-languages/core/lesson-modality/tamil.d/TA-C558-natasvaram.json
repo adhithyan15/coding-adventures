@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C558-natasvaram",
+    "language": "tamil",
+    "chapter": 558,
+    "sequence": 31760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5312107f8efa628e"
+  },
+  "findings": []
+}

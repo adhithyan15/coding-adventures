@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:a9831373883a8ab5",
+  "lessonIds": [
+    "TE-C507-svabhavam",
+    "TE-C507-vyaktitvam",
+    "TE-C507-mancitanam",
+    "TE-C507-vinayam",
+    "TE-C507-ahankaram"
+  ],
+  "tex": "telugu/book/chapters/ch507-character.tex"
+}

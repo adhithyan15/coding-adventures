@@ -1,0 +1,11 @@
+{
+  "id": "MR-C483-okne",
+  "pathSegment": "MR-PATH-483-PACAN483",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-483-PACAN483",
+      "order": 3
+    }
+  ]
+}

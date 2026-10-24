@@ -1,0 +1,11 @@
+{
+  "id": "KA-C466-purasabhe",
+  "pathSegment": "KA-PATH-466-UPANAGARA466",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-466-UPANAGARA466",
+      "order": 2
+    }
+  ]
+}

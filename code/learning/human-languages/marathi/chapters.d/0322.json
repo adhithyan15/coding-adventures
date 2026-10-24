@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Honours and Awards",
+  "label": "ch:mr-honours-and-awards",
+  "canDo": "I can talk about awards, honours and congratulations.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C322-udghatan-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can talk about awards, honours and congratulations.",
+    "assesses": [
+      "MR-LEX-C322-PURASKAR322-03",
+      "MR-LEX-C322-PURASKAR322-04",
+      "MR-LEX-C322-PURASKAR322-05"
+    ]
+  }
+}

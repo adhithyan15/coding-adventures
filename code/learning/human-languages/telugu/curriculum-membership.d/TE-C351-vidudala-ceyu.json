@@ -1,0 +1,11 @@
+{
+  "id": "TE-C351-vidudala-ceyu",
+  "pathSegment": "TE-PATH-351-BANDI351",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-351-BANDI351",
+      "order": 3
+    }
+  ]
+}

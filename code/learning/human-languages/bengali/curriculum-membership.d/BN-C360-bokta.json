@@ -1,0 +1,11 @@
+{
+  "id": "BN-C360-bokta",
+  "pathSegment": "BN-PATH-360-BOKTRITA360",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-360-BOKTRITA360",
+      "order": 1
+    }
+  ]
+}

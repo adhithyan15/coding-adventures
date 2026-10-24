@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:c86c0eb65c93ddd5",
+  "lessonIds": [
+    "BN-C380-onukul",
+    "BN-C380-protikul",
+    "BN-C380-upojukto",
+    "BN-C380-jogyo",
+    "BN-C380-obhyosto-hooya"
+  ],
+  "tex": "bengali/book/chapters/ch380-the-right-conditions.tex"
+}

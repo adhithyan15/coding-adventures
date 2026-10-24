@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C428-vati",
+    "language": "tamil",
+    "chapter": 428,
+    "sequence": 24570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a35aa208d1d139f5"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:7f9baddcd491dcad",
+  "lessonIds": [
+    "MR-C553-sadhya-karne",
+    "MR-C553-hulkavni-dene",
+    "MR-C553-acuk",
+    "MR-C553-hamkhas",
+    "MR-C553-tatpar"
+  ],
+  "tex": "marathi/book/chapters/ch553-reaching-the-goal.tex"
+}

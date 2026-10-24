@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C496-aruvi",
+    "language": "malayalam",
+    "chapter": 496,
+    "sequence": 24800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7d29db49d71d782"
+  },
+  "findings": []
+}

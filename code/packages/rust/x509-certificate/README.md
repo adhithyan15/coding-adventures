@@ -7,12 +7,18 @@ exact signed bytes, enforces optional-field ordering and version constraints,
 requires a non-empty issuer Name, and requires the inner and outer signature
 algorithm encodings to match.
 
+Callers that own a complete certificate document can use
+`decode_x509_certificate`. Enclosing DER structures use
+`decode_x509_certificate_element` so nested certificates consume the caller's
+existing decoder budget instead of resetting it.
+
 ## Security boundary
 
 The package uses one caller-selected DER depth, element, framing, and OID
-budget. Decoded values borrow the caller's input, errors retain only a category
-and byte offset, and unsafe code is denied. It has no ambient authority or
-external dependency.
+budget, whether it creates the decoder for a standalone document or consumes a
+caller-owned decoder for composition. Decoded values borrow the caller's
+input, errors retain only a category and byte offset, and unsafe code is denied.
+It has no ambient authority or external dependency.
 
 Successful structural decoding does not recognize or enable an algorithm,
 verify the certificate signature, authorize key use, normalize names, validate

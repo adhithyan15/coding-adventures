@@ -1,0 +1,11 @@
+{
+  "id": "MR-C463-osalne",
+  "pathSegment": "MR-PATH-463-GARVA463",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-463-GARVA463",
+      "order": 4
+    }
+  ]
+}

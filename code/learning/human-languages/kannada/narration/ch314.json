@@ -1,0 +1,893 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 314,
+  "title": "Tickets, Seats and Trouble",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:9af5f047179d049c",
+  "lessons": [
+    {
+      "id": "KA-C314-situ",
+      "sequence": 15190,
+      "title": "ಸೀಟು (sīṭu) — a seat",
+      "headword": "ಸೀಟು",
+      "romanization": "sīṭu",
+      "gloss": "a seat (on a bus or a train)",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb8325211f235f14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"a ticket\", \"a bus\" and \"a train\". (ṭikeṭ, bas, railu.) Then \"Go straight on.\" (nēravāgi hōgi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸೀಟು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೀಟು — sīṭu — \"a seat (on a bus or a train)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಸೀಟು ಖಾಲಿ ಇದೆಯಾ? ī sīṭu khāli ideyā? — \"Is this seat free?\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಖಾಲಿ, \"empty\", says the seat is free. ಇದೆಯಾ is ಇದೆ with the question ending -ಆ, the one in ನಿಮಗೆ ಕಾಫಿ ಇಷ್ಟವಾ."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಕಿಟಕಿಯ ಪಕ್ಕದ ಸೀಟು ಬೇಕು. nanage kiṭakiya pakkada sīṭu bēku. — \"I would like a seat by the window.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಿಟಕಿಯ ಪಕ್ಕದ (kiṭakiya pakkada, \"by the window\"): \"of the window's side\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೀಟು (sīṭu) is English seat, borrowed with a final -ಉ, as ಸ್ಕೇಲು is English scale. Others keep their last consonant bare, as ಟಿಕೆಟ್ and ಬಸ್ do. Both habits live side by side in Kannada."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīṭu, slowly, then at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīṭu*, slowly, then at speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Is this seat free?\" — ī sīṭu khāli ideyā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Is this seat free?\" — *ī sīṭu khāli ideyā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I would like a seat by the window\" — nanage kiṭakiya pakkada sīṭu bēku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I would like a seat by the window\" — *nanage kiṭakiya pakkada sīṭu bēku*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸೀಟು (sīṭu) mean? (A seat, on a bus or a train.) \"Is this seat free?\" (ಈ ಸೀಟು (sīṭu) ಖಾಲಿ ಇದೆಯಾ?) Where does the word come from? (English seat.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C314-tiket-kodi",
+      "sequence": 15200,
+      "title": "ಒಂದು ಟಿಕೆಟ್ ಕೊಡಿ (ondu ṭikeṭ koḍi) — at the ticket window",
+      "headword": "ಒಂದು ಟಿಕೆಟ್ ಕೊಡಿ",
+      "romanization": "ondu ṭikeṭ koḍi",
+      "gloss": "one ticket, please — buying a ticket and asking when it leaves",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b5640402f90e669",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a seat\" (sīṭu) and \"Is this seat free?\" (ī sīṭu khāli ideyā?). Then \"to give\". (koḍu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: buying a ticket",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೈಸೂರಿಗೆ ಒಂದು ಟಿಕೆಟ್ ಕೊಡಿ. maisūrige ondu ṭikeṭ koḍi. — \"One ticket to Mysuru, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೊಡಿ is the polite \"give\", like the ಹೋಗಿ of directions. The place takes \"to\": ಮೈಸೂರಿಗೆ, as ಊರಿಗೆ. For two people: ಎರಡು ಟಿಕೆಟ್ ಕೊಡಿ."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎಷ್ಟು ಆಯಿತು? eṣṭu āyitu? — \"How much is it?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Literally \"how much has it come to?\", with the ಆಯಿತು of \"it happened, it became\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ನಾಳೆಯ ರೈಲಿಗೆ ಒಂದು ಸೀಟು ಕಾಯ್ದಿರಿಸಿದೆ. nānu nāḷeya railige ondu sīṭu kāydiriside. — \"I booked a seat on tomorrow's train.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಾಯ್ದಿರಿಸಿದೆ is the past of ಕಾಯ್ದಿರಿಸು, \"to book\"; ನಾಳೆಯ (nāḷeya, \"tomorrow's\"); ರೈಲಿಗೆ (railige, \"for the train\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: when it leaves",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಸ್ ಎಷ್ಟು ಗಂಟೆಗೆ ಹೊರಡುತ್ತದೆ? bas eṣṭu gaṇṭege horaḍuttade? — \"At what time does the bus leave?\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಎಷ್ಟು ಗಂಟೆಗೆ, \"at how many hours\", is \"at what time\". ಹೊರಡುತ್ತದೆ is \"it sets out\". The answer keeps the same shape:"
+            },
+            {
+              "kind": "speech",
+              "text": "ಆರು ಗಂಟೆಗೆ ಹೊರಡುತ್ತದೆ. āru gaṇṭege horaḍuttade. — \"It leaves at six.\""
+            },
+            {
+              "kind": "speech",
+              "text": "For the arrival, ಬರುತ್ತದೆ, \"it comes\", takes the place of ಹೊರಡುತ್ತದೆ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"One ticket to Mysuru, please\" — maisūrige ondu ṭikeṭ koḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"One ticket to Mysuru, please\" — *maisūrige ondu ṭikeṭ koḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How much is it?\" — eṣṭu āyitu?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How much is it?\" — *eṣṭu āyitu?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"At what time does the bus leave?\" — bas eṣṭu gaṇṭege horaḍuttade?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"At what time does the bus leave?\" — *bas eṣṭu gaṇṭege horaḍuttade?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I booked a seat on tomorrow's train\" — nānu nāḷeya railige ondu sīṭu kāydiriside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I booked a seat on tomorrow's train\" — *nānu nāḷeya railige ondu sīṭu kāydiriside*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"One ticket, please\"? (ಒಂದು ಟಿಕೆಟ್ ಕೊಡಿ (ondu ṭikeṭ koḍi).) \"How much is it?\" (ಎಷ್ಟು ಆಯಿತು?) \"At what time does it leave?\" (ಎಷ್ಟು ಗಂಟೆಗೆ ಹೊರಡುತ್ತದೆ?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C314-ausadha",
+      "sequence": 15210,
+      "title": "ಔಷಧ (auṣadha) — a medicine; a remedy",
+      "headword": "ಔಷಧ",
+      "romanization": "auṣadha",
+      "gloss": "a medicine; a remedy",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad636aec1ff4c1ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"a fever\", \"a tablet\" and \"a hospital\". (jvara, mātre, āspatre.) Then \"At what time does the bus leave?\" (bas eṣṭu gaṇṭege horaḍuttade?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಔಷಧ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಔಷಧ — auṣadha — \"a medicine; a remedy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಯಾಣದಲ್ಲಿ ನನಗೆ ಜ್ವರ ಬಂತು. ವೈದ್ಯರು ಔಷಧ ಕೊಟ್ಟರು. prayāṇadalli nanage jvara bantu. vaidyaru auṣadha koṭṭaru. — \"On the journey I got a fever. The doctor gave (me) medicine.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಯಾಣದಲ್ಲಿ (prayāṇadalli, \"on the journey\"). A fever \"came\" to me: ನನಗೆ ಜ್ವರ ಬಂತು."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಔಷಧ ದಿನಕ್ಕೆ ಎರಡು ಸಲ ತೆಗೆದುಕೊಳ್ಳಿ. ī auṣadha dinakke eraḍu sala tegedukoḷḷi. — \"Take this medicine twice a day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ದಿನಕ್ಕೆ (dinakke, \"a day, per day\"); ಎರಡು ಸಲ, \"two times\", with the ಸಲ of ಇನ್ನೊಂದು ಸಲ ಹೇಳಿ; ತೆಗೆದುಕೊಳ್ಳಿ is the polite \"take\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In talk you will often hear ಔಷಧಿ, with a final -ಇ: the same word. ಮಾತ್ರೆ is one tablet; ಔಷಧ (auṣadha) is any medicine."
+            },
+            {
+              "kind": "speech",
+              "text": "Its first letter is one you have not written: the vowel au, standing at the start of a word. The next lesson takes it out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಔಷಧ (auṣadha) is Sanskrit auṣadha. CDIAL 2571 gives it as \"consisting of herbs\" and, as a noun, \"herbs in general, a herb\", built on ōṣadhi, \"a herb, a plant\". Pali already has ōsadha for \"medicine\". A word for herbs became the word for the remedy made from them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auṣadha, slowly, then at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auṣadha*, slowly, then at speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"On the journey I got a fever. The doctor gave me medicine.\" — prayāṇadalli nanage jvara bantu. vaidyaru auṣadha koṭṭaru.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"On the journey I got a fever. The doctor gave me medicine.\" — *prayāṇadalli nanage jvara bantu. vaidyaru auṣadha koṭṭaru.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Take this medicine twice a day\" — ī auṣadha dinakke eraḍu sala tegedukoḷḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Take this medicine twice a day\" — *ī auṣadha dinakke eraḍu sala tegedukoḷḷi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಔಷಧ (auṣadha) mean? (A medicine; a remedy.) How is it said in quick talk? (ಔಷಧಿ.) What did the Sanskrit word first mean? (Made of herbs; a herb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-S175-letter-au",
+      "sequence": 15220,
+      "title": "ಔ (au) — the letter that opens ಔಷಧ (auṣadha)",
+      "headword": "ಔ",
+      "romanization": "au",
+      "gloss": "the letter ಔ — the vowel au at the start of a word, taken from ಔಷಧ",
+      "script": "kannada",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:09702406e03903e1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ಔ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಔ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: which letters are ಒ and ಓ? (o and ō.) Which sign says au after a consonant? (◌ೌ, the mark in ಹೌದು.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ಔಷಧ (auṣadha), \"a medicine\". You met it a moment ago. This lesson takes its first letter out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ಔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಔ — au."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel: the shape au takes at the start of a word. It is one vowel that glides from a toward u, the way the middle of English now does."
+            },
+            {
+              "kind": "speech",
+              "text": "After a consonant, au is the sign ◌ೌ: ಹೌದು, haudu, \"yes\"; ಗೌರವ, gaurava, \"respect\". At the start of a word there is no consonant to carry a sign, so the vowel stands as a letter of its own. With it, every vowel this book uses has its letter for the front of a word, and all but ಅ have a sign for inside one."
+            },
+            {
+              "kind": "speech",
+              "text": "In print the lower part of ಔ (au) is the pair of round bowls you know from the bottom of ಒ. Above them a flat bar runs along the top; on the left it drops into the body, and on the right it ends in a small curl that turns inward. Few words open with ಔ (au), and most of them come from Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ಔ — copy the printed shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen beside ಔ (au) and copy the shape you can see, slowly, and larger than it is printed. Then hold your copy against the print: two round bowls below, a flat bar along the top that drops into the body on the left, and a small curl turning inward at its right end."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ಔ (au) at the start of ಔಷಧ (auṣadha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ಔ at the start of **ಔಷಧ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ಔ three times, saying au as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ಔ three times, saying *au* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ಒ, ಓ, then ಔ (au), from memory, naming each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ಒ, ಓ, then ಔ, from memory, naming each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ಔಷಧ (auṣadha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ಔಷಧ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಔಷಧ (auṣadha) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಔಷಧ** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ಔ? (au, at the start of a word.) Which word did it come from? (ಔಷಧ, auṣadha, \"a medicine\".) Which sign says au after a consonant? (◌ೌ, as in ಹೌದು.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C314-kaleduhoyitu",
+      "sequence": 15230,
+      "title": "ಕಳೆದುಹೋಯಿತು (kaḷeduhōyitu) — when something goes wrong",
+      "headword": "ಕಳೆದುಹೋಯಿತು",
+      "romanization": "kaḷeduhōyitu",
+      "gloss": "it got lost — saying what went wrong on a trip",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af30935542f2f8cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to get lost\" (kaḷeduhōgu) and \"to complain\" (dūru koḍu). Then \"a medicine\". (auṣadha.) Which letter opens it? (ಔ, au.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the bus got away",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಯ್ಯೋ, ನನ್ನ ಬಸ್ ತಪ್ಪಿಹೋಯಿತು! ayyō, nanna bas tappihōyitu! — \"Oh no, I've missed my bus!\""
+            },
+            {
+              "kind": "speech",
+              "text": "ತಪ್ಪಿಹೋಯಿತು is two pieces: ತಪ್ಪಿ, the -ಇ form of the verb ತಪ್ಪು, \"to slip, to go astray\", the verb behind the noun ತಪ್ಪು, \"a mistake\"; and ಹೋಯಿತು, \"it went\". Word for word: \"my bus slipped away\". Kannada says the bus got away, not that you missed it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: lost, and reported",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಚೀಲ ಕಳೆದುಹೋಯಿತು. ನನ್ನ ಫೋನ್ ಚೀಲದಲ್ಲಿ ಇತ್ತು. nanna cīla kaḷeduhōyitu. nanna phōn cīladalli ittu. — \"My bag is lost. My phone was in the bag.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಳೆದುಹೋಯಿತು (kaḷeduhōyitu) is the \"it\" past of ಕಳೆದುಹೋಗು; ಇತ್ತು says where the phone was. ಚೀಲದಲ್ಲಿ (cīladalli, \"in the bag\"). Then the report:"
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಪೊಲೀಸರಿಗೆ ದೂರು ಕೊಟ್ಟೆ. nānu polīsarige dūru koṭṭe. — \"I made a complaint to the police.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೊಲೀಸರಿಗೆ (polīsarige, \"to the police\"): ಪೊಲೀಸ್ with the respectful -ರು and the \"to\" ending."
+            },
+            {
+              "kind": "speech",
+              "text": "And when the trouble is your health:"
+            },
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಹುಷಾರಿಲ್ಲ. ನನಗೆ ಔಷಧ ಬೇಕು. nanage huṣārilla. nanage auṣadha bēku. — \"I'm not well. I need medicine.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಹುಷಾರಿಲ್ಲ is ಹುಷಾರು, \"careful, well\", with ಇಲ್ಲ: \"(I am) not well\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Oh no, I've missed my bus!\" — ayyō, nanna bas tappihōyitu!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Oh no, I've missed my bus!\" — *ayyō, nanna bas tappihōyitu!*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My bag is lost. My phone was in the bag.\" — nanna cīla kaḷeduhōyitu. nanna phōn cīladalli ittu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My bag is lost. My phone was in the bag.\" — *nanna cīla kaḷeduhōyitu. nanna phōn cīladalli ittu.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I made a complaint to the police\" — nānu polīsarige dūru koṭṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I made a complaint to the police\" — *nānu polīsarige dūru koṭṭe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I'm not well. I need medicine.\" — nanage huṣārilla. nanage auṣadha bēku.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I'm not well. I need medicine.\" — *nanage huṣārilla. nanage auṣadha bēku.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I missed my bus\"? (ನನ್ನ ಬಸ್ ತಪ್ಪಿಹೋಯಿತು.) \"It got lost\"? (ಕಳೆದುಹೋಯಿತು (kaḷeduhōyitu).) \"I made a complaint\"? (ದೂರು ಕೊಟ್ಟೆ.) \"I'm not well\"? (ನನಗೆ ಹುಷಾರಿಲ್ಲ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R314-at-the-station",
+      "sequence": 15240,
+      "title": "Review — at the station",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a ticket, a seat, a time, and what to say when things go wrong",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:563d1946df50d47b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a medicine\" (auṣadha) and \"clean\" (svaccha). Which letter opens the first? (ಔ (au).) Which sits small inside the second? (ಛ.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ಔ (au) and ಛ, once each from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ಔ** and **ಛ**, once each from memory]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "One ticket to my home town, please. At what time does the bus leave?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: One ticket to my home town, please. At what time does the bus leave?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Is this seat free? I would like a seat by the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Is this seat free? I would like a seat by the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Oh no, the bus has gone. Where is the station? Is it next to the hotel?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Oh no, the bus has gone. Where is the station? Is it next to the hotel?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Because I had a fever, I took medicine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Because I had a fever, I took medicine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My bag is lost. My phone was in the bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My bag is lost. My phone was in the bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I'm not well. I need medicine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I'm not well. I need medicine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ಔಷಧ (auṣadha) and ಸೀಟು (sīṭu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ಔಷಧ** and **ಸೀಟು**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A seat\"? (ಸೀಟು (sīṭu).) \"One ticket, please\"? (ಒಂದು ಟಿಕೆಟ್ ಕೊಡಿ (ondu ṭikeṭ koḍi).) \"At what time does it leave?\" (ಎಷ್ಟು ಗಂಟೆಗೆ ಹೊರಡುತ್ತದೆ?) \"It got lost\"? (ಕಳೆದುಹೋಯಿತು (kaḷeduhōyitu).) \"A medicine\"? (ಔಷಧ (auṣadha), which opens with ಔ (au).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

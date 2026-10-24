@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C190-karna-return",
+    "language": "punjabi",
+    "chapter": 190,
+    "sequence": 10260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:326059c9ae6feb85"
+  },
+  "findings": []
+}

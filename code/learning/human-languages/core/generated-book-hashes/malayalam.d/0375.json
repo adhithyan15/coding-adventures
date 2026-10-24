@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:9a75588a67ec2b41",
+  "lessonIds": [
+    "ML-C375-raksakan",
+    "ML-C375-sannaddhapravarttakan",
+    "ML-C375-raksikkuka",
+    "ML-C375-raksappetuka",
+    "ML-C375-kutunnuka"
+  ],
+  "tex": "malayalam/book/chapters/ch375-rescue.tex"
+}

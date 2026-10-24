@@ -1,0 +1,838 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 397,
+  "title": "Degrees and training",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:935014e961a9b89a",
+  "lessons": [
+    {
+      "id": "AR-C397-bakaluriyus",
+      "sequence": 22390,
+      "title": "بكالوريوس (bakālūriyūs) — a bachelor's degree",
+      "headword": "بكالوريوس",
+      "romanization": "bakālūriyūs",
+      "gloss": "a bachelor's degree",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:752ba742379550be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a thesis, then the Arabic for a curriculum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بكالوريوس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بكالوريوس — bakālūriyūs — \"a bachelor's degree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حصل أخي على البكالوريوس في التجارة. ḥaṣala akhī ʿalā al-bakālūriyūs fī at-tijāra. My brother got a bachelor's degree in commerce."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بكالوريوس (bakālūriyūs) is a modern loan, usually traced to medieval Latin baccalaureus, the holder of a first degree. Arabic keeps the Latin ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bakālūriyūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bakālūriyūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bakālūriyūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bakālūriyūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaṣala akhī ʿalā al-bakālūriyūs fī at-tijāra. — My brother got a bachelor's degree in commerce.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaṣala akhī ʿalā al-bakālūriyūs fī at-tijāra.* — My brother got a bachelor's degree in commerce.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a thesis, then the Arabic for a curriculum, then say bakālūriyūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a thesis, then the Arabic for a curriculum, then say *bakālūriyūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بكالوريوس (bakālūriyūs) mean? (\"A bachelor's degree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C397-majistir",
+      "sequence": 22400,
+      "title": "ماجستير (mājistīr) — a master's degree",
+      "headword": "ماجستير",
+      "romanization": "mājistīr",
+      "gloss": "a master's degree",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da16202d707eea81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a curriculum, then the Arabic for a bachelor's degree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ماجستير",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ماجستير — mājistīr — \"a master's degree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تدرس أختي الماجستير في الأدب. tadrusu ukhtī al-mājistīr fī al-adab. My sister is studying for a master's degree in literature."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ماجستير (mājistīr) is a modern loan, usually traced to Latin magister, \"a master, a teacher\", through European names for the degree."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājistīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājistīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājistīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājistīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadrusu ukhtī al-mājistīr fī al-adab. — My sister is studying for a master's degree in literature.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadrusu ukhtī al-mājistīr fī al-adab.* — My sister is studying for a master's degree in literature.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a curriculum, then the Arabic for a bachelor's degree, then say mājistīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a curriculum, then the Arabic for a bachelor's degree, then say *mājistīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ماجستير (mājistīr) mean? (\"A master's degree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C397-duktura",
+      "sequence": 22410,
+      "title": "دكتوراه (duktūrāh) — a doctorate",
+      "headword": "دكتوراه",
+      "romanization": "duktūrāh",
+      "gloss": "a doctorate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aac5a93581091a37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a bachelor's degree, then the Arabic for a master's degree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دكتوراه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دكتوراه — duktūrāh — \"a doctorate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كتب أبي أطروحة الدكتوراه في عامين. kataba abī uṭrūḥat ad-duktūrāh fī ʿāmayn. My father wrote his doctoral thesis in two years."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دكتوراه (duktūrāh) is a modern loan, usually traced to Latin doctor, \"a teacher\", through European languages. Its final h is written with ه."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duktūrāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duktūrāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duktūrāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duktūrāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kataba abī uṭrūḥat ad-duktūrāh fī ʿāmayn. — My father wrote his doctoral thesis in two years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kataba abī uṭrūḥat ad-duktūrāh fī ʿāmayn.* — My father wrote his doctoral thesis in two years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a bachelor's degree, then the Arabic for a master's degree, then say duktūrāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a bachelor's degree, then the Arabic for a master's degree, then say *duktūrāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دكتوراه (duktūrāh) mean? (\"A doctorate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C397-muqarrar",
+      "sequence": 22420,
+      "title": "مقرر (muqarrar) — a syllabus",
+      "headword": "مقرر",
+      "romanization": "muqarrar",
+      "gloss": "a syllabus",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e33929be2086bedc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a master's degree, then the Arabic for a doctorate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مقرر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقرر — muqarrar — \"a syllabus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هذا الكتاب جزء من المقرر. hādhā al-kitāb juzʾ min al-muqarrar. This book is part of the syllabus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقرر (muqarrar) is built on the native Arabic root q-r-r, \"to settle, to be still\" (Lane). Muqarrar is the Form II passive participle, what has been fixed: a set syllabus. قرار, a decision, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muqarrar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muqarrar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muqarrar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muqarrar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hādhā al-kitāb juzʾ min al-muqarrar. — This book is part of the syllabus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hādhā al-kitāb juzʾ min al-muqarrar.* — This book is part of the syllabus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a master's degree, then the Arabic for a doctorate, then say muqarrar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a master's degree, then the Arabic for a doctorate, then say *muqarrar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مقرر (muqarrar) mean? (\"A syllabus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C397-tadrib",
+      "sequence": 22430,
+      "title": "تدريب (tadrīb) — training",
+      "headword": "تدريب",
+      "romanization": "tadrīb",
+      "gloss": "training",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f8b8687b4758eb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a doctorate, then the Arabic for a syllabus."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تدريب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تدريب — tadrīb — \"training\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يحتاج الموظفون الجدد إلى تدريب. yaḥtāju al-muwaẓẓafūn al-judud ilā tadrīb. New employees need training."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تدريب (tadrīb) is built on the native Arabic root d-r-b, \"to be used to, practised\" (Lane). Tadrīb is the Form II verbal noun, making someone practised: training. مدرب, a coach, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadrīb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadrīb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadrīb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadrīb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaḥtāju al-muwaẓẓafūn al-judud ilā tadrīb. — New employees need training.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaḥtāju al-muwaẓẓafūn al-judud ilā tadrīb.* — New employees need training.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a doctorate, then the Arabic for a syllabus, then say tadrīb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a doctorate, then the Arabic for a syllabus, then say *tadrīb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تدريب (tadrīb) mean? (\"Training\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R397-review-390-397",
+      "sequence": 22440,
+      "title": "Words from chapters 390–397 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 390-397",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab2a28f2fd85bfd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for a faculty and a specialization."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a faculty, a specialization, a dean, a scholarship, to enrol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a faculty, a specialization, a dean, a scholarship, to enrol]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a researcher, a study, a laboratory, an institute, a questionnaire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a researcher, a study, a laboratory, an institute, a questionnaire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lecturer, a professor, to supervise, a supervisor, to study for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lecturer, a professor, to supervise, a supervisor, to study for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a test, admission, an average, to excel, to evaluate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a test, admission, an average, to excel, to evaluate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to master, to acquire, to go deeper, to summarize, a summary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to master, to acquire, to go deeper, to summarize, a summary]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reference, to cite, to quote, to read up on, to reflect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reference, to cite, to quote, to read up on, to reflect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a term, a definition, an index, a thesis, a curriculum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a term, a definition, an index, a thesis, a curriculum]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bachelor's degree, a master's degree, a doctorate, a syllabus, training",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bachelor's degree, a master's degree, a doctorate, a syllabus, training]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A faculty? (كلية, kulliyya.) A specialization? (تخصص, takhaṣṣuṣ.) A dean? (عميد, ʿamīd.) A scholarship? (منحة, minḥa.) To enrol? (التحق, iltaḥaqa.) A researcher? (باحث, bāḥith.) A study? (دراسة, dirāsa.) A laboratory? (مختبر, mukhtabar.) An institute? (معهد, maʿhad.) A questionnaire? (استبيان, istibyān.) A lecturer? (محاضر, muḥāḍir.) A professor? (أستاذ, ustādh.) To supervise? (أشرف, ashrafa.) A supervisor? (مشرف, mushrif.) To study for? (ذاكر, dhākara.) A test? (اختبار, ikhtibār.) Admission? (قبول, qabūl.) An average? (معدل, muʿaddal.) To excel? (تفوق, tafawwaqa.) To evaluate? (قيم, qayyama.) To master? (أتقن, atqana.) To acquire? (اكتسب, iktasaba.) To go deeper? (تعمق, taʿammaqa.) To summarize? (لخص, lakhkhaṣa.) A summary? (ملخص, mulakhkhaṣ.) A reference? (مرجع, marjiʿ.) To cite? (استشهد, istashhada.) To quote? (اقتبس, iqtabasa.) To read up on? (طالع, ṭālaʿa.) To reflect? (تأمل, taʾammala.) A term? (مصطلح, muṣṭalaḥ.) A definition? (تعريف, taʿrīf.) An index? (فهرس, fihris.) A thesis? (أطروحة, uṭrūḥa.) A curriculum? (منهج, manhaj.) A bachelor's degree? (بكالوريوس, bakālūriyūs.) A master's degree? (ماجستير, mājistīr.) A doctorate? (دكتوراه, duktūrāh.) A syllabus? (مقرر, muqarrar.) Training? (تدريب, tadrīb.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Gains and Losses",
+  "label": "ch:te-gains-and-losses",
+  "canDo": "I can say who gains, who loses and what helps or harms.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C393-upayogapadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can say who gains, who loses and what helps or harms.",
+    "assesses": [
+      "TE-LEX-C393-PRAYOJANAM393-03",
+      "TE-LEX-C393-PRAYOJANAM393-04",
+      "TE-LEX-C393-PRAYOJANAM393-05"
+    ]
+  }
+}

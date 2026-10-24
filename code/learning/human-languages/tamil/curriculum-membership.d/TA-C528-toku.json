@@ -1,0 +1,11 @@
+{
+  "id": "TA-C528-toku",
+  "pathSegment": "TA-PATH-528-VASIPPU528",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-528-VASIPPU528",
+      "order": 4
+    }
+  ]
+}

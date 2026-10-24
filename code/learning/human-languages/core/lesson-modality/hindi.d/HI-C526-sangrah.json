@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C526-sangrah",
+    "language": "hindi",
+    "chapter": 526,
+    "sequence": 29030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:466ae120c9c1243e"
+  },
+  "findings": []
+}

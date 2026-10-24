@@ -1,0 +1,11 @@
+{
+  "id": "KA-C441-nagadu",
+  "pathSegment": "KA-PATH-441-SHULKA441",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-441-SHULKA441",
+      "order": 3
+    }
+  ]
+}

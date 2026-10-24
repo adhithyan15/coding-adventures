@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:b8445b32cacc2a72",
+  "lessonIds": [
+    "TE-C495-bhayapadu",
+    "TE-C495-bhayapettu",
+    "TE-C495-ulikkipadu",
+    "TE-C495-pidakala",
+    "TE-C495-talladillu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch495.txt",
+  "json": "telugu/narration/ch495.json",
+  "textHash": "fnv1a64:20f5d5e58d726cd5",
+  "jsonHash": "fnv1a64:a91d12d1b9e7cc14",
+  "findings": []
+}

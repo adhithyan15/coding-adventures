@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C381-iruttu",
+    "language": "malayalam",
+    "chapter": 381,
+    "sequence": 18640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43a5ec3fb02af7b2"
+  },
+  "findings": []
+}

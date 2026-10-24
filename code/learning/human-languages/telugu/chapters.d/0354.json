@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "A Plot Uncovered",
+  "label": "ch:te-a-plot-uncovered",
+  "canDo": "I can say a conspiracy, to mislead, to expose, to cover up and a spy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C354-gudhacari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say a conspiracy, to mislead, to expose, to cover up and a spy.",
+    "assesses": [
+      "TE-LEX-C354-KUTRA354-03",
+      "TE-LEX-C354-KUTRA354-04",
+      "TE-LEX-C354-KUTRA354-05"
+    ]
+  }
+}

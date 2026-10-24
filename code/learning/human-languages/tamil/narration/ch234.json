@@ -4,7 +4,7 @@
   "chapter": 234,
   "title": "Post office, City, Country, Capital city, Crossroads",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:66b42e8a475fc6f8",
+  "sourceHash": "fnv1a64:a78778a144e9260d",
   "lessons": [
     {
       "id": "TA-C234-ancalakam",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e5429b45708b43c",
+      "sourceHash": "fnv1a64:e19667aa21043769",
       "notice": null,
       "blocks": [
         {

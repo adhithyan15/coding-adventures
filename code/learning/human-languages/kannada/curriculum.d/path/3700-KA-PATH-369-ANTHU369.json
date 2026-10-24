@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-369-ANTHU369",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-369-ANTHU369"
+  ],
+  "after": []
+}

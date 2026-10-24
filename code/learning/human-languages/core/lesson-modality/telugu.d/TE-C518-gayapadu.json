@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C518-gayapadu",
+    "language": "telugu",
+    "chapter": 518,
+    "sequence": 26230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ffe51c43e3d4915"
+  },
+  "findings": []
+}

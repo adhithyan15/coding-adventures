@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C536-rangabhumi",
+    "language": "kannada",
+    "chapter": 536,
+    "sequence": 27370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1dffd3ac665be02a"
+  },
+  "findings": []
+}

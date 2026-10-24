@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:7b600d02024988fa",
+  "lessonIds": [
+    "TE-C424-ottidi",
+    "TE-C424-balavantam",
+    "TE-C424-abhyarthincu",
+    "TE-C424-edirincu",
+    "TE-C424-upasamharincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch424.txt",
+  "json": "telugu/narration/ch424.json",
+  "textHash": "fnv1a64:7b88385ba12a3f08",
+  "jsonHash": "fnv1a64:9e83028ff53cf53f",
+  "findings": []
+}

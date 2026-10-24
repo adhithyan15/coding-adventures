@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:a419a3325b162eda",
+  "lessonIds": [
+    "TE-C409-himsa",
+    "TE-C409-samarasyam",
+    "TE-C409-aikyata",
+    "TE-C409-sanghibhavam",
+    "TE-C409-acarincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch409.txt",
+  "json": "telugu/narration/ch409.json",
+  "textHash": "fnv1a64:a6b1d1512941f902",
+  "jsonHash": "fnv1a64:9ba1d62f286fbaf9",
+  "findings": []
+}

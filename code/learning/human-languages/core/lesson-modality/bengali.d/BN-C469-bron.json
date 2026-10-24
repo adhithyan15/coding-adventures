@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C469-bron",
+    "language": "bengali",
+    "chapter": 469,
+    "sequence": 28590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee06c4e2fc5a056a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C469-valimaruka",
+  "pathSegment": "ML-PATH-469-NATAPPU469",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-469-NATAPPU469",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C437-khatt-sayr",
+  "pathSegment": "AR-PATH-437-BUSALA437",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-437-BUSALA437",
+      "order": 4
+    }
+  ]
+}

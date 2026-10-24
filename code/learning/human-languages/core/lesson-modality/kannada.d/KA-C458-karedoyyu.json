@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C458-karedoyyu",
+    "language": "kannada",
+    "chapter": 458,
+    "sequence": 23300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4fecb9a6d3dd108"
+  },
+  "findings": []
+}

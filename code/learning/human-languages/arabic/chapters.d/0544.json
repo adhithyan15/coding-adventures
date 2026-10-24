@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "Instruments",
+  "label": "ch:ar-instruments",
+  "canDo": "I can name an oud, a violin, a drum, a reed flute and a band.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C544-firqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can name an oud, a violin, a drum, a reed flute and a band.",
+    "assesses": [
+      "AR-LEX-C544-ALAT544-03",
+      "AR-LEX-C544-ALAT544-04",
+      "AR-LEX-C544-ALAT544-05"
+    ]
+  }
+}

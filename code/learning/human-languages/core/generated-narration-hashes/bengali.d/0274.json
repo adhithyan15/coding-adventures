@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:6c887a2fd35cf3c4",
+  "lessonIds": [
+    "BN-C274-jodi-tahole",
+    "BN-C274-brishti-hole",
+    "BN-C274-dhoka",
+    "BN-W274-letter-ddha",
+    "BN-R274-if-and-otherwise"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "bengali/narration/ch274.txt",
+  "json": "bengali/narration/ch274.json",
+  "textHash": "fnv1a64:12cde6fa1a0c832c",
+  "jsonHash": "fnv1a64:5470bd36e9e502b6",
+  "findings": []
+}

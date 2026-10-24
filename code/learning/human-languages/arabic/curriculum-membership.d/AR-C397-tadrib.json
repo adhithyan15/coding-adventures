@@ -1,0 +1,11 @@
+{
+  "id": "AR-C397-tadrib",
+  "pathSegment": "AR-PATH-397-SHAHADA397",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-397-SHAHADA397",
+      "order": 4
+    }
+  ]
+}

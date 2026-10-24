@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C319-ratha",
+    "language": "arabic",
+    "chapter": 319,
+    "sequence": 18350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbe40ba82242e9a0"
+  },
+  "findings": []
+}

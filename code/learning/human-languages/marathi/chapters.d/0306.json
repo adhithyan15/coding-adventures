@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Bit by Bit",
+  "label": "ch:mr-bit-by-bit",
+  "canDo": "I can say how often and how gradually things happened.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C306-nuktac",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can say how often and how gradually things happened.",
+    "assesses": [
+      "MR-LEX-C306-KRAMASH306-03",
+      "MR-LEX-C306-KRAMASH306-04",
+      "MR-LEX-C306-KRAMASH306-05"
+    ]
+  }
+}

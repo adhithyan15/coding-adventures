@@ -1,0 +1,11 @@
+{
+  "id": "BN-C424-othanama-kora",
+  "pathSegment": "BN-PATH-424-DAM424",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-424-DAM424",
+      "order": 4
+    }
+  ]
+}

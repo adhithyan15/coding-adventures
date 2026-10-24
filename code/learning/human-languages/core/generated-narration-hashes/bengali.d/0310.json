@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:40249bfe1f6bd82e",
+  "lessonIds": [
+    "BN-C310-shongkho",
+    "BN-C310-prarthona-kora",
+    "BN-C310-bhokto",
+    "BN-C310-debi",
+    "BN-C310-pobitro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch310.txt",
+  "json": "bengali/narration/ch310.json",
+  "textHash": "fnv1a64:b2ffb757a83edae8",
+  "jsonHash": "fnv1a64:7e1fcc6c624841cb",
+  "findings": []
+}

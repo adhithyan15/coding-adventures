@@ -1,0 +1,11 @@
+{
+  "id": "TA-C382-utpatu",
+  "pathSegment": "TA-PATH-382-NIPANTANAI382",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-382-NIPANTANAI382",
+      "order": 1
+    }
+  ]
+}

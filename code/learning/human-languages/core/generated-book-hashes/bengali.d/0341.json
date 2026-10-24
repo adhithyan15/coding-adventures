@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:15f3804083e61a34",
+  "lessonIds": [
+    "BN-C341-longghon-kora",
+    "BN-C341-omanyo-kora",
+    "BN-C341-jaliyati",
+    "BN-C341-durniti",
+    "BN-C341-onyay"
+  ],
+  "tex": "bengali/book/chapters/ch341-bending-the-rules.tex"
+}

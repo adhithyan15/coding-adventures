@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C468-tol",
+    "language": "malayalam",
+    "chapter": 468,
+    "sequence": 23360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33fc33da5f274bc4"
+  },
+  "findings": []
+}

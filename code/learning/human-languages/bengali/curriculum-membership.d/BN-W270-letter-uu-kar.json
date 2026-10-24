@@ -1,0 +1,11 @@
+{
+  "id": "BN-W270-letter-uu-kar",
+  "pathSegment": "BN-PATH-270-ASK-WAY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-270-ASK-WAY",
+      "order": 1
+    }
+  ]
+}

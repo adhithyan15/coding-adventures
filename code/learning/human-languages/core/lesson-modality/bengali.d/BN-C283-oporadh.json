@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C283-oporadh",
+    "language": "bengali",
+    "chapter": 283,
+    "sequence": 18350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bc4f03e8e1b5a52"
+  },
+  "findings": []
+}

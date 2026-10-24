@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:6c12cccd1a0f2359",
+  "lessonIds": [
+    "TE-C534-godavapadu",
+    "TE-C534-tagada",
+    "TE-C534-alugu",
+    "TE-C534-raji",
+    "TE-C534-manaspartha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch534.txt",
+  "json": "telugu/narration/ch534.json",
+  "textHash": "fnv1a64:ccec0d3824ffbcae",
+  "jsonHash": "fnv1a64:893a7ac637d283c6",
+  "findings": []
+}

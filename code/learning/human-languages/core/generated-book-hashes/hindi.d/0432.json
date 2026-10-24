@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:b5777cdb01881b1a",
+  "lessonIds": [
+    "HI-C432-mal",
+    "HI-C432-bhandar",
+    "HI-C432-paiket",
+    "HI-C432-lebal",
+    "HI-C432-lapetna"
+  ],
+  "tex": "hindi/book/chapters/ch432-goods-and-stock.tex"
+}

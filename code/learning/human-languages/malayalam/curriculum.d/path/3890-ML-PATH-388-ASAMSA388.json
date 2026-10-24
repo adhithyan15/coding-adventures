@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-388-ASAMSA388",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-388-ASAMSA388"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:c011655c17295496",
+  "lessonIds": [
+    "HI-C406-taiksi",
+    "HI-C406-tayar",
+    "HI-C406-pancar",
+    "HI-C406-helmet",
+    "HI-C406-laisens"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch406.txt",
+  "json": "hindi/narration/ch406.json",
+  "textHash": "fnv1a64:33fb561ff04522b4",
+  "jsonHash": "fnv1a64:1c6857b3d57b8956",
+  "findings": []
+}

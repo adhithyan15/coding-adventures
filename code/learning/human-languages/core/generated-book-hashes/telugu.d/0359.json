@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:8bb1ebb735a140de",
+  "lessonIds": [
+    "TE-C359-samrajyam",
+    "TE-C359-cakravarti",
+    "TE-C359-rakumarudu",
+    "TE-C359-rakumari",
+    "TE-C359-sthapincu"
+  ],
+  "tex": "telugu/book/chapters/ch359-empires.tex"
+}

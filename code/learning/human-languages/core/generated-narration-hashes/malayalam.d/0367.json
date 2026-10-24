@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:ff2e5a0c7c3b07ad",
+  "lessonIds": [
+    "ML-C367-kurrakrtyam",
+    "ML-C367-kurrasammatam",
+    "ML-C367-pitikutuka",
+    "ML-C367-tattikkontupokuka",
+    "ML-C367-niriksikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch367.txt",
+  "json": "malayalam/narration/ch367.json",
+  "textHash": "fnv1a64:8def2e9d8aabd4b4",
+  "jsonHash": "fnv1a64:517774cc31035845",
+  "findings": []
+}

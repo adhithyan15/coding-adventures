@@ -1,0 +1,11 @@
+{
+  "id": "TA-C476-mukakkavacam",
+  "pathSegment": "TA-PATH-476-KIRUMI476",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-476-KIRUMI476",
+      "order": 2
+    }
+  ]
+}

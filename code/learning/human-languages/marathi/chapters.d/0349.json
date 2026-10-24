@@ -1,0 +1,21 @@
+{
+  "chapter": 349,
+  "title": "Problems and Solutions",
+  "label": "ch:mr-problems-and-solutions",
+  "canDo": "I can describe a problem and suggest a way out.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-R349-review-342-349",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can describe a problem and suggest a way out.",
+    "assesses": [
+      "MR-LEX-C349-UPAY349-01",
+      "MR-LEX-C349-UPAY349-02",
+      "MR-LEX-C349-UPAY349-03",
+      "MR-LEX-C349-UPAY349-04",
+      "MR-LEX-C349-UPAY349-05"
+    ]
+  }
+}

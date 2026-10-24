@@ -1,0 +1,11 @@
+{
+  "id": "BN-C430-krishok",
+  "pathSegment": "BN-PATH-430-KHET430",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-430-KHET430",
+      "order": 2
+    }
+  ]
+}

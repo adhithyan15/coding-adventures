@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:a1c0b76b953360d5",
+  "lessonIds": [
+    "KA-C526-bandhu",
+    "KA-C526-tavaru",
+    "KA-C526-avali",
+    "KA-C526-marimaga",
+    "KA-C526-kiriya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch526.txt",
+  "json": "kannada/narration/ch526.json",
+  "textHash": "fnv1a64:36b5ce6e5072b395",
+  "jsonHash": "fnv1a64:5161aacd02c70cb7",
+  "findings": []
+}

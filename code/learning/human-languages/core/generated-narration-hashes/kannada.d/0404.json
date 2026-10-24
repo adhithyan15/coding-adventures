@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:532332bd5f164469",
+  "lessonIds": [
+    "KA-C404-sadasya",
+    "KA-C404-dana-madu",
+    "KA-C404-protsahisu",
+    "KA-C404-samyojisu",
+    "KA-C404-sauharda",
+    "KA-R404-review-398-404"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch404.txt",
+  "json": "kannada/narration/ch404.json",
+  "textHash": "fnv1a64:0e19fee859e6ec29",
+  "jsonHash": "fnv1a64:ad4c792b56f8fe0e",
+  "findings": []
+}

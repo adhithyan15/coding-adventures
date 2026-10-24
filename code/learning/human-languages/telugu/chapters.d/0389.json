@@ -1,0 +1,21 @@
+{
+  "chapter": 389,
+  "title": "Analysing and Comparing",
+  "label": "ch:te-analysing-and-comparing",
+  "canDo": "I can analyse, examine and compare.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-R389-review-382-389",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can analyse, examine and compare.",
+    "assesses": [
+      "TE-LEX-C389-VISLESANA389-01",
+      "TE-LEX-C389-VISLESANA389-02",
+      "TE-LEX-C389-VISLESANA389-03",
+      "TE-LEX-C389-VISLESANA389-04",
+      "TE-LEX-C389-VISLESANA389-05"
+    ]
+  }
+}

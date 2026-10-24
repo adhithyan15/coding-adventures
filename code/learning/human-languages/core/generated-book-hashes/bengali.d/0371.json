@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:4cdef4f627ff38e1",
+  "lessonIds": [
+    "BN-C371-jotheshto",
+    "BN-C371-otirikto",
+    "BN-C371-olpo",
+    "BN-C371-jogano",
+    "BN-C371-sima"
+  ],
+  "tex": "bengali/book/chapters/ch371-enough-or-too-much.tex"
+}

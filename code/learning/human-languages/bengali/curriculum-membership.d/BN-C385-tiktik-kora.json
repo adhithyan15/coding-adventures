@@ -1,0 +1,11 @@
+{
+  "id": "BN-C385-tiktik-kora",
+  "pathSegment": "BN-PATH-385-GHONTA385",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-385-GHONTA385",
+      "order": 2
+    }
+  ]
+}

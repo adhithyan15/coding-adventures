@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c7de755591b9de15",
+  "sourceHash": "fnv1a64:8025052497097eed",
   "lessons": [
     {
       "id": "KA-C13-dehada-bhagagalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18e6bf8f3c31d2c9",
+      "sourceHash": "fnv1a64:f52fd5a22454034e",
       "notice": null,
       "blocks": [
         {

@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 325,
+  "title": "Old Writings",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a51256e7915ebe66",
+  "lessons": [
+    {
+      "id": "TA-C325-olaiccuvati",
+      "sequence": 18680,
+      "title": "ஓலைச்சுவடி (ōlaiccuvaṭi) — a palm-leaf manuscript",
+      "headword": "ஓலைச்சுவடி",
+      "romanization": "ōlaiccuvaṭi",
+      "gloss": "a palm-leaf manuscript",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ba37dd17d82741e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to cremate, then the Tamil for a memorial meeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஓலைச்சுவடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஓலைச்சுவடி — ōlaiccuvaṭi — \"a palm-leaf manuscript\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஈரம் பட்டால் ஓலைச்சுவடி கெட்டுவிடும். īram paṭṭāl ōlaiccuvaṭi keṭṭuviṭum. If damp gets to it, a palm-leaf manuscript is ruined."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural ஓலைச்சுவடிகள்; ஓலை, palm leaf + சுவடி, a bundle of leaves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஓலைச்சுவடி (ōlaiccuvaṭi) is a Tamil compound built from ஓலை, \"palm leaf, writing on a palm leaf\" (DEDR 1070), and சுவடி, \"a bound bundle of leaves\", whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōlaiccuvaṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōlaiccuvaṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōlaiccuvaṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōlaiccuvaṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īram paṭṭāl ōlaiccuvaṭi keṭṭuviṭum. — If damp gets to it, a palm-leaf manuscript is ruined.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īram paṭṭāl ōlaiccuvaṭi keṭṭuviṭum.* — If damp gets to it, a palm-leaf manuscript is ruined.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to cremate, then the Tamil for a memorial meeting, then say ōlaiccuvaṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to cremate, then the Tamil for a memorial meeting, then say *ōlaiccuvaṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஓலைச்சுவடி (ōlaiccuvaṭi) mean? (\"A palm-leaf manuscript\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C325-kalvettu",
+      "sequence": 18690,
+      "title": "கல்வெட்டு (kalveṭṭu) — an inscription",
+      "headword": "கல்வெட்டு",
+      "romanization": "kalveṭṭu",
+      "gloss": "an inscription",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec435f12f71aaa41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a memorial meeting, then the Tamil for a palm-leaf manuscript."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கல்வெட்டு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கல்வெட்டு — kalveṭṭu — \"an inscription\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கோயில் சுவரில் ஒரு பழைய கல்வெட்டு இருக்கிறது. kōyil cuvaril oru paḻaiya kalveṭṭu irukkiṟatu. There is an old inscription on the temple wall."
+            },
+            {
+              "kind": "speech",
+              "text": "கல், stone + வெட்டு, to cut: writing cut in stone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கல்வெட்டு (kalveṭṭu) is a Tamil compound built from கல், \"stone\" (DEDR 1298), and வெட்டு, \"to cut, engrave\" (DEDR 5478)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalveṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalveṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalveṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalveṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōyil cuvaril oru paḻaiya kalveṭṭu irukkiṟatu. — There is an old inscription on the temple wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōyil cuvaril oru paḻaiya kalveṭṭu irukkiṟatu.* — There is an old inscription on the temple wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a memorial meeting, then the Tamil for a palm-leaf manuscript, then say kalveṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a memorial meeting, then the Tamil for a palm-leaf manuscript, then say *kalveṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கல்வெட்டு (kalveṭṭu) mean? (\"An inscription\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C325-pulavar",
+      "sequence": 18700,
+      "title": "புலவர் (pulavar) — a classical poet; a scholar",
+      "headword": "புலவர்",
+      "romanization": "pulavar",
+      "gloss": "a classical poet; a scholar",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3a1652e0027266d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a palm-leaf manuscript, then the Tamil for an inscription."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புலவர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புலவர் — pulavar — \"a classical poet; a scholar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தப் புலவர் பல பாடல்களை எழுதினார். antap pulavar pala pāṭalkaḷai eḻutiṉār. That poet wrote many poems."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of the classical poets and of Tamil scholars."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புலவர் (pulavar), \"a learned poet, a scholar\", is a Tamil word whose origin is not settled in the sources at hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulavar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulavar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulavar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulavar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antap pulavar pala pāṭalkaḷai eḻutiṉār. — That poet wrote many poems.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antap pulavar pala pāṭalkaḷai eḻutiṉār.* — That poet wrote many poems.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a palm-leaf manuscript, then the Tamil for an inscription, then say pulavar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a palm-leaf manuscript, then the Tamil for an inscription, then say *pulavar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புலவர் (pulavar) mean? (\"A classical poet; a scholar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C325-kaviyam",
+      "sequence": 18710,
+      "title": "காவியம் (kāviyam) — an epic",
+      "headword": "காவியம்",
+      "romanization": "kāviyam",
+      "gloss": "an epic",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5fd23918477fb9e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an inscription, then the Tamil for a classical poet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: காவியம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காவியம் — kāviyam — \"an epic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தக் காவியம் ஒரு வீரனின் கதை. intak kāviyam oru vīraṉiṉ katai. This epic is the story of a hero."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural காவியங்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காவியம் (kāviyam) is borrowed from Sanskrit kāvya, \"poetical, a poem\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāviyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāviyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāviyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāviyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intak kāviyam oru vīraṉiṉ katai. — This epic is the story of a hero.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intak kāviyam oru vīraṉiṉ katai.* — This epic is the story of a hero.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an inscription, then the Tamil for a classical poet, then say kāviyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an inscription, then the Tamil for a classical poet, then say *kāviyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does காவியம் (kāviyam) mean? (\"An epic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C325-iyarru",
+      "sequence": 18720,
+      "title": "இயற்று (iyaṟṟu) — to compose",
+      "headword": "இயற்று",
+      "romanization": "iyaṟṟu",
+      "gloss": "to compose",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2f200fef4ea79fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a classical poet, then the Tamil for an epic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இயற்று",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இயற்று — iyaṟṟu — \"to compose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் இந்த நூலை இயற்றினார். avar inta nūlai iyaṟṟiṉār. He composed this work."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): இயற்றினேன், iyaṟṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Of composing a poem or a book, in written Tamil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இயற்று (iyaṟṟu) is native Dravidian: DEDR 471 gives it beside இயல், \"to be possible\", as \"to do, effect, cause to act\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iyaṟṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iyaṟṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iyaṟṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iyaṟṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar inta nūlai iyaṟṟiṉār. — He composed this work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar inta nūlai iyaṟṟiṉār.* — He composed this work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a classical poet, then the Tamil for an epic, then say iyaṟṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a classical poet, then the Tamil for an epic, then say *iyaṟṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இயற்று (iyaṟṟu) mean? (\"To compose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R325-review-318-325",
+      "sequence": 18730,
+      "title": "Looking back: from An Opening Ceremony to Old Writings",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from An Opening Ceremony to Old Writings",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7d7ef57ab2cc376",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for an opening ceremony and a standing lamp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an opening ceremony, a standing lamp, a chief guest, to preside, to give a speech",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an opening ceremony, a standing lamp, a chief guest, to preside, to give a speech]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an anniversary, a golden jubilee, an annual day, a festive look, an invitation card",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an anniversary, a golden jubilee, an annual day, a festive look, an invitation card]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hoist a flag, a parade, a festoon, a banner, to proclaim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hoist a flag, a parade, a festoon, a banner, to proclaim]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ritual, a convention, to name a child, a baby shower, a housewarming",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ritual, a convention, to name a child, a baby shower, a housewarming]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wed, a wedding pendant, an auspicious hour, a wedding dais, a pandal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wed, a wedding pendant, an auspicious hour, a wedding dais, a pandal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a funeral, a procession, a wreath, to bury, a grave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a funeral, a procession, a wreath, to bury, a grave]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tribute, last respects, a memorial day, to cremate, a memorial meeting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tribute, last respects, a memorial day, to cremate, a memorial meeting]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a palm-leaf manuscript, an inscription, a classical poet, an epic, to compose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a palm-leaf manuscript, an inscription, a classical poet, an epic, to compose]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An opening ceremony? (திறப்புவிழா, tiṟappuviḻā.) A standing lamp? (குத்துவிளக்கு, kuttuviḷakku.) A chief guest? (சிறப்பு விருந்தினர், ciṟappu viruntiṉar.) To preside? (தலைமைதாங்கு, talaimaitāṅku.) To give a speech? (உரையாற்று, uraiyāṟṟu.) An anniversary? (ஆண்டு நிறைவு, āṇṭu niṟaivu.) A golden jubilee? (பொன்விழா, poṉviḻā.) An annual day? (ஆண்டுவிழா, āṇṭuviḻā.) A festive look? (விழாக்கோலம், viḻākkōlam.) An invitation card? (அழைப்பிதழ், aḻaippitaḻ.) To hoist a flag? (கொடியேற்று, koṭiyēṟṟu.) A parade? (அணிவகுப்பு, aṇivakuppu.) A festoon? (தோரணம், tōraṇam.) A banner? (பதாகை, patākai.) To proclaim? (பறைசாற்று, paṟaicāṟṟu.) A ritual? (சடங்கு, caṭaṅku.) A convention? (மரபு, marapu.) To name a child? (பெயர்சூட்டு, peyarcūṭṭu.) A baby shower? (வளைகாப்பு, vaḷaikāppu.) A housewarming? (புதுமனை புகுவிழா, putumaṉai pukuviḻā.) To wed? (மணமுடி, maṇamuṭi.) A wedding pendant? (தாலி, tāli.) An auspicious hour? (முகூர்த்தம், mukūrttam.) A wedding dais? (மணமேடை, maṇamēṭai.) A pandal? (பந்தல், pantal.) A funeral? (இறுதிச்சடங்கு, iṟuticcaṭaṅku.) A procession? (ஊர்வலம், ūrvalam.) A wreath? (மலர்வளையம், malarvaḷaiyam.) To bury? (புதை, putai.) A grave? (கல்லறை, kallaṟai.) A tribute? (அஞ்சலி, añcali.) Last respects? (இறுதிமரியாதை, iṟutimariyātai.) A memorial day? (நினைவுநாள், niṉaivunāḷ.) To cremate? (எரியூட்டு, eriyūṭṭu.) A memorial meeting? (நினைவேந்தல், niṉaivēntal.) A palm-leaf manuscript? (ஓலைச்சுவடி, ōlaiccuvaṭi.) An inscription? (கல்வெட்டு, kalveṭṭu.) A classical poet? (புலவர், pulavar.) An epic? (காவியம், kāviyam.) To compose? (இயற்று, iyaṟṟu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

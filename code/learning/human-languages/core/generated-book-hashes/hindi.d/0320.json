@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:8ffeb0bc5a600457",
+  "lessonIds": [
+    "HI-C320-samrat",
+    "HI-C320-badsah",
+    "HI-C320-simhasan",
+    "HI-C320-mukut",
+    "HI-C320-darbar"
+  ],
+  "tex": "hindi/book/chapters/ch320-kings-and-emperors.tex"
+}

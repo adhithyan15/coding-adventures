@@ -127,6 +127,32 @@ on KEYWORD="return" -> set-mode default
 - **Transitions fire only on emitted tokens.** Suppressed tokens (F04 `suppress`) and
   synthetic `emit()` tokens do not trigger transitions — consistent with the
   `previous_token` lookbehind semantics.
+- **The built-in `NEWLINE` is an emitted token.** In standard (non-indentation,
+  non-layout) mode the engine itself emits `NEWLINE` for a bare `\n` that no skip
+  pattern consumed; no `.tokens` pattern declares it. It participates in the
+  transition table with exactly the same semantics as a declared token: first
+  matching rule wins, `in MODE` guards and every action apply, and the new mode
+  governs the next match. So a grammar can write `on NEWLINE -> set-mode beg`
+  (Ruby's lexer returns to EXPR_BEG at every line start) or
+  `on NEWLINE in comment -> pop`. A rule fires only if it names `NEWLINE`, so a
+  grammar without such a rule is unaffected. (Amended 2026-10-20: before this,
+  the Rust engine emitted `NEWLINE` and `continue`d without consulting the table,
+  so such rules parsed and validated but never fired — found by LANG84 Ruby R0.
+  The Rust `lexer` crate implements this; the Python, Ruby, TypeScript, Go,
+  Elixir and Lua ports still emit `NEWLINE` without consulting the table and
+  are a parity follow-up.)
+  Consequences of where the built-in check sits:
+  - If a skip pattern consumes `\n` (e.g. `WHITESPACE = /[ \t\r\n]+/`), no
+    `NEWLINE` is emitted and an `on NEWLINE` rule never fires — unless skip is
+    disabled (`disable-skip`), in which case the `\n` reaches the built-in check.
+  - The built-in check runs before the active group's patterns, so a `NEWLINE`
+    is emitted (and can trigger rules) inside a pushed region too; use an
+    `in MODE` guard to scope a rule.
+  - Unchanged: the built-in `NEWLINE` is still not passed to an F04 `on-token`
+    callback and does not update `previous_token` or bracket depths.
+  - `INDENT`, `DEDENT` and `EOF` do not trigger transitions: `INDENT`/`DEDENT`
+    exist only in indentation mode, where transitions are a no-op, and nothing
+    is lexed after `EOF`.
 - **Targets must exist.** Every `set-mode`/`push` target and every `in MODE` guard must
   name `default` or a declared group; the validator rejects undefined targets (a
   silent fallback to `default` would mask grammar bugs).
@@ -234,6 +260,10 @@ are simply tried ahead of the inherited defaults; nothing is removed.
 first and applies its actions, then the table runs and refines. The table is the
 declarative default; callbacks are the escape hatch. For grammars with neither, neither
 path runs.
+
+**Built-in NEWLINE.** In standard mode the engine's own `NEWLINE` token (a bare `\n`
+not consumed by a skip pattern) is passed to `apply_transitions` just like a token
+matched from a pattern — see [Rules](#rules).
 
 **Indentation/layout modes.** `tokenize_indentation`/`tokenize_layout` use only the
 default group; transitions are a no-op there (orthogonal, exactly as F04 groups are).
@@ -353,7 +383,9 @@ New checks in `validate_token_grammar` (extending F04's group checks):
 2. Each `in_mode`, and each `set-mode`/`push` target, must be `default` or a declared
    group → else error (no silent fallback).
 3. `on_tokens` referencing an unknown effective token name → warning (built-ins like
-   `NAME`/`NUMBER` and `KEYWORD`-by-value are allowed).
+   `NAME`/`NUMBER`, the engine-emitted `NEWLINE`, and `KEYWORD`-by-value are
+   allowed). *(Not yet implemented: the Rust validator does not check `on_tokens`
+   names at all, so `NEWLINE` is accepted today.)*
 4. Duplicate or unreachable rules → warning.
 5. **Security caps.** Bound the transition count and `on_tokens` length per rule (e.g.
    ≤ 4096 rules) so an untrusted `.tokens` file cannot blow up generated-code size; a
@@ -371,6 +403,16 @@ A grammar with no `start_mode:` and no `transitions:`:
 
 Every existing `TokenGrammar { .. }` literal across all language ports must add the two
 empty defaults; until each grammar adopts a table, behavior is exactly as today.
+
+### Interaction with token-adjacency flags (F11)
+
+[F11](F11-grammar-token-adjacency-predicates.md) has the lexer record, on each
+emitted token, whether trivia (`TOKEN_PRECEDED_BY_SPACE`) and a line terminator
+(`TOKEN_PRECEDED_BY_NEWLINE`) preceded it. Those bits describe what was consumed
+*between* tokens, not which group consumed it, so a `set-mode`, `push` or `pop`
+neither sets nor clears them: the token after a mode switch is flagged from the
+trivia before it exactly as if no switch had happened. While skipping is
+disabled (`disable-skip`) nothing is consumed as trivia, so nothing is flagged.
 
 ## Implementation Order
 
@@ -398,6 +440,9 @@ empty defaults; until each grammar adopts a table, behavior is exactly as today.
   `` `a${`x${y}z`}b` `` documented as residual.
 - `set-mode` keeps stack depth constant; `push`/`pop` change it; `pop` floors at
   `default`; skip enable/disable toggles.
+- Built-in `NEWLINE`: `set-mode`, `push`, `pop` and multi-action rules fire on it;
+  `in MODE` guards apply; a skip pattern that eats `\n` suppresses it (unless skip
+  is disabled); a table without a `NEWLINE` rule keeps the mode across lines.
 - No-table grammars produce identical token streams to today (snapshot JSON/TOML/CSS).
 
 ### Compiler tests

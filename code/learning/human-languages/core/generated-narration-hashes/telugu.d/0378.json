@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:b3c7773a49f735ba",
+  "lessonIds": [
+    "TE-C378-kotlata",
+    "TE-C378-kalpulu",
+    "TE-C378-gayaparacu",
+    "TE-C378-penuguladu",
+    "TE-C378-gumigudu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch378.txt",
+  "json": "telugu/narration/ch378.json",
+  "textHash": "fnv1a64:0d6fce71bd992606",
+  "jsonHash": "fnv1a64:242e174fab76fa06",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:f0f2688253ea86bc",
+  "lessonIds": [
+    "TE-C368-sasanam",
+    "TE-C368-talapatram",
+    "TE-C368-caritrakarudu",
+    "TE-C368-nagarikata",
+    "TE-C368-yugam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch368.txt",
+  "json": "telugu/narration/ch368.json",
+  "textHash": "fnv1a64:f688b7b6ab998b56",
+  "jsonHash": "fnv1a64:28f9f6e513c2f94a",
+  "findings": []
+}

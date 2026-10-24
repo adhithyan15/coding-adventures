@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:26e9efdf61d46355",
+  "lessonIds": [
+    "MR-C398-tikitghar",
+    "MR-C398-pas",
+    "MR-C398-partava",
+    "MR-C398-gantavya",
+    "MR-C398-rakhun-thevne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch398.txt",
+  "json": "marathi/narration/ch398.json",
+  "textHash": "fnv1a64:8052a115e12eeae4",
+  "jsonHash": "fnv1a64:883e1fe110a011ea",
+  "findings": []
+}

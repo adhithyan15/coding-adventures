@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Weights and Measures",
+  "label": "ch:te-weights-and-measures",
+  "canDo": "I can say a measurement, size, a sample, value and to weigh.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C486-tucu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can say a measurement, size, a sample, value and to weigh.",
+    "assesses": [
+      "TE-LEX-C486-KOLATA486-03",
+      "TE-LEX-C486-KOLATA486-04",
+      "TE-LEX-C486-KOLATA486-05"
+    ]
+  }
+}

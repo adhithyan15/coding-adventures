@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Cracks and Holes",
+  "label": "ch:ta-cracks-and-holes",
+  "canDo": "I can talk about things breaking off and shattering, cracks, holes and scratches.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C443-kiru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can talk about things breaking off and shattering, cracks, holes and scratches.",
+    "assesses": [
+      "TA-LEX-C443-VIRISAL443-03",
+      "TA-LEX-C443-VIRISAL443-04",
+      "TA-LEX-C443-VIRISAL443-05"
+    ]
+  }
+}

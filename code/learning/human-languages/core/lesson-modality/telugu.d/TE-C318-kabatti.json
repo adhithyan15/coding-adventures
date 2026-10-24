@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C318-kabatti",
+    "language": "telugu",
+    "chapter": 318,
+    "sequence": 15320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0bc11ab84763c8d7"
+  },
+  "findings": []
+}

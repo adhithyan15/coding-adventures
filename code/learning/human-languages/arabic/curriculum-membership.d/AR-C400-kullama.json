@@ -1,0 +1,11 @@
+{
+  "id": "AR-C400-kullama",
+  "pathSegment": "AR-PATH-400-KULLAMA400",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-400-KULLAMA400",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:35b8a38446f1dcb5",
+  "lessonIds": [
+    "TE-C390-vastavam",
+    "TE-C390-siddhantam",
+    "TE-C390-sutram",
+    "TE-C390-prakriya",
+    "TE-C390-nirvacincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch390.txt",
+  "json": "telugu/narration/ch390.json",
+  "textHash": "fnv1a64:8542a757b19df6f1",
+  "jsonHash": "fnv1a64:3decfd84cc79d816",
+  "findings": []
+}

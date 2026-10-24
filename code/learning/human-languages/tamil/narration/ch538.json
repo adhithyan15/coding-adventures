@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 538,
+  "title": "Threads and Beads",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b70a2929ca1f17af",
+  "lessons": [
+    {
+      "id": "TA-C538-pinnu",
+      "sequence": 30740,
+      "title": "பின்னு (piṉṉu) — to knit; to plait",
+      "headword": "பின்னு",
+      "romanization": "piṉṉu",
+      "gloss": "to knit; to plait",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c4f5b3b233cfdc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to polish, then the Tamil for to bake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பின்னு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பின்னு — piṉṉu — \"to knit; to plait\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அம்மா என் தலைமுடியைப் பின்னினாள். ammā eṉ talaimuṭiyaip piṉṉiṉāḷ. Mother plaited my hair."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பின்னினேன், piṉṉiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Of hair, wool or a net. The noun is பின்னல், a plait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பின்னு (piṉṉu) is native Dravidian: DEDR 4207 gives பின்னு (piṉṉu), \"to plait, to braid, to lace, to knit\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṉṉu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṉṉu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṉṉu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṉṉu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammā eṉ talaimuṭiyaip piṉṉiṉāḷ. — Mother plaited my hair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammā eṉ talaimuṭiyaip piṉṉiṉāḷ.* — Mother plaited my hair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to polish, then the Tamil for to bake, then say piṉṉu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to polish, then the Tamil for to bake, then say *piṉṉu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பின்னு (piṉṉu) mean? (\"To knit; to plait\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C538-mutai",
+      "sequence": 30750,
+      "title": "முடை (muṭai) — to weave (a basket or mat)",
+      "headword": "முடை",
+      "romanization": "muṭai",
+      "gloss": "to weave (a basket or mat)",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51dbc327a80b59a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to bake, then the Tamil for to knit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முடை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முடை — muṭai — \"to weave (a basket or mat)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பாட்டி பனை ஓலையால் ஒரு கூடை முடைந்தாள். pāṭṭi paṉai ōlaiyāl oru kūṭai muṭaintāḷ. Grandmother wove a basket from palm leaves."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): முடைந்தேன், muṭaintēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Of baskets and mats; cloth is woven with நெய் (ney)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முடை (muṭai) is native Dravidian: DEDR 4927 gives முடை (muṭai), \"to braid, to plait, to wattle\", and the noun for a basket of palm leaf."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭṭi paṉai ōlaiyāl oru kūṭai muṭaintāḷ. — Grandmother wove a basket from palm leaves.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭṭi paṉai ōlaiyāl oru kūṭai muṭaintāḷ.* — Grandmother wove a basket from palm leaves.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to bake, then the Tamil for to knit, then say muṭai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to bake, then the Tamil for to knit, then say *muṭai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முடை (muṭai) mean? (\"To weave (a basket or mat)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C538-kor",
+      "sequence": 30760,
+      "title": "கோர் (kōr) — to string (beads, flowers)",
+      "headword": "கோர்",
+      "romanization": "kōr",
+      "gloss": "to string (beads, flowers)",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4596eda769785eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to knit, then the Tamil for to weave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கோர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோர் — kōr — \"to string (beads, flowers)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவள் மல்லிகைப் பூக்களை நூலில் கோர்த்தாள். avaḷ mallikaip pūkkaḷai nūlil kōrttāḷ. She strung jasmine flowers on a thread."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கோர்த்தேன், kōrttēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is strung takes -ஐ, the thread -இல்: பூக்களை நூலில் கோர் (kōr)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோர் (kōr) is native Dravidian: DEDR 2176 gives கோ and கோர் (kōr), \"to string beads or flowers, to thread a needle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ mallikaip pūkkaḷai nūlil kōrttāḷ. — She strung jasmine flowers on a thread.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ mallikaip pūkkaḷai nūlil kōrttāḷ.* — She strung jasmine flowers on a thread.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to knit, then the Tamil for to weave, then say kōr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to knit, then the Tamil for to weave, then say *kōr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கோர் (kōr) mean? (\"To string (beads, flowers)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C538-tari",
+      "sequence": 30770,
+      "title": "தறி (taṟi) — a loom",
+      "headword": "தறி",
+      "romanization": "taṟi",
+      "gloss": "a loom",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d17123d44d30528a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to weave, then the Tamil for to string."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தறி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தறி — taṟi — \"a loom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நெசவாளர் தறியில் சேலை நெய்கிறார். necavāḷar taṟiyil cēlai neykiṟār. The weaver weaves a sari on the loom."
+            },
+            {
+              "kind": "speech",
+              "text": "A hand loom is a கைத்தறி."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தறி (taṟi) is native Dravidian: DEDR 3140 gives தறி (taṟi), \"to cut off\", and the noun for a wooden post and a weaver's loom."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṟi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṟi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṟi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṟi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "necavāḷar taṟiyil cēlai neykiṟār. — The weaver weaves a sari on the loom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *necavāḷar taṟiyil cēlai neykiṟār.* — The weaver weaves a sari on the loom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to weave, then the Tamil for to string, then say taṟi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to weave, then the Tamil for to string, then say *taṟi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தறி (taṟi) mean? (\"A loom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C538-pattu",
+      "sequence": 30780,
+      "title": "பட்டு (paṭṭu) — silk",
+      "headword": "பட்டு",
+      "romanization": "paṭṭu",
+      "gloss": "silk",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38133e5acedbd993",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to string, then the Tamil for a loom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பட்டு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பட்டு — paṭṭu — \"silk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "திருமணத்துக்கு அவள் பட்டுச் சேலை அணிந்தாள். tirumaṇattukku avaḷ paṭṭuc cēlai aṇintāḷ. She wore a silk sari for the wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a noun it doubles the next stop: பட்டுச் சேலை, a silk sari."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பட்டு (paṭṭu) is borrowed from Sanskrit paṭṭa, \"cloth, woven silk\" (CDIAL 7700), with the Tamil final -உ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirumaṇattukku avaḷ paṭṭuc cēlai aṇintāḷ. — She wore a silk sari for the wedding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirumaṇattukku avaḷ paṭṭuc cēlai aṇintāḷ.* — She wore a silk sari for the wedding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to string, then the Tamil for a loom, then say paṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to string, then the Tamil for a loom, then say *paṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பட்டு (paṭṭu) mean? (\"Silk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

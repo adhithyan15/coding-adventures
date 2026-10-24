@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:77c7ae749036a10f",
+  "lessonIds": [
+    "AR-C510-tashkhis",
+    "AR-C510-tahlil",
+    "AR-C510-ashia",
+    "AR-C510-alaja",
+    "AR-C510-dawa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch510.txt",
+  "json": "arabic/narration/ch510.json",
+  "textHash": "fnv1a64:ee65f455e1866bd3",
+  "jsonHash": "fnv1a64:60c5015ce35a67c0",
+  "findings": []
+}

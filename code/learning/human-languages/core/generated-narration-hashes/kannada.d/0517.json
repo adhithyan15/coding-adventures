@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:e48d79a8b54f4e1f",
+  "lessonIds": [
+    "KA-C517-badti",
+    "KA-C517-pragati",
+    "KA-C517-mahatvakankse",
+    "KA-C517-sadhisu",
+    "KA-C517-galisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch517.txt",
+  "json": "kannada/narration/ch517.json",
+  "textHash": "fnv1a64:284dd56bd69dc3bd",
+  "jsonHash": "fnv1a64:473a7868683fb367",
+  "findings": []
+}

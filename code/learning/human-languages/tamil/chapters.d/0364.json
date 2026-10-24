@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "At the University",
+  "label": "ch:ta-at-the-university",
+  "canDo": "I can talk about professors, lectures and getting a degree.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C364-cerkkai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can talk about professors, lectures and getting a degree.",
+    "assesses": [
+      "TA-LEX-C364-PERACIRIYAR364-03",
+      "TA-LEX-C364-PERACIRIYAR364-04",
+      "TA-LEX-C364-PERACIRIYAR364-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C468-shujayra",
+  "pathSegment": "AR-PATH-468-NABAT468",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-468-NABAT468",
+      "order": 1
+    }
+  ]
+}

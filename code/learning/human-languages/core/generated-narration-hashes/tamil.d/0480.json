@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:514344acc703a2c6",
+  "lessonIds": [
+    "TA-C480-mantai",
+    "TA-C480-tatai",
+    "TA-C480-puruvam",
+    "TA-C480-imai",
+    "TA-C480-cimittu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch480.txt",
+  "json": "tamil/narration/ch480.json",
+  "textHash": "fnv1a64:1e8d4edf1570f458",
+  "jsonHash": "fnv1a64:8a414d7e3ca876c3",
+  "findings": []
+}

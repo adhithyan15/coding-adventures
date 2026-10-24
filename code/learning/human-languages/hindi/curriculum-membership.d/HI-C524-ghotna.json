@@ -1,0 +1,11 @@
+{
+  "id": "HI-C524-ghotna",
+  "pathSegment": "HI-PATH-524-PAROSNA524",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-524-PAROSNA524",
+      "order": 2
+    }
+  ]
+}

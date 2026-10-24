@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:60832a57f9aa335c",
+  "lessonIds": [
+    "KA-C359-utsava",
+    "KA-C359-meravanige",
+    "KA-C359-ghosavakya",
+    "KA-C359-meresu",
+    "KA-C359-dhvaja"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch359.txt",
+  "json": "kannada/narration/ch359.json",
+  "textHash": "fnv1a64:fff7067577f4d9c1",
+  "jsonHash": "fnv1a64:48a9a2441ca8013e",
+  "findings": []
+}

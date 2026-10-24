@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C484-suddhikarikkuka",
+    "language": "malayalam",
+    "chapter": 484,
+    "sequence": 24190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c14ccf965e1797a7"
+  },
+  "findings": []
+}

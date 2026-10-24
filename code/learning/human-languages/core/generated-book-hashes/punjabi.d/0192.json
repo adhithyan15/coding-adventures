@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:0f2b797022805a42",
+  "lessonIds": [
+    "PA-C192-lok-return",
+    "PA-C192-lokaan",
+    "PA-C192-lokaan-review",
+    "PA-C192-lokaan-naal",
+    "PA-C192-lokaan-lai",
+    "PA-C192-lokaan-ton",
+    "PA-C192-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch192-people-before-postpositions.tex"
+}

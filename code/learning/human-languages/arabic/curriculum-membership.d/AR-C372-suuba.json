@@ -1,0 +1,11 @@
+{
+  "id": "AR-C372-suuba",
+  "pathSegment": "AR-PATH-372-AQABA372",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-372-AQABA372",
+      "order": 1
+    }
+  ]
+}

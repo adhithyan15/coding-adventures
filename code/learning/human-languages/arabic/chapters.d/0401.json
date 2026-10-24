@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Likely or not",
+  "label": "ch:ar-likely-or-not",
+  "canDo": "I can talk about a probability, say what is probable, and say that something is likely or ruled out.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C401-istabada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can talk about a probability, say what is probable, and say that something is likely or ruled out.",
+    "assesses": [
+      "AR-LEX-C401-IHTIMAL401-03",
+      "AR-LEX-C401-IHTIMAL401-04",
+      "AR-LEX-C401-IHTIMAL401-05"
+    ]
+  }
+}

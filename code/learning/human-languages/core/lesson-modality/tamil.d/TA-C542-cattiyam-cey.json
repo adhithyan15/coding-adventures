@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C542-cattiyam-cey",
+    "language": "tamil",
+    "chapter": 542,
+    "sequence": 30970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1ab7ab37831a545"
+  },
+  "findings": []
+}

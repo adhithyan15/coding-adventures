@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Readers and Viewers",
+  "label": "ch:mr-readers-and-viewers",
+  "canDo": "I can talk about the people who read, watch and listen.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C314-mukhprstha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can talk about the people who read, watch and listen.",
+    "assesses": [
+      "MR-LEX-C314-VACHAK314-03",
+      "MR-LEX-C314-VACHAK314-04",
+      "MR-LEX-C314-VACHAK314-05"
+    ]
+  }
+}

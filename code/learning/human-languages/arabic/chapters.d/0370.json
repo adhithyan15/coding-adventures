@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "Criticism and excuses",
+  "label": "ch:ar-criticism-and-excuses",
+  "canDo": "I can say that someone criticized, opposed, justified, exaggerated or generalized.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C370-ammama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can say that someone criticized, opposed, justified, exaggerated or generalized.",
+    "assesses": [
+      "AR-LEX-C370-NAQD370-03",
+      "AR-LEX-C370-NAQD370-04",
+      "AR-LEX-C370-NAQD370-05"
+    ]
+  }
+}

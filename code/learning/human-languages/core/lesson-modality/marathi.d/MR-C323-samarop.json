@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C323-samarop",
+    "language": "marathi",
+    "chapter": 323,
+    "sequence": 18830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2b63a0f528a7130"
+  },
+  "findings": []
+}

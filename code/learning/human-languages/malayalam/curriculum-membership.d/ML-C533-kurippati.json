@@ -1,0 +1,11 @@
+{
+  "id": "ML-C533-kurippati",
+  "pathSegment": "ML-PATH-533-VAKSIN533",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-533-VAKSIN533",
+      "order": 2
+    }
+  ]
+}

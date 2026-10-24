@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:8e803b238cd0ed34",
+  "lessonIds": [
+    "KA-C501-saumya",
+    "KA-C501-mugdha",
+    "KA-C501-krura",
+    "KA-C501-nisthura",
+    "KA-C501-anakisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch501.txt",
+  "json": "kannada/narration/ch501.json",
+  "textHash": "fnv1a64:26dc5acf1210a56c",
+  "jsonHash": "fnv1a64:876b6cdce480d92c",
+  "findings": []
+}

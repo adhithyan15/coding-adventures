@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C511-mamparu",
+    "language": "kannada",
+    "chapter": 511,
+    "sequence": 26080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c16df36f202910b6"
+  },
+  "findings": []
+}

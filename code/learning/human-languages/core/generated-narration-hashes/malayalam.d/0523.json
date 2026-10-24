@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:1573eeacceb9a9c8",
+  "lessonIds": [
+    "ML-C523-manasikavastha",
+    "ML-C523-paka",
+    "ML-C523-pirupirukkuka",
+    "ML-C523-kusumpu",
+    "ML-C523-aradhikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch523.txt",
+  "json": "malayalam/narration/ch523.json",
+  "textHash": "fnv1a64:f466625f4720296e",
+  "jsonHash": "fnv1a64:03f9558eced85150",
+  "findings": []
+}

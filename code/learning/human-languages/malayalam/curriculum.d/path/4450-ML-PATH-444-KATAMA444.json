@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-444-KATAMA444",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ML-EXT-444-KATAMA444"
+  ],
+  "after": []
+}

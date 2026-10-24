@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Fuel and Breakdowns",
+  "label": "ch:te-fuel-and-breakdowns",
+  "canDo": "I can say fuel, to break down, to refuse to start, a puncture and to repair.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C444-marammatu-ceyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can say fuel, to break down, to refuse to start, a puncture and to repair.",
+    "assesses": [
+      "TE-LEX-C444-INDHANAM444-03",
+      "TE-LEX-C444-INDHANAM444-04",
+      "TE-LEX-C444-INDHANAM444-05"
+    ]
+  }
+}

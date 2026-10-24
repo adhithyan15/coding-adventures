@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C394-vivek",
+    "language": "marathi",
+    "chapter": 394,
+    "sequence": 22690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20ed26325f449213"
+  },
+  "findings": []
+}

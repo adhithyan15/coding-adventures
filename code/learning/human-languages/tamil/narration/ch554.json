@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 554,
+  "title": "Weekend Plans",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:24496a3bed7d9790",
+  "lessons": [
+    {
+      "id": "TA-C554-atikapatcam",
+      "sequence": 31560,
+      "title": "அதிகபட்சம் (atikapaṭcam) — at most; a maximum",
+      "headword": "அதிகபட்சம்",
+      "romanization": "atikapaṭcam",
+      "gloss": "at most; a maximum",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2db4d4c1ac415071",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an alternative, then the Tamil for approximately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அதிகபட்சம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அதிகபட்சம் — atikapaṭcam — \"at most; a maximum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "போக்குவரத்தைப் பொறுத்து அதிகபட்சம் இரண்டு மணி நேரத்தில் திரும்பி வருவோம். pōkkuvarattaip poṟuttu atikapaṭcam iraṇṭu maṇi nērattil tirumpi varuvōm. Depending on the traffic, we will be back in two hours at most."
+            },
+            {
+              "kind": "speech",
+              "text": "The pair of குறைந்தபட்சம், at least."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அதிகபட்சம் (atikapaṭcam) is built from Sanskrit adhika, \"additional, more\" (CDIAL 250), and pakṣa, \"a side, a wing\" (CDIAL 7627): the side of more."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atikapaṭcam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atikapaṭcam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atikapaṭcam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atikapaṭcam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōkkuvarattaip poṟuttu atikapaṭcam iraṇṭu maṇi nērattil tirumpi varuvōm. — Depending on the traffic, we will be back in two hours at most.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōkkuvarattaip poṟuttu atikapaṭcam iraṇṭu maṇi nērattil tirumpi varuvōm.* — Depending on the traffic, we will be back in two hours at most.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an alternative, then the Tamil for approximately, then say atikapaṭcam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an alternative, then the Tamil for approximately, then say *atikapaṭcam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அதிகபட்சம் (atikapaṭcam) mean? (\"At most; a maximum\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C554-mutintavarai",
+      "sequence": 31570,
+      "title": "முடிந்தவரை (muṭintavarai) — as far as possible",
+      "headword": "முடிந்தவரை",
+      "romanization": "muṭintavarai",
+      "gloss": "as far as possible",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:664ed8304b2f634d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for approximately, then the Tamil for at most."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முடிந்தவரை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முடிந்தவரை — muṭintavarai — \"as far as possible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "முடிந்தவரை சீக்கிரம் கிளம்புவோம். muṭintavarai cīkkiram kiḷampuvōm. We will set off as early as possible."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"up to what is possible\": முடிந்த + வரை (varai)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முடிந்தவரை (muṭintavarai) is a native phrase grown into one word: முடிந்த (muṭinta), \"that has been possible\", from முடி, \"to end, to be accomplished\" (DEDR 4922), and வரை (varai), \"up to\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭintavarai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭintavarai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭintavarai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭintavarai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭintavarai cīkkiram kiḷampuvōm. — We will set off as early as possible.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭintavarai cīkkiram kiḷampuvōm.* — We will set off as early as possible.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for approximately, then the Tamil for at most, then say muṭintavarai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for approximately, then the Tamil for at most, then say *muṭintavarai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முடிந்தவரை (muṭintavarai) mean? (\"As far as possible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C554-malaiyerram",
+      "sequence": 31580,
+      "title": "மலையேற்றம் (malaiyēṟṟam) — trekking; hill climbing",
+      "headword": "மலையேற்றம்",
+      "romanization": "malaiyēṟṟam",
+      "gloss": "trekking; hill climbing",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8369fa1e2f731dcf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for at most, then the Tamil for as far as possible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மலையேற்றம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மலையேற்றம் — malaiyēṟṟam — \"trekking; hill climbing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வானிலை நன்றாக இருந்தால் சனிக்கிழமை மலையேற்றம் போவோம். vāṉilai naṉṟāka iruntāl caṉikkiḻamai malaiyēṟṟam pōvōm. If the weather is good, we will go trekking on Saturday."
+            },
+            {
+              "kind": "speech",
+              "text": "மலை (malai) \"a hill\" + ஏற்றம் \"a climb\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மலையேற்றம் (malaiyēṟṟam) is a native compound: மலை (malai), \"a hill, a mountain\" (DEDR 4742), and ஏற்றம் (ēṟṟam), \"a climb, an ascent\", from ஏறு, \"to climb\" (DEDR 916)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malaiyēṟṟam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malaiyēṟṟam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malaiyēṟṟam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malaiyēṟṟam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṉilai naṉṟāka iruntāl caṉikkiḻamai malaiyēṟṟam pōvōm. — If the weather is good, we will go trekking on Saturday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṉilai naṉṟāka iruntāl caṉikkiḻamai malaiyēṟṟam pōvōm.* — If the weather is good, we will go trekking on Saturday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for at most, then the Tamil for as far as possible, then say malaiyēṟṟam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for at most, then the Tamil for as far as possible, then say *malaiyēṟṟam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மலையேற்றம் (malaiyēṟṟam) mean? (\"Trekking; hill climbing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C554-minpiti",
+      "sequence": 31590,
+      "title": "மீன்பிடி (mīṉpiṭi) — to go fishing; to fish",
+      "headword": "மீன்பிடி",
+      "romanization": "mīṉpiṭi",
+      "gloss": "to go fishing; to fish",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc446942efd20be5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for as far as possible, then the Tamil for trekking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மீன்பிடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மீன்பிடி — mīṉpiṭi — \"to go fishing; to fish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நேரம் இருந்தால் ஏரியில் மீன்பிடிப்போம். nēram iruntāl ēriyil mīṉpiṭippōm. If there is time, we will fish in the lake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): மீன்பிடித்தேன், mīṉpiṭittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"to catch fish\": மீன் (mīṉ) + பிடி (piṭi)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மீன்பிடி (mīṉpiṭi) is a native compound: மீன் (mīṉ), \"a fish\" (DEDR 4885), and பிடி (piṭi), \"to catch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṉpiṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṉpiṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṉpiṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṉpiṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēram iruntāl ēriyil mīṉpiṭippōm. — If there is time, we will fish in the lake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēram iruntāl ēriyil mīṉpiṭippōm.* — If there is time, we will fish in the lake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for as far as possible, then the Tamil for trekking, then say mīṉpiṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for as far as possible, then the Tamil for trekking, then say *mīṉpiṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மீன்பிடி (mīṉpiṭi) mean? (\"To go fishing; to fish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C554-pommalattam",
+      "sequence": 31600,
+      "title": "பொம்மலாட்டம் (pommalāṭṭam) — a puppet show",
+      "headword": "பொம்மலாட்டம்",
+      "romanization": "pommalāṭṭam",
+      "gloss": "a puppet show",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d5c4500d336ed7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for trekking, then the Tamil for to go fishing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பொம்மலாட்டம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொம்மலாட்டம் — pommalāṭṭam — \"a puppet show\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குழந்தைகள் விரும்பினால் பொம்மலாட்டம் பார்க்கப் போகலாம். kuḻantaikaḷ virumpiṉāl pommalāṭṭam pārkkap pōkalām. If the children want to, we can go and see a puppet show."
+            },
+            {
+              "kind": "speech",
+              "text": "பொம்மை (pommai) \"a doll\" + ஆட்டம் \"a dance, a play\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொம்மலாட்டம் (pommalāṭṭam) is a native compound: பொம்மை (pommai), \"a puppet, a doll\" (DEDR 4530), and ஆட்டம் (āṭṭam), \"a dance, a play\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pommalāṭṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pommalāṭṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pommalāṭṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pommalāṭṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻantaikaḷ virumpiṉāl pommalāṭṭam pārkkap pōkalām. — If the children want to, we can go and see a puppet show.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻantaikaḷ virumpiṉāl pommalāṭṭam pārkkap pōkalām.* — If the children want to, we can go and see a puppet show.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for trekking, then the Tamil for to go fishing, then say pommalāṭṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for trekking, then the Tamil for to go fishing, then say *pommalāṭṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பொம்மலாட்டம் (pommalāṭṭam) mean? (\"A puppet show\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

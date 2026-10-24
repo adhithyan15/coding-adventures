@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Pilgrims and Hill Stations",
+  "label": "ch:ka-pilgrims-and-hill-stations",
+  "canDo": "I can say a pilgrimage, a hill station, to take along, to get back and to stay overnight.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C458-tangu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can say a pilgrimage, a hill station, to take along, to get back and to stay overnight.",
+    "assesses": [
+      "KA-LEX-C458-YATRE458-03",
+      "KA-LEX-C458-YATRE458-04",
+      "KA-LEX-C458-YATRE458-05"
+    ]
+  }
+}

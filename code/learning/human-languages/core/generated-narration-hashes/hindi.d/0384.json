@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:2f62f66590639b94",
+  "lessonIds": [
+    "HI-C384-tarakna",
+    "HI-C384-jamna",
+    "HI-C384-ubalnaa",
+    "HI-C384-galna",
+    "HI-C384-madhyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch384.txt",
+  "json": "hindi/narration/ch384.json",
+  "textHash": "fnv1a64:3b3e59e828c846bd",
+  "jsonHash": "fnv1a64:2859394bf036985e",
+  "findings": []
+}

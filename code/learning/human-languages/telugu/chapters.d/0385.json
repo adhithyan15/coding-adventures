@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "Agreeing",
+  "label": "ch:te-agreeing",
+  "canDo": "I can agree, accept and give consent.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C385-maddatu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can agree, accept and give consent.",
+    "assesses": [
+      "TE-LEX-C385-ANGIKARAM385-03",
+      "TE-LEX-C385-ANGIKARAM385-04",
+      "TE-LEX-C385-ANGIKARAM385-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C346-viti-dawn",
+  "pathSegment": "TA-PATH-346-MUDIVU346",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-346-MUDIVU346",
+      "order": 4
+    }
+  ]
+}

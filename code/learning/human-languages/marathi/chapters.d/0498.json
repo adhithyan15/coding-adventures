@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "Growing Up and Growing Old",
+  "label": "ch:mr-growing-up-and-growing-old",
+  "canDo": "I can talk about childhood, youth, old age, age and the teenage years.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C498-kisor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about childhood, youth, old age, age and the teenage years.",
+    "assesses": [
+      "MR-LEX-C498-VAY498-03",
+      "MR-LEX-C498-VAY498-04",
+      "MR-LEX-C498-VAY498-05"
+    ]
+  }
+}

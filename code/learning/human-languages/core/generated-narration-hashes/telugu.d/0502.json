@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:8c009e41e27f1c1a",
+  "lessonIds": [
+    "TE-C502-nitturcu",
+    "TE-C502-nirasapadu",
+    "TE-C502-nirutsaham",
+    "TE-C502-tahatahaladu",
+    "TE-C502-krsincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch502.txt",
+  "json": "telugu/narration/ch502.json",
+  "textHash": "fnv1a64:cab4a488bc7445fa",
+  "jsonHash": "fnv1a64:4ed350dd1f6fa415",
+  "findings": []
+}

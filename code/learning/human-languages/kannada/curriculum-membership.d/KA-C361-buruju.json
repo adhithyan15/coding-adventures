@@ -1,0 +1,11 @@
+{
+  "id": "KA-C361-buruju",
+  "pathSegment": "KA-PATH-361-SMARAKA361",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-361-SMARAKA361",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:ac74201d1e662bce",
+  "lessonIds": [
+    "TE-C437-sanklistamaina",
+    "TE-C437-saralamaina",
+    "TE-C437-aspastamaina",
+    "TE-C437-tivramaina",
+    "TE-C437-nirdharincu",
+    "TE-R437-review-430-437",
+    "TE-R437-review-final-437"
+  ],
+  "tex": "telugu/book/chapters/ch437-hard-or-plain.tex"
+}

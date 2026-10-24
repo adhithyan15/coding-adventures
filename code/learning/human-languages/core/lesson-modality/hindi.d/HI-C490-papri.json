@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C490-papri",
+    "language": "hindi",
+    "chapter": 490,
+    "sequence": 26960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa3fa11fd434ceb4"
+  },
+  "findings": []
+}

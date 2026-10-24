@@ -1,0 +1,21 @@
+{
+  "chapter": 421,
+  "title": "Risk and Caution",
+  "label": "ch:te-risk-and-caution",
+  "canDo": "I can talk about dangers, precautions and preventing harm.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-R421-review-414-421",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can talk about dangers, precautions and preventing harm.",
+    "assesses": [
+      "TE-LEX-C421-APAYAM421-01",
+      "TE-LEX-C421-APAYAM421-02",
+      "TE-LEX-C421-APAYAM421-03",
+      "TE-LEX-C421-APAYAM421-04",
+      "TE-LEX-C421-APAYAM421-05"
+    ]
+  }
+}

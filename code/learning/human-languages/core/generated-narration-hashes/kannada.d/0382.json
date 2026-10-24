@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:b2ad94d1298b1690",
+  "lessonIds": [
+    "KA-C382-sangati",
+    "KA-C382-vastava",
+    "KA-C382-bhrame",
+    "KA-C382-astitva",
+    "KA-C382-managanu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch382.txt",
+  "json": "kannada/narration/ch382.json",
+  "textHash": "fnv1a64:12295976adcafaac",
+  "jsonHash": "fnv1a64:b20c907ae854a759",
+  "findings": []
+}

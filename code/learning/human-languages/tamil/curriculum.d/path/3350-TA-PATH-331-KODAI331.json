@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-331-KODAI331",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-331-KODAI331"
+  ],
+  "after": []
+}

@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 513,
+  "title": "Workshops and Orders",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d860d50da2ee1dbe",
+  "lessons": [
+    {
+      "id": "MR-C513-karyasala",
+      "sequence": 29460,
+      "title": "कार्यशाळा (kāryaśāḷā) — a workshop; a training session",
+      "headword": "कार्यशाळा",
+      "romanization": "kāryaśāḷā",
+      "gloss": "a workshop; a training session",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d5279d0350a05b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a supply, then the Marathi for to sell well."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कार्यशाळा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कार्यशाळा — kāryaśāḷā — \"a workshop; a training session\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिक्षकांसाठी तीन दिवसांची कार्यशाळा झाली. śikṣakāṁsāṭhī tīn divsāñcī kāryaśāḷā jhālī. There was a three-day workshop for teachers."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कार्यशाळा (kāryaśāḷā) is a tatsama compound of Sanskrit kārya, \"work\", and śālā, \"hall\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryaśāḷā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryaśāḷā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryaśāḷā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryaśāḷā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikṣakāṁsāṭhī tīn divsāñcī kāryaśāḷā jhālī. — There was a three-day workshop for teachers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikṣakāṁsāṭhī tīn divsāñcī kāryaśāḷā jhālī.* — There was a three-day workshop for teachers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a supply, then the Marathi for to sell well, then say kāryaśāḷā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a supply, then the Marathi for to sell well, then say *kāryaśāḷā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कार्यशाळा (kāryaśāḷā) mean? (\"A workshop; a training session\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C513-ades",
+      "sequence": 29470,
+      "title": "आदेश (ādeś) — a command; an order",
+      "headword": "आदेश",
+      "romanization": "ādeś",
+      "gloss": "a command; an order",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a5ff4a75a9ebad8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to sell well, then the Marathi for a workshop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आदेश",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आदेश — ādeś — \"a command; an order\"."
+            },
+            {
+              "kind": "speech",
+              "text": "व्यवस्थापकाने नवीन आदेश दिला. vyavasthāpakāne navīn ādeś dilā. The manager gave a new order."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "आदेश (ādeś) देणे, to order."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आदेश (ādeś) is a tatsama, taken from Sanskrit ādeśa, \"advice, instruction\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādeś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādeś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādeś, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādeś*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyavasthāpakāne navīn ādeś dilā. — The manager gave a new order.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyavasthāpakāne navīn ādeś dilā.* — The manager gave a new order.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to sell well, then the Marathi for a workshop, then say ādeś again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to sell well, then the Marathi for a workshop, then say *ādeś* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आदेश (ādeś) mean? (\"A command; an order\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C513-vibhag",
+      "sequence": 29480,
+      "title": "विभाग (vibhāg) — a department; a division",
+      "headword": "विभाग",
+      "romanization": "vibhāg",
+      "gloss": "a department; a division",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:652d9122345bee05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a workshop, then the Marathi for a command."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विभाग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विभाग — vibhāg — \"a department; a division\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझी बहीण हिशेब विभागात काम करते. mājhī bahīṇ hiśeb vibhāgāt kām karte. My sister works in the accounts department."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विभाग (vibhāg) is a tatsama, taken from Sanskrit vibhāga, \"distribution, a share\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vibhāg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vibhāg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vibhāg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vibhāg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhī bahīṇ hiśeb vibhāgāt kām karte. — My sister works in the accounts department.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhī bahīṇ hiśeb vibhāgāt kām karte.* — My sister works in the accounts department.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a workshop, then the Marathi for a command, then say vibhāg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a workshop, then the Marathi for a command, then say *vibhāg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विभाग (vibhāg) mean? (\"A department; a division\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C513-sadar-karne",
+      "sequence": 29490,
+      "title": "सादर करणे (sādar karṇe) — to present; to submit",
+      "headword": "सादर करणे",
+      "romanization": "sādar karṇe",
+      "gloss": "to present; to submit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f9a19e4dcb9430b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a command, then the Marathi for a department."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सादर करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सादर करणे — sādar karṇe — \"to present; to submit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीराने बैठकीत तिचा अहवाल सादर केला. mīrāne baiṭhkīt ticā ahvāl sādar kelā. Meera presented her report at the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने अहवाल सादर केला, tyāne ahvāl sādar kelā."
+            },
+            {
+              "kind": "speech",
+              "text": "A report submitted or a song performed: गाणं सादर करणे (sādar karṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सादर करणे (sādar karṇe) is सादर, a loan through Persian usually traced to Arabic ṣādir, \"issued, going forth\", with करणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādar karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādar karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādar karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādar karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrāne baiṭhkīt ticā ahvāl sādar kelā. — Meera presented her report at the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrāne baiṭhkīt ticā ahvāl sādar kelā.* — Meera presented her report at the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a command, then the Marathi for a department, then say sādar karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a command, then the Marathi for a department, then say *sādar karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सादर करणे (sādar karṇe) mean? (\"To present; to submit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C513-sutrasancalan-karne",
+      "sequence": 29500,
+      "title": "सूत्रसंचालन करणे (sūtrasañcālan karṇe) — to host a programme",
+      "headword": "सूत्रसंचालन करणे",
+      "romanization": "sūtrasañcālan karṇe",
+      "gloss": "to host a programme",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:407447ab618ed4d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a department, then the Marathi for to present."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सूत्रसंचालन करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूत्रसंचालन करणे — sūtrasañcālan karṇe — \"to host a programme\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शाळेच्या कार्यक्रमाचं सूत्रसंचालन अरुणने केलं. śāḷecyā kāryakramācaṁ sūtrasañcālan aruṇne kelaṁ. Arun hosted the school programme."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने सूत्रसंचालन केलं, tyāne sūtrasañcālan kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The event takes -चं: कार्यक्रमाचं सूत्रसंचालन करणे (sūtrasañcālan karṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूत्रसंचालन करणे (sūtrasañcālan karṇe) is a learned compound built from Sanskrit sūtra, \"thread\" (Monier-Williams), and संचालन, \"running\": the host holds the thread of the programme."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūtrasañcālan karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūtrasañcālan karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūtrasañcālan karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūtrasañcālan karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāḷecyā kāryakramācaṁ sūtrasañcālan aruṇne kelaṁ. — Arun hosted the school programme.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāḷecyā kāryakramācaṁ sūtrasañcālan aruṇne kelaṁ.* — Arun hosted the school programme.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a department, then the Marathi for to present, then say sūtrasañcālan karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a department, then the Marathi for to present, then say *sūtrasañcālan karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सूत्रसंचालन करणे (sūtrasañcālan karṇe) mean? (\"To host a programme\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

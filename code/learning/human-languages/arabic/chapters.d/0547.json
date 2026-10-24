@@ -1,0 +1,19 @@
+{
+  "chapter": 547,
+  "title": "Winning and prizes",
+  "label": "ch:ar-winning-and-prizes",
+  "canDo": "I can talk about a win, a championship, a trophy and a medal, and say that a team qualified.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C547-taahhala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 547: I can talk about a win, a championship, a trophy and a medal, and say that a team qualified.",
+    "assesses": [
+      "AR-LEX-C547-BUTULA547-03",
+      "AR-LEX-C547-BUTULA547-04",
+      "AR-LEX-C547-BUTULA547-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C430-balahinaparacu",
+  "pathSegment": "TE-PATH-430-SAMATULYAM430",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-430-SAMATULYAM430",
+      "order": 1
+    }
+  ]
+}

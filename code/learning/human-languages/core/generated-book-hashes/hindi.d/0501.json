@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:e19668fa289b3ab5",
+  "lessonIds": [
+    "HI-C501-nata",
+    "HI-C501-byahna",
+    "HI-C501-talaq",
+    "HI-C501-nibhana",
+    "HI-C501-sulah"
+  ],
+  "tex": "hindi/book/chapters/ch501-getting-along.tex"
+}

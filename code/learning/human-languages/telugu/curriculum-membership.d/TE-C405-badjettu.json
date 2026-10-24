@@ -1,0 +1,11 @@
+{
+  "id": "TE-C405-badjettu",
+  "pathSegment": "TE-PATH-405-ARTHIKA405",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-405-ARTHIKA405",
+      "order": 3
+    }
+  ]
+}

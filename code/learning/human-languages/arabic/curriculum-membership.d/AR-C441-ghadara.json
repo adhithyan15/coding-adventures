@@ -1,0 +1,11 @@
+{
+  "id": "AR-C441-ghadara",
+  "pathSegment": "AR-PATH-441-ISTIQBAL441",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-441-ISTIQBAL441",
+      "order": 3
+    }
+  ]
+}

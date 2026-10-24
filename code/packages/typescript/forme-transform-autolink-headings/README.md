@@ -206,3 +206,12 @@ v0 contract.
   `class="forme-anchor"` (or omit it) when consuming the
   `anchorHref` — this package only emits the slug + href, not
   the surrounding markup.
+
+## TE04 fenced-block compatibility
+
+Ignores headings inside fenced payloads while retaining the existing heading-only extraction behavior.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

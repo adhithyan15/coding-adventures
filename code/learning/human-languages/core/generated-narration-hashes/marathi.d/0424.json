@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:23c8bbbcab19224c",
+  "lessonIds": [
+    "MR-C424-vikri",
+    "MR-C424-pherivala",
+    "MR-C424-ghauk",
+    "MR-C424-dalal",
+    "MR-C424-bil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch424.txt",
+  "json": "marathi/narration/ch424.json",
+  "textHash": "fnv1a64:0bccded7c59fcfdf",
+  "jsonHash": "fnv1a64:c4879c78530da48e",
+  "findings": []
+}

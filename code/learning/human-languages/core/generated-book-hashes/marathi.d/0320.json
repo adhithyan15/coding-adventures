@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:b3ab26d88d63e2ed",
+  "lessonIds": [
+    "MR-C320-sajavne",
+    "MR-C320-utsav",
+    "MR-C320-sohla",
+    "MR-C320-yatra",
+    "MR-C320-muhurta"
+  ],
+  "tex": "marathi/book/chapters/ch320-festival-days.tex"
+}

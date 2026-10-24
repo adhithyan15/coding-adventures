@@ -1,0 +1,11 @@
+{
+  "id": "MR-C525-visalne",
+  "pathSegment": "MR-PATH-525-BHANDI525",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-525-BHANDI525",
+      "order": 4
+    }
+  ]
+}

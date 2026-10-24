@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C380-katappatu",
+    "language": "tamil",
+    "chapter": 380,
+    "sequence": 21800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:900204e66a3a3adb"
+  },
+  "findings": []
+}

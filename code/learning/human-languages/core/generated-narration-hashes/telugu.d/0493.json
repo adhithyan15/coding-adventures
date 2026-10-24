@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:da04d9bf992f0684",
+  "lessonIds": [
+    "TE-C493-samagri",
+    "TE-C493-sagu",
+    "TE-C493-tippu",
+    "TE-C493-cediripovu",
+    "TE-C493-venudirugu",
+    "TE-R493-review-486-493",
+    "TE-R493-review-final-493"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch493.txt",
+  "json": "telugu/narration/ch493.json",
+  "textHash": "fnv1a64:98a7f257ea8797c0",
+  "jsonHash": "fnv1a64:84dbb3ef89e2a929",
+  "findings": []
+}

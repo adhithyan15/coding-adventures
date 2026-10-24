@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Losing the Way",
+  "label": "ch:ta-losing-the-way",
+  "canDo": "I can talk about landmarks and losing the way, and falling behind, moving forward and stepping aside.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C412-vilaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about landmarks and losing the way, and falling behind, moving forward and stepping aside.",
+    "assesses": [
+      "TA-LEX-C412-VAZHI412-03",
+      "TA-LEX-C412-VAZHI412-04",
+      "TA-LEX-C412-VAZHI412-05"
+    ]
+  }
+}

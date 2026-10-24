@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C391-prastavincu",
+    "language": "telugu",
+    "chapter": 391,
+    "sequence": 19500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75393b5e92e8fa57"
+  },
+  "findings": []
+}

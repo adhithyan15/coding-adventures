@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:63983c5d7321b4ce",
+  "lessonIds": [
+    "BN-C525-sur",
+    "BN-C525-tal",
+    "BN-C525-svorlipi",
+    "BN-C525-gomgom-kora",
+    "BN-C525-shis-deoya"
+  ],
+  "tex": "bengali/book/chapters/ch525-making-music.tex"
+}

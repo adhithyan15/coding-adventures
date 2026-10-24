@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C490-bandhappetuka",
+    "language": "malayalam",
+    "chapter": 490,
+    "sequence": 24520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a127fd7d8c6bdce"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Lines and Carriages",
+  "label": "ch:hi-lines-and-carriages",
+  "canDo": "I can talk about the railway line, the engine and the carriages, and a train sliding forward.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C399-sarakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can talk about the railway line, the engine and the carriages, and a train sliding forward.",
+    "assesses": [
+      "HI-LEX-C399-LAIN399-03",
+      "HI-LEX-C399-LAIN399-04",
+      "HI-LEX-C399-LAIN399-05"
+    ]
+  }
+}

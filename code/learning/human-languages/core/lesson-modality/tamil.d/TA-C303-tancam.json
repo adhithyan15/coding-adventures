@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C303-tancam",
+    "language": "tamil",
+    "chapter": 303,
+    "sequence": 17590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5b1fa3a9b4b7930"
+  },
+  "findings": []
+}

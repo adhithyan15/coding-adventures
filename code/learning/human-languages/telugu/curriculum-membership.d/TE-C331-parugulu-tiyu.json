@@ -1,0 +1,11 @@
+{
+  "id": "TE-C331-parugulu-tiyu",
+  "pathSegment": "TE-PATH-331-MANTA331",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-331-MANTA331",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C375-raksappetuka",
+  "pathSegment": "ML-PATH-375-RAKSHA375",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-375-RAKSHA375",
+      "order": 3
+    }
+  ]
+}

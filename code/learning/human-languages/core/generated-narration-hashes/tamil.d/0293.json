@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:5416e6283e19fea1",
+  "lessonIds": [
+    "TA-C293-poruttatu",
+    "TA-C293-vantiruntal",
+    "TA-W293-six-lines",
+    "TA-R293-depends-and-would"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch293.txt",
+  "json": "tamil/narration/ch293.json",
+  "textHash": "fnv1a64:8cc478c0e36ca241",
+  "jsonHash": "fnv1a64:69a29be9a42d1d97",
+  "findings": []
+}

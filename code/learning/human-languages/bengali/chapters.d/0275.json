@@ -1,0 +1,22 @@
+{
+  "chapter": 275,
+  "title": "It Depends, and What Would Be",
+  "label": "ch:bn-it-depends-and-what-would-be",
+  "canDo": "I can say what something depends on (… -er opôr nirbhôr kôre), say what would happen and what used to happen (jetām), write six connected lines about a trip, and read and write ঙ in সঙ্গে.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-R275-depends-and-would",
+    "kind": "production",
+    "summary": "Complete BN-R275-depends-and-would: say what something depends on and what would be, after writing six connected lines about a trip.",
+    "assesses": [
+      "BN-GRAMMAR-C275-DEPENDS-01",
+      "BN-GRAMMAR-C275-WOULD-01",
+      "BN-GRAMMAR-C275-DEPENDS-ON-PERSON-01",
+      "BN-GRAMMAR-C275-USED-TO-01",
+      "BN-LEX-C275-SONGGE-01",
+      "BN-SCRIPT-C275-UMA-01"
+    ]
+  }
+}

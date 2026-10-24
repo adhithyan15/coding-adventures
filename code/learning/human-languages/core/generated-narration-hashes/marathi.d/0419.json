@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:9fba38ed44c702bf",
+  "lessonIds": [
+    "MR-C419-vasti",
+    "MR-C419-vasahat",
+    "MR-C419-peth",
+    "MR-C419-bol",
+    "MR-C419-cal",
+    "MR-R419-review-412-419"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch419.txt",
+  "json": "marathi/narration/ch419.json",
+  "textHash": "fnv1a64:38f98afa512585e6",
+  "jsonHash": "fnv1a64:33f7afc692aed512",
+  "findings": []
+}

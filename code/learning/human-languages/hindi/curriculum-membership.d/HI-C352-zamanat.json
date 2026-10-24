@@ -1,0 +1,11 @@
+{
+  "id": "HI-C352-zamanat",
+  "pathSegment": "HI-PATH-352-ADALAT352",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-352-ADALAT352",
+      "order": 4
+    }
+  ]
+}

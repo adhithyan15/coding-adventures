@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Medicine and Treatment",
+  "label": "ch:bn-medicine-and-treatment",
+  "canDo": "I can talk about medicine, treatment and getting better.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C472-sere-otha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can talk about medicine, treatment and getting better.",
+    "assesses": [
+      "BN-LEX-C472-OSHUDH472-03",
+      "BN-LEX-C472-OSHUDH472-04",
+      "BN-LEX-C472-OSHUDH472-05"
+    ]
+  }
+}

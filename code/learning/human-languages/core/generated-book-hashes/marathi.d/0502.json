@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:63d87e6a86d0f38f",
+  "lessonIds": [
+    "MR-C502-tatatut",
+    "MR-C502-kurbur",
+    "MR-C502-duravne",
+    "MR-C502-dhusphusne",
+    "MR-C502-abola-dharne"
+  ],
+  "tex": "marathi/book/chapters/ch502-drifting-apart.tex"
+}

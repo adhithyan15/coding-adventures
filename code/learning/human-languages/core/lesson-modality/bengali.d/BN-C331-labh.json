@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C331-labh",
+    "language": "bengali",
+    "chapter": 331,
+    "sequence": 21070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8157e4012efd8f70"
+  },
+  "findings": []
+}

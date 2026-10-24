@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Berths and Missed Trains",
+  "label": "ch:ka-berths-and-missed-trains",
+  "canDo": "I can say a berth, a formal seat, to slip away, to peep and a fare.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C435-dara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can say a berth, a formal seat, to slip away, to peep and a fare.",
+    "assesses": [
+      "KA-LEX-C435-BERTH435-03",
+      "KA-LEX-C435-BERTH435-04",
+      "KA-LEX-C435-BERTH435-05"
+    ]
+  }
+}

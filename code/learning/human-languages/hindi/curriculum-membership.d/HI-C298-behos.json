@@ -1,0 +1,11 @@
+{
+  "id": "HI-C298-behos",
+  "pathSegment": "HI-PATH-298-GHAYAL298",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-298-GHAYAL298",
+      "order": 2
+    }
+  ]
+}

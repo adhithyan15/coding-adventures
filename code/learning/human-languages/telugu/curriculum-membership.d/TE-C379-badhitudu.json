@@ -1,0 +1,11 @@
+{
+  "id": "TE-C379-badhitudu",
+  "pathSegment": "TE-PATH-379-BADHITUDU379",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-379-BADHITUDU379",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C507-panipuri",
+    "language": "tamil",
+    "chapter": 507,
+    "sequence": 29160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f986ddb5583282c0"
+  },
+  "findings": []
+}

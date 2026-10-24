@@ -1,0 +1,11 @@
+{
+  "id": "TE-C513-ubbasam",
+  "pathSegment": "TE-PATH-513-VYADHI513",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-513-VYADHI513",
+      "order": 4
+    }
+  ]
+}

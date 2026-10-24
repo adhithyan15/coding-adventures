@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:a3bc5d96b855300e",
+  "lessonIds": [
+    "KA-C405-maitri",
+    "KA-C405-sandhana",
+    "KA-C405-madhyasthike",
+    "KA-C405-hondanike",
+    "KA-C405-pracodisu"
+  ],
+  "tex": "kannada/book/chapters/ch405-settling-disputes.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 354,
+  "title": "An Empire and Its Emperor",
+  "label": "ch:ka-an-empire-and-its-emperor",
+  "canDo": "I can say an empire, an emperor, a coronation, a royal court and a prince.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-R354-review-348-354",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say an empire, an emperor, a coronation, a royal court and a prince.",
+    "assesses": [
+      "KA-LEX-C354-SAMRAJYA354-01",
+      "KA-LEX-C354-SAMRAJYA354-02",
+      "KA-LEX-C354-SAMRAJYA354-03",
+      "KA-LEX-C354-SAMRAJYA354-04",
+      "KA-LEX-C354-SAMRAJYA354-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:39131793403833d2",
+  "lessonIds": [
+    "TE-C372-kathakudu",
+    "TE-C372-kathamsam",
+    "TE-C372-patra",
+    "TE-C372-kalpana",
+    "TE-C372-kattukatha"
+  ],
+  "tex": "telugu/book/chapters/ch372-how-a-story-works.tex"
+}

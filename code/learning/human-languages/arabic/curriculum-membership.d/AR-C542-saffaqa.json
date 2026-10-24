@@ -1,0 +1,11 @@
+{
+  "id": "AR-C542-saffaqa",
+  "pathSegment": "AR-PATH-542-MASRAH542",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-542-MASRAH542",
+      "order": 3
+    }
+  ]
+}

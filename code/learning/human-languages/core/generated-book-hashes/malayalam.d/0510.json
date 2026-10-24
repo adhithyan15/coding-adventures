@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:99f1068348bdd549",
+  "lessonIds": [
+    "ML-C510-mutalmannu",
+    "ML-C510-alippalam",
+    "ML-C510-mutikkettuka",
+    "ML-C510-tanukkuka",
+    "ML-C510-irampuka"
+  ],
+  "tex": "malayalam/book/chapters/ch510-fog-and-hail.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:27b8368ef72ab34d",
+  "lessonIds": [
+    "ML-C405-vadikkuka",
+    "ML-C405-yukti",
+    "ML-C405-vastuta",
+    "ML-C405-sammatikkuka",
+    "ML-C405-nigamanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch405.txt",
+  "json": "malayalam/narration/ch405.json",
+  "textHash": "fnv1a64:f68365fba99def03",
+  "jsonHash": "fnv1a64:1427941a8d5ac72c",
+  "findings": []
+}

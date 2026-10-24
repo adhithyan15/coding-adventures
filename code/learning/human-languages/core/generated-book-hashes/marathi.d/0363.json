@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:1be52844390310ed",
+  "lessonIds": [
+    "MR-C363-satta",
+    "MR-C363-bhrastacar",
+    "MR-C363-pardarsakta",
+    "MR-C363-svartha",
+    "MR-C363-cithavne"
+  ],
+  "tex": "marathi/book/chapters/ch363-power-and-its-abuse.tex"
+}

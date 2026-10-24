@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C444-ullanghisu",
+    "language": "kannada",
+    "chapter": 444,
+    "sequence": 22570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76c2d3a9f302c6f9"
+  },
+  "findings": []
+}

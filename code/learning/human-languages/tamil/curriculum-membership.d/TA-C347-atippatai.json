@@ -1,0 +1,11 @@
+{
+  "id": "TA-C347-atippatai",
+  "pathSegment": "TA-PATH-347-ATARAM347",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-347-ATARAM347",
+      "order": 3
+    }
+  ]
+}

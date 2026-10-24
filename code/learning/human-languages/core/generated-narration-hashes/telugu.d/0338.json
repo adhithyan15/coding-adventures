@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:933edf5a2b8d80d2",
+  "lessonIds": [
+    "TE-C338-kramanga",
+    "TE-C338-ranuranu",
+    "TE-C338-munupu",
+    "TE-C338-gatam",
+    "TE-C338-appatlo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch338.txt",
+  "json": "telugu/narration/ch338.json",
+  "textHash": "fnv1a64:114ec63209c5dd9c",
+  "jsonHash": "fnv1a64:5df92ae7b3c41ad1",
+  "findings": []
+}

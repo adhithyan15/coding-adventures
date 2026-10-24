@@ -1,0 +1,11 @@
+{
+  "id": "MR-C411-rapet",
+  "pathSegment": "MR-PATH-411-SAFAR411",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-411-SAFAR411",
+      "order": 1
+    }
+  ]
+}

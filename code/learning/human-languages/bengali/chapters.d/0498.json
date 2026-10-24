@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "A Business of One's Own",
+  "label": "ch:bn-a-business-of-one-s-own",
+  "canDo": "I can talk about starting a business, its partners and investing in it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C498-sheyar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about starting a business, its partners and investing in it.",
+    "assesses": [
+      "BN-LEX-C498-UDYOG498-03",
+      "BN-LEX-C498-UDYOG498-04",
+      "BN-LEX-C498-UDYOG498-05"
+    ]
+  }
+}

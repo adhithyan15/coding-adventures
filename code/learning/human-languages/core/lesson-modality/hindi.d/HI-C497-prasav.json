@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C497-prasav",
+    "language": "hindi",
+    "chapter": 497,
+    "sequence": 27320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8288802bc965dd92"
+  },
+  "findings": []
+}

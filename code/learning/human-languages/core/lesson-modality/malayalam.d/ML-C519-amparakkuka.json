@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C519-amparakkuka",
+    "language": "malayalam",
+    "chapter": 519,
+    "sequence": 26120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8c4d569c9c72b39"
+  },
+  "findings": []
+}

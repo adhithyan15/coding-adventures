@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C502-sabhya",
+    "language": "kannada",
+    "chapter": 502,
+    "sequence": 25610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8be20fe8cb5ce331"
+  },
+  "findings": []
+}

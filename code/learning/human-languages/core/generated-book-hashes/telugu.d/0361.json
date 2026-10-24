@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:cff62726e2d76aeb",
+  "lessonIds": [
+    "TE-C361-yuddhabhumi",
+    "TE-C361-dalam",
+    "TE-C361-muttadincu",
+    "TE-C361-jayincu",
+    "TE-C361-parajayam"
+  ],
+  "tex": "telugu/book/chapters/ch361-on-the-battlefield.tex"
+}

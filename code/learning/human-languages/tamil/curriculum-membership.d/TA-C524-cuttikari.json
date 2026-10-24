@@ -1,0 +1,11 @@
+{
+  "id": "TA-C524-cuttikari",
+  "pathSegment": "TA-PATH-524-SAMAIYAL524",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-524-SAMAIYAL524",
+      "order": 4
+    }
+  ]
+}

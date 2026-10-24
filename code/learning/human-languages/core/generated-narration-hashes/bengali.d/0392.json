@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:4205418405981e89",
+  "lessonIds": [
+    "BN-C392-traphik",
+    "BN-C392-pothchari",
+    "BN-C392-phlaiobhar",
+    "BN-C392-sainbord",
+    "BN-C392-ghesha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch392.txt",
+  "json": "bengali/narration/ch392.json",
+  "textHash": "fnv1a64:f32bb60209b04cf2",
+  "jsonHash": "fnv1a64:4a3dcd1d9d16659f",
+  "findings": []
+}

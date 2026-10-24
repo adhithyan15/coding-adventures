@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:fc0ad3f3b87b6db1",
+  "lessonIds": [
+    "AR-C428-sikkat-hadid",
+    "AR-C428-araba",
+    "AR-C428-maqsura",
+    "AR-C428-mitru",
+    "AR-C428-anzala"
+  ],
+  "tex": "arabic/book/chapters/ch428-on-the-railway.tex"
+}

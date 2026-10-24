@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:d9d332b22cd2e4fe",
+  "lessonIds": [
+    "ML-C535-arbudam",
+    "ML-C535-mutantu",
+    "ML-C535-cennikkuttu",
+    "ML-C535-vatam",
+    "ML-C535-charddikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch535.txt",
+  "json": "malayalam/narration/ch535.json",
+  "textHash": "fnv1a64:d12793c008a7e1ea",
+  "jsonHash": "fnv1a64:dde9d2e542929ddb",
+  "findings": []
+}

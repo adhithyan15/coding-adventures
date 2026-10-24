@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C444-khari",
+    "language": "hindi",
+    "chapter": 444,
+    "sequence": 24370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82f2ab4838e09816"
+  },
+  "findings": []
+}

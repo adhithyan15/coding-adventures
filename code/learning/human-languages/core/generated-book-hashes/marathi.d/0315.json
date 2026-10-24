@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:75c2ce236b5327db",
+  "lessonIds": [
+    "MR-C315-pratyaksadarsi",
+    "MR-C315-mahitipat",
+    "MR-C315-ank",
+    "MR-C315-nondavne",
+    "MR-C315-bhatakne"
+  ],
+  "tex": "marathi/book/chapters/ch315-eyewitness-accounts.tex"
+}

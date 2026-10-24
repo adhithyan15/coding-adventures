@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:d680cfb0972cfbcb",
+  "lessonIds": [
+    "MR-C453-tapat",
+    "MR-C453-santapne",
+    "MR-C453-cidne",
+    "MR-C453-khekasne",
+    "MR-C453-kurkurne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch453.txt",
+  "json": "marathi/narration/ch453.json",
+  "textHash": "fnv1a64:fcb0b0dbab50d06a",
+  "jsonHash": "fnv1a64:1271fc962a3d4eab",
+  "findings": []
+}

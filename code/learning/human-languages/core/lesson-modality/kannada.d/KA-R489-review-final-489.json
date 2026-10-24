@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R489-review-final-489",
+    "language": "kannada",
+    "chapter": 489,
+    "sequence": 24930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75c6224af13bcb50"
+  },
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 497,
+  "title": "Along the Coast",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b0f0170401424e93",
+  "lessons": [
+    {
+      "id": "ML-C497-tiradesam",
+      "sequence": 24840,
+      "title": "തീരദേശം (tīradēśaṁ) — the coastal region",
+      "headword": "തീരദേശം",
+      "romanization": "tīradēśaṁ",
+      "gloss": "the coastal region",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cc1a310bbb3f90b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a dam, then the Malayalam for to dry up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തീരദേശം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തീരദേശം — tīradēśaṁ — \"the coastal region\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തീരദേശത്ത് ധാരാളം മീൻപിടുത്തക്കാർ താമസിക്കുന്നു. tīradēśattŭ dhārāḷaṁ mīnpiṭuttakkār tāmasikkunnu. Many fishing people live in the coastal region."
+            },
+            {
+              "kind": "speech",
+              "text": "തീരം, a shore, plus ദേശം, a land."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തീരദേശം (tīradēśaṁ) is a Malayalam compound built from തീരം, a shore, from Sanskrit tīra (CDIAL 5842), and ദേശം, a land, from Sanskrit deśa (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīradēśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīradēśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīradēśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīradēśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīradēśattŭ dhārāḷaṁ mīnpiṭuttakkār tāmasikkunnu. — Many fishing people live in the coastal region.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīradēśattŭ dhārāḷaṁ mīnpiṭuttakkār tāmasikkunnu.* — Many fishing people live in the coastal region.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a dam, then the Malayalam for to dry up, then say tīradēśaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a dam, then the Malayalam for to dry up, then say *tīradēśaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തീരദേശം (tīradēśaṁ) mean? (\"The coastal region\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C497-alimukham",
+      "sequence": 24850,
+      "title": "അഴിമുഖം (aḻimukhaṁ) — an estuary; a river mouth",
+      "headword": "അഴിമുഖം",
+      "romanization": "aḻimukhaṁ",
+      "gloss": "an estuary; a river mouth",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b03952d9c6e3d05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to dry up, then the Malayalam for the coastal region."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അഴിമുഖം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അഴിമുഖം — aḻimukhaṁ — \"an estuary; a river mouth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുഴ കടലിൽ ചേരുന്നത് അഴിമുഖത്താണ്. puḻa kaṭalil cērunnatŭ aḻimukhattāṇŭ. The river meets the sea at the estuary."
+            },
+            {
+              "kind": "speech",
+              "text": "അഴി, an opening to the sea, plus മുഖം, a face: the face of the river towards the sea."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അഴിമുഖം (aḻimukhaṁ) is a Malayalam compound built from അഴി, a bar or opening where a river meets the sea, whose origin is not settled, and മുഖം, a face, from Sanskrit mukha (CDIAL 10158)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḻimukhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḻimukhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḻimukhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḻimukhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puḻa kaṭalil cērunnatŭ aḻimukhattāṇŭ. — The river meets the sea at the estuary.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puḻa kaṭalil cērunnatŭ aḻimukhattāṇŭ.* — The river meets the sea at the estuary.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to dry up, then the Malayalam for the coastal region, then say aḻimukhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to dry up, then the Malayalam for the coastal region, then say *aḻimukhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അഴിമുഖം (aḻimukhaṁ) mean? (\"An estuary; a river mouth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C497-veliyerram",
+      "sequence": 24860,
+      "title": "വേലിയേറ്റം (vēliyēṟṟaṁ) — high tide",
+      "headword": "വേലിയേറ്റം",
+      "romanization": "vēliyēṟṟaṁ",
+      "gloss": "high tide",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ecf58c3f862c48c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for the coastal region, then the Malayalam for an estuary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വേലിയേറ്റം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേലിയേറ്റം — vēliyēṟṟaṁ — \"high tide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വേലിയേറ്റത്തിൽ കടൽവെള്ളം കായലിലേക്ക് കയറി. vēliyēṟṟattil kaṭalveḷḷaṁ kāyalilēkkŭ kayaṟi. At high tide sea water came into the backwaters."
+            },
+            {
+              "kind": "speech",
+              "text": "വേലി, the tide, plus ഏറ്റം, a rise: the sea comes far up the shore."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേലിയേറ്റം (vēliyēṟṟaṁ) is a Malayalam compound built from വേലി, the tide, usually traced to Sanskrit velā, \"the boundary of sea and land\" (Monier-Williams), and the native ഏറ്റം, a rise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēliyēṟṟaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēliyēṟṟaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēliyēṟṟaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēliyēṟṟaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēliyēṟṟattil kaṭalveḷḷaṁ kāyalilēkkŭ kayaṟi. — At high tide sea water came into the backwaters.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēliyēṟṟattil kaṭalveḷḷaṁ kāyalilēkkŭ kayaṟi.* — At high tide sea water came into the backwaters.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for the coastal region, then the Malayalam for an estuary, then say vēliyēṟṟaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for the coastal region, then the Malayalam for an estuary, then say *vēliyēṟṟaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വേലിയേറ്റം (vēliyēṟṟaṁ) mean? (\"High tide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C497-veliyirakkam",
+      "sequence": 24870,
+      "title": "വേലിയിറക്കം (vēliyiṟakkaṁ) — low tide",
+      "headword": "വേലിയിറക്കം",
+      "romanization": "vēliyiṟakkaṁ",
+      "gloss": "low tide",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:608d7a599d66dd15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an estuary, then the Malayalam for high tide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വേലിയിറക്കം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേലിയിറക്കം — vēliyiṟakkaṁ — \"low tide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വേലിയിറക്കത്തിൽ കുട്ടികൾ മണലിൽ ഞണ്ടുകളെ പിടിച്ചു. vēliyiṟakkattil kuṭṭikaḷ maṇalil ñaṇṭukaḷe piṭiccu. At low tide the children caught crabs on the sand."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇറക്കം, a going down, is the noun of ഇറങ്ങുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേലിയിറക്കം (vēliyiṟakkaṁ) is a Malayalam compound built from വേലി, the tide, usually traced to Sanskrit velā, and the native ഇറക്കം, a going down (DEDR 516)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēliyiṟakkaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēliyiṟakkaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēliyiṟakkaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēliyiṟakkaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēliyiṟakkattil kuṭṭikaḷ maṇalil ñaṇṭukaḷe piṭiccu. — At low tide the children caught crabs on the sand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēliyiṟakkattil kuṭṭikaḷ maṇalil ñaṇṭukaḷe piṭiccu.* — At low tide the children caught crabs on the sand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an estuary, then the Malayalam for high tide, then say vēliyiṟakkaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an estuary, then the Malayalam for high tide, then say *vēliyiṟakkaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വേലിയിറക്കം (vēliyiṟakkaṁ) mean? (\"Low tide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C497-katalakramanam",
+      "sequence": 24880,
+      "title": "കടലാക്രമണം (kaṭalākramaṇaṁ) — a sea surge; coastal erosion",
+      "headword": "കടലാക്രമണം",
+      "romanization": "kaṭalākramaṇaṁ",
+      "gloss": "a sea surge; coastal erosion",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:591b664caf4b5b08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for high tide, then the Malayalam for low tide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കടലാക്രമണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കടലാക്രമണം — kaṭalākramaṇaṁ — \"a sea surge; coastal erosion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കടലാക്രമണത്തിൽ തീരത്തെ വീടുകൾ തകർന്നു. kaṭalākramaṇattil tīratte vīṭukaḷ takarnnu. In the sea surge the houses on the shore were destroyed."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally an attack by the sea: കടൽ plus ആക്രമണം, an attack. A word of the monsoon news."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കടലാക്രമണം (kaṭalākramaṇaṁ) is a Malayalam compound built from the native കടൽ, the sea (DEDR 1118), and ആക്രമണം, an attack, from Sanskrit ākramaṇa, \"stepping upon, attacking\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭalākramaṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭalākramaṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭalākramaṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭalākramaṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭalākramaṇattil tīratte vīṭukaḷ takarnnu. — In the sea surge the houses on the shore were destroyed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭalākramaṇattil tīratte vīṭukaḷ takarnnu.* — In the sea surge the houses on the shore were destroyed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for high tide, then the Malayalam for low tide, then say kaṭalākramaṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for high tide, then the Malayalam for low tide, then say *kaṭalākramaṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കടലാക്രമണം (kaṭalākramaṇaṁ) mean? (\"A sea surge; coastal erosion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

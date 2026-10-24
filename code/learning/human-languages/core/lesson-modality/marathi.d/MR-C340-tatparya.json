@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C340-tatparya",
+    "language": "marathi",
+    "chapter": 340,
+    "sequence": 19670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4df8e376fd766c98"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:10dde9d6ddceadbe",
+  "lessonIds": [
+    "MR-C370-vyakhyan",
+    "MR-C370-nibandh",
+    "MR-C370-bhasan",
+    "MR-C370-parisamvad",
+    "MR-C370-vakta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch370.txt",
+  "json": "marathi/narration/ch370.json",
+  "textHash": "fnv1a64:5228a11b63adfab9",
+  "jsonHash": "fnv1a64:ffd7948966c49777",
+  "findings": []
+}

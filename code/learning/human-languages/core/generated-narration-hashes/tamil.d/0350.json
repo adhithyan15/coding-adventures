@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:50a30e0153b3654e",
+  "lessonIds": [
+    "TA-C350-kannottam",
+    "TA-C350-nilaippatu",
+    "TA-C350-manappanmai",
+    "TA-C350-konam",
+    "TA-C350-velippatuttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch350.txt",
+  "json": "tamil/narration/ch350.json",
+  "textHash": "fnv1a64:c86f4da9a9d8cc96",
+  "jsonHash": "fnv1a64:b12255b0af1bb539",
+  "findings": []
+}

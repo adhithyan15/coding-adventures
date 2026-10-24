@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Hopes and Proposals",
+  "label": "ch:ka-hopes-and-proposals",
+  "canDo": "I can say to hope for, to look to, to propose, to suggest and a solution.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C429-parihara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can say to hope for, to look to, to propose, to suggest and a solution.",
+    "assesses": [
+      "KA-LEX-C429-ASHISU429-03",
+      "KA-LEX-C429-ASHISU429-04",
+      "KA-LEX-C429-ASHISU429-05"
+    ]
+  }
+}

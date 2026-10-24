@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 366,
+  "title": "Clues and Footprints",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0f309fc9da4c514a",
+  "lessons": [
+    {
+      "id": "ML-C366-sucana",
+      "sequence": 17870,
+      "title": "സൂചന (sūcana) — a clue; a hint",
+      "headword": "സൂചന",
+      "romanization": "sūcana",
+      "gloss": "a clue; a hint",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f33deaa1b04aec47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to arrest, then the Malayalam for to seize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സൂചന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സൂചന — sūcana — \"a clue; a hint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസിന് കള്ളനെക്കുറിച്ച് ഒരു സൂചന കിട്ടി. pōlīsinŭ kaḷḷanekkuṟiccŭ oru sūcana kiṭṭi. The police got a clue about the thief."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a hint or a sign: മഴയുടെ സൂചന (sūcana), a sign of rain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സൂചന (sūcana) is borrowed from Sanskrit sūcanā, \"pointing out, indication, communication\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūcana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūcana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūcana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūcana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsinŭ kaḷḷanekkuṟiccŭ oru sūcana kiṭṭi. — The police got a clue about the thief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsinŭ kaḷḷanekkuṟiccŭ oru sūcana kiṭṭi.* — The police got a clue about the thief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to arrest, then the Malayalam for to seize, then say sūcana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to arrest, then the Malayalam for to seize, then say *sūcana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സൂചന (sūcana) mean? (\"A clue; a hint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C366-atayalam",
+      "sequence": 17880,
+      "title": "അടയാളം (aṭayāḷaṁ) — a mark; a sign",
+      "headword": "അടയാളം",
+      "romanization": "aṭayāḷaṁ",
+      "gloss": "a mark; a sign",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed4e8989c5ce22a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to seize, then the Malayalam for a clue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അടയാളം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അടയാളം — aṭayāḷaṁ — \"a mark; a sign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കള്ളൻ ഭിത്തിയിൽ ഒരു അടയാളം ഇട്ടു. kaḷḷan bhittiyil oru aṭayāḷaṁ iṭṭu. The thief left a mark on the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a symbol or a landmark."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അടയാളം (aṭayāḷaṁ) is native Dravidian: DEDR 89 lists Malayalam aṭayāḷam, \"mark, sign\", beside Tamil aṭaiyāḷam, \"mark, symbol, seal\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭayāḷaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭayāḷaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭayāḷaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭayāḷaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷan bhittiyil oru aṭayāḷaṁ iṭṭu. — The thief left a mark on the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷan bhittiyil oru aṭayāḷaṁ iṭṭu.* — The thief left a mark on the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to seize, then the Malayalam for a clue, then say aṭayāḷaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to seize, then the Malayalam for a clue, then say *aṭayāḷaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അടയാളം (aṭayāḷaṁ) mean? (\"A mark; a sign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C366-kalppatu",
+      "sequence": 17890,
+      "title": "കാൽപ്പാട് (kālppāṭŭ) — a footprint",
+      "headword": "കാൽപ്പാട്",
+      "romanization": "kālppāṭŭ",
+      "gloss": "a footprint",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65146e39c8078e02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a clue, then the Malayalam for a mark."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കാൽപ്പാട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാൽപ്പാട് — kālppāṭŭ — \"a footprint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മണലിൽ കള്ളന്റെ കാൽപ്പാടുകൾ ഉണ്ടായിരുന്നു. maṇalil kaḷḷanṟe kālppāṭukaḷ uṇṭāyirunnu. The thief's footprints were in the sand."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: കാൽപ്പാടുകൾ, kālppāṭukaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "കാൽ, foot, + പാട്, a mark, a trace."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാൽപ്പാട് (kālppāṭŭ) is a native Dravidian compound of കാൽ (kāl), \"leg, foot\" (DEDR 1479), and പാട്, \"a mark, a trace\": the mark a foot leaves."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālppāṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālppāṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālppāṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālppāṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṇalil kaḷḷanṟe kālppāṭukaḷ uṇṭāyirunnu. — The thief's footprints were in the sand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṇalil kaḷḷanṟe kālppāṭukaḷ uṇṭāyirunnu.* — The thief's footprints were in the sand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a clue, then the Malayalam for a mark, then say kālppāṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a clue, then the Malayalam for a mark, then say *kālppāṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കാൽപ്പാട് (kālppāṭŭ) mean? (\"A footprint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C366-viralatayalam",
+      "sequence": 17900,
+      "title": "വിരലടയാളം (viralaṭayāḷaṁ) — a fingerprint",
+      "headword": "വിരലടയാളം",
+      "romanization": "viralaṭayāḷaṁ",
+      "gloss": "a fingerprint",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bea7aa0d952a598d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a mark, then the Malayalam for a footprint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിരലടയാളം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിരലടയാളം — viralaṭayāḷaṁ — \"a fingerprint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് വാതിലിൽ നിന്ന് വിരലടയാളം എടുത്തു. pōlīsŭ vātilil ninnŭ viralaṭayāḷaṁ eṭuttu. The police took fingerprints from the door."
+            },
+            {
+              "kind": "speech",
+              "text": "വിരൽ, finger, + അടയാളം (aṭayāḷaṁ), a mark."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിരലടയാളം (viralaṭayāḷaṁ) is a native Dravidian compound of വിരൽ (viral), \"finger\" (DEDR 5409), and അടയാളം (aṭayāḷaṁ), \"a mark\" (DEDR 89)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viralaṭayāḷaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viralaṭayāḷaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viralaṭayāḷaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viralaṭayāḷaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ vātilil ninnŭ viralaṭayāḷaṁ eṭuttu. — The police took fingerprints from the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ vātilil ninnŭ viralaṭayāḷaṁ eṭuttu.* — The police took fingerprints from the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a mark, then the Malayalam for a footprint, then say viralaṭayāḷaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a mark, then the Malayalam for a footprint, then say *viralaṭayāḷaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിരലടയാളം (viralaṭayāḷaṁ) mean? (\"A fingerprint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C366-duruhamaya",
+      "sequence": 17910,
+      "title": "ദുരൂഹമായ (durūhamāya) — mysterious",
+      "headword": "ദുരൂഹമായ",
+      "romanization": "durūhamāya",
+      "gloss": "mysterious",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12c5ce2477052099",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a footprint, then the Malayalam for a fingerprint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ദുരൂഹമായ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദുരൂഹമായ — durūhamāya — \"mysterious\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ കത്ത് വളരെ ദുരൂഹമായിരുന്നു. ā kattŭ vaḷare durūhamāyirunnu. That letter was very mysterious."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ദുരൂഹത, a mystery."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദുരൂഹമായ (durūhamāya) is built from Sanskrit durūha, \"hard to infer or understand\" (Monier-Williams), with the Malayalam adjective ending -ആയ: a mysterious thing is one nobody can work out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durūhamāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durūhamāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durūhamāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durūhamāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kattŭ vaḷare durūhamāyirunnu. — That letter was very mysterious.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kattŭ vaḷare durūhamāyirunnu.* — That letter was very mysterious.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a footprint, then the Malayalam for a fingerprint, then say durūhamāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a footprint, then the Malayalam for a fingerprint, then say *durūhamāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ദുരൂഹമായ (durūhamāya) mean? (\"Mysterious\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

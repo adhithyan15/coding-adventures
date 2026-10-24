@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Blindness, Deafness and Pain",
+  "label": "ch:ka-blindness-deafness-and-pain",
+  "canDo": "I can say a blind man, deaf, mute, to groan and to droop.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C515-nalugu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can say a blind man, deaf, mute, to groan and to droop.",
+    "assesses": [
+      "KA-LEX-C515-KURUDA515-03",
+      "KA-LEX-C515-KURUDA515-04",
+      "KA-LEX-C515-KURUDA515-05"
+    ]
+  }
+}

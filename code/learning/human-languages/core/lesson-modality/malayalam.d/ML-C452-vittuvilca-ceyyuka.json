@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C452-vittuvilca-ceyyuka",
+    "language": "malayalam",
+    "chapter": 452,
+    "sequence": 22400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56590ce9f999542e"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:fe32fae649a15b8e",
+  "lessonIds": [
+    "TE-C545-abhyasincu",
+    "TE-C545-kasarattu",
+    "TE-C545-guripettu",
+    "TE-C545-toyu",
+    "TE-C545-pandem"
+  ],
+  "tex": "telugu/book/chapters/ch545-training.tex"
+}

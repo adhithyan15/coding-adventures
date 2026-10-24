@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:3eb17ddfef59e307",
+  "lessonIds": [
+    "KA-C532-gite",
+    "KA-C532-nrtya",
+    "KA-C532-hasya",
+    "KA-C532-jogula",
+    "KA-C532-meluku-haku",
+    "KA-R532-review-526-532"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch532.txt",
+  "json": "kannada/narration/ch532.json",
+  "textHash": "fnv1a64:0612cc1b19859416",
+  "jsonHash": "fnv1a64:c71324a6ce1287ff",
+  "findings": []
+}

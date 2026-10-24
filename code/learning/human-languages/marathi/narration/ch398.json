@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 398,
+  "title": "At the Ticket Office",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:26e9efdf61d46355",
+  "lessons": [
+    {
+      "id": "MR-C398-tikitghar",
+      "sequence": 23100,
+      "title": "तिकीटघर (tikīṭghar) — a ticket office",
+      "headword": "तिकीटघर",
+      "romanization": "tikīṭghar",
+      "gloss": "a ticket office",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7d79114371d2d34",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to be stalled, then the Marathi for to set off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तिकीटघर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिकीटघर — tikīṭghar — \"a ticket office\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तिकीटघरासमोर मोठी रांग होती. tikīṭgharāsamor moṭhī rāṅg hotī. There was a long queue in front of the ticket office."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "घर at the end of a compound is a room or building for one job: तिकीटघर (tikīṭghar), a ticket house."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिकीटघर (tikīṭghar) is a Marathi compound of तिकीट, a loan from English ticket, and घर, \"house\", inherited from Sanskrit ghara (CDIAL 4428)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tikīṭghar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tikīṭghar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tikīṭghar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tikīṭghar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tikīṭgharāsamor moṭhī rāṅg hotī. — There was a long queue in front of the ticket office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tikīṭgharāsamor moṭhī rāṅg hotī.* — There was a long queue in front of the ticket office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to be stalled, then the Marathi for to set off, then say tikīṭghar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to be stalled, then the Marathi for to set off, then say *tikīṭghar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तिकीटघर (tikīṭghar) mean? (\"A ticket office\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C398-pas",
+      "sequence": 23110,
+      "title": "पास (pās) — a travel pass; a season ticket",
+      "headword": "पास",
+      "romanization": "pās",
+      "gloss": "a travel pass; a season ticket",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c749c3d930cb366a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to set off, then the Marathi for a ticket office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पास",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पास — pās — \"a travel pass; a season ticket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुणकडे बसचा महिन्याचा पास आहे. aruṇkaḍe bascā mahinyācā pās āhe. Arun has a monthly bus pass."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A pass lasts a week, a month or a year: आठवड्याचा पास (pās), a weekly pass."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पास (pās) is a loan from English pass, the card that lets you travel again and again for one price."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruṇkaḍe bascā mahinyācā pās āhe. — Arun has a monthly bus pass.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruṇkaḍe bascā mahinyācā pās āhe.* — Arun has a monthly bus pass.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to set off, then the Marathi for a ticket office, then say pās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to set off, then the Marathi for a ticket office, then say *pās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पास (pās) mean? (\"A travel pass; a season ticket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C398-partava",
+      "sequence": 23120,
+      "title": "परतावा (partāvā) — a refund",
+      "headword": "परतावा",
+      "romanization": "partāvā",
+      "gloss": "a refund",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6e53e686cc23c71",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a ticket office, then the Marathi for a travel pass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परतावा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परतावा — partāvā — \"a refund\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मला तिकिटाचा पूर्ण परतावा मिळाला. malā tikiṭācā pūrṇa partāvā miḷālā. I got a full refund for the ticket."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on परत, back: a refund is money that comes back to you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परतावा (partāvā) is a Marathi derivation built on परत, \"back, again\", from the family of Sanskrit parivartate, \"turns round\", where CDIAL lists Marathi paratṇẽ, \"to return\" (CDIAL 7872)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "partāvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *partāvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "partāvā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *partāvā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malā tikiṭācā pūrṇa partāvā miḷālā. — I got a full refund for the ticket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malā tikiṭācā pūrṇa partāvā miḷālā.* — I got a full refund for the ticket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a ticket office, then the Marathi for a travel pass, then say partāvā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a ticket office, then the Marathi for a travel pass, then say *partāvā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परतावा (partāvā) mean? (\"A refund\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C398-gantavya",
+      "sequence": 23130,
+      "title": "गंतव्य (gantavya) — a destination",
+      "headword": "गंतव्य",
+      "romanization": "gantavya",
+      "gloss": "a destination",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:027058d60bbeb782",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a travel pass, then the Marathi for a refund."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गंतव्य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गंतव्य — gantavya — \"a destination\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आमचं गंतव्य अजून खूप दूर आहे. āmcaṁ gantavya ajūn khūp dūr āhe. Our destination is still very far away."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word; in speech people say जिथे जायचं आहे ते ठिकाण."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गंतव्य (gantavya) is a tatsama, taken from Sanskrit gantavya, \"to be gone to\", a form of the verb gam, \"to go\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gantavya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gantavya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gantavya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gantavya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmcaṁ gantavya ajūn khūp dūr āhe. — Our destination is still very far away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmcaṁ gantavya ajūn khūp dūr āhe.* — Our destination is still very far away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a travel pass, then the Marathi for a refund, then say gantavya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a travel pass, then the Marathi for a refund, then say *gantavya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गंतव्य (gantavya) mean? (\"A destination\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C398-rakhun-thevne",
+      "sequence": 23140,
+      "title": "राखून ठेवणे (rākhūn ṭhevṇe) — to set aside; to keep back",
+      "headword": "राखून ठेवणे",
+      "romanization": "rākhūn ṭhevṇe",
+      "gloss": "to set aside; to keep back",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6d9de67196eeba6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a refund, then the Marathi for a destination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: राखून ठेवणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राखून ठेवणे — rākhūn ṭhevṇe — \"to set aside; to keep back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मी तुझ्यासाठी एक जागा राखून ठेवली. mī tujhyāsāṭhī ek jāgā rākhūn ṭhevlī. I kept a seat aside for you."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने राखून ठेवलं, tyāne rākhūn ṭhevlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "राखणे is to guard or keep; with ठेवणे it means to hold something back for later. The verb agrees with the thing kept: जागा राखून ठेवली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राखून ठेवणे (rākhūn ṭhevṇe) joins राखून, the -ऊन form of राखणे, \"to keep, to guard\", inherited from Sanskrit rakṣati, \"guards\" (CDIAL 10547), to ठेवणे, \"to put, to keep\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rākhūn ṭhevṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rākhūn ṭhevṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rākhūn ṭhevṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rākhūn ṭhevṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī tujhyāsāṭhī ek jāgā rākhūn ṭhevlī. — I kept a seat aside for you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī tujhyāsāṭhī ek jāgā rākhūn ṭhevlī.* — I kept a seat aside for you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a refund, then the Marathi for a destination, then say rākhūn ṭhevṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a refund, then the Marathi for a destination, then say *rākhūn ṭhevṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does राखून ठेवणे (rākhūn ṭhevṇe) mean? (\"To set aside; to keep back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

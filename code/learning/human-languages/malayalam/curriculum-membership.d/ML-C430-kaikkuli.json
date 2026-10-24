@@ -1,0 +1,11 @@
+{
+  "id": "ML-C430-kaikkuli",
+  "pathSegment": "ML-PATH-430-AZHIMATI430",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-430-AZHIMATI430",
+      "order": 1
+    }
+  ]
+}

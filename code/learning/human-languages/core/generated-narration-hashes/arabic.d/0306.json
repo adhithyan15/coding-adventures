@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:75934b0d17f605ee",
+  "lessonIds": [
+    "AR-C306-urs",
+    "AR-C306-khataba",
+    "AR-C306-khutuba",
+    "AR-C306-zaffa",
+    "AR-C306-zaghrada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch306.txt",
+  "json": "arabic/narration/ch306.json",
+  "textHash": "fnv1a64:0ebe773ebad6bd39",
+  "jsonHash": "fnv1a64:31e00a5953396027",
+  "findings": []
+}

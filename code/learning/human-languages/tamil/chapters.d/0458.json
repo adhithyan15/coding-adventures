@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Crying Aloud",
+  "label": "ch:ta-crying-aloud",
+  "canDo": "I can describe ways of crying, sobbing and screaming.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C458-alaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can describe ways of crying, sobbing and screaming.",
+    "assesses": [
+      "TA-LEX-C458-AZHUKAI458-03",
+      "TA-LEX-C458-AZHUKAI458-04",
+      "TA-LEX-C458-AZHUKAI458-05"
+    ]
+  }
+}

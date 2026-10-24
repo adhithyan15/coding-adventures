@@ -1,0 +1,11 @@
+{
+  "id": "AR-C506-dhaqn",
+  "pathSegment": "AR-PATH-506-WAJH506",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-506-WAJH506",
+      "order": 3
+    }
+  ]
+}

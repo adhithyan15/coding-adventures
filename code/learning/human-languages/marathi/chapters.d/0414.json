@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Guests and Hosts",
+  "label": "ch:mr-guests-and-hosts",
+  "canDo": "I can talk about a guest, hospitality, a reception desk, and asking after people.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C414-phirakne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can talk about a guest, hospitality, a reception desk, and asking after people.",
+    "assesses": [
+      "MR-LEX-C414-ATITHI414-03",
+      "MR-LEX-C414-ATITHI414-04",
+      "MR-LEX-C414-ATITHI414-05"
+    ]
+  }
+}

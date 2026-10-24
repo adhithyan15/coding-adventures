@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:60d64fbe744112ae",
+  "lessonIds": [
+    "BN-C380-onukul",
+    "BN-C380-protikul",
+    "BN-C380-upojukto",
+    "BN-C380-jogyo",
+    "BN-C380-obhyosto-hooya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch380.txt",
+  "json": "bengali/narration/ch380.json",
+  "textHash": "fnv1a64:a9682b2dbdf33c3a",
+  "jsonHash": "fnv1a64:26cd5c3511800ffb",
+  "findings": []
+}

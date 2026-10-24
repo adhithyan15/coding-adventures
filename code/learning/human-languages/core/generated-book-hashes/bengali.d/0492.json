@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:52abe5b87c8a38bc",
+  "lessonIds": [
+    "BN-C492-karigor",
+    "BN-C492-sekra",
+    "BN-C492-jhalai-kora",
+    "BN-C492-kasari",
+    "BN-C492-gatha"
+  ],
+  "tex": "bengali/book/chapters/ch492-skilled-hands.tex"
+}

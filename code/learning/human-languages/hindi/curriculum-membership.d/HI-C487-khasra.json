@@ -1,0 +1,11 @@
+{
+  "id": "HI-C487-khasra",
+  "pathSegment": "HI-PATH-487-SANKRAMAN487",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-487-SANKRAMAN487",
+      "order": 2
+    }
+  ]
+}

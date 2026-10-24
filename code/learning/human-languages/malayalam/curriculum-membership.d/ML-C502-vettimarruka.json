@@ -1,0 +1,11 @@
+{
+  "id": "ML-C502-vettimarruka",
+  "pathSegment": "ML-PATH-502-TOTTAM502",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-502-TOTTAM502",
+      "order": 4
+    }
+  ]
+}

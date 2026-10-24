@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Ways of Learning",
+  "label": "ch:ml-ways-of-learning",
+  "canDo": "I can say to grasp, to memorise, to train, to interpret and to define.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C438-nirvacikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can say to grasp, to memorise, to train, to interpret and to define.",
+    "assesses": [
+      "ML-LEX-C438-GRAHANAM438-03",
+      "ML-LEX-C438-GRAHANAM438-04",
+      "ML-LEX-C438-GRAHANAM438-05"
+    ]
+  }
+}

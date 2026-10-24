@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:5370ffe17ad210ca",
+  "lessonIds": [
+    "ML-C483-sevanam",
+    "ML-C483-kotukuvala",
+    "ML-C483-sucitvam",
+    "ML-C483-menu",
+    "ML-C483-veyirrar"
+  ],
+  "tex": "malayalam/book/chapters/ch483-service-and-meals.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C189-frame-contrast",
+  "pathSegment": "PA-PATH-189-A2-WANT-PLURAL",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-189-A2-WANT-PLURAL",
+      "order": 6
+    }
+  ]
+}

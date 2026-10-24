@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C429-vasul-karne",
+    "language": "marathi",
+    "chapter": 429,
+    "sequence": 24720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a75b3a084ae8d817"
+  },
+  "findings": []
+}

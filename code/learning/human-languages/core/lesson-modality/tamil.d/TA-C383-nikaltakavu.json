@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C383-nikaltakavu",
+    "language": "tamil",
+    "chapter": 383,
+    "sequence": 21950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1eda9a2a62bb754b"
+  },
+  "findings": []
+}

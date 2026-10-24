@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Charges and penalties",
+  "label": "ch:ar-charges-and-penalties",
+  "canDo": "I can say a charge, a felony, a penalty, to punish and to inform the police.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R348-review-341-348",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can say a charge, a felony, a penalty, to punish and to inform the police.",
+    "assesses": [
+      "AR-LEX-C348-TUHMA348-03",
+      "AR-LEX-C348-TUHMA348-04",
+      "AR-LEX-C348-TUHMA348-05"
+    ]
+  }
+}

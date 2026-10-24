@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:ba305f5464e031ea",
+  "lessonIds": [
+    "MR-C437-garva",
+    "MR-C437-himvarsav",
+    "MR-C437-jhombne",
+    "MR-C437-gothne",
+    "MR-C437-vitalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch437.txt",
+  "json": "marathi/narration/ch437.json",
+  "textHash": "fnv1a64:057fbe497dde97b2",
+  "jsonHash": "fnv1a64:f69f96297ca0f9bf",
+  "findings": []
+}

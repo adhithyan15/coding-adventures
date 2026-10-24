@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C434-marga-kadhne",
+    "language": "marathi",
+    "chapter": 434,
+    "sequence": 24980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c129da5f8ad45e5"
+  },
+  "findings": []
+}

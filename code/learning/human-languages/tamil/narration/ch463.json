@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 463,
+  "title": "Grief and Suffering",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cce867256110df01",
+  "lessons": [
+    {
+      "id": "TA-C463-tukkam",
+      "sequence": 26610,
+      "title": "துக்கம் (tukkam) — grief; mourning",
+      "headword": "துக்கம்",
+      "romanization": "tukkam",
+      "gloss": "grief; mourning",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd14544faa2ba240",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for disgust, then the Tamil for to grimace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: துக்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துக்கம் — tukkam — \"grief; mourning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நண்பன் ஊரை விட்டுப் போனதால் எனக்குத் துக்கமாக இருந்தது. naṇpaṉ ūrai viṭṭup pōṉatāl eṉakkut tukkamāka iruntatu. I was sad because my friend left town."
+            },
+            {
+              "kind": "speech",
+              "text": "A house in mourning is a துக்க வீடு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துக்கம் (tukkam) is borrowed from Sanskrit duḥkha, \"difficulty, pain\" (CDIAL 6375); Tamil writes the cluster as க்க."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tukkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tukkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tukkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tukkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṇpaṉ ūrai viṭṭup pōṉatāl eṉakkut tukkamāka iruntatu. — I was sad because my friend left town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṇpaṉ ūrai viṭṭup pōṉatāl eṉakkut tukkamāka iruntatu.* — I was sad because my friend left town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for disgust, then the Tamil for to grimace, then say tukkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for disgust, then the Tamil for to grimace, then say *tukkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does துக்கம் (tukkam) mean? (\"Grief; mourning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C463-vetanai",
+      "sequence": 26620,
+      "title": "வேதனை (vētaṉai) — torment; anguish",
+      "headword": "வேதனை",
+      "romanization": "vētaṉai",
+      "gloss": "torment; anguish",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc6d6b70662fbc84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to grimace, then the Tamil for grief."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வேதனை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேதனை — vētaṉai — \"torment; anguish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "காயத்தின் வலி அவருக்கு வேதனை தந்தது. kāyattiṉ vali avarukku vētaṉai tantatu. The pain of the wound tormented him."
+            },
+            {
+              "kind": "speech",
+              "text": "Pain of body or of mind: மன வேதனை (vētaṉai), anguish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேதனை (vētaṉai) is borrowed from Sanskrit vēdanā, \"feeling; pain\" (CDIAL 12106)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vētaṉai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vētaṉai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vētaṉai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vētaṉai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāyattiṉ vali avarukku vētaṉai tantatu. — The pain of the wound tormented him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāyattiṉ vali avarukku vētaṉai tantatu.* — The pain of the wound tormented him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to grimace, then the Tamil for grief, then say vētaṉai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to grimace, then the Tamil for grief, then say *vētaṉai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வேதனை (vētaṉai) mean? (\"Torment; anguish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C463-tunpam",
+      "sequence": 26630,
+      "title": "துன்பம் (tuṉpam) — suffering; hardship",
+      "headword": "துன்பம்",
+      "romanization": "tuṉpam",
+      "gloss": "suffering; hardship",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d48a83f7cf1e796",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for grief, then the Tamil for torment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: துன்பம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துன்பம் — tuṉpam — \"suffering; hardship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெள்ளத்தால் அந்தக் கிராம மக்கள் துன்பப்பட்டார்கள். veḷḷattāl antak kirāma makkaḷ tuṉpappaṭṭārkaḷ. Because of the flood the people of that village suffered."
+            },
+            {
+              "kind": "speech",
+              "text": "துன்பப்படு, to suffer. இன்பம், delight, is its opposite."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துன்பம் (tuṉpam) is native Dravidian (DEDR 3372), a word for affliction, sorrow and want."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṉpam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṉpam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṉpam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṉpam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷattāl antak kirāma makkaḷ tuṉpappaṭṭārkaḷ. — Because of the flood the people of that village suffered.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷattāl antak kirāma makkaḷ tuṉpappaṭṭārkaḷ.* — Because of the flood the people of that village suffered.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for grief, then the Tamil for torment, then say tuṉpam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for grief, then the Tamil for torment, then say *tuṉpam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does துன்பம் (tuṉpam) mean? (\"Suffering; hardship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C463-verumai",
+      "sequence": 26640,
+      "title": "வெறுமை (veṟumai) — emptiness",
+      "headword": "வெறுமை",
+      "romanization": "veṟumai",
+      "gloss": "emptiness",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65f00e28001783f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for torment, then the Tamil for suffering."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வெறுமை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெறுமை — veṟumai — \"emptiness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குழந்தைகள் வெளிநாட்டுக்குப் போன பிறகு வீடு வெறுமையாக இருந்தது. kuḻantaikaḷ veḷināṭṭukkup pōṉa piṟaku vīṭu veṟumaiyāka iruntatu. After the children went abroad the house felt empty."
+            },
+            {
+              "kind": "speech",
+              "text": "From வெறு \"empty\" (வெறும் கை, an empty hand), not from வெறு \"to hate\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெறுமை (veṟumai) is native Dravidian (DEDR 5513), the noun of வெறு veṟu, \"empty\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veṟumai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veṟumai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veṟumai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veṟumai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻantaikaḷ veḷināṭṭukkup pōṉa piṟaku vīṭu veṟumaiyāka iruntatu. — After the children went abroad the house felt empty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻantaikaḷ veḷināṭṭukkup pōṉa piṟaku vīṭu veṟumaiyāka iruntatu.* — After the children went abroad the house felt empty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for torment, then the Tamil for suffering, then say veṟumai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for torment, then the Tamil for suffering, then say *veṟumai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வெறுமை (veṟumai) mean? (\"Emptiness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C463-irankal",
+      "sequence": 26650,
+      "title": "இரங்கல் (iraṅkal) — condolence",
+      "headword": "இரங்கல்",
+      "romanization": "iraṅkal",
+      "gloss": "condolence",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a5df9c730c08257",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for suffering, then the Tamil for emptiness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இரங்கல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இரங்கல் — iraṅkal — \"condolence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தக் குடும்பத்துக்கு நாங்கள் இரங்கல் தெரிவித்தோம். antak kuṭumpattukku nāṅkaḷ iraṅkal terivittōm. We offered our condolences to that family."
+            },
+            {
+              "kind": "speech",
+              "text": "இரங்கல் (iraṅkal) கூட்டம், a memorial meeting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இரங்கல் (iraṅkal) is native Dravidian, a noun from இரங்கு iraṅku, \"to feel pity, to be grieved\" (DEDR 473)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraṅkal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraṅkal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraṅkal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraṅkal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antak kuṭumpattukku nāṅkaḷ iraṅkal terivittōm. — We offered our condolences to that family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antak kuṭumpattukku nāṅkaḷ iraṅkal terivittōm.* — We offered our condolences to that family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for suffering, then the Tamil for emptiness, then say iraṅkal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for suffering, then the Tamil for emptiness, then say *iraṅkal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இரங்கல் (iraṅkal) mean? (\"Condolence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

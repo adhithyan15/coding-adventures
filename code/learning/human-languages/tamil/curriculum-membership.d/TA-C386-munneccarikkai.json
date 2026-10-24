@@ -1,0 +1,11 @@
+{
+  "id": "TA-C386-munneccarikkai",
+  "pathSegment": "TA-PATH-386-UTTI386",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-386-UTTI386",
+      "order": 1
+    }
+  ]
+}

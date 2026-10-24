@@ -1,0 +1,11 @@
+{
+  "id": "TA-C436-pavalam",
+  "pathSegment": "TA-PATH-436-KATAL436",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-436-KATAL436",
+      "order": 4
+    }
+  ]
+}

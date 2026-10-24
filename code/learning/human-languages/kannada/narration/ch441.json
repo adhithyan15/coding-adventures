@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 441,
+  "title": "Paying Charges",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fc0b64fdedbced61",
+  "lessons": [
+    {
+      "id": "KA-C441-sarati",
+      "sequence": 22410,
+      "title": "ಸರತಿ (sarati) — a turn in line; a queue",
+      "headword": "ಸರತಿ",
+      "romanization": "sarati",
+      "gloss": "a turn in line; a queue",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2708b4694fd021c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an embassy, then the Kannada for international."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸರತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸರತಿ — sarati — \"a turn in line; a queue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಿಲ್ ಕಟ್ಟಲು ನಾವು ಸರತಿಯಲ್ಲಿ ನಿಂತೆವು. bil kaṭṭalu nāvu saratiyalli nintevu. We stood in the queue to pay the bill."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸರತಿ (sarati) ಸಾಲು, a queue; ನನ್ನ ಸರತಿ (sarati), my turn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸರತಿ (sarati) is a Kannada word for a turn in a line whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bil kaṭṭalu nāvu saratiyalli nintevu. — We stood in the queue to pay the bill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bil kaṭṭalu nāvu saratiyalli nintevu.* — We stood in the queue to pay the bill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an embassy, then the Kannada for international, then say sarati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an embassy, then the Kannada for international, then say *sarati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸರತಿ (sarati) mean? (\"A turn in line; a queue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C441-manna-madu",
+      "sequence": 22420,
+      "title": "ಮನ್ನಾ ಮಾಡು (mannā māḍu) — to waive; to write off",
+      "headword": "ಮನ್ನಾ ಮಾಡು",
+      "romanization": "mannā māḍu",
+      "gloss": "to waive; to write off",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cdf305912bf2a4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for international, then the Kannada for a turn in line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮನ್ನಾ ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮನ್ನಾ ಮಾಡು — mannā māḍu — \"to waive; to write off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೋಟೆಲ್ ಮಕ್ಕಳ ಶುಲ್ಕವನ್ನು ಮನ್ನಾ ಮಾಡಿತು. hōṭel makkaḷa śulkavannu mannā māḍitu. The hotel waived the fee for the children."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮನ್ನಾ ಮಾಡಿದೆ, mannā māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of fees, fines and debts: ದಂಡ ಮನ್ನಾ, a fine waived."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮನ್ನಾ ಮಾಡು (mannā māḍu) joins mannā, \"waived, remitted\", which came into Kannada through Hindustani and whose earlier source is not settled, and the native verb ಮಾಡು, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mannā māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mannā māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mannā māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mannā māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōṭel makkaḷa śulkavannu mannā māḍitu. — The hotel waived the fee for the children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōṭel makkaḷa śulkavannu mannā māḍitu.* — The hotel waived the fee for the children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for international, then the Kannada for a turn in line, then say mannā māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for international, then the Kannada for a turn in line, then say *mannā māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮನ್ನಾ ಮಾಡು (mannā māḍu) mean? (\"To waive; to write off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C441-desiya",
+      "sequence": 22430,
+      "title": "ದೇಶೀಯ (dēśīya) — domestic; of the country",
+      "headword": "ದೇಶೀಯ",
+      "romanization": "dēśīya",
+      "gloss": "domestic; of the country",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abf7aa937d3245e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a turn in line, then the Kannada for to waive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದೇಶೀಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೇಶೀಯ — dēśīya — \"domestic; of the country\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ದೇಶೀಯ ವಿಮಾನಗಳು ಒಂದನೇ ಟರ್ಮಿನಲ್ನಿಂದ ಹೊರಡುತ್ತವೆ. dēśīya vimānagaḷu ondanē ṭarminalninda horaḍuttave. Domestic flights leave from terminal one."
+            },
+            {
+              "kind": "speech",
+              "text": "Its partner on airport signs is ಅಂತರರಾಷ್ಟ್ರೀಯ, international."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೇಶೀಯ (dēśīya) is borrowed from Sanskrit dēśīya, \"of the country\", built on dēśa, \"a region, a country\" (CDIAL 6547), the source of ದೇಶ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēśīya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēśīya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēśīya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēśīya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēśīya vimānagaḷu ondanē ṭarminalninda horaḍuttave. — Domestic flights leave from terminal one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēśīya vimānagaḷu ondanē ṭarminalninda horaḍuttave.* — Domestic flights leave from terminal one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a turn in line, then the Kannada for to waive, then say dēśīya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a turn in line, then the Kannada for to waive, then say *dēśīya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದೇಶೀಯ (dēśīya) mean? (\"Domestic; of the country\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C441-nagadu",
+      "sequence": 22440,
+      "title": "ನಗದು (nagadu) — cash",
+      "headword": "ನಗದು",
+      "romanization": "nagadu",
+      "gloss": "cash",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65593140909964db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to waive, then the Kannada for domestic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಗದು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಗದು — nagadu — \"cash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಅಂಗಡಿಯಲ್ಲಿ ನಗದು ಮಾತ್ರ ತೆಗೆದುಕೊಳ್ಳುತ್ತಾರೆ. ī aṅgaḍiyalli nagadu mātra tegedukoḷḷuttāre. This shop takes cash only."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಗದು (nagadu) ಕೊಡು, to pay in cash."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಗದು (nagadu) is usually traced to Arabic naqd, \"ready money\", which reached Kannada through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagadu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagadu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī aṅgaḍiyalli nagadu mātra tegedukoḷḷuttāre. — This shop takes cash only.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī aṅgaḍiyalli nagadu mātra tegedukoḷḷuttāre.* — This shop takes cash only.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to waive, then the Kannada for domestic, then say nagadu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to waive, then the Kannada for domestic, then say *nagadu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಗದು (nagadu) mean? (\"Cash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C441-kard",
+      "sequence": 22450,
+      "title": "ಕಾರ್ಡ್ (kārḍ) — a card; a bank card",
+      "headword": "ಕಾರ್ಡ್",
+      "romanization": "kārḍ",
+      "gloss": "a card; a bank card",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0df8ffb6a66cff01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for domestic, then the Kannada for cash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಾರ್ಡ್",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾರ್ಡ್ — kārḍ — \"a card; a bank card\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಟಿಕೆಟ್ಗೆ ಕಾರ್ಡ್ ಮೂಲಕ ಪಾವತಿಸಿದೆ. nānu ṭikeṭge kārḍ mūlaka pāvatiside. I paid for the ticket by card."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಾರ್ಡ್ (kārḍ) ಮೂಲಕ, by card; ನಗದಾಗಿ, in cash."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾರ್ಡ್ (kārḍ) is a loan from English card."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu ṭikeṭge kārḍ mūlaka pāvatiside. — I paid for the ticket by card.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu ṭikeṭge kārḍ mūlaka pāvatiside.* — I paid for the ticket by card.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for domestic, then the Kannada for cash, then say kārḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for domestic, then the Kannada for cash, then say *kārḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಾರ್ಡ್ (kārḍ) mean? (\"A card; a bank card\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

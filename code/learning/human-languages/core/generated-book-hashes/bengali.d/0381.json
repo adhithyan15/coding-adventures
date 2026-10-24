@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:2fdcd06f976ebe85",
+  "lessonIds": [
+    "BN-C381-bebostha",
+    "BN-C381-karjokor",
+    "BN-C381-bikol",
+    "BN-C381-dokkhota",
+    "BN-C381-onushilon-kora"
+  ],
+  "tex": "bengali/book/chapters/ch381-making-it-work.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C530-fatama",
+  "pathSegment": "AR-PATH-530-ATFAL530",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-530-ATFAL530",
+      "order": 3
+    }
+  ]
+}

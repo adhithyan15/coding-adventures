@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:ce446c7b8ab7b502",
+  "lessonIds": [
+    "AR-C346-tajassasa",
+    "AR-C346-tanakkara",
+    "AR-C346-ishtabaha",
+    "AR-C346-tasallala",
+    "AR-C346-tarada"
+  ],
+  "tex": "arabic/book/chapters/ch346-spies-and-suspects.tex"
+}

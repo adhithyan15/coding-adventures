@@ -1,0 +1,11 @@
+{
+  "id": "ML-R540-review-533-540",
+  "pathSegment": "ML-PATH-540-KLINIKKU540",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ML-EXT-540-KLINIKKU540",
+      "order": 5
+    }
+  ]
+}

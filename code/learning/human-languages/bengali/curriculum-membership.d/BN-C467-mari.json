@@ -1,0 +1,11 @@
+{
+  "id": "BN-C467-mari",
+  "pathSegment": "BN-PATH-467-THOT467",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-467-THOT467",
+      "order": 2
+    }
+  ]
+}

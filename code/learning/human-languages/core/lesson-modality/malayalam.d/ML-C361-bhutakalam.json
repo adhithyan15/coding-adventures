@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C361-bhutakalam",
+    "language": "malayalam",
+    "chapter": 361,
+    "sequence": 17620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7be70ba97afaa4ca"
+  },
+  "findings": []
+}

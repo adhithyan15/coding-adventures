@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C540-klinikku",
+    "language": "malayalam",
+    "chapter": 540,
+    "sequence": 27170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ec9ea819c4e7c8d"
+  },
+  "findings": []
+}

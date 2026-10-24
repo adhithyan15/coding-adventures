@@ -1,0 +1,11 @@
+{
+  "id": "KA-S175-letter-au",
+  "pathSegment": "KA-PATH-314-TICKETS-TROUBLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-314-TICKETS-TROUBLE",
+      "order": 3
+    }
+  ]
+}

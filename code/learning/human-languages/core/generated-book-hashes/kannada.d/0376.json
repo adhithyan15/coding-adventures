@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:a8d9040295a9f2e0",
+  "lessonIds": [
+    "KA-C376-purave",
+    "KA-C376-sabitupadisu",
+    "KA-C376-sadhyate",
+    "KA-C376-mahatva",
+    "KA-C376-adharisu"
+  ],
+  "tex": "kannada/book/chapters/ch376-proof-and-possibility.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C307-nikalna",
+  "pathSegment": "HI-PATH-307-PHANSA307",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-307-PHANSA307",
+      "order": 3
+    }
+  ]
+}

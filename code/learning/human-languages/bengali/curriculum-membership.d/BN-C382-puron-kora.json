@@ -1,0 +1,11 @@
+{
+  "id": "BN-C382-puron-kora",
+  "pathSegment": "BN-PATH-382-NISHTHA382",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-382-NISHTHA382",
+      "order": 2
+    }
+  ]
+}

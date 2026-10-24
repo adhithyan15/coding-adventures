@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C294-fajatan",
+    "language": "arabic",
+    "chapter": 294,
+    "sequence": 17050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d613b13d3b0beba1"
+  },
+  "findings": []
+}

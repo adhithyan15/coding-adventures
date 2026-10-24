@@ -1,0 +1,11 @@
+{
+  "id": "AR-C286-sawfa",
+  "pathSegment": "AR-PATH-286-REASONS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-286-REASONS",
+      "order": 3
+    }
+  ]
+}

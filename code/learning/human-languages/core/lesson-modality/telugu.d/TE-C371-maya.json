@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C371-maya",
+    "language": "telugu",
+    "chapter": 371,
+    "sequence": 18310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c13a078efcb10e6a"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:0e9c74e5f9431831",
+  "lessonIds": [
+    "MR-C350-svikarne",
+    "MR-C350-manya-karne",
+    "MR-C350-grahya-dharne",
+    "MR-C350-dos-dene",
+    "MR-C350-arop-karne"
+  ],
+  "tex": "marathi/book/chapters/ch350-accepting-and-blaming.tex"
+}

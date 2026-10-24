@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:cfba11717697b036",
+  "lessonIds": [
+    "KA-C466-upanagara",
+    "KA-C466-vasisu",
+    "KA-C466-purasabhe",
+    "KA-C466-bididipa",
+    "KA-C466-carandi"
+  ],
+  "tex": "kannada/book/chapters/ch466-living-in-the-suburbs.tex"
+}

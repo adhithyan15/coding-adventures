@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:f273284470ca6977",
+  "lessonIds": [
+    "MR-C458-dilasa",
+    "MR-C458-dhir",
+    "MR-C458-santvan-karne",
+    "MR-C458-hayse-vatne",
+    "MR-C458-gahivarne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch458.txt",
+  "json": "marathi/narration/ch458.json",
+  "textHash": "fnv1a64:6e5854a24e6e5a1b",
+  "jsonHash": "fnv1a64:4eda7ced7132e978",
+  "findings": []
+}

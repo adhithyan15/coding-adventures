@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:6847da00aeae3ff1",
+  "lessonIds": [
+    "KA-C415-amanatu",
+    "KA-C415-horagidu",
+    "KA-C415-vinayiti",
+    "KA-C415-manjuru-madu",
+    "KA-C415-adesa"
+  ],
+  "tex": "kannada/book/chapters/ch415-suspensions-and-exemptions.tex"
+}

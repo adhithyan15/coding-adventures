@@ -1,0 +1,11 @@
+{
+  "id": "MR-C316-mandap",
+  "pathSegment": "MR-PATH-316-LAGNA316",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-316-LAGNA316",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C377-raksana",
+    "language": "telugu",
+    "chapter": 377,
+    "sequence": 18630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd426e40960c63ef"
+  },
+  "findings": []
+}

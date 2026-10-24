@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:c854e98c29b27dc6",
+  "lessonIds": [
+    "HI-C542-varta",
+    "HI-C542-riyayat",
+    "HI-C542-sahmati",
+    "HI-C542-peskas",
+    "HI-C542-madhyasth"
+  ],
+  "tex": "hindi/book/chapters/ch542-coming-to-terms.tex"
+}

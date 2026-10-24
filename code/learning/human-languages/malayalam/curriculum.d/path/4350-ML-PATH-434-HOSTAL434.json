@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-434-HOSTAL434",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ML-EXT-434-HOSTAL434"
+  ],
+  "after": []
+}

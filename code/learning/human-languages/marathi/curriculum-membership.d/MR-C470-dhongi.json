@@ -1,0 +1,11 @@
+{
+  "id": "MR-C470-dhongi",
+  "pathSegment": "MR-PATH-470-LABAD470",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-470-LABAD470",
+      "order": 1
+    }
+  ]
+}

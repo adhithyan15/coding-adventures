@@ -1,0 +1,23 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER direction syntax vertical slice",
+  "fixtures": [
+    {
+      "name": "direction-top-bottom",
+      "source": "erDiagram\ndirection TB\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER {\n  string id PK\n}\nORDER {\n  int id PK\n}"
+    },
+    {
+      "name": "direction-bottom-top",
+      "source": "erDiagram\ndirection BT\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER {\n  string id PK\n}\nORDER {\n  int id PK\n}"
+    },
+    {
+      "name": "direction-left-right",
+      "source": "erDiagram\ndirection LR\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER {\n  string id PK\n}\nORDER {\n  int id PK\n}"
+    },
+    {
+      "name": "direction-right-left",
+      "source": "erDiagram\ndirection RL\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER {\n  string id PK\n}\nORDER {\n  int id PK\n}"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C478-currikkarannuka",
+  "pathSegment": "ML-PATH-478-SANCARI478",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-478-SANCARI478",
+      "order": 4
+    }
+  ]
+}

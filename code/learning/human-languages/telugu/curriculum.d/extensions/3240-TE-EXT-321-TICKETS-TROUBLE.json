@@ -1,0 +1,10 @@
+{
+  "id": "TE-EXT-321-TICKETS-TROUBLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can buy a ticket, ask for a seat and when a train leaves, and report a missed bus or a lost bag.",
+  "prerequisites": [
+    "TE-EXT-320-ASK-THE-WAY"
+  ]
+}

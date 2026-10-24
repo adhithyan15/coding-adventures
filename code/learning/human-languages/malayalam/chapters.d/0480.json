@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Keeping Things Safe",
+  "label": "ch:ml-keeping-things-safe",
+  "canDo": "I can say a travelogue, to leave behind, to ask around, a locker and to keep aside.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C480-karutivaykkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can say a travelogue, to leave behind, to ask around, a locker and to keep aside.",
+    "assesses": [
+      "ML-LEX-C480-ORMMA480-03",
+      "ML-LEX-C480-ORMMA480-04",
+      "ML-LEX-C480-ORMMA480-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:abc76f3078d89aa3",
+  "lessonIds": [
+    "MR-C482-dokedukhi",
+    "MR-C482-dukhne",
+    "MR-C482-kal-yene",
+    "MR-C482-kanhne",
+    "MR-C482-vivhalne"
+  ],
+  "tex": "marathi/book/chapters/ch482-aches-and-pains.tex"
+}

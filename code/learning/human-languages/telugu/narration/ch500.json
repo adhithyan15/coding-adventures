@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 500,
+  "title": "Joy and Delight",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4e88f470fe017f57",
+  "lessons": [
+    {
+      "id": "TE-C500-anandincu",
+      "sequence": 25300,
+      "title": "ఆనందించు (ānandiñcu) — to enjoy; to rejoice",
+      "headword": "ఆనందించు",
+      "romanization": "ānandiñcu",
+      "gloss": "to enjoy; to rejoice",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e41cda4d581376cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a grudge, then the Telugu for contempt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆనందించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆనందించు — ānandiñcu — \"to enjoy; to rejoice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సెలవుల్లో పిల్లలు సముద్రం దగ్గర ఆనందించారు. selavullō pillalu samudraṁ daggara ānandiñcāru. In the holidays the children enjoyed themselves by the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఆనందించాను, ānandiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ఆనందం, joy; ఆనందంగా, happily."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆనందించు (ānandiñcu) is built on Sanskrit ānanda, \"happiness\" (CDIAL 1172), from the root nand, with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānandiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānandiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānandiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānandiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "selavullō pillalu samudraṁ daggara ānandiñcāru. — In the holidays the children enjoyed themselves by the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *selavullō pillalu samudraṁ daggara ānandiñcāru.* — In the holidays the children enjoyed themselves by the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a grudge, then the Telugu for contempt, then say ānandiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a grudge, then the Telugu for contempt, then say *ānandiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆనందించు (ānandiñcu) mean? (\"To enjoy; to rejoice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C500-murisipovu",
+      "sequence": 25310,
+      "title": "మురిసిపోవు (murisipōvu) — to be delighted",
+      "headword": "మురిసిపోవు",
+      "romanization": "murisipōvu",
+      "gloss": "to be delighted",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e39afdd3df18c31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for contempt, then the Telugu for to enjoy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మురిసిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మురిసిపోవు — murisipōvu — \"to be delighted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మనవడిని చూసి తాతయ్య మురిసిపోయారు. manavaḍini cūsi tātayya murisipōyāru. Seeing his grandson, grandpa was delighted."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మురిసిపోయాను, murisipōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "A warm word for the glow of a parent or a grandparent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మురిసిపోవు (murisipōvu) is native Dravidian: DEDR 5011 lists Telugu muriyu, \"to exult, to be in great glee\", and the verb ends in pōvu, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "murisipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *murisipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "murisipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *murisipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manavaḍini cūsi tātayya murisipōyāru. — Seeing his grandson, grandpa was delighted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manavaḍini cūsi tātayya murisipōyāru.* — Seeing his grandson, grandpa was delighted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for contempt, then the Telugu for to enjoy, then say murisipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for contempt, then the Telugu for to enjoy, then say *murisipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మురిసిపోవు (murisipōvu) mean? (\"To be delighted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C500-pongipovu",
+      "sequence": 25320,
+      "title": "పొంగిపోవు (poṅgipōvu) — to be overjoyed; to swell with pride",
+      "headword": "పొంగిపోవు",
+      "romanization": "poṅgipōvu",
+      "gloss": "to be overjoyed; to swell with pride",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7e8425be744a1b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to enjoy, then the Telugu for to be delighted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పొంగిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొంగిపోవు — poṅgipōvu — \"to be overjoyed; to swell with pride\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బహుమతి గెలిచినప్పుడు ఆమె పొంగిపోయింది. bahumati gelicinappuḍu āme poṅgipōyindi. When she won the prize, she was overjoyed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పొంగిపోయాను, poṅgipōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "పొంగు is to boil over, like milk: joy that overflows."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొంగిపోవు (poṅgipōvu) is native Dravidian: DEDR 4469 lists Telugu poṅgu, \"to bubble up, to boil; to rejoice, to be elated\", with Tamil poṅku; pōvu, \"to go\" (DEDR 4572) ends it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṅgipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṅgipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṅgipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṅgipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahumati gelicinappuḍu āme poṅgipōyindi. — When she won the prize, she was overjoyed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahumati gelicinappuḍu āme poṅgipōyindi.* — When she won the prize, she was overjoyed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to enjoy, then the Telugu for to be delighted, then say poṅgipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to enjoy, then the Telugu for to be delighted, then say *poṅgipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పొంగిపోవు (poṅgipōvu) mean? (\"To be overjoyed; to swell with pride\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C500-pulakincu",
+      "sequence": 25330,
+      "title": "పులకించు (pulakiñcu) — to thrill; to be thrilled",
+      "headword": "పులకించు",
+      "romanization": "pulakiñcu",
+      "gloss": "to thrill; to be thrilled",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e96bdb25044d7224",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be delighted, then the Telugu for to be overjoyed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పులకించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పులకించు — pulakiñcu — \"to thrill; to be thrilled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పాట విని నా మనసు పులకించింది. ā pāṭa vini nā manasu pulakiñcindi. Hearing that song, my heart thrilled."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పులకించాను, pulakiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of the body or the heart: the hair stands on end with joy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పులకించు (pulakiñcu) is built on Sanskrit pulaka, the hair of the body standing on end, a sign of rapture rather than fear (Monier-Williams); the Telugu ending -ఇంచు makes it a verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulakiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulakiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulakiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulakiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pāṭa vini nā manasu pulakiñcindi. — Hearing that song, my heart thrilled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pāṭa vini nā manasu pulakiñcindi.* — Hearing that song, my heart thrilled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be delighted, then the Telugu for to be overjoyed, then say pulakiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be delighted, then the Telugu for to be overjoyed, then say *pulakiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పులకించు (pulakiñcu) mean? (\"To thrill; to be thrilled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C500-ullasam",
+      "sequence": 25340,
+      "title": "ఉల్లాసం (ullāsaṁ) — cheerfulness; gaiety",
+      "headword": "ఉల్లాసం",
+      "romanization": "ullāsaṁ",
+      "gloss": "cheerfulness; gaiety",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58a8f62693fe95b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be overjoyed, then the Telugu for to thrill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉల్లాసం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉల్లాసం — ullāsaṁ — \"cheerfulness; gaiety\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పండుగ రోజు ఇల్లంతా ఉల్లాసంగా ఉంది. paṇḍuga rōju illantā ullāsaṅgā undi. On the festival day the whole house is cheerful."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉల్లాసంగా, cheerfully, in high spirits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉల్లాసం (ullāsaṁ) is borrowed from Sanskrit ullāsa, both \"light\" and \"joy, merriness\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ullāsaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ullāsaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ullāsaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ullāsaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇḍuga rōju illantā ullāsaṅgā undi. — On the festival day the whole house is cheerful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇḍuga rōju illantā ullāsaṅgā undi.* — On the festival day the whole house is cheerful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be overjoyed, then the Telugu for to thrill, then say ullāsaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be overjoyed, then the Telugu for to thrill, then say *ullāsaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉల్లాసం (ullāsaṁ) mean? (\"Cheerfulness; gaiety\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

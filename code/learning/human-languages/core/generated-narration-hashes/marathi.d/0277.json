@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:96e528732a03f295",
+  "lessonIds": [
+    "MR-C277-jain",
+    "MR-C277-janar-ahe",
+    "MR-R277-what-will-happen"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "marathi/narration/ch277.txt",
+  "json": "marathi/narration/ch277.json",
+  "textHash": "fnv1a64:9cee02df1a0f2d7e",
+  "jsonHash": "fnv1a64:45b0b6910ae5d3fb",
+  "findings": []
+}

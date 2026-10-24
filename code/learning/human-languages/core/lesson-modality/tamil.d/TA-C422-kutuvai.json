@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C422-kutuvai",
+    "language": "tamil",
+    "chapter": 422,
+    "sequence": 24240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f9430c94be383b6"
+  },
+  "findings": []
+}

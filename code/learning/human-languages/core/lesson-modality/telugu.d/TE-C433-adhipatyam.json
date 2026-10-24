@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C433-adhipatyam",
+    "language": "telugu",
+    "chapter": 433,
+    "sequence": 21640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2490057cfd6d2472"
+  },
+  "findings": []
+}

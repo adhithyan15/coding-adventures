@@ -1,0 +1,11 @@
+{
+  "id": "KA-C490-mujugara",
+  "pathSegment": "KA-PATH-490-BHAYA490",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-490-BHAYA490",
+      "order": 3
+    }
+  ]
+}

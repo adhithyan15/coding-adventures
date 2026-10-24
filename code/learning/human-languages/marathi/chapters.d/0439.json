@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Storms and Thunder",
+  "label": "ch:mr-storms-and-thunder",
+  "canDo": "I can talk about cyclones, whirlwinds and thunder, and say the wind howled and lightning cracked.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C439-kadadne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can talk about cyclones, whirlwinds and thunder, and say the wind howled and lightning cracked.",
+    "assesses": [
+      "MR-LEX-C439-VAVTAL439-03",
+      "MR-LEX-C439-VAVTAL439-04",
+      "MR-LEX-C439-VAVTAL439-05"
+    ]
+  }
+}

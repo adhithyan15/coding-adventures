@@ -1,0 +1,11 @@
+{
+  "id": "TE-C480-tegipovu",
+  "pathSegment": "TE-PATH-480-MUNCETTU480",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-480-MUNCETTU480",
+      "order": 2
+    }
+  ]
+}

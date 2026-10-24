@@ -1,0 +1,11 @@
+{
+  "id": "MR-C540-hami",
+  "pathSegment": "MR-PATH-540-VIMA540",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-540-VIMA540",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C537-merukerru",
+  "pathSegment": "TA-PATH-537-SIRPAM537",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-537-SIRPAM537",
+      "order": 3
+    }
+  ]
+}

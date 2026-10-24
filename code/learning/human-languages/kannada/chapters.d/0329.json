@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "The News on Every Channel",
+  "label": "ch:ka-the-news-on-every-channel",
+  "canDo": "I can say the media, a TV channel, a news bulletin, to announce and a statement.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C329-helike",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can say the media, a TV channel, a news bulletin, to announce and a statement.",
+    "assesses": [
+      "KA-LEX-C329-MADHYAMA329-03",
+      "KA-LEX-C329-MADHYAMA329-04",
+      "KA-LEX-C329-MADHYAMA329-05"
+    ]
+  }
+}

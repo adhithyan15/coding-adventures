@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C495-kotumuti",
+    "language": "malayalam",
+    "chapter": 495,
+    "sequence": 24740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a07ad3ade9669d7"
+  },
+  "findings": []
+}

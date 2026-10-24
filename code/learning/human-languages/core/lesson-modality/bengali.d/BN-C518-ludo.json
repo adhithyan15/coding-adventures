@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C518-ludo",
+    "language": "bengali",
+    "chapter": 518,
+    "sequence": 31330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11ccd91fc7ac2963"
+  },
+  "findings": []
+}

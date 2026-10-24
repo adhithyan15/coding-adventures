@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:69f1f29302e0a38a",
+  "lessonIds": [
+    "MR-C292-thingi",
+    "MR-C292-bhadakne",
+    "MR-C292-jvala",
+    "MR-C292-rakh",
+    "MR-C292-agnisaman-dal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch292.txt",
+  "json": "marathi/narration/ch292.json",
+  "textHash": "fnv1a64:7c1488955c65a395",
+  "jsonHash": "fnv1a64:665fb5dc77b4bc4b",
+  "findings": []
+}

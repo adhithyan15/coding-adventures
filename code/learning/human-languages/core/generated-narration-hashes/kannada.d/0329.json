@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:819c23661d596e0a",
+  "lessonIds": [
+    "KA-C329-madhyama",
+    "KA-C329-vahini",
+    "KA-C329-varte",
+    "KA-C329-ghosisu",
+    "KA-C329-helike"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch329.txt",
+  "json": "kannada/narration/ch329.json",
+  "textHash": "fnv1a64:6b839a08b523d39c",
+  "jsonHash": "fnv1a64:462b7ff3d5451b0d",
+  "findings": []
+}

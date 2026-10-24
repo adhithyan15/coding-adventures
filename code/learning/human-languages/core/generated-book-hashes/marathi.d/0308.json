@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:8053ff400f978e1c",
+  "lessonIds": [
+    "MR-C308-pidhi",
+    "MR-C308-purvaj",
+    "MR-C308-varsa",
+    "MR-C308-vams",
+    "MR-C308-jatan-karne"
+  ],
+  "tex": "marathi/book/chapters/ch308-generations.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:c291d412957008cd",
+  "lessonIds": [
+    "AR-C442-mukhayyam",
+    "AR-C442-muntaja",
+    "AR-C442-shalih",
+    "AR-C442-ashala",
+    "AR-C442-sanawbar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch442.txt",
+  "json": "arabic/narration/ch442.json",
+  "textHash": "fnv1a64:9dcb1285f8a2fb59",
+  "jsonHash": "fnv1a64:73012a962f13b383",
+  "findings": []
+}

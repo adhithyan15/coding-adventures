@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C546-boddinka",
+    "language": "telugu",
+    "chapter": 546,
+    "sequence": 27700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32834e1b0c0ad5c9"
+  },
+  "findings": []
+}

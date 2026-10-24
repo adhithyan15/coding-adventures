@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C370-aitihyam",
+    "language": "telugu",
+    "chapter": 370,
+    "sequence": 18250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91afa7460a66a160"
+  },
+  "findings": []
+}

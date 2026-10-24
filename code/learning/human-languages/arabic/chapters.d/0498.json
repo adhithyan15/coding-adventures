@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "Making others feel, and blame",
+  "label": "ch:ar-making-others-feel-and-blame",
+  "canDo": "I can say that something made someone happy, sad, laugh or angry, and that someone blamed someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C498-lama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can say that something made someone happy, sad, laugh or angry, and that someone blamed someone.",
+    "assesses": [
+      "AR-LEX-C498-ATHAR498-03",
+      "AR-LEX-C498-ATHAR498-04",
+      "AR-LEX-C498-ATHAR498-05"
+    ]
+  }
+}

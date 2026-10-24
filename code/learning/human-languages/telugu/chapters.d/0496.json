@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Sorrow",
+  "label": "ch:te-sorrow",
+  "canDo": "I can say that I was sad, hurt or crushed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C496-nisprha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can say that I was sad, hurt or crushed.",
+    "assesses": [
+      "TE-LEX-C496-BADHA496-03",
+      "TE-LEX-C496-BADHA496-04",
+      "TE-LEX-C496-BADHA496-05"
+    ]
+  }
+}

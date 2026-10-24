@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R468-review-461-468",
+    "language": "malayalam",
+    "chapter": 468,
+    "sequence": 23400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8867254a368f9f59"
+  },
+  "findings": []
+}

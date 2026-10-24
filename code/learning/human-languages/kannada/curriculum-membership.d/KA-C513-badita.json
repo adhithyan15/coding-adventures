@@ -1,0 +1,11 @@
+{
+  "id": "KA-C513-badita",
+  "pathSegment": "KA-PATH-513-CHETARIKE513",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-513-CHETARIKE513",
+      "order": 2
+    }
+  ]
+}

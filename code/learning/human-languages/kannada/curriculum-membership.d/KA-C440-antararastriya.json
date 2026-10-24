@@ -1,0 +1,11 @@
+{
+  "id": "KA-C440-antararastriya",
+  "pathSegment": "KA-PATH-440-PARAVANAGI440",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-440-PARAVANAGI440",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C282-poketmar",
+    "language": "bengali",
+    "chapter": 282,
+    "sequence": 18340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f336ac0d303a565"
+  },
+  "findings": []
+}

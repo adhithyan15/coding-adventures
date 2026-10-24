@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 401,
+  "output": "bengali/book/chapters/ch401-points-of-the-compass.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

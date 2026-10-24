@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "An Old Village House",
+  "label": "ch:ta-an-old-village-house",
+  "canDo": "I can describe the parts of an old house.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C522-cakkatai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can describe the parts of an old house.",
+    "assesses": [
+      "TA-LEX-C522-PAZHAYAVEEDU522-03",
+      "TA-LEX-C522-PAZHAYAVEEDU522-04",
+      "TA-LEX-C522-PAZHAYAVEEDU522-05"
+    ]
+  }
+}

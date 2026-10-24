@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:21ee0f849e416b87",
+  "lessonIds": [
+    "AR-C407-taadhdhara",
+    "AR-C407-istalzama",
+    "AR-C407-tajannaba",
+    "AR-C407-tafada",
+    "AR-C407-taraa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch407.txt",
+  "json": "arabic/narration/ch407.json",
+  "textHash": "fnv1a64:7e2f6c6d7750e560",
+  "jsonHash": "fnv1a64:1547f4e42e409232",
+  "findings": []
+}

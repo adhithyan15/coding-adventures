@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:d43d69750c523192",
+  "lessonIds": [
+    "TE-C418-sadhyam",
+    "TE-C418-asadhyam",
+    "TE-C418-sambhavyata",
+    "TE-C418-anivaryam",
+    "TE-C418-vilaite"
+  ],
+  "tex": "telugu/book/chapters/ch418-possible-or-not.tex"
+}

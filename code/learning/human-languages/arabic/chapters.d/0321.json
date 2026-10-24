@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "Robbers and gangs",
+  "label": "ch:ar-robbers-and-gangs",
+  "canDo": "I can say a robber, a pickpocket, a gang, to rob and to loot.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C321-nahaba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can say a robber, a pickpocket, a gang, to rob and to loot.",
+    "assesses": [
+      "AR-LEX-C321-SARIQ321-03",
+      "AR-LEX-C321-SARIQ321-04",
+      "AR-LEX-C321-SARIQ321-05"
+    ]
+  }
+}

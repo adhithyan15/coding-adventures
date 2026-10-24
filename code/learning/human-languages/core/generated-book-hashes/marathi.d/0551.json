@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:a846dd9c48fbf0ed",
+  "lessonIds": [
+    "MR-C551-pratiksa",
+    "MR-C551-yadi",
+    "MR-C551-kram",
+    "MR-C551-rakhiv",
+    "MR-C551-akasmik"
+  ],
+  "tex": "marathi/book/chapters/ch551-waiting-lists.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:6e8c18999148938c",
+  "lessonIds": [
+    "AR-C503-mutasamih",
+    "AR-C503-asabi",
+    "AR-C503-marih",
+    "AR-C503-munazzam",
+    "AR-C503-muhmil",
+    "AR-R503-review-496-503"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch503.txt",
+  "json": "arabic/narration/ch503.json",
+  "textHash": "fnv1a64:dee41c404095e24b",
+  "jsonHash": "fnv1a64:b910d49c7a60639e",
+  "findings": []
+}

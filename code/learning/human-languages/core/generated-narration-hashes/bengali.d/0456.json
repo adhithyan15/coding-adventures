@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:6e7a9ccddd62b63c",
+  "lessonIds": [
+    "BN-C456-choritro",
+    "BN-C456-gun",
+    "BN-C456-obhyas",
+    "BN-C456-achoron",
+    "BN-C456-ropto-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch456.txt",
+  "json": "bengali/narration/ch456.json",
+  "textHash": "fnv1a64:0acfe433f798fa06",
+  "jsonHash": "fnv1a64:7665554ad25b7758",
+  "findings": []
+}

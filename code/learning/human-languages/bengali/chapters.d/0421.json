@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Goods and Stock",
+  "label": "ch:bn-goods-and-stock",
+  "canDo": "I can talk about goods in a warehouse, wholesale prices and placing an order.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C421-mojut-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can talk about goods in a warehouse, wholesale prices and placing an order.",
+    "assesses": [
+      "BN-LEX-C421-GUDAM421-03",
+      "BN-LEX-C421-GUDAM421-04",
+      "BN-LEX-C421-GUDAM421-05"
+    ]
+  }
+}

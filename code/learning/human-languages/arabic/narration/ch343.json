@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 343,
+  "title": "Adventures",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:79224ea733af25f8",
+  "lessons": [
+    {
+      "id": "AR-C343-mughamara",
+      "sequence": 19560,
+      "title": "مغامرة (mughāmara) — an adventure",
+      "headword": "مغامرة",
+      "romanization": "mughāmara",
+      "gloss": "an adventure",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af79fed585aa92c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a title, then the Arabic for to invent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مغامرة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مغامرة — mughāmara — \"an adventure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كانت الرحلة مغامرة كبيرة. kānat ar-riḥla mughāmara kabīra. The trip was a great adventure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مغامرة (mughāmara) is built on the native Arabic root gh-m-r (Lane), where ghamr is deep water that covers a man. Mughāmara is the verbal noun of Form III, \"to plunge into\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mughāmara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mughāmara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mughāmara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mughāmara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānat ar-riḥla mughāmara kabīra. — The trip was a great adventure.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānat ar-riḥla mughāmara kabīra.* — The trip was a great adventure.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a title, then the Arabic for to invent, then say mughāmara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a title, then the Arabic for to invent, then say *mughāmara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مغامرة (mughāmara) mean? (\"An adventure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C343-majhul",
+      "sequence": 19570,
+      "title": "مجهول (majhūl) — unknown; a stranger",
+      "headword": "مجهول",
+      "romanization": "majhūl",
+      "gloss": "unknown; a stranger",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a78f47d143178e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to invent, then the Arabic for an adventure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مجهول",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مجهول — majhūl — \"unknown; a stranger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وصلت رسالة من شخص مجهول. waṣalat risāla min shakhṣ majhūl. A letter arrived from an unknown person."
+            },
+            {
+              "kind": "speech",
+              "text": "In grammar, the passive is المبني للمجهول, built for the unknown doer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مجهول (majhūl) is usually traced to the native Arabic root j-h-l, \"to be ignorant, not to know\". Majhūl is the passive participle: \"what is not known\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majhūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majhūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majhūl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majhūl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waṣalat risāla min shakhṣ majhūl. — A letter arrived from an unknown person.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waṣalat risāla min shakhṣ majhūl.* — A letter arrived from an unknown person.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to invent, then the Arabic for an adventure, then say majhūl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to invent, then the Arabic for an adventure, then say *majhūl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مجهول (majhūl) mean? (\"Unknown; a stranger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C343-mufajaa",
+      "sequence": 19580,
+      "title": "مفاجأة (mufājaʾa) — a surprise",
+      "headword": "مفاجأة",
+      "romanization": "mufājaʾa",
+      "gloss": "a surprise",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0427a16eda2943d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an adventure, then the Arabic for unknown."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مفاجأة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مفاجأة — mufājaʾa — \"a surprise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كانت الهدية مفاجأة جميلة. kānat al-hadiyya mufājaʾa jamīla. The present was a lovely surprise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مفاجأة (mufājaʾa) is built on the native Arabic root f-j-ʾ (Lane), \"to come upon unawares\", the root of fajʾatan, suddenly. It is the verbal noun of Form III."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mufājaʾa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mufājaʾa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mufājaʾa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mufājaʾa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānat al-hadiyya mufājaʾa jamīla. — The present was a lovely surprise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānat al-hadiyya mufājaʾa jamīla.* — The present was a lovely surprise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an adventure, then the Arabic for unknown, then say mufājaʾa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an adventure, then the Arabic for unknown, then say *mufājaʾa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مفاجأة (mufājaʾa) mean? (\"A surprise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C343-sudfa",
+      "sequence": 19590,
+      "title": "صدفة (ṣudfa) — a coincidence, chance",
+      "headword": "صدفة",
+      "romanization": "ṣudfa",
+      "gloss": "a coincidence, chance",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fea6b527ce1fa0c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for unknown, then the Arabic for a surprise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صدفة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صدفة — ṣudfa — \"a coincidence, chance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "التقيت بصديقي القديم صدفة (ṣudfa) في السوق. iltaqaytu bi-ṣadīqī al-qadīm ṣudfatan fī as-sūq. I met my old friend by chance in the market."
+            },
+            {
+              "kind": "speech",
+              "text": "صدفة (ṣudfa) or بالصدفة: by chance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صدفة (ṣudfa) is built on the native Arabic root ṣ-d-f (Lane), where Form III ṣādafa is \"to light upon someone without meaning to\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣudfa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣudfa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣudfa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣudfa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iltaqaytu bi-ṣadīqī al-qadīm ṣudfatan fī as-sūq. — I met my old friend by chance in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iltaqaytu bi-ṣadīqī al-qadīm ṣudfatan fī as-sūq.* — I met my old friend by chance in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for unknown, then the Arabic for a surprise, then say ṣudfa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for unknown, then the Arabic for a surprise, then say *ṣudfa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صدفة (ṣudfa) mean? (\"A coincidence, chance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C343-khatara",
+      "sequence": 19600,
+      "title": "خاطر (khāṭara) — to take a risk",
+      "headword": "خاطر",
+      "romanization": "khāṭara",
+      "gloss": "to take a risk",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84390867b4604527",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a surprise, then the Arabic for a coincidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خاطر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خاطر — khāṭara — \"to take a risk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خاطر الرجل بحياته لينقذ الطفل. khāṭara ar-rajul bi-ḥayātihi li-yunqidha aṭ-ṭifl. The man risked his life to save the child."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يخاطر, yukhāṭir."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes بـ for what is risked."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خاطر (khāṭara) is built on the native Arabic root kh-ṭ-r (Lane), the root of khaṭar, danger, and khaṭīr, serious. It is Form III, \"to put a thing in danger\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṭara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāṭara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṭara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāṭara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṭara ar-rajul bi-ḥayātihi li-yunqidha aṭ-ṭifl. — The man risked his life to save the child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāṭara ar-rajul bi-ḥayātihi li-yunqidha aṭ-ṭifl.* — The man risked his life to save the child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a surprise, then the Arabic for a coincidence, then say khāṭara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a surprise, then the Arabic for a coincidence, then say *khāṭara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خاطر (khāṭara) mean? (\"To take a risk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

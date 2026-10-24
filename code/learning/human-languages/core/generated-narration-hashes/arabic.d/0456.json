@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:673278cf7ffee3fa",
+  "lessonIds": [
+    "AR-C456-hajm",
+    "AR-C456-sinf",
+    "AR-C456-ayyina",
+    "AR-C456-nasaba",
+    "AR-C456-daqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch456.txt",
+  "json": "arabic/narration/ch456.json",
+  "textHash": "fnv1a64:027c19034f4c2064",
+  "jsonHash": "fnv1a64:81a29b1dace1f02e",
+  "findings": []
+}

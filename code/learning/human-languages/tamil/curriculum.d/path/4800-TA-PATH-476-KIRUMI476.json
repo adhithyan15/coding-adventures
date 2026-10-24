@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-476-KIRUMI476",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-476-KIRUMI476"
+  ],
+  "after": []
+}

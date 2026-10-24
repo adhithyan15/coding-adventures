@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 539,
+  "title": "Songs and Verse",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:81509fbb19484d55",
+  "lessons": [
+    {
+      "id": "TE-C539-pallavi",
+      "sequence": 27300,
+      "title": "పల్లవి (pallavi) — a refrain; a chorus",
+      "headword": "పల్లవి",
+      "romanization": "pallavi",
+      "gloss": "a refrain; a chorus",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c50bac24352638da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a mridangam drum, then the Telugu for a reed pipe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పల్లవి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పల్లవి — pallavi — \"a refrain; a chorus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పాట పల్లవి అందరికీ గుర్తుంది. ā pāṭa pallavi andarikī gurtundi. Everyone remembers the refrain of that song."
+            },
+            {
+              "kind": "speech",
+              "text": "The opening line a song keeps returning to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పల్లవి (pallavi) is usually traced to Sanskrit pallava, \"a sprout, a twig, a blossom\" (CDIAL 7969)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pallavi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pallavi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pallavi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pallavi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pāṭa pallavi andarikī gurtundi. — Everyone remembers the refrain of that song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pāṭa pallavi andarikī gurtundi.* — Everyone remembers the refrain of that song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a mridangam drum, then the Telugu for a reed pipe, then say pallavi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a mridangam drum, then the Telugu for a reed pipe, then say *pallavi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పల్లవి (pallavi) mean? (\"A refrain; a chorus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C539-caranam",
+      "sequence": 27310,
+      "title": "చరణం (caraṇaṁ) — a stanza; a verse of a song",
+      "headword": "చరణం",
+      "romanization": "caraṇaṁ",
+      "gloss": "a stanza; a verse of a song",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f6f899de538c687",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a reed pipe, then the Telugu for a refrain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చరణం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చరణం — caraṇaṁ — \"a stanza; a verse of a song\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రెండో చరణం నాకు గుర్తులేదు. reṇḍō caraṇaṁ nāku gurtulēdu. I do not remember the second verse."
+            },
+            {
+              "kind": "speech",
+              "text": "The verses that come between the refrains."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చరణం (caraṇaṁ) is borrowed from Sanskrit caraṇa, \"a foot; a line of a stanza\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caraṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caraṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caraṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caraṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reṇḍō caraṇaṁ nāku gurtulēdu. — I do not remember the second verse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reṇḍō caraṇaṁ nāku gurtulēdu.* — I do not remember the second verse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a reed pipe, then the Telugu for a refrain, then say caraṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a reed pipe, then the Telugu for a refrain, then say *caraṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చరణం (caraṇaṁ) mean? (\"A stanza; a verse of a song\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C539-padyam",
+      "sequence": 27320,
+      "title": "పద్యం (padyaṁ) — a metrical verse; a poem",
+      "headword": "పద్యం",
+      "romanization": "padyaṁ",
+      "gloss": "a metrical verse; a poem",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78d609f4e2de6990",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a refrain, then the Telugu for a stanza."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పద్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పద్యం — padyaṁ — \"a metrical verse; a poem\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తాతయ్య చాలా పద్యాలు నోటికి చెబుతారు. tātayya cālā padyālu nōṭiki cebutāru. Grandpa can recite many verses by heart."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: పద్యాలు, padyālu."
+            },
+            {
+              "kind": "speech",
+              "text": "Classical Telugu verse in a fixed metre; పాట is a song."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పద్యం (padyaṁ) is borrowed from Sanskrit padya, \"relating to a foot; made of the parts of verses\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tātayya cālā padyālu nōṭiki cebutāru. — Grandpa can recite many verses by heart.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tātayya cālā padyālu nōṭiki cebutāru.* — Grandpa can recite many verses by heart.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a refrain, then the Telugu for a stanza, then say padyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a refrain, then the Telugu for a stanza, then say *padyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పద్యం (padyaṁ) mean? (\"A metrical verse; a poem\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C539-geyam",
+      "sequence": 27330,
+      "title": "గేయం (gēyaṁ) — a lyric; a song text",
+      "headword": "గేయం",
+      "romanization": "gēyaṁ",
+      "gloss": "a lyric; a song text",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bb43d770635c681",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a stanza, then the Telugu for a metrical verse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గేయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గేయం — gēyaṁ — \"a lyric; a song text\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ కవి రాసిన గేయం బాగుంది. ā kavi rāsina gēyaṁ bāgundi. The lyric that poet wrote is good."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal: verse written to be sung."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గేయం (gēyaṁ) is borrowed from Sanskrit gēya, \"to be sung; singing, a song\" (CDIAL 4249)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gēyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gēyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gēyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gēyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kavi rāsina gēyaṁ bāgundi. — The lyric that poet wrote is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kavi rāsina gēyaṁ bāgundi.* — The lyric that poet wrote is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a stanza, then the Telugu for a metrical verse, then say gēyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a stanza, then the Telugu for a metrical verse, then say *gēyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గేయం (gēyaṁ) mean? (\"A lyric; a song text\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C539-janapadam",
+      "sequence": 27340,
+      "title": "జానపదం (jānapadaṁ) — folk tradition; country life",
+      "headword": "జానపదం",
+      "romanization": "jānapadaṁ",
+      "gloss": "folk tradition; country life",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f9099aff10a86e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a metrical verse, then the Telugu for a lyric."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: జానపదం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జానపదం — jānapadaṁ — \"folk tradition; country life\"."
+            },
+            {
+              "kind": "speech",
+              "text": "జానపద పాటలు పల్లెల్లో పుట్టాయి. jānapada pāṭalu pallellō puṭṭāyi. Folk songs were born in the villages."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly as జానపద, folk: జానపద కళలు, folk arts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జానపదం (jānapadaṁ) is borrowed from Sanskrit jānapada, \"living in the country; a country dweller\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jānapadaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jānapadaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jānapadaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jānapadaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jānapada pāṭalu pallellō puṭṭāyi. — Folk songs were born in the villages.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jānapada pāṭalu pallellō puṭṭāyi.* — Folk songs were born in the villages.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a metrical verse, then the Telugu for a lyric, then say jānapadaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a metrical verse, then the Telugu for a lyric, then say *jānapadaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does జానపదం (jānapadaṁ) mean? (\"Folk tradition; country life\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

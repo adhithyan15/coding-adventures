@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 373,
+  "title": "Data and Methods",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:7bf3cfc28e654570",
+  "lessons": [
+    {
+      "id": "MR-C373-sarveksan",
+      "sequence": 21580,
+      "title": "सर्वेक्षण (sarvekṣaṇ) — a survey",
+      "headword": "सर्वेक्षण",
+      "romanization": "sarvekṣaṇ",
+      "gloss": "a survey",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:586841101aea2623",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a thesis, then the Marathi for a theory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सर्वेक्षण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सर्वेक्षण — sarvekṣaṇ — \"a survey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संस्थेने गावात आरोग्याचं सर्वेक्षण केलं. saṁsthene gāvāt ārogyācaṁ sarvekṣaṇ kelaṁ. The organization carried out a health survey in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "सर्व + ईक्षण, all + looking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सर्वेक्षण (sarvekṣaṇ) is a learned compound built from Sanskrit sarva, \"all\", and īkṣaṇa, \"look, view\" (Monier-Williams): a view over everything."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarvekṣaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarvekṣaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarvekṣaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarvekṣaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁsthene gāvāt ārogyācaṁ sarvekṣaṇ kelaṁ. — The organization carried out a health survey in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁsthene gāvāt ārogyācaṁ sarvekṣaṇ kelaṁ.* — The organization carried out a health survey in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a thesis, then the Marathi for a theory, then say sarvekṣaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a thesis, then the Marathi for a theory, then say *sarvekṣaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सर्वेक्षण (sarvekṣaṇ) mean? (\"A survey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C373-namuna",
+      "sequence": 21590,
+      "title": "नमुना (namunā) — a sample; a specimen",
+      "headword": "नमुना",
+      "romanization": "namunā",
+      "gloss": "a sample; a specimen",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91751b290d761be1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a theory, then the Marathi for a survey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नमुना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमुना — namunā — \"a sample; a specimen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रयोगासाठी नदीच्या पाण्याचा नमुना घेतला. prayogāsāṭhī nadīcyā pāṇyācā namunā ghetlā. A sample of river water was taken for the experiment."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Plural: नमुने, namune."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural नमुने; also a model, a pattern."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमुना (namunā) is a loan from Persian namūna, \"a sample, a pattern\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namunā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namunā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namunā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namunā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayogāsāṭhī nadīcyā pāṇyācā namunā ghetlā. — A sample of river water was taken for the experiment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayogāsāṭhī nadīcyā pāṇyācā namunā ghetlā.* — A sample of river water was taken for the experiment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a theory, then the Marathi for a survey, then say namunā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a theory, then the Marathi for a survey, then say *namunā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नमुना (namunā) mean? (\"A sample; a specimen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C373-akdevari",
+      "sequence": 21600,
+      "title": "आकडेवारी (ākḍevārī) — statistics; figures",
+      "headword": "आकडेवारी",
+      "romanization": "ākḍevārī",
+      "gloss": "statistics; figures",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d32f8902ef320bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a survey, then the Marathi for a sample."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आकडेवारी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आकडेवारी — ākḍevārī — \"statistics; figures\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सर्वेक्षणाची आकडेवारी उद्या जाहीर होईल. sarvekṣaṇācī ākḍevārī udyā jāhīr hoīl. The survey's figures will be announced tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "आकडा, a figure, + -वारी: figures taken together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आकडेवारी (ākḍevārī) is built on आकडा, \"a figure, a number\", with the ending -वारी; the origin of आकडा is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākḍevārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākḍevārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākḍevārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākḍevārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarvekṣaṇācī ākḍevārī udyā jāhīr hoīl. — The survey's figures will be announced tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarvekṣaṇācī ākḍevārī udyā jāhīr hoīl.* — The survey's figures will be announced tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a survey, then the Marathi for a sample, then say ākḍevārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a survey, then the Marathi for a sample, then say *ākḍevārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आकडेवारी (ākḍevārī) mean? (\"Statistics; figures\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C373-vislesan",
+      "sequence": 21610,
+      "title": "विश्लेषण (viśleṣaṇ) — an analysis",
+      "headword": "विश्लेषण",
+      "romanization": "viśleṣaṇ",
+      "gloss": "an analysis",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cc22b7ebcc7e052",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a sample, then the Marathi for statistics."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विश्लेषण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विश्लेषण — viśleṣaṇ — \"an analysis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तिने आकडेवारीचं नीट विश्लेषण केलं. tine ākḍevārīcaṁ nīṭ viśleṣaṇ kelaṁ. She analysed the figures carefully."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "विश्लेषण (viśleṣaṇ) करणे, to analyse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विश्लेषण (viśleṣaṇ) is a tatsama, taken from Sanskrit viśleṣaṇa, \"separating, dissolving\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśleṣaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśleṣaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśleṣaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśleṣaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tine ākḍevārīcaṁ nīṭ viśleṣaṇ kelaṁ. — She analysed the figures carefully.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tine ākḍevārīcaṁ nīṭ viśleṣaṇ kelaṁ.* — She analysed the figures carefully.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a sample, then the Marathi for statistics, then say viśleṣaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a sample, then the Marathi for statistics, then say *viśleṣaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विश्लेषण (viśleṣaṇ) mean? (\"An analysis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C373-paddhat",
+      "sequence": 21620,
+      "title": "पद्धत (paddhat) — a method; a way",
+      "headword": "पद्धत",
+      "romanization": "paddhat",
+      "gloss": "a method; a way",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee196413cf6c80c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for statistics, then the Marathi for an analysis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पद्धत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पद्धत — paddhat — \"a method; a way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिकवण्याची त्यांची पद्धत वेगळी आहे. śikvaṇyācī tyāñcī paddhat vegḷī āhe. Their way of teaching is different."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine: X ची पद्धत (paddhat), the way of X."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पद्धत (paddhat) is a tatsama, taken from Sanskrit paddhati, \"a path, a track, a way\" (Monier-Williams). Marathi drops the final -i."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paddhat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paddhat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paddhat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paddhat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikvaṇyācī tyāñcī paddhat vegḷī āhe. — Their way of teaching is different.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikvaṇyācī tyāñcī paddhat vegḷī āhe.* — Their way of teaching is different.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for statistics, then the Marathi for an analysis, then say paddhat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for statistics, then the Marathi for an analysis, then say *paddhat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पद्धत (paddhat) mean? (\"A method; a way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R373-review-366-373",
+      "sequence": 21630,
+      "title": "Looking back: from Values to Data and Methods",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Values to Data and Methods",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e01bd882e44cd95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for a value and morality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a value, morality, integrity, renunciation, welfare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a value, morality, integrity, renunciation, welfare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a practice, a convention, an ideology, a tendency, social",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a practice, a convention, an ideology, a tendency, social]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to comply with, to violate, to discharge, to entrust, to handle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to comply with, to violate, to discharge, to entrust, to handle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a professor, a syllabus, a scholarship, a fee, a hostel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a professor, a syllabus, a scholarship, a fee, a hostel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lecture, an essay, a speech, a symposium, a speaker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lecture, an essay, a speech, a symposium, a speaker]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to pass, to fail, to revise, to cram, a certificate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to pass, to fail, to revise, to cram, a certificate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "research, an experiment, a scholar, a thesis, a theory",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: research, an experiment, a scholar, a thesis, a theory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a survey, a sample, statistics, an analysis, a method",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a survey, a sample, statistics, an analysis, a method]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A value? (मूल्य, mūlya.) Morality? (नैतिकता, naitiktā.) Integrity? (सचोटी, sacoṭī.) Renunciation? (त्याग, tyāg.) Welfare? (हित, hit.) A practice? (प्रथा, prathā.) A convention? (रूढी, rūḍhī.) An ideology? (विचारसरणी, vicārsarṇī.) A tendency? (प्रवृत्ती, pravṛttī.) Social? (सामाजिक, sāmājik.) To comply with? (पालन करणे, pālan karṇe.) To violate? (उल्लंघन करणे, ullaṅghan karṇe.) To discharge? (बजावणे, bajāvṇe.) To entrust? (सोपवणे, sopavṇe.) To handle? (हाताळणे, hātāḷṇe.) A professor? (प्राध्यापक, prādhyāpak.) A syllabus? (अभ्यासक्रम, abhyāsakram.) A scholarship? (शिष्यवृत्ती, śiṣyavṛttī.) A fee? (शुल्क, śulka.) A hostel? (वसतिगृह, vasatigṛh.) A lecture? (व्याख्यान, vyākhyān.) An essay? (निबंध, nibandh.) A speech? (भाषण, bhāṣaṇ.) A symposium? (परिसंवाद, parisaṁvād.) A speaker? (वक्ता, vaktā.) To pass? (उत्तीर्ण होणे, uttīrṇa hoṇe.) To fail? (नापास होणे, nāpās hoṇe.) To revise? (उजळणी करणे, ujaḷṇī karṇe.) To cram? (घोकणे, ghokṇe.) A certificate? (प्रमाणपत्र, pramāṇpatra.) Research? (संशोधन, saṁśodhan.) An experiment? (प्रयोग, prayog.) A scholar? (विद्वान, vidvān.) A thesis? (प्रबंध, prabandh.) A theory? (सिद्धांत, siddhānt.) A survey? (सर्वेक्षण, sarvekṣaṇ.) A sample? (नमुना, namunā.) Statistics? (आकडेवारी, ākḍevārī.) An analysis? (विश्लेषण, viśleṣaṇ.) A method? (पद्धत, paddhat.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

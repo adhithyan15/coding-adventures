@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:f6ddf4b35373de5c",
+  "lessonIds": [
+    "AR-C542-masrahiyya",
+    "AR-C542-mashhad",
+    "AR-C542-tasfiq",
+    "AR-C542-saffaqa",
+    "AR-C542-tamthil"
+  ],
+  "tex": "arabic/book/chapters/ch542-on-stage.tex"
+}

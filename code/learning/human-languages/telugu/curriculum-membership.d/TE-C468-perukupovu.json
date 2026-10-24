@@ -1,0 +1,11 @@
+{
+  "id": "TE-C468-perukupovu",
+  "pathSegment": "TE-PATH-468-MURUGU468",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-468-MURUGU468",
+      "order": 4
+    }
+  ]
+}

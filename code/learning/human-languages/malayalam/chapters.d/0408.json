@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Weighing It Up",
+  "label": "ch:ml-weighing-it-up",
+  "canDo": "I can say to consider, to evaluate, a stance, an attitude and to justify.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C408-nyayikarikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can say to consider, to evaluate, a stance, an attitude and to justify.",
+    "assesses": [
+      "ML-LEX-C408-NILAPATU408-03",
+      "ML-LEX-C408-NILAPATU408-04",
+      "ML-LEX-C408-NILAPATU408-05"
+    ]
+  }
+}

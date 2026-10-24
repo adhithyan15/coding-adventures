@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 462,
+  "title": "Lazy and Industrious",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7b06d1f492c1c575",
+  "lessons": [
+    {
+      "id": "BN-C462-olos",
+      "sequence": 28230,
+      "title": "অলস (ôlôs) — lazy; idle",
+      "headword": "অলস",
+      "romanization": "ôlôs",
+      "gloss": "lazy; idle",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5462868b6c4584e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for whimsical, then the Bengali for to dig one's heels in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অলস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অলস — ôlôs — \"lazy; idle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ছুটির দিনে আমি অলস হয়ে বিছানায় শুয়ে থাকি। chhuṭir dine āmi ôlôs hôye bichhānāy shuye thāki. On holidays I lie lazily in bed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অলস (ôlôs) is a tatsama, Sanskrit alasa, \"inactive, lazy\" (CDIAL 708)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôlôs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôlôs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôlôs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôlôs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhuṭir dine āmi ôlôs hôye bichhānāy shuye thāki. — On holidays I lie lazily in bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhuṭir dine āmi ôlôs hôye bichhānāy shuye thāki.* — On holidays I lie lazily in bed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for whimsical, then the Bengali for to dig one's heels in, then say ôlôs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for whimsical, then the Bengali for to dig one's heels in, then say *ôlôs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অলস (ôlôs) mean? (\"Lazy; idle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C462-kormoth",
+      "sequence": 28240,
+      "title": "কর্মঠ (kôrmôṭh) — industrious; always busy at work",
+      "headword": "কর্মঠ",
+      "romanization": "kôrmôṭh",
+      "gloss": "industrious; always busy at work",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17eca2161a21b782",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to dig one's heels in, then the Bengali for lazy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কর্মঠ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কর্মঠ — kôrmôṭh — \"industrious; always busy at work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দিদিমা সারাদিন কাজ করেন, তিনি খুব কর্মঠ। didimā sārādin kāj kôren, tini khub kôrmôṭh. My grandmother works all day long: she is very industrious."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কর্মঠ (kôrmôṭh) is a tatsama, Sanskrit karmaṭha, \"capable of work, working diligently\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôrmôṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôrmôṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôrmôṭh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôrmôṭh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "didimā sārādin kāj kôren, tini khub kôrmôṭh. — My grandmother works all day long: she is very industrious.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *didimā sārādin kāj kôren, tini khub kôrmôṭh.* — My grandmother works all day long: she is very industrious.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to dig one's heels in, then the Bengali for lazy, then say kôrmôṭh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to dig one's heels in, then the Bengali for lazy, then say *kôrmôṭh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কর্মঠ (kôrmôṭh) mean? (\"Industrious; always busy at work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C462-elomelo",
+      "sequence": 28250,
+      "title": "এলোমেলো (elomelo) — messy; in disorder",
+      "headword": "এলোমেলো",
+      "romanization": "elomelo",
+      "gloss": "messy; in disorder",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1ea7fad784c8b33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for lazy, then the Bengali for industrious."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: এলোমেলো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "এলোমেলো — elomelo — \"messy; in disorder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অরুণের টেবিলটা সবসময় এলোমেলো থাকে। ôruner ṭebilṭā sôbsômôy elomelo thāke. Arun's desk is always in a mess."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "এলোমেলো (elomelo) is a rhyming doubling that paints things scattered every which way; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elomelo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elomelo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elomelo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elomelo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôruner ṭebilṭā sôbsômôy elomelo thāke. — Arun's desk is always in a mess.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôruner ṭebilṭā sôbsômôy elomelo thāke.* — Arun's desk is always in a mess.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for lazy, then the Bengali for industrious, then say elomelo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for lazy, then the Bengali for industrious, then say *elomelo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does এলোমেলো (elomelo) mean? (\"Messy; in disorder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C462-phaki-deoya",
+      "sequence": 28260,
+      "title": "ফাঁকি দেওয়া (phā̃ki deoyā) — to shirk; to dodge (work)",
+      "headword": "ফাঁকি দেওয়া",
+      "romanization": "phā̃ki deoyā",
+      "gloss": "to shirk; to dodge (work)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:943d78d791d3059f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for industrious, then the Bengali for in disorder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফাঁকি দেওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফাঁকি দেওয়া — phā̃ki deoyā — \"to shirk; to dodge (work)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অলস কর্মচারীটা কাজে ফাঁকি দিত। ôlôs kôrmôchārīṭā kāje phā̃ki ditô. The lazy employee used to shirk his work."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি কাজে ফাঁকি দিলেন, tini kāje phā̃ki dilen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফাঁকি দেওয়া (phā̃ki deoyā) is phā̃ki, \"a trick, a dodge\", which CDIAL lists for Bengali (CDIAL 9035), with deoyā, \"to give\" (CDIAL 6141)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phā̃ki deoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phā̃ki deoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phā̃ki deoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phā̃ki deoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôlôs kôrmôchārīṭā kāje phā̃ki ditô. — The lazy employee used to shirk his work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôlôs kôrmôchārīṭā kāje phā̃ki ditô.* — The lazy employee used to shirk his work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for industrious, then the Bengali for in disorder, then say phā̃ki deoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for industrious, then the Bengali for in disorder, then say *phā̃ki deoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফাঁকি দেওয়া (phā̃ki deoyā) mean? (\"To shirk; to dodge (work)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C462-gorimosi-kora",
+      "sequence": 28270,
+      "title": "গড়িমসি করা (gôṛimôsi kôrā) — to dawdle; to put off doing something",
+      "headword": "গড়িমসি করা",
+      "romanization": "gôṛimôsi kôrā",
+      "gloss": "to dawdle; to put off doing something",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05d2fbcef667d882",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for in disorder, then the Bengali for to shirk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গড়িমসি করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গড়িমসি করা — gôṛimôsi kôrā — \"to dawdle; to put off doing something\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাড়ির কাজ করতে ছেলেটা গড়িমসি করছিল। bāṛir kāj kôrte chheleṭā gôṛimôsi kôrchhilô. The boy was dawdling over his homework."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি সই করতে গড়িমসি করলেন, tini sôi kôrte gôṛimôsi kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গড়িমসি করা (gôṛimôsi kôrā) is gôṛimôsi, \"dawdling\", whose origin is not settled, with kôrā, \"to do\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôṛimôsi kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôṛimôsi kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôṛimôsi kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôṛimôsi kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṛir kāj kôrte chheleṭā gôṛimôsi kôrchhilô. — The boy was dawdling over his homework.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṛir kāj kôrte chheleṭā gôṛimôsi kôrchhilô.* — The boy was dawdling over his homework.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for in disorder, then the Bengali for to shirk, then say gôṛimôsi kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for in disorder, then the Bengali for to shirk, then say *gôṛimôsi kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গড়িমসি করা (gôṛimôsi kôrā) mean? (\"To dawdle; to put off doing something\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

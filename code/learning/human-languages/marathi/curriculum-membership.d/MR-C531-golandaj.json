@@ -1,0 +1,11 @@
+{
+  "id": "MR-C531-golandaj",
+  "pathSegment": "MR-PATH-531-KHELADU531",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-531-KHELADU531",
+      "order": 1
+    }
+  ]
+}

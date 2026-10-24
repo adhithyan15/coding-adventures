@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C492-cakotaran",
+    "language": "tamil",
+    "chapter": 492,
+    "sequence": 28120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c63347558afd69a"
+  },
+  "findings": []
+}

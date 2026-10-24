@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-396-MUSTALAH396",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "AR-EXT-396-MUSTALAH396"
+  ],
+  "after": []
+}

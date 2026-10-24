@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C294-sotorko",
+    "language": "bengali",
+    "chapter": 294,
+    "sequence": 18920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb993c6882039393"
+  },
+  "findings": []
+}

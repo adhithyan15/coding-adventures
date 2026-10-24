@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Once Upon a Time",
+  "label": "ch:ml-once-upon-a-time",
+  "canDo": "I can say once upon a time, in those days, at that moment, following that and throughout.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C358-utanilam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can say once upon a time, in those days, at that moment, following that and throughout.",
+    "assesses": [
+      "ML-LEX-C358-PANDUPANDU358-03",
+      "ML-LEX-C358-PANDUPANDU358-04",
+      "ML-LEX-C358-PANDUPANDU358-05"
+    ]
+  }
+}

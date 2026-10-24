@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-389-CEYALPATUTTU389",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TA-EXT-389-CEYALPATUTTU389"
+  ],
+  "after": []
+}

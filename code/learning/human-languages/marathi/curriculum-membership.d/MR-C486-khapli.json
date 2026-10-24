@@ -1,0 +1,11 @@
+{
+  "id": "MR-C486-khapli",
+  "pathSegment": "MR-PATH-486-IJA486",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-486-IJA486",
+      "order": 1
+    }
+  ]
+}

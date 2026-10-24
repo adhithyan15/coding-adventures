@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:45a5c8be1fbe3f5b",
+  "lessonIds": [
+    "KA-C425-svikarisu",
+    "KA-C425-tiraskarisu",
+    "KA-C425-pramanikarisu",
+    "KA-C425-urjita",
+    "KA-C425-manyate",
+    "KA-R425-review-419-425"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch425.txt",
+  "json": "kannada/narration/ch425.json",
+  "textHash": "fnv1a64:293db8cbefe4d55c",
+  "jsonHash": "fnv1a64:f219fe8a4235c18d",
+  "findings": []
+}

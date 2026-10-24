@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 486,
+  "title": "Aches and Pains",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d949d8229c188764",
+  "lessons": [
+    {
+      "id": "HI-C486-dukhna",
+      "sequence": 26740,
+      "title": "दुखना (dukhnā) — to ache",
+      "headword": "दुखना",
+      "romanization": "dukhnā",
+      "gloss": "to ache",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cdce8e3156b73f5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to retch, then the Hindi for a burp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुखना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुखना — dukhnā — \"to ache\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ठंड में दादा के घुटने दुखते हैं। ṭhaṇḍ meṁ dādā ke ghuṭne dukhte haiṁ. Grandfather's knees ache in the cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह पैर बहुत दुखा, vah pair bahut dukhā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुखना (dukhnā) is a tadbhava: CDIAL lists Hindi dukhnā, \"pains\", under Sanskrit duḥkhati (CDIAL 6376), the entry that also holds dukhānā. The part of the body that aches is the subject."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhaṇḍ meṁ dādā ke ghuṭne dukhte haiṁ. — Grandfather's knees ache in the cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhaṇḍ meṁ dādā ke ghuṭne dukhte haiṁ.* — Grandfather's knees ache in the cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to retch, then the Hindi for a burp, then say dukhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to retch, then the Hindi for a burp, then say *dukhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुखना (dukhnā) mean? (\"To ache\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C486-pindli",
+      "sequence": 26750,
+      "title": "पिंडली (piṇḍlī) — the calf of the leg",
+      "headword": "पिंडली",
+      "romanization": "piṇḍlī",
+      "gloss": "the calf of the leg",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5915dde6adb09b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a burp, then the Hindi for to ache."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पिंडली",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पिंडली — piṇḍlī — \"the calf of the leg\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दौड़ने के बाद अरुण की पिंडली में दर्द है। dauṛne ke bād Aruṇ kī piṇḍlī meṁ dard hai. Arun's calf aches after running."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पिंडली (piṇḍlī) is a tadbhava: CDIAL lists Hindi piṇḍlī, \"calf of leg, shin\", beside piṇḍā, \"lump\", under Sanskrit píṇḍa (CDIAL 8168): the rounded lump of muscle at the back of the leg."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṇḍlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṇḍlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṇḍlī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṇḍlī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dauṛne ke bād Aruṇ kī piṇḍlī meṁ dard hai. — Arun's calf aches after running.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dauṛne ke bād Aruṇ kī piṇḍlī meṁ dard hai.* — Arun's calf aches after running.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a burp, then the Hindi for to ache, then say piṇḍlī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a burp, then the Hindi for to ache, then say *piṇḍlī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पिंडली (piṇḍlī) mean? (\"The calf of the leg\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C486-kasakna",
+      "sequence": 26760,
+      "title": "कसकना (kasaknā) — to throb with pain",
+      "headword": "कसकना",
+      "romanization": "kasaknā",
+      "gloss": "to throb with pain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d58964d52e6b0ea6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to ache, then the Hindi for the calf of the leg."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कसकना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कसकना — kasaknā — \"to throb with pain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ठंड में पुरानी चोट कसकती है। ṭhaṇḍ meṁ purānī coṭ kasaktī hai. An old injury throbs in the cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह चोट रात भर कसकी, vah coṭ rāt bhar kaskī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कसकना (kasaknā) is inherited: CDIAL lists Hindi kasaknā, \"to be racked by pain, ache\", under Sanskrit kaṣati, \"rubs, scratches\" (CDIAL 2972). It is the dull, returning ache of an old hurt."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasaknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasaknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasaknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasaknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhaṇḍ meṁ purānī coṭ kasaktī hai. — An old injury throbs in the cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhaṇḍ meṁ purānī coṭ kasaktī hai.* — An old injury throbs in the cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to ache, then the Hindi for the calf of the leg, then say kasaknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to ache, then the Hindi for the calf of the leg, then say *kasaknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कसकना (kasaknā) mean? (\"To throb with pain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C486-rirh",
+      "sequence": 26770,
+      "title": "रीढ़ (rīṛh) — the spine; the backbone",
+      "headword": "रीढ़",
+      "romanization": "rīṛh",
+      "gloss": "the spine; the backbone",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cbdef5dc52a97a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for the calf of the leg, then the Hindi for to throb with pain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रीढ़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रीढ़ — rīṛh — \"the spine; the backbone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भारी बोझ उठाने से मज़दूर की रीढ़ में दर्द है। bhārī bojh uṭhāne se mazdūr kī rīṛh meṁ dard hai. The labourer's back hurts from lifting heavy loads."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रीढ़ (rīṛh) is a tadbhava: CDIAL lists Hindi rīṛh, \"backbone\", under Sanskrit rīḍhaka- (CDIAL 10749a). rīṛh kī haḍḍī, \"the bone of the back\", is the spine itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rīṛh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rīṛh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rīṛh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rīṛh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhārī bojh uṭhāne se mazdūr kī rīṛh meṁ dard hai. — The labourer's back hurts from lifting heavy loads.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhārī bojh uṭhāne se mazdūr kī rīṛh meṁ dard hai.* — The labourer's back hurts from lifting heavy loads.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for the calf of the leg, then the Hindi for to throb with pain, then say rīṛh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for the calf of the leg, then the Hindi for to throb with pain, then say *rīṛh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रीढ़ (rīṛh) mean? (\"The spine; the backbone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C486-sujna",
+      "sequence": 26780,
+      "title": "सूजना (sūjnā) — to swell (of the body)",
+      "headword": "सूजना",
+      "romanization": "sūjnā",
+      "gloss": "to swell (of the body)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c5637594db4e224",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to throb with pain, then the Hindi for the spine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सूजना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूजना — sūjnā — \"to swell (of the body)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मोच से अरुण का पैर सूज गया। moc se Aruṇ kā pair sūj gayā. Arun's foot swelled up from the sprain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह पैर सूज गया, vah pair sūj gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूजना (sūjnā) is a tadbhava: CDIAL lists Hindi sūjnā, \"to swell\", under Sanskrit śūyatē, \"swells\" (CDIAL 12568). sūjan, \"a swelling\", is its noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūjnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūjnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūjnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūjnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moc se Aruṇ kā pair sūj gayā. — Arun's foot swelled up from the sprain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moc se Aruṇ kā pair sūj gayā.* — Arun's foot swelled up from the sprain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to throb with pain, then the Hindi for the spine, then say sūjnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to throb with pain, then the Hindi for the spine, then say *sūjnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सूजना (sūjnā) mean? (\"To swell (of the body)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

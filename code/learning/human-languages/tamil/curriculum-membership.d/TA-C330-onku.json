@@ -1,0 +1,11 @@
+{
+  "id": "TA-C330-onku",
+  "pathSegment": "TA-PATH-330-PERARASU330",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-330-PERARASU330",
+      "order": 4
+    }
+  ]
+}

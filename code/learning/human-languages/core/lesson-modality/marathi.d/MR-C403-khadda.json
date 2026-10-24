@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C403-khadda",
+    "language": "marathi",
+    "chapter": 403,
+    "sequence": 23350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a252bef6366b8e81"
+  },
+  "findings": []
+}

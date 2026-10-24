@@ -1,0 +1,11 @@
+{
+  "id": "KA-C361-smarisu",
+  "pathSegment": "KA-PATH-361-SMARAKA361",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-361-SMARAKA361",
+      "order": 2
+    }
+  ]
+}

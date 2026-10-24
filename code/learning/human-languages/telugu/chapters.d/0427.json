@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Coming to Terms",
+  "label": "ch:te-coming-to-terms",
+  "canDo": "I can insist, arrange, reassure and satisfy.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C427-madhyavarti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can insist, arrange, reassure and satisfy.",
+    "assesses": [
+      "TE-LEX-C427-MADHYAVARTI427-03",
+      "TE-LEX-C427-MADHYAVARTI427-04",
+      "TE-LEX-C427-MADHYAVARTI427-05"
+    ]
+  }
+}

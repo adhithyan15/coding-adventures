@@ -1,0 +1,405 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 285,
+  "title": "Bigger, Biggest, and How Long",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:534bce679dc91208",
+  "lessons": [
+    {
+      "id": "MR-C285-peksha",
+      "sequence": 16380,
+      "title": "-पेक्षा (-pekṣā) — than, and the most",
+      "headword": "-पेक्षा",
+      "romanization": "-pekṣā",
+      "gloss": "than — comparing two things, and सर्वात, the most",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c67eff7d40f0b4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I want to go to Pune\". (malā puṇyālā jāycaṁ āhe.) Then \"fast\". (jalad.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -पेक्षा, 'than'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाडी बसपेक्षा जलद आहे. gāḍī baspekṣā jalad āhe. — \"The train is faster than the bus.\""
+            },
+            {
+              "kind": "speech",
+              "text": "-पेक्षा (-pekṣā) goes on the thing you compare against, in its bent form: घर becomes घरापेक्षा (gharāpekṣā), चहा becomes चहापेक्षा (cahāpekṣā). The adjective stays as it is; Marathi needs no \"-er\". For a quantity, add जास्त (jāsta, \"more\") or कमी, \"less\": मला चहापेक्षा दूध जास्त आवडतं (malā cahāpekṣā dūdh jāsta āvaḍtaṁ), \"I like milk more than tea\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: सर्वात, 'the most'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मीरा वर्गात सर्वात उंच आहे. mīrā vargāt sarvāt uñc āhe. — \"Meera is the tallest in the class.\""
+            },
+            {
+              "kind": "speech",
+              "text": "सर्वात (sarvāt) is \"of all\": सर्वात मोठा (sarvāt moṭhā), \"the biggest\"; सर्वात जवळ (sarvāt javaḷ), \"the nearest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The train is faster than the bus\" — gāḍī baspekṣā jalad āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The train is faster than the bus\" — *gāḍī baspekṣā jalad āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like milk more than tea\" — malā cahāpekṣā dūdh jāsta āvaḍtaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like milk more than tea\" — *malā cahāpekṣā dūdh jāsta āvaḍtaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Meera is the tallest in the class\" — mīrā vargāt sarvāt uñc āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Meera is the tallest in the class\" — *mīrā vargāt sarvāt uñc āhe*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C285-peksha-r1",
+              "prompt": "Say that the train is faster than the bus, then that Meera is the tallest.",
+              "assesses": [
+                "MR-GRAMMAR-C285-PEKSHA-01",
+                "MR-GRAMMAR-C285-SARVAT-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "gāḍī baspekṣā jalad āhe; mīrā sarvāt uñc āhe",
+                "गाडी बसपेक्षा जलद आहे. मीरा सर्वात उंच आहे."
+              ],
+              "feedback": {
+                "correct": "-pekṣā on the bus, sarvāt before the adjective.",
+                "incorrect": "Compare against the bus: baspekṣā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than the house\"? (घरापेक्षा.) \"More\"? (जास्त.) \"The biggest\"? (सर्वात मोठा.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C285-varshanpasun",
+      "sequence": 16390,
+      "title": "तीन वर्षांपासून (tīn varṣāmpāsūn) — how long",
+      "headword": "तीन वर्षांपासून",
+      "romanization": "tīn varṣāmpāsūn",
+      "gloss": "for three years (and still) — how long, with पासून, पर्यंत and -भर",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:899b99227e3eefc6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the train is faster than the bus\". (gāḍī baspekṣā jalad āhe.) Then \"from\" and \"until\". (pāsūn, paryant.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -पासून, 'for (and still)'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी तीन वर्षांपासून पुण्यात राहतो. mī tīn varṣāmpāsūn puṇyāt rāhto. — \"I have lived in Pune for three years.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Marathi keeps the present: the living still goes on. -पासून goes on the stretch of time, in its bent plural: वर्ष becomes वर्षांपासून (varṣāmpāsūn), तास becomes तासांपासून (tāsāmpāsūn). To ask: तुम्ही किती दिवसांपासून इथे आहात? (tumhī kitī divsāmpāsūn ithe āhāt?), \"How long have you been here?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: from … until, and all … long",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी सकाळपासून संध्याकाळपर्यंत काम केलं. mī sakāḷpāsūn sandhyākāḷparyant kām kelaṁ. — \"I worked from morning until evening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "-पासून … -पर्यंत frames a stretch with two ends. -भर, as in दिवसभर, fills it: दिवसभर पाऊस पडत होता (divasbhar pāūs paḍat hotā), \"it rained all day\". A bare number of hours needs no ending: मी दोन तास वाचत होतो (mī don tās vācat hoto)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have lived in Pune for three years\" — mī tīn varṣāmpāsūn puṇyāt rāhto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have lived in Pune for three years\" — *mī tīn varṣāmpāsūn puṇyāt rāhto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How long have you been here?\" — tumhī kitī divsāmpāsūn ithe āhāt?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How long have you been here?\" — *tumhī kitī divsāmpāsūn ithe āhāt?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I worked from morning until evening\" — mī sakāḷpāsūn sandhyākāḷparyant kām kelaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I worked from morning until evening\" — *mī sakāḷpāsūn sandhyākāḷparyant kām kelaṁ*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C285-varshanpasun-r1",
+              "prompt": "Say that you have lived in Pune for three years, then that it rained all day.",
+              "assesses": [
+                "MR-GRAMMAR-C285-PASUN-SPAN-01",
+                "MR-GRAMMAR-C285-FROM-UNTIL-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "mī tīn varṣāmpāsūn puṇyāt rāhto; divasbhar pāūs paḍat hotā",
+                "मी तीन वर्षांपासून पुण्यात राहतो. दिवसभर पाऊस पडत होता."
+              ],
+              "feedback": {
+                "correct": "The present for what still goes on; -bhar for the whole day.",
+                "incorrect": "varṣa bends to varṣāṁ- before -pāsūn."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"For three years\"? (तीन वर्षांपासून (tīn varṣāmpāsūn).) Which tense goes with it, for something still going on? (The present: राहतो.) \"From morning until evening\"? (सकाळपासून संध्याकाळपर्यंत.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R285-comparing-and-time",
+      "sequence": 16400,
+      "title": "Review — comparing and time",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "more, most, and how long",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8aedd7a748505eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I got angry\" and \"I want to become a teacher\". (malā rāg ālā, malā śikṣak vhāycaṁ āhe.) Ask what time the Pune train leaves. (puṇyācī gāḍī kitī vājtā nighte?) Then ऋतू and ज्ञान, and the letters ऋ and ञ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In my opinion the train is better than the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In my opinion the train is better than the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I like the monsoon season most, with ऋतू.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I like the monsoon season most, with **ऋतू**.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have lived in Pune for three years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have lived in Pune for three years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yesterday it rained all day. I read from morning until evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Yesterday it rained all day. I read from morning until evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how long you have been learning Marathi, with -पासून",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how long you have been learning Marathi, with **-पासून**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than\"? (-पेक्षा (-pekṣā).) \"The most\"? (सर्वात.) \"For three years\"? (तीन वर्षांपासून (tīn varṣāmpāsūn).) \"All day\"? (दिवसभर.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

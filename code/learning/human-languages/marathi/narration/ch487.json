@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 487,
+  "title": "Burns and Rashes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c1819350c3663b8e",
+  "lessons": [
+    {
+      "id": "MR-C487-catka-basne",
+      "sequence": 27890,
+      "title": "चटका बसणे (caṭkā basṇe) — to get a burn",
+      "headword": "चटका बसणे",
+      "romanization": "caṭkā basṇe",
+      "gloss": "to get a burn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0a5b579cba82dc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to sprain, then the Marathi for to swell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चटका बसणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चटका बसणे — caṭkā basṇe — \"to get a burn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गरम तव्याला हात लागला आणि चटका बसला. garam tavyālā hāt lāglā āṇi caṭkā baslā. My hand touched the hot griddle and I got burnt."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (to him …): त्याला चटका बसला, tyālā caṭkā baslā."
+            },
+            {
+              "kind": "speech",
+              "text": "Dative: मला चटका बसला. Also a sudden pang of grief."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चटका बसणे (caṭkā basṇe) is a Marathi phrase built on चटका, which CDIAL lists as Marathi caṭkā, \"glow\", under caṭa (CDIAL 4570), with बसणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṭkā basṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṭkā basṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṭkā basṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṭkā basṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garam tavyālā hāt lāglā āṇi caṭkā baslā. — My hand touched the hot griddle and I got burnt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garam tavyālā hāt lāglā āṇi caṭkā baslā.* — My hand touched the hot griddle and I got burnt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to sprain, then the Marathi for to swell, then say caṭkā basṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to sprain, then the Marathi for to swell, then say *caṭkā basṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चटका बसणे (caṭkā basṇe) mean? (\"To get a burn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C487-galu",
+      "sequence": 27900,
+      "title": "गळू (gaḷū) — an abscess; a boil",
+      "headword": "गळू",
+      "romanization": "gaḷū",
+      "gloss": "an abscess; a boil",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9e72221dd04d019",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to swell, then the Marathi for to get a burn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गळू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गळू — gaḷū — \"an abscess; a boil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पाठीवरचं गळू आता फुटलं. pāṭhīvarcaṁ gaḷū ātā phuṭlaṁ. The boil on the back has burst now."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter; गळू (gaḷū) होणे, to get a boil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गळू (gaḷū) is a tadbhava: CDIAL lists Marathi gaḷū̃, \"boil\", under Sanskrit gaḍu (CDIAL 3977)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaḷū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaḷū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaḷū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaḷū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhīvarcaṁ gaḷū ātā phuṭlaṁ. — The boil on the back has burst now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhīvarcaṁ gaḷū ātā phuṭlaṁ.* — The boil on the back has burst now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to swell, then the Marathi for to get a burn, then say gaḷū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to swell, then the Marathi for to get a burn, then say *gaḷū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गळू (gaḷū) mean? (\"An abscess; a boil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C487-pural",
+      "sequence": 27910,
+      "title": "पुरळ (puraḷ) — a rash; spots",
+      "headword": "पुरळ",
+      "romanization": "puraḷ",
+      "gloss": "a rash; spots",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0d52e5628b83737",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to get a burn, then the Marathi for an abscess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुरळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुरळ — puraḷ — \"a rash; spots\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उन्हामुळे मुलाच्या पाठीवर पुरळ आलं. unhāmuḷe mulācyā pāṭhīvar puraḷ ālaṁ. The sun brought out a rash on the boy's back."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter; पुरळ (puraḷ) येणे, to break out in a rash."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुरळ (puraḷ) is a Marathi noun whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puraḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puraḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puraḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puraḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unhāmuḷe mulācyā pāṭhīvar puraḷ ālaṁ. — The sun brought out a rash on the boy's back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unhāmuḷe mulācyā pāṭhīvar puraḷ ālaṁ.* — The sun brought out a rash on the boy's back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to get a burn, then the Marathi for an abscess, then say puraḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to get a burn, then the Marathi for an abscess, then say *puraḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुरळ (puraḷ) mean? (\"A rash; spots\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C487-bhajne",
+      "sequence": 27920,
+      "title": "भाजणे (bhājṇe) — to roast; to get burnt",
+      "headword": "भाजणे",
+      "romanization": "bhājṇe",
+      "gloss": "to roast; to get burnt",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebd7d3b44a39319f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an abscess, then the Marathi for a rash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भाजणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाजणे — bhājṇe — \"to roast; to get burnt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "स्वयंपाक करताना ती भाजली. svayampāk kartānā tī bhājlī. She got burnt while cooking."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो भाजला, to bhājlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Of people, to get burnt; of food, to roast: शेंगदाणे भाजणे (bhājṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाजणे (bhājṇe) is a tadbhava: CDIAL lists Marathi bhājṇẽ, \"fries, parches\", under Sanskrit bhṛjjati (CDIAL 9583)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhājṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhājṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhājṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhājṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svayampāk kartānā tī bhājlī. — She got burnt while cooking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svayampāk kartānā tī bhājlī.* — She got burnt while cooking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an abscess, then the Marathi for a rash, then say bhājṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an abscess, then the Marathi for a rash, then say *bhājṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भाजणे (bhājṇe) mean? (\"To roast; to get burnt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C487-khajavne",
+      "sequence": 27930,
+      "title": "खाजवणे (khājavṇe) — to scratch (an itch)",
+      "headword": "खाजवणे",
+      "romanization": "khājavṇe",
+      "gloss": "to scratch (an itch)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c793efae7119e41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a rash, then the Marathi for to roast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खाजवणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खाजवणे — khājavṇe — \"to scratch (an itch)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "डास चावल्यावर तो पाय खाजवत होता. ḍās cāvlyāvar to pāy khājavat hotā. After the mosquito bit him he was scratching his leg."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने पाय खाजवला, tyāne pāy khājavlā."
+            },
+            {
+              "kind": "speech",
+              "text": "खाज, an itch: खाज येणे, to itch, with the dative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खाजवणे (khājavṇe) is a Marathi verb built on खाज, \"itch\", which CDIAL lists under Sanskrit kharju, \"itching, scab\" (CDIAL 3827)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khājavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khājavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khājavṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khājavṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍās cāvlyāvar to pāy khājavat hotā. — After the mosquito bit him he was scratching his leg.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍās cāvlyāvar to pāy khājavat hotā.* — After the mosquito bit him he was scratching his leg.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a rash, then the Marathi for to roast, then say khājavṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a rash, then the Marathi for to roast, then say *khājavṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खाजवणे (khājavṇe) mean? (\"To scratch (an itch)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 302,
+  "output": "arabic/book/chapters/ch302-an-interview.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

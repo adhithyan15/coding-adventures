@@ -1,0 +1,11 @@
+{
+  "id": "AR-C496-murtah",
+  "pathSegment": "AR-PATH-496-HAMAS496",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-496-HAMAS496",
+      "order": 3
+    }
+  ]
+}

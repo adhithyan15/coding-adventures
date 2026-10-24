@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C366-anvesana",
+    "language": "telugu",
+    "chapter": 366,
+    "sequence": 18070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df1c407e3ea2260e"
+  },
+  "findings": []
+}

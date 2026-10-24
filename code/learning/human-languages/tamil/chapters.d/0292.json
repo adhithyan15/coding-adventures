@@ -1,0 +1,20 @@
+{
+  "chapter": 292,
+  "title": "If It Rains",
+  "label": "ch:ta-if-it-rains",
+  "canDo": "I can say what will happen if with vantāl and maḻai peytāl, say if after a noun with eṉṟāl, make an if less likely with oruvēḷai, and say even if (-ālum) and if not (-āviṭṭāl).",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-R292-if-and-if-not",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: say what will happen if, even if and if not, with the if-form of a verb and eṉṟāl.",
+    "assesses": [
+      "TA-GRAMMAR-C292-CONDITIONAL-01",
+      "TA-GRAMMAR-C292-NEGATIVE-CONDITION-01",
+      "TA-GRAMMAR-C292-ENRAL-01",
+      "TA-GRAMMAR-C292-REAL-CONDITION-01"
+    ]
+  }
+}

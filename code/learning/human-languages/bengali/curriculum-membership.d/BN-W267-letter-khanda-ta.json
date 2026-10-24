@@ -1,0 +1,11 @@
+{
+  "id": "BN-W267-letter-khanda-ta",
+  "pathSegment": "BN-PATH-267-STORY-ORDER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-267-STORY-ORDER",
+      "order": 3
+    }
+  ]
+}

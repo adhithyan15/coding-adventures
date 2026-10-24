@@ -1,0 +1,11 @@
+{
+  "id": "KA-C344-banduku",
+  "pathSegment": "KA-PATH-344-AYUDHA344",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-344-AYUDHA344",
+      "order": 1
+    }
+  ]
+}

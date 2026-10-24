@@ -1,0 +1,11 @@
+{
+  "id": "KA-C350-birudu",
+  "pathSegment": "KA-PATH-350-SANMANA350",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-350-SANMANA350",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:7099221b92802570",
+  "lessonIds": [
+    "BN-C291-tran",
+    "BN-C291-svechchhasebok",
+    "BN-C291-shibir",
+    "BN-C291-bitoron-kora",
+    "BN-C291-dan-kora",
+    "BN-R291-review-284-291"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch291.txt",
+  "json": "bengali/narration/ch291.json",
+  "textHash": "fnv1a64:12c1edf2edcc024f",
+  "jsonHash": "fnv1a64:63baaa7c999758e8",
+  "findings": []
+}

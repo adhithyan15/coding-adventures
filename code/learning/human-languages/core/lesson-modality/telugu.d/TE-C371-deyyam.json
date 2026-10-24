@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C371-deyyam",
+    "language": "telugu",
+    "chapter": 371,
+    "sequence": 18320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01ce357bb4ba302f"
+  },
+  "findings": []
+}

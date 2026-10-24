@@ -1,0 +1,11 @@
+{
+  "id": "BN-C268-karon-jonno",
+  "pathSegment": "BN-PATH-268-OPINION-REASON",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-268-OPINION-REASON",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:76651a2022304955",
+  "lessonIds": [
+    "AR-C346-tajassasa",
+    "AR-C346-tanakkara",
+    "AR-C346-ishtabaha",
+    "AR-C346-tasallala",
+    "AR-C346-tarada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch346.txt",
+  "json": "arabic/narration/ch346.json",
+  "textHash": "fnv1a64:5e646b8adf5cf6fa",
+  "jsonHash": "fnv1a64:52c2ad068919a77c",
+  "findings": []
+}

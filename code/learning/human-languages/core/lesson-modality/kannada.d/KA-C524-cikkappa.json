@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C524-cikkappa",
+    "language": "kannada",
+    "chapter": 524,
+    "sequence": 26740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b796a4cb7076262f"
+  },
+  "findings": []
+}

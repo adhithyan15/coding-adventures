@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:9fe1ecebbf6b973c",
+  "lessonIds": [
+    "TE-C531-bidda",
+    "TE-C531-sisuvu",
+    "TE-C531-santanam",
+    "TE-C531-varasudu",
+    "TE-C531-jolapata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch531.txt",
+  "json": "telugu/narration/ch531.json",
+  "textHash": "fnv1a64:659aa6085e751b51",
+  "jsonHash": "fnv1a64:60baee70abe72b05",
+  "findings": []
+}

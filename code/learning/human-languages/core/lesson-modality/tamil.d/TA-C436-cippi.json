@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C436-cippi",
+    "language": "tamil",
+    "chapter": 436,
+    "sequence": 24970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd6fd7c8553d66ee"
+  },
+  "findings": []
+}

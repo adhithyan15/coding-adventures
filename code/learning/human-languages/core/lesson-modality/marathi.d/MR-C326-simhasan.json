@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C326-simhasan",
+    "language": "marathi",
+    "chapter": 326,
+    "sequence": 18950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e29d6c2b717be31"
+  },
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-195-A2-VALA-FORMS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can contrast a room with a window with in that room, using one bounded masculine direct-oblique pattern.",
+  "prerequisites": [
+    "PA-EXT-194-A2-VIDIARTHI"
+  ]
+}

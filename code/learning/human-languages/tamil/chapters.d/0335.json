@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "A Siege",
+  "label": "ch:ta-a-siege",
+  "canDo": "I can describe a siege and how a fort was defended.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C335-orran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can describe a siege and how a fort was defended.",
+    "assesses": [
+      "TA-LEX-C335-KOTTAI335-03",
+      "TA-LEX-C335-KOTTAI335-04",
+      "TA-LEX-C335-KOTTAI335-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C389-haka",
+    "language": "bengali",
+    "chapter": 389,
+    "sequence": 24290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0f9589ea70e740d"
+  },
+  "findings": []
+}

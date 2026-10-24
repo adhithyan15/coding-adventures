@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:3faf7e47e4da8e3c",
+  "lessonIds": [
+    "BN-C269-uchit",
+    "BN-W269-letter-u",
+    "BN-C269-uchit-te-hobe",
+    "BN-C269-tai-sejonno",
+    "BN-R269-advice-and-result"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "bengali/narration/ch269.txt",
+  "json": "bengali/narration/ch269.json",
+  "textHash": "fnv1a64:74e9d3716a5776b9",
+  "jsonHash": "fnv1a64:5b77eb548052115b",
+  "findings": []
+}

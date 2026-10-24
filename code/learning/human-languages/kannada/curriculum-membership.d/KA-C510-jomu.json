@@ -1,0 +1,11 @@
+{
+  "id": "KA-C510-jomu",
+  "pathSegment": "KA-PATH-510-NOVU510",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-510-NOVU510",
+      "order": 1
+    }
+  ]
+}

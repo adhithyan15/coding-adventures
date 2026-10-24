@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:c592e6b6a9afe046",
+  "lessonIds": [
+    "TE-C389-vislesincu",
+    "TE-C389-vislesana",
+    "TE-C389-parisilincu",
+    "TE-C389-polika",
+    "TE-C389-vyatyasam",
+    "TE-R389-review-382-389"
+  ],
+  "tex": "telugu/book/chapters/ch389-analysing-and-comparing.tex"
+}

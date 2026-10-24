@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C390-mempatuttu",
+    "language": "tamil",
+    "chapter": 390,
+    "sequence": 22320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b971a4721d7f7e4"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:fccd767090f237f0",
+  "lessonIds": [
+    "MR-C372-samsodhan",
+    "MR-C372-prayog",
+    "MR-C372-vidvan",
+    "MR-C372-prabandh",
+    "MR-C372-siddhant"
+  ],
+  "tex": "marathi/book/chapters/ch372-research.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C359-vakil",
+    "language": "marathi",
+    "chapter": 359,
+    "sequence": 20870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a14069bf19c66cf"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C381-bebostha",
+    "language": "bengali",
+    "chapter": 381,
+    "sequence": 23610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5efaf8e0732ab964"
+  },
+  "findings": []
+}

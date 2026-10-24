@@ -1,0 +1,11 @@
+{
+  "id": "ML-C512-munnippokuka",
+  "pathSegment": "ML-PATH-512-PRALAYAM512",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-512-PRALAYAM512",
+      "order": 3
+    }
+  ]
+}

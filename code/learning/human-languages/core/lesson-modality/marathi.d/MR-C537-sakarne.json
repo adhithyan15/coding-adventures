@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C537-sakarne",
+    "language": "marathi",
+    "chapter": 537,
+    "sequence": 30730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2b593a90040eb56"
+  },
+  "findings": []
+}

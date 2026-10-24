@@ -1,0 +1,11 @@
+{
+  "id": "MR-C334-sthapan-karne",
+  "pathSegment": "MR-PATH-334-KRANTI334",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-334-KRANTI334",
+      "order": 1
+    }
+  ]
+}

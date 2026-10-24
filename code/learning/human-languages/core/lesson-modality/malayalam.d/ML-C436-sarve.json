@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C436-sarve",
+    "language": "malayalam",
+    "chapter": 436,
+    "sequence": 21600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59e56e9e0b8445c7"
+  },
+  "findings": []
+}

@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 516,
+  "title": "Free Time",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8227d2f42287a921",
+  "lessons": [
+    {
+      "id": "BN-C516-binodon",
+      "sequence": 31230,
+      "title": "বিনোদন (binodôn) — entertainment",
+      "headword": "বিনোদন",
+      "romanization": "binodôn",
+      "gloss": "entertainment",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:083efb6b682c523b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for leftover from a meal, then the Bengali for to rinse after a meal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিনোদন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিনোদন — binodôn — \"entertainment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার বিনোদন বই পড়া। Āmār binodôn bôi pôṛā. Reading books is my entertainment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিনোদন (binodôn) is a tatsama, Sanskrit vinodana, \"diversion, pastime\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "binodôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *binodôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "binodôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *binodôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmār binodôn bôi pôṛā. — Reading books is my entertainment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmār binodôn bôi pôṛā.* — Reading books is my entertainment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for leftover from a meal, then the Bengali for to rinse after a meal, then say binodôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for leftover from a meal, then the Bengali for to rinse after a meal, then say *binodôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিনোদন (binodôn) mean? (\"Entertainment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C516-phursot",
+      "sequence": 31240,
+      "title": "ফুরসত (phursôt) — spare time; a free moment",
+      "headword": "ফুরসত",
+      "romanization": "phursôt",
+      "gloss": "spare time; a free moment",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:124627f3c51e4fbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to rinse after a meal, then the Bengali for entertainment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফুরসত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফুরসত — phursôt — \"spare time; a free moment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই সপ্তাহে আমার ফুরসত নেই। Ei sôptāhe āmār phursôt nei. I have no spare time this week."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফুরসত (phursôt) is usually traced to Arabic furṣa, \"an opportunity\", through Persian furṣat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phursôt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phursôt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phursôt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phursôt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ei sôptāhe āmār phursôt nei. — I have no spare time this week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ei sôptāhe āmār phursôt nei.* — I have no spare time this week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to rinse after a meal, then the Bengali for entertainment, then say phursôt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to rinse after a meal, then the Bengali for entertainment, then say *phursôt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফুরসত (phursôt) mean? (\"Spare time; a free moment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C516-saikling",
+      "sequence": 31250,
+      "title": "সাইক্লিং (sāikling) — cycling (as a pastime)",
+      "headword": "সাইক্লিং",
+      "romanization": "sāikling",
+      "gloss": "cycling (as a pastime)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8518a828b6d44ce1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for entertainment, then the Bengali for spare time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সাইক্লিং",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাইক্লিং — sāikling — \"cycling (as a pastime)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ছুটির দিনে আমি বন্ধুদের সঙ্গে সাইক্লিং করি। Chhuṭir dine āmi bôndhuder sôngge sāikling kôri. On holidays I go cycling with my friends."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাইক্লিং (sāikling) is borrowed from English cycling."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāikling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāikling*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāikling, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāikling*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chhuṭir dine āmi bôndhuder sôngge sāikling kôri. — On holidays I go cycling with my friends.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chhuṭir dine āmi bôndhuder sôngge sāikling kôri.* — On holidays I go cycling with my friends.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for entertainment, then the Bengali for spare time, then say sāikling again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for entertainment, then the Bengali for spare time, then say *sāikling* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সাইক্লিং (sāikling) mean? (\"Cycling (as a pastime)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C516-mogno",
+      "sequence": 31260,
+      "title": "মগ্ন (môgnô) — absorbed (in something)",
+      "headword": "মগ্ন",
+      "romanization": "môgnô",
+      "gloss": "absorbed (in something)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f27344e7d45034a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for spare time, then the Bengali for cycling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মগ্ন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মগ্ন — môgnô — \"absorbed (in something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মেয়েটা গল্পের বইয়ে মগ্ন ছিল। Meyeṭā gôlper bôiye môgnô chhilô. The girl was absorbed in a storybook."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মগ্ন (môgnô) is a tatsama, Sanskrit magna, \"sunk, plunged\", from majj, \"to sink\" (Monier-Williams): sunk deep in what you are doing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môgnô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môgnô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môgnô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môgnô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meyeṭā gôlper bôiye môgnô chhilô. — The girl was absorbed in a storybook.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Meyeṭā gôlper bôiye môgnô chhilô.* — The girl was absorbed in a storybook.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for spare time, then the Bengali for cycling, then say môgnô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for spare time, then the Bengali for cycling, then say *môgnô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মগ্ন (môgnô) mean? (\"Absorbed (in something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C516-shoukhin",
+      "sequence": 31270,
+      "title": "শৌখিন (shoukhin) — keen on a pastime; amateur",
+      "headword": "শৌখিন",
+      "romanization": "shoukhin",
+      "gloss": "keen on a pastime; amateur",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28ac0b4e80daef32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for cycling, then the Bengali for absorbed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শৌখিন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শৌখিন — shoukhin — \"keen on a pastime; amateur\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার কাকা একজন শৌখিন গায়ক। Āmār kākā ekjôn shoukhin gāyôk. My uncle is an amateur singer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শৌখিন (shoukhin) is usually traced to Arabic shawq, \"eagerness, longing\", through Persian; শখ, a hobby, belongs to the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shoukhin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shoukhin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shoukhin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shoukhin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmār kākā ekjôn shoukhin gāyôk. — My uncle is an amateur singer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmār kākā ekjôn shoukhin gāyôk.* — My uncle is an amateur singer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for cycling, then the Bengali for absorbed, then say shoukhin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for cycling, then the Bengali for absorbed, then say *shoukhin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শৌখিন (shoukhin) mean? (\"Keen on a pastime; amateur\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

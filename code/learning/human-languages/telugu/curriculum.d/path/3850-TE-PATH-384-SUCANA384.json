@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-384-SUCANA384",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TE-EXT-384-SUCANA384"
+  ],
+  "after": []
+}

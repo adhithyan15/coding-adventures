@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C492-canga",
+    "language": "hindi",
+    "chapter": 492,
+    "sequence": 27070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5086fd7c1e64cd90"
+  },
+  "findings": []
+}

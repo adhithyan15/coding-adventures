@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:63cd5c3f126f57c5",
+  "lessonIds": [
+    "HI-C367-sarahna",
+    "HI-C367-tarif",
+    "HI-C367-qasur",
+    "HI-C367-alocna",
+    "HI-C367-jhelna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch367.txt",
+  "json": "hindi/narration/ch367.json",
+  "textHash": "fnv1a64:93f9cbc85fe84185",
+  "jsonHash": "fnv1a64:c2ff630280b76c3b",
+  "findings": []
+}

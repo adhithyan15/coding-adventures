@@ -1,0 +1,11 @@
+{
+  "id": "AR-C286-bi-sabab",
+  "pathSegment": "AR-PATH-286-REASONS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-286-REASONS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C506-secha",
+  "pathSegment": "BN-PATH-506-TANK506",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-506-TANK506",
+      "order": 3
+    }
+  ]
+}

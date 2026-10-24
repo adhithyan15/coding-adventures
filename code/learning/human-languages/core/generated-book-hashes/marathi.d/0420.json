@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:dec1ab66f6d1bfb0",
+  "lessonIds": [
+    "MR-C420-dutavas",
+    "MR-C420-tarangan",
+    "MR-C420-pranisangrahalay",
+    "MR-C420-rahivasi",
+    "MR-C420-parisar"
+  ],
+  "tex": "marathi/book/chapters/ch420-embassies-and-zoos.tex"
+}

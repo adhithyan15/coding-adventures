@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:609ab0ef26019cea",
+  "lessonIds": [
+    "BN-C542-bheste-jaoya",
+    "BN-C542-nishphol",
+    "BN-C542-bishringkhol",
+    "BN-C542-khosa",
+    "BN-C542-golmal"
+  ],
+  "tex": "bengali/book/chapters/ch542-when-plans-fall-through.tex"
+}

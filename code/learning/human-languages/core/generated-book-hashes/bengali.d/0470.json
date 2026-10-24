@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:630b5a97c2c82ac1",
+  "lessonIds": [
+    "BN-C470-tak",
+    "BN-C470-khushki",
+    "BN-C470-ukun",
+    "BN-C470-jhora",
+    "BN-C470-khopa"
+  ],
+  "tex": "bengali/book/chapters/ch470-hair-and-scalp.tex"
+}

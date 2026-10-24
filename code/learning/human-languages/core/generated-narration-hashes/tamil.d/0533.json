@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:435c9a7cbba7961c",
+  "lessonIds": [
+    "TA-C533-pantayam",
+    "TA-C533-turattu",
+    "TA-C533-carukku",
+    "TA-C533-tavu",
+    "TA-C533-mukkuli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch533.txt",
+  "json": "tamil/narration/ch533.json",
+  "textHash": "fnv1a64:87f9787505b29ecb",
+  "jsonHash": "fnv1a64:e8921d120a26ea35",
+  "findings": []
+}

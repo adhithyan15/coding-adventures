@@ -1,0 +1,11 @@
+{
+  "id": "TE-C503-abhimanam",
+  "pathSegment": "TE-PATH-503-PREMA503",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-503-PREMA503",
+      "order": 4
+    }
+  ]
+}

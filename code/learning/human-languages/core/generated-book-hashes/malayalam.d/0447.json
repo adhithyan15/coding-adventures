@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:c43cc9b79151dfd6",
+  "lessonIds": [
+    "ML-C447-netuka",
+    "ML-C447-gunanilavaram",
+    "ML-C447-parajayappetuka",
+    "ML-C447-laksyamituka",
+    "ML-C447-karyaksamata"
+  ],
+  "tex": "malayalam/book/chapters/ch447-aims-and-standards.tex"
+}

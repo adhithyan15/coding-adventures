@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:2bbad9366562e4fd",
+  "lessonIds": [
+    "BN-C415-sud",
+    "BN-C415-pasboi",
+    "BN-C415-lenden",
+    "BN-C415-biniyog-kora",
+    "BN-C415-khoyano",
+    "BN-R415-review-408-415"
+  ],
+  "tex": "bengali/book/chapters/ch415-interest-and-investment.tex"
+}

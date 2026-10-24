@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:dbb38b7712f2db47",
+  "lessonIds": [
+    "TA-C414-vica",
+    "TA-C414-ellai",
+    "TA-C414-cavati",
+    "TA-C414-nulaivayil",
+    "TA-C414-parimutal-cey"
+  ],
+  "tex": "tamil/book/chapters/ch414-at-the-border.tex"
+}

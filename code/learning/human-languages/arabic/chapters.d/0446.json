@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Good service",
+  "label": "ch:ar-good-service",
+  "canDo": "I can say a tip, a service, to serve, to greet warmly and to recommend.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-R446-review-439-446",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can say a tip, a service, to serve, to greet warmly and to recommend.",
+    "assesses": [
+      "AR-LEX-C446-KHIDMA446-03",
+      "AR-LEX-C446-KHIDMA446-04",
+      "AR-LEX-C446-KHIDMA446-05"
+    ]
+  }
+}

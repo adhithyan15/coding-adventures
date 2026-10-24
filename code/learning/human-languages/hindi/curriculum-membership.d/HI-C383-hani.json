@@ -1,0 +1,11 @@
+{
+  "id": "HI-C383-hani",
+  "pathSegment": "HI-PATH-383-SANKAT383",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-383-SANKAT383",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C397-kholambne",
+  "pathSegment": "MR-PATH-397-VILAMB397",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-397-VILAMB397",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C351-atavatu",
+  "pathSegment": "TA-PATH-351-KURIPPITU351",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-351-KURIPPITU351",
+      "order": 3
+    }
+  ]
+}

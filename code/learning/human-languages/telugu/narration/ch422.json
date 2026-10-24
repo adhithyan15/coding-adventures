@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 422,
+  "title": "Promises and Intentions",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c6bd06553ca0809b",
+  "lessons": [
+    {
+      "id": "TE-C422-hami",
+      "sequence": 21050,
+      "title": "హామీ (hāmī) — a guarantee; an assurance",
+      "headword": "హామీ",
+      "romanization": "hāmī",
+      "gloss": "a guarantee; an assurance",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4d88bde0e1d9f46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to prevent, then the Telugu for a dilemma."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: హామీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హామీ — hāmī — \"a guarantee; an assurance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రభుత్వం రైతులకు సహాయం చేస్తామని హామీ ఇచ్చింది. prabhutvaṁ raitulaku sahāyaṁ cēstāmani hāmī iccindi. The government assured the farmers that it would help."
+            },
+            {
+              "kind": "speech",
+              "text": "హామీ (hāmī) ఇచ్చు, to promise, to guarantee."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హామీ (hāmī) has an origin that is not settled; it may have come into Telugu through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāmī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāmī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāmī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāmī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prabhutvaṁ raitulaku sahāyaṁ cēstāmani hāmī iccindi. — The government assured the farmers that it would help.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prabhutvaṁ raitulaku sahāyaṁ cēstāmani hāmī iccindi.* — The government assured the farmers that it would help.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to prevent, then the Telugu for a dilemma, then say hāmī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to prevent, then the Telugu for a dilemma, then say *hāmī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does హామీ (hāmī) mean? (\"A guarantee; an assurance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C422-neravercu",
+      "sequence": 21060,
+      "title": "నెరవేర్చు (neravērcu) — to fulfil; to carry out",
+      "headword": "నెరవేర్చు",
+      "romanization": "neravērcu",
+      "gloss": "to fulfil; to carry out",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca9cd06b14a735b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a dilemma, then the Telugu for a guarantee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నెరవేర్చు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నెరవేర్చు — neravērcu — \"to fulfil; to carry out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను తన వాగ్దానాన్ని నెరవేర్చాడు. atanu tana vāgdānānni neravērcāḍu. He kept his promise."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): నెరవేర్చాను, neravērcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "For promises, wishes and duties: కోరిక నెరవేర్చు (neravērcu), to fulfil a wish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నెరవేర్చు (neravērcu) is a Telugu verb whose origin is uncertain; DEDR has no article for it. Its intransitive partner is నెరవేరు, to come true."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neravērcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neravērcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neravērcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neravērcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu tana vāgdānānni neravērcāḍu. — He kept his promise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu tana vāgdānānni neravērcāḍu.* — He kept his promise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a dilemma, then the Telugu for a guarantee, then say neravērcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a dilemma, then the Telugu for a guarantee, then say *neravērcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నెరవేర్చు (neravērcu) mean? (\"To fulfil; to carry out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C422-uddesincu",
+      "sequence": 21070,
+      "title": "ఉద్దేశించు (uddēśiñcu) — to intend; to mean for",
+      "headword": "ఉద్దేశించు",
+      "romanization": "uddēśiñcu",
+      "gloss": "to intend; to mean for",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e6623b0fd0ce70b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a guarantee, then the Telugu for to fulfil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉద్దేశించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉద్దేశించు — uddēśiñcu — \"to intend; to mean for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నేను మిమ్మల్ని బాధపెట్టాలని ఉద్దేశించలేదు. nēnu mimmalni bādhapeṭṭālani uddēśiñcalēdu. I did not mean to hurt you."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఉద్దేశించాను, uddēśiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb of ఉద్దేశం, an intention, which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉద్దేశించు (uddēśiñcu) is built on Sanskrit uddeśa, \"the act of pointing to; direction\" (Monier-Williams), with the Telugu verb ending -ఇంచు; ఉద్దేశం is the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddēśiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddēśiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddēśiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddēśiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēnu mimmalni bādhapeṭṭālani uddēśiñcalēdu. — I did not mean to hurt you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēnu mimmalni bādhapeṭṭālani uddēśiñcalēdu.* — I did not mean to hurt you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a guarantee, then the Telugu for to fulfil, then say uddēśiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a guarantee, then the Telugu for to fulfil, then say *uddēśiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉద్దేశించు (uddēśiñcu) mean? (\"To intend; to mean for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C422-sankalpam",
+      "sequence": 21080,
+      "title": "సంకల్పం (saṅkalpaṁ) — a resolve; a firm intention",
+      "headword": "సంకల్పం",
+      "romanization": "saṅkalpaṁ",
+      "gloss": "a resolve; a firm intention",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59c10c1d9b248a07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to fulfil, then the Telugu for to intend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంకల్పం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంకల్పం — saṅkalpaṁ — \"a resolve; a firm intention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రోజూ నడవాలని నా సంకల్పం. rōjū naḍavālani nā saṅkalpaṁ. My resolve is to walk every day."
+            },
+            {
+              "kind": "speech",
+              "text": "సంకల్పించు, to resolve."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంకల్పం (saṅkalpaṁ) is borrowed from Sanskrit saṁkalpa, \"will, desire\" (CDIAL 12819)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkalpaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkalpaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkalpaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkalpaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rōjū naḍavālani nā saṅkalpaṁ. — My resolve is to walk every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rōjū naḍavālani nā saṅkalpaṁ.* — My resolve is to walk every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to fulfil, then the Telugu for to intend, then say saṅkalpaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to fulfil, then the Telugu for to intend, then say *saṅkalpaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంకల్పం (saṅkalpaṁ) mean? (\"A resolve; a firm intention\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C422-niscayincu",
+      "sequence": 21090,
+      "title": "నిశ్చయించు (niścayiñcu) — to decide firmly; to make up one’s mind",
+      "headword": "నిశ్చయించు",
+      "romanization": "niścayiñcu",
+      "gloss": "to decide firmly; to make up one’s mind",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3aa46bd30ea6713",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to intend, then the Telugu for a resolve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిశ్చయించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిశ్చయించు — niścayiñcu — \"to decide firmly; to make up one’s mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మేము ఆదివారం బయలుదేరాలని నిశ్చయించాము. mēmu ādivāraṁ bayaludērālani niścayiñcāmu. We made up our minds to set off on Sunday."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): నిశ్చయించాను, niścayiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb of నిశ్చయం, certainty; నిశ్చయించుకో, to resolve for oneself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిశ్చయించు (niścayiñcu) is built on Sanskrit niścaya, \"inquiry, conviction\" (CDIAL 7439), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niścayiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niścayiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niścayiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niścayiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēmu ādivāraṁ bayaludērālani niścayiñcāmu. — We made up our minds to set off on Sunday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēmu ādivāraṁ bayaludērālani niścayiñcāmu.* — We made up our minds to set off on Sunday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to intend, then the Telugu for a resolve, then say niścayiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to intend, then the Telugu for a resolve, then say *niścayiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిశ్చయించు (niścayiñcu) mean? (\"To decide firmly; to make up one’s mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C372-vafadar",
+    "language": "hindi",
+    "chapter": 372,
+    "sequence": 20500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e8004e1c19d3be0"
+  },
+  "findings": []
+}

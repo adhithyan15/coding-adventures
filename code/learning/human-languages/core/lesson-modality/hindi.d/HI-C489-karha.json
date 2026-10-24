@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C489-karha",
+    "language": "hindi",
+    "chapter": 489,
+    "sequence": 26930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5394827fd3521b4e"
+  },
+  "findings": []
+}

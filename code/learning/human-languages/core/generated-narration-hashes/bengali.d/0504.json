@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:edc24e4163683cb0",
+  "lessonIds": [
+    "BN-C504-robot",
+    "BN-C504-svoyongkriyo",
+    "BN-C504-jenaretor",
+    "BN-C504-jong-dhora",
+    "BN-C504-motor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch504.txt",
+  "json": "bengali/narration/ch504.json",
+  "textHash": "fnv1a64:ce344e3a3fe9c901",
+  "jsonHash": "fnv1a64:534cada296942f2a",
+  "findings": []
+}

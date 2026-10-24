@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C391-savappetti",
+    "language": "malayalam",
+    "chapter": 391,
+    "sequence": 19170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e7aab11588949f6"
+  },
+  "findings": []
+}

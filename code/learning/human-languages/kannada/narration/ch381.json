@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 381,
+  "title": "Thinking It Through",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a111513e06a82f00",
+  "lessons": [
+    {
+      "id": "KA-C381-pariganisu",
+      "sequence": 19250,
+      "title": "ಪರಿಗಣಿಸು (parigaṇisu) — to consider",
+      "headword": "ಪರಿಗಣಿಸು",
+      "romanization": "parigaṇisu",
+      "gloss": "to consider",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f10571991c9228d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an inducement, then the Kannada for to attract."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪರಿಗಣಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಿಗಣಿಸು — parigaṇisu — \"to consider\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ನಿನ್ನ ಸಲಹೆಯನ್ನು ಪರಿಗಣಿಸಿದೆ. nānu ninna salaheyannu parigaṇiside. I considered your suggestion."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪರಿಗಣಿಸಿದೆ, parigaṇiside."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to count as: ಇದನ್ನು ತಪ್ಪು ಎಂದು ಪರಿಗಣಿಸು (parigaṇisu), to count this as a mistake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಿಗಣಿಸು (parigaṇisu) is built on Sanskrit pari-gaṇ, \"to count over, to reckon up completely\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parigaṇisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parigaṇisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parigaṇisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parigaṇisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu ninna salaheyannu parigaṇiside. — I considered your suggestion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu ninna salaheyannu parigaṇiside.* — I considered your suggestion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an inducement, then the Kannada for to attract, then say parigaṇisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an inducement, then the Kannada for to attract, then say *parigaṇisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪರಿಗಣಿಸು (parigaṇisu) mean? (\"To consider\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C381-bhavisu",
+      "sequence": 19260,
+      "title": "ಭಾವಿಸು (bhāvisu) — to suppose; to assume",
+      "headword": "ಭಾವಿಸು",
+      "romanization": "bhāvisu",
+      "gloss": "to suppose; to assume",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76707a8a1d7c1700",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to attract, then the Kannada for to consider."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಭಾವಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭಾವಿಸು — bhāvisu — \"to suppose; to assume\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೀನು ಬರುವುದಿಲ್ಲ ಅಂತ ನಾನು ಭಾವಿಸಿದೆ. nīnu baruvudilla anta nānu bhāviside. I assumed you would not come."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಭಾವಿಸಿದೆ, bhāviside."
+            },
+            {
+              "kind": "speech",
+              "text": "What is supposed comes before ಅಂತ or ಎಂದು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭಾವಿಸು (bhāvisu) is built on Sanskrit bhāva, \"being, state, disposition\" (CDIAL 9475), from bhū, \"to be\", with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāvisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāvisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāvisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāvisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīnu baruvudilla anta nānu bhāviside. — I assumed you would not come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīnu baruvudilla anta nānu bhāviside.* — I assumed you would not come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to attract, then the Kannada for to consider, then say bhāvisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to attract, then the Kannada for to consider, then say *bhāvisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಭಾವಿಸು (bhāvisu) mean? (\"To suppose; to assume\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C381-viveka",
+      "sequence": 19270,
+      "title": "ವಿವೇಕ (vivēka) — good sense; discernment",
+      "headword": "ವಿವೇಕ",
+      "romanization": "vivēka",
+      "gloss": "good sense; discernment",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5aecc534ecd53277",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to consider, then the Kannada for to suppose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿವೇಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿವೇಕ — vivēka — \"good sense; discernment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಷ್ಟದ ಸಮಯದಲ್ಲಿ ಅವಳು ವಿವೇಕದಿಂದ ನಡೆದುಕೊಂಡಳು. kaṣṭada samayadalli avaḷu vivēkadinda naḍedukoṇḍaḷu. In hard times she acted with good sense."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿವೇಕಿ, a sensible person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿವೇಕ (vivēka) is borrowed from Sanskrit viveka, \"discrimination, the power to tell things apart\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivēka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivēka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivēka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivēka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṣṭada samayadalli avaḷu vivēkadinda naḍedukoṇḍaḷu. — In hard times she acted with good sense.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṣṭada samayadalli avaḷu vivēkadinda naḍedukoṇḍaḷu.* — In hard times she acted with good sense.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to consider, then the Kannada for to suppose, then say vivēka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to consider, then the Kannada for to suppose, then say *vivēka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿವೇಕ (vivēka) mean? (\"Good sense; discernment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C381-manana-madu",
+      "sequence": 19280,
+      "title": "ಮನನ ಮಾಡು (manana māḍu) — to reflect on",
+      "headword": "ಮನನ ಮಾಡು",
+      "romanization": "manana māḍu",
+      "gloss": "to reflect on",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51a2ed5ca26b6bce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to suppose, then the Kannada for good sense."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮನನ ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮನನ ಮಾಡು — manana māḍu — \"to reflect on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗುರುಗಳ ಮಾತನ್ನು ನಾನು ಮನೆಯಲ್ಲಿ ಮನನ ಮಾಡಿದೆ. gurugaḷa mātannu nānu maneyalli manana māḍide. At home I reflected on my teacher's words."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮನನ ಮಾಡಿದೆ, manana māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "What you reflect on takes -ಅನ್ನು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮನನ ಮಾಡು (manana māḍu) is built from Sanskrit manana, \"thinking, reflection\" (Monier-Williams), from man, \"to think\", with māḍu, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manana māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manana māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manana māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manana māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gurugaḷa mātannu nānu maneyalli manana māḍide. — At home I reflected on my teacher's words.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gurugaḷa mātannu nānu maneyalli manana māḍide.* — At home I reflected on my teacher's words.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to suppose, then the Kannada for good sense, then say manana māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to suppose, then the Kannada for good sense, then say *manana māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮನನ ಮಾಡು (manana māḍu) mean? (\"To reflect on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C381-buddhi",
+      "sequence": 19290,
+      "title": "ಬುದ್ಧಿ (buddhi) — intellect; wit",
+      "headword": "ಬುದ್ಧಿ",
+      "romanization": "buddhi",
+      "gloss": "intellect; wit",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee3b3ba281747c5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for good sense, then the Kannada for to reflect on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬುದ್ಧಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬುದ್ಧಿ — buddhi — \"intellect; wit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಹುಡುಗನಿಗೆ ಒಳ್ಳೆಯ ಬುದ್ಧಿ ಇದೆ. ā huḍuganige oḷḷeya buddhi ide. That boy has a good mind."
+            },
+            {
+              "kind": "speech",
+              "text": "Also advice: ಬುದ್ಧಿ (buddhi) ಹೇಳು, to give someone a piece of advice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬುದ್ಧಿ (buddhi) is borrowed from Sanskrit buddhi, \"intelligence, understanding\" (CDIAL 9277), from budh, \"to wake, to know\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buddhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buddhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buddhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buddhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā huḍuganige oḷḷeya buddhi ide. — That boy has a good mind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā huḍuganige oḷḷeya buddhi ide.* — That boy has a good mind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for good sense, then the Kannada for to reflect on, then say buddhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for good sense, then the Kannada for to reflect on, then say *buddhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬುದ್ಧಿ (buddhi) mean? (\"Intellect; wit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

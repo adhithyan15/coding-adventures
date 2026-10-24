@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C492-porabadu",
+    "language": "telugu",
+    "chapter": 492,
+    "sequence": 24760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:112d8903b20705dc"
+  },
+  "findings": []
+}

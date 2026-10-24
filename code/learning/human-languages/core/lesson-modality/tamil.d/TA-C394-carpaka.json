@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C394-carpaka",
+    "language": "tamil",
+    "chapter": 394,
+    "sequence": 22540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e84ab7dd5c50166"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:3e9458587dc499a8",
+  "lessonIds": [
+    "BN-C430-khet",
+    "BN-C430-langol",
+    "BN-C430-krishok",
+    "BN-C430-sech-deoya",
+    "BN-C430-chash-kora",
+    "BN-R430-review-424-430"
+  ],
+  "tex": "bengali/book/chapters/ch430-fields-and-farming.tex"
+}

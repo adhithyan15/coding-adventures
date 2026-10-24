@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C530-urjjasvalamaya",
+    "language": "malayalam",
+    "chapter": 530,
+    "sequence": 26660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a179027dfb9ff1e"
+  },
+  "findings": []
+}

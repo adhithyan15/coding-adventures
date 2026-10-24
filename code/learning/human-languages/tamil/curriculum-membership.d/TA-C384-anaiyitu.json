@@ -1,0 +1,11 @@
+{
+  "id": "TA-C384-anaiyitu",
+  "pathSegment": "TA-PATH-384-AVACIYAM384",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-384-AVACIYAM384",
+      "order": 4
+    }
+  ]
+}

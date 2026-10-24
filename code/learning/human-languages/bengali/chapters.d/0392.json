@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Traffic and Crossings",
+  "label": "ch:bn-traffic-and-crossings",
+  "canDo": "I can find my way through traffic, past signboards and over a flyover.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C392-ghesha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can find my way through traffic, past signboards and over a flyover.",
+    "assesses": [
+      "BN-LEX-C392-TRAFFIC392-03",
+      "BN-LEX-C392-TRAFFIC392-04",
+      "BN-LEX-C392-TRAFFIC392-05"
+    ]
+  }
+}

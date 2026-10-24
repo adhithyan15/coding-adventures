@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C431-uposagor",
+    "language": "bengali",
+    "chapter": 431,
+    "sequence": 26410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:feec1362137a21c8"
+  },
+  "findings": []
+}

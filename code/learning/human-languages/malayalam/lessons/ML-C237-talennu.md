@@ -14,7 +14,7 @@ romanization: "talēnnŭ"
 concept_tag: ML-SAMAYAM237-TALENNU
 prerequisites: [ML-C237-pakal, ML-C237-ennenkilum]
 sounds: []
-roots: [dravidian-tala-kai]
+roots: [dravidian-talai-head]
 etymology_hook: "talēnnŭ: native Dravidian, built on tala 'head, front end' (DEDR 3103) with a word for 'day'"
 duration:
   max_seconds: 200

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:d277b275395f630d",
+  "lessonIds": [
+    "AR-C480-nashra-jawwiyya",
+    "AR-C480-daraja",
+    "AR-C480-irtafaa",
+    "AR-C480-inkhafada",
+    "AR-C480-mutadil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch480.txt",
+  "json": "arabic/narration/ch480.json",
+  "textHash": "fnv1a64:39b9289a25f0e425",
+  "jsonHash": "fnv1a64:2498f34a3302aa70",
+  "findings": []
+}

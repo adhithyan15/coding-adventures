@@ -1,0 +1,11 @@
+{
+  "id": "BN-C324-par-paoya",
+  "pathSegment": "BN-PATH-324-KOUSHOL324",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-324-KOUSHOL324",
+      "order": 4
+    }
+  ]
+}

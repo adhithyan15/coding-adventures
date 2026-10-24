@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:8d5ccc1c28e810cb",
+  "lessonIds": [
+    "ML-C481-risorttu",
+    "ML-C481-satram",
+    "ML-C481-tamasasthalam",
+    "ML-C481-tamasakkaran",
+    "ML-C481-risapsan"
+  ],
+  "tex": "malayalam/book/chapters/ch481-finding-a-room.tex"
+}

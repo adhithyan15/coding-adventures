@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Monuments and Memory",
+  "label": "ch:ml-monuments-and-memory",
+  "canDo": "I can say a commemoration, a memorial, a statue, a stone inscription and to commemorate.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C393-anusmarikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can say a commemoration, a memorial, a statue, a stone inscription and to commemorate.",
+    "assesses": [
+      "ML-LEX-C393-SMARAKAM393-03",
+      "ML-LEX-C393-SMARAKAM393-04",
+      "ML-LEX-C393-SMARAKAM393-05"
+    ]
+  }
+}

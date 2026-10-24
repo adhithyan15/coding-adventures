@@ -1,0 +1,3 @@
+# Test-first failures must name existing upstream error variants
+
+When a new composition crate deliberately starts with red integration tests, verify every nested error variant against the dependency's public enum before running the expected-failure build. An invented category such as `InvalidNull` adds an accidental compiler error beside the intentional missing-API errors and weakens the evidence that the test suite is red for exactly the behavior not yet implemented. Read the public decoder and its focused tests first; for DER NULL contents the repository-owned primitive reports `NonEmptyNull`.

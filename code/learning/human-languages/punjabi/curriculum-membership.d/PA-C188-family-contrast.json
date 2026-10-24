@@ -1,0 +1,11 @@
+{
+  "id": "PA-C188-family-contrast",
+  "pathSegment": "PA-PATH-188-A2-MEETING-FAMILY",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "PA-EXT-188-A2-MEETING-FAMILY",
+      "order": 7
+    }
+  ]
+}

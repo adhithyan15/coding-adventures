@@ -1,0 +1,11 @@
+{
+  "id": "TE-C517-killanoppulu",
+  "pathSegment": "TE-PATH-517-LAKSANAM517",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-517-LAKSANAM517",
+      "order": 4
+    }
+  ]
+}

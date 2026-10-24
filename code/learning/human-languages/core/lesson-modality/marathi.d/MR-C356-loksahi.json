@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C356-loksahi",
+    "language": "marathi",
+    "chapter": 356,
+    "sequence": 20710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09cc43c174497850"
+  },
+  "findings": []
+}

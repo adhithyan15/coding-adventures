@@ -1,0 +1,10 @@
+{
+  "id": "TE-EXT-324-IF-REAL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what will happen if something happens, with -tē and okavēḷa, and if it does not, with -akapōtē and lēkapōtē.",
+  "prerequisites": [
+    "TE-EXT-323-COMPARE-DURATION"
+  ]
+}

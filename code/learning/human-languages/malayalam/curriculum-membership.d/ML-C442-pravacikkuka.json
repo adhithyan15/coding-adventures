@@ -1,0 +1,11 @@
+{
+  "id": "ML-C442-pravacikkuka",
+  "pathSegment": "ML-PATH-442-APAKATAM442",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-442-APAKATAM442",
+      "order": 2
+    }
+  ]
+}

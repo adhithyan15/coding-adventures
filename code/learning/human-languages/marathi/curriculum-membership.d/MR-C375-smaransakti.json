@@ -1,0 +1,11 @@
+{
+  "id": "MR-C375-smaransakti",
+  "pathSegment": "MR-PATH-375-BUDDHI375",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-375-BUDDHI375",
+      "order": 1
+    }
+  ]
+}

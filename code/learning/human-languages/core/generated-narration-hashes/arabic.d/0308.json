@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:fa7e08dee20d9d71",
+  "lessonIds": [
+    "AR-C308-tahqiq",
+    "AR-C308-haqqaqa",
+    "AR-C308-muhaqqiq",
+    "AR-C308-dalil",
+    "AR-C308-basma",
+    "AR-R308-review-301-308"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch308.txt",
+  "json": "arabic/narration/ch308.json",
+  "textHash": "fnv1a64:2462301931914c9a",
+  "jsonHash": "fnv1a64:6c62624109d623c6",
+  "findings": []
+}

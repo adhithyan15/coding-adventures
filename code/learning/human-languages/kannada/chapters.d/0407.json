@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Doing Research",
+  "label": "ch:ka-doing-research",
+  "canDo": "I can say research, an experiment, a theory, to analyse and a survey.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C407-samikse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can say research, an experiment, a theory, to analyse and a survey.",
+    "assesses": [
+      "KA-LEX-C407-SAMSHODHANE407-03",
+      "KA-LEX-C407-SAMSHODHANE407-04",
+      "KA-LEX-C407-SAMSHODHANE407-05"
+    ]
+  }
+}

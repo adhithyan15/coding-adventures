@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:7a03a59c1620dbe7",
+  "lessonIds": [
+    "KA-C354-samrajya",
+    "KA-C354-cakravarti",
+    "KA-C354-pattabhiseka",
+    "KA-C354-asthana",
+    "KA-C354-rajakumara",
+    "KA-R354-review-348-354"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch354.txt",
+  "json": "kannada/narration/ch354.json",
+  "textHash": "fnv1a64:f93cba4bc15e6fb3",
+  "jsonHash": "fnv1a64:5b9cad445621c4df",
+  "findings": []
+}

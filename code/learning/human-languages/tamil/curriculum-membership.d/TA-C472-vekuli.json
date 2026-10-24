@@ -1,0 +1,11 @@
+{
+  "id": "TA-C472-vekuli",
+  "pathSegment": "TA-PATH-472-MANITAR472",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-472-MANITAR472",
+      "order": 1
+    }
+  ]
+}

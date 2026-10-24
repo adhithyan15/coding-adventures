@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C508-nanayuka",
+    "language": "malayalam",
+    "chapter": 508,
+    "sequence": 25420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:663b89aecb99ed09"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:a72c6adf2ebee6a2",
+  "lessonIds": [
+    "BN-C351-shroddha-kora",
+    "BN-C351-obohela-kora",
+    "BN-C351-obogya",
+    "BN-C351-kodor",
+    "BN-C351-khatir-kora"
+  ],
+  "tex": "bengali/book/chapters/ch351-respect-and-neglect.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:6f361aa4c4facc01",
+  "lessonIds": [
+    "KA-C349-khadga",
+    "KA-C349-bana",
+    "KA-C349-kavaca",
+    "KA-C349-sarathi",
+    "KA-C349-madi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch349.txt",
+  "json": "kannada/narration/ch349.json",
+  "textHash": "fnv1a64:69d6757a2529a421",
+  "jsonHash": "fnv1a64:73d4ca417d631bc4",
+  "findings": []
+}

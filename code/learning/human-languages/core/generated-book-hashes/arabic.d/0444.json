@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:7dce8aef1d2885b6",
+  "lessonIds": [
+    "AR-C444-kahraba",
+    "AR-C444-sakhkhana",
+    "AR-C444-inqataa",
+    "AR-C444-muhawwil",
+    "AR-C444-anara"
+  ],
+  "tex": "arabic/book/chapters/ch444-power-and-light.tex"
+}

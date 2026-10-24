@@ -1,0 +1,11 @@
+{
+  "id": "KA-C366-kalanka",
+  "pathSegment": "KA-PATH-366-GHANATE366",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-366-GHANATE366",
+      "order": 1
+    }
+  ]
+}

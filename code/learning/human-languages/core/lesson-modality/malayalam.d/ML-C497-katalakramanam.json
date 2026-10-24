@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C497-katalakramanam",
+    "language": "malayalam",
+    "chapter": 497,
+    "sequence": 24880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:591b664caf4b5b08"
+  },
+  "findings": []
+}

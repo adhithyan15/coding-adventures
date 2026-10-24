@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:04373c179bb39cec",
+  "lessonIds": [
+    "TE-C498-atmagauravam",
+    "TE-C498-avamanam",
+    "TE-C498-garvapadu",
+    "TE-C498-mohamatapadu",
+    "TE-C498-taladincuko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch498.txt",
+  "json": "telugu/narration/ch498.json",
+  "textHash": "fnv1a64:eef758b342789b34",
+  "jsonHash": "fnv1a64:49d0cc60a2159629",
+  "findings": []
+}

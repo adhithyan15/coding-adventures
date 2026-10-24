@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:efbb575ba4173817",
+  "lessonIds": [
+    "TE-C441-pasportu",
+    "TE-C441-gurtimpu",
+    "TE-C441-sunkam",
+    "TE-C441-bhadrata",
+    "TE-C441-dhruvapatram"
+  ],
+  "tex": "telugu/book/chapters/ch441-papers-at-the-border.tex"
+}

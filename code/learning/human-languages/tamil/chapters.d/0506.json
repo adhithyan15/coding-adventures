@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Getting Hired",
+  "label": "ch:ta-getting-hired",
+  "canDo": "I can talk about applying for a job and being hired.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C506-utaviyalar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about applying for a job and being hired.",
+    "assesses": [
+      "TA-LEX-C506-VELAI506-03",
+      "TA-LEX-C506-VELAI506-04",
+      "TA-LEX-C506-VELAI506-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C368-ahmala",
+    "language": "arabic",
+    "chapter": 368,
+    "sequence": 20940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94992c533ca3a0a7"
+  },
+  "findings": []
+}

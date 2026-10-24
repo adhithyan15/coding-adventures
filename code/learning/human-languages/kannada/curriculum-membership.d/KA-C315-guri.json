@@ -1,0 +1,11 @@
+{
+  "id": "KA-C315-guri",
+  "pathSegment": "KA-PATH-315-FEELINGS-HOPES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-315-FEELINGS-HOPES",
+      "order": 2
+    }
+  ]
+}

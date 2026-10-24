@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 461,
+  "title": "Cancelled and postponed",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4b6441d1f6088cd2",
+  "lessons": [
+    {
+      "id": "AR-C461-ilgha",
+      "sequence": 25740,
+      "title": "إلغاء (ilghāʾ) — a cancellation",
+      "headword": "إلغاء",
+      "romanization": "ilghāʾ",
+      "gloss": "a cancellation",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82ed38345cd1fee0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to go bad, then the Arabic for to suffer damage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: إلغاء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إلغاء — ilghāʾ — \"a cancellation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سمعنا عن إلغاء الرحلة في المطار. samiʿnā ʿan ilghāʾ ar-riḥla fī al-maṭār. We heard about the cancellation of the flight at the airport."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إلغاء (ilghāʾ) is built on the native Arabic root l-gh-w, \"to be of no account\" (Lane). It is the verbal noun of Form IV, \"to make null\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ilghāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ilghāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ilghāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ilghāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samiʿnā ʿan ilghāʾ ar-riḥla fī al-maṭār. — We heard about the cancellation of the flight at the airport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samiʿnā ʿan ilghāʾ ar-riḥla fī al-maṭār.* — We heard about the cancellation of the flight at the airport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to go bad, then the Arabic for to suffer damage, then say ilghāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to go bad, then the Arabic for to suffer damage, then say *ilghāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does إلغاء (ilghāʾ) mean? (\"A cancellation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C461-tajil",
+      "sequence": 25750,
+      "title": "تأجيل (taʾjīl) — a postponement",
+      "headword": "تأجيل",
+      "romanization": "taʾjīl",
+      "gloss": "a postponement",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9055ac2ead9d866a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to suffer damage, then the Arabic for a cancellation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تأجيل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تأجيل — taʾjīl — \"a postponement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أخبرنا المدير بتأجيل الاجتماع. akhbaranā al-mudīr bi-taʾjīl al-ijtimāʿ. The manager told us the meeting was postponed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تأجيل (taʾjīl) is built on the native Arabic root ʾ-j-l, \"an appointed term\" (Lane). It is the verbal noun of Form II, \"to set a later term\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʾjīl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʾjīl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʾjīl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʾjīl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhbaranā al-mudīr bi-taʾjīl al-ijtimāʿ. — The manager told us the meeting was postponed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhbaranā al-mudīr bi-taʾjīl al-ijtimāʿ.* — The manager told us the meeting was postponed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to suffer damage, then the Arabic for a cancellation, then say taʾjīl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to suffer damage, then the Arabic for a cancellation, then say *taʾjīl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تأجيل (taʾjīl) mean? (\"A postponement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C461-algha",
+      "sequence": 25760,
+      "title": "ألغى (alghā) — to cancel",
+      "headword": "ألغى",
+      "romanization": "alghā",
+      "gloss": "to cancel",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eda0e21446a67fe1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a cancellation, then the Arabic for a postponement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ألغى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ألغى — alghā — \"to cancel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ألغت الشركة الرحلة بسبب العاصفة. alghat ash-sharika ar-riḥla bi-sabab al-ʿāṣifa. The company cancelled the flight because of the storm."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يلغي, yulghī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ألغى (alghā) is built on the native Arabic root l-gh-w, \"to be of no account\" (Lane). It is Form IV, \"to make null\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alghā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alghā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alghā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alghā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alghat ash-sharika ar-riḥla bi-sabab al-ʿāṣifa. — The company cancelled the flight because of the storm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alghat ash-sharika ar-riḥla bi-sabab al-ʿāṣifa.* — The company cancelled the flight because of the storm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a cancellation, then the Arabic for a postponement, then say alghā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a cancellation, then the Arabic for a postponement, then say *alghā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ألغى (alghā) mean? (\"To cancel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C461-fawwata",
+      "sequence": 25770,
+      "title": "فوت (fawwata) — to miss (a chance); to let slip",
+      "headword": "فوت",
+      "romanization": "fawwata",
+      "gloss": "to miss (a chance); to let slip",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:752507173fb9646f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a postponement, then the Arabic for to cancel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فوت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فوت — fawwata — \"to miss (a chance); to let slip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "فوت أخي الحفلة بسبب العمل. fawwata akhī al-ḥafla bi-sabab al-ʿamal. My brother missed the party because of work."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يفوت, yufawwit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فوت (fawwata) is built on the native Arabic root f-w-t, \"to pass by, to escape\" (Lane). It is Form II, \"to let pass\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fawwata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fawwata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fawwata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fawwata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fawwata akhī al-ḥafla bi-sabab al-ʿamal. — My brother missed the party because of work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fawwata akhī al-ḥafla bi-sabab al-ʿamal.* — My brother missed the party because of work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a postponement, then the Arabic for to cancel, then say fawwata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a postponement, then the Arabic for to cancel, then say *fawwata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فوت (fawwata) mean? (\"To miss (a chance); to let slip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C461-dayyaa",
+      "sequence": 25780,
+      "title": "ضيع (ḍayyaʿa) — to waste time; to lose",
+      "headword": "ضيع",
+      "romanization": "ḍayyaʿa",
+      "gloss": "to waste time; to lose",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d128038a143dee8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to cancel, then the Arabic for to miss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ضيع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضيع — ḍayyaʿa — \"to waste time; to lose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ضيعنا ساعة في الازدحام. ḍayyaʿnā sāʿa fī al-izdiḥām. We wasted an hour in the traffic jam."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يضيع, yuḍayyiʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضيع (ḍayyaʿa) is built on the native Arabic root ḍ-y-ʿ, \"to be lost, to perish\" (Lane). It is Form II, \"to let be lost\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍayyaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍayyaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍayyaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍayyaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍayyaʿnā sāʿa fī al-izdiḥām. — We wasted an hour in the traffic jam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍayyaʿnā sāʿa fī al-izdiḥām.* — We wasted an hour in the traffic jam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to cancel, then the Arabic for to miss, then say ḍayyaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to cancel, then the Arabic for to miss, then say *ḍayyaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ضيع (ḍayyaʿa) mean? (\"To waste time; to lose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C378-gumigudu",
+  "pathSegment": "TE-PATH-378-KOTLATA378",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-378-KOTLATA378",
+      "order": 4
+    }
+  ]
+}

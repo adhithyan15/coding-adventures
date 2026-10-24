@@ -1,0 +1,11 @@
+{
+  "id": "KA-C383-tirucu",
+  "pathSegment": "KA-PATH-383-SANDEHA383",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-383-SANDEHA383",
+      "order": 1
+    }
+  ]
+}

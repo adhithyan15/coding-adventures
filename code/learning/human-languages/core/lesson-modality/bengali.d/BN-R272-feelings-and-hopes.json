@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R272-feelings-and-hopes",
+    "language": "bengali",
+    "chapter": 272,
+    "sequence": 16940,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1918f17505e8fe18"
+  },
+  "findings": []
+}

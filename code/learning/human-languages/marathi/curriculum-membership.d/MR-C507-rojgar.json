@@ -1,0 +1,11 @@
+{
+  "id": "MR-C507-rojgar",
+  "pathSegment": "MR-PATH-507-ROJGAR507",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-507-ROJGAR507",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,870 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 517,
+  "title": "Symptoms",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:cd7bbb08fc27aace",
+  "lessons": [
+    {
+      "id": "TE-C517-laksanam",
+      "sequence": 26170,
+      "title": "లక్షణం (lakṣaṇaṁ) — a symptom; a trait",
+      "headword": "లక్షణం",
+      "romanization": "lakṣaṇaṁ",
+      "gloss": "a symptom; a trait",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a8b69014d12c82e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an allergy, then the Telugu for sleeplessness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: లక్షణం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లక్షణం — lakṣaṇaṁ — \"a symptom; a trait\"."
+            },
+            {
+              "kind": "speech",
+              "text": "జ్వరం, దగ్గు ఆ జబ్బు లక్షణాలు. jvaraṁ, daggu ā jabbu lakṣaṇālu. Fever and cough are the symptoms of that illness."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: లక్షణాలు, lakṣaṇālu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a person's traits: మంచి లక్షణాలు, good qualities."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లక్షణం (lakṣaṇaṁ) is borrowed from Sanskrit lakṣaṇa, \"line, mark\" (CDIAL 10882): the marks by which an illness or a person is known."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakṣaṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakṣaṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakṣaṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakṣaṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jvaraṁ, daggu ā jabbu lakṣaṇālu. — Fever and cough are the symptoms of that illness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jvaraṁ, daggu ā jabbu lakṣaṇālu.* — Fever and cough are the symptoms of that illness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an allergy, then the Telugu for sleeplessness, then say lakṣaṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an allergy, then the Telugu for sleeplessness, then say *lakṣaṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does లక్షణం (lakṣaṇaṁ) mean? (\"A symptom; a trait\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C517-maikam",
+      "sequence": 26180,
+      "title": "మైకం (maikaṁ) — dizziness; a daze",
+      "headword": "మైకం",
+      "romanization": "maikaṁ",
+      "gloss": "dizziness; a daze",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a6b3baf0c89494f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for sleeplessness, then the Telugu for a symptom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మైకం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మైకం — maikaṁ — \"dizziness; a daze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఎండలో నడిచాక నాకు మైకంగా అనిపించింది. eṇḍalō naḍicāka nāku maikaṅgā anipiñcindi. After walking in the sun, I felt giddy."
+            },
+            {
+              "kind": "speech",
+              "text": "మైకంగా ఉంది, I feel giddy; also the daze of sleep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మైకం (maikaṁ) is native Dravidian: DEDR 4706 lists Telugu maikamu, \"intoxication, unconsciousness, drowsiness\", in the article of Tamil mayakku, \"to bewilder, to confuse\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maikaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maikaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maikaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maikaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṇḍalō naḍicāka nāku maikaṅgā anipiñcindi. — After walking in the sun, I felt giddy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṇḍalō naḍicāka nāku maikaṅgā anipiñcindi.* — After walking in the sun, I felt giddy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for sleeplessness, then the Telugu for a symptom, then say maikaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for sleeplessness, then the Telugu for a symptom, then say *maikaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మైకం (maikaṁ) mean? (\"Dizziness; a daze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C517-ayasapadu",
+      "sequence": 26190,
+      "title": "ఆయాసపడు (āyāsapaḍu) — to pant; to get breathless",
+      "headword": "ఆయాసపడు",
+      "romanization": "āyāsapaḍu",
+      "gloss": "to pant; to get breathless",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffc90f7bf76e984c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a symptom, then the Telugu for dizziness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆయాసపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆయాసపడు — āyāsapaḍu — \"to pant; to get breathless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొండ ఎక్కి తాతయ్య ఆయాసపడ్డారు. koṇḍa ekki tātayya āyāsapaḍḍāru. Climbing the hill, grandpa got breathless."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఆయాసపడ్డాను, āyāsapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆయాసం, breathlessness, + పడు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆయాసపడు (āyāsapaḍu) is built from ఆయాసం, from Sanskrit āyāsa, \"effort, exertion; fatigue\" (Monier-Williams) and the native verb paḍu, \"to feel, to suffer\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyāsapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyāsapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyāsapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyāsapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṇḍa ekki tātayya āyāsapaḍḍāru. — Climbing the hill, grandpa got breathless.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṇḍa ekki tātayya āyāsapaḍḍāru.* — Climbing the hill, grandpa got breathless.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a symptom, then the Telugu for dizziness, then say āyāsapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a symptom, then the Telugu for dizziness, then say *āyāsapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆయాసపడు (āyāsapaḍu) mean? (\"To pant; to get breathless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C517-kakku",
+      "sequence": 26200,
+      "title": "కక్కు (kakku) — to throw up; to spit out",
+      "headword": "కక్కు",
+      "romanization": "kakku",
+      "gloss": "to throw up; to spit out",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5487cb2f54663dba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for dizziness, then the Telugu for to pant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కక్కు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కక్కు — kakku — \"to throw up; to spit out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బస్సులో ప్రయాణం చేస్తూ పాప కక్కింది. bassulō prayāṇaṁ cēstū pāpa kakkindi. The little girl threw up on the bus journey."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కక్కాను, kakkānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Colloquial; వాంతి చేసుకో is the polite way to say it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కక్కు (kakku) is native Dravidian: DEDR 1079 lists Telugu k(r)akku, \"to vomit, to disgorge\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bassulō prayāṇaṁ cēstū pāpa kakkindi. — The little girl threw up on the bus journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bassulō prayāṇaṁ cēstū pāpa kakkindi.* — The little girl threw up on the bus journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for dizziness, then the Telugu for to pant, then say kakku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for dizziness, then the Telugu for to pant, then say *kakku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కక్కు (kakku) mean? (\"To throw up; to spit out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C517-killanoppulu",
+      "sequence": 26210,
+      "title": "కీళ్ళనొప్పులు (kīḷḷanoppulu) — joint pains",
+      "headword": "కీళ్ళనొప్పులు",
+      "romanization": "kīḷḷanoppulu",
+      "gloss": "joint pains",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6abda4685ac7e95b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to pant, then the Telugu for to throw up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కీళ్ళనొప్పులు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కీళ్ళనొప్పులు — kīḷḷanoppulu — \"joint pains\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వర్షాకాలంలో అమ్మమ్మకు కీళ్ళనొప్పులు ఎక్కువ. varṣākālaṁlō ammammaku kīḷḷanoppulu ekkuva. In the rainy season grandma's joints ache more."
+            },
+            {
+              "kind": "speech",
+              "text": "కీలు, a joint (plural కీళ్ళు), + నొప్పులు, pains."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కీళ్ళనొప్పులు (kīḷḷanoppulu) is built from కీళ్ళు, \"joints\", and native noppulu, \"pains\" (DEDR 3793)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kīḷḷanoppulu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kīḷḷanoppulu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kīḷḷanoppulu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kīḷḷanoppulu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṣākālaṁlō ammammaku kīḷḷanoppulu ekkuva. — In the rainy season grandma's joints ache more.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṣākālaṁlō ammammaku kīḷḷanoppulu ekkuva.* — In the rainy season grandma's joints ache more.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to pant, then the Telugu for to throw up, then say kīḷḷanoppulu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to pant, then the Telugu for to throw up, then say *kīḷḷanoppulu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కీళ్ళనొప్పులు (kīḷḷanoppulu) mean? (\"Joint pains\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R517-review-510-517",
+      "sequence": 26220,
+      "title": "Words from chapters 510–517 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 510-517",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:372ae53cd1afb7fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for selfishness and negligence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "selfishness, negligence, discipline, self-confidence, curiosity",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: selfishness, negligence, discipline, self-confidence, curiosity]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wits, to be confused, to think back on, to go over again, to remind",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wits, to be confused, to think back on, to go over again, to remind]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sickness, to fall ill, a slight indisposition, to be bedridden, to come round",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sickness, to fall ill, a slight indisposition, to be bedridden, to come round]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a disorder, a contagious disease, a heart attack, paralysis, asthma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a disorder, a contagious disease, a heart attack, paralysis, asthma]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an earache, a toothache, a backache, to groan, to faint",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an earache, a toothache, a backache, to groan, to faint]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the brain, a nerve, the liver, the spine, breath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the brain, a nerve, the liver, the spine, breath]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eyesight, hearing, deafness, an allergy, sleeplessness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: eyesight, hearing, deafness, an allergy, sleeplessness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a symptom, dizziness, to pant, to throw up, joint pains",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a symptom, dizziness, to pant, to throw up, joint pains]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Selfishness? (స్వార్థం, svārthaṁ.) Negligence? (నిర్లక్ష్యం, nirlakṣyaṁ.) Discipline? (క్రమశిక్షణ, kramaśikṣaṇa.) Self-confidence? (ఆత్మవిశ్వాసం, ātmaviśvāsaṁ.) Curiosity? (కుతూహలం, kutūhalaṁ.) Wits? (తెలివితేటలు, telivitēṭalu.) To be confused? (తికమకపడు, tikamakapaḍu.) To think back on? (తలచుకో, talacukō.) To go over again? (నెమరువేయు, nemaruvēyu.) To remind? (గుర్తుచేయు, gurtucēyu.) A sickness? (జబ్బు, jabbu.) To fall ill? (జబ్బుపడు, jabbupaḍu.) A slight indisposition? (నలత, nalata.) To be bedridden? (మంచం పట్టు, mañcaṁ paṭṭu.) To come round? (తేరుకో, tērukō.) A disorder? (వ్యాధి, vyādhi.) A contagious disease? (అంటువ్యాధి, aṇṭuvyādhi.) A heart attack? (గుండెపోటు, guṇḍepōṭu.) Paralysis? (పక్షవాతం, pakṣavātaṁ.) Asthma? (ఉబ్బసం, ubbasaṁ.) An earache? (చెవిపోటు, cevipōṭu.) A toothache? (పంటినొప్పి, paṇṭinoppi.) A backache? (వెన్నునొప్పి, vennunoppi.) To groan? (మూలుగు, mūlugu.) To faint? (మూర్ఛపోవు, mūrchapōvu.) The brain? (మెదడు, medaḍu.) A nerve? (నరం, naraṁ.) The liver? (కాలేయం, kālēyaṁ.) The spine? (వెన్నెముక, vennemuka.) Breath? (శ్వాస, śvāsa.) Eyesight? (చూపు, cūpu.) Hearing? (వినికిడి, vinikiḍi.) Deafness? (చెవుడు, cevuḍu.) An allergy? (అలెర్జీ, alerjī.) Sleeplessness? (నిద్రలేమి, nidralēmi.) A symptom? (లక్షణం, lakṣaṇaṁ.) Dizziness? (మైకం, maikaṁ.) To pant? (ఆయాసపడు, āyāsapaḍu.) To throw up? (కక్కు, kakku.) Joint pains? (కీళ్ళనొప్పులు, kīḷḷanoppulu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-R322-feelings-and-hopes",
+  "pathSegment": "TE-PATH-322-FEELINGS-HOPES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-322-FEELINGS-HOPES",
+      "order": 4
+    }
+  ]
+}

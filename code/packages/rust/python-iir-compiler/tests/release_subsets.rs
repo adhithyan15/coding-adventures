@@ -16,130 +16,20 @@
 //!
 //! On top of stage I it pins the IIR **identity classes**: releases that
 //! share a profile emit byte-identical IIR for every case they all accept,
-//! which is what lets the `lang_matrix` rows on the default release stand
-//! for the others (LANG84 "CI bounding").
+//! which is what lets the `lang_matrix` rows on each class representative
+//! stand for the others (LANG84 "CI bounding"; `release_sweep.rs` computes
+//! the classes and writes `code/grammars/python/release_classes.csv`).
 
-use std::collections::BTreeMap;
-use std::path::{Path, PathBuf};
+mod common;
+
 use std::process::Command;
 
+use common::{claiming_releases, corpus, corpus_dir, inventory, Outcome};
 use interpreter_ir::op_registry::registry_name;
 use python_iir_compiler::profiles::profile_for;
 use python_iir_compiler::{
     compile_source_at, run_module, supported_releases, FrontendBudgets, FrontendError, DEFAULT_RELEASE, SUBSET,
 };
-
-fn python_grammars() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/python")
-}
-
-/// Rows of a CSV with `#` provenance lines, as maps keyed by header name
-/// (lesson: read the header, never assume a column position).
-fn csv_rows(path: &Path) -> Vec<BTreeMap<String, String>> {
-    let text = std::fs::read_to_string(path).unwrap_or_else(|e| panic!("{}: {e}", path.display()));
-    let mut lines = text.lines().filter(|line| !line.starts_with('#') && !line.is_empty());
-    let header: Vec<String> = lines.next().unwrap().split(',').map(str::to_string).collect();
-    lines
-        .map(|line| header.iter().cloned().zip(line.split(',').map(str::to_string)).collect())
-        .collect()
-}
-
-fn inventory() -> Vec<BTreeMap<String, String>> {
-    csv_rows(&python_grammars().join("releases.csv"))
-}
-
-/// Releases whose `iir_status` lists the subset, in inventory order.
-fn claiming_releases() -> Vec<String> {
-    inventory()
-        .into_iter()
-        .filter(|row| row["iir_status"].split(';').any(|s| s == SUBSET))
-        .map(|row| row["release"].clone())
-        .collect()
-}
-
-/// One corpus case: `<name>.py` plus `.expect` (accepted) or `.reject`, and
-/// any `.reject@<release>` overrides.
-struct Case {
-    name: String,
-    source: String,
-    outcome: Outcome,
-    overrides: BTreeMap<String, String>,
-    cite: String,
-}
-
-#[derive(Clone)]
-enum Outcome {
-    /// Exact stdout, then the LANG83 trap kind if the program stops on one.
-    Runs { stdout: String, trap: Option<String> },
-    /// The C6 category the compile must fail with.
-    Rejected(String),
-}
-
-impl Case {
-    /// The outcome this case must have on `release`.
-    fn outcome_on(&self, release: &str) -> Outcome {
-        match self.overrides.get(release) {
-            Some(category) => Outcome::Rejected(category.clone()),
-            None => self.outcome.clone(),
-        }
-    }
-}
-
-fn corpus_dir() -> PathBuf {
-    let rows = csv_rows(&python_grammars().join("subsets.csv"));
-    let row = rows.iter().find(|row| row["subset"] == SUBSET).expect("subsets.csv declares py-int-print");
-    python_grammars().join(&row["corpus_dir"])
-}
-
-fn corpus() -> Vec<Case> {
-    let dir = corpus_dir();
-    let mut names: Vec<String> = Vec::new();
-    let mut overrides: BTreeMap<String, BTreeMap<String, String>> = BTreeMap::new();
-    for entry in std::fs::read_dir(&dir).unwrap_or_else(|e| panic!("{}: {e}", dir.display())) {
-        let path = entry.unwrap().path();
-        let file = path.file_name().unwrap().to_string_lossy().into_owned();
-        if let Some((stem, release)) = file.split_once(".reject@") {
-            let category = std::fs::read_to_string(&path).unwrap().trim().to_string();
-            overrides.entry(stem.to_string()).or_default().insert(release.to_string(), category);
-        } else if let Some(stem) = file.strip_suffix(".py") {
-            names.push(stem.to_string());
-        }
-    }
-    names.sort();
-    for (stem, by_release) in &overrides {
-        assert!(names.contains(stem), "{stem}: an override without a case");
-        for release in by_release.keys() {
-            assert!(supported_releases().contains(&release.as_str()), "{stem}: override for unpaired {release}");
-        }
-    }
-    names
-        .into_iter()
-        .map(|name| {
-            let read = |ext: &str| std::fs::read_to_string(dir.join(format!("{name}.{ext}"))).ok();
-            let source = read("py").unwrap();
-            let cite = read("cite").unwrap_or_default();
-            assert!(cite.contains("oracle:"), "{name}.cite must record its oracle");
-            let outcome = match (read("expect"), read("reject")) {
-                (Some(expect), None) => {
-                    let (stdout, trap) = match expect.rfind("trap:") {
-                        Some(at) => (expect[..at].to_string(), Some(expect[at + 5..].trim().to_string())),
-                        None => (expect, None),
-                    };
-                    Outcome::Runs { stdout, trap }
-                }
-                (None, Some(reject)) => Outcome::Rejected(reject.trim().to_string()),
-                _ => panic!("{name}: exactly one of .expect and .reject"),
-            };
-            Case {
-                overrides: overrides.remove(&name).unwrap_or_default(),
-                name,
-                source,
-                outcome,
-                cite,
-            }
-        })
-        .collect()
-}
 
 #[test]
 fn profiles_match_the_inventory() {
@@ -155,8 +45,11 @@ fn profiles_match_the_inventory() {
     assert_eq!(profiled, 5, "3.0a1, 3.11.17, 3.12.3, 3.13.16 and 3.16.0a1");
 }
 
-/// LANG84 C4.4: the default is an exact row that claims an IIR subset, and
-/// the only row claiming `backend_status` (the matrix compiles it).
+/// LANG84 C4.4: the default is an exact row that claims an IIR subset. It
+/// claims `backend_status` too, and since phase 7b slice 2 so does every
+/// other claiming release: `lang_matrix` runs the corpus on each IIR-identity
+/// class representative, and `release_inventory.py check --matrix` verifies
+/// each B claim case by case. B is never claimed without I.
 #[test]
 fn the_default_release_claims_py_int_print_on_the_backends() {
     assert!(claiming_releases().iter().any(|r| r == DEFAULT_RELEASE), "{DEFAULT_RELEASE}");
@@ -165,7 +58,8 @@ fn the_default_release_claims_py_int_print_on_the_backends() {
         .filter(|row| row["backend_status"].split(';').any(|s| s == SUBSET))
         .map(|row| row["release"].clone())
         .collect();
-    assert_eq!(backend, [DEFAULT_RELEASE]);
+    assert!(backend.iter().any(|r| r == DEFAULT_RELEASE), "{DEFAULT_RELEASE}: {backend:?}");
+    assert_eq!(backend, claiming_releases());
 }
 
 #[test]

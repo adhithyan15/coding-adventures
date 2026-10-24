@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 410,
+  "output": "arabic/book/chapters/ch410-allowed-or-required.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

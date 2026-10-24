@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:b0a2732858397d97",
+  "lessonIds": [
+    "KA-C418-paryaya",
+    "KA-C418-ayke",
+    "KA-C418-tatkalika",
+    "KA-C418-sasvata",
+    "KA-C418-marpadisu",
+    "KA-R418-review-412-418"
+  ],
+  "tex": "kannada/book/chapters/ch418-other-options.tex"
+}

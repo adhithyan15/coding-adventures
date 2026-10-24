@@ -1,0 +1,19 @@
+{
+  "chapter": 550,
+  "title": "Making Up One's Mind",
+  "label": "ch:hi-making-up-one-s-mind",
+  "canDo": "I can say what I chose, accepted or refused.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C550-cayan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 550: I can say what I chose, accepted or refused.",
+    "assesses": [
+      "HI-LEX-C550-CHAYAN550-03",
+      "HI-LEX-C550-CHAYAN550-04",
+      "HI-LEX-C550-CHAYAN550-05"
+    ]
+  }
+}

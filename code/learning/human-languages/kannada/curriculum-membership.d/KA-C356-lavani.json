@@ -1,0 +1,11 @@
+{
+  "id": "KA-C356-lavani",
+  "pathSegment": "KA-PATH-356-JANAPADA356",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-356-JANAPADA356",
+      "order": 3
+    }
+  ]
+}

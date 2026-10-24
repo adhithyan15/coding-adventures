@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-480-NASHRA480",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a weather forecast, a degree, to increase, to drop and mild.",
+  "prerequisites": []
+}

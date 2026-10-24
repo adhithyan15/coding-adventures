@@ -1,0 +1,21 @@
+{
+  "chapter": 369,
+  "title": "Whether or Not",
+  "label": "ch:bn-whether-or-not",
+  "canDo": "I can say what happens whether or not something is true.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-R369-review-362-369",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can say what happens whether or not something is true.",
+    "assesses": [
+      "BN-LEX-C369-KINA369-01",
+      "BN-LEX-C369-KINA369-02",
+      "BN-LEX-C369-KINA369-03",
+      "BN-LEX-C369-KINA369-04",
+      "BN-LEX-C369-KINA369-05"
+    ]
+  }
+}

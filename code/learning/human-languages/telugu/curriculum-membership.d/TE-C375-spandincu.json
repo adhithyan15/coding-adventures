@@ -1,0 +1,11 @@
+{
+  "id": "TE-C375-spandincu",
+  "pathSegment": "TE-PATH-375-PATRIKEYUDU375",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-375-PATRIKEYUDU375",
+      "order": 4
+    }
+  ]
+}

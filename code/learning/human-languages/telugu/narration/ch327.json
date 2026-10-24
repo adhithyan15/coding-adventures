@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 327,
+  "title": "Once Upon a Time",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:11e96621a26b757f",
+  "lessons": [
+    {
+      "id": "TE-C327-okappudu",
+      "sequence": 16050,
+      "title": "ఒకప్పుడు (okappuḍu) — at one time; once",
+      "headword": "ఒకప్పుడు",
+      "romanization": "okappuḍu",
+      "gloss": "at one time; once",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32efa7b1147ae96d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to steal, then the Telugu for to run away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఒకప్పుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఒకప్పుడు — okappuḍu — \"at one time; once\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఒకప్పుడు ఇక్కడ ఒక పెద్ద అడవి ఉండేది. okappuḍu ikkaḍa oka pedda aḍavi uṇḍēdi. At one time there was a big forest here."
+            },
+            {
+              "kind": "speech",
+              "text": "Stories often open with ఒకప్పుడు (okappuḍu), the way English opens with once upon a time: ఒక, one, and అప్పుడు, then."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఒకప్పుడు (okappuḍu) is a native Telugu compound: oka, \"one\" (DEDR 990), and appuḍu, \"at that time\" (DEDR 4559)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okappuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okappuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okappuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okappuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okappuḍu ikkaḍa oka pedda aḍavi uṇḍēdi. — At one time there was a big forest here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okappuḍu ikkaḍa oka pedda aḍavi uṇḍēdi.* — At one time there was a big forest here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to steal, then the Telugu for to run away, then say okappuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to steal, then the Telugu for to run away, then say *okappuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఒకప్పుడు (okappuḍu) mean? (\"At one time; once\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C327-raju",
+      "sequence": 16060,
+      "title": "రాజు (rāju) — a king",
+      "headword": "రాజు",
+      "romanization": "rāju",
+      "gloss": "a king",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf597a47b6b7b76e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to run away, then the Telugu for at one time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రాజు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాజు — rāju — \"a king\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ రాజు చాలా మంచివాడు. ā rāju cālā mañcivāḍu. That king is a very good man."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: రాజులు, rājulu."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, రాజధాని, is the seat of the king: the same Sanskrit word sits inside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాజు (rāju) is borrowed from Sanskrit rājan, \"a chieftain, a king\" (CDIAL 10679). Telugu gives it the native ending -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāju",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāju*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāju, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāju*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rāju cālā mañcivāḍu. — That king is a very good man.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rāju cālā mañcivāḍu.* — That king is a very good man.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to run away, then the Telugu for at one time, then say rāju again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to run away, then the Telugu for at one time, then say *rāju* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రాజు (rāju) mean? (\"A king\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C327-rani",
+      "sequence": 16070,
+      "title": "రాణి (rāṇi) — a queen",
+      "headword": "రాణి",
+      "romanization": "rāṇi",
+      "gloss": "a queen",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01a210e16fffd5dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for at one time, then the Telugu for a king."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రాణి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాణి — rāṇi — \"a queen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రాణి రాజుతో అడవికి వెళ్ళింది. rāṇi rājutō aḍaviki veḷḷindi. The queen went to the forest with the king."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాణి (rāṇi) is borrowed from Sanskrit rājñī, \"a queen\" (CDIAL 10692), the feminine of rājan, \"a king\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṇi rājutō aḍaviki veḷḷindi. — The queen went to the forest with the king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṇi rājutō aḍaviki veḷḷindi.* — The queen went to the forest with the king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for at one time, then the Telugu for a king, then say rāṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for at one time, then the Telugu for a king, then say *rāṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రాణి (rāṇi) mean? (\"A queen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C327-rajyam",
+      "sequence": 16080,
+      "title": "రాజ్యం (rājyaṁ) — a kingdom",
+      "headword": "రాజ్యం",
+      "romanization": "rājyaṁ",
+      "gloss": "a kingdom",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9326f3e515347de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a king, then the Telugu for a queen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రాజ్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాజ్యం — rājyaṁ — \"a kingdom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ రాజ్యంలో ప్రజలు సంతోషంగా ఉండేవారు. ā rājyaṁlō prajalu santōṣaṅgā uṇḍēvāru. In that kingdom the people lived happily."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: రాజ్యాలు, rājyālu."
+            },
+            {
+              "kind": "speech",
+              "text": "A Sanskrit -a noun ending in -ం: its plural is రాజ్యాలు, the way పుస్తకం gives పుస్తకాలు. In the old stories a kingdom depends on its king: రాజ్యం (rājyaṁ) రాజు (rāju) మీద ఆధారపడి ఉంటుంది."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాజ్యం (rājyaṁ) is borrowed from Sanskrit rājya, \"kingship\", and later \"a kingdom\" (CDIAL 10694), built on rājan, \"a king\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rājyaṁlō prajalu santōṣaṅgā uṇḍēvāru. — In that kingdom the people lived happily.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rājyaṁlō prajalu santōṣaṅgā uṇḍēvāru.* — In that kingdom the people lived happily.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a king, then the Telugu for a queen, then say rājyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a king, then the Telugu for a queen, then say *rājyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రాజ్యం (rājyaṁ) mean? (\"A kingdom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C327-elu",
+      "sequence": 16090,
+      "title": "ఏలు (ēlu) — to reign over",
+      "headword": "ఏలు",
+      "romanization": "ēlu",
+      "gloss": "to reign over",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:828b7b48a76affd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a queen, then the Telugu for a kingdom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఏలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఏలు — ēlu — \"to reign over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ రాజు చాలా సంవత్సరాలు రాజ్యం ఏలాడు. ā rāju cālā saṁvatsarālu rājyaṁ ēlāḍu. That king ruled the kingdom for many years."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఏలాను, ēlānu."
+            },
+            {
+              "kind": "speech",
+              "text": "A native verb of the old stories: రాజ్యం (rājyaṁ) ఏలు (ēlu), to rule a kingdom."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఏలు (ēlu) is native Dravidian: DEDR 5157 lists Telugu ēlu, \"to rule, govern\", with Tamil āḷ, \"to rule, reign over\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēlu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēlu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēlu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rāju cālā saṁvatsarālu rājyaṁ ēlāḍu. — That king ruled the kingdom for many years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rāju cālā saṁvatsarālu rājyaṁ ēlāḍu.* — That king ruled the kingdom for many years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a queen, then the Telugu for a kingdom, then say ēlu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a queen, then the Telugu for a kingdom, then say *ēlu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఏలు (ēlu) mean? (\"To reign over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

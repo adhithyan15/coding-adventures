@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C313-pukarne",
+    "language": "marathi",
+    "chapter": 313,
+    "sequence": 18320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd85bf4408a2f613"
+  },
+  "findings": []
+}

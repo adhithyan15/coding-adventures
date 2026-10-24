@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 298,
+  "title": "A fire",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:577bc0337b8e0fdd",
+  "lessons": [
+    {
+      "id": "AR-C298-hariq",
+      "sequence": 17250,
+      "title": "حريق (ḥarīq) — a blaze, a fire that spreads",
+      "headword": "حريق",
+      "romanization": "ḥarīq",
+      "gloss": "a blaze, a fire that spreads",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2297f37c449f23f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to put on air, then the Arabic for on air."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حريق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حريق — ḥarīq — \"a blaze, a fire that spreads\"."
+            },
+            {
+              "kind": "speech",
+              "text": "رأى الجيران حريقا في المصنع. raʾā al-jīrān ḥarīqan fī al-maṣnaʿ. The neighbours saw a fire at the factory."
+            },
+            {
+              "kind": "speech",
+              "text": "نار is fire itself; حريق (ḥarīq) is a fire that destroys."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حريق (ḥarīq) is built on the native Arabic root ḥ-r-q (Lane), \"to burn\". Ḥarīq is the fire that burns a thing up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥarīq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥarīq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥarīq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥarīq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raʾā al-jīrān ḥarīqan fī al-maṣnaʿ. — The neighbours saw a fire at the factory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raʾā al-jīrān ḥarīqan fī al-maṣnaʿ.* — The neighbours saw a fire at the factory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to put on air, then the Arabic for on air, then say ḥarīq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to put on air, then the Arabic for on air, then say *ḥarīq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حريق (ḥarīq) mean? (\"A blaze, a fire that spreads\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C298-dukhan",
+      "sequence": 17260,
+      "title": "دخان (dukhān) — smoke",
+      "headword": "دخان",
+      "romanization": "dukhān",
+      "gloss": "smoke",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbbcc6d6ecb9f3ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for on air, then the Arabic for a blaze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دخان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دخان — dukhān — \"smoke\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خرج دخان أسود من النافذة. kharaja dukhān aswad min an-nāfidha. Black smoke came out of the window."
+            },
+            {
+              "kind": "speech",
+              "text": "In many dialects دخان (dukhān) also means tobacco."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دخان (dukhān) is built on the native Arabic root d-kh-n (Lane), where dakhana is said of a fire that sends up smoke."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukhān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukhān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukhān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukhān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharaja dukhān aswad min an-nāfidha. — Black smoke came out of the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharaja dukhān aswad min an-nāfidha.* — Black smoke came out of the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for on air, then the Arabic for a blaze, then say dukhān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for on air, then the Arabic for a blaze, then say *dukhān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دخان (dukhān) mean? (\"Smoke\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C298-ishtaala",
+      "sequence": 17270,
+      "title": "اشتعل (ishtaʿala) — to catch fire, to blaze",
+      "headword": "اشتعل",
+      "romanization": "ishtaʿala",
+      "gloss": "to catch fire, to blaze",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca8b7001f23a39c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a blaze, then the Arabic for smoke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اشتعل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اشتعل — ishtaʿala — \"to catch fire, to blaze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اشتعلت النار في الخشب بسرعة. ishtaʿalat an-nār fī al-khashab bi-surʿa. The fire caught in the wood quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يشتعل, yashtaʿil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اشتعل (ishtaʿala) is built on the native Arabic root sh-ʿ-l (Lane), \"to kindle a fire\". It is Form VIII, \"to take fire\"; shuʿla is a flame."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtaʿala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtaʿala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtaʿala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtaʿala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtaʿalat an-nār fī al-khashab bi-surʿa. — The fire caught in the wood quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtaʿalat an-nār fī al-khashab bi-surʿa.* — The fire caught in the wood quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a blaze, then the Arabic for smoke, then say ishtaʿala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a blaze, then the Arabic for smoke, then say *ishtaʿala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اشتعل (ishtaʿala) mean? (\"To catch fire, to blaze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C298-ihtaraqa",
+      "sequence": 17280,
+      "title": "احترق (iḥtaraqa) — to burn down, to get burnt",
+      "headword": "احترق",
+      "romanization": "iḥtaraqa",
+      "gloss": "to burn down, to get burnt",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb6c78ad9b7834f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for smoke, then the Arabic for to catch fire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: احترق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احترق — iḥtaraqa — \"to burn down, to get burnt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "احترق الخبز في الفرن. iḥtaraqa al-khubz fī al-furn. The bread got burnt in the oven."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحترق, yaḥtariq."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احترق (iḥtaraqa) is built on the native Arabic root ḥ-r-q (Lane), \"to burn\". It is Form VIII, \"to be burnt, to burn up\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtaraqa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtaraqa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtaraqa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtaraqa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtaraqa al-khubz fī al-furn. — The bread got burnt in the oven.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtaraqa al-khubz fī al-furn.* — The bread got burnt in the oven.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for smoke, then the Arabic for to catch fire, then say iḥtaraqa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for smoke, then the Arabic for to catch fire, then say *iḥtaraqa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does احترق (iḥtaraqa) mean? (\"To burn down, to get burnt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C298-rajul-itfa",
+      "sequence": 17290,
+      "title": "رجل إطفاء (rajul iṭfāʾ) — a firefighter",
+      "headword": "رجل إطفاء",
+      "romanization": "rajul iṭfāʾ",
+      "gloss": "a firefighter",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c2ff317b0b074d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to catch fire, then the Arabic for to burn down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رجل إطفاء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رجل إطفاء — rajul iṭfāʾ — \"a firefighter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "صعد رجل الإطفاء إلى السطح. ṣaʿida rajul al-iṭfāʾ ilā as-saṭḥ. The firefighter climbed up to the roof."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural رجال الإطفاء. The fire brigade is الإطفاء."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رجل إطفاء (rajul iṭfāʾ) is \"a man of extinguishing\": iṭfāʾ is the verbal noun of the taught aṭfaʾa, built on the native Arabic root ṭ-f-ʾ, \"(of fire) to go out\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rajul iṭfāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rajul iṭfāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rajul iṭfāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rajul iṭfāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣaʿida rajul al-iṭfāʾ ilā as-saṭḥ. — The firefighter climbed up to the roof.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣaʿida rajul al-iṭfāʾ ilā as-saṭḥ.* — The firefighter climbed up to the roof.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to catch fire, then the Arabic for to burn down, then say rajul iṭfāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to catch fire, then the Arabic for to burn down, then say *rajul iṭfāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رجل إطفاء (rajul iṭfāʾ) mean? (\"A firefighter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

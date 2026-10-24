@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-551-MAJBUR551",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether someone is free, stubborn or shy.",
+  "prerequisites": []
+}

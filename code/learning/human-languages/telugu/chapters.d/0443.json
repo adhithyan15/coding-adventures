@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Wheels and Engines",
+  "label": "ch:te-wheels-and-engines",
+  "canDo": "I can say a vehicle, an engine, a tyre, a brake and a horn.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C443-haranu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can say a vehicle, an engine, a tyre, a brake and a horn.",
+    "assesses": [
+      "TE-LEX-C443-VAHANAM443-03",
+      "TE-LEX-C443-VAHANAM443-04",
+      "TE-LEX-C443-VAHANAM443-05"
+    ]
+  }
+}

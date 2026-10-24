@@ -1,0 +1,11 @@
+{
+  "id": "TA-C302-mintelu",
+  "pathSegment": "TA-PATH-302-AZHIVU302",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-302-AZHIVU302",
+      "order": 3
+    }
+  ]
+}

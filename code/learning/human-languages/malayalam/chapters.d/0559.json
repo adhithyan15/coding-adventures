@@ -1,0 +1,19 @@
+{
+  "chapter": 559,
+  "title": "Looking After Each Other",
+  "label": "ch:ml-looking-after-each-other",
+  "canDo": "I can say to look after, to hold close, to get along, to cherish and to ask forgiveness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C559-ksama-codikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 559: I can say to look after, to hold close, to get along, to cherish and to ask forgiveness.",
+    "assesses": [
+      "ML-LEX-C559-PARIPALANAM559-03",
+      "ML-LEX-C559-PARIPALANAM559-04",
+      "ML-LEX-C559-PARIPALANAM559-05"
+    ]
+  }
+}

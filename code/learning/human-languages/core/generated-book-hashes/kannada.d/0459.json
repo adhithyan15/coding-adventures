@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:90df147afd279212",
+  "lessonIds": [
+    "KA-C459-parvata",
+    "KA-C459-sikhara",
+    "KA-C459-muggarisu",
+    "KA-C459-dere",
+    "KA-C459-bidara"
+  ],
+  "tex": "kannada/book/chapters/ch459-mountains-and-camps.tex"
+}

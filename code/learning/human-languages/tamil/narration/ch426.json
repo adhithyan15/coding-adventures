@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 426,
+  "title": "Crowds and Noise",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a5e244ea6ae252b8",
+  "lessons": [
+    {
+      "id": "TA-C426-cantati",
+      "sequence": 24430,
+      "title": "சந்தடி (cantaṭi) — bustle; commotion",
+      "headword": "சந்தடி",
+      "romanization": "cantaṭi",
+      "gloss": "bustle; commotion",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:176ba8ff48a76b7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a view, then the Tamil for a canteen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சந்தடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சந்தடி — cantaṭi — \"bustle; commotion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "காலையில் சந்தையில் ஒரே சந்தடி. kālaiyil cantaiyil orē cantaṭi. In the morning there is nothing but bustle in the market."
+            },
+            {
+              "kind": "speech",
+              "text": "சந்தடி (cantaṭi) இல்லாமல் means quietly, without fuss."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சந்தடி (cantaṭi), \"bustle, noise of a crowd\", is a Tamil word whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantaṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantaṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantaṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantaṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālaiyil cantaiyil orē cantaṭi. — In the morning there is nothing but bustle in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālaiyil cantaiyil orē cantaṭi.* — In the morning there is nothing but bustle in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a view, then the Tamil for a canteen, then say cantaṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a view, then the Tamil for a canteen, then say *cantaṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சந்தடி (cantaṭi) mean? (\"Bustle; commotion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C426-iraiccal",
+      "sequence": 24440,
+      "title": "இரைச்சல் (iraiccal) — noise; din",
+      "headword": "இரைச்சல்",
+      "romanization": "iraiccal",
+      "gloss": "noise; din",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b40d122d03d31ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a canteen, then the Tamil for bustle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இரைச்சல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இரைச்சல் — iraiccal — \"noise; din\"."
+            },
+            {
+              "kind": "speech",
+              "text": "போக்குவரத்தின் இரைச்சலால் தூங்க முடியவில்லை. pōkkuvarattiṉ iraiccalāl tūṅka muṭiyavillai. I could not sleep because of the noise of the traffic."
+            },
+            {
+              "kind": "speech",
+              "text": "The cause takes -ஆல்: இரைச்சலால், because of the noise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இரைச்சல் (iraiccal) is native Dravidian (DEDR 489), \"sound, noise, clamour\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraiccal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraiccal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraiccal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraiccal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōkkuvarattiṉ iraiccalāl tūṅka muṭiyavillai. — I could not sleep because of the noise of the traffic.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōkkuvarattiṉ iraiccalāl tūṅka muṭiyavillai.* — I could not sleep because of the noise of the traffic.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a canteen, then the Tamil for bustle, then say iraiccal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a canteen, then the Tamil for bustle, then say *iraiccal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இரைச்சல் (iraiccal) mean? (\"Noise; din\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C426-tiral",
+      "sequence": 24450,
+      "title": "திரள் (tiraḷ) — to gather; to throng",
+      "headword": "திரள்",
+      "romanization": "tiraḷ",
+      "gloss": "to gather; to throng",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:733ad8cbabf2a3f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for bustle, then the Tamil for noise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: திரள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திரள் — tiraḷ — \"to gather; to throng\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சதுக்கத்தில் நிறைய மக்கள் திரண்டார்கள். catukkattil niṟaiya makkaḷ tiraṇṭārkaḷ. Many people thronged the square."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): திரண்டது, tiraṇṭatu."
+            },
+            {
+              "kind": "speech",
+              "text": "ள் meets the past -ந்த- as ண்ட: திரண்டார்கள், they gathered."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திரள் (tiraḷ) is native Dravidian (DEDR 3245), \"to become round, to assemble, to crowd together\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "catukkattil niṟaiya makkaḷ tiraṇṭārkaḷ. — Many people thronged the square.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *catukkattil niṟaiya makkaḷ tiraṇṭārkaḷ.* — Many people thronged the square.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for bustle, then the Tamil for noise, then say tiraḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for bustle, then the Tamil for noise, then say *tiraḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does திரள் (tiraḷ) mean? (\"To gather; to throng\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C426-nirampu",
+      "sequence": 24460,
+      "title": "நிரம்பு (nirampu) — to fill up; to become full",
+      "headword": "நிரம்பு",
+      "romanization": "nirampu",
+      "gloss": "to fill up; to become full",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:813395e450f495c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for noise, then the Tamil for to gather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிரம்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிரம்பு — nirampu — \"to fill up; to become full\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சில நிமிடங்களில் பேருந்து நிரம்பியது. cila nimiṭaṅkaḷil pēruntu nirampiyatu. In a few minutes the bus filled up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): நிரம்பியது, nirampiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "நிரம்பு (nirampu) is to become full; நிரப்பு is to fill something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிரம்பு (nirampu) is native Dravidian (DEDR 3672), \"to become full, to be complete\", in the same article as நிரப்பு, \"to fill\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirampu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirampu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirampu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirampu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cila nimiṭaṅkaḷil pēruntu nirampiyatu. — In a few minutes the bus filled up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cila nimiṭaṅkaḷil pēruntu nirampiyatu.* — In a few minutes the bus filled up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for noise, then the Tamil for to gather, then say nirampu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for noise, then the Tamil for to gather, then say *nirampu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிரம்பு (nirampu) mean? (\"To fill up; to become full\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C426-tinaru",
+      "sequence": 24470,
+      "title": "திணறு (tiṇaṟu) — to gasp; to be overwhelmed",
+      "headword": "திணறு",
+      "romanization": "tiṇaṟu",
+      "gloss": "to gasp; to be overwhelmed",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5700006b94390519",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to gather, then the Tamil for to fill up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: திணறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திணறு — tiṇaṟu — \"to gasp; to be overwhelmed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நெரிசலான பேருந்தில் நான் திணறினேன். nericalāṉa pēruntil nāṉ tiṇaṟiṉēṉ. In the crowded bus I gasped for air."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): திணறினேன், tiṇaṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of work or questions: கேள்விகளுக்குப் பதில் சொல்லத் திணறினான்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திணறு (tiṇaṟu), \"to gasp, to be overwhelmed\", is a Tamil verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiṇaṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiṇaṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiṇaṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiṇaṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nericalāṉa pēruntil nāṉ tiṇaṟiṉēṉ. — In the crowded bus I gasped for air.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nericalāṉa pēruntil nāṉ tiṇaṟiṉēṉ.* — In the crowded bus I gasped for air.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to gather, then the Tamil for to fill up, then say tiṇaṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to gather, then the Tamil for to fill up, then say *tiṇaṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does திணறு (tiṇaṟu) mean? (\"To gasp; to be overwhelmed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

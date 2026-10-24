@@ -1,0 +1,11 @@
+{
+  "id": "HI-C395-batorna",
+  "pathSegment": "HI-PATH-395-MANZURI395",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-395-MANZURI395",
+      "order": 2
+    }
+  ]
+}

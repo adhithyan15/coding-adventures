@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C303-ustura",
+    "language": "arabic",
+    "chapter": 303,
+    "sequence": 17510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25107b04cdd55817"
+  },
+  "findings": []
+}

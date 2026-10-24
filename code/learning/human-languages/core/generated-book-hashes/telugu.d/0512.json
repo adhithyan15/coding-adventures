@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:c774f73839feca67",
+  "lessonIds": [
+    "TE-C512-jabbu",
+    "TE-C512-jabbupadu",
+    "TE-C512-nalata",
+    "TE-C512-mancam-pattu",
+    "TE-C512-teruko"
+  ],
+  "tex": "telugu/book/chapters/ch512-falling-ill.tex"
+}

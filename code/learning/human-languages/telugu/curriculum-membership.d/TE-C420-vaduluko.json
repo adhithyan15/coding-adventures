@@ -1,0 +1,11 @@
+{
+  "id": "TE-C420-vaduluko",
+  "pathSegment": "TE-PATH-420-ENPIKA420",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-420-ENPIKA420",
+      "order": 4
+    }
+  ]
+}

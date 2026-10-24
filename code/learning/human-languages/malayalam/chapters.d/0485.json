@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Ways In and Out",
+  "label": "ch:ml-ways-in-and-out",
+  "canDo": "I can say a lift, a staircase, a gateway, a waiting room and a roadside food stall.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C485-tattukata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can say a lift, a staircase, a gateway, a waiting room and a roadside food stall.",
+    "assesses": [
+      "ML-LEX-C485-KAVATAM485-03",
+      "ML-LEX-C485-KAVATAM485-04",
+      "ML-LEX-C485-KAVATAM485-05"
+    ]
+  }
+}

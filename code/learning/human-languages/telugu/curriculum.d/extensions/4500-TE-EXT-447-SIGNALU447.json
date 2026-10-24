@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-447-SIGNALU447",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a traffic signal, a licence, a pedestrian, a footpath and to break a rule.",
+  "prerequisites": []
+}

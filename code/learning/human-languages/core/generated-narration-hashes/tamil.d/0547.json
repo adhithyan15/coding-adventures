@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:e2f2565c47676dd1",
+  "lessonIds": [
+    "TA-C547-kaikutu",
+    "TA-C547-neritu",
+    "TA-C547-utteci",
+    "TA-C547-niti",
+    "TA-C547-nal-kuri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch547.txt",
+  "json": "tamil/narration/ch547.json",
+  "textHash": "fnv1a64:5c627486709e4041",
+  "jsonHash": "fnv1a64:8d1b83fa13726391",
+  "findings": []
+}

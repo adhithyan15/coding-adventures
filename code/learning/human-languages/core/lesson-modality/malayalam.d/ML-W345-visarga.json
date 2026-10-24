@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "ML-W345-visarga",
+    "language": "malayalam",
+    "chapter": 345,
+    "sequence": 16410,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:278039a58cf87960",
+    "detachableSegments": [
+      "Script you'll notice: ഃ",
+      "Writing: ഃ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

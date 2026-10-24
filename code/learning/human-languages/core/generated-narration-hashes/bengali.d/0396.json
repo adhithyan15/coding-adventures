@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:5adc0589a4a644a3",
+  "lessonIds": [
+    "BN-C396-majhi",
+    "BN-C396-dar",
+    "BN-C396-nongor",
+    "BN-C396-chhoi",
+    "BN-C396-baoya"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "bengali/narration/ch396.txt",
+  "json": "bengali/narration/ch396.json",
+  "textHash": "fnv1a64:b7d764e409aea90e",
+  "jsonHash": "fnv1a64:10307078d5927eca",
+  "findings": []
+}

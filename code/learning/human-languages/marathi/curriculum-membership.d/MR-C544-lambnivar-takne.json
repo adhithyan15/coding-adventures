@@ -1,0 +1,11 @@
+{
+  "id": "MR-C544-lambnivar-takne",
+  "pathSegment": "MR-PATH-544-AARAKHDA544",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-544-AARAKHDA544",
+      "order": 3
+    }
+  ]
+}

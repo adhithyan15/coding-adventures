@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:5c9b701a32591723",
+  "lessonIds": [
+    "MR-C545-bhavitavya",
+    "MR-C545-suvarnasandhi",
+    "MR-C545-soy",
+    "MR-C545-atkal-bandhne",
+    "MR-C545-vartavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch545.txt",
+  "json": "marathi/narration/ch545.json",
+  "textHash": "fnv1a64:131ef98ac5bdc6fb",
+  "jsonHash": "fnv1a64:60ecff8ba9b956b2",
+  "findings": []
+}

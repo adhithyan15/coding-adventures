@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Effects and Limits",
+  "label": "ch:ml-effects-and-limits",
+  "canDo": "I can say to affect, to influence, an alternative, a limit and a deadline.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C443-samayaparidhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can say to affect, to influence, an alternative, a limit and a deadline.",
+    "assesses": [
+      "ML-LEX-C443-PARIDHI443-03",
+      "ML-LEX-C443-PARIDHI443-04",
+      "ML-LEX-C443-PARIDHI443-05"
+    ]
+  }
+}

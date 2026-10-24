@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:233c418d2e455370",
+  "lessonIds": [
+    "BN-C381-bebostha",
+    "BN-C381-karjokor",
+    "BN-C381-bikol",
+    "BN-C381-dokkhota",
+    "BN-C381-onushilon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch381.txt",
+  "json": "bengali/narration/ch381.json",
+  "textHash": "fnv1a64:9283d2d21d8d56bc",
+  "jsonHash": "fnv1a64:0eb8e4d000908e3f",
+  "findings": []
+}

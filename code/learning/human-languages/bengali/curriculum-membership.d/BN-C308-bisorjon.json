@@ -1,0 +1,11 @@
+{
+  "id": "BN-C308-bisorjon",
+  "pathSegment": "BN-PATH-308-BISORJON308",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "BN-EXT-308-BISORJON308",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C413-prerippikkuka",
+    "language": "malayalam",
+    "chapter": 413,
+    "sequence": 20440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23372119256e0fb9"
+  },
+  "findings": []
+}

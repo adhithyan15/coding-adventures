@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:83c00f6f26f9f290",
+  "lessonIds": [
+    "BN-C276-ghotona",
+    "BN-C276-kichhu",
+    "BN-C276-onek",
+    "BN-C276-manush",
+    "BN-C276-durghotona"
+  ],
+  "tex": "bengali/book/chapters/ch276-something-happened.tex"
+}

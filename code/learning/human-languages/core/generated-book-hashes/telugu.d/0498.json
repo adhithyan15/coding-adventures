@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:e7ed5b3af0ecf864",
+  "lessonIds": [
+    "TE-C498-atmagauravam",
+    "TE-C498-avamanam",
+    "TE-C498-garvapadu",
+    "TE-C498-mohamatapadu",
+    "TE-C498-taladincuko"
+  ],
+  "tex": "telugu/book/chapters/ch498-shame-and-shyness.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C318-atlal",
+  "pathSegment": "AR-PATH-318-HADARA318",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-318-HADARA318",
+      "order": 2
+    }
+  ]
+}

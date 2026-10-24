@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:49b1799e8a58b31a",
+  "lessonIds": [
+    "TE-C357-vamsam",
+    "TE-C357-taram",
+    "TE-C357-purvikulu",
+    "TE-C357-anatha",
+    "TE-C357-batuku",
+    "TE-R357-review-350-357"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch357.txt",
+  "json": "telugu/narration/ch357.json",
+  "textHash": "fnv1a64:59efbf9abc80a4ba",
+  "jsonHash": "fnv1a64:8038617d1b6e4f48",
+  "findings": []
+}

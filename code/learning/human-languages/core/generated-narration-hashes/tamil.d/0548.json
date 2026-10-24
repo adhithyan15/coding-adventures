@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 548,
+  "sourceHash": "fnv1a64:f0900532d284ac95",
+  "lessonIds": [
+    "TA-C548-cikkanam",
+    "TA-C548-tivalaku",
+    "TA-C548-ey",
+    "TA-C548-mocati",
+    "TA-C548-uturuvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch548.txt",
+  "json": "tamil/narration/ch548.json",
+  "textHash": "fnv1a64:6cd92c77b6a67416",
+  "jsonHash": "fnv1a64:605667458ad1104b",
+  "findings": []
+}

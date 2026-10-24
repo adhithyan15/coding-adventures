@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:7e26e7def9a194d7",
+  "lessonIds": [
+    "AR-C395-marji",
+    "AR-C395-istashhada",
+    "AR-C395-iqtabasa",
+    "AR-C395-talaa",
+    "AR-C395-taammala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch395.txt",
+  "json": "arabic/narration/ch395.json",
+  "textHash": "fnv1a64:7290e34203e70df6",
+  "jsonHash": "fnv1a64:280a3f53a7c5a5bb",
+  "findings": []
+}

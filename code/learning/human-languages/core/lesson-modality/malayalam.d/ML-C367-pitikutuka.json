@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C367-pitikutuka",
+    "language": "malayalam",
+    "chapter": 367,
+    "sequence": 17940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9d80e09da45a6f0"
+  },
+  "findings": []
+}

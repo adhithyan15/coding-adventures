@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 480,
+  "title": "The forecast",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d277b275395f630d",
+  "lessons": [
+    {
+      "id": "AR-C480-nashra-jawwiyya",
+      "sequence": 26720,
+      "title": "نشرة جوية (nashra jawwiyya) — a weather forecast",
+      "headword": "نشرة جوية",
+      "romanization": "nashra jawwiyya",
+      "gloss": "a weather forecast",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c782e7ef90f98435",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to exchange, then the Arabic for to pack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نشرة جوية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نشرة جوية — nashra jawwiyya — \"a weather forecast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شاهدنا النشرة الجوية في التلفاز. shāhadnā an-nashra al-jawwiyya fī at-tilfāz. We watched the weather forecast on television."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نشرة جوية (nashra jawwiyya) is built from two native Arabic words: nashra, \"a bulletin\", on the root n-sh-r, \"to spread out\" (Lane), and jawwiyya, \"of the air\", on j-w-w (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nashra jawwiyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nashra jawwiyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nashra jawwiyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nashra jawwiyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāhadnā an-nashra al-jawwiyya fī at-tilfāz. — We watched the weather forecast on television.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāhadnā an-nashra al-jawwiyya fī at-tilfāz.* — We watched the weather forecast on television.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to exchange, then the Arabic for to pack, then say nashra jawwiyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to exchange, then the Arabic for to pack, then say *nashra jawwiyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نشرة جوية (nashra jawwiyya) mean? (\"A weather forecast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C480-daraja",
+      "sequence": 26730,
+      "title": "درجة (daraja) — a degree; a class (of travel)",
+      "headword": "درجة",
+      "romanization": "daraja",
+      "gloss": "a degree; a class (of travel)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80e8c74f96b834cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to pack, then the Arabic for a weather forecast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: درجة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "درجة — daraja — \"a degree; a class (of travel)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كانت درجة (daraja) الحرارة مرتفعة اليوم. kānat darajat al-ḥarāra murtafiʿa al-yawm. The temperature was high today."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: درجات, darajāt."
+            },
+            {
+              "kind": "speech",
+              "text": "darajat al-ḥarāra is the temperature; ad-daraja al-ūlā is first class."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "درجة (daraja) is built on the native Arabic root d-r-j, \"to go step by step\" (Lane). A daraja is a step."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daraja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daraja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daraja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daraja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānat darajat al-ḥarāra murtafiʿa al-yawm. — The temperature was high today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānat darajat al-ḥarāra murtafiʿa al-yawm.* — The temperature was high today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to pack, then the Arabic for a weather forecast, then say daraja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to pack, then the Arabic for a weather forecast, then say *daraja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does درجة (daraja) mean? (\"A degree; a class (of travel)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C480-irtafaa",
+      "sequence": 26740,
+      "title": "ارتفع (irtafaʿa) — to increase; to rise",
+      "headword": "ارتفع",
+      "romanization": "irtafaʿa",
+      "gloss": "to increase; to rise",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d84ba705c0a4c4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a weather forecast, then the Arabic for a degree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ارتفع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارتفع — irtafaʿa — \"to increase; to rise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ارتفعت درجة (daraja) الحرارة عند الظهر. irtafaʿat darajat al-ḥarāra ʿinda aẓ-ẓuhr. The temperature rose at noon."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يرتفع, yartafiʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارتفع (irtafaʿa) is built on the native Arabic root r-f-ʿ, \"to raise\" (Lane). It is Form VIII, \"to rise\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtafaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtafaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtafaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtafaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtafaʿat darajat al-ḥarāra ʿinda aẓ-ẓuhr. — The temperature rose at noon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtafaʿat darajat al-ḥarāra ʿinda aẓ-ẓuhr.* — The temperature rose at noon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a weather forecast, then the Arabic for a degree, then say irtafaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a weather forecast, then the Arabic for a degree, then say *irtafaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ارتفع (irtafaʿa) mean? (\"To increase; to rise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C480-inkhafada",
+      "sequence": 26750,
+      "title": "انخفض (inkhafaḍa) — to drop; to fall (of a level)",
+      "headword": "انخفض",
+      "romanization": "inkhafaḍa",
+      "gloss": "to drop; to fall (of a level)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:240807f12cb00d19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a degree, then the Arabic for to increase."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انخفض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انخفض — inkhafaḍa — \"to drop; to fall (of a level)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انخفضت الحرارة في الليل. inkhafaḍat al-ḥarāra fī al-layl. The temperature dropped at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينخفض, yankhafiḍ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انخفض (inkhafaḍa) is built on the native Arabic root kh-f-ḍ, \"to be low; to lower\" (Lane). It is Form VII."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inkhafaḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inkhafaḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inkhafaḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inkhafaḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inkhafaḍat al-ḥarāra fī al-layl. — The temperature dropped at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inkhafaḍat al-ḥarāra fī al-layl.* — The temperature dropped at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a degree, then the Arabic for to increase, then say inkhafaḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a degree, then the Arabic for to increase, then say *inkhafaḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انخفض (inkhafaḍa) mean? (\"To drop; to fall (of a level)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C480-mutadil",
+      "sequence": 26760,
+      "title": "معتدل (muʿtadil) — mild; moderate",
+      "headword": "معتدل",
+      "romanization": "muʿtadil",
+      "gloss": "mild; moderate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:661cd75b9fe230eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to increase, then the Arabic for to drop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: معتدل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معتدل — muʿtadil — \"mild; moderate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الطقس في الربيع معتدل. aṭ-ṭaqs fī ar-rabīʿ muʿtadil. The weather in spring is mild."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معتدل (muʿtadil) is built on the native Arabic root ʿ-d-l, \"to be even, balanced\" (Lane). It is the Form VIII participle, \"evenly balanced\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muʿtadil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muʿtadil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muʿtadil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muʿtadil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭ-ṭaqs fī ar-rabīʿ muʿtadil. — The weather in spring is mild.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭ-ṭaqs fī ar-rabīʿ muʿtadil.* — The weather in spring is mild.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to increase, then the Arabic for to drop, then say muʿtadil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to increase, then the Arabic for to drop, then say *muʿtadil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does معتدل (muʿtadil) mean? (\"Mild; moderate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

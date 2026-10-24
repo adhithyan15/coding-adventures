@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:fc0b64fdedbced61",
+  "lessonIds": [
+    "KA-C441-sarati",
+    "KA-C441-manna-madu",
+    "KA-C441-desiya",
+    "KA-C441-nagadu",
+    "KA-C441-kard"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch441.txt",
+  "json": "kannada/narration/ch441.json",
+  "textHash": "fnv1a64:fd4804086c58c9de",
+  "jsonHash": "fnv1a64:30285556a9669279",
+  "findings": []
+}

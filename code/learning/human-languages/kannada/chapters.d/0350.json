@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "An Evening of Honours",
+  "label": "ch:ka-an-evening-of-honours",
+  "canDo": "I can say to honour, to extol, an honorific title, fame and to inaugurate.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C350-udghatisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can say to honour, to extol, an honorific title, fame and to inaugurate.",
+    "assesses": [
+      "KA-LEX-C350-SANMANA350-03",
+      "KA-LEX-C350-SANMANA350-04",
+      "KA-LEX-C350-SANMANA350-05"
+    ]
+  }
+}

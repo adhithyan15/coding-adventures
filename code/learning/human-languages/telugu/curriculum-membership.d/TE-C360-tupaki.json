@@ -1,0 +1,11 @@
+{
+  "id": "TE-C360-tupaki",
+  "pathSegment": "TE-PATH-360-AYUDHAM360",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-360-AYUDHAM360",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C409-sanghibhavam",
+    "language": "telugu",
+    "chapter": 409,
+    "sequence": 20410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae0a7a16dfa620ab"
+  },
+  "findings": []
+}

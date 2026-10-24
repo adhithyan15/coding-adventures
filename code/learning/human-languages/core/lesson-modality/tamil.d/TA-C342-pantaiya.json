@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C342-pantaiya",
+    "language": "tamil",
+    "chapter": 342,
+    "sequence": 19580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:208ce7a5b4cfbf33"
+  },
+  "findings": []
+}

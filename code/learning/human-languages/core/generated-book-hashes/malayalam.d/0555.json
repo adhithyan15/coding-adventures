@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:01116c0d1b9bdf5a",
+  "lessonIds": [
+    "ML-C555-tarattu",
+    "ML-C555-kuttukutumbam",
+    "ML-C555-anukutumbam",
+    "ML-C555-verpiriyuka",
+    "ML-C555-inannuka"
+  ],
+  "tex": "malayalam/book/chapters/ch555-generations-under-one-roof.tex"
+}

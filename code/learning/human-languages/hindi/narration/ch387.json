@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 387,
+  "title": "Very, Extremely",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d92b01b00b53a597",
+  "lessons": [
+    {
+      "id": "HI-C387-behad",
+      "sequence": 21250,
+      "title": "बेहद (behad) — extremely, beyond measure",
+      "headword": "बेहद",
+      "romanization": "behad",
+      "gloss": "extremely, beyond measure",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0444eb19e656139b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for stubbornness, then the Hindi for eligible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बेहद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेहद — behad — \"extremely, beyond measure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर आज भी बेहद गर्मी रही तो स्कूल बंद रहेंगे। agar āj bhī behad garmī rahī to skūl band raheṅge. If it is extremely hot again today, the schools will stay shut."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेहद (behad) is usually traced to Persian behadd, \"without limit\". It joins Persian be-, \"without\", to Arabic ḥadd, \"a limit\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "behad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *behad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "behad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *behad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āj bhī behad garmī rahī to skūl band raheṅge. — If it is extremely hot again today, the schools will stay shut.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āj bhī behad garmī rahī to skūl band raheṅge.* — If it is extremely hot again today, the schools will stay shut.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for stubbornness, then the Hindi for eligible, then say behad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for stubbornness, then the Hindi for eligible, then say *behad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बेहद (behad) mean? (\"Extremely, beyond measure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C387-atyant",
+      "sequence": 21260,
+      "title": "अत्यंत (atyant) — extremely (formal)",
+      "headword": "अत्यंत",
+      "romanization": "atyant",
+      "gloss": "extremely (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4b7f24b5343b0c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for eligible, then the Hindi for extremely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अत्यंत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अत्यंत — atyant — \"extremely (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर रोगी की हालत अत्यंत गंभीर होगी तो उसे अस्पताल ले जाना पड़ेगा। agar rogī kī hālat atyant gambhīr hogī to use aspatāl le jānā paṛegā. If the patient's condition is extremely serious, he will have to be taken to hospital."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अत्यंत (atyant) is a tatsama, borrowed from Sanskrit atyanta, \"excessive, very great\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atyant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atyant*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atyant, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atyant*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar rogī kī hālat atyant gambhīr hogī to use aspatāl le jānā paṛegā. — If the patient's condition is extremely serious, he will have to be taken to hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar rogī kī hālat atyant gambhīr hogī to use aspatāl le jānā paṛegā.* — If the patient's condition is extremely serious, he will have to be taken to hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for eligible, then the Hindi for extremely, then say atyant again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for eligible, then the Hindi for extremely, then say *atyant* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अत्यंत (atyant) mean? (\"Extremely (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C387-zara",
+      "sequence": 21270,
+      "title": "ज़रा (zarā) — a little, a bit",
+      "headword": "ज़रा",
+      "romanization": "zarā",
+      "gloss": "a little, a bit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abf43d141f2068f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for extremely, then the Hindi for extremely (formal)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ज़रा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़रा — zarā — \"a little, a bit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ज़रा धीरे बोलो, वरना बच्चा जाग जाएगा। zarā dhīre bolo, varnā baccā jāg jāegā. Speak a little more quietly, or the baby will wake up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़रा (zarā) is usually traced to Arabic dharra, \"a speck, an atom\", which reached Hindi through Persian. Persian says zarra; the Hindi sense is a little."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zarā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zarā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zarā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zarā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zarā dhīre bolo, varnā baccā jāg jāegā. — Speak a little more quietly, or the baby will wake up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zarā dhīre bolo, varnā baccā jāg jāegā.* — Speak a little more quietly, or the baby will wake up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for extremely, then the Hindi for extremely (formal), then say zarā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for extremely, then the Hindi for extremely (formal), then say *zarā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ज़रा (zarā) mean? (\"A little, a bit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C387-khub",
+      "sequence": 21280,
+      "title": "ख़ूब (khūb) — plenty, a lot",
+      "headword": "ख़ूब",
+      "romanization": "khūb",
+      "gloss": "plenty, a lot",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de1addd9f3a21a48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for extremely (formal), then the Hindi for a bit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ख़ूब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ख़ूब — khūb — \"plenty, a lot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर ख़ूब बारिश होगी तो फ़सल अच्छी होगी। agar khūb bāriś hogī to fasal acchī hogī. If there is plenty of rain, the harvest will be good."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ख़ूब (khūb) is usually traced to Persian khūb, \"good, fine\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khūb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khūb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khūb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khūb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar khūb bāriś hogī to fasal acchī hogī. — If there is plenty of rain, the harvest will be good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar khūb bāriś hogī to fasal acchī hogī.* — If there is plenty of rain, the harvest will be good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for extremely (formal), then the Hindi for a bit, then say khūb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for extremely (formal), then the Hindi for a bit, then say *khūb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ख़ूब (khūb) mean? (\"Plenty, a lot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C387-zabardast",
+      "sequence": 21290,
+      "title": "ज़बरदस्त (zabardast) — tremendous, powerful",
+      "headword": "ज़बरदस्त",
+      "romanization": "zabardast",
+      "gloss": "tremendous, powerful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2eba97c05109d134",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a bit, then the Hindi for plenty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ज़बरदस्त",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़बरदस्त — zabardast — \"tremendous, powerful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर हमारी टीम जीत गई तो गाँव में ज़बरदस्त दावत होगी। agar hamārī ṭīm jīt gaī to gā̃v meṁ zabardast dāvat hogī. If our team wins, there will be a tremendous feast in the village."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़बरदस्त (zabardast) is usually traced to Persian zabardast, \"strong-handed, superior\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zabardast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zabardast*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zabardast, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zabardast*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar hamārī ṭīm jīt gaī to gā̃v meṁ zabardast dāvat hogī. — If our team wins, there will be a tremendous feast in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar hamārī ṭīm jīt gaī to gā̃v meṁ zabardast dāvat hogī.* — If our team wins, there will be a tremendous feast in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a bit, then the Hindi for plenty, then say zabardast again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a bit, then the Hindi for plenty, then say *zabardast* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ज़बरदस्त (zabardast) mean? (\"Tremendous, powerful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

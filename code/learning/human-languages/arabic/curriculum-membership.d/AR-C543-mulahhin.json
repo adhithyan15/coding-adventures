@@ -1,0 +1,11 @@
+{
+  "id": "AR-C543-mulahhin",
+  "pathSegment": "AR-PATH-543-MUSIQA543",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-543-MUSIQA543",
+      "order": 3
+    }
+  ]
+}

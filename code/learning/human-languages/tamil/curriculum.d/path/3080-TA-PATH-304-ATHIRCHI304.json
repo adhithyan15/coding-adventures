@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-304-ATHIRCHI304",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-304-ATHIRCHI304"
+  ],
+  "after": []
+}

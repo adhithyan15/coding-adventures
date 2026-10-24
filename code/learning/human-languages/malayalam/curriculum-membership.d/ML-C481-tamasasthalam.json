@@ -1,0 +1,11 @@
+{
+  "id": "ML-C481-tamasasthalam",
+  "pathSegment": "ML-PATH-481-TAMASAM481",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-481-TAMASAM481",
+      "order": 2
+    }
+  ]
+}

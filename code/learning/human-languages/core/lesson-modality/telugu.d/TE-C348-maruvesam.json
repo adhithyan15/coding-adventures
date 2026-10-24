@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C348-maruvesam",
+    "language": "telugu",
+    "chapter": 348,
+    "sequence": 17160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed3a798f8f48369c"
+  },
+  "findings": []
+}

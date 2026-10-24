@@ -1,0 +1,11 @@
+{
+  "id": "TA-C395-kaivitu",
+  "pathSegment": "TA-PATH-395-NATATTU395",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-395-NATATTU395",
+      "order": 4
+    }
+  ]
+}

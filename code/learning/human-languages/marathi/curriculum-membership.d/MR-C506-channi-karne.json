@@ -1,0 +1,11 @@
+{
+  "id": "MR-C506-channi-karne",
+  "pathSegment": "MR-PATH-506-KACHERI506",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-506-KACHERI506",
+      "order": 4
+    }
+  ]
+}

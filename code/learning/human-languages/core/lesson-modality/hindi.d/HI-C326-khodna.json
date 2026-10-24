@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C326-khodna",
+    "language": "hindi",
+    "chapter": 326,
+    "sequence": 17950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0ebf15338c361a7"
+  },
+  "findings": []
+}

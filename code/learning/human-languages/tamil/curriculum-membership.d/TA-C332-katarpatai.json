@@ -1,0 +1,11 @@
+{
+  "id": "TA-C332-katarpatai",
+  "pathSegment": "TA-PATH-332-POR332",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-332-POR332",
+      "order": 4
+    }
+  ]
+}

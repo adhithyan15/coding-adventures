@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 488,
+  "title": "Happy, bored, angry and sad",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:951c37c16131f3cc",
+  "lessons": [
+    {
+      "id": "AR-C488-saada",
+      "sequence": 27200,
+      "title": "سعادة (saʿāda) — happiness",
+      "headword": "سعادة",
+      "romanization": "saʿāda",
+      "gloss": "happiness",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70a2eade1f5cc35a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a sentence, then the Arabic for a barber."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سعادة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سعادة — saʿāda — \"happiness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شعرت بسعادة كبيرة في العيد. shaʿartu bi-saʿāda kabīra fī al-ʿīd. I felt great happiness at the feast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سعادة (saʿāda) is built on the native Arabic root s-a-d, \"to be lucky, to be happy\" (Lane). Saʿāda is the state of being saʿīd, happy, a word you already know from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saʿāda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saʿāda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saʿāda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saʿāda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shaʿartu bi-saʿāda kabīra fī al-ʿīd. — I felt great happiness at the feast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shaʿartu bi-saʿāda kabīra fī al-ʿīd.* — I felt great happiness at the feast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a sentence, then the Arabic for a barber, then say saʿāda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a sentence, then the Arabic for a barber, then say *saʿāda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سعادة (saʿāda) mean? (\"Happiness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C488-malal",
+      "sequence": 27210,
+      "title": "ملل (malal) — boredom",
+      "headword": "ملل",
+      "romanization": "malal",
+      "gloss": "boredom",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:180c175092cb60d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a barber, then the Arabic for happiness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ملل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ملل — malal — \"boredom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شعر الطالب بالملل في المحاضرة الطويلة. shaʿara aṭ-ṭālib bi-l-malal fī al-muḥāḍara aṭ-ṭawīla. The student felt bored in the long lecture."
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic says شعر بالملل, to feel boredom, where English says to be bored."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ملل (malal) is built on the native Arabic root m-l-l, \"to be weary of a thing\" (Lane). Malal is the noun of that weariness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shaʿara aṭ-ṭālib bi-l-malal fī al-muḥāḍara aṭ-ṭawīla. — The student felt bored in the long lecture.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shaʿara aṭ-ṭālib bi-l-malal fī al-muḥāḍara aṭ-ṭawīla.* — The student felt bored in the long lecture.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a barber, then the Arabic for happiness, then say malal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a barber, then the Arabic for happiness, then say *malal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ملل (malal) mean? (\"Boredom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C488-ghadiba",
+      "sequence": 27220,
+      "title": "غضب (ghaḍiba) — to get angry",
+      "headword": "غضب",
+      "romanization": "ghaḍiba",
+      "gloss": "to get angry",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f936f9d5ece52552",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for happiness, then the Arabic for boredom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غضب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غضب — ghaḍiba — \"to get angry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غضب أبي لأن أخي كسر النافذة. ghaḍiba abī li-anna akhī kasara an-nāfidha. My father got angry because my brother broke the window."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يغضب, yaghḍab."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes من for the person: غضب (ghaḍiba) من أخيه."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غضب (ghaḍiba) is built on the native Arabic root gh-ḍ-b, \"anger, wrath\" (Lane). The adjective ghāḍib, angry, and the noun ghaḍab, anger, come from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaḍiba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaḍiba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaḍiba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaḍiba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaḍiba abī li-anna akhī kasara an-nāfidha. — My father got angry because my brother broke the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaḍiba abī li-anna akhī kasara an-nāfidha.* — My father got angry because my brother broke the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for happiness, then the Arabic for boredom, then say ghaḍiba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for happiness, then the Arabic for boredom, then say *ghaḍiba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غضب (ghaḍiba) mean? (\"To get angry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C488-hazina",
+      "sequence": 27230,
+      "title": "حزن (ḥazina) — to grieve, to be sad",
+      "headword": "حزن",
+      "romanization": "ḥazina",
+      "gloss": "to grieve, to be sad",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca890e15df5939ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for boredom, then the Arabic for to get angry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حزن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حزن — ḥazina — \"to grieve, to be sad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حزنت البنت عندما سافرت صديقتها. ḥazinat al-bint ʿindamā sāfarat ṣadīqatuhā. The girl was sad when her friend went away."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحزن, yaḥzan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حزن (ḥazina) is built on the native Arabic root ḥ-z-n, \"grief, sadness\" (Lane). The adjective ḥazīn, sad, which you already know, comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥazina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥazina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥazina, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥazina*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥazinat al-bint ʿindamā sāfarat ṣadīqatuhā. — The girl was sad when her friend went away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥazinat al-bint ʿindamā sāfarat ṣadīqatuhā.* — The girl was sad when her friend went away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for boredom, then the Arabic for to get angry, then say ḥazina again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for boredom, then the Arabic for to get angry, then say *ḥazina* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حزن (ḥazina) mean? (\"To grieve, to be sad\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C488-tanahhada",
+      "sequence": 27240,
+      "title": "تنهد (tanahhada) — to sigh",
+      "headword": "تنهد",
+      "romanization": "tanahhada",
+      "gloss": "to sigh",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8cf7af86af9c475",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to get angry, then the Arabic for to grieve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تنهد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تنهد — tanahhada — \"to sigh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تنهدت أمي وجلست على الكرسي. tanahhadat ummī wa-jalasat ʿalā al-kursī. My mother sighed and sat down on the chair."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتنهد, yatanahhad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تنهد (tanahhada) is built on the native Arabic root n-h-d, \"to swell, to rise\" (Lane). Lane gives Form V tanahhada as to sigh: to let the chest rise with a long breath."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanahhada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanahhada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanahhada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanahhada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanahhadat ummī wa-jalasat ʿalā al-kursī. — My mother sighed and sat down on the chair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanahhadat ummī wa-jalasat ʿalā al-kursī.* — My mother sighed and sat down on the chair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to get angry, then the Arabic for to grieve, then say tanahhada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to get angry, then the Arabic for to grieve, then say *tanahhada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تنهد (tanahhada) mean? (\"To sigh\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

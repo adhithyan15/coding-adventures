@@ -1,0 +1,11 @@
+{
+  "id": "HI-C550-marzi",
+  "pathSegment": "HI-PATH-550-CHAYAN550",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-550-CHAYAN550",
+      "order": 0
+    }
+  ]
+}

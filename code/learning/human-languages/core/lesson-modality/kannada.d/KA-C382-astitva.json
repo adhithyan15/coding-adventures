@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C382-astitva",
+    "language": "kannada",
+    "chapter": 382,
+    "sequence": 19330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:961e2d0c72fe9ead"
+  },
+  "findings": []
+}

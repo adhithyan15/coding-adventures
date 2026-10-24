@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C299-muccuttinaru",
+    "language": "tamil",
+    "chapter": 299,
+    "sequence": 17390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c085210d33ed196f"
+  },
+  "findings": []
+}

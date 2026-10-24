@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:7c5393ed54234d24",
+  "lessonIds": [
+    "TE-C366-khajana",
+    "TE-C366-nidhi",
+    "TE-C366-anvesana",
+    "TE-C366-dora",
+    "TE-C366-akramincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch366.txt",
+  "json": "telugu/narration/ch366.json",
+  "textHash": "fnv1a64:809b7e8e873e164e",
+  "jsonHash": "fnv1a64:fa844eaefaebc697",
+  "findings": []
+}

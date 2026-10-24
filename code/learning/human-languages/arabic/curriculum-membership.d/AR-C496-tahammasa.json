@@ -1,0 +1,11 @@
+{
+  "id": "AR-C496-tahammasa",
+  "pathSegment": "AR-PATH-496-HAMAS496",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-496-HAMAS496",
+      "order": 1
+    }
+  ]
+}

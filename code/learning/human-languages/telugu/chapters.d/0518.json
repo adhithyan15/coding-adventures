@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Slips and Falls",
+  "label": "ch:te-slips-and-falls",
+  "canDo": "I can say that someone got hurt, got a bump, staggered, limped or bled.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C518-raktasravam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can say that someone got hurt, got a bump, staggered, limped or bled.",
+    "assesses": [
+      "TE-LEX-C518-GAYAM518-03",
+      "TE-LEX-C518-GAYAM518-04",
+      "TE-LEX-C518-GAYAM518-05"
+    ]
+  }
+}

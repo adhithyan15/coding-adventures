@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C438-kuyil",
+    "language": "tamil",
+    "chapter": 438,
+    "sequence": 25050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abf750c3566cf4ca"
+  },
+  "findings": []
+}

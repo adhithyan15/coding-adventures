@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:20eb76b51a255fe5",
+  "lessonIds": [
+    "MR-C533-kasrat",
+    "MR-C533-yogasan",
+    "MR-C533-sitti",
+    "MR-C533-vakne",
+    "MR-C533-jhepavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch533.txt",
+  "json": "marathi/narration/ch533.json",
+  "textHash": "fnv1a64:7615bcd06227dbfc",
+  "jsonHash": "fnv1a64:b5e2f5d7a2ce6a58",
+  "findings": []
+}

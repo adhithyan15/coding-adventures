@@ -1,0 +1,11 @@
+{
+  "id": "TE-C386-tiraskarincu",
+  "pathSegment": "TE-PATH-386-ABHYANTARAM386",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-386-ABHYANTARAM386",
+      "order": 4
+    }
+  ]
+}

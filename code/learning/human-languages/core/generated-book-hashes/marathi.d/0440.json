@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:b44d0a2ddec1148b",
+  "lessonIds": [
+    "MR-C440-duskal",
+    "MR-C440-dhagphuti",
+    "MR-C440-kadaka",
+    "MR-C440-jhodapne",
+    "MR-C440-osarne"
+  ],
+  "tex": "marathi/book/chapters/ch440-droughts-and-cloudbursts.tex"
+}

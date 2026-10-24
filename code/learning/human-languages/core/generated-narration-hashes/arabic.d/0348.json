@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:957526276df35d8f",
+  "lessonIds": [
+    "AR-C348-tuhma",
+    "AR-C348-jinaya",
+    "AR-C348-uquba",
+    "AR-C348-aqaba",
+    "AR-C348-ballagha",
+    "AR-R348-review-341-348"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch348.txt",
+  "json": "arabic/narration/ch348.json",
+  "textHash": "fnv1a64:c40bbaad2261afde",
+  "jsonHash": "fnv1a64:1369bdfb72b680d2",
+  "findings": []
+}

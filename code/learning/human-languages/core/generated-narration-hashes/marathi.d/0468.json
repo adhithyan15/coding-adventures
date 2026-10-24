@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:c7096bcc2d31ec10",
+  "lessonIds": [
+    "MR-C468-mrdu",
+    "MR-C468-saumya",
+    "MR-C468-halva",
+    "MR-C468-samvedansil",
+    "MR-C468-paropkari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch468.txt",
+  "json": "marathi/narration/ch468.json",
+  "textHash": "fnv1a64:3d439fd67aa88ba1",
+  "jsonHash": "fnv1a64:a0f0fd2aff407d6d",
+  "findings": []
+}

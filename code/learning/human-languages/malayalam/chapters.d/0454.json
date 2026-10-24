@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Raising Questions",
+  "label": "ch:ml-raising-questions",
+  "canDo": "I can say to bring up, to defend, to uphold, to be convinced and to confirm.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C454-sthirikarikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can say to bring up, to defend, to uphold, to be convinced and to confirm.",
+    "assesses": [
+      "ML-LEX-C454-UNNAYAM454-03",
+      "ML-LEX-C454-UNNAYAM454-04",
+      "ML-LEX-C454-UNNAYAM454-05"
+    ]
+  }
+}

@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 297,
+  "title": "Thieves in the Night",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:35576f3fe43223a2",
+  "lessons": [
+    {
+      "id": "MR-C297-ghusne",
+      "sequence": 17460,
+      "title": "घुसणे (ghusṇe) — to barge in; to force one's way in",
+      "headword": "घुसणे",
+      "romanization": "ghusṇe",
+      "gloss": "to barge in; to force one's way in",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a59f13142722702",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to recover, then the Marathi for to be missed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घुसणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घुसणे — ghusṇe — \"to barge in; to force one's way in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात्री दोन चोर खिडकीतून घरात घुसले. rātrī don cor khiḍkītūn gharāt ghusle. At night two thieves forced their way into the house through the window."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो घुसला, to ghuslā."
+            },
+            {
+              "kind": "speech",
+              "text": "The place entered takes -त: घरात घुसणे (ghusṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घुसणे (ghusṇe) is inherited: CDIAL lists Marathi ghusṇe, 'to enter forcibly', under ghuss, 'thrust in, pierce' (CDIAL 4492)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghusṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghusṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghusṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghusṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātrī don cor khiḍkītūn gharāt ghusle. — At night two thieves forced their way into the house through the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātrī don cor khiḍkītūn gharāt ghusle.* — At night two thieves forced their way into the house through the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to recover, then the Marathi for to be missed, then say ghusṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to recover, then the Marathi for to be missed, then say *ghusṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घुसणे (ghusṇe) mean? (\"To barge in; to force one's way in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C297-phodne",
+      "sequence": 17470,
+      "title": "फोडणे (phoḍṇe) — to break open; to smash",
+      "headword": "फोडणे",
+      "romanization": "phoḍṇe",
+      "gloss": "to break open; to smash",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2c4d00ed2473ade",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to be missed, then the Marathi for to barge in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फोडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फोडणे — phoḍṇe — \"to break open; to smash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चोरांनी कपाटाचं कुलूप फोडलं. corānnī kapāṭācaṁ kulūp phoḍlaṁ. The thieves broke the lock of the cupboard."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने फोडलं, tyāne phoḍlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Transitive: the thing broken agrees with the past: कुलूप फोडलं, खिडकी फोडली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फोडणे (phoḍṇe) is a tadbhava: CDIAL lists Marathi phoḍṇe, 'to break', under Sanskrit sphoṭayati, 'bursts, splits, breaks' (CDIAL 13857)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phoḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phoḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phoḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phoḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "corānnī kapāṭācaṁ kulūp phoḍlaṁ. — The thieves broke the lock of the cupboard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *corānnī kapāṭācaṁ kulūp phoḍlaṁ.* — The thieves broke the lock of the cupboard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to be missed, then the Marathi for to barge in, then say phoḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to be missed, then the Marathi for to barge in, then say *phoḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फोडणे (phoḍṇe) mean? (\"To break open; to smash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C297-hiskavne",
+      "sequence": 17480,
+      "title": "हिसकावणे (hiskāvṇe) — to snatch",
+      "headword": "हिसकावणे",
+      "romanization": "hiskāvṇe",
+      "gloss": "to snatch",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef150293c1cef2e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to barge in, then the Marathi for to break open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हिसकावणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिसकावणे — hiskāvṇe — \"to snatch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एका माणसाने तिच्या हातातली पिशवी हिसकावली. ekā māṇsāne ticyā hātātlī piśvī hiskāvlī. A man snatched the bag from her hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने हिसकावलं, tyāne hiskāvlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The thing snatched is the object and agrees with the past: पिशवी हिसकावली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिसकावणे (hiskāvṇe) is inherited: it belongs to the family CDIAL lists under hicc (CDIAL 14083), where Marathi hisakṇe is 'to jerk'. To snatch is to jerk away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiskāvṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiskāvṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiskāvṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiskāvṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekā māṇsāne ticyā hātātlī piśvī hiskāvlī. — A man snatched the bag from her hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekā māṇsāne ticyā hātātlī piśvī hiskāvlī.* — A man snatched the bag from her hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to barge in, then the Marathi for to break open, then say hiskāvṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to barge in, then the Marathi for to break open, then say *hiskāvṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हिसकावणे (hiskāvṇe) mean? (\"To snatch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C297-lutne",
+      "sequence": 17490,
+      "title": "लुटणे (luṭṇe) — to loot; to plunder",
+      "headword": "लुटणे",
+      "romanization": "luṭṇe",
+      "gloss": "to loot; to plunder",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2ba1466c27185ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to break open, then the Marathi for to snatch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लुटणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लुटणे — luṭṇe — \"to loot; to plunder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रस्त्यात चार माणसांनी प्रवाशांना लुटलं. rastyāt cār māṇsānnī pravāśānnā luṭlaṁ. On the road four men robbed the travellers."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने लुटलं, tyāne luṭlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The victims take -ला: प्रवाशांना लुटणे (luṭṇe); goods are the object: दुकान लुटणे (luṭṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लुटणे (luṭṇe) is inherited: CDIAL lists Marathi luṭṇe, 'plunders', under luṭṭati, 'plunders' (CDIAL 11078)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luṭṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luṭṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luṭṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luṭṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rastyāt cār māṇsānnī pravāśānnā luṭlaṁ. — On the road four men robbed the travellers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rastyāt cār māṇsānnī pravāśānnā luṭlaṁ.* — On the road four men robbed the travellers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to break open, then the Marathi for to snatch, then say luṭṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to break open, then the Marathi for to snatch, then say *luṭṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लुटणे (luṭṇe) mean? (\"To loot; to plunder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C297-lubadne",
+      "sequence": 17500,
+      "title": "लुबाडणे (lubāḍṇe) — to fleece; to swindle",
+      "headword": "लुबाडणे",
+      "romanization": "lubāḍṇe",
+      "gloss": "to fleece; to swindle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad8d706216a7f21b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to snatch, then the Marathi for to loot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लुबाडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लुबाडणे — lubāḍṇe — \"to fleece; to swindle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्या माणसाने गोड बोलून आजीला लुबाडलं. tyā māṇsāne goḍ bolūn ājīlā lubāḍlaṁ. That man swindled Grandma with sweet talk."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने लुबाडलं, tyāne lubāḍlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Like लुटणे (luṭṇe), but by trickery; the victim takes -ला."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लुबाडणे (lubāḍṇe) is a Marathi verb of fleecing by trickery; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lubāḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lubāḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lubāḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lubāḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyā māṇsāne goḍ bolūn ājīlā lubāḍlaṁ. — That man swindled Grandma with sweet talk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyā māṇsāne goḍ bolūn ājīlā lubāḍlaṁ.* — That man swindled Grandma with sweet talk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to snatch, then the Marathi for to loot, then say lubāḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to snatch, then the Marathi for to loot, then say *lubāḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लुबाडणे (lubāḍṇe) mean? (\"To fleece; to swindle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

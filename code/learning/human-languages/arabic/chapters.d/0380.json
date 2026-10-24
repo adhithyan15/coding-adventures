@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Justice and fairness",
+  "label": "ch:ar-justice-and-fairness",
+  "canDo": "I can talk about justice and equality, say what is fair or unjust, and say what someone deserves.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C380-istahaqqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can talk about justice and equality, say what is fair or unjust, and say what someone deserves.",
+    "assesses": [
+      "AR-LEX-C380-ADALA380-03",
+      "AR-LEX-C380-ADALA380-04",
+      "AR-LEX-C380-ADALA380-05"
+    ]
+  }
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 503,
+  "title": "Quick Minds and Slow",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:da585e8184793721",
+  "lessons": [
+    {
+      "id": "KA-C503-curuku",
+      "sequence": 25660,
+      "title": "ಚುರುಕು (curuku) — quick; brisk",
+      "headword": "ಚುರುಕು",
+      "romanization": "curuku",
+      "gloss": "quick; brisk",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:684de19606d07ad1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to take note, then the Kannada for to react."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚುರುಕು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚುರುಕು — curuku — \"quick; brisk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಹುಡುಗಿ ಓದಿನಲ್ಲಿ ತುಂಬಾ ಚುರುಕು. ā huḍugi ōdinalli tumbā curuku. That girl is very quick at her studies."
+            },
+            {
+              "kind": "speech",
+              "text": "ಚುರುಕಾಗಿ, briskly. Also used of a sharp sun: ಚುರುಕು (curuku) ಬಿಸಿಲು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚುರುಕು (curuku) is native Dravidian: DEDR 2713 groups Kannada cuṟuku with Tamil cuṟukku, \"quickness, briskness, keenness\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "curuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *curuku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "curuku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *curuku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā huḍugi ōdinalli tumbā curuku. — That girl is very quick at her studies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā huḍugi ōdinalli tumbā curuku.* — That girl is very quick at her studies.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to take note, then the Kannada for to react, then say curuku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to take note, then the Kannada for to react, then say *curuku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚುರುಕು (curuku) mean? (\"Quick; brisk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C503-pratibhe",
+      "sequence": 25670,
+      "title": "ಪ್ರತಿಭೆ (pratibhe) — talent; flair",
+      "headword": "ಪ್ರತಿಭೆ",
+      "romanization": "pratibhe",
+      "gloss": "talent; flair",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad6a0b7c80a1aeb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to react, then the Kannada for quick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರತಿಭೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಭೆ — pratibhe — \"talent; flair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಹುಡುಗನಿಗೆ ಚಿತ್ರ ಬಿಡಿಸುವ ಪ್ರತಿಭೆ ಇದೆ. ā huḍuganige citra biḍisuva pratibhe ide. That boy has a talent for painting."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಭಾವಂತ, a talented person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಭೆ (pratibhe) is borrowed from Sanskrit pratibhā, \"light, splendour; intelligence, understanding\" (Monier-Williams). The final -ā became -ೆ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratibhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratibhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratibhe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratibhe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā huḍuganige citra biḍisuva pratibhe ide. — That boy has a talent for painting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā huḍuganige citra biḍisuva pratibhe ide.* — That boy has a talent for painting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to react, then the Kannada for quick, then say pratibhe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to react, then the Kannada for quick, then say *pratibhe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರತಿಭೆ (pratibhe) mean? (\"Talent; flair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C503-dadda",
+      "sequence": 25680,
+      "title": "ದಡ್ಡ (daḍḍa) — slow-witted; dull",
+      "headword": "ದಡ್ಡ",
+      "romanization": "daḍḍa",
+      "gloss": "slow-witted; dull",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1538cf8fccdf39d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for quick, then the Kannada for talent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದಡ್ಡ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದಡ್ಡ — daḍḍa — \"slow-witted; dull\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗಣಿತದಲ್ಲಿ ನಾನು ಸ್ವಲ್ಪ ದಡ್ಡ. gaṇitadalli nānu svalpa daḍḍa. I am a bit slow at mathematics."
+            },
+            {
+              "kind": "speech",
+              "text": "It can sting; ಜಾಣ is the opposite."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದಡ್ಡ (daḍḍa) is native Dravidian: DEDR 2314 lists Kannada daḍḍa, \"a dull, ignorant man\", beside Kodagu daḍḍë, \"a dull man\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daḍḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daḍḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daḍḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daḍḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṇitadalli nānu svalpa daḍḍa. — I am a bit slow at mathematics.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṇitadalli nānu svalpa daḍḍa.* — I am a bit slow at mathematics.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for quick, then the Kannada for talent, then say daḍḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for quick, then the Kannada for talent, then say *daḍḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದಡ್ಡ (daḍḍa) mean? (\"Slow-witted; dull\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C503-marevu",
+      "sequence": 25690,
+      "title": "ಮರೆವು (marevu) — forgetfulness",
+      "headword": "ಮರೆವು",
+      "romanization": "marevu",
+      "gloss": "forgetfulness",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ed9781588b3753e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for talent, then the Kannada for slow-witted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮರೆವು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮರೆವು — marevu — \"forgetfulness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಯಸ್ಸಾದ ಮೇಲೆ ಅಜ್ಜನಿಗೆ ಮರೆವು ಹೆಚ್ಚಾಗಿದೆ. vayassāda mēle ajjanige marevu heccāgide. With age, grandfather's forgetfulness has grown."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is ಮರೆ, to forget; ಮರೆಯಬೇಡಿ, please do not forget."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮರೆವು (marevu) is native Dravidian: DEDR 4760 lists Kannada maṟe, \"to forget, be forgotten\"; -vu makes the noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marevu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marevu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marevu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marevu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vayassāda mēle ajjanige marevu heccāgide. — With age, grandfather's forgetfulness has grown.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vayassāda mēle ajjanige marevu heccāgide.* — With age, grandfather's forgetfulness has grown.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for talent, then the Kannada for slow-witted, then say marevu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for talent, then the Kannada for slow-witted, then say *marevu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮರೆವು (marevu) mean? (\"Forgetfulness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C503-ekagrate",
+      "sequence": 25700,
+      "title": "ಏಕಾಗ್ರತೆ (ēkāgrate) — concentration; focus",
+      "headword": "ಏಕಾಗ್ರತೆ",
+      "romanization": "ēkāgrate",
+      "gloss": "concentration; focus",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a36770eeb350523e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for slow-witted, then the Kannada for forgetfulness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಏಕಾಗ್ರತೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏಕಾಗ್ರತೆ — ēkāgrate — \"concentration; focus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಓದುವಾಗ ನನಗೆ ಏಕಾಗ್ರತೆ ಬೇಕು. ōduvāga nanage ēkāgrate bēku. I need concentration while I study."
+            },
+            {
+              "kind": "speech",
+              "text": "ಏಕ, one + ಅಗ್ರ, point: a mind on one point."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏಕಾಗ್ರತೆ (ēkāgrate) is borrowed from Sanskrit ekāgratā, \"intentness in the pursuit of one object\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēkāgrate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēkāgrate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēkāgrate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēkāgrate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōduvāga nanage ēkāgrate bēku. — I need concentration while I study.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōduvāga nanage ēkāgrate bēku.* — I need concentration while I study.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for slow-witted, then the Kannada for forgetfulness, then say ēkāgrate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for slow-witted, then the Kannada for forgetfulness, then say *ēkāgrate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಏಕಾಗ್ರತೆ (ēkāgrate) mean? (\"Concentration; focus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

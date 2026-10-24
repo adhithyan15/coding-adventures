@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 533,
+  "title": "Home Life",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:f3e991ceff3ddf0f",
+  "lessons": [
+    {
+      "id": "TE-C533-kapuram",
+      "sequence": 26990,
+      "title": "కాపురం (kāpuraṁ) — married life; a household",
+      "headword": "కాపురం",
+      "romanization": "kāpuraṁ",
+      "gloss": "married life; a household",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c0f2ffb1c5a872f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to coax, then the Telugu for a tantrum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కాపురం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాపురం — kāpuraṁ — \"married life; a household\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వాళ్ళ కాపురం సంతోషంగా సాగుతోంది. vāḷḷa kāpuraṁ santōṣaṅgā sāgutōndi. Their married life is going happily."
+            },
+            {
+              "kind": "speech",
+              "text": "కాపురం (kāpuraṁ) పెట్టు, to set up house."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాపురం (kāpuraṁ) is native Dravidian: DEDR 1456 lists Telugu kāpuramu, \"dwelling, residence\", beside kāpu, \"a cultivator\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāpuraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāpuraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāpuraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāpuraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḷḷa kāpuraṁ santōṣaṅgā sāgutōndi. — Their married life is going happily.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḷḷa kāpuraṁ santōṣaṅgā sāgutōndi.* — Their married life is going happily.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to coax, then the Telugu for a tantrum, then say kāpuraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to coax, then the Telugu for a tantrum, then say *kāpuraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కాపురం (kāpuraṁ) mean? (\"Married life; a household\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C533-samsaram",
+      "sequence": 27000,
+      "title": "సంసారం (saṁsāraṁ) — family life",
+      "headword": "సంసారం",
+      "romanization": "saṁsāraṁ",
+      "gloss": "family life",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:932de966131f8843",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a tantrum, then the Telugu for married life."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంసారం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంసారం — saṁsāraṁ — \"family life\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పెద్ద సంసారం నడపడం సులభం కాదు. pedda saṁsāraṁ naḍapaḍaṁ sulabhaṁ kādu. Running a big family is not easy."
+            },
+            {
+              "kind": "speech",
+              "text": "Also one's family itself: మా సంసారం (saṁsāraṁ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంసారం (saṁsāraṁ) is borrowed from Sanskrit saṁsāra, \"secular life, the world\" (CDIAL 13036)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁsāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁsāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁsāraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁsāraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pedda saṁsāraṁ naḍapaḍaṁ sulabhaṁ kādu. — Running a big family is not easy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pedda saṁsāraṁ naḍapaḍaṁ sulabhaṁ kādu.* — Running a big family is not easy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a tantrum, then the Telugu for married life, then say saṁsāraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a tantrum, then the Telugu for married life, then say *saṁsāraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంసారం (saṁsāraṁ) mean? (\"Family life\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C533-grhini",
+      "sequence": 27010,
+      "title": "గృహిణి (gṛhiṇi) — a homemaker",
+      "headword": "గృహిణి",
+      "romanization": "gṛhiṇi",
+      "gloss": "a homemaker",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01b42e8a876effa3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for married life, then the Telugu for family life."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గృహిణి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గృహిణి — gṛhiṇi — \"a homemaker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా అమ్మ గృహిణి. mā amma gṛhiṇi. My mother is a homemaker."
+            },
+            {
+              "kind": "speech",
+              "text": "From గృహం, house."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గృహిణి (gṛhiṇi) is borrowed from Sanskrit gṛhiṇī, \"the mistress of a house\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gṛhiṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gṛhiṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gṛhiṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gṛhiṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā amma gṛhiṇi. — My mother is a homemaker.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā amma gṛhiṇi.* — My mother is a homemaker.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for married life, then the Telugu for family life, then say gṛhiṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for married life, then the Telugu for family life, then say *gṛhiṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గృహిణి (gṛhiṇi) mean? (\"A homemaker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C533-atithyam",
+      "sequence": 27020,
+      "title": "ఆతిథ్యం (ātithyaṁ) — hospitality",
+      "headword": "ఆతిథ్యం",
+      "romanization": "ātithyaṁ",
+      "gloss": "hospitality",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:710d39409bd3f765",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for family life, then the Telugu for a homemaker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆతిథ్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆతిథ్యం — ātithyaṁ — \"hospitality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వాళ్ళ ఆతిథ్యం మాకు ఎంతో నచ్చింది. vāḷḷa ātithyaṁ māku entō naccindi. We liked their hospitality very much."
+            },
+            {
+              "kind": "speech",
+              "text": "Linked to అతిథి, a guest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆతిథ్యం (ātithyaṁ) is borrowed from Sanskrit ātithya, \"hospitable reception, hospitality\" (Monier-Williams), built on atithi, \"a guest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātithyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātithyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātithyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātithyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḷḷa ātithyaṁ māku entō naccindi. — We liked their hospitality very much.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḷḷa ātithyaṁ māku entō naccindi.* — We liked their hospitality very much.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for family life, then the Telugu for a homemaker, then say ātithyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for family life, then the Telugu for a homemaker, then say *ātithyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆతిథ్యం (ātithyaṁ) mean? (\"Hospitality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C533-muccatincu",
+      "sequence": 27030,
+      "title": "ముచ్చటించు (muccaṭiñcu) — to chat; to have a heart-to-heart",
+      "headword": "ముచ్చటించు",
+      "romanization": "muccaṭiñcu",
+      "gloss": "to chat; to have a heart-to-heart",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3832eb0420c02987",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a homemaker, then the Telugu for hospitality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ముచ్చటించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ముచ్చటించు — muccaṭiñcu — \"to chat; to have a heart-to-heart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సాయంత్రం అమ్మమ్మ పక్కింటివాళ్ళతో ముచ్చటించింది. sāyantraṁ ammamma pakkiṇṭivāḷḷatō muccaṭiñcindi. In the evening grandma chatted with the neighbours."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ముచ్చటించాను, muccaṭiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "-తో ముచ్చటించు (muccaṭiñcu); ముచ్చట, a pleasant chat or a charming thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ముచ్చటించు (muccaṭiñcu) is built on ముచ్చట, \"a pleasant talk; a charming thing\", with the verb ending -ఇంచు; the origin of ముచ్చట is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muccaṭiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muccaṭiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muccaṭiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muccaṭiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāyantraṁ ammamma pakkiṇṭivāḷḷatō muccaṭiñcindi. — In the evening grandma chatted with the neighbours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāyantraṁ ammamma pakkiṇṭivāḷḷatō muccaṭiñcindi.* — In the evening grandma chatted with the neighbours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a homemaker, then the Telugu for hospitality, then say muccaṭiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a homemaker, then the Telugu for hospitality, then say *muccaṭiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ముచ్చటించు (muccaṭiñcu) mean? (\"To chat; to have a heart-to-heart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R533-review-526-533",
+      "sequence": 27040,
+      "title": "Words from chapters 526–533 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 526-533",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79a571af33f6f1b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for to appoint and to manage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to appoint, to manage, to supervise, to cooperate, training",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to appoint, to manage, to supervise, to cooperate, training]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to achieve, to excel, to fail, a resignation, to quit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to achieve, to excel, to fail, a resignation, to quit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sibling, brothers, a husband's younger brother, a husband's sister, an elder brother's wife",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sibling, brothers, a husband's younger brother, a husband's sister, an elder brother's wife]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a maternal uncle, a paternal aunt, a father's elder brother, a mother's elder sister, a niece",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a maternal uncle, a paternal aunt, a father's elder brother, a mother's elder sister, a niece]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a co-father-in-law, a great-grandfather, a nephew, a kinsman, a granny",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a co-father-in-law, a great-grandfather, a nephew, a kinsman, a granny]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an infant, a newborn, offspring, an heir, a lullaby",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an infant, a newborn, offspring, an heir, a lullaby]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upbringing, pampering, to support, to coax, a tantrum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: upbringing, pampering, to support, to coax, a tantrum]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "married life, family life, a homemaker, hospitality, to chat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: married life, family life, a homemaker, hospitality, to chat]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To appoint? (నియమించు, niyamiñcu.) To manage? (నిర్వహించు, nirvahiñcu.) To supervise? (పర్యవేక్షించు, paryavēkṣiñcu.) To cooperate? (సహకరించు, sahakariñcu.) Training? (శిక్షణ, śikṣaṇa.) To achieve? (సాధించు, sādhiñcu.) To excel? (రాణించు, rāṇiñcu.) To fail? (విఫలమవు, viphalamavu.) A resignation? (రాజీనామా, rājīnāmā.) To quit? (మానేయు, mānēyu.) A sibling? (తోబుట్టువు, tōbuṭṭuvu.) Brothers? (అన్నదమ్ములు, annadammulu.) A husband's younger brother? (మరిది, maridi.) A husband's sister? (ఆడపడుచు, āḍapaḍucu.) An elder brother's wife? (వదిన, vadina.) A maternal uncle? (మేనమామ, mēnamāma.) A paternal aunt? (మేనత్త, mēnatta.) A father's elder brother? (పెద్దనాన్న, peddanānna.) A mother's elder sister? (పెద్దమ్మ, peddamma.) A niece? (మేనకోడలు, mēnakōḍalu.) A co-father-in-law? (వియ్యంకుడు, viyyaṅkuḍu.) A great-grandfather? (ముత్తాత, muttāta.) A nephew? (మేనల్లుడు, mēnalluḍu.) A kinsman? (చుట్టం, cuṭṭaṁ.) A granny? (అవ్వ, avva.) An infant? (బిడ్డ, biḍḍa.) A newborn? (శిశువు, śiśuvu.) Offspring? (సంతానం, santānaṁ.) An heir? (వారసుడు, vārasuḍu.) A lullaby? (జోలపాట, jōlapāṭa.) Upbringing? (పెంపకం, pempakaṁ.) Pampering? (గారాబం, gārābaṁ.) To support? (పోషించు, pōṣiñcu.) To coax? (బుజ్జగించు, bujjagiñcu.) A tantrum? (మారాం, mārāṁ.) Married life? (కాపురం, kāpuraṁ.) Family life? (సంసారం, saṁsāraṁ.) A homemaker? (గృహిణి, gṛhiṇi.) Hospitality? (ఆతిథ్యం, ātithyaṁ.) To chat? (ముచ్చటించు, muccaṭiñcu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

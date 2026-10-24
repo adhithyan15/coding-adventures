@@ -1,0 +1,11 @@
+{
+  "id": "MR-C479-nadi",
+  "pathSegment": "MR-PATH-479-NADI479",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-479-NADI479",
+      "order": 0
+    }
+  ]
+}

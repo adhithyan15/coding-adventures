@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C566-cittukali",
+    "language": "malayalam",
+    "chapter": 566,
+    "sequence": 28530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cc40f2a620f2ba9"
+  },
+  "findings": []
+}

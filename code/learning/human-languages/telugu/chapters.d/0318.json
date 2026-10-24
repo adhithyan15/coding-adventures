@@ -1,0 +1,21 @@
+{
+  "chapter": 318,
+  "title": "What I Think, and So",
+  "label": "ch:te-what-i-think-and-so",
+  "canDo": "I can say what I think, firmly or softly, with ani anukuṇṭunnānu, nā abhiprāyaṁlō and anipistundi, and give a result with kābaṭṭi and andukē.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-R318-opinion-and-result",
+    "kind": "production",
+    "summary": "Complete TE-R318-opinion-and-result: give an opinion three ways and draw a result from a reason with kābaṭṭi and andukē.",
+    "assesses": [
+      "TE-LEX-C318-ANIPINCU-01",
+      "TE-GRAMMAR-C318-THINK-THAT-01",
+      "TE-GRAMMAR-C318-IN-MY-OPINION-01",
+      "TE-GRAMMAR-C318-KABATTI-01",
+      "TE-GRAMMAR-C318-ANDUKE-RESULT-01"
+    ]
+  }
+}

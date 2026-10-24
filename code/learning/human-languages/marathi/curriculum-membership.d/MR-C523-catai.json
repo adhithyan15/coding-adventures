@@ -1,0 +1,11 @@
+{
+  "id": "MR-C523-catai",
+  "pathSegment": "MR-PATH-523-GALICHA523",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-523-GALICHA523",
+      "order": 3
+    }
+  ]
+}

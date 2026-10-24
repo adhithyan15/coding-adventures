@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:fc5c50363f8c5014",
+  "lessonIds": [
+    "MR-C399-calak",
+    "MR-C399-vahak",
+    "MR-C399-calavne",
+    "MR-C399-sahapravasi",
+    "MR-C399-vatsaru"
+  ],
+  "tex": "marathi/book/chapters/ch399-drivers-and-conductors.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C484-havaguna",
+    "language": "kannada",
+    "chapter": 484,
+    "sequence": 24640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02d1d64e088a012a"
+  },
+  "findings": []
+}

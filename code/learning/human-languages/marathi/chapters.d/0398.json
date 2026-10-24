@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "At the Ticket Office",
+  "label": "ch:mr-at-the-ticket-office",
+  "canDo": "I can talk about a ticket office, a pass, a refund and where I am going.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C398-rakhun-thevne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about a ticket office, a pass, a refund and where I am going.",
+    "assesses": [
+      "MR-LEX-C398-TIKITGHAR398-03",
+      "MR-LEX-C398-TIKITGHAR398-04",
+      "MR-LEX-C398-TIKITGHAR398-05"
+    ]
+  }
+}

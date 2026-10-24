@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C407-nirasana",
+    "language": "telugu",
+    "chapter": 407,
+    "sequence": 20280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58df9cfb16e07d30"
+  },
+  "findings": []
+}

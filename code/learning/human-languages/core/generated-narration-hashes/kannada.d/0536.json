@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:c673544112d20a4e",
+  "lessonIds": [
+    "KA-C536-nataka",
+    "KA-C536-rangabhumi",
+    "KA-C536-mukhavada",
+    "KA-C536-pradarsisu",
+    "KA-C536-abhinayisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch536.txt",
+  "json": "kannada/narration/ch536.json",
+  "textHash": "fnv1a64:d37d63390d1019bf",
+  "jsonHash": "fnv1a64:4824b4259fdf7c07",
+  "findings": []
+}

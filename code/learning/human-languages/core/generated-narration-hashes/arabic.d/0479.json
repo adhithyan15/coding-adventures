@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:bcc72072a07d83a0",
+  "lessonIds": [
+    "AR-C479-tazallaja",
+    "AR-C479-wahsh",
+    "AR-C479-kis",
+    "AR-C479-tabadala",
+    "AR-C479-hazama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch479.txt",
+  "json": "arabic/narration/ch479.json",
+  "textHash": "fnv1a64:c7b427d17d194107",
+  "jsonHash": "fnv1a64:72ffb264d7d5b2e1",
+  "findings": []
+}

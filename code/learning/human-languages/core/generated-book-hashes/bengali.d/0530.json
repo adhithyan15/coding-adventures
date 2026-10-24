@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:759491c062ba8f79",
+  "lessonIds": [
+    "BN-C530-multubi",
+    "BN-C530-nirdishto",
+    "BN-C530-agam",
+    "BN-C530-talbahana-kora",
+    "BN-C530-sabyosto-kora"
+  ],
+  "tex": "bengali/book/chapters/ch530-put-off-or-settled.tex"
+}

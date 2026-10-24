@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C478-timingila",
+    "language": "kannada",
+    "chapter": 478,
+    "sequence": 24350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea847bd746910996"
+  },
+  "findings": []
+}

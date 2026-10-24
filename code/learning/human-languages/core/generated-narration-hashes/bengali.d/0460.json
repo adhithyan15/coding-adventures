@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:7a7844121c39483d",
+  "lessonIds": [
+    "BN-C460-nishthur",
+    "BN-C460-kothor",
+    "BN-C460-ugro",
+    "BN-C460-svarthopor",
+    "BN-C460-otyachar-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch460.txt",
+  "json": "bengali/narration/ch460.json",
+  "textHash": "fnv1a64:cf3ff929c3649d47",
+  "jsonHash": "fnv1a64:288d5eff3b47710f",
+  "findings": []
+}

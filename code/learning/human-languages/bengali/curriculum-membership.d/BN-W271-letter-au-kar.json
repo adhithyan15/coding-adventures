@@ -1,0 +1,11 @@
+{
+  "id": "BN-W271-letter-au-kar",
+  "pathSegment": "BN-PATH-271-TICKET-TROUBLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-271-TICKET-TROUBLE",
+      "order": 1
+    }
+  ]
+}

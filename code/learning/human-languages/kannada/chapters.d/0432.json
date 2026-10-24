@@ -1,0 +1,21 @@
+{
+  "chapter": 432,
+  "title": "Pressure and Objections",
+  "label": "ch:ka-pressure-and-objections",
+  "canDo": "I can say to suppress, to bow down, an objection, a hindrance and suitable.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-R432-review-final-432",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can say to suppress, to bow down, an objection, a hindrance and suitable.",
+    "assesses": [
+      "KA-LEX-C432-HATTIKKU432-01",
+      "KA-LEX-C432-HATTIKKU432-02",
+      "KA-LEX-C432-HATTIKKU432-03",
+      "KA-LEX-C432-HATTIKKU432-04",
+      "KA-LEX-C432-HATTIKKU432-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:71451bbd40de5460",
+  "lessonIds": [
+    "TE-C477-rtupavanam",
+    "TE-C477-varsapatam",
+    "TE-C477-musuru",
+    "TE-C477-jallu",
+    "TE-C477-tadisipovu",
+    "TE-R477-review-470-477"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch477.txt",
+  "json": "telugu/narration/ch477.json",
+  "textHash": "fnv1a64:ad62c3906a8080ef",
+  "jsonHash": "fnv1a64:14d089ee8d615534",
+  "findings": []
+}

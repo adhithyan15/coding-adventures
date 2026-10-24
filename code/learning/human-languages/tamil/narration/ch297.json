@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 297,
+  "title": "Smugglers on the Run",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d522a1137ae36f26",
+  "lessons": [
+    {
+      "id": "TA-C297-katattu",
+      "sequence": 17250,
+      "title": "கடத்து (kaṭattu) — to smuggle; to kidnap",
+      "headword": "கடத்து",
+      "romanization": "kaṭattu",
+      "gloss": "to smuggle; to kidnap",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb73ffdc47970c91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a prisoner, then the Tamil for to confess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கடத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடத்து — kaṭattu — \"to smuggle; to kidnap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அன்று காவலர்கள் வராமல் இருந்திருந்தால், அவர்கள் தங்கத்தைக் கடத்தியிருப்பார்கள். aṉṟu kāvalarkaḷ varāmal iruntiruntāl, avarkaḷ taṅkattaik kaṭattiyiruppārkaḷ. If the police had not come that day, they would have smuggled the gold."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கடத்தினேன், kaṭattiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is carried off takes -ஐ; also to kidnap: குழந்தையைக் கடத்தினார்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடத்து (kaṭattu) is native Dravidian: DEDR 1109 gives it as the causative of கட, \"to cross\", so to smuggle is to make something cross."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭattu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭattu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭattu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭattu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṉṟu kāvalarkaḷ varāmal iruntiruntāl, avarkaḷ taṅkattaik kaṭattiyiruppārkaḷ. — If the police had not come that day, they would have smuggled the gold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṉṟu kāvalarkaḷ varāmal iruntiruntāl, avarkaḷ taṅkattaik kaṭattiyiruppārkaḷ.* — If the police had not come that day, they would have smuggled the gold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a prisoner, then the Tamil for to confess, then say kaṭattu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a prisoner, then the Tamil for to confess, then say *kaṭattu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கடத்து (kaṭattu) mean? (\"To smuggle; to kidnap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C297-tappiyotu",
+      "sequence": 17260,
+      "title": "தப்பியோடு (tappiyōṭu) — to flee",
+      "headword": "தப்பியோடு",
+      "romanization": "tappiyōṭu",
+      "gloss": "to flee",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:376a373bd15f5ccf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to confess, then the Tamil for to smuggle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தப்பியோடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தப்பியோடு — tappiyōṭu — \"to flee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "திருடர்கள் இருட்டில் தப்பியோடினார்கள். tiruṭarkaḷ iruṭṭil tappiyōṭiṉārkaḷ. The thieves fled in the dark."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தப்பியோடினேன், tappiyōṭiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Built from தப்பி, having escaped, and ஓடு, to run."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தப்பியோடு (tappiyōṭu) is a Tamil compound built from தப்பு, \"to slip away, escape\" (DEDR 3071), and ஓடு, \"to run\" (DEDR 1041)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tappiyōṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tappiyōṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tappiyōṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tappiyōṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiruṭarkaḷ iruṭṭil tappiyōṭiṉārkaḷ. — The thieves fled in the dark.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiruṭarkaḷ iruṭṭil tappiyōṭiṉārkaḷ.* — The thieves fled in the dark.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to confess, then the Tamil for to smuggle, then say tappiyōṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to confess, then the Tamil for to smuggle, then say *tappiyōṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தப்பியோடு (tappiyōṭu) mean? (\"To flee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C297-kallanottu",
+      "sequence": 17270,
+      "title": "கள்ளநோட்டு (kaḷḷanōṭṭu) — a counterfeit note",
+      "headword": "கள்ளநோட்டு",
+      "romanization": "kaḷḷanōṭṭu",
+      "gloss": "a counterfeit note",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61c0c21e156b5a5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to smuggle, then the Tamil for to flee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கள்ளநோட்டு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கள்ளநோட்டு — kaḷḷanōṭṭu — \"a counterfeit note\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கடைக்காரர் ஒரு கள்ளநோட்டைக் கண்டுபிடித்தார். kaṭaikkārar oru kaḷḷanōṭṭaik kaṇṭupiṭittār. The shopkeeper spotted a counterfeit note."
+            },
+            {
+              "kind": "speech",
+              "text": "கள்ள- means false or stolen before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கள்ளநோட்டு (kaḷḷanōṭṭu) joins native கள்ளம், \"deceit, theft\" (DEDR 1372), with நோட்டு, a loan from English note, \"a banknote\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷanōṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷanōṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷanōṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷanōṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaikkārar oru kaḷḷanōṭṭaik kaṇṭupiṭittār. — The shopkeeper spotted a counterfeit note.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaikkārar oru kaḷḷanōṭṭaik kaṇṭupiṭittār.* — The shopkeeper spotted a counterfeit note.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to smuggle, then the Tamil for to flee, then say kaḷḷanōṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to smuggle, then the Tamil for to flee, then say *kaḷḷanōṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கள்ளநோட்டு (kaḷḷanōṭṭu) mean? (\"A counterfeit note\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C297-pulanayvu",
+      "sequence": 17280,
+      "title": "புலனாய்வு (pulaṉāyvu) — an investigation",
+      "headword": "புலனாய்வு",
+      "romanization": "pulaṉāyvu",
+      "gloss": "an investigation",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdfcb02fa695c26d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to flee, then the Tamil for a counterfeit note."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புலனாய்வு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புலனாய்வு — pulaṉāyvu — \"an investigation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தக் கொள்ளை பற்றிப் புலனாய்வு தொடங்கியது. intak koḷḷai paṟṟip pulaṉāyvu toṭaṅkiyatu. An investigation into this robbery began."
+            },
+            {
+              "kind": "speech",
+              "text": "News reports say புலனாய்வு (pulaṉāyvu) நடக்கிறது, an investigation is under way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புலனாய்வு (pulaṉāyvu) is a Tamil compound built from புலன், \"the senses, perception\", and ஆய்வு, \"examination\", from ஆய், \"to search, examine\" (DEDR 363)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulaṉāyvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulaṉāyvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulaṉāyvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulaṉāyvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intak koḷḷai paṟṟip pulaṉāyvu toṭaṅkiyatu. — An investigation into this robbery began.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intak koḷḷai paṟṟip pulaṉāyvu toṭaṅkiyatu.* — An investigation into this robbery began.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to flee, then the Tamil for a counterfeit note, then say pulaṉāyvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to flee, then the Tamil for a counterfeit note, then say *pulaṉāyvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புலனாய்வு (pulaṉāyvu) mean? (\"An investigation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C297-kurrancattu",
+      "sequence": 17290,
+      "title": "குற்றஞ்சாட்டு (kuṟṟañcāṭṭu) — to accuse",
+      "headword": "குற்றஞ்சாட்டு",
+      "romanization": "kuṟṟañcāṭṭu",
+      "gloss": "to accuse",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1a753153e4a83d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a counterfeit note, then the Tamil for an investigation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குற்றஞ்சாட்டு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குற்றஞ்சாட்டு — kuṟṟañcāṭṭu — \"to accuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் என்னைப் பொய்யாகக் குற்றஞ்சாட்டினார். avar eṉṉaip poyyākak kuṟṟañcāṭṭiṉār. He accused me falsely."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): குற்றஞ்சாட்டினேன், kuṟṟañcāṭṭiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The accused takes -ஐ. The -ம் of குற்றம் turns to ஞ் before ச."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குற்றஞ்சாட்டு (kuṟṟañcāṭṭu) is a Tamil compound built from குற்றம், \"fault\" (DEDR 1851), and சாட்டு, which DEDR 2300 gives as \"to beat, strike\"; how the compound came to mean to accuse is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟañcāṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟañcāṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟañcāṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟañcāṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar eṉṉaip poyyākak kuṟṟañcāṭṭiṉār. — He accused me falsely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar eṉṉaip poyyākak kuṟṟañcāṭṭiṉār.* — He accused me falsely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a counterfeit note, then the Tamil for an investigation, then say kuṟṟañcāṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a counterfeit note, then the Tamil for an investigation, then say *kuṟṟañcāṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குற்றஞ்சாட்டு (kuṟṟañcāṭṭu) mean? (\"To accuse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

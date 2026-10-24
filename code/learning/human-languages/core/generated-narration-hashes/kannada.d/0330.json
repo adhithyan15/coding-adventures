@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:a8856d6b20ca9d1c",
+  "lessonIds": [
+    "KA-C330-dikki-hode",
+    "KA-C330-pratyaksadarsi",
+    "KA-C330-hani",
+    "KA-C330-mrta",
+    "KA-C330-avaghada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch330.txt",
+  "json": "kannada/narration/ch330.json",
+  "textHash": "fnv1a64:5bdba432cf4f2cf9",
+  "jsonHash": "fnv1a64:0ff62e3ef1395111",
+  "findings": []
+}

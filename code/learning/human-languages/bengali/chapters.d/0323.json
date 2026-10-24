@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Heroes and Villains",
+  "label": "ch:bn-heroes-and-villains",
+  "canDo": "I can talk about the people in a story and the parts they play.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C323-chhodmobesh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can talk about the people in a story and the parts they play.",
+    "assesses": [
+      "BN-LEX-C323-NAYOK323-03",
+      "BN-LEX-C323-NAYOK323-04",
+      "BN-LEX-C323-NAYOK323-05"
+    ]
+  }
+}

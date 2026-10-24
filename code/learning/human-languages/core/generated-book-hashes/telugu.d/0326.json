@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:be6518daa261728f",
+  "lessonIds": [
+    "TE-C326-saksi",
+    "TE-C326-yuddham",
+    "TE-C326-sanghatana",
+    "TE-C326-dongilincu",
+    "TE-C326-paripovu"
+  ],
+  "tex": "telugu/book/chapters/ch326-a-witness-to-the-war.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C333-pokkho",
+    "language": "bengali",
+    "chapter": 333,
+    "sequence": 21170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cbc42c446863957"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "All or Part",
+  "label": "ch:bn-all-or-part",
+  "canDo": "I can say whether something is complete, partial or almost done.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C373-angshik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can say whether something is complete, partial or almost done.",
+    "assesses": [
+      "BN-LEX-C373-EKEBARE373-03",
+      "BN-LEX-C373-EKEBARE373-04",
+      "BN-LEX-C373-EKEBARE373-05"
+    ]
+  }
+}

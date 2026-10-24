@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Agreeing and Disagreeing",
+  "label": "ch:ka-agreeing-and-disagreeing",
+  "canDo": "I can say to consent, a difference of opinion, a consensus, to oppose and mutual.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C379-paraspara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can say to consent, a difference of opinion, a consensus, to oppose and mutual.",
+    "assesses": [
+      "KA-LEX-C379-OMMATA379-03",
+      "KA-LEX-C379-OMMATA379-04",
+      "KA-LEX-C379-OMMATA379-05"
+    ]
+  }
+}

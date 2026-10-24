@@ -1,0 +1,11 @@
+{
+  "id": "BN-C508-rannaghor",
+  "pathSegment": "BN-PATH-508-GHOR508",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-508-GHOR508",
+      "order": 2
+    }
+  ]
+}

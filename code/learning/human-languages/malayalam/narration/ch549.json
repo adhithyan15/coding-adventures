@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 549,
+  "title": "Skill and Progress",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d5f5e2d43e645f73",
+  "lessons": [
+    {
+      "id": "ML-C549-naipunyam",
+      "sequence": 27640,
+      "title": "നൈപുണ്യം (naipuṇyaṁ) — proficiency; expertise",
+      "headword": "നൈപുണ്യം",
+      "romanization": "naipuṇyaṁ",
+      "gloss": "proficiency; expertise",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a323ca7b960f7462",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a professional cook, then the Malayalam for a photographer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നൈപുണ്യം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നൈപുണ്യം — naipuṇyaṁ — \"proficiency; expertise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കമ്പ്യൂട്ടറിൽ അവൾക്ക് നല്ല നൈപുണ്യം ഉണ്ട്. kampyūṭṭaṟil avaḷkkŭ nalla naipuṇyaṁ uṇṭŭ. She is very skilled with computers."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; കഴിവ് is the everyday word for skill."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നൈപുണ്യം (naipuṇyaṁ) is borrowed from Sanskrit naipuṇya, \"dexterity, skill\" (Monier-Williams), the noun of nipuṇa, \"clever\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naipuṇyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naipuṇyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naipuṇyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naipuṇyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampyūṭṭaṟil avaḷkkŭ nalla naipuṇyaṁ uṇṭŭ. — She is very skilled with computers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampyūṭṭaṟil avaḷkkŭ nalla naipuṇyaṁ uṇṭŭ.* — She is very skilled with computers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a professional cook, then the Malayalam for a photographer, then say naipuṇyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a professional cook, then the Malayalam for a photographer, then say *naipuṇyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നൈപുണ്യം (naipuṇyaṁ) mean? (\"Proficiency; expertise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C549-pratiphalam",
+      "sequence": 27650,
+      "title": "പ്രതിഫലം (pratiphalaṁ) — a fee; a reward",
+      "headword": "പ്രതിഫലം",
+      "romanization": "pratiphalaṁ",
+      "gloss": "a fee; a reward",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b26dd79fb8afc79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a photographer, then the Malayalam for proficiency."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രതിഫലം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതിഫലം — pratiphalaṁ — \"a fee; a reward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ജോലിക്ക് അവന് നല്ല പ്രതിഫലം കിട്ടി. ā jōlikkŭ avanŭ nalla pratiphalaṁ kiṭṭi. He got a good fee for that job."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രതി- in return + ഫലം a fruit, a result."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതിഫലം (pratiphalaṁ) is a learned compound built from Sanskrit prati, \"back, in return\", and phala, \"fruit, result\" (CDIAL 9051): what comes back for one's work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiphalaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiphalaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiphalaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiphalaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā jōlikkŭ avanŭ nalla pratiphalaṁ kiṭṭi. — He got a good fee for that job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā jōlikkŭ avanŭ nalla pratiphalaṁ kiṭṭi.* — He got a good fee for that job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a photographer, then the Malayalam for proficiency, then say pratiphalaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a photographer, then the Malayalam for proficiency, then say *pratiphalaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രതിഫലം (pratiphalaṁ) mean? (\"A fee; a reward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C549-kariyar",
+      "sequence": 27660,
+      "title": "കരിയർ (kariyar) — a career",
+      "headword": "കരിയർ",
+      "romanization": "kariyar",
+      "gloss": "a career",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90262e6eb3121a39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for proficiency, then the Malayalam for a fee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കരിയർ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കരിയർ — kariyar — \"a career\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സംഗീതത്തിൽ ഒരു കരിയർ ഉണ്ടാക്കാൻ അവൾ ആഗ്രഹിക്കുന്നു. saṁgītattil oru kariyar uṇṭākkān avaḷ āgrahikkunnu. She wants to build a career in music."
+            },
+            {
+              "kind": "speech",
+              "text": "In talk about jobs the English word is common."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കരിയർ (kariyar) was borrowed from English career."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kariyar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kariyar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kariyar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kariyar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁgītattil oru kariyar uṇṭākkān avaḷ āgrahikkunnu. — She wants to build a career in music.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁgītattil oru kariyar uṇṭākkān avaḷ āgrahikkunnu.* — She wants to build a career in music.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for proficiency, then the Malayalam for a fee, then say kariyar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for proficiency, then the Malayalam for a fee, then say *kariyar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കരിയർ (kariyar) mean? (\"A career\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C549-sampalavarddhana",
+      "sequence": 27670,
+      "title": "ശമ്പളവർദ്ധന (śampaḷavarddhana) — a pay rise",
+      "headword": "ശമ്പളവർദ്ധന",
+      "romanization": "śampaḷavarddhana",
+      "gloss": "a pay rise",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:520e9a6cf5275fff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a fee, then the Malayalam for a career."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശമ്പളവർദ്ധന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശമ്പളവർദ്ധന — śampaḷavarddhana — \"a pay rise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എല്ലാ ജീവനക്കാർക്കും പത്ത് ശതമാനം ശമ്പളവർദ്ധന കിട്ടി. ellā jīvanakkārkkuṁ pattŭ śatamānaṁ śampaḷavarddhana kiṭṭi. All the staff got a ten per cent pay rise."
+            },
+            {
+              "kind": "speech",
+              "text": "ശമ്പളം a salary + വർദ്ധന an increase; വർദ്ധിക്കുക is to increase."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശമ്പളവർദ്ധന (śampaḷavarddhana) is a Malayalam compound built from ശമ്പളം, \"a salary\" (CDIAL 12315), and വർദ്ധന, from Sanskrit vardhana, \"strengthening, increase\" (CDIAL 11378)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śampaḷavarddhana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śampaḷavarddhana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śampaḷavarddhana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śampaḷavarddhana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellā jīvanakkārkkuṁ pattŭ śatamānaṁ śampaḷavarddhana kiṭṭi. — All the staff got a ten per cent pay rise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellā jīvanakkārkkuṁ pattŭ śatamānaṁ śampaḷavarddhana kiṭṭi.* — All the staff got a ten per cent pay rise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a fee, then the Malayalam for a career, then say śampaḷavarddhana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a fee, then the Malayalam for a career, then say *śampaḷavarddhana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശമ്പളവർദ്ധന (śampaḷavarddhana) mean? (\"A pay rise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C549-vahikkuka",
+      "sequence": 27680,
+      "title": "വഹിക്കുക (vahikkuka) — to bear a load; to hold (a post)",
+      "headword": "വഹിക്കുക",
+      "romanization": "vahikkuka",
+      "gloss": "to bear a load; to hold (a post)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:131dbe7eb2ee7e50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a career, then the Malayalam for a pay rise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വഹിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വഹിക്കുക — vahikkuka — \"to bear a load; to hold (a post)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ കമ്പനിയിൽ മാനേജരുടെ സ്ഥാനം അവൾ വഹിക്കുന്നു. ā kampaniyil mānējaruṭe sthānaṁ avaḷ vahikkunnu. She holds the manager's post in that company."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വഹിച്ചു, vahiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal: to carry a load, to hold a post, to bear a cost."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വഹിക്കുക (vahikkuka) is built from Sanskrit vahati, \"carries, bears along\" (CDIAL 11453), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vahikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vahikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vahikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vahikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kampaniyil mānējaruṭe sthānaṁ avaḷ vahikkunnu. — She holds the manager's post in that company.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kampaniyil mānējaruṭe sthānaṁ avaḷ vahikkunnu.* — She holds the manager's post in that company.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a career, then the Malayalam for a pay rise, then say vahikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a career, then the Malayalam for a pay rise, then say *vahikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വഹിക്കുക (vahikkuka) mean? (\"To bear a load; to hold (a post)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C466-paccika",
+  "pathSegment": "TE-PATH-466-CAURASTA466",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-466-CAURASTA466",
+      "order": 2
+    }
+  ]
+}

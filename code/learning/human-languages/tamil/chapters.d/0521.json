@@ -1,0 +1,21 @@
+{
+  "chapter": 521,
+  "title": "Around the House",
+  "label": "ch:ta-around-the-house",
+  "canDo": "I can name more small things around the house.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R521-review-514-521",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can name more small things around the house.",
+    "assesses": [
+      "TA-LEX-C521-VEEDU521-01",
+      "TA-LEX-C521-VEEDU521-02",
+      "TA-LEX-C521-VEEDU521-03",
+      "TA-LEX-C521-VEEDU521-04",
+      "TA-LEX-C521-VEEDU521-05"
+    ]
+  }
+}

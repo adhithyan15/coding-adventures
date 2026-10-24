@@ -1,0 +1,11 @@
+{
+  "id": "AR-C453-istaradda",
+  "pathSegment": "AR-PATH-453-QIST453",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-453-QIST453",
+      "order": 3
+    }
+  ]
+}

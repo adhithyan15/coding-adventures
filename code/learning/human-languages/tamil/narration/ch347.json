@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 347,
+  "title": "Evidence and Logic",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:74a1055fb1e527d9",
+  "lessons": [
+    {
+      "id": "TA-C347-ataram",
+      "sequence": 20100,
+      "title": "ஆதாரம் (ātāram) — evidence; proof; a source",
+      "headword": "ஆதாரம்",
+      "romanization": "ātāram",
+      "gloss": "evidence; proof; a source",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f5f7665624363a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a complaint, then the Tamil for an athlete."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆதாரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆதாரம் — ātāram — \"evidence; proof; a source\"."
+            },
+            {
+              "kind": "speech",
+              "text": "உங்களிடம் இதற்கு ஆதாரம் இருக்கிறதா? uṅkaḷiṭam itaṟku ātāram irukkiṟatā? Do you have evidence for this?"
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ஆதாரங்கள், ātāraṅkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "With -உடன், a -அம் noun takes its oblique -அத்து-: ஆதாரத்துடன், with evidence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆதாரம் (ātāram) is borrowed from Sanskrit ādhāra, \"support, substratum\" (CDIAL 1165). Tamil gives the final -a the noun ending -அம், and \"what holds a claim up\" became \"evidence\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātāram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātāram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātāram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātāram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṅkaḷiṭam itaṟku ātāram irukkiṟatā? — Do you have evidence for this?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṅkaḷiṭam itaṟku ātāram irukkiṟatā?* — Do you have evidence for this?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a complaint, then the Tamil for an athlete, then say ātāram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a complaint, then the Tamil for an athlete, then say *ātāram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆதாரம் (ātāram) mean? (\"Evidence; proof; a source\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C347-nirupi",
+      "sequence": 20110,
+      "title": "நிரூபி (nirūpi) — to prove",
+      "headword": "நிரூபி",
+      "romanization": "nirūpi",
+      "gloss": "to prove",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11e6740c33eb6f7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an athlete, then the Tamil for evidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிரூபி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிரூபி — nirūpi — \"to prove\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் தன் கருத்தை ஆதாரத்துடன் நிரூபித்தார். avar taṉ karuttai ātārattuṭaṉ nirūpittār. He proved his point with evidence."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): நிரூபித்தேன், nirūpittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is proved takes -ஐ: கருத்தை நிரூபி (nirūpi), to prove a point."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிரூபி (nirūpi) is a verb Tamil built on Sanskrit nirūpaṇa, \"stating, determining; examination\" (Monier-Williams), with the verb ending -இ that many Sanskrit loans take, as in சுவாசி, \"to breathe\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirūpi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirūpi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirūpi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirūpi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar taṉ karuttai ātārattuṭaṉ nirūpittār. — He proved his point with evidence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar taṉ karuttai ātārattuṭaṉ nirūpittār.* — He proved his point with evidence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an athlete, then the Tamil for evidence, then say nirūpi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an athlete, then the Tamil for evidence, then say *nirūpi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிரூபி (nirūpi) mean? (\"To prove\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C347-tarkkam",
+      "sequence": 20120,
+      "title": "தர்க்கம் (tarkkam) — logic; reasoning",
+      "headword": "தர்க்கம்",
+      "romanization": "tarkkam",
+      "gloss": "logic; reasoning",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9db60aa71f8dd60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for evidence, then the Tamil for to prove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தர்க்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தர்க்கம் — tarkkam — \"logic; reasoning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் சொன்னதில் தர்க்கம் இல்லை. avaṉ coṉṉatil tarkkam illai. There is no logic in what he said."
+            },
+            {
+              "kind": "speech",
+              "text": "தர்க்கமாக, logically: an -அம் noun + -ஆக makes the adverb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தர்க்கம் (tarkkam) is borrowed from Sanskrit tarka, \"inquiry; conjecture\" (CDIAL 5714), the name Indian thought gave to the study of reasoning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ coṉṉatil tarkkam illai. — There is no logic in what he said.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ coṉṉatil tarkkam illai.* — There is no logic in what he said.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for evidence, then the Tamil for to prove, then say tarkkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for evidence, then the Tamil for to prove, then say *tarkkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தர்க்கம் (tarkkam) mean? (\"Logic; reasoning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C347-atippatai",
+      "sequence": 20130,
+      "title": "அடிப்படை (aṭippaṭai) — a basis; a foundation; basic",
+      "headword": "அடிப்படை",
+      "romanization": "aṭippaṭai",
+      "gloss": "a basis; a foundation; basic",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7559f886e14640a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to prove, then the Tamil for logic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அடிப்படை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடிப்படை — aṭippaṭai — \"a basis; a foundation; basic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த முடிவின் அடிப்படை என்ன? inta muṭiviṉ aṭippaṭai eṉṉa? What is the basis of this decision?"
+            },
+            {
+              "kind": "speech",
+              "text": "Before another noun it means basic: அடிப்படை (aṭippaṭai) உரிமை, a basic right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடிப்படை (aṭippaṭai) is a native Tamil compound built from aṭi, \"foot, base, bottom\" (DEDR 72), and paṭai, \"layer, stratum\" (DEDR 3852): the bottom layer that the rest stands on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭippaṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭippaṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭippaṭai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭippaṭai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta muṭiviṉ aṭippaṭai eṉṉa? — What is the basis of this decision?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta muṭiviṉ aṭippaṭai eṉṉa?* — What is the basis of this decision?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to prove, then the Tamil for logic, then say aṭippaṭai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to prove, then the Tamil for logic, then say *aṭippaṭai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அடிப்படை (aṭippaṭai) mean? (\"A basis; a foundation; basic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C347-vilakkam",
+      "sequence": 20140,
+      "title": "விளக்கம் (viḷakkam) — an explanation",
+      "headword": "விளக்கம்",
+      "romanization": "viḷakkam",
+      "gloss": "an explanation",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c195ec2830adb4b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for logic, then the Tamil for a basis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விளக்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விளக்கம் — viḷakkam — \"an explanation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆசிரியர் தெளிவான விளக்கம் கொடுத்தார். āciriyar teḷivāṉa viḷakkam koṭuttār. The teacher gave a clear explanation."
+            },
+            {
+              "kind": "speech",
+              "text": "Its verb is விளக்கு, to explain, the same word as விளக்கு, a lamp: an explanation sheds light."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விளக்கம் (viḷakkam) is native Dravidian: DEDR 5496 lists Tamil viḷakku, \"to make bright, to explain\", and viḷakkam, \"clearness, light\", in the family of veḷ, \"white, bright\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viḷakkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viḷakkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viḷakkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viḷakkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āciriyar teḷivāṉa viḷakkam koṭuttār. — The teacher gave a clear explanation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āciriyar teḷivāṉa viḷakkam koṭuttār.* — The teacher gave a clear explanation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for logic, then the Tamil for a basis, then say viḷakkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for logic, then the Tamil for a basis, then say *viḷakkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விளக்கம் (viḷakkam) mean? (\"An explanation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

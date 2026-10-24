@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:ea9142071c416326",
+  "lessonIds": [
+    "TA-C333-porkkalam",
+    "TA-C333-porvirar",
+    "TA-C333-val-sword",
+    "TA-C333-ketayam",
+    "TA-C333-kavacam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch333.txt",
+  "json": "tamil/narration/ch333.json",
+  "textHash": "fnv1a64:e385c28a0cd42885",
+  "jsonHash": "fnv1a64:87708e75a19445ee",
+  "findings": []
+}

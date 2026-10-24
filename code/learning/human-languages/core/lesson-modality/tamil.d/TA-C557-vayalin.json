@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C557-vayalin",
+    "language": "tamil",
+    "chapter": 557,
+    "sequence": 31750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43a96891e5e5f14b"
+  },
+  "findings": []
+}

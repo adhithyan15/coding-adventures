@@ -1,0 +1,21 @@
+{
+  "chapter": 373,
+  "title": "Data and Methods",
+  "label": "ch:mr-data-and-methods",
+  "canDo": "I can talk about surveys, samples, figures and methods.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-R373-review-366-373",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can talk about surveys, samples, figures and methods.",
+    "assesses": [
+      "MR-LEX-C373-PADDHAT373-01",
+      "MR-LEX-C373-PADDHAT373-02",
+      "MR-LEX-C373-PADDHAT373-03",
+      "MR-LEX-C373-PADDHAT373-04",
+      "MR-LEX-C373-PADDHAT373-05"
+    ]
+  }
+}

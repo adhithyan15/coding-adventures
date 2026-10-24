@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:434e312b4c0d0873",
+  "lessonIds": [
+    "TE-C386-vibhedincu",
+    "TE-C386-abhyantaram",
+    "TE-C386-aksepincu",
+    "TE-C386-vyatirekata",
+    "TE-C386-tiraskarincu"
+  ],
+  "tex": "telugu/book/chapters/ch386-disagreeing.tex"
+}

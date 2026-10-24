@@ -1,0 +1,21 @@
+{
+  "chapter": 437,
+  "title": "Wild Creatures",
+  "label": "ch:bn-wild-creatures",
+  "canDo": "I can talk about tigers and deer, hunting and grazing, and the hum of insects.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-R437-review-final-437",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can talk about tigers and deer, hunting and grazing, and the hum of insects.",
+    "assesses": [
+      "BN-LEX-C437-BAGH437-01",
+      "BN-LEX-C437-BAGH437-02",
+      "BN-LEX-C437-BAGH437-03",
+      "BN-LEX-C437-BAGH437-04",
+      "BN-LEX-C437-BAGH437-05"
+    ]
+  }
+}

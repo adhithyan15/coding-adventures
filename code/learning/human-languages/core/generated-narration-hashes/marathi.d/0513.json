@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:d860d50da2ee1dbe",
+  "lessonIds": [
+    "MR-C513-karyasala",
+    "MR-C513-ades",
+    "MR-C513-vibhag",
+    "MR-C513-sadar-karne",
+    "MR-C513-sutrasancalan-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch513.txt",
+  "json": "marathi/narration/ch513.json",
+  "textHash": "fnv1a64:940a086fa4b800fd",
+  "jsonHash": "fnv1a64:c3ae6bbb727a523a",
+  "findings": []
+}

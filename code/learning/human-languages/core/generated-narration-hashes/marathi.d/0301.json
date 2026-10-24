@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:14e9edb8ed31fe2e",
+  "lessonIds": [
+    "MR-C301-disne",
+    "MR-C301-sapadne",
+    "MR-C301-adhalne",
+    "MR-C301-dokavne",
+    "MR-C301-nirakhne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch301.txt",
+  "json": "marathi/narration/ch301.json",
+  "textHash": "fnv1a64:2f049bd7c0f496b1",
+  "jsonHash": "fnv1a64:799ba1e4d885c7e2",
+  "findings": []
+}

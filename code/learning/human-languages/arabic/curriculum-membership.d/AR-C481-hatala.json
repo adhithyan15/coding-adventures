@@ -1,0 +1,11 @@
+{
+  "id": "AR-C481-hatala",
+  "pathSegment": "AR-PATH-481-MATAR481",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-481-MATAR481",
+      "order": 3
+    }
+  ]
+}

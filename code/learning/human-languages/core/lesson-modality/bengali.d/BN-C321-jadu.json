@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C321-jadu",
+    "language": "bengali",
+    "chapter": 321,
+    "sequence": 20330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:662b3f720d336da6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C411-odambadike",
+    "language": "kannada",
+    "chapter": 411,
+    "sequence": 20810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52769eeb1848781b"
+  },
+  "findings": []
+}

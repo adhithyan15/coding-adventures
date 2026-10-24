@@ -1,0 +1,21 @@
+{
+  "chapter": 375,
+  "title": "The Relief Camp",
+  "label": "ch:ka-the-relief-camp",
+  "canDo": "I can say a camp, a refugee, condolence, to hand over and to rush.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-R375-review-final-375",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say a camp, a refugee, condolence, to hand over and to rush.",
+    "assesses": [
+      "KA-LEX-C375-SHIBIRA375-01",
+      "KA-LEX-C375-SHIBIRA375-02",
+      "KA-LEX-C375-SHIBIRA375-03",
+      "KA-LEX-C375-SHIBIRA375-04",
+      "KA-LEX-C375-SHIBIRA375-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Tears and Laughter",
+  "label": "ch:ml-tears-and-laughter",
+  "canDo": "I can say to groan, to burst into tears, a hurt feeling, to burst out laughing and confusion.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C525-asayakkulappam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can say to groan, to burst into tears, a hurt feeling, to burst out laughing and confusion.",
+    "assesses": [
+      "ML-LEX-C525-VILAPAM525-03",
+      "ML-LEX-C525-VILAPAM525-04",
+      "ML-LEX-C525-VILAPAM525-05"
+    ]
+  }
+}

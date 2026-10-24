@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C488-rugna",
+    "language": "marathi",
+    "chapter": 488,
+    "sequence": 27940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:647dc86bedce43e1"
+  },
+  "findings": []
+}

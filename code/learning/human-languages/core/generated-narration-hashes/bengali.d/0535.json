@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:2faa425ee5e572dd",
+  "lessonIds": [
+    "BN-C535-sitbelt",
+    "BN-C535-bima",
+    "BN-C535-geranti",
+    "BN-C535-surokkhit",
+    "BN-C535-ogninirbapok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch535.txt",
+  "json": "bengali/narration/ch535.json",
+  "textHash": "fnv1a64:aab4be5cce26ce6d",
+  "jsonHash": "fnv1a64:1e857ec408f8fae8",
+  "findings": []
+}

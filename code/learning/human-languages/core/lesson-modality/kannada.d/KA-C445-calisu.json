@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C445-calisu",
+    "language": "kannada",
+    "chapter": 445,
+    "sequence": 22640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84b5782bca77abd5"
+  },
+  "findings": []
+}

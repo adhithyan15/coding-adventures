@@ -1,0 +1,10 @@
+{
+  "id": "KA-EXT-310-STORY-ORDER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can tell a short story in order with modalu, adara nantara and konege, join actions with bandu and hōgi, read a connected story of about ninety words, and read the letter ಛ in svaccha.",
+  "prerequisites": [
+    "KA-EXT-309-PAST-SCENE"
+  ]
+}

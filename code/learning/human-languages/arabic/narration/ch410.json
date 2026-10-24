@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 410,
+  "title": "Allowed or required",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:db6cf2fcd1e8248b",
+  "lessons": [
+    {
+      "id": "AR-C410-abaha",
+      "sequence": 23060,
+      "title": "أباح (abāḥa) — to permit",
+      "headword": "أباح",
+      "romanization": "abāḥa",
+      "gloss": "to permit",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5dbc08d874d42849",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to stipulate in writing, then the Arabic for to legislate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أباح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أباح — abāḥa — \"to permit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أباح القانون العمل يوم السبت. abāḥa al-qānūn al-ʿamal yawm as-sabt. The law permitted work on Saturdays."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يبيح, yubīḥ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أباح (abāḥa) is built on the native Arabic root b-w-ḥ, \"to become known, to disclose\" (Lane). It is Form IV, to lay a thing open to people: to permit it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abāḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abāḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abāḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abāḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abāḥa al-qānūn al-ʿamal yawm as-sabt. — The law permitted work on Saturdays.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abāḥa al-qānūn al-ʿamal yawm as-sabt.* — The law permitted work on Saturdays.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to stipulate in writing, then the Arabic for to legislate, then say abāḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to stipulate in writing, then the Arabic for to legislate, then say *abāḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أباح (abāḥa) mean? (\"To permit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C410-awjaba",
+      "sequence": 23070,
+      "title": "أوجب (awjaba) — to make obligatory",
+      "headword": "أوجب",
+      "romanization": "awjaba",
+      "gloss": "to make obligatory",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:827f521d365ce899",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to legislate, then the Arabic for to permit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أوجب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أوجب — awjaba — \"to make obligatory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أوجب القانون التعليم للأطفال. awjaba al-qānūn at-taʿlīm li-l-aṭfāl. The law made schooling obligatory for children."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يوجب, yūjib."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أوجب (awjaba) is built on the native Arabic root w-j-b, \"to be due, binding\" (Lane). It is Form IV, to make binding: to make obligatory. واجب, a duty, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awjaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awjaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awjaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awjaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awjaba al-qānūn at-taʿlīm li-l-aṭfāl. — The law made schooling obligatory for children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awjaba al-qānūn at-taʿlīm li-l-aṭfāl.* — The law made schooling obligatory for children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to legislate, then the Arabic for to permit, then say awjaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to legislate, then the Arabic for to permit, then say *awjaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أوجب (awjaba) mean? (\"To make obligatory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C410-khalafa",
+      "sequence": 23080,
+      "title": "خالف (khālafa) — to break a rule",
+      "headword": "خالف",
+      "romanization": "khālafa",
+      "gloss": "to break a rule",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d97197551d1330df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to permit, then the Arabic for to make obligatory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خالف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خالف — khālafa — \"to break a rule\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خالف الرجل قواعد المكان. khālafa ar-rajul qawāʿid al-makān. The man broke the rules of the place."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يخالف, yukhālif."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to differ: خالفه الرأي, disagreed with him."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خالف (khālafa) is built on the native Arabic root kh-l-f, \"to come after, behind\" (Lane). It is Form III, to go against the one behind or before you: to break a rule, to differ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khālafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khālafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khālafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khālafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khālafa ar-rajul qawāʿid al-makān. — The man broke the rules of the place.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khālafa ar-rajul qawāʿid al-makān.* — The man broke the rules of the place.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to permit, then the Arabic for to make obligatory, then say khālafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to permit, then the Arabic for to make obligatory, then say *khālafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خالف (khālafa) mean? (\"To break a rule\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C410-iltazama",
+      "sequence": 23090,
+      "title": "التزم (iltazama) — to comply",
+      "headword": "التزم",
+      "romanization": "iltazama",
+      "gloss": "to comply",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f0921c0ecdfe21c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to make obligatory, then the Arabic for to break a rule."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: التزم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "التزم — iltazama — \"to comply\"."
+            },
+            {
+              "kind": "speech",
+              "text": "التزم الجميع بالقواعد. iltazama al-jamīʿ bi-l-qawāʿid. Everyone complied with the rules."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يلتزم, yaltazim."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes بـ: التزم (iltazama) بـ …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "التزم (iltazama) is built on the native Arabic root l-z-m, \"to cling, to stick to\" (Lane). It is Form VIII, to bind oneself to a thing: to comply, to commit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iltazama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iltazama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iltazama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iltazama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iltazama al-jamīʿ bi-l-qawāʿid. — Everyone complied with the rules.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iltazama al-jamīʿ bi-l-qawāʿid.* — Everyone complied with the rules.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to make obligatory, then the Arabic for to break a rule, then say iltazama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to make obligatory, then the Arabic for to break a rule, then say *iltazama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does التزم (iltazama) mean? (\"To comply\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C410-afa-exempt",
+      "sequence": 23100,
+      "title": "أعفى (aʿfā) — to exempt",
+      "headword": "أعفى",
+      "romanization": "aʿfā",
+      "gloss": "to exempt",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47cab63882f7b461",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to break a rule, then the Arabic for to comply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أعفى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أعفى — aʿfā — \"to exempt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أعفى المدير الموظف من العمل يوم العيد. aʿfā al-mudīr al-muwaẓẓaf min al-ʿamal yawm al-ʿīd. The manager exempted the employee from work on the feast day."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يعفي, yuʿfī."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes من: أعفاه من …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أعفى (aʿfā) is built on the native Arabic root ʿ-f-w, \"to efface; to pardon\" (Lane). It is Form IV, to release someone from a thing: to exempt."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aʿfā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aʿfā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aʿfā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aʿfā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aʿfā al-mudīr al-muwaẓẓaf min al-ʿamal yawm al-ʿīd. — The manager exempted the employee from work on the feast day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aʿfā al-mudīr al-muwaẓẓaf min al-ʿamal yawm al-ʿīd.* — The manager exempted the employee from work on the feast day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to break a rule, then the Arabic for to comply, then say aʿfā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to break a rule, then the Arabic for to comply, then say *aʿfā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أعفى (aʿfā) mean? (\"To exempt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

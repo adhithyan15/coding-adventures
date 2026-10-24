@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:87a2a728a1fee00a",
+  "lessonIds": [
+    "AR-C296-sahafa",
+    "AR-C296-muharrir",
+    "AR-C296-maqal",
+    "AR-C296-harrara",
+    "AR-C296-nashra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch296.txt",
+  "json": "arabic/narration/ch296.json",
+  "textHash": "fnv1a64:38d7dc8309088441",
+  "jsonHash": "fnv1a64:7cde0ad058107294",
+  "findings": []
+}

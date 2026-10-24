@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:ac6bfa59976d824a",
+  "lessonIds": [
+    "AR-C534-ataa",
+    "AR-C534-asa",
+    "AR-C534-wabbakha",
+    "AR-C534-ihtiram",
+    "AR-C534-afa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch534.txt",
+  "json": "arabic/narration/ch534.json",
+  "textHash": "fnv1a64:888e05bbcc41d8a3",
+  "jsonHash": "fnv1a64:98ab6e55d512ff86",
+  "findings": []
+}

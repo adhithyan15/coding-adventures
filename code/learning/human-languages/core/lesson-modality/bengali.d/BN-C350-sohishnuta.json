@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C350-sohishnuta",
+    "language": "bengali",
+    "chapter": 350,
+    "sequence": 22040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f275bf65f3eb779"
+  },
+  "findings": []
+}

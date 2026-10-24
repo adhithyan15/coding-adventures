@@ -1,0 +1,21 @@
+{
+  "chapter": 523,
+  "title": "Into the Outdoors",
+  "label": "ch:bn-into-the-outdoors",
+  "canDo": "I can talk about camps, climbing, fishing and swimming across.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R523-review-516-523",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about camps, climbing, fishing and swimming across.",
+    "assesses": [
+      "BN-LEX-C523-BAIRE523-01",
+      "BN-LEX-C523-BAIRE523-02",
+      "BN-LEX-C523-BAIRE523-03",
+      "BN-LEX-C523-BAIRE523-04",
+      "BN-LEX-C523-BAIRE523-05"
+    ]
+  }
+}

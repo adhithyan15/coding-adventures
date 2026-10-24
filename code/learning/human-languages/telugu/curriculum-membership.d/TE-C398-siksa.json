@@ -1,0 +1,11 @@
+{
+  "id": "TE-C398-siksa",
+  "pathSegment": "TE-PATH-398-CATTAM398",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-398-CATTAM398",
+      "order": 3
+    }
+  ]
+}

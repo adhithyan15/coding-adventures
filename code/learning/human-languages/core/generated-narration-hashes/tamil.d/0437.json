@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:7442c5b6ce353b4b",
+  "lessonIds": [
+    "TA-C437-vanavilanku",
+    "TA-C437-caranalayam",
+    "TA-C437-itampeyar",
+    "TA-C437-vettaiyatu",
+    "TA-C437-inam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch437.txt",
+  "json": "tamil/narration/ch437.json",
+  "textHash": "fnv1a64:62271d5869d937e3",
+  "jsonHash": "fnv1a64:1c389b6c584c69fd",
+  "findings": []
+}

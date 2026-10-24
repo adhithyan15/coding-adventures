@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-323-NAYOK323",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "BN-EXT-323-NAYOK323"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:a6271bac6b3041f5",
+  "lessonIds": [
+    "MR-C405-viman",
+    "MR-C405-uddan",
+    "MR-C405-dhavpatti",
+    "MR-C405-simasulka",
+    "MR-C405-vhisa"
+  ],
+  "tex": "marathi/book/chapters/ch405-planes-and-runways.tex"
+}

@@ -1,5 +1,21 @@
 # Changelog — CodingAdventures.Conduit.FSharp
 
+## Unreleased
+
+- Fix a double free of every handler `GCHandle`: `Application`'s `Dispose`
+  freed the handles again after Rust's `CtxFree` had freed them (via
+  `conduit_app_free` or a consumed `bind`). The slot returned to the handle
+  table twice, so later registrations could share it and dispatch to the
+  wrong function. `Dispose` now leaves them to Rust, the same fix as the C#
+  binding.
+- Fix a double free of `current` in the after-hook trampoline when the hook
+  throws: it is now freed only while still owned.
+- A halt whose response cannot be marshalled now becomes a safe 500
+  (`haltToNative`) instead of throwing out of a native callback.
+- Registration reads `app.Ptr` (which throws once the app is bound) before
+  allocating the handler's `GCHandle`, so a call after `bind` leaks nothing.
+  The unused `_handles` list is gone.
+
 ## 0.1.0 — 2026-06-14
 
 Initial release (WEB16).

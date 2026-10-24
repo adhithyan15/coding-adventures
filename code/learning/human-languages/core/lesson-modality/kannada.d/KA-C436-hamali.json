@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C436-hamali",
+    "language": "kannada",
+    "chapter": 436,
+    "sequence": 22150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:349866ebe10e191c"
+  },
+  "findings": []
+}

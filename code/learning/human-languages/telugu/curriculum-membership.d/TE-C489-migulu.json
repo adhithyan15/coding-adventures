@@ -1,0 +1,11 @@
+{
+  "id": "TE-C489-migulu",
+  "pathSegment": "TE-PATH-489-KALTI489",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-489-KALTI489",
+      "order": 4
+    }
+  ]
+}

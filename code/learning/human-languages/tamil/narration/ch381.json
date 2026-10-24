@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 381,
+  "title": "One Nation",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a99b2bd8b2d88cc7",
+  "lessons": [
+    {
+      "id": "TA-C381-tecam",
+      "sequence": 21840,
+      "title": "தேசம் (tēcam) — a nation",
+      "headword": "தேசம்",
+      "romanization": "tēcam",
+      "gloss": "a nation",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:382851fe9f49f874",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to contribute, then the Tamil for to cooperate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தேசம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேசம் — tēcam — \"a nation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் தேசத்துக்காகத் தன் வாழ்க்கையைக் கொடுத்தார். avar tēcattukkākat taṉ vāḻkkaiyaik koṭuttār. He gave his life for the nation."
+            },
+            {
+              "kind": "speech",
+              "text": "தேசிய, national: தேசியக் கொடி, the national flag."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேசம் (tēcam) is borrowed from Sanskrit deśa, \"point, region; province, country\" (CDIAL 6547). Tamil writes the ś as ச."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēcam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēcam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēcam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēcam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar tēcattukkākat taṉ vāḻkkaiyaik koṭuttār. — He gave his life for the nation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar tēcattukkākat taṉ vāḻkkaiyaik koṭuttār.* — He gave his life for the nation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to contribute, then the Tamil for to cooperate, then say tēcam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to contribute, then the Tamil for to cooperate, then say *tēcam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தேசம் (tēcam) mean? (\"A nation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C381-akati",
+      "sequence": 21850,
+      "title": "அகதி (akati) — a refugee",
+      "headword": "அகதி",
+      "romanization": "akati",
+      "gloss": "a refugee",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f3cc4aa2b1c4ede",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to cooperate, then the Tamil for a nation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அகதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அகதி — akati — \"a refugee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "போரால் பல குடும்பங்கள் அகதிகளாக இங்கே வந்தன. pōrāl pala kuṭumpaṅkaḷ akatikaḷāka iṅkē vantaṉa. Because of the war, many families came here as refugees."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: அகதிகள், akatikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "அகதியாக, as a refugee."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அகதி (akati) is borrowed from Sanskrit agati, \"not going; without resource, helpless\" (Monier-Williams): one who has no place to go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrāl pala kuṭumpaṅkaḷ akatikaḷāka iṅkē vantaṉa. — Because of the war, many families came here as refugees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrāl pala kuṭumpaṅkaḷ akatikaḷāka iṅkē vantaṉa.* — Because of the war, many families came here as refugees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to cooperate, then the Tamil for a nation, then say akati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to cooperate, then the Tamil for a nation, then say *akati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அகதி (akati) mean? (\"A refugee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C381-cinnam",
+      "sequence": 21860,
+      "title": "சின்னம் (ciṉṉam) — a symbol; an emblem",
+      "headword": "சின்னம்",
+      "romanization": "ciṉṉam",
+      "gloss": "a symbol; an emblem",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6efea09ed2bf1af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a nation, then the Tamil for a refugee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சின்னம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சின்னம் — ciṉṉam — \"a symbol; an emblem\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புறா அமைதியின் சின்னம். puṟā amaitiyiṉ ciṉṉam. The dove is a symbol of peace."
+            },
+            {
+              "kind": "speech",
+              "text": "X-இன் சின்னம் (ciṉṉam), a symbol of X. In elections, each party has its சின்னம் (ciṉṉam)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சின்னம் (ciṉṉam) is borrowed from Sanskrit cihna, \"mark, sign\" (CDIAL 4833); Pali has cinha. Tamil reshapes the cluster hn as ன்ன."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṉṉam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṉṉam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṉṉam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṉṉam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṟā amaitiyiṉ ciṉṉam. — The dove is a symbol of peace.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṟā amaitiyiṉ ciṉṉam.* — The dove is a symbol of peace.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a nation, then the Tamil for a refugee, then say ciṉṉam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a nation, then the Tamil for a refugee, then say *ciṉṉam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சின்னம் (ciṉṉam) mean? (\"A symbol; an emblem\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C381-onrinai",
+      "sequence": 21870,
+      "title": "ஒன்றிணை (oṉṟiṇai) — to unite; to bring together",
+      "headword": "ஒன்றிணை",
+      "romanization": "oṉṟiṇai",
+      "gloss": "to unite; to bring together",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e72d82b110da031e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a refugee, then the Tamil for a symbol."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒன்றிணை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒன்றிணை — oṉṟiṇai — \"to unite; to bring together\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தத் தலைவர் மக்களை ஒன்றிணைத்தார். antat talaivar makkaḷai oṉṟiṇaittār. That leader united the people."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஒன்றிணைத்தேன், oṉṟiṇaittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Transitive with -ஐ and the past in -த்த-; people unite with -ந்த-: ஒன்றிணைந்தார்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒன்றிணை (oṉṟiṇai) is native: oṉṟu, \"one\" (DEDR 990), and iṇai, \"to join, unite\" (DEDR 457): to join into one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṉṟiṇai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṉṟiṇai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṉṟiṇai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṉṟiṇai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antat talaivar makkaḷai oṉṟiṇaittār. — That leader united the people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antat talaivar makkaḷai oṉṟiṇaittār.* — That leader united the people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a refugee, then the Tamil for a symbol, then say oṉṟiṇai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a refugee, then the Tamil for a symbol, then say *oṉṟiṇai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒன்றிணை (oṉṟiṇai) mean? (\"To unite; to bring together\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C381-piratiniti",
+      "sequence": 21880,
+      "title": "பிரதிநிதி (piratiniti) — a representative",
+      "headword": "பிரதிநிதி",
+      "romanization": "piratiniti",
+      "gloss": "a representative",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:428ffc764e2512c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a symbol, then the Tamil for to unite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பிரதிநிதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிரதிநிதி — piratiniti — \"a representative\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒவ்வொரு வகுப்பிலிருந்தும் ஒரு பிரதிநிதி கூட்டத்துக்கு வந்தார். ovvoru vakuppiliruntum oru piratiniti kūṭṭattukku vantār. A representative from each class came to the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "X-இன் பிரதிநிதியாக, as the representative of X."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிரதிநிதி (piratiniti) is borrowed from Sanskrit pratinidhi, \"substitution; a substitute, representative, proxy\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piratiniti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piratiniti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piratiniti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piratiniti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ovvoru vakuppiliruntum oru piratiniti kūṭṭattukku vantār. — A representative from each class came to the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ovvoru vakuppiliruntum oru piratiniti kūṭṭattukku vantār.* — A representative from each class came to the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a symbol, then the Tamil for to unite, then say piratiniti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a symbol, then the Tamil for to unite, then say *piratiniti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பிரதிநிதி (piratiniti) mean? (\"A representative\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

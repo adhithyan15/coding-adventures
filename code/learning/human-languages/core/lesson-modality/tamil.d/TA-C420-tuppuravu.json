@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C420-tuppuravu",
+    "language": "tamil",
+    "chapter": 420,
+    "sequence": 24160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4075c639aae0efc0"
+  },
+  "findings": []
+}

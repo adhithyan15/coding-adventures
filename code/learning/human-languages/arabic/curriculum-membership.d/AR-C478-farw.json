@@ -1,0 +1,11 @@
+{
+  "id": "AR-C478-farw",
+  "pathSegment": "AR-PATH-478-QATI478",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-478-QATI478",
+      "order": 3
+    }
+  ]
+}

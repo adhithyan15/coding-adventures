@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C407-samskarana",
+    "language": "telugu",
+    "chapter": 407,
+    "sequence": 20320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8751aa82674677a2"
+  },
+  "findings": []
+}

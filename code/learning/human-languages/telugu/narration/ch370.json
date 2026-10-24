@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 370,
+  "title": "Legends",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:51a1fc308061b4ce",
+  "lessons": [
+    {
+      "id": "TE-C370-aitihyam",
+      "sequence": 18250,
+      "title": "ఐతిహ్యం (aitihyaṁ) — a legend; lore",
+      "headword": "ఐతిహ్యం",
+      "romanization": "aitihyaṁ",
+      "gloss": "a legend; lore",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91afa7460a66a160",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to demolish, then the Telugu for to build."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఐతిహ్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఐతిహ్యం — aitihyaṁ — \"a legend; lore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ కోట గురించి ఒక ఐతిహ్యం ఉంది. ā kōṭa guriñci oka aitihyaṁ undi. There is a legend about that fort."
+            },
+            {
+              "kind": "speech",
+              "text": "A story handed down by word of mouth, not written in history books."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఐతిహ్యం (aitihyaṁ) is borrowed from Sanskrit aitihya, \"traditional instruction, tradition\" (Monier-Williams), from iti ha, \"thus indeed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aitihyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aitihyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aitihyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aitihyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kōṭa guriñci oka aitihyaṁ undi. — There is a legend about that fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kōṭa guriñci oka aitihyaṁ undi.* — There is a legend about that fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to demolish, then the Telugu for to build, then say aitihyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to demolish, then the Telugu for to build, then say *aitihyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఐతిహ్యం (aitihyaṁ) mean? (\"A legend; lore\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C370-gatha",
+      "sequence": 18260,
+      "title": "గాథ (gātha) — a tale; a saga",
+      "headword": "గాథ",
+      "romanization": "gātha",
+      "gloss": "a tale; a saga",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af4fae7f8100e89a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to build, then the Telugu for a legend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గాథ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గాథ — gātha — \"a tale; a saga\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా అమ్మమ్మ వీరుల గాథలు చెప్పేది. mā ammamma vīrula gāthalu ceppēdi. My grandmother used to tell tales of heroes."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: గాథలు, gāthalu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గాథ (gātha) is borrowed from Sanskrit gāthā, \"a song\" (CDIAL 4126); in Telugu it is a tale of deeds."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gātha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gātha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gātha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gātha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā ammamma vīrula gāthalu ceppēdi. — My grandmother used to tell tales of heroes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā ammamma vīrula gāthalu ceppēdi.* — My grandmother used to tell tales of heroes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to build, then the Telugu for a legend, then say gātha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to build, then the Telugu for a legend, then say *gātha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గాథ (gātha) mean? (\"A tale; a saga\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C370-kirti",
+      "sequence": 18270,
+      "title": "కీర్తి (kīrti) — fame; glory",
+      "headword": "కీర్తి",
+      "romanization": "kīrti",
+      "gloss": "fame; glory",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2cfd6cb46bec0cc1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a legend, then the Telugu for a tale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కీర్తి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కీర్తి — kīrti — \"fame; glory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ కవి కీర్తి దేశమంతా వ్యాపించింది. ā kavi kīrti dēśamantā vyāpiñcindi. That poet's fame spread across the whole country."
+            },
+            {
+              "kind": "speech",
+              "text": "కీర్తి (kīrti) గడించు, to win fame."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కీర్తి (kīrti) is borrowed from Sanskrit kīrti, \"report\", and then \"fame\" (CDIAL 3200)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kīrti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kīrti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kīrti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kīrti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kavi kīrti dēśamantā vyāpiñcindi. — That poet's fame spread across the whole country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kavi kīrti dēśamantā vyāpiñcindi.* — That poet's fame spread across the whole country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a legend, then the Telugu for a tale, then say kīrti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a legend, then the Telugu for a tale, then say *kīrti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కీర్తి (kīrti) mean? (\"Fame; glory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C370-koniyadu",
+      "sequence": 18280,
+      "title": "కొనియాడు (koniyāḍu) — to extol; to praise highly",
+      "headword": "కొనియాడు",
+      "romanization": "koniyāḍu",
+      "gloss": "to extol; to praise highly",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4600ade3335628fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a tale, then the Telugu for fame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కొనియాడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొనియాడు — koniyāḍu — \"to extol; to praise highly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అందరూ ఆ వీరుడి ధైర్యాన్ని కొనియాడారు. andarū ā vīruḍi dhairyānni koniyāḍāru. Everyone praised that hero's courage."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కొనియాడాను, koniyāḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "A written-style word: the news uses it of speeches and tributes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొనియాడు (koniyāḍu) is native Dravidian: DEDR 2151 lists Telugu koniyāḍu, \"to praise\", under konu, \"to take, hold\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koniyāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koniyāḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koniyāḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koniyāḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andarū ā vīruḍi dhairyānni koniyāḍāru. — Everyone praised that hero's courage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andarū ā vīruḍi dhairyānni koniyāḍāru.* — Everyone praised that hero's courage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a tale, then the Telugu for fame, then say koniyāḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a tale, then the Telugu for fame, then say *koniyāḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కొనియాడు (koniyāḍu) mean? (\"To extol; to praise highly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C370-dandincu",
+      "sequence": 18290,
+      "title": "దండించు (daṇḍiñcu) — to chastise; to discipline",
+      "headword": "దండించు",
+      "romanization": "daṇḍiñcu",
+      "gloss": "to chastise; to discipline",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d020a477091123e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for fame, then the Telugu for to extol."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దండించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దండించు — daṇḍiñcu — \"to chastise; to discipline\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తండ్రి అల్లరి చేసిన కొడుకును దండించాడు. taṇḍri allari cēsina koḍukunu daṇḍiñcāḍu. The father punished his naughty son."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): దండించాను, daṇḍiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on the Sanskrit word for a rod."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దండించు (daṇḍiñcu) is built on Sanskrit daṇḍayati, \"chastises, fines\" (CDIAL 6136), from daṇḍa, \"a stick, a rod\" (CDIAL 6128)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṇḍiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṇḍiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṇḍiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṇḍiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇḍri allari cēsina koḍukunu daṇḍiñcāḍu. — The father punished his naughty son.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇḍri allari cēsina koḍukunu daṇḍiñcāḍu.* — The father punished his naughty son.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for fame, then the Telugu for to extol, then say daṇḍiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for fame, then the Telugu for to extol, then say *daṇḍiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దండించు (daṇḍiñcu) mean? (\"To chastise; to discipline\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

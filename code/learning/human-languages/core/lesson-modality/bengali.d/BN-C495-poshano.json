@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C495-poshano",
+    "language": "bengali",
+    "chapter": 495,
+    "sequence": 30190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c26f22f0f25b489"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C372-tamakkana",
+  "pathSegment": "AR-PATH-372-AQABA372",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-372-AQABA372",
+      "order": 4
+    }
+  ]
+}

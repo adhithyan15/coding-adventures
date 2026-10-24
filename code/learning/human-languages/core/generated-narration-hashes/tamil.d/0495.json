@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:673569b4024fe509",
+  "lessonIds": [
+    "TA-C495-cicu",
+    "TA-C495-malalai",
+    "TA-C495-taval",
+    "TA-C495-talattu",
+    "TA-C495-uttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch495.txt",
+  "json": "tamil/narration/ch495.json",
+  "textHash": "fnv1a64:39efd062c016b249",
+  "jsonHash": "fnv1a64:a4fd2c3960246826",
+  "findings": []
+}

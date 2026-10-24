@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-469-SAMME469",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-469-SAMME469"
+  ],
+  "after": []
+}

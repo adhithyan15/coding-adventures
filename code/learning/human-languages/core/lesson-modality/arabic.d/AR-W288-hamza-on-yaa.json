@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "AR-W288-hamza-on-yaa",
+    "language": "arabic",
+    "chapter": 288,
+    "sequence": 16660,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9a7dddc0bf8fd222",
+    "detachableSegments": [
+      "Script you'll notice: ئ",
+      "Writing: ئ"
+    ]
+  },
+  "findings": []
+}

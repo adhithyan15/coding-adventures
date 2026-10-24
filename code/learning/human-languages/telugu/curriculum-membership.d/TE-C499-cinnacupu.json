@@ -1,0 +1,11 @@
+{
+  "id": "TE-C499-cinnacupu",
+  "pathSegment": "TE-PATH-499-ASUYA499",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-499-ASUYA499",
+      "order": 4
+    }
+  ]
+}

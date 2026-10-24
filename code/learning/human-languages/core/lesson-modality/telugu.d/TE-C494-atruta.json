@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C494-atruta",
+    "language": "telugu",
+    "chapter": 494,
+    "sequence": 25040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9a47ac9a347b287"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-282-ASKWAY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask how to get somewhere and how far it is (sṭeśan kaise jāte haiṁ?, kitnī dūr hai?), follow the answer (sīdhe jāie, bāẽ muṛiye), and ask someone to tell me (batāie).",
+  "prerequisites": []
+}

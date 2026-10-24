@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 320,
+  "title": "The Reporter on the Spot",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8c7d4574bdfea67c",
+  "lessons": [
+    {
+      "id": "KA-C320-varadigara",
+      "sequence": 16050,
+      "title": "ವರದಿಗಾರ (varadigāra) — a reporter",
+      "headword": "ವರದಿಗಾರ",
+      "romanization": "varadigāra",
+      "gloss": "a reporter",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffc2606264ba0191",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a thief, then the Kannada for to run away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವರದಿಗಾರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವರದಿಗಾರ — varadigāra — \"a reporter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ವರದಿಗಾರ ಅಲ್ಲಿ ಇದ್ದಿದ್ದರೆ ಎಲ್ಲರಿಗೂ ಸುದ್ದಿ ಗೊತ್ತಾಗುತ್ತಿತ್ತು. ā varadigāra alli iddiddare ellarigū suddi gottāguttittu. If that reporter had been there, everyone would have known the news."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ವರದಿಗಾರರು, varadigāraru."
+            },
+            {
+              "kind": "speech",
+              "text": "ವರದಿ is a report; -ಗಾರ makes \"one who does it\", as in ಕೆಲಸಗಾರ, a worker."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವರದಿಗಾರ (varadigāra) is a Kannada word built from ವರದಿ, \"a report\", and the ending -gāra, \"one who does\", as in ಕೆಲಸಗಾರ. The origin of ವರದಿ itself is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varadigāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varadigāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varadigāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varadigāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā varadigāra alli iddiddare ellarigū suddi gottāguttittu. — If that reporter had been there, everyone would have known the news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā varadigāra alli iddiddare ellarigū suddi gottāguttittu.* — If that reporter had been there, everyone would have known the news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a thief, then the Kannada for to run away, then say varadigāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a thief, then the Kannada for to run away, then say *varadigāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವರದಿಗಾರ (varadigāra) mean? (\"A reporter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C320-sambhavisu",
+      "sequence": 16060,
+      "title": "ಸಂಭವಿಸು (sambhavisu) — to occur; to happen",
+      "headword": "ಸಂಭವಿಸು",
+      "romanization": "sambhavisu",
+      "gloss": "to occur; to happen",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fc8325f4eb6bf18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to run away, then the Kannada for a reporter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂಭವಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಭವಿಸು — sambhavisu — \"to occur; to happen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿನ್ನೆ ರಾತ್ರಿ ನಮ್ಮ ಬೀದಿಯಲ್ಲಿ ಅಪಘಾತ ಸಂಭವಿಸಿತು. ninne rātri namma bīdiyalli apaghāta sambhavisitu. Last night an accident happened in our street."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಸಂಭವಿಸಿತು, sambhavisitu."
+            },
+            {
+              "kind": "speech",
+              "text": "An event is the subject, so the past is ಸಂಭವಿಸಿತು, it happened. It suits news reports."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಭವಿಸು (sambhavisu) is built on Sanskrit sambhava, \"being or coming together, arising\" (Monier-Williams), with the Kannada ending -isu that makes verbs of Sanskrit nouns."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhavisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhavisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhavisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhavisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ninne rātri namma bīdiyalli apaghāta sambhavisitu. — Last night an accident happened in our street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ninne rātri namma bīdiyalli apaghāta sambhavisitu.* — Last night an accident happened in our street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to run away, then the Kannada for a reporter, then say sambhavisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to run away, then the Kannada for a reporter, then say *sambhavisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂಭವಿಸು (sambhavisu) mean? (\"To occur; to happen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C320-prasara",
+      "sequence": 16070,
+      "title": "ಪ್ರಸಾರ (prasāra) — a broadcast; spreading",
+      "headword": "ಪ್ರಸಾರ",
+      "romanization": "prasāra",
+      "gloss": "a broadcast; spreading",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce7472f9b104222d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a reporter, then the Kannada for to occur."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಸಾರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಸಾರ — prasāra — \"a broadcast; spreading\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಪಂದ್ಯದ ಪ್ರಸಾರ ಸಂಜೆ ಆರು ಗಂಟೆಗೆ ಶುರುವಾಯಿತು. ā pandyada prasāra sañje āru gaṇṭege śuruvāyitu. The broadcast of that match began at six in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Radio and television both have a ಪ್ರಸಾರ (prasāra). ಪ್ರಸಾರವಾಗು means to be broadcast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಸಾರ (prasāra) is borrowed from Sanskrit prasāra, \"spreading out, extension\" (CDIAL 8835). A broadcast spreads a programme far and wide."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pandyada prasāra sañje āru gaṇṭege śuruvāyitu. — The broadcast of that match began at six in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pandyada prasāra sañje āru gaṇṭege śuruvāyitu.* — The broadcast of that match began at six in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a reporter, then the Kannada for to occur, then say prasāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a reporter, then the Kannada for to occur, then say *prasāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಸಾರ (prasāra) mean? (\"A broadcast; spreading\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C320-bittarisu",
+      "sequence": 16080,
+      "title": "ಬಿತ್ತರಿಸು (bittarisu) — to broadcast; to air",
+      "headword": "ಬಿತ್ತರಿಸು",
+      "romanization": "bittarisu",
+      "gloss": "to broadcast; to air",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e1d88cbbcfddc3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to occur, then the Kannada for a broadcast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಿತ್ತರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿತ್ತರಿಸು — bittarisu — \"to broadcast; to air\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಟೀವಿ ಆ ಸಂದರ್ಶನವನ್ನು ರಾತ್ರಿ ಬಿತ್ತರಿಸಿತು. ṭīvi ā sandarśanavannu rātri bittarisitu. The television aired that interview at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಬಿತ್ತರಿಸಿದೆ, bittariside."
+            },
+            {
+              "kind": "speech",
+              "text": "What is aired takes -ಅನ್ನು. ಪ್ರಸಾರ (prasāra) ಮಾಡು says the same thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿತ್ತರಿಸು (bittarisu) is built on ಬಿತ್ತರ, the Kannada form of Sanskrit vistara, \"spreading out, extent\" (Monier-Williams), with the verb ending -isu. Sanskrit v often turns into Kannada b."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bittarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bittarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bittarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bittarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭīvi ā sandarśanavannu rātri bittarisitu. — The television aired that interview at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭīvi ā sandarśanavannu rātri bittarisitu.* — The television aired that interview at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to occur, then the Kannada for a broadcast, then say bittarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to occur, then the Kannada for a broadcast, then say *bittarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಿತ್ತರಿಸು (bittarisu) mean? (\"To broadcast; to air\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C320-sirsike",
+      "sequence": 16090,
+      "title": "ಶೀರ್ಷಿಕೆ (śīrṣike) — a headline; a title",
+      "headword": "ಶೀರ್ಷಿಕೆ",
+      "romanization": "śīrṣike",
+      "gloss": "a headline; a title",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7c52bac5a2c4b92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a broadcast, then the Kannada for to broadcast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಶೀರ್ಷಿಕೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶೀರ್ಷಿಕೆ — śīrṣike — \"a headline; a title\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇವತ್ತಿನ ಪತ್ರಿಕೆಯ ಶೀರ್ಷಿಕೆ ಆ ಯುದ್ಧದ ಬಗ್ಗೆ ಇತ್ತು. ivattina patrikeya śīrṣike ā yuddhada bagge ittu. Today's newspaper headline was about that war."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಶೀರ್ಷಿಕೆಗಳು, śīrṣikegaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A book, a film and a song have a ಶೀರ್ಷಿಕೆ (śīrṣike) too: its title."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶೀರ್ಷಿಕೆ (śīrṣike) is borrowed from Sanskrit śīrṣaka, built on śīrṣa, \"head, top\" (CDIAL 12497). A headline sits at the head of a story."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śīrṣike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śīrṣike*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śīrṣike, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śīrṣike*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ivattina patrikeya śīrṣike ā yuddhada bagge ittu. — Today's newspaper headline was about that war.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ivattina patrikeya śīrṣike ā yuddhada bagge ittu.* — Today's newspaper headline was about that war.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a broadcast, then the Kannada for to broadcast, then say śīrṣike again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a broadcast, then the Kannada for to broadcast, then say *śīrṣike* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಶೀರ್ಷಿಕೆ (śīrṣike) mean? (\"A headline; a title\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

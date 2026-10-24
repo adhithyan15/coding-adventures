@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:95fad505fae44527",
+  "lessonIds": [
+    "HI-C320-samrat",
+    "HI-C320-badsah",
+    "HI-C320-simhasan",
+    "HI-C320-mukut",
+    "HI-C320-darbar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch320.txt",
+  "json": "hindi/narration/ch320.json",
+  "textHash": "fnv1a64:0cf3a4a0d1b8ce2d",
+  "jsonHash": "fnv1a64:71a2d8a7156fed54",
+  "findings": []
+}

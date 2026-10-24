@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Growing up and growing older",
+  "label": "ch:ar-growing-up-and-growing-older",
+  "canDo": "I can say to be reared, to be brought up, a birthplace, boyhood and middle age.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C323-kuhula",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can say to be reared, to be brought up, a birthplace, boyhood and middle age.",
+    "assesses": [
+      "AR-LEX-C323-NASHAA323-03",
+      "AR-LEX-C323-NASHAA323-04",
+      "AR-LEX-C323-NASHAA323-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:7030970821dc8e79",
+  "lessonIds": [
+    "KA-C491-koragu",
+    "KA-C491-marugu",
+    "KA-C491-sankata",
+    "KA-C491-visada",
+    "KA-C491-pascattapa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch491.txt",
+  "json": "kannada/narration/ch491.json",
+  "textHash": "fnv1a64:8539190229b757b0",
+  "jsonHash": "fnv1a64:8c1d1254588b4021",
+  "findings": []
+}

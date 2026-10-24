@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-343-ASK-THE-WAY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask where a place is and how to get there, and follow and give simple directions: straight on, left, right, at the junction.",
+  "prerequisites": []
+}

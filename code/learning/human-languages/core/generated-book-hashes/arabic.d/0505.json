@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:2394ebd9ad3389b7",
+  "lessonIds": [
+    "AR-C505-jumjuma",
+    "AR-C505-dil",
+    "AR-C505-fakhidh",
+    "AR-C505-wirk",
+    "AR-C505-mafsil"
+  ],
+  "tex": "arabic/book/chapters/ch505-bones-and-joints.tex"
+}

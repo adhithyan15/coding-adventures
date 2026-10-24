@@ -1,0 +1,11 @@
+{
+  "id": "HI-R281-advice-and-reasons",
+  "pathSegment": "HI-PATH-281-SHOULDSO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-281-SHOULDSO",
+      "order": 4
+    }
+  ]
+}

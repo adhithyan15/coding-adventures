@@ -1,0 +1,11 @@
+{
+  "id": "AR-C387-aghlabiyya",
+  "pathSegment": "AR-PATH-387-UMMA387",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-387-UMMA387",
+      "order": 3
+    }
+  ]
+}

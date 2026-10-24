@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Kitchen Tools",
+  "label": "ch:mr-kitchen-tools",
+  "canDo": "I can talk about the stove, the counter, kneading and grating.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C526-kisne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about the stove, the counter, kneading and grating.",
+    "assesses": [
+      "MR-LEX-C526-OTA526-03",
+      "MR-LEX-C526-OTA526-04",
+      "MR-LEX-C526-OTA526-05"
+    ]
+  }
+}

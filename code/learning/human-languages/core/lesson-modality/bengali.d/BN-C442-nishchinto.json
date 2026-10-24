@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C442-nishchinto",
+    "language": "bengali",
+    "chapter": 442,
+    "sequence": 27230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f268e57bfac2ba84"
+  },
+  "findings": []
+}

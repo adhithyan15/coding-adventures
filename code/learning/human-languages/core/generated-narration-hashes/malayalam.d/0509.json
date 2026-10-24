@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:a936a0adcfdab787",
+  "lessonIds": [
+    "ML-C509-tapanila",
+    "ML-C509-ardrata",
+    "ML-C509-usnam",
+    "ML-C509-kulir",
+    "ML-C509-cutakuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch509.txt",
+  "json": "malayalam/narration/ch509.json",
+  "textHash": "fnv1a64:935197028a207378",
+  "jsonHash": "fnv1a64:7c00e53e325d5f28",
+  "findings": []
+}

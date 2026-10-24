@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Old weapons",
+  "label": "ch:ar-old-weapons",
+  "canDo": "I can say a weapon, a sword, a spear, an arrow and armour.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C326-dir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can say a weapon, a sword, a spear, an arrow and armour.",
+    "assesses": [
+      "AR-LEX-C326-SILAH326-03",
+      "AR-LEX-C326-SILAH326-04",
+      "AR-LEX-C326-SILAH326-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C323-nayok",
+    "language": "bengali",
+    "chapter": 323,
+    "sequence": 20410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ac96699e5c1d5f1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C472-munhadar",
+  "pathSegment": "AR-PATH-472-QIMMA472",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-472-QIMMA472",
+      "order": 3
+    }
+  ]
+}

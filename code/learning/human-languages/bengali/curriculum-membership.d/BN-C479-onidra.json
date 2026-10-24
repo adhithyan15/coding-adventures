@@ -1,0 +1,11 @@
+{
+  "id": "BN-C479-onidra",
+  "pathSegment": "BN-PATH-479-GHUM479",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-479-GHUM479",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C451-tyaksi",
+  "pathSegment": "KA-PATH-451-VAHANA451",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-451-VAHANA451",
+      "order": 2
+    }
+  ]
+}

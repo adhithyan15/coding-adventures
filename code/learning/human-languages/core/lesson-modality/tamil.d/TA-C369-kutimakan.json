@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C369-kutimakan",
+    "language": "tamil",
+    "chapter": 369,
+    "sequence": 21250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74246b3dd58aba9f"
+  },
+  "findings": []
+}

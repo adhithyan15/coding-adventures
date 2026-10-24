@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "Rules and Defiance",
+  "label": "ch:mr-rules-and-defiance",
+  "canDo": "I can talk about rulebooks, warnings and defying rules.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C542-jhugarne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can talk about rulebooks, warnings and defying rules.",
+    "assesses": [
+      "MR-LEX-C542-NIYAM542-03",
+      "MR-LEX-C542-NIYAM542-04",
+      "MR-LEX-C542-NIYAM542-05"
+    ]
+  }
+}

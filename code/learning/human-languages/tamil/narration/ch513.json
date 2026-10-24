@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 513,
+  "title": "People at Work",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:dea1fda76f635f5e",
+  "lessons": [
+    {
+      "id": "TA-C513-tolilmunaivor",
+      "sequence": 29450,
+      "title": "தொழில்முனைவோர் (toḻilmuṉaivōr) — an entrepreneur",
+      "headword": "தொழில்முனைவோர்",
+      "romanization": "toḻilmuṉaivōr",
+      "gloss": "an entrepreneur",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a3d9fc7588b43df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a transfer, then the Tamil for to start."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தொழில்முனைவோர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொழில்முனைவோர் — toḻilmuṉaivōr — \"an entrepreneur\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இளம் தொழில்முனைவோர் பலர் இந்த நகரத்தில் இருக்கிறார்கள். iḷam toḻilmuṉaivōr palar inta nakarattil irukkiṟārkaḷ. There are many young entrepreneurs in this city."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending -ஓர் makes it a word for people; it serves for one person and for many."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொழில்முனைவோர் (toḻilmuṉaivōr) is a modern native compound: தொழில் (toḻil), \"a trade, work\" (DEDR 3524), and முனைவோர், \"those who set out to do something\", from முனை (muṉai), \"to strive\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilmuṉaivōr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilmuṉaivōr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilmuṉaivōr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilmuṉaivōr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḷam toḻilmuṉaivōr palar inta nakarattil irukkiṟārkaḷ. — There are many young entrepreneurs in this city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḷam toḻilmuṉaivōr palar inta nakarattil irukkiṟārkaḷ.* — There are many young entrepreneurs in this city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a transfer, then the Tamil for to start, then say toḻilmuṉaivōr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a transfer, then the Tamil for to start, then say *toḻilmuṉaivōr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தொழில்முனைவோர் (toḻilmuṉaivōr) mean? (\"An entrepreneur\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C513-alocakar",
+      "sequence": 29460,
+      "title": "ஆலோசகர் (ālōcakar) — an adviser; a consultant",
+      "headword": "ஆலோசகர்",
+      "romanization": "ālōcakar",
+      "gloss": "an adviser; a consultant",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82f068bb4412ffdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to start, then the Tamil for an entrepreneur."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆலோசகர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆலோசகர் — ālōcakar — \"an adviser; a consultant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நிறுவனம் ஒரு நிதி ஆலோசகரை அமர்த்தியது. niṟuvaṉam oru niti ālōcakarai amarttiyatu. The company hired a financial adviser."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ஆலோசனை, advice. The person advised takes -க்கு: அரசுக்கு ஆலோசகர் (ālōcakar), an adviser to the government."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆலோசகர் (ālōcakar) is borrowed from Sanskrit: the stem of ālocana, \"consideration, reflection\" (Monier-Williams), with the Tamil personal ending -அர்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālōcakar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālōcakar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālōcakar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālōcakar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṟuvaṉam oru niti ālōcakarai amarttiyatu. — The company hired a financial adviser.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṟuvaṉam oru niti ālōcakarai amarttiyatu.* — The company hired a financial adviser.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to start, then the Tamil for an entrepreneur, then say ālōcakar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to start, then the Tamil for an entrepreneur, then say *ālōcakar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆலோசகர் (ālōcakar) mean? (\"An adviser; a consultant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C513-kollar",
+      "sequence": 29470,
+      "title": "கொல்லர் (kollar) — a blacksmith",
+      "headword": "கொல்லர்",
+      "romanization": "kollar",
+      "gloss": "a blacksmith",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66ac381c6e8b17e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an entrepreneur, then the Tamil for an adviser."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கொல்லர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொல்லர் — kollar — \"a blacksmith\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கொல்லர் பழுத்த இரும்பை அடித்து ஒரு கத்தி செய்தார். kollar paḻutta irumpai aṭittu oru katti ceytār. The blacksmith hammered the red-hot iron into a knife."
+            },
+            {
+              "kind": "speech",
+              "text": "A word for one person given with respect; the older form is கொல்லன்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொல்லர் (kollar) is native Dravidian: DEDR 2133 gives கொல் (kol), \"working in iron\", and கொல்லன் (kollaṉ), \"a blacksmith\"; கொல்லர் is the form with the respectful -அர்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kollar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kollar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kollar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kollar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kollar paḻutta irumpai aṭittu oru katti ceytār. — The blacksmith hammered the red-hot iron into a knife.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kollar paḻutta irumpai aṭittu oru katti ceytār.* — The blacksmith hammered the red-hot iron into a knife.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an entrepreneur, then the Tamil for an adviser, then say kollar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an entrepreneur, then the Tamil for an adviser, then say *kollar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கொல்லர் (kollar) mean? (\"A blacksmith\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C513-necavalar",
+      "sequence": 29480,
+      "title": "நெசவாளர் (necavāḷar) — a weaver",
+      "headword": "நெசவாளர்",
+      "romanization": "necavāḷar",
+      "gloss": "a weaver",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6b6b262cb3c188b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an adviser, then the Tamil for a blacksmith."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நெசவாளர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நெசவாளர் — necavāḷar — \"a weaver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எங்கள் கிராமத்தில் பல நெசவாளர்கள் சேலைகள் நெய்கிறார்கள். eṅkaḷ kirāmattil pala necavāḷarkaḷ cēlaikaḷ neykiṟārkaḷ. In our village many weavers weave saris."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: நெசவாளர்கள், necavāḷarkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending -ஆளர் makes \"one who …\"; the verb to weave is நெய் (ney), which also names ghee."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நெசவாளர் (necavāḷar) is native Dravidian: DEDR 3745 gives நெய் (ney), \"to weave\", and நெசவு (necavu), \"weaving\"; -ஆளர் makes \"one who weaves\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "necavāḷar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *necavāḷar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "necavāḷar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *necavāḷar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṅkaḷ kirāmattil pala necavāḷarkaḷ cēlaikaḷ neykiṟārkaḷ. — In our village many weavers weave saris.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṅkaḷ kirāmattil pala necavāḷarkaḷ cēlaikaḷ neykiṟārkaḷ.* — In our village many weavers weave saris.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an adviser, then the Tamil for a blacksmith, then say necavāḷar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an adviser, then the Tamil for a blacksmith, then say *necavāḷar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நெசவாளர் (necavāḷar) mean? (\"A weaver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C513-panippen",
+      "sequence": 29490,
+      "title": "பணிப்பெண் (paṇippeṇ) — a maid; a housekeeper",
+      "headword": "பணிப்பெண்",
+      "romanization": "paṇippeṇ",
+      "gloss": "a maid; a housekeeper",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6018ff5e370a4e40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a blacksmith, then the Tamil for a weaver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பணிப்பெண்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பணிப்பெண் — paṇippeṇ — \"a maid; a housekeeper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்த வீட்டில் ஒரு பணிப்பெண் சமையல் செய்கிறாள். anta vīṭṭil oru paṇippeṇ camaiyal ceykiṟāḷ. In that house a maid does the cooking."
+            },
+            {
+              "kind": "speech",
+              "text": "பணி \"service\" + பெண் \"a woman\". A man in the same work is a பணியாளர்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பணிப்பெண் (paṇippeṇ) is a native compound: பணி (paṇi), \"service\" (DEDR 3884), and பெண் (peṇ), \"a woman\" (DEDR 4395)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇippeṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇippeṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇippeṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇippeṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anta vīṭṭil oru paṇippeṇ camaiyal ceykiṟāḷ. — In that house a maid does the cooking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anta vīṭṭil oru paṇippeṇ camaiyal ceykiṟāḷ.* — In that house a maid does the cooking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a blacksmith, then the Tamil for a weaver, then say paṇippeṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a blacksmith, then the Tamil for a weaver, then say *paṇippeṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பணிப்பெண் (paṇippeṇ) mean? (\"A maid; a housekeeper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R513-review-506-513",
+      "sequence": 29500,
+      "title": "Looking back at work and careers",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Getting Hired to People at Work",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8400c87e7f768744",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for a salaried job and a CV."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a salaried job, a CV, to hire, full-time, an assistant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a salaried job, a CV, to hire, full-time, an assistant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a workplace, to be employed, a secretary, a file, to supervise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a workplace, to be employed, a secretary, a file, to supervise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wages, leave from work, overtime, an accountant, a clerk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wages, leave from work, overtime, an accountant, a clerk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a promotion, an ambition, to work hard, to encourage, an expert",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a promotion, an ambition, to work hard, to encourage, an expert]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "production, to fit, to coordinate, to stack, to take measurements",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: production, to fit, to coordinate, to stack, to take measurements]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exports, imports, business, a businessman, a partner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: exports, imports, business, a businessman, a partner]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dismissal, to resign, to retire, a transfer, to start",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dismissal, to resign, to retire, a transfer, to start]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an entrepreneur, an adviser, a blacksmith, a weaver, a maid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an entrepreneur, an adviser, a blacksmith, a weaver, a maid]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A salaried job? (உத்தியோகம், uttiyōkam.) A CV? (சுயவிவரம், cuyavivaram.) To hire? (அமர்த்து, amarttu.) Full-time? (முழுநேர, muḻunēra.) An assistant? (உதவியாளர், utaviyāḷar.) A workplace? (பணியிடம், paṇiyiṭam.) To be employed? (பணிபுரி, paṇipuri.) A secretary? (செயலாளர், ceyalāḷar.) A file? (கோப்பு, kōppu.) To supervise? (மேற்பார்வையிடு, mēṟpārvaiyiṭu.) Wages? (ஊதியம், ūtiyam.) Leave from work? (விடுப்பு, viṭuppu.) Overtime? (கூடுதல் நேரம், kūṭutal nēram.) An accountant? (கணக்காளர், kaṇakkāḷar.) A clerk? (எழுத்தர், eḻuttar.) A promotion? (பதவி உயர்வு, patavi uyarvu.) An ambition? (லட்சியம், laṭciyam.) To work hard? (உழை, uḻai.) To encourage? (ஊக்குவி, ūkkuvi.) An expert? (நிபுணர், nipuṇar.) Production? (உற்பத்தி, uṟpatti.) To fit? (பொருத்து, poruttu.) To coordinate? (ஒருங்கிணை, oruṅkiṇai.) To stack? (அடுக்கு, aṭukku.) To take measurements? (அள, aḷa.) Exports? (ஏற்றுமதி, ēṟṟumati.) Imports? (இறக்குமதி, iṟakkumati.) Business? (வணிகம், vaṇikam.) A businessman? (தொழிலதிபர், toḻilatipar.) A partner? (கூட்டாளி, kūṭṭāḷi.) Dismissal? (பணிநீக்கம், paṇinīkkam.) To resign? (பதவி விலகு, patavi vilaku.) To retire? (ஓய்வு பெறு, ōyvu peṟu.) A transfer? (இடமாற்றம், iṭamāṟṟam.) To start? (தொடங்கு, toṭaṅku.) An entrepreneur? (தொழில்முனைவோர், toḻilmuṉaivōr.) An adviser? (ஆலோசகர், ālōcakar.) A blacksmith? (கொல்லர், kollar.) A weaver? (நெசவாளர், necavāḷar.) A maid? (பணிப்பெண், paṇippeṇ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

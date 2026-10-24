@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:de88c92de03b1f68",
+  "lessonIds": [
+    "HI-C487-chut",
+    "HI-C487-sankraman",
+    "HI-C487-khasra",
+    "HI-C487-cecak",
+    "HI-C487-pakna"
+  ],
+  "tex": "hindi/book/chapters/ch487-catching-something.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C464-ardar-madu",
+  "pathSegment": "KA-PATH-464-UPAHARA464",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-464-UPAHARA464",
+      "order": 4
+    }
+  ]
+}

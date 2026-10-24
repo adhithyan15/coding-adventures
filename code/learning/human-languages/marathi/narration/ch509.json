@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 509,
+  "title": "Moving Up",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f14006fdb64afb45",
+  "lessons": [
+    {
+      "id": "MR-C509-padonnati",
+      "sequence": 29250,
+      "title": "पदोन्नती (padonnatī) — a promotion",
+      "headword": "पदोन्नती",
+      "romanization": "padonnatī",
+      "gloss": "a promotion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3797213ba28d7ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a pay rise, then the Marathi for to earn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पदोन्नती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पदोन्नती — padonnatī — \"a promotion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीराला या वर्षी पदोन्नती मिळाली. mīrālā yā varṣī padonnatī miḷālī. Meera got a promotion this year."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पदोन्नती (padonnatī) is a tatsama compound of Sanskrit pada, \"step, position\", and unnati, \"rising\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padonnatī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padonnatī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padonnatī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padonnatī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrālā yā varṣī padonnatī miḷālī. — Meera got a promotion this year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrālā yā varṣī padonnatī miḷālī.* — Meera got a promotion this year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a pay rise, then the Marathi for to earn, then say padonnatī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a pay rise, then the Marathi for to earn, then say *padonnatī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पदोन्नती (padonnatī) mean? (\"A promotion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C509-pad",
+      "sequence": 29260,
+      "title": "पद (pad) — a position; a post",
+      "headword": "पद",
+      "romanization": "pad",
+      "gloss": "a position; a post",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41840a7a8b25514f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to earn, then the Marathi for a promotion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पद — pad — \"a position; a post\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तिला व्यवस्थापकाचं पद मिळालं. tilā vyavasthāpakācaṁ pad miḷālaṁ. She got the manager's post."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पद (pad) is a tatsama, taken from Sanskrit pada, \"step, place, position\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tilā vyavasthāpakācaṁ pad miḷālaṁ. — She got the manager's post.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tilā vyavasthāpakācaṁ pad miḷālaṁ.* — She got the manager's post.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to earn, then the Marathi for a promotion, then say pad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to earn, then the Marathi for a promotion, then say *pad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पद (pad) mean? (\"A position; a post\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C509-varistha",
+      "sequence": 29270,
+      "title": "वरिष्ठ (variṣṭha) — senior",
+      "headword": "वरिष्ठ",
+      "romanization": "variṣṭha",
+      "gloss": "senior",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2dcfce608458db4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a promotion, then the Marathi for a position."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वरिष्ठ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वरिष्ठ — variṣṭha — \"senior\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वरिष्ठ अधिकारी आज बैठकीला आले. variṣṭha adhikārī āj baiṭhkīlā āle. The senior officers came to the meeting today."
+            },
+            {
+              "kind": "speech",
+              "text": "As a noun in the plural: वरिष्ठ (variṣṭha), one's seniors."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वरिष्ठ (variṣṭha) is a tatsama, taken from Sanskrit variṣṭha, \"best, foremost\", a superlative (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "variṣṭha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *variṣṭha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "variṣṭha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *variṣṭha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "variṣṭha adhikārī āj baiṭhkīlā āle. — The senior officers came to the meeting today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *variṣṭha adhikārī āj baiṭhkīlā āle.* — The senior officers came to the meeting today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a promotion, then the Marathi for a position, then say variṣṭha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a promotion, then the Marathi for a position, then say *variṣṭha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वरिष्ठ (variṣṭha) mean? (\"Senior\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C509-kanistha",
+      "sequence": 29280,
+      "title": "कनिष्ठ (kaniṣṭha) — junior",
+      "headword": "कनिष्ठ",
+      "romanization": "kaniṣṭha",
+      "gloss": "junior",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91bde36f72d0083a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a position, then the Marathi for senior."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कनिष्ठ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कनिष्ठ — kaniṣṭha — \"junior\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कनिष्ठ कर्मचारी वरिष्ठांकडून काम शिकतात. kaniṣṭha karmacārī variṣṭhāṅkaḍūn kām śiktāt. Junior staff learn the work from their seniors."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कनिष्ठ (kaniṣṭha) is a tatsama, taken from Sanskrit kaniṣṭha, \"youngest, least\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaniṣṭha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaniṣṭha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaniṣṭha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaniṣṭha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaniṣṭha karmacārī variṣṭhāṅkaḍūn kām śiktāt. — Junior staff learn the work from their seniors.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaniṣṭha karmacārī variṣṭhāṅkaḍūn kām śiktāt.* — Junior staff learn the work from their seniors.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a position, then the Marathi for senior, then say kaniṣṭha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a position, then the Marathi for senior, then say *kaniṣṭha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कनिष्ठ (kaniṣṭha) mean? (\"Junior\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C509-jhatne",
+      "sequence": 29290,
+      "title": "झटणे (jhaṭṇe) — to strive; to work hard",
+      "headword": "झटणे",
+      "romanization": "jhaṭṇe",
+      "gloss": "to strive; to work hard",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3ec1d2b0243cf81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for senior, then the Marathi for junior."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झटणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झटणे — jhaṭṇe — \"to strive; to work hard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पदोन्नतीसाठी तो दिवसरात्र झटला. padonnatīsāṭhī to divasrātra jhaṭlā. He strove day and night for the promotion."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो झटला, to jhaṭlā."
+            },
+            {
+              "kind": "speech",
+              "text": "The goal takes -साठी: यशासाठी झटणे (jhaṭṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झटणे (jhaṭṇe) is an expressive Marathi verb. CDIAL lists a Marathi jhaṭṇe, \"to collide violently\", under jhaṭ, \"sudden movement\" (CDIAL 5327), but not the sense \"to strive\", so the link is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṭṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṭṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṭṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṭṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padonnatīsāṭhī to divasrātra jhaṭlā. — He strove day and night for the promotion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padonnatīsāṭhī to divasrātra jhaṭlā.* — He strove day and night for the promotion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for senior, then the Marathi for junior, then say jhaṭṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for senior, then the Marathi for junior, then say *jhaṭṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झटणे (jhaṭṇe) mean? (\"To strive; to work hard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C396-majhi",
+    "language": "bengali",
+    "chapter": 396,
+    "sequence": 24610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8bfc7104d0b6231"
+  },
+  "findings": []
+}

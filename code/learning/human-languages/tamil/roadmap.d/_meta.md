@@ -11,3 +11,8 @@ to. Tamil script is taught **inline**, inside the word lessons, never as a
 gated reading course. Grammar is introduced piece by piece, on the first word
 that needs it.
 
+Coverage note: canonical lessons now continue through Chapter 558 (the B1
+core in chapters 284–293 and the 1,325-word B1 vocabulary in chapters
+294–558; Tamil attains B1 on the level gate), while the planned table below
+still describes the opening chapters only.
+

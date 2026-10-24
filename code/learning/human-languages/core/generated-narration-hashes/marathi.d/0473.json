@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:8cf93c1cfbfae5f8",
+  "lessonIds": [
+    "MR-C473-khodkar",
+    "MR-C473-miskil",
+    "MR-C473-vinodi",
+    "MR-C473-gammat",
+    "MR-C473-thatta-karne",
+    "MR-R473-review-466-473"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch473.txt",
+  "json": "marathi/narration/ch473.json",
+  "textHash": "fnv1a64:9a76e3e21c5750b7",
+  "jsonHash": "fnv1a64:0090bd3ba0653e98",
+  "findings": []
+}

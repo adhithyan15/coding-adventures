@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Stopped by the police",
+  "label": "ch:ar-stopped-by-the-police",
+  "canDo": "I can say to seize, to detain, to stop, a patrol and a checkpoint.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C317-hajiz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can say to seize, to detain, to stop, a patrol and a checkpoint.",
+    "assesses": [
+      "AR-LEX-C317-TAWQIF317-03",
+      "AR-LEX-C317-TAWQIF317-04",
+      "AR-LEX-C317-TAWQIF317-05"
+    ]
+  }
+}

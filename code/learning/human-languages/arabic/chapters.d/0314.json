@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "A funeral",
+  "label": "ch:ar-a-funeral",
+  "canDo": "I can say a funeral, to pass away, to bury, to escort a coffin and a grave.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C314-qabr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can say a funeral, to pass away, to bury, to escort a coffin and a grave.",
+    "assesses": [
+      "AR-LEX-C314-JANAZA314-03",
+      "AR-LEX-C314-JANAZA314-04",
+      "AR-LEX-C314-JANAZA314-05"
+    ]
+  }
+}

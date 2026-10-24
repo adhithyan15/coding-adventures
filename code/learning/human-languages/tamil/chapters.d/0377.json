@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Unity and Division",
+  "label": "ch:ta-unity-and-division",
+  "canDo": "I can talk about violence, non-violence and unity.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C377-pilavupatu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can talk about violence, non-violence and unity.",
+    "assesses": [
+      "TA-LEX-C377-VANMURAI377-03",
+      "TA-LEX-C377-VANMURAI377-04",
+      "TA-LEX-C377-VANMURAI377-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:27d0d9d6dfaa9b51",
+  "lessonIds": [
+    "TE-C458-sarduko",
+    "TE-C458-alavatupadu",
+    "TE-C458-domatera",
+    "TE-C458-marugudoddi",
+    "TE-C458-taguniru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch458.txt",
+  "json": "telugu/narration/ch458.json",
+  "textHash": "fnv1a64:8544c3b04379963b",
+  "jsonHash": "fnv1a64:263c68f1bcd2770d",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-284-THANA284",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "BN-EXT-284-THANA284"
+  ],
+  "after": []
+}

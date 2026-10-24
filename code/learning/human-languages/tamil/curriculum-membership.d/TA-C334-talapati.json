@@ -1,0 +1,11 @@
+{
+  "id": "TA-C334-talapati",
+  "pathSegment": "TA-PATH-334-THER334",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-334-THER334",
+      "order": 4
+    }
+  ]
+}

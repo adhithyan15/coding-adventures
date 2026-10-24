@@ -1,0 +1,11 @@
+{
+  "id": "HI-C393-upalabdhi",
+  "pathSegment": "HI-PATH-393-SAFALTA393",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-393-SAFALTA393",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:a81194474afeb911",
+  "lessonIds": [
+    "TE-C350-neram",
+    "TE-C350-nerasthudu",
+    "TE-C350-dosi",
+    "TE-C350-nirdosi",
+    "TE-C350-siksincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch350.txt",
+  "json": "telugu/narration/ch350.json",
+  "textHash": "fnv1a64:a5f0b7f1871524a4",
+  "jsonHash": "fnv1a64:7a156128b652964f",
+  "findings": []
+}

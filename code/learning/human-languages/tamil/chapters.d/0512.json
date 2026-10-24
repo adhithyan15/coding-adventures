@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Leaving a Job",
+  "label": "ch:ta-leaving-a-job",
+  "canDo": "I can talk about resigning, retiring and being dismissed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C512-totanku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about resigning, retiring and being dismissed.",
+    "assesses": [
+      "TA-LEX-C512-VILAKAL512-03",
+      "TA-LEX-C512-VILAKAL512-04",
+      "TA-LEX-C512-VILAKAL512-05"
+    ]
+  }
+}

@@ -1,0 +1,857 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 475,
+  "title": "Into the Woods",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:579219293ebd04a8",
+  "lessons": [
+    {
+      "id": "KA-C475-aranya",
+      "sequence": 24150,
+      "title": "ಅರಣ್ಯ (araṇya) — woodland; a forest",
+      "headword": "ಅರಣ್ಯ",
+      "romanization": "araṇya",
+      "gloss": "woodland; a forest",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:355d49e27cc0b679",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to forsake, then the Kannada for solar power."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅರಣ್ಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅರಣ್ಯ — araṇya — \"woodland; a forest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅರಣ್ಯ ಇಲಾಖೆ ಹೊಸ ಮರಗಳನ್ನು ನೆಟ್ಟಿತು. araṇya ilākhe hosa maragaḷannu neṭṭitu. The forest department planted new trees."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word; ಕಾಡು is the everyday forest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅರಣ್ಯ (araṇya) is borrowed from Sanskrit araṇya, \"foreign land, wilderness, a forest\" (CDIAL 600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "araṇya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *araṇya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "araṇya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *araṇya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "araṇya ilākhe hosa maragaḷannu neṭṭitu. — The forest department planted new trees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *araṇya ilākhe hosa maragaḷannu neṭṭitu.* — The forest department planted new trees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to forsake, then the Kannada for solar power, then say araṇya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to forsake, then the Kannada for solar power, then say *araṇya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅರಣ್ಯ (araṇya) mean? (\"Woodland; a forest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C475-malekadu",
+      "sequence": 24160,
+      "title": "ಮಳೆಕಾಡು (maḷekāḍu) — a rainforest",
+      "headword": "ಮಳೆಕಾಡು",
+      "romanization": "maḷekāḍu",
+      "gloss": "a rainforest",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:204f60d1336ae116",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for solar power, then the Kannada for woodland."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಳೆಕಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಳೆಕಾಡು — maḷekāḍu — \"a rainforest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಳೆಕಾಡಿನಲ್ಲಿ ಸೂರ್ಯನ ಬೆಳಕು ನೆಲ ಮುಟ್ಟುವುದಿಲ್ಲ. maḷekāḍinalli sūryana beḷaku nela muṭṭuvudilla. In a rainforest the sunlight does not reach the ground."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಳೆ, rain, plus ಕಾಡು, forest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಳೆಕಾಡು (maḷekāḍu) is a native Kannada compound of ಮಳೆ, \"rain\" (DEDR 4753), and ಕಾಡು, \"a forest\" (DEDR 1438)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷekāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷekāḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷekāḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷekāḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷekāḍinalli sūryana beḷaku nela muṭṭuvudilla. — In a rainforest the sunlight does not reach the ground.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷekāḍinalli sūryana beḷaku nela muṭṭuvudilla.* — In a rainforest the sunlight does not reach the ground.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for solar power, then the Kannada for woodland, then say maḷekāḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for solar power, then the Kannada for woodland, then say *maḷekāḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಳೆಕಾಡು (maḷekāḍu) mean? (\"A rainforest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C475-kadgiccu",
+      "sequence": 24170,
+      "title": "ಕಾಡ್ಗಿಚ್ಚು (kāḍgiccu) — a forest fire",
+      "headword": "ಕಾಡ್ಗಿಚ್ಚು",
+      "romanization": "kāḍgiccu",
+      "gloss": "a forest fire",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78719b69e39f55bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for woodland, then the Kannada for a rainforest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಾಡ್ಗಿಚ್ಚು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾಡ್ಗಿಚ್ಚು — kāḍgiccu — \"a forest fire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಳೆದ ಬೇಸಿಗೆಯಲ್ಲಿ ಈ ಬೆಟ್ಟದಲ್ಲಿ ಕಾಡ್ಗಿಚ್ಚು ಆಯಿತು. kaḷeda bēsigeyalli ī beṭṭadalli kāḍgiccu āyitu. Last summer there was a forest fire on this hill."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಾಡು, forest, plus ಕಿಚ್ಚು, fire: the k turns to g in the join."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾಡ್ಗಿಚ್ಚು (kāḍgiccu) is a native Kannada compound of ಕಾಡು, \"a forest\" (DEDR 1438), and kiccu, \"fire\" (DEDR 1514)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāḍgiccu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāḍgiccu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāḍgiccu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāḍgiccu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷeda bēsigeyalli ī beṭṭadalli kāḍgiccu āyitu. — Last summer there was a forest fire on this hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷeda bēsigeyalli ī beṭṭadalli kāḍgiccu āyitu.* — Last summer there was a forest fire on this hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for woodland, then the Kannada for a rainforest, then say kāḍgiccu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for woodland, then the Kannada for a rainforest, then say *kāḍgiccu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಾಡ್ಗಿಚ್ಚು (kāḍgiccu) mean? (\"A forest fire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C475-kadi-fell",
+      "sequence": 24180,
+      "title": "ಕಡಿ (kaḍi) — to fell; to chop",
+      "headword": "ಕಡಿ",
+      "romanization": "kaḍi",
+      "gloss": "to fell; to chop",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bef0d494feb045d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a rainforest, then the Kannada for a forest fire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಡಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಡಿ — kaḍi — \"to fell; to chop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಸ್ತೆ ವಿಸ್ತರಿಸಲು ಅವರು ತುಂಬಾ ಮರಗಳನ್ನು ಕಡಿದರು. raste vistarisalu avaru tumbā maragaḷannu kaḍidaru. To widen the road they cut down a lot of trees."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಕಡಿದೆ, kaḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮರ ಕಡಿ (kaḍi), to fell a tree; ಕತ್ತರಿಸು is to cut with a blade."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಡಿ (kaḍi) is native Dravidian: DEDR 1125 lists Kannada kaḍi, \"to cut, to chop, to fell\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raste vistarisalu avaru tumbā maragaḷannu kaḍidaru. — To widen the road they cut down a lot of trees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raste vistarisalu avaru tumbā maragaḷannu kaḍidaru.* — To widen the road they cut down a lot of trees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a rainforest, then the Kannada for a forest fire, then say kaḍi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a rainforest, then the Kannada for a forest fire, then say *kaḍi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಡಿ (kaḍi) mean? (\"To fell; to chop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C475-samraksisu",
+      "sequence": 24190,
+      "title": "ಸಂರಕ್ಷಿಸು (saṃrakṣisu) — to conserve; to protect",
+      "headword": "ಸಂರಕ್ಷಿಸು",
+      "romanization": "saṃrakṣisu",
+      "gloss": "to conserve; to protect",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e408d77a29ffda7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a forest fire, then the Kannada for to fell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂರಕ್ಷಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂರಕ್ಷಿಸು — saṃrakṣisu — \"to conserve; to protect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾವು ಕಾಡುಗಳನ್ನು ಸಂರಕ್ಷಿಸಬೇಕು. nāvu kāḍugaḷannu saṃrakṣisabēku. We must conserve our forests."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಸಂರಕ್ಷಿಸಿದೆ, saṃrakṣiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂರಕ್ಷಣೆ is conservation; ಕಾಪಾಡು is the everyday verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂರಕ್ಷಿಸು (saṃrakṣisu) is built from Sanskrit saṃrakṣaṇa, \"guarding, preservation, protection\" (Monier-Williams), with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃrakṣisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃrakṣisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃrakṣisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃrakṣisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvu kāḍugaḷannu saṃrakṣisabēku. — We must conserve our forests.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvu kāḍugaḷannu saṃrakṣisabēku.* — We must conserve our forests.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a forest fire, then the Kannada for to fell, then say saṃrakṣisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a forest fire, then the Kannada for to fell, then say *saṃrakṣisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂರಕ್ಷಿಸು (saṃrakṣisu) mean? (\"To conserve; to protect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R475-review-469-475",
+      "sequence": 24200,
+      "title": "Looking back: from Bags, Bakeries and Deliveries to Into the Woods",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Bags, Bakeries and Deliveries to Into the Woods",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de250f77806718f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for a handbag and to swap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a handbag, to swap, a warranty, a bakery, a home delivery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a handbag, to swap, a warranty, a bakery, a home delivery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to widen, an entrance gate, a power cut, supplies, a telephone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to widen, an entrance gate, a power cut, supplies, a telephone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a din, to gather, to stare, to tug, to spill over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a din, to gather, to stare, to tug, to spill over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get damaged, to be off guard, to escape unharmed, shelter, a helpline",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get damaged, to be off guard, to escape unharmed, shelter, a helpline]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the environment, pollution, to pollute, soot, carbon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the environment, pollution, to pollute, soot, carbon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waste matter, recycling, to sort, to forsake, solar power",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: waste matter, recycling, to sort, to forsake, solar power]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "woodland, a rainforest, a forest fire, to fell, to conserve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: woodland, a rainforest, a forest fire, to fell, to conserve]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A handbag? (ಕೈಚೀಲ, kaicīla.) To swap? (ಅದಲುಬದಲು ಮಾಡು, adalubadalu māḍu.) A warranty? (ವಾರಂಟಿ, vāraṇṭi.) A bakery? (ಬೇಕರಿ, bēkari.) A home delivery? (ಡೆಲಿವರಿ, ḍelivari.) To widen? (ವಿಸ್ತರಿಸು, vistarisu.) An entrance gate? (ಪ್ರವೇಶದ್ವಾರ, pravēśadvāra.) A power cut? (ಕಡಿತ, kaḍita.) Supplies? (ಸರಬರಾಜು, sarabarāju.) A telephone? (ದೂರವಾಣಿ, dūravāṇi.) A din? (ಗದ್ದಲ, gaddala.) To gather? (ಜಮಾಯಿಸು, jamāyisu.) To stare? (ದಿಟ್ಟಿಸು, diṭṭisu.) To tug? (ಜಗ್ಗು, jaggu.) To spill over? (ತುಳುಕು, tuḷuku.) To get damaged? (ಹಾಳಾಗು, hāḷāgu.) To be off guard? (ಏಮಾರು, ēmāru.) To escape unharmed? (ಪಾರಾಗು, pārāgu.) Shelter? (ಆಶ್ರಯ, āśraya.) A helpline? (ಸಹಾಯವಾಣಿ, sahāyavāṇi.) The environment? (ಪರಿಸರ, parisara.) Pollution? (ಮಾಲಿನ್ಯ, mālinya.) To pollute? (ಕಲುಷಿತಗೊಳಿಸು, kaluṣitagoḷisu.) Soot? (ಮಸಿ, masi.) Carbon? (ಇಂಗಾಲ, iṅgāla.) Waste matter? (ತ್ಯಾಜ್ಯ, tyājya.) Recycling? (ಮರುಬಳಕೆ, marubaḷake.) To sort? (ವಿಂಗಡಿಸು, viṅgaḍisu.) To forsake? (ತ್ಯಜಿಸು, tyajisu.) Solar power? (ಸೌರಶಕ್ತಿ, sauraśakti.) Woodland? (ಅರಣ್ಯ, araṇya.) A rainforest? (ಮಳೆಕಾಡು, maḷekāḍu.) A forest fire? (ಕಾಡ್ಗಿಚ್ಚು, kāḍgiccu.) To fell? (ಕಡಿ, kaḍi.) To conserve? (ಸಂರಕ್ಷಿಸು, saṃrakṣisu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

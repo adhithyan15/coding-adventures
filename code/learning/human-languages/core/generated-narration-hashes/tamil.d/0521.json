@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:91061a8485376425",
+  "lessonIds": [
+    "TA-C521-ilupparai",
+    "TA-C521-virippu",
+    "TA-C521-ottatai",
+    "TA-C521-talppal",
+    "TA-C521-puntotti",
+    "TA-R521-review-514-521"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch521.txt",
+  "json": "tamil/narration/ch521.json",
+  "textHash": "fnv1a64:c6d5e218ab655ac3",
+  "jsonHash": "fnv1a64:12ce83aa768e0d10",
+  "findings": []
+}

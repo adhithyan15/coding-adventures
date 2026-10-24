@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Dozing, Panting and Eating Well",
+  "label": "ch:ml-dozing-panting-and-eating-well",
+  "canDo": "I can say to doze off, to pant, to smart, a diet and nutritious food.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C539-posakaharam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can say to doze off, to pant, to smart, a diet and nutritious food.",
+    "assesses": [
+      "ML-LEX-C539-AHARAM539-03",
+      "ML-LEX-C539-AHARAM539-04",
+      "ML-LEX-C539-AHARAM539-05"
+    ]
+  }
+}

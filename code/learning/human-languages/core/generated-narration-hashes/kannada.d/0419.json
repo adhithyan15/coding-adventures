@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:c9516def255f0744",
+  "lessonIds": [
+    "KA-C419-viphalavagu",
+    "KA-C419-phalisu",
+    "KA-C419-kaigudu",
+    "KA-C419-bikkattu",
+    "KA-C419-anivarya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch419.txt",
+  "json": "kannada/narration/ch419.json",
+  "textHash": "fnv1a64:fd8b1f131cf6ab17",
+  "jsonHash": "fnv1a64:6ad88490c625a2a0",
+  "findings": []
+}

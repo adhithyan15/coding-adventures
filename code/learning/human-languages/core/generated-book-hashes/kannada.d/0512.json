@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:12366df12ba7310a",
+  "lessonIds": [
+    "KA-C512-raktadottada",
+    "KA-C512-hrdayaghata",
+    "KA-C512-raktasrava",
+    "KA-C512-parsvavayu",
+    "KA-C512-prajne-tappu"
+  ],
+  "tex": "kannada/book/chapters/ch512-serious-illness.tex"
+}

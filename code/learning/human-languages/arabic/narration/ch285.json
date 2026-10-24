@@ -1,0 +1,908 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 285,
+  "title": "What I Think, And So",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:ed363c1140d3a3c3",
+  "lessons": [
+    {
+      "id": "AR-C285-ray",
+      "sequence": 16500,
+      "title": "رأي (raʾy) — an opinion",
+      "headword": "رأي",
+      "romanization": "raʾy",
+      "gloss": "an opinion, a view — what you see in a matter",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a255024826a76af5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tell a two-step story: \"first I read, then I wrote\". (Awwalan qaraʾtu, thumma katabtu.) Then \"I told the story when he came\". (Ḥakaytu al-qiṣṣa ʿindamā jāʾa.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A story says what happened. The next node asks what you think about it, and why."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رأي",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رأي — raʾy — \"an opinion, a view\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ما رأيك في الفيلم؟ — mā raʾyuka fī al-fīlm? — What do you think of the film?"
+            },
+            {
+              "kind": "speech",
+              "text": "في رأيي، الفيلم مفيد. — fī raʾyī, al-fīlm mufīd — In my opinion, the film is useful."
+            },
+            {
+              "kind": "speech",
+              "text": "Raʾyī is \"my opinion\", with the -ī of \"my\". Raʾyuka is \"your opinion\" to a man; to a woman it is raʾyuki. Fī, \"in\", says what the opinion is about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رأي (raʾy) is built on the native Arabic root r-a-y, \"to see\" (Lane): the root of raʾā, \"he saw\", from chapter twenty-nine. Lane gives raʾā fī al-amr raʾyan for forming a view of a matter. An opinion, in Arabic, is what you see in something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raʾy, with the catch in the middle — raʾ-y",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raʾy*, with the catch in the middle — *raʾ-y*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What do you think of the film?\" — mā raʾyuka fī al-fīlm?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What do you think of the film?\" — *mā raʾyuka fī al-fīlm?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In my opinion, the book is useful\" — fī raʾyī, al-kitāb mufīd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In my opinion, the book is useful\" — *fī raʾyī, al-kitāb mufīd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same question to a woman, about a sentence — mā raʾyuki fī al-jumla?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same question to a woman, about a sentence — *mā raʾyuki fī al-jumla?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رأي (raʾy) mean? (\"An opinion\".) \"In my opinion\"? (Fī raʾyī.) Which verb shares its root? (Raʾā, he saw.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C285-ataqidu-anna",
+      "sequence": 16510,
+      "title": "أعتقد أن (aʿtaqidu anna) — I think that",
+      "headword": "أعتقد أن",
+      "romanization": "aʿtaqidu anna",
+      "gloss": "I think that — aʿtaqidu anna and aẓunnu anna, with the noun after anna in -a, and lā aʿtaqidu dhālika for 'I don't think so'",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bd78d89eb964d67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"in my opinion\". (Fī raʾyī.) Then say aktub anna Sāmī jārī, \"I write that Sami is my neighbour\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Anna hangs a whole sentence on a verb. Hang it on a verb of thinking, and you can give an opinion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: aʿtaqidu anna, aẓunnu anna",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Iʿtaqada, to believe, from chapter one hundred and sixty-four, has the present aʿtaqidu, I believe, I think. Put anna after it:"
+            },
+            {
+              "kind": "speech",
+              "text": "أعتقد أن الامتحان صعب. — aʿtaqidu anna al-imtiḥāna ṣaʿb — I think the exam is hard."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun after anna takes -a: al-imtiḥāna. With \"it\" the pronoun joins anna itself: aʿtaqidu annahu ṣaʿb, I think it's hard."
+            },
+            {
+              "kind": "speech",
+              "text": "أظن أن — aẓunnu anna — is \"I suppose\", a little less sure: aẓunnu anna al-qiṭāra sarīʿ, I suppose the train is fast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: agreeing and not",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For \"I don't think so\", put lā in front and dhālika, \"that\", after: لا أعتقد ذلك — lā aʿtaqidu dhālika."
+            },
+            {
+              "kind": "speech",
+              "text": "— mā raʾyuka fī al-fīlm? — aʿtaqidu annahu mumtāz. — lā aʿtaqidu dhālika!"
+            },
+            {
+              "kind": "speech",
+              "text": "Three ways to start an opinion, then: fī raʾyī, aʿtaqidu anna, aẓunnu anna. English drops its \"that\"; Arabic keeps anna."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think the exam is hard\" — aʿtaqidu anna al-imtiḥāna ṣaʿb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think the exam is hard\" — *aʿtaqidu anna al-imtiḥāna ṣaʿb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think it's excellent\" — aʿtaqidu annahu mumtāz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think it's excellent\" — *aʿtaqidu annahu mumtāz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I suppose the train is fast\" — aẓunnu anna al-qiṭāra sarīʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I suppose the train is fast\" — *aẓunnu anna al-qiṭāra sarīʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I don't think so\" — lā aʿtaqidu dhālika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I don't think so\" — *lā aʿtaqidu dhālika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think the lawyer is here\" — aʿtaqidu anna al-muḥāmiya hunā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think the lawyer is here\" — *aʿtaqidu anna al-muḥāmiya hunā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think that\"? (Aʿtaqidu anna.) The less sure one? (Aẓunnu anna.) What happens to the noun after anna? (It takes -a: al-imtiḥāna.) \"I don't think so\"? (Lā aʿtaqidu dhālika.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C285-sual",
+      "sequence": 16520,
+      "title": "سؤال (suʾāl) — a question",
+      "headword": "سؤال",
+      "romanization": "suʾāl",
+      "gloss": "a question — the noun of saʾala, to ask",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4b200b7a74322e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think that\", then \"he asked\". (Aʿtaqidu anna, saʾala.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before an opinion there is often a question. Here is the noun for it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سؤال",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سؤال — suʾāl — \"a question\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عندي سؤال. — ʿindī suʾāl — I have a question."
+            },
+            {
+              "kind": "speech",
+              "text": "ʿIndī, \"at me\", is how Arabic says \"I have\". The answer to a question is jawāb, from chapter seventy-four, and the two make a pair: suʾāl wa-jawāb, question and answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it su-ʾāl, with the catch before the long ā: the same catch as in the middle of saʾala."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سؤال (suʾāl) is built on the native Arabic root s-a-l, \"to ask\" (Lane), the root of saʾala, \"he asked\". Lane gives suʾāl as \"a question\", the counterpart of jawāb. The catch in the middle is the root's own middle letter, a hamza. In saʾala it sits on ا. Here the vowel before it is u, and it is written on a different seat, which the next lesson puts in your hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suʾāl, slowly, with the catch — su-ʾāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suʾāl*, slowly, with the catch — *su-ʾāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have a question\" — ʿindī suʾāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have a question\" — *ʿindī suʾāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"question and answer\" — suʾāl wa-jawāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"question and answer\" — *suʾāl wa-jawāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think the question is easy\" — aʿtaqidu anna as-suʾāla sahl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think the question is easy\" — *aʿtaqidu anna as-suʾāla sahl*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سؤال (suʾāl) mean? (\"A question\".) Which verb shares its root? (Saʾala, he asked.) What is its partner? (Jawāb, an answer.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W285-hamza-on-waw",
+      "sequence": 16530,
+      "title": "ؤ (hamza on waw) — the catch inside سؤال (suʾāl)",
+      "headword": "ؤ",
+      "romanization": "hamza on waw",
+      "gloss": "hamza on waw — the catch inside سؤال, written on a waw seat",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:5d1afc83767e6d5a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ؤ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ؤ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ء and و once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say سؤال (suʾāl), \"a question\". You met it a moment ago. This lesson takes its catch out and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ؤ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ؤ (hamza on waw) — hamza on a wāw seat, the glottal catch written ʾ in this book's romanization."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the second letter of سؤال (suʾāl), between س and ا. It is two pieces: a و below, the seat, and the small hamza mark riding on top of it. Like a plain و, it takes the hand of س on its right and does not join to the letter after it, so a gap opens before ال."
+            },
+            {
+              "kind": "speech",
+              "text": "The seat does not change the sound. أ, ء and ؤ (hamza on waw) all say the same catch; the seat follows the vowels around it, and here the u before it calls for و."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ؤ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ؤ (hamza on waw) and follow its line. Write the و first, then add the hamza above it. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this character or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "the seat and the mark of ؤ (hamza on waw) inside سؤال (suʾāl)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: the seat and the mark of ؤ inside **سؤال**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ؤ (hamza on waw) three times, saying the catch as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ؤ three times, saying the catch as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "سؤ, joined, then the gap, then ال",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: سؤ, joined, then the gap, then ال]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "سؤال (suʾāl) whole, then سأل beside it: one catch, two seats",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **سؤال** whole, then **سأل** beside it: one catch, two seats]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "سؤال (suʾāl) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **سؤال** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is this — ؤ (hamza on waw)? (Hamza on a wāw seat, a catch.) Which word did it come from? (سؤال, suʾāl, \"a question\".) Does the seat change the sound? (No: only the spelling.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C285-li-dhalika-fa",
+      "sequence": 16540,
+      "title": "لذلك، فـ (li-dhālika, fa-) — so",
+      "headword": "لذلك، فـ",
+      "romanization": "li-dhālika, fa-",
+      "gloss": "so — li-dhālika or fa- after the reason, where li-anna comes after the claim: the same two facts in the other order",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c30286b41b546879",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I have a question\". (ʿIndī suʾāl.) Then \"because\". (Li-anna.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Li-anna puts the reason after the claim. A story often wants the opposite order: first the reason, then what came of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: li-dhālika, after the reason",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نمت مبكرا لأنني كنت متعبا. — nimtu mubakkiran li-annanī kuntu mutʿaban — I went to bed early because I was tired."
+            },
+            {
+              "kind": "speech",
+              "text": "كنت متعبا، لذلك نمت مبكرا. — kuntu mutʿaban, li-dhālika nimtu mubakkiran — I was tired, so I went to bed early."
+            },
+            {
+              "kind": "speech",
+              "text": "The same two facts. With li-anna the claim comes first; with li-dhālika, \"therefore, so\", the reason comes first and the result follows. The -an on mutʿaban after kuntu is kāna's doing; chapter two hundred and eighty-nine comes back to it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: fa-, the short \"so\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فـ — fa- — does the same job in one letter. Like wa-, it is written onto the next word, with no space:"
+            },
+            {
+              "kind": "speech",
+              "text": "تأخر القطار، فأخذنا الحافلة. — taʾakhkhara al-qiṭār, fa-akhadhnā al-ḥāfila — The train was late, so we took the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Wa- adds the next thing; fa- says the next thing came of the first. Li-dhālika is the heavier of the two, and it suits a reason that needs weight: kāna al-imtiḥān ṣaʿban, li-dhālika qaraʾtu kathīran, the exam was hard, so I read a lot."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nimtu mubakkiran li-annanī kuntu mutʿaban",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nimtu mubakkiran li-annanī kuntu mutʿaban*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same facts the other way — kuntu mutʿaban, li-dhālika nimtu mubakkiran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same facts the other way — *kuntu mutʿaban, li-dhālika nimtu mubakkiran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The train was late, so we took the bus\" — taʾakhkhara al-qiṭār, fa-akhadhnā al-ḥāfila",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The train was late, so we took the bus\" — *taʾakhkhara al-qiṭār, fa-akhadhnā al-ḥāfila*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an opinion and its result — aʿtaqidu anna al-imtiḥāna ṣaʿb, li-dhālika aqraʾu kathīran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an opinion and its result — *aʿtaqidu anna al-imtiḥāna ṣaʿb, li-dhālika aqraʾu kathīran*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After li-anna, what comes? (The reason.) After li-dhālika? (The result.) The one-letter \"so\"? (فـ, fa-, written onto the next word.) What do li-anna and li-dhālika share? (Li-, for.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R285-opinion-and-so",
+      "sequence": 16550,
+      "title": "Review — an opinion, its reason and what came of it",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "an opinion with its reason and its result — fī raʾyī, aʿtaqidu anna, li-anna, li-dhālika and fa-, and a question to start it",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6138d50c993cccfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retell the trip to the sea in three steps, with awwalan, thumma and fī an-nihāya. Then say how it ended, with ʿindamā: ʿindamā waṣaltu, ḥakaytu al-qiṣṣa. And one step with baʿda an: baʿda an akalnā, sabaḥnā."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four lessons, and an opinion has its parts. A question to open it: عندي سؤال, ʿindī suʾāl. Three ways to start it: fī raʾyī, aʿtaqidu anna, aẓunnu anna. A reason after the claim, with li-anna; a result after the reason, with li-dhālika or fa-."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All of it in one breath:"
+            },
+            {
+              "kind": "speech",
+              "text": "في رأيي القصة جميلة، لذلك أحكيها كثيرا. — fī raʾyī al-qiṣṣa jamīla, li-dhālika aḥkīhā kathīran — In my opinion the story is lovely, so I tell it often."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What do you think of the story?\" — mā raʾyuka fī al-qiṣṣa?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What do you think of the story?\" — *mā raʾyuka fī al-qiṣṣa?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think the number is right\" — aʿtaqidu anna ar-raqma ṣaḥīḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think the number is right\" — *aʿtaqidu anna ar-raqma ṣaḥīḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The information was useful, so I wrote it\" — kānat al-maʿlūmāt mufīdatan, fa-katabtuhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The information was useful, so I wrote it\" — *kānat al-maʿlūmāt mufīdatan, fa-katabtuhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an opinion of your own, its reason with li-anna, and a result with li-dhālika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an opinion of your own, its reason with *li-anna*, and a result with *li-dhālika*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"In my opinion\"? (Fī raʾyī.) \"I have a question\"? (ʿIndī suʾāl.) Which seat carries the hamza in سؤال? (و.) The one-letter \"so\"? (Fa-.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

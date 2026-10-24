@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C443-odha",
+    "language": "marathi",
+    "chapter": 443,
+    "sequence": 25410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7835309544fa5827"
+  },
+  "findings": []
+}

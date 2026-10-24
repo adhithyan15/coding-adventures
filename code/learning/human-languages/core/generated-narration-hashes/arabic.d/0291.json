@@ -1,0 +1,17 @@
+{
+  "language": "arabic",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:ae79137d2f75a1aa",
+  "lessonIds": [
+    "AR-C291-idha",
+    "AR-C291-idha-amtarat",
+    "AR-R291-if-it-rains"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "arabic/narration/ch291.txt",
+  "json": "arabic/narration/ch291.json",
+  "textHash": "fnv1a64:a22c89d5981d52b3",
+  "jsonHash": "fnv1a64:bb81b7f7b04bfdbf",
+  "findings": []
+}

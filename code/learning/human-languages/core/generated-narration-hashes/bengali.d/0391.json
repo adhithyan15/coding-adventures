@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:983869546643bfa9",
+  "lessonIds": [
+    "BN-C391-songghorsho",
+    "BN-C391-tola",
+    "BN-C391-nora",
+    "BN-C391-chharano",
+    "BN-C391-kosha",
+    "BN-R391-review-384-391"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch391.txt",
+  "json": "bengali/narration/ch391.json",
+  "textHash": "fnv1a64:65f34699ddb9e7ef",
+  "jsonHash": "fnv1a64:6ebc1f973bafe98e",
+  "findings": []
+}

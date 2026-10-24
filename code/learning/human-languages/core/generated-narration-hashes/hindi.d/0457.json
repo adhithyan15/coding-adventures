@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:78db7ba03f8d5cde",
+  "lessonIds": [
+    "HI-C457-bhay",
+    "HI-C457-ghabrana",
+    "HI-C457-darana",
+    "HI-C457-kayar",
+    "HI-C457-siharna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch457.txt",
+  "json": "hindi/narration/ch457.json",
+  "textHash": "fnv1a64:8143315cf6197c87",
+  "jsonHash": "fnv1a64:619dbba9dab576a4",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:a82048cb1cc819ff",
+  "lessonIds": [
+    "HI-C490-chala",
+    "HI-C490-taka",
+    "HI-C490-papri",
+    "HI-C490-kuredna",
+    "HI-C490-dag"
+  ],
+  "tex": "hindi/book/chapters/ch490-cuts-and-scrapes.tex"
+}

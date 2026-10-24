@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "Jobs and Promotions",
+  "label": "ch:ml-jobs-and-promotions",
+  "canDo": "I can say a trade, a salaried job, a promotion, pay and to step down.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C542-sthanamoliyuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can say a trade, a salaried job, a promotion, pay and to step down.",
+    "assesses": [
+      "ML-LEX-C542-TOZHIL542-03",
+      "ML-LEX-C542-TOZHIL542-04",
+      "ML-LEX-C542-TOZHIL542-05"
+    ]
+  }
+}

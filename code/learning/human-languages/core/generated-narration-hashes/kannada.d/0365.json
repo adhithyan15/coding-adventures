@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:780de2c32ec0b290",
+  "lessonIds": [
+    "KA-C365-hodedata",
+    "KA-C365-himse",
+    "KA-C365-kaidi",
+    "KA-C365-nuku",
+    "KA-C365-gastu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch365.txt",
+  "json": "kannada/narration/ch365.json",
+  "textHash": "fnv1a64:b952b725bd4816b1",
+  "jsonHash": "fnv1a64:6f52f9499bea7e72",
+  "findings": []
+}

@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 569,
+  "title": "Winning and Losing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fece908712fdb525",
+  "lessons": [
+    {
+      "id": "ML-C569-campyan",
+      "sequence": 28660,
+      "title": "ചാമ്പ്യൻ (cāmpyan) — a sports champion",
+      "headword": "ചാമ്പ്യൻ",
+      "romanization": "cāmpyan",
+      "gloss": "a sports champion",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ec1c7db3adcf785",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a referee, then the Malayalam for to compete."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചാമ്പ്യൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചാമ്പ്യൻ — cāmpyan — \"a sports champion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞങ്ങളുടെ സ്കൂൾ ടീം ജില്ലയിലെ ചാമ്പ്യൻ ആയി. ñaṅṅaḷuṭe skūḷ ṭīṁ jillayile cāmpyan āyi. Our school team became the district champion."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ചാമ്പ്യന്മാർ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചാമ്പ്യൻ (cāmpyan) was borrowed from English champion."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāmpyan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāmpyan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāmpyan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāmpyan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñaṅṅaḷuṭe skūḷ ṭīṁ jillayile cāmpyan āyi. — Our school team became the district champion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñaṅṅaḷuṭe skūḷ ṭīṁ jillayile cāmpyan āyi.* — Our school team became the district champion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a referee, then the Malayalam for to compete, then say cāmpyan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a referee, then the Malayalam for to compete, then say *cāmpyan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചാമ്പ്യൻ (cāmpyan) mean? (\"A sports champion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C569-etirali",
+      "sequence": 28670,
+      "title": "എതിരാളി (etirāḷi) — an opponent; a rival",
+      "headword": "എതിരാളി",
+      "romanization": "etirāḷi",
+      "gloss": "an opponent; a rival",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:434a833cd8fcc0b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to compete, then the Malayalam for a sports champion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: എതിരാളി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എതിരാളി — etirāḷi — \"an opponent; a rival\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവസാന കളിയിൽ ഞങ്ങളുടെ എതിരാളി ശക്തമായ ടീമായിരുന്നു. avasāna kaḷiyil ñaṅṅaḷuṭe etirāḷi śaktamāya ṭīmāyirunnu. In the last match our opponents were a strong team."
+            },
+            {
+              "kind": "speech",
+              "text": "എതിർ opposite + ആൾ a person; എതിരെ, against, is already familiar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എതിരാളി (etirāḷi) is native Dravidian, a compound of എതിർ, \"opposite, adverse\" (DEDR 795), and ആൾ, \"a person\" (DEDR 399)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etirāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etirāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etirāḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etirāḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avasāna kaḷiyil ñaṅṅaḷuṭe etirāḷi śaktamāya ṭīmāyirunnu. — In the last match our opponents were a strong team.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avasāna kaḷiyil ñaṅṅaḷuṭe etirāḷi śaktamāya ṭīmāyirunnu.* — In the last match our opponents were a strong team.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to compete, then the Malayalam for a sports champion, then say etirāḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to compete, then the Malayalam for a sports champion, then say *etirāḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does എതിരാളി (etirāḷi) mean? (\"An opponent; a rival\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C569-turnamenru",
+      "sequence": 28680,
+      "title": "ടൂർണമെന്റ് (ṭūrṇamenṟŭ) — a tournament",
+      "headword": "ടൂർണമെന്റ്",
+      "romanization": "ṭūrṇamenṟŭ",
+      "gloss": "a tournament",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbc3b9f6824b461c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a sports champion, then the Malayalam for an opponent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ടൂർണമെന്റ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ടൂർണമെന്റ് — ṭūrṇamenṟŭ — \"a tournament\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അടുത്ത മാസം സ്കൂളിൽ ഒരു ഫുട്ബോൾ ടൂർണമെന്റ് ഉണ്ട്. aṭutta māsaṁ skūḷil oru phuṭbōḷ ṭūrṇamenṟŭ uṇṭŭ. There is a football tournament at school next month."
+            },
+            {
+              "kind": "speech",
+              "text": "English -nt comes out as -ന്റ്, as in പ്രിന്റർ, a printer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ടൂർണമെന്റ് (ṭūrṇamenṟŭ) was borrowed from English tournament."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭūrṇamenṟŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭūrṇamenṟŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭūrṇamenṟŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭūrṇamenṟŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭutta māsaṁ skūḷil oru phuṭbōḷ ṭūrṇamenṟŭ uṇṭŭ. — There is a football tournament at school next month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭutta māsaṁ skūḷil oru phuṭbōḷ ṭūrṇamenṟŭ uṇṭŭ.* — There is a football tournament at school next month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a sports champion, then the Malayalam for an opponent, then say ṭūrṇamenṟŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a sports champion, then the Malayalam for an opponent, then say *ṭūrṇamenṟŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ടൂർണമെന്റ് (ṭūrṇamenṟŭ) mean? (\"A tournament\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C569-munneruka",
+      "sequence": 28690,
+      "title": "മുന്നേറുക (munnēṟuka) — to advance; to forge ahead",
+      "headword": "മുന്നേറുക",
+      "romanization": "munnēṟuka",
+      "gloss": "to advance; to forge ahead",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79e2ff9225b6b048",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an opponent, then the Malayalam for a tournament."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുന്നേറുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുന്നേറുക — munnēṟuka — \"to advance; to forge ahead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രണ്ടാം പകുതിയിൽ ഞങ്ങളുടെ ടീം മുന്നേറി. raṇṭāṁ pakutiyil ñaṅṅaḷuṭe ṭīṁ munnēṟi. In the second half our team pulled ahead."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മുന്നേറി, munnēṟi."
+            },
+            {
+              "kind": "speech",
+              "text": "മുൻ front + ഏറുക to rise, to climb: to move to the front."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുന്നേറുക (munnēṟuka) is native Dravidian, a compound of മുൻ, \"front, before\" (DEDR 5020), and ഏറുക, \"to rise, to ascend\" (DEDR 916)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munnēṟuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munnēṟuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munnēṟuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munnēṟuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭāṁ pakutiyil ñaṅṅaḷuṭe ṭīṁ munnēṟi. — In the second half our team pulled ahead.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭāṁ pakutiyil ñaṅṅaḷuṭe ṭīṁ munnēṟi.* — In the second half our team pulled ahead.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an opponent, then the Malayalam for a tournament, then say munnēṟuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an opponent, then the Malayalam for a tournament, then say *munnēṟuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മുന്നേറുക (munnēṟuka) mean? (\"To advance; to forge ahead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C569-pinnilakuka",
+      "sequence": 28700,
+      "title": "പിന്നിലാകുക (pinnilākuka) — to fall behind",
+      "headword": "പിന്നിലാകുക",
+      "romanization": "pinnilākuka",
+      "gloss": "to fall behind",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e629817dd036d88c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a tournament, then the Malayalam for to advance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പിന്നിലാകുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിന്നിലാകുക — pinnilākuka — \"to fall behind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആദ്യ പകുതിയിൽ ഞങ്ങളുടെ ടീം രണ്ട് ഗോളിന് പിന്നിലായി. ādya pakutiyil ñaṅṅaḷuṭe ṭīṁ raṇṭŭ gōḷinŭ pinnilāyi. In the first half our team fell two goals behind."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പിന്നിലായി, pinnilāyi."
+            },
+            {
+              "kind": "speech",
+              "text": "പിന്നിൽ behind + ആകുക to become."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിന്നിലാകുക (pinnilākuka) is native Dravidian, built from പിന്നിൽ, \"behind\", from പിൻ (DEDR 4205), and ആകുക, \"to become\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pinnilākuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pinnilākuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pinnilākuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pinnilākuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādya pakutiyil ñaṅṅaḷuṭe ṭīṁ raṇṭŭ gōḷinŭ pinnilāyi. — In the first half our team fell two goals behind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādya pakutiyil ñaṅṅaḷuṭe ṭīṁ raṇṭŭ gōḷinŭ pinnilāyi.* — In the first half our team fell two goals behind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a tournament, then the Malayalam for to advance, then say pinnilākuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a tournament, then the Malayalam for to advance, then say *pinnilākuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പിന്നിലാകുക (pinnilākuka) mean? (\"To fall behind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:d035baad2a64f323",
+  "lessonIds": [
+    "AR-C394-atqana",
+    "AR-C394-iktasaba",
+    "AR-C394-taammaqa",
+    "AR-C394-lakhkhasa",
+    "AR-C394-mulakhkhas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch394.txt",
+  "json": "arabic/narration/ch394.json",
+  "textHash": "fnv1a64:de3aebab4de2d596",
+  "jsonHash": "fnv1a64:aa061c953d3fb4e5",
+  "findings": []
+}

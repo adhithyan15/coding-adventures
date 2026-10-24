@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C445-rahadari",
+    "language": "telugu",
+    "chapter": 445,
+    "sequence": 22350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acfd0690d205dee7"
+  },
+  "findings": []
+}

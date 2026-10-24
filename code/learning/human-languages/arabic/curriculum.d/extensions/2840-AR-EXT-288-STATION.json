@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-288-STATION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can buy a return ticket, report a missed train or a lost bag, and ask for the person in charge.",
+  "prerequisites": []
+}

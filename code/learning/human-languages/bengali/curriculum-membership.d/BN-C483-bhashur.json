@@ -1,0 +1,11 @@
+{
+  "id": "BN-C483-bhashur",
+  "pathSegment": "BN-PATH-483-JAMAI483",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-483-JAMAI483",
+      "order": 4
+    }
+  ]
+}

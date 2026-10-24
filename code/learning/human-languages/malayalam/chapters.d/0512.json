@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "When the River Rises",
+  "label": "ch:ml-when-the-river-rises",
+  "canDo": "I can say to overflow its banks, waterlogging, to float up, to go under and to divert.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C512-valitiriccuvituka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can say to overflow its banks, waterlogging, to float up, to go under and to divert.",
+    "assesses": [
+      "ML-LEX-C512-PRALAYAM512-03",
+      "ML-LEX-C512-PRALAYAM512-04",
+      "ML-LEX-C512-PRALAYAM512-05"
+    ]
+  }
+}

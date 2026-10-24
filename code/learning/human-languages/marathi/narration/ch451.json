@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 451,
+  "title": "Cheerful and Gloomy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9fa020629501be12",
+  "lessons": [
+    {
+      "id": "MR-C451-prasanna",
+      "sequence": 26050,
+      "title": "प्रसन्न (prasanna) — cheerful; bright and clear",
+      "headword": "प्रसन्न",
+      "romanization": "prasanna",
+      "gloss": "cheerful; bright and clear",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66f0eb58d1286999",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for surprise, then the Marathi for to be deeply moved."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रसन्न",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रसन्न — prasanna — \"cheerful; bright and clear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सकाळी बागेत फिरल्यावर मन प्रसन्न होतं. sakāḷī bāget phirlyāvar man prasanna hotaṁ. After a morning walk in the garden, the mind feels bright."
+            },
+            {
+              "kind": "speech",
+              "text": "Unchanging for gender: प्रसन्न (prasanna) चेहरा, a cheerful face; प्रसन्न (prasanna) सकाळ, a bright morning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रसन्न (prasanna) is a tatsama, taken from Sanskrit prasanna, \"pleased; clear, bright\" (CDIAL 8823)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasanna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasanna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasanna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasanna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakāḷī bāget phirlyāvar man prasanna hotaṁ. — After a morning walk in the garden, the mind feels bright.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakāḷī bāget phirlyāvar man prasanna hotaṁ.* — After a morning walk in the garden, the mind feels bright.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for surprise, then the Marathi for to be deeply moved, then say prasanna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for surprise, then the Marathi for to be deeply moved, then say *prasanna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रसन्न (prasanna) mean? (\"Cheerful; bright and clear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C451-udas",
+      "sequence": 26060,
+      "title": "उदास (udās) — gloomy; low, downcast",
+      "headword": "उदास",
+      "romanization": "udās",
+      "gloss": "gloomy; low, downcast",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a498d799fb10587",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to be deeply moved, then the Marathi for cheerful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उदास",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उदास — udās — \"gloomy; low, downcast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पावसाळ्यात अरुण कधीकधी उदास असतो. pāvsāḷyāt aruṇ kadhīkadhī udās asto. In the monsoon Arun is sometimes low."
+            },
+            {
+              "kind": "speech",
+              "text": "Unchanging: उदास (udās) मुलगा, उदास (udās) मुलगी. उदास (udās) वाटणे, to feel low."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उदास (udās) is usually traced to Sanskrit udāsa, a noun, \"indifference, apathy\" (Monier-Williams); in Marathi it is an adjective of low spirits."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvsāḷyāt aruṇ kadhīkadhī udās asto. — In the monsoon Arun is sometimes low.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvsāḷyāt aruṇ kadhīkadhī udās asto.* — In the monsoon Arun is sometimes low.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to be deeply moved, then the Marathi for cheerful, then say udās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to be deeply moved, then the Marathi for cheerful, then say *udās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उदास (udās) mean? (\"Gloomy; low, downcast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C451-khus",
+      "sequence": 26070,
+      "title": "खुश (khuś) — pleased; glad",
+      "headword": "खुश",
+      "romanization": "khuś",
+      "gloss": "pleased; glad",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb788d9be97e1822",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for cheerful, then the Marathi for gloomy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खुश",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खुश — khuś — \"pleased; glad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बक्षीस मिळाल्यावर मुली खुश झाल्या. bakṣīs miḷālyāvar mulī khuś jhālyā. The girls were pleased when they got the prize."
+            },
+            {
+              "kind": "speech",
+              "text": "Unchanging; खुश (khuś) होणे, to become pleased. A Persian word beside the Sanskrit आनंदी."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खुश (khuś) is a loan from Persian khush, \"happy, pleasant\"; Marathi writes the Persian kh with ख."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khuś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khuś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khuś, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khuś*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bakṣīs miḷālyāvar mulī khuś jhālyā. — The girls were pleased when they got the prize.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bakṣīs miḷālyāvar mulī khuś jhālyā.* — The girls were pleased when they got the prize.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for cheerful, then the Marathi for gloomy, then say khuś again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for cheerful, then the Marathi for gloomy, then say *khuś* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खुश (khuś) mean? (\"Pleased; glad\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C451-naraj",
+      "sequence": 26080,
+      "title": "नाराज (nārāj) — displeased; upset",
+      "headword": "नाराज",
+      "romanization": "nārāj",
+      "gloss": "displeased; upset",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9527ddc9efa9f57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for gloomy, then the Marathi for pleased."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाराज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाराज — nārāj — \"displeased; upset\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मी उशिरा आलो म्हणून वडील नाराज झाले. mī uśirā ālo mhaṇūn vaḍīl nārāj jhāle. Father was displeased because I came late."
+            },
+            {
+              "kind": "speech",
+              "text": "Unchanging. The person one is upset with takes -वर: ती माझ्यावर नाराज (nārāj) आहे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाराज (nārāj) is a loan from Persian nārāz, \"displeased\", built with the Persian negative nā-."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nārāj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nārāj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nārāj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nārāj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī uśirā ālo mhaṇūn vaḍīl nārāj jhāle. — Father was displeased because I came late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī uśirā ālo mhaṇūn vaḍīl nārāj jhāle.* — Father was displeased because I came late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for gloomy, then the Marathi for pleased, then say nārāj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for gloomy, then the Marathi for pleased, then say *nārāj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नाराज (nārāj) mean? (\"Displeased; upset\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C451-vaitagne",
+      "sequence": 26090,
+      "title": "वैतागणे (vaitāgṇe) — to get fed up; to be exasperated",
+      "headword": "वैतागणे",
+      "romanization": "vaitāgṇe",
+      "gloss": "to get fed up; to be exasperated",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1a5a37ddea5044e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for pleased, then the Marathi for displeased."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वैतागणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वैतागणे — vaitāgṇe — \"to get fed up; to be exasperated\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दिवसभर पाऊस पडत होता, म्हणून मुलं वैतागली. divasbhar pāūs paḍat hotā, mhaṇūn mulaṁ vaitāglī. It rained all day, so the children got fed up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो वैतागला, to vaitāglā."
+            },
+            {
+              "kind": "speech",
+              "text": "What one is fed up with takes -ला: कामाला वैतागणे (vaitāgṇe). The noun वैताग, exasperation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वैतागणे (vaitāgṇe) is a Marathi verb built on वैताग, \"exasperation\"; the origin of वैताग is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaitāgṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaitāgṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaitāgṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaitāgṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divasbhar pāūs paḍat hotā, mhaṇūn mulaṁ vaitāglī. — It rained all day, so the children got fed up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divasbhar pāūs paḍat hotā, mhaṇūn mulaṁ vaitāglī.* — It rained all day, so the children got fed up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for pleased, then the Marathi for displeased, then say vaitāgṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for pleased, then the Marathi for displeased, then say *vaitāgṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वैतागणे (vaitāgṇe) mean? (\"To get fed up; to be exasperated\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

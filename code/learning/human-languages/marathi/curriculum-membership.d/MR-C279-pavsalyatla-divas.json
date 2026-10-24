@@ -1,0 +1,11 @@
+{
+  "id": "MR-C279-pavsalyatla-divas",
+  "pathSegment": "MR-PATH-279-STORY-ORDER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-279-STORY-ORDER",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 419,
+  "title": "Neighbourhoods",
+  "label": "ch:mr-neighbourhoods",
+  "canDo": "I can talk about settlements, housing colonies, old quarters, lanes and tenements.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-R419-review-412-419",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can talk about settlements, housing colonies, old quarters, lanes and tenements.",
+    "assesses": [
+      "MR-LEX-C419-VASTI419-01",
+      "MR-LEX-C419-VASTI419-02",
+      "MR-LEX-C419-VASTI419-03",
+      "MR-LEX-C419-VASTI419-04",
+      "MR-LEX-C419-VASTI419-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C457-paritapam",
+  "pathSegment": "TA-PATH-457-KARUNAI457",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-457-KARUNAI457",
+      "order": 3
+    }
+  ]
+}

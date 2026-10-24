@@ -1,0 +1,11 @@
+{
+  "id": "TA-C488-toppai",
+  "pathSegment": "TA-PATH-488-EDAI488",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-488-EDAI488",
+      "order": 1
+    }
+  ]
+}

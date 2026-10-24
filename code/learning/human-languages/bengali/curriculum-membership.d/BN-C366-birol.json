@@ -1,0 +1,11 @@
+{
+  "id": "BN-C366-birol",
+  "pathSegment": "BN-PATH-366-SOMBHABONA366",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-366-SOMBHABONA366",
+      "order": 3
+    }
+  ]
+}

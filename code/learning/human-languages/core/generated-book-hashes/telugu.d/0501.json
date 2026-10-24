@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:e844ed96fe7579b0",
+  "lessonIds": [
+    "TE-C501-santosapettu",
+    "TE-C501-ascaryaparacu",
+    "TE-C501-satkarincu",
+    "TE-C501-meppincu",
+    "TE-C501-utsahaparacu",
+    "TE-R501-review-494-501"
+  ],
+  "tex": "telugu/book/chapters/ch501-making-others-feel.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C289-kuntu-saidan",
+    "language": "arabic",
+    "chapter": 289,
+    "sequence": 16700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:530347995724b07a"
+  },
+  "findings": []
+}

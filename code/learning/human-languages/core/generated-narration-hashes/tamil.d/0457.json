@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:781fc3f70096181c",
+  "lessonIds": [
+    "TA-C457-karunai",
+    "TA-C457-parivu",
+    "TA-C457-anutapam",
+    "TA-C457-paritapam",
+    "TA-C457-akkarai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch457.txt",
+  "json": "tamil/narration/ch457.json",
+  "textHash": "fnv1a64:4ac7de3decd7909c",
+  "jsonHash": "fnv1a64:7bc1b278a8c36441",
+  "findings": []
+}

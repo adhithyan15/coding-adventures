@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "A Thief and a War",
+  "label": "ch:ka-a-thief-and-a-war",
+  "canDo": "I can say a war, a soldier, to invade, a thief and to run away.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C319-odihogu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can say a war, a soldier, to invade, a thief and to run away.",
+    "assesses": [
+      "KA-LEX-C319-YUDDHA319-03",
+      "KA-LEX-C319-YUDDHA319-04",
+      "KA-LEX-C319-YUDDHA319-05"
+    ]
+  }
+}

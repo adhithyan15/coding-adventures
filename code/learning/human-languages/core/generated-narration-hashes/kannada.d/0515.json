@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:17fb6982ad40c2ad",
+  "lessonIds": [
+    "KA-C515-kuruda",
+    "KA-C515-kivuda",
+    "KA-C515-muka",
+    "KA-C515-naralu",
+    "KA-C515-nalugu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch515.txt",
+  "json": "kannada/narration/ch515.json",
+  "textHash": "fnv1a64:f66046015acbfe61",
+  "jsonHash": "fnv1a64:7a01723348d3c4d3",
+  "findings": []
+}

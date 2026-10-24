@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Birds",
+  "label": "ch:ar-birds",
+  "canDo": "I can say a falcon, an ostrich, a seagull, a feather and to float.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C474-tafa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can say a falcon, an ostrich, a seagull, a feather and to float.",
+    "assesses": [
+      "AR-LEX-C474-SAQR474-03",
+      "AR-LEX-C474-SAQR474-04",
+      "AR-LEX-C474-SAQR474-05"
+    ]
+  }
+}

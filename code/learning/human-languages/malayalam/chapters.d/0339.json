@@ -1,0 +1,22 @@
+{
+  "chapter": 339,
+  "title": "Was, Was Doing, Used To",
+  "label": "ch:ml-was-was-doing-used-to",
+  "canDo": "I can say where someone was and what there was, set a scene with what was going on, and say what used to happen.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-R339-the-past-three-ways",
+    "kind": "production",
+    "summary": "Complete ML-R339-the-past-three-ways: was and there was, a scene in the past progressive with an event cutting into it, and a habit with -umāyirunnu.",
+    "assesses": [
+      "ML-GRAMMAR-C339-AYIRUNNU-01",
+      "ML-GRAMMAR-C339-UNDAYIRUNNU-01",
+      "ML-GRAMMAR-C339-PAST-PROGRESSIVE-01",
+      "ML-GRAMMAR-C339-SCENE-EVENT-01",
+      "ML-GRAMMAR-C339-PAST-HABITUAL-01",
+      "ML-CONCEPT-C32-POKUKA-02"
+    ]
+  }
+}

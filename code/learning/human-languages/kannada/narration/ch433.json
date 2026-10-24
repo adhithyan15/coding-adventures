@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 433,
+  "title": "At the Railway Station",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8269e8c83898f2fc",
+  "lessons": [
+    {
+      "id": "KA-C433-prayanika",
+      "sequence": 22000,
+      "title": "ಪ್ರಯಾಣಿಕ (prayāṇika) — a passenger; a traveller",
+      "headword": "ಪ್ರಯಾಣಿಕ",
+      "romanization": "prayāṇika",
+      "gloss": "a passenger; a traveller",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a834a38ee654c10a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for chalk, then the Kannada for a ruler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಯಾಣಿಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಯಾಣಿಕ — prayāṇika — \"a passenger; a traveller\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರೈಲು ನಿಲ್ದಾಣದಲ್ಲಿ ತುಂಬಾ ಪ್ರಯಾಣಿಕರು ಇದ್ದರು. railu nildāṇadalli tumbā prayāṇikaru iddaru. There were a lot of passengers at the railway station."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಪ್ರಯಾಣಿಕರು, prayāṇikaru."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ಪ್ರಯಾಣ, a journey, with -ಇಕ, one who belongs to it: the one who makes the journey."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಯಾಣಿಕ (prayāṇika) is built from Sanskrit prayāṇa, \"setting out, a journey\" (CDIAL 8732), with the ending -ika, \"one who belongs to\". The same prayāṇa gives ಪ್ರಯಾಣ, a journey."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayāṇika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayāṇika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayāṇika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayāṇika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "railu nildāṇadalli tumbā prayāṇikaru iddaru. — There were a lot of passengers at the railway station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *railu nildāṇadalli tumbā prayāṇikaru iddaru.* — There were a lot of passengers at the railway station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for chalk, then the Kannada for a ruler, then say prayāṇika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for chalk, then the Kannada for a ruler, then say *prayāṇika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಯಾಣಿಕ (prayāṇika) mean? (\"A passenger; a traveller\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C433-platpharm",
+      "sequence": 22010,
+      "title": "ಪ್ಲಾಟ್ಫಾರ್ಮ್ (plāṭphārm) — a railway platform",
+      "headword": "ಪ್ಲಾಟ್ಫಾರ್ಮ್",
+      "romanization": "plāṭphārm",
+      "gloss": "a railway platform",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6709aa29fcad234",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a ruler, then the Kannada for a passenger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ಲಾಟ್ಫಾರ್ಮ್",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ಲಾಟ್ಫಾರ್ಮ್ — plāṭphārm — \"a railway platform\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಮ್ಮ ರೈಲು ಮೂರನೇ ಪ್ಲಾಟ್ಫಾರ್ಮ್ಗೆ ಬರುತ್ತದೆ. namma railu mūranē plāṭphārmge baruttade. Our train comes in at the third platform."
+            },
+            {
+              "kind": "speech",
+              "text": "ವೇದಿಕೆ is a stage or any raised platform; at a station people say ಪ್ಲಾಟ್ಫಾರ್ಮ್ (plāṭphārm)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ಲಾಟ್ಫಾರ್ಮ್ (plāṭphārm) is a loan from English platform, which came in with the railways. Its last consonant keeps the virama, as recent English loans do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plāṭphārm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plāṭphārm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plāṭphārm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plāṭphārm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namma railu mūranē plāṭphārmge baruttade. — Our train comes in at the third platform.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namma railu mūranē plāṭphārmge baruttade.* — Our train comes in at the third platform.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a ruler, then the Kannada for a passenger, then say plāṭphārm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a ruler, then the Kannada for a passenger, then say *plāṭphārm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ಲಾಟ್ಫಾರ್ಮ್ (plāṭphārm) mean? (\"A railway platform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C433-bogi",
+      "sequence": 22020,
+      "title": "ಬೋಗಿ (bōgi) — a railway coach; a carriage",
+      "headword": "ಬೋಗಿ",
+      "romanization": "bōgi",
+      "gloss": "a railway coach; a carriage",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1565cf1222d9e8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a passenger, then the Kannada for a railway platform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೋಗಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೋಗಿ — bōgi — \"a railway coach; a carriage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಅಣ್ಣ ಮುಂದಿನ ಬೋಗಿಯಲ್ಲಿ ಕುಳಿತಿದ್ದಾನೆ. nanna aṇṇa mundina bōgiyalli kuḷitiddāne. My elder brother is sitting in the next coach."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಬೋಗಿಗಳು, bōgigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A train is a line of ಬೋಗಿಗಳು pulled by an engine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೋಗಿ (bōgi) is a loan from English bogie, the wheeled frame under a railway carriage. In Indian use the word came to name the whole coach."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōgi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōgi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōgi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōgi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna aṇṇa mundina bōgiyalli kuḷitiddāne. — My elder brother is sitting in the next coach.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna aṇṇa mundina bōgiyalli kuḷitiddāne.* — My elder brother is sitting in the next coach.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a passenger, then the Kannada for a railway platform, then say bōgi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a passenger, then the Kannada for a railway platform, then say *bōgi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೋಗಿ (bōgi) mean? (\"A railway coach; a carriage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C433-hali",
+      "sequence": 22030,
+      "title": "ಹಳಿ (haḷi) — a rail track; a rail",
+      "headword": "ಹಳಿ",
+      "romanization": "haḷi",
+      "gloss": "a rail track; a rail",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33c7df7d29a3ab74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a railway platform, then the Kannada for a railway coach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಳಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಳಿ — haḷi — \"a rail track; a rail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರೈಲು ಹಳಿಯ ಮೇಲೆ ನಡೆಯಬಾರದು. railu haḷiya mēle naḍeyabāradu. Nobody should walk on the rail track."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಹಳಿಗಳು, haḷigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಳಿ (haḷi) ತಪ್ಪು, to leave the rails, is said of a train and, loosely, of a plan that goes wrong."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಳಿ (haḷi) looks like a native Kannada word, but its origin is not settled: DEDR shows no clear source for haḷi in the sense of a rail or a track."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "railu haḷiya mēle naḍeyabāradu. — Nobody should walk on the rail track.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *railu haḷiya mēle naḍeyabāradu.* — Nobody should walk on the rail track.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a railway platform, then the Kannada for a railway coach, then say haḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a railway platform, then the Kannada for a railway coach, then say *haḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಳಿ (haḷi) mean? (\"A rail track; a rail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C433-talupu",
+      "sequence": 22040,
+      "title": "ತಲುಪು (talupu) — to reach; to arrive at",
+      "headword": "ತಲುಪು",
+      "romanization": "talupu",
+      "gloss": "to reach; to arrive at",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46cd4b881d61624c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a railway coach, then the Kannada for a rail track."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಲುಪು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಲುಪು — talupu — \"to reach; to arrive at\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರೈಲು ರಾತ್ರಿ ಹತ್ತು ಗಂಟೆಗೆ ಊರು ತಲುಪಿತು. railu rātri hattu gaṇṭege ūru talupitu. The train reached the town at ten at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತಲುಪಿದೆ, talupide."
+            },
+            {
+              "kind": "speech",
+              "text": "The place may take -ಅನ್ನು or no ending: ಊರನ್ನು ತಲುಪು (talupu), ಊರು ತಲುಪು (talupu). ತಲುಪಿಸು, to deliver, makes something else reach."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಲುಪು (talupu) is native Dravidian: DEDR 3102 lists Kannada talapu, talupu, \"to reach, to arrive\", beside talapisu, \"to cause to reach\", the source of ತಲುಪಿಸು."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talupu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talupu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talupu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talupu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "railu rātri hattu gaṇṭege ūru talupitu. — The train reached the town at ten at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *railu rātri hattu gaṇṭege ūru talupitu.* — The train reached the town at ten at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a railway coach, then the Kannada for a rail track, then say talupu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a railway coach, then the Kannada for a rail track, then say *talupu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಲುಪು (talupu) mean? (\"To reach; to arrive at\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

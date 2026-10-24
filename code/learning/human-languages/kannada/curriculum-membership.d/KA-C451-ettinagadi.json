@@ -1,0 +1,11 @@
+{
+  "id": "KA-C451-ettinagadi",
+  "pathSegment": "KA-PATH-451-VAHANA451",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-451-VAHANA451",
+      "order": 4
+    }
+  ]
+}

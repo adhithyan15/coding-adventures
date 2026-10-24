@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C472-emaru",
+    "language": "kannada",
+    "chapter": 472,
+    "sequence": 24010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23d0859e09320d8e"
+  },
+  "findings": []
+}

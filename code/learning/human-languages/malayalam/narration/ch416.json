@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 416,
+  "title": "Justice and Rights",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c44a550399fbcf06",
+  "lessons": [
+    {
+      "id": "ML-C416-niti",
+      "sequence": 20560,
+      "title": "നീതി (nīti) — justice",
+      "headword": "നീതി",
+      "romanization": "nīti",
+      "gloss": "justice",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a1510c4dbac3000",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for equality, then the Malayalam for freedom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നീതി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നീതി — nīti — \"justice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ കുടുംബത്തിന് ഇനിയും നീതി കിട്ടിയില്ല. ā kuṭumbattinŭ iniyuṁ nīti kiṭṭiyilla. That family has still not got justice."
+            },
+            {
+              "kind": "speech",
+              "text": "Justice is കിട്ടുക, received, or നിഷേധിക്കുക, denied."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നീതി (nīti) is borrowed from Sanskrit nīti, \"leading, guidance; conduct\" (CDIAL 7546; Monier-Williams), from the root nī, \"to lead\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kuṭumbattinŭ iniyuṁ nīti kiṭṭiyilla. — That family has still not got justice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kuṭumbattinŭ iniyuṁ nīti kiṭṭiyilla.* — That family has still not got justice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for equality, then the Malayalam for freedom, then say nīti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for equality, then the Malayalam for freedom, then say *nīti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നീതി (nīti) mean? (\"Justice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C416-aniti",
+      "sequence": 20570,
+      "title": "അനീതി (anīti) — injustice",
+      "headword": "അനീതി",
+      "romanization": "anīti",
+      "gloss": "injustice",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f48e80c93ba6cf42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for freedom, then the Malayalam for justice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അനീതി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അനീതി — anīti — \"injustice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അനീതി കണ്ടാൽ അവൾ മിണ്ടാതിരിക്കില്ല. anīti kaṇṭāl avaḷ miṇṭātirikkilla. If she sees injustice, she will not stay silent."
+            },
+            {
+              "kind": "speech",
+              "text": "The Sanskrit prefix അ- or അൻ- makes an opposite: നീതി (nīti), അനീതി (anīti)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അനീതി (anīti) is borrowed from Sanskrit anīti, \"impropriety, injustice\" (Monier-Williams): a-, \"not\", and nīti."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anīti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anīti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anīti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anīti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anīti kaṇṭāl avaḷ miṇṭātirikkilla. — If she sees injustice, she will not stay silent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anīti kaṇṭāl avaḷ miṇṭātirikkilla.* — If she sees injustice, she will not stay silent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for freedom, then the Malayalam for justice, then say anīti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for freedom, then the Malayalam for justice, then say *anīti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അനീതി (anīti) mean? (\"Injustice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C416-anyayamaya",
+      "sequence": 20580,
+      "title": "അന്യായമായ (anyāyamāya) — unfair; unjust",
+      "headword": "അന്യായമായ",
+      "romanization": "anyāyamāya",
+      "gloss": "unfair; unjust",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d71736abdb27a35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for justice, then the Malayalam for injustice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അന്യായമായ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അന്യായമായ — anyāyamāya — \"unfair; unjust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അത് തികച്ചും അന്യായമായ ഒരു തീരുമാനമായിരുന്നു. atŭ tikaccuṁ anyāyamāya oru tīrumānamāyirunnu. That was a completely unfair decision."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is അന്യായം, a wrong."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അന്യായമായ (anyāyamāya) is built from Sanskrit a-, \"not\", and nyāya, \"rule, right method\" (CDIAL 7614), with the adjective ending -ആയ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anyāyamāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anyāyamāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anyāyamāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anyāyamāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atŭ tikaccuṁ anyāyamāya oru tīrumānamāyirunnu. — That was a completely unfair decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atŭ tikaccuṁ anyāyamāya oru tīrumānamāyirunnu.* — That was a completely unfair decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for justice, then the Malayalam for injustice, then say anyāyamāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for justice, then the Malayalam for injustice, then say *anyāyamāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അന്യായമായ (anyāyamāya) mean? (\"Unfair; unjust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C416-manusyavakasam",
+      "sequence": 20590,
+      "title": "മനുഷ്യാവകാശം (manuṣyāvakāśaṁ) — human rights",
+      "headword": "മനുഷ്യാവകാശം",
+      "romanization": "manuṣyāvakāśaṁ",
+      "gloss": "human rights",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be2cdf3283d09e25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for injustice, then the Malayalam for unfair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മനുഷ്യാവകാശം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മനുഷ്യാവകാശം — manuṣyāvakāśaṁ — \"human rights\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മനുഷ്യാവകാശം എല്ലാവരുടേതുമാണ്. manuṣyāvakāśaṁ ellāvaruṭētumāṇŭ. Human rights belong to everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Also in the plural: മനുഷ്യാവകാശങ്ങൾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മനുഷ്യാവകാശം (manuṣyāvakāśaṁ) is a Malayalam compound built from Sanskrit manuṣya, \"human\" (CDIAL 9828), and അവകാശം, \"a right\", from Sanskrit avakāśa, \"room, opportunity\" (CDIAL 728)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manuṣyāvakāśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manuṣyāvakāśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manuṣyāvakāśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manuṣyāvakāśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manuṣyāvakāśaṁ ellāvaruṭētumāṇŭ. — Human rights belong to everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manuṣyāvakāśaṁ ellāvaruṭētumāṇŭ.* — Human rights belong to everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for injustice, then the Malayalam for unfair, then say manuṣyāvakāśaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for injustice, then the Malayalam for unfair, then say *manuṣyāvakāśaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മനുഷ്യാവകാശം (manuṣyāvakāśaṁ) mean? (\"Human rights\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C416-vivecanam",
+      "sequence": 20600,
+      "title": "വിവേചനം (vivēcanaṁ) — discrimination",
+      "headword": "വിവേചനം",
+      "romanization": "vivēcanaṁ",
+      "gloss": "discrimination",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb998921ea0c576b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for unfair, then the Malayalam for human rights."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിവേചനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിവേചനം — vivēcanaṁ — \"discrimination\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലിയിൽ സ്ത്രീകളോട് വിവേചനം പാടില്ല. jōliyil strīkaḷōṭŭ vivēcanaṁ pāṭilla. There must be no discrimination against women at work."
+            },
+            {
+              "kind": "speech",
+              "text": "Against a group: -ഓട് വിവേചനം (vivēcanaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിവേചനം (vivēcanaṁ) is borrowed from Sanskrit vivecana, \"discriminating, distinguishing\" (Monier-Williams). The Sanskrit word is neutral, telling things apart; Malayalam uses it for treating people unequally."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivēcanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivēcanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivēcanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivēcanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōliyil strīkaḷōṭŭ vivēcanaṁ pāṭilla. — There must be no discrimination against women at work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōliyil strīkaḷōṭŭ vivēcanaṁ pāṭilla.* — There must be no discrimination against women at work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for unfair, then the Malayalam for human rights, then say vivēcanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for unfair, then the Malayalam for human rights, then say *vivēcanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിവേചനം (vivēcanaṁ) mean? (\"Discrimination\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

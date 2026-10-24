@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:80b872eaa2dba62a",
+  "lessonIds": [
+    "AR-C426-jamarik",
+    "AR-C426-fattasha",
+    "AR-C426-khatama",
+    "AR-C426-afragha",
+    "AR-C426-sadara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch426.txt",
+  "json": "arabic/narration/ch426.json",
+  "textHash": "fnv1a64:f468e5d824ae89e9",
+  "jsonHash": "fnv1a64:6f00ca382352a90e",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:967bbcf09fb25503",
+  "lessonIds": [
+    "BN-C358-mil",
+    "BN-C358-parthokyo",
+    "BN-C358-jogsutro",
+    "BN-C358-sadharon",
+    "BN-C358-guliye-phela"
+  ],
+  "tex": "bengali/book/chapters/ch358-alike-and-different.tex"
+}

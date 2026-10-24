@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:c9ac1934409c4994",
+  "lessonIds": [
+    "BN-C346-prarthi",
+    "BN-C346-rashtropoti",
+    "BN-C346-bhotar",
+    "BN-C346-podotyag-kora",
+    "BN-C346-shopoth-neoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch346.txt",
+  "json": "bengali/narration/ch346.json",
+  "textHash": "fnv1a64:c36f34eee018c123",
+  "jsonHash": "fnv1a64:461487bcde0572a0",
+  "findings": []
+}

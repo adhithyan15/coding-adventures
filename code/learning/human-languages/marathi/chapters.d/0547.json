@@ -1,0 +1,19 @@
+{
+  "chapter": 547,
+  "title": "Emergencies",
+  "label": "ch:mr-emergencies",
+  "canDo": "I can talk about emergencies, alarms and bringing things under control.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C547-atokyat-anne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 547: I can talk about emergencies, alarms and bringing things under control.",
+    "assesses": [
+      "MR-LEX-C547-ANIBANI547-03",
+      "MR-LEX-C547-ANIBANI547-04",
+      "MR-LEX-C547-ANIBANI547-05"
+    ]
+  }
+}

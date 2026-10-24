@@ -1,0 +1,11 @@
+{
+  "id": "KA-C319-kalla",
+  "pathSegment": "KA-PATH-319-YUDDHA319",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-319-YUDDHA319",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C328-prishtha",
+    "language": "bengali",
+    "chapter": 328,
+    "sequence": 20660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:665d4e99055170ec"
+  },
+  "findings": []
+}

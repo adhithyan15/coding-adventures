@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:112f6d222b614193",
+  "lessonIds": [
+    "ML-C360-yadrcchikamayi",
+    "ML-C360-manappurvam",
+    "ML-C360-abaddham",
+    "ML-C360-bhagyam",
+    "ML-C360-vidhivasal"
+  ],
+  "tex": "malayalam/book/chapters/ch360-by-chance-or-on-purpose.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "The Monsoon Arrives",
+  "label": "ch:ka-the-monsoon-arrives",
+  "canDo": "I can say the monsoon, a dark cloud, drizzle, a downpour and to get soaked.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C485-toyyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can say the monsoon, a dark cloud, drizzle, a downpour and to get soaked.",
+    "assesses": [
+      "KA-LEX-C485-MUNGARU485-03",
+      "KA-LEX-C485-MUNGARU485-04",
+      "KA-LEX-C485-MUNGARU485-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:c743bba7cc8eaee0",
+  "lessonIds": [
+    "AR-C391-bahith",
+    "AR-C391-dirasa",
+    "AR-C391-mukhtabar",
+    "AR-C391-mahad",
+    "AR-C391-istibyan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch391.txt",
+  "json": "arabic/narration/ch391.json",
+  "textHash": "fnv1a64:9c8c97941eeb9c4a",
+  "jsonHash": "fnv1a64:67752d7715c47b03",
+  "findings": []
+}

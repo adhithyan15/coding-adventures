@@ -1,0 +1,11 @@
+{
+  "id": "TA-C476-cukataram",
+  "pathSegment": "TA-PATH-476-KIRUMI476",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-476-KIRUMI476",
+      "order": 3
+    }
+  ]
+}

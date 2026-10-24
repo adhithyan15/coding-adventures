@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Currents and Beaches",
+  "label": "ch:bn-currents-and-beaches",
+  "canDo": "I can talk about currents, beaches and jetties, and a dip in the water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C398-chhitano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about currents, beaches and jetties, and a dip in the water.",
+    "assesses": [
+      "BN-LEX-C398-SROT398-03",
+      "BN-LEX-C398-SROT398-04",
+      "BN-LEX-C398-SROT398-05"
+    ]
+  }
+}

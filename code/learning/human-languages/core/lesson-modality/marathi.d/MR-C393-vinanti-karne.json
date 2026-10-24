@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C393-vinanti-karne",
+    "language": "marathi",
+    "chapter": 393,
+    "sequence": 22640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26c2fa88b890e08c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C540-qiraa",
+    "language": "arabic",
+    "chapter": 540,
+    "sequence": 29860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a04af88bb3af8131"
+  },
+  "findings": []
+}

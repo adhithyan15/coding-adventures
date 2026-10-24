@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C318-talaimaitanku",
+    "language": "tamil",
+    "chapter": 318,
+    "sequence": 18360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99664b694dd57205"
+  },
+  "findings": []
+}

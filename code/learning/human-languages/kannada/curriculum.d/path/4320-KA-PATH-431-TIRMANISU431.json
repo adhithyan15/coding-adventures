@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-431-TIRMANISU431",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "KA-EXT-431-TIRMANISU431"
+  ],
+  "after": []
+}

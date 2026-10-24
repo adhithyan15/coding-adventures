@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:6d5e9a9850bd1749",
+  "lessonIds": [
+    "BN-C357-probondho",
+    "BN-C357-bishoy",
+    "BN-C357-montobyo",
+    "BN-C357-uposonghar",
+    "BN-C357-dharona"
+  ],
+  "tex": "bengali/book/chapters/ch357-reporting-findings.tex"
+}

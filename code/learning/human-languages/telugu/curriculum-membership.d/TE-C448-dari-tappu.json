@@ -1,0 +1,11 @@
+{
+  "id": "TE-C448-dari-tappu",
+  "pathSegment": "TE-PATH-448-DISA448",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-448-DISA448",
+      "order": 2
+    }
+  ]
+}

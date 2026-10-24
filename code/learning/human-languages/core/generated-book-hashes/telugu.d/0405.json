@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:03e536014555d0a0",
+  "lessonIds": [
+    "TE-C405-arthika",
+    "TE-C405-dravyolbanam",
+    "TE-C405-pettubadi",
+    "TE-C405-badjettu",
+    "TE-C405-runam",
+    "TE-R405-review-398-405"
+  ],
+  "tex": "telugu/book/chapters/ch405-money-and-the-economy.tex"
+}

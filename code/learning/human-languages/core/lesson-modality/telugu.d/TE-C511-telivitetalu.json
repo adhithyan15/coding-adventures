@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C511-telivitetalu",
+    "language": "telugu",
+    "chapter": 511,
+    "sequence": 25870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee6b50c5bc1f61e1"
+  },
+  "findings": []
+}

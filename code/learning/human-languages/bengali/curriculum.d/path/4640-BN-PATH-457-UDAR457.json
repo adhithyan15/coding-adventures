@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-457-UDAR457",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-457-UDAR457"
+  ],
+  "after": []
+}

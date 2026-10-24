@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C345-adagu",
+    "language": "kannada",
+    "chapter": 345,
+    "sequence": 17330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bc7a8ee36fddf14"
+  },
+  "findings": []
+}

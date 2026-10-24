@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 466,
+  "title": "Courage and Cowardice",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c96dd83fa3857d9b",
+  "lessons": [
+    {
+      "id": "TA-C466-tuniccal",
+      "sequence": 26760,
+      "title": "துணிச்சல் (tuṇiccal) — courage; daring",
+      "headword": "துணிச்சல்",
+      "romanization": "tuṇiccal",
+      "gloss": "courage; daring",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c07febefe287d0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for infatuation, then the Tamil for to be moved."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: துணிச்சல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துணிச்சல் — tuṇiccal — \"courage; daring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இரவில் தனியாகப் போக அவளுக்குத் துணிச்சல் இருந்தது. iravil taṉiyākap pōka avaḷukkut tuṇiccal iruntatu. She had the courage to go alone at night."
+            },
+            {
+              "kind": "speech",
+              "text": "From துணி \"to dare\", not துணி \"cloth\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துணிச்சல் (tuṇiccal) is native Dravidian, a noun from துணி tuṇi, \"to dare\" (DEDR 3306), which lists it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṇiccal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṇiccal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṇiccal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṇiccal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iravil taṉiyākap pōka avaḷukkut tuṇiccal iruntatu. — She had the courage to go alone at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iravil taṉiyākap pōka avaḷukkut tuṇiccal iruntatu.* — She had the courage to go alone at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for infatuation, then the Tamil for to be moved, then say tuṇiccal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for infatuation, then the Tamil for to be moved, then say *tuṇiccal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does துணிச்சல் (tuṇiccal) mean? (\"Courage; daring\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C466-kolai",
+      "sequence": 26770,
+      "title": "கோழை (kōḻai) — a coward",
+      "headword": "கோழை",
+      "romanization": "kōḻai",
+      "gloss": "a coward",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fc21ac649feedf4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to be moved, then the Tamil for courage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கோழை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோழை — kōḻai — \"a coward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பயந்து ஓடியதால் அவனைக் கோழை என்று சொன்னார்கள். payantu ōṭiyatāl avaṉaik kōḻai eṉṟu coṉṉārkaḷ. Because he ran away in fear, they called him a coward."
+            },
+            {
+              "kind": "speech",
+              "text": "X-ஐ Y என்று சொல், to call X a Y."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோழை (kōḻai) is native Dravidian (DEDR 2250), where it names both timidity and a timid person."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōḻai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōḻai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōḻai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōḻai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "payantu ōṭiyatāl avaṉaik kōḻai eṉṟu coṉṉārkaḷ. — Because he ran away in fear, they called him a coward.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *payantu ōṭiyatāl avaṉaik kōḻai eṉṟu coṉṉārkaḷ.* — Because he ran away in fear, they called him a coward.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to be moved, then the Tamil for courage, then say kōḻai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to be moved, then the Tamil for courage, then say *kōḻai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கோழை (kōḻai) mean? (\"A coward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C466-ancu",
+      "sequence": 26780,
+      "title": "அஞ்சு (añcu) — to dread; to be afraid",
+      "headword": "அஞ்சு",
+      "romanization": "añcu",
+      "gloss": "to dread; to be afraid",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20b1e12dd522f087",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for courage, then the Tamil for a coward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அஞ்சு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அஞ்சு — añcu — \"to dread; to be afraid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் யாருக்கும் அஞ்சவில்லை. avaṉ yārukkum añcavillai. He was afraid of no one."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): அஞ்சினேன், añciṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "More literary than பயப்படு, the everyday verb. What is feared takes -க்கு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அஞ்சு (añcu) is native Dravidian (DEDR 55); the same entry gives அச்சம் accam, \"fear\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "añcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *añcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "añcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *añcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ yārukkum añcavillai. — He was afraid of no one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ yārukkum añcavillai.* — He was afraid of no one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for courage, then the Tamil for a coward, then say añcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for courage, then the Tamil for a coward, then say *añcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அஞ்சு (añcu) mean? (\"To dread; to be afraid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C466-patunku",
+      "sequence": 26790,
+      "title": "பதுங்கு (patuṅku) — to cower; to crouch",
+      "headword": "பதுங்கு",
+      "romanization": "patuṅku",
+      "gloss": "to cower; to crouch",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfa37b3513abd801",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a coward, then the Tamil for to dread."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பதுங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதுங்கு — patuṅku — \"to cower; to crouch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பூனை சத்தம் கேட்டுக் கட்டிலுக்குக் கீழே பதுங்கியது. pūṉai cattam kēṭṭuk kaṭṭilukkuk kīḻē patuṅkiyatu. Hearing the noise, the cat crouched under the bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பதுங்கினேன், patuṅkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "To hide by crouching low, as an animal does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதுங்கு (patuṅku) is native Dravidian (DEDR 3912); its strong partner பதுக்கு patukku means to hide something away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patuṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patuṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patuṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patuṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūṉai cattam kēṭṭuk kaṭṭilukkuk kīḻē patuṅkiyatu. — Hearing the noise, the cat crouched under the bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūṉai cattam kēṭṭuk kaṭṭilukkuk kīḻē patuṅkiyatu.* — Hearing the noise, the cat crouched under the bed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a coward, then the Tamil for to dread, then say patuṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a coward, then the Tamil for to dread, then say *patuṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பதுங்கு (patuṅku) mean? (\"To cower; to crouch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C466-mirattu",
+      "sequence": 26800,
+      "title": "மிரட்டு (miraṭṭu) — to threaten; to intimidate",
+      "headword": "மிரட்டு",
+      "romanization": "miraṭṭu",
+      "gloss": "to threaten; to intimidate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82113b2e4977f6dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to dread, then the Tamil for to cower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மிரட்டு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மிரட்டு — miraṭṭu — \"to threaten; to intimidate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பெரிய பையன்கள் அவனை மிரட்டினார்கள். periya paiyaṉkaḷ avaṉai miraṭṭiṉārkaḷ. The big boys intimidated him."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): மிரட்டினேன், miraṭṭiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The one threatened takes -ஐ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மிரட்டு (miraṭṭu) is native Dravidian (DEDR 5075), the causative of மிரள் miraḷ, \"to be frightened\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miraṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miraṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miraṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miraṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "periya paiyaṉkaḷ avaṉai miraṭṭiṉārkaḷ. — The big boys intimidated him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *periya paiyaṉkaḷ avaṉai miraṭṭiṉārkaḷ.* — The big boys intimidated him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to dread, then the Tamil for to cower, then say miraṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to dread, then the Tamil for to cower, then say *miraṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மிரட்டு (miraṭṭu) mean? (\"To threaten; to intimidate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

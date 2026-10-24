@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:0d5d445722243e52",
+  "lessonIds": [
+    "ML-C465-purappetal",
+    "ML-C465-varavu",
+    "ML-C465-kalatamasam",
+    "ML-C465-kattunilkkuka",
+    "ML-C465-otikkayaruka"
+  ],
+  "tex": "malayalam/book/chapters/ch465-departures-and-arrivals.tex"
+}

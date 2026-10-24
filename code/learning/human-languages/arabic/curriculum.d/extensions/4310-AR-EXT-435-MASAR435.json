@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-435-MASAR435",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a route, a fare, a subscription, a pedestrian crossing and to turn around.",
+  "prerequisites": []
+}

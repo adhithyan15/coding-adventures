@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 490,
+  "title": "Torn and Crushed",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:77723f06d00434c3",
+  "lessons": [
+    {
+      "id": "TE-C490-cedagottu",
+      "sequence": 24660,
+      "title": "చెడగొట్టు (ceḍagoṭṭu) — to spoil; to ruin",
+      "headword": "చెడగొట్టు",
+      "romanization": "ceḍagoṭṭu",
+      "gloss": "to spoil; to ruin",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ff098c07f596603",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to rot, then the Telugu for to be left over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చెడగొట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెడగొట్టు — ceḍagoṭṭu — \"to spoil; to ruin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వర్షం మా విహారయాత్రను చెడగొట్టింది. varṣaṁ mā vihārayātranu ceḍagoṭṭindi. The rain spoiled our outing."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): చెడగొట్టాను, ceḍagoṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "చెడ, bad, + కొట్టు, to strike: to make something go bad. Said of plans, food and children who are spoilt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెడగొట్టు (ceḍagoṭṭu) is native Dravidian: చెడు, \"to go bad\" (DEDR 2760), and కొట్టు, \"to strike\" (DEDR 2063)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceḍagoṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceḍagoṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceḍagoṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceḍagoṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṣaṁ mā vihārayātranu ceḍagoṭṭindi. — The rain spoiled our outing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṣaṁ mā vihārayātranu ceḍagoṭṭindi.* — The rain spoiled our outing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to rot, then the Telugu for to be left over, then say ceḍagoṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to rot, then the Telugu for to be left over, then say *ceḍagoṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చెడగొట్టు (ceḍagoṭṭu) mean? (\"To spoil; to ruin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C490-cirigipovu",
+      "sequence": 24670,
+      "title": "చిరిగిపోవు (cirigipōvu) — to get torn",
+      "headword": "చిరిగిపోవు",
+      "romanization": "cirigipōvu",
+      "gloss": "to get torn",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f98f6adea480f57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be left over, then the Telugu for to spoil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చిరిగిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చిరిగిపోవు — cirigipōvu — \"to get torn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ముళ్ళకు తగిలి నా చొక్కా చిరిగిపోయింది. muḷḷaku tagili nā cokkā cirigipōyindi. My shirt caught on the thorns and got torn."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): చిరిగిపోయింది, cirigipōyindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of cloth and paper. చిరుగు is a tear. Its subject is a thing, so the past shown is the third person: చిరిగిపోయింది, it got torn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చిరిగిపోవు (cirigipōvu) is native Dravidian: DEDR 2491 lists Telugu cirugu, \"to be torn\", beside cīru, \"to tear\", here with పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cirigipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cirigipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cirigipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cirigipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muḷḷaku tagili nā cokkā cirigipōyindi. — My shirt caught on the thorns and got torn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muḷḷaku tagili nā cokkā cirigipōyindi.* — My shirt caught on the thorns and got torn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be left over, then the Telugu for to spoil, then say cirigipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be left over, then the Telugu for to spoil, then say *cirigipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చిరిగిపోవు (cirigipōvu) mean? (\"To get torn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C490-masipovu",
+      "sequence": 24680,
+      "title": "మాసిపోవు (māsipōvu) — to get grubby; to get soiled",
+      "headword": "మాసిపోవు",
+      "romanization": "māsipōvu",
+      "gloss": "to get grubby; to get soiled",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:888684ee0b0f66bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to spoil, then the Telugu for to get torn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మాసిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మాసిపోవు — māsipōvu — \"to get grubby; to get soiled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రెండు రోజుల ప్రయాణంలో నా బట్టలు మాసిపోయాయి. reṇḍu rōjula prayāṇaṁlō nā baṭṭalu māsipōyāyi. After two days on the road my clothes were grubby."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): మాసిపోయింది, māsipōyindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of clothes, walls and hands that dirt has dulled. మాసిన బట్టలు, dirty clothes. Its subject is a thing, so the past shown is the third person: మాసిపోయింది, it got grubby."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మాసిపోవు (māsipōvu) is native Dravidian: DEDR 4792 lists Telugu māsi, \"dirt\", and māyu, \"to become dirty, soiled\", here with పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māsipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māsipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māsipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māsipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reṇḍu rōjula prayāṇaṁlō nā baṭṭalu māsipōyāyi. — After two days on the road my clothes were grubby.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reṇḍu rōjula prayāṇaṁlō nā baṭṭalu māsipōyāyi.* — After two days on the road my clothes were grubby.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to spoil, then the Telugu for to get torn, then say māsipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to spoil, then the Telugu for to get torn, then say *māsipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మాసిపోవు (māsipōvu) mean? (\"To get grubby; to get soiled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C490-cilipovu",
+      "sequence": 24690,
+      "title": "చీలిపోవు (cīlipōvu) — to split; to split apart",
+      "headword": "చీలిపోవు",
+      "romanization": "cīlipōvu",
+      "gloss": "to split; to split apart",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a0521b522213e63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to get torn, then the Telugu for to get grubby."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చీలిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చీలిపోవు — cīlipōvu — \"to split; to split apart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "భూకంపంలో గోడ రెండుగా చీలిపోయింది. bhūkampaṁlō gōḍa reṇḍugā cīlipōyindi. In the earthquake the wall split in two."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): చీలిపోయింది, cīlipōyindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of wood, of walls and of a group that breaks in two. Its subject is a thing, so the past shown is the third person: చీలిపోయింది, it split."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చీలిపోవు (cīlipōvu) is native Dravidian: DEDR 1622 lists Telugu cīlu, \"to break, to split, to crack\", here with పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīlipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīlipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīlipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīlipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūkampaṁlō gōḍa reṇḍugā cīlipōyindi. — In the earthquake the wall split in two.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūkampaṁlō gōḍa reṇḍugā cīlipōyindi.* — In the earthquake the wall split in two.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to get torn, then the Telugu for to get grubby, then say cīlipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to get torn, then the Telugu for to get grubby, then say *cīlipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చీలిపోవు (cīlipōvu) mean? (\"To split; to split apart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C490-virigipovu",
+      "sequence": 24700,
+      "title": "విరిగిపోవు (virigipōvu) — to break off; to snap",
+      "headword": "విరిగిపోవు",
+      "romanization": "virigipōvu",
+      "gloss": "to break off; to snap",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbacdc6953801151",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to get grubby, then the Telugu for to split."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విరిగిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విరిగిపోవు — virigipōvu — \"to break off; to snap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గాలికి చెట్టు కొమ్మ విరిగిపోయింది. gāliki ceṭṭu komma virigipōyindi. A branch of the tree snapped in the wind."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): విరిగిపోయింది, virigipōyindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of sticks, bones and chairs; glass and pots crack instead. Its subject is a thing, so the past shown is the third person: విరిగిపోయింది, it snapped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విరిగిపోవు (virigipōvu) is native Dravidian: విరుగు, \"to break\", is of the family of Telugu viriyu, \"to burst, to break open\" (DEDR 5411), here with పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virigipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virigipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virigipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virigipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāliki ceṭṭu komma virigipōyindi. — A branch of the tree snapped in the wind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāliki ceṭṭu komma virigipōyindi.* — A branch of the tree snapped in the wind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to get grubby, then the Telugu for to split, then say virigipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to get grubby, then the Telugu for to split, then say *virigipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విరిగిపోవు (virigipōvu) mean? (\"To break off; to snap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

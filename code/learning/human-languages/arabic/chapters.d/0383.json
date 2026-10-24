@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "The economy",
+  "label": "ch:ar-the-economy",
+  "canDo": "I can talk about the economy, a tax, a deficit and inflation, and say that someone invested.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C383-istathmara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can talk about the economy, a tax, a deficit and inflation, and say that someone invested.",
+    "assesses": [
+      "AR-LEX-C383-IQTISAD383-03",
+      "AR-LEX-C383-IQTISAD383-04",
+      "AR-LEX-C383-IQTISAD383-05"
+    ]
+  }
+}

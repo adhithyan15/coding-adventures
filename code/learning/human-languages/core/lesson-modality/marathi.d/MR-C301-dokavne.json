@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C301-dokavne",
+    "language": "marathi",
+    "chapter": 301,
+    "sequence": 17690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e02d1249136ae397"
+  },
+  "findings": []
+}

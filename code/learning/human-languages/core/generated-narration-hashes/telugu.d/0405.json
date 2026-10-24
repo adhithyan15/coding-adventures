@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:4033adbadf3e2e82",
+  "lessonIds": [
+    "TE-C405-arthika",
+    "TE-C405-dravyolbanam",
+    "TE-C405-pettubadi",
+    "TE-C405-badjettu",
+    "TE-C405-runam",
+    "TE-R405-review-398-405"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch405.txt",
+  "json": "telugu/narration/ch405.json",
+  "textHash": "fnv1a64:c7fb4d11fc076dc1",
+  "jsonHash": "fnv1a64:41ece36fceaf4adc",
+  "findings": []
+}

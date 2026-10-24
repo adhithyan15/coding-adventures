@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Writing an Essay",
+  "label": "ch:ka-writing-an-essay",
+  "canDo": "I can say an essay, to summarise, a treatise, to present and a note.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C409-tippani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can say an essay, to summarise, a treatise, to present and a note.",
+    "assesses": [
+      "KA-LEX-C409-PRABANDHA409-03",
+      "KA-LEX-C409-PRABANDHA409-04",
+      "KA-LEX-C409-PRABANDHA409-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:075d7fc9415f57e4",
+  "lessonIds": [
+    "BN-C463-dushtu",
+    "BN-C463-rosik",
+    "BN-C463-bachal",
+    "BN-C463-thatta-kora",
+    "BN-C463-katukutu-deoya"
+  ],
+  "tex": "bengali/book/chapters/ch463-mischief-and-wit.tex"
+}

@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 545,
+  "title": "Training",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dd18a0d277e72fb1",
+  "lessons": [
+    {
+      "id": "TE-C545-abhyasincu",
+      "sequence": 27610,
+      "title": "అభ్యసించు (abhyasiñcu) — to study closely; to practise",
+      "headword": "అభ్యసించు",
+      "romanization": "abhyasiñcu",
+      "gloss": "to study closely; to practise",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a60952b6b4920f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to prevail, then the Telugu for running."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అభ్యసించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభ్యసించు — abhyasiñcu — \"to study closely; to practise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను రోజూ రెండు గంటలు సంగీతం అభ్యసిస్తాడు. atanu rōjū reṇḍu gaṇṭalu saṅgītaṁ abhyasistāḍu. He practises music for two hours every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): అభ్యసించాను, abhyasiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; అభ్యాసం is practice or exercise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభ్యసించు (abhyasiñcu) is built on Sanskrit abhyasana, \"practice, exercise\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhyasiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhyasiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhyasiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhyasiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu rōjū reṇḍu gaṇṭalu saṅgītaṁ abhyasistāḍu. — He practises music for two hours every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu rōjū reṇḍu gaṇṭalu saṅgītaṁ abhyasistāḍu.* — He practises music for two hours every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to prevail, then the Telugu for running, then say abhyasiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to prevail, then the Telugu for running, then say *abhyasiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అభ్యసించు (abhyasiñcu) mean? (\"To study closely; to practise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C545-kasarattu",
+      "sequence": 27620,
+      "title": "కసరత్తు (kasarattu) — a workout; drill",
+      "headword": "కసరత్తు",
+      "romanization": "kasarattu",
+      "gloss": "a workout; drill",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa937b020ad73c1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for running, then the Telugu for to study closely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కసరత్తు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కసరత్తు — kasarattu — \"a workout; drill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "క్రీడాకారులు ఉదయమే కసరత్తు చేశారు. krīḍākārulu udayamē kasarattu cēśāru. The athletes worked out early in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "కసరత్తు (kasarattu) చేయు, to work out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కసరత్తు (kasarattu) came into Telugu through Hindustani kasrat, \"exercise\", which is usually traced to Arabic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasarattu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasarattu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasarattu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasarattu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krīḍākārulu udayamē kasarattu cēśāru. — The athletes worked out early in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krīḍākārulu udayamē kasarattu cēśāru.* — The athletes worked out early in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for running, then the Telugu for to study closely, then say kasarattu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for running, then the Telugu for to study closely, then say *kasarattu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కసరత్తు (kasarattu) mean? (\"A workout; drill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C545-guripettu",
+      "sequence": 27630,
+      "title": "గురిపెట్టు (guripeṭṭu) — to aim",
+      "headword": "గురిపెట్టు",
+      "romanization": "guripeṭṭu",
+      "gloss": "to aim",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9af70c3555c30aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to study closely, then the Telugu for a workout."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గురిపెట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గురిపెట్టు — guripeṭṭu — \"to aim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను బంతిని గోలు వైపు గురిపెట్టాడు. atanu bantini gōlu vaipu guripeṭṭāḍu. He aimed the ball at the goal."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): గురిపెట్టాను, guripeṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "గురి, aim, + పెట్టు, to put."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గురిపెట్టు (guripeṭṭu) is native Dravidian: DEDR 1847 lists Telugu guṟi, \"an aim, an object aimed at\", with Tamil kuṟi; peṭṭu, \"to put\", makes the verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guripeṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guripeṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guripeṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guripeṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu bantini gōlu vaipu guripeṭṭāḍu. — He aimed the ball at the goal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu bantini gōlu vaipu guripeṭṭāḍu.* — He aimed the ball at the goal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to study closely, then the Telugu for a workout, then say guripeṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to study closely, then the Telugu for a workout, then say *guripeṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గురిపెట్టు (guripeṭṭu) mean? (\"To aim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C545-toyu",
+      "sequence": 27640,
+      "title": "తోయు (tōyu) — to shove; to push",
+      "headword": "తోయు",
+      "romanization": "tōyu",
+      "gloss": "to shove; to push",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef96daa6dabe3b55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a workout, then the Telugu for to aim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తోయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తోయు — tōyu — \"to shove; to push\"."
+            },
+            {
+              "kind": "speech",
+              "text": "జనం గుంపులో ఎవరో నన్ను తోశారు. janaṁ gumpulō evarō nannu tōśāru. Someone in the crowd shoved me."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తోశాను, tōśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Rougher than నెట్టు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తోయు (tōyu) is native Dravidian: DEDR 3340 lists Telugu trōcu, \"to push, to shove, to thrust\", the older form of this verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janaṁ gumpulō evarō nannu tōśāru. — Someone in the crowd shoved me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janaṁ gumpulō evarō nannu tōśāru.* — Someone in the crowd shoved me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a workout, then the Telugu for to aim, then say tōyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a workout, then the Telugu for to aim, then say *tōyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తోయు (tōyu) mean? (\"To shove; to push\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C545-pandem",
+      "sequence": 27650,
+      "title": "పందెం (pandeṁ) — a bet; a race",
+      "headword": "పందెం",
+      "romanization": "pandeṁ",
+      "gloss": "a bet; a race",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3fb3d20780319892",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to aim, then the Telugu for to shove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పందెం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పందెం — pandeṁ — \"a bet; a race\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఎవరు ముందు వస్తారో అని మేము పందెం వేసుకున్నాం. evaru mundu vastārō ani mēmu pandeṁ vēsukunnāṁ. We had a bet on who would arrive first."
+            },
+            {
+              "kind": "speech",
+              "text": "పందెం (pandeṁ) వేయు, to bet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పందెం (pandeṁ) is native Dravidian: DEDR 3921 lists Telugu pandemu, \"a wager; a race\", with Tamil pantayam, \"a contest for a prize, a stake\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pandeṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pandeṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pandeṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pandeṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evaru mundu vastārō ani mēmu pandeṁ vēsukunnāṁ. — We had a bet on who would arrive first.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *evaru mundu vastārō ani mēmu pandeṁ vēsukunnāṁ.* — We had a bet on who would arrive first.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to aim, then the Telugu for to shove, then say pandeṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to aim, then the Telugu for to shove, then say *pandeṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పందెం (pandeṁ) mean? (\"A bet; a race\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

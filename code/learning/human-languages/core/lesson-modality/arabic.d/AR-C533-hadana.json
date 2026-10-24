@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C533-hadana",
+    "language": "arabic",
+    "chapter": 533,
+    "sequence": 29520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c4c88baaa70f3d7"
+  },
+  "findings": []
+}

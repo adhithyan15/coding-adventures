@@ -1,0 +1,11 @@
+{
+  "id": "BN-C410-park",
+  "pathSegment": "BN-PATH-410-MATH410",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-410-MATH410",
+      "order": 1
+    }
+  ]
+}

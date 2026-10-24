@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:a6b8343ab0854664",
+  "lessonIds": [
+    "MR-C525-kalsi",
+    "MR-C525-math",
+    "MR-C525-otne",
+    "MR-C525-sandne",
+    "MR-C525-visalne"
+  ],
+  "tex": "marathi/book/chapters/ch525-pouring-and-rinsing.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C483-cori",
+  "pathSegment": "TA-PATH-483-TOL483",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-483-TOL483",
+      "order": 3
+    }
+  ]
+}

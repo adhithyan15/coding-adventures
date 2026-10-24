@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:1e1f06b00c71f470",
+  "lessonIds": [
+    "BN-C317-bir",
+    "BN-C317-atmotyag",
+    "BN-C317-shohid",
+    "BN-C317-atmosomorpon-kora",
+    "BN-C317-porajoy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch317.txt",
+  "json": "bengali/narration/ch317.json",
+  "textHash": "fnv1a64:5e3933c0cde9f5ba",
+  "jsonHash": "fnv1a64:593b7ee2928793d8",
+  "findings": []
+}

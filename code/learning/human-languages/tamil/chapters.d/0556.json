@@ -1,0 +1,19 @@
+{
+  "chapter": 556,
+  "title": "A Writing and Craft Contest",
+  "label": "ch:ta-a-writing-and-craft-contest",
+  "canDo": "I can talk about the rules of a contest.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C556-carikai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 556: I can talk about the rules of a contest.",
+    "assesses": [
+      "TA-LEX-C556-POTTI556-03",
+      "TA-LEX-C556-POTTI556-04",
+      "TA-LEX-C556-POTTI556-05"
+    ]
+  }
+}

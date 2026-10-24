@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C443-sicna",
+    "language": "hindi",
+    "chapter": 443,
+    "sequence": 24330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8651a092b2e98226"
+  },
+  "findings": []
+}

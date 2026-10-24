@@ -1,0 +1,11 @@
+{
+  "id": "TA-C298-urukkulai",
+  "pathSegment": "TA-PATH-298-VIBATHU298",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-298-VIBATHU298",
+      "order": 2
+    }
+  ]
+}

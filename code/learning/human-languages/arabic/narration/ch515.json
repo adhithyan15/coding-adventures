@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 515,
+  "title": "Lying down and getting up",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:681fa19195ba4713",
+  "lessons": [
+    {
+      "id": "AR-C515-shakhara",
+      "sequence": 28580,
+      "title": "شخر (shakhara) — to snore",
+      "headword": "شخر",
+      "romanization": "shakhara",
+      "gloss": "to snore",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95ebed06974b69f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to yawn, then the Arabic for to doze off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شخر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شخر — shakhara — \"to snore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يشخر أخي في الليل. yashkhiru akhī fī al-layl. My brother snores at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يشخر, yashkhir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شخر (shakhara) is built on the native Arabic root sh-kh-r, \"to snort\" (Lane). Lane gives shakhara, aor. yashkhiru, as a snorting sound from the nose or throat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shakhara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shakhara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shakhara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shakhara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yashkhiru akhī fī al-layl. — My brother snores at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yashkhiru akhī fī al-layl.* — My brother snores at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to yawn, then the Arabic for to doze off, then say shakhara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to yawn, then the Arabic for to doze off, then say *shakhara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شخر (shakhara) mean? (\"To snore\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C515-istarkha",
+      "sequence": 28590,
+      "title": "استرخى (istarkhā) — to relax",
+      "headword": "استرخى",
+      "romanization": "istarkhā",
+      "gloss": "to relax",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d56ae0c77f06e323",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to doze off, then the Arabic for to snore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استرخى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استرخى — istarkhā — \"to relax\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استرخت أمي على الأريكة. istarkhat ummī ʿalā al-arīka. My mother relaxed on the sofa."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يسترخي, yastarkhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استرخى (istarkhā) is built on the native Arabic root r-kh-w, \"to be slack, loose\" (Lane). Form X istarkhā is to let the body go loose."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istarkhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istarkhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istarkhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istarkhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istarkhat ummī ʿalā al-arīka. — My mother relaxed on the sofa.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istarkhat ummī ʿalā al-arīka.* — My mother relaxed on the sofa.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to doze off, then the Arabic for to snore, then say istarkhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to doze off, then the Arabic for to snore, then say *istarkhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استرخى (istarkhā) mean? (\"To relax\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C515-istalqa",
+      "sequence": 28600,
+      "title": "استلقى (istalqā) — to lie down",
+      "headword": "استلقى",
+      "romanization": "istalqā",
+      "gloss": "to lie down",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d47ea89f35721226",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to snore, then the Arabic for to relax."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استلقى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استلقى — istalqā — \"to lie down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استلقى الولد على العشب. istalqā al-walad ʿalā al-ʿushb. The boy lay down on the grass."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستلقي, yastalqī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استلقى (istalqā) is built on the native Arabic root l-q-y, \"to meet; to throw\" (Lane). Form X istalqā is to throw oneself down on one's back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istalqā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istalqā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istalqā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istalqā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istalqā al-walad ʿalā al-ʿushb. — The boy lay down on the grass.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istalqā al-walad ʿalā al-ʿushb.* — The boy lay down on the grass.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to snore, then the Arabic for to relax, then say istalqā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to snore, then the Arabic for to relax, then say *istalqā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استلقى (istalqā) mean? (\"To lie down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C515-nahada",
+      "sequence": 28610,
+      "title": "نهض (nahaḍa) — to get up, to rise",
+      "headword": "نهض",
+      "romanization": "nahaḍa",
+      "gloss": "to get up, to rise",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5f66803705e8c20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to relax, then the Arabic for to lie down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نهض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نهض — nahaḍa — \"to get up, to rise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نهض جدي من الكرسي ببطء. nahaḍa jaddī min al-kursī bi-buṭʾ. My grandfather got up slowly from the chair."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينهض, yanhaḍ."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun نهضة is a rising, a revival."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نهض (nahaḍa) is built on the native Arabic root n-h-ḍ, \"to rise, to stand up\" (Lane). Nahaḍa is to rise up from sitting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nahaḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nahaḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nahaḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nahaḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nahaḍa jaddī min al-kursī bi-buṭʾ. — My grandfather got up slowly from the chair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nahaḍa jaddī min al-kursī bi-buṭʾ.* — My grandfather got up slowly from the chair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to relax, then the Arabic for to lie down, then say nahaḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to relax, then the Arabic for to lie down, then say *nahaḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نهض (nahaḍa) mean? (\"To get up, to rise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C515-ighma",
+      "sequence": 28620,
+      "title": "إغماء (ighmāʾ) — fainting, a faint",
+      "headword": "إغماء",
+      "romanization": "ighmāʾ",
+      "gloss": "fainting, a faint",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1399d2ed02a02eda",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to lie down, then the Arabic for to get up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: إغماء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إغماء — ighmāʾ — \"fainting, a faint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نقلوا اللاعب إلى المستشفى بعد الإغماء. naqalū al-lāʿib ilā al-mustashfā baʿda al-ighmāʾ. They took the player to hospital after he fainted."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إغماء (ighmāʾ) is built on the native Arabic root gh-m-y, \"to cover, to veil\" (Lane). Ighmāʾ is the verbal noun of Form IV: being covered over, losing one's senses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ighmāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ighmāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ighmāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ighmāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naqalū al-lāʿib ilā al-mustashfā baʿda al-ighmāʾ. — They took the player to hospital after he fainted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naqalū al-lāʿib ilā al-mustashfā baʿda al-ighmāʾ.* — They took the player to hospital after he fainted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to lie down, then the Arabic for to get up, then say ighmāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to lie down, then the Arabic for to get up, then say *ighmāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does إغماء (ighmāʾ) mean? (\"Fainting, a faint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:f9dae4f3b4d0ea75",
+  "lessonIds": [
+    "TE-C371-mantrikudu",
+    "TE-C371-maya",
+    "TE-C371-deyyam",
+    "TE-C371-varam",
+    "TE-C371-sapam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch371.txt",
+  "json": "telugu/narration/ch371.json",
+  "textHash": "fnv1a64:18416f1027caab6a",
+  "jsonHash": "fnv1a64:f0dded00f97cb82b",
+  "findings": []
+}

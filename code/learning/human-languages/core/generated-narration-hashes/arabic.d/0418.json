@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:53895065a46b938d",
+  "lessonIds": [
+    "AR-C418-azzaza",
+    "AR-C418-adafa-weaken",
+    "AR-C418-tawwara",
+    "AR-C418-faaliyya",
+    "AR-C418-mustaqill"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch418.txt",
+  "json": "arabic/narration/ch418.json",
+  "textHash": "fnv1a64:d6fbbbd02ee9ff76",
+  "jsonHash": "fnv1a64:d63a5ccb60ee5d5e",
+  "findings": []
+}

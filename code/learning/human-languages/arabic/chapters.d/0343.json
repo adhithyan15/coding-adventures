@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Adventures",
+  "label": "ch:ar-adventures",
+  "canDo": "I can say an adventure, unknown, a surprise, a coincidence and to take a risk.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C343-khatara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can say an adventure, unknown, a surprise, a coincidence and to take a risk.",
+    "assesses": [
+      "AR-LEX-C343-MUGHAMARA343-03",
+      "AR-LEX-C343-MUGHAMARA343-04",
+      "AR-LEX-C343-MUGHAMARA343-05"
+    ]
+  }
+}

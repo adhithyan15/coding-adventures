@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 545,
+  "title": "Stocks and Brokers",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:00e9059c612b50be",
+  "lessons": [
+    {
+      "id": "TA-C545-pankuccantai",
+      "sequence": 31100,
+      "title": "பங்குச்சந்தை (paṅkuccantai) — the stock market",
+      "headword": "பங்குச்சந்தை",
+      "romanization": "paṅkuccantai",
+      "gloss": "the stock market",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60fcc72bc3ac01c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an omen, then the Tamil for prudence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பங்குச்சந்தை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பங்குச்சந்தை — paṅkuccantai — \"the stock market\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பங்குச்சந்தை சரிந்தால் பலர் பணத்தை இழப்பார்கள். paṅkuccantai carintāl palar paṇattai iḻappārkaḷ. If the stock market falls, many people will lose money."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"share market\": பங்கு \"a share\" + சந்தை (cantai)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பங்குச்சந்தை (paṅkuccantai) is a modern compound: the native பங்கு (paṅku), \"a share, a portion\", from பகு, \"to divide\" (DEDR 3808), and சந்தை (cantai), \"a market\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṅkuccantai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṅkuccantai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṅkuccantai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṅkuccantai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṅkuccantai carintāl palar paṇattai iḻappārkaḷ. — If the stock market falls, many people will lose money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṅkuccantai carintāl palar paṇattai iḻappārkaḷ.* — If the stock market falls, many people will lose money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an omen, then the Tamil for prudence, then say paṅkuccantai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an omen, then the Tamil for prudence, then say *paṅkuccantai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பங்குச்சந்தை (paṅkuccantai) mean? (\"The stock market\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C545-tarakar",
+      "sequence": 31110,
+      "title": "தரகர் (tarakar) — a broker",
+      "headword": "தரகர்",
+      "romanization": "tarakar",
+      "gloss": "a broker",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb0657a15fa2bac0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for prudence, then the Tamil for the stock market."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தரகர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தரகர் — tarakar — \"a broker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வீடு வாங்க ஒரு தரகரின் உதவியை நாடினோம். vīṭu vāṅka oru tarakariṉ utaviyai nāṭiṉōm. To buy a house we sought the help of a broker."
+            },
+            {
+              "kind": "speech",
+              "text": "The fee a broker takes is தரகு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தரகர் (tarakar) is native Dravidian: DEDR 3090 gives தரகு (taraku), \"brokerage, a middleman's fee\", and தரகன் (tarakaṉ), \"a broker\"; தரகர் is the form with the respectful -அர்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarakar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarakar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarakar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarakar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīṭu vāṅka oru tarakariṉ utaviyai nāṭiṉōm. — To buy a house we sought the help of a broker.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīṭu vāṅka oru tarakariṉ utaviyai nāṭiṉōm.* — To buy a house we sought the help of a broker.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for prudence, then the Tamil for the stock market, then say tarakar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for prudence, then the Tamil for the stock market, then say *tarakar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தரகர் (tarakar) mean? (\"A broker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C545-uyarttu",
+      "sequence": 31120,
+      "title": "உயர்த்து (uyarttu) — to lift up; to raise",
+      "headword": "உயர்த்து",
+      "romanization": "uyarttu",
+      "gloss": "to lift up; to raise",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:278f75a291883116",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the stock market, then the Tamil for a broker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உயர்த்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உயர்த்து — uyarttu — \"to lift up; to raise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கடைக்காரர் அரிசியின் விலையை உயர்த்தினார். kaṭaikkārar ariciyiṉ vilaiyai uyarttiṉār. The shopkeeper raised the price of rice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): உயர்த்தினேன், uyarttiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The strong partner of உயர், to rise: விலை உயர்ந்தது, the price rose; விலையை உயர்த்தினார், he raised the price."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உயர்த்து (uyarttu) is native Dravidian: DEDR 646 gives உயர் (uyar), \"to rise, to be high\", and its causative உயர்த்து, \"to raise\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uyarttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uyarttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uyarttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uyarttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaikkārar ariciyiṉ vilaiyai uyarttiṉār. — The shopkeeper raised the price of rice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaikkārar ariciyiṉ vilaiyai uyarttiṉār.* — The shopkeeper raised the price of rice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the stock market, then the Tamil for a broker, then say uyarttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the stock market, then the Tamil for a broker, then say *uyarttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உயர்த்து (uyarttu) mean? (\"To lift up; to raise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C545-kanicamaka",
+      "sequence": 31130,
+      "title": "கணிசமாக (kaṇicamāka) — considerably",
+      "headword": "கணிசமாக",
+      "romanization": "kaṇicamāka",
+      "gloss": "considerably",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a3ea4d283c0ee2e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a broker, then the Tamil for to lift up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கணிசமாக",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கணிசமாக — kaṇicamāka — \"considerably\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த ஆண்டு விற்பனை கணிசமாக அதிகரித்தது. inta āṇṭu viṟpaṉai kaṇicamāka atikarittatu. This year sales went up considerably."
+            },
+            {
+              "kind": "speech",
+              "text": "An adverb in -ஆக; before a noun it is கணிசமான: கணிசமான தொகை, a sizeable sum."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of கணிசமாக (kaṇicamāka) is not settled: it is the -ஆக adverb of கணிசம் (kaṇicam), \"a considerable amount\", whose source is unclear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇicamāka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇicamāka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇicamāka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇicamāka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta āṇṭu viṟpaṉai kaṇicamāka atikarittatu. — This year sales went up considerably.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta āṇṭu viṟpaṉai kaṇicamāka atikarittatu.* — This year sales went up considerably.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a broker, then the Tamil for to lift up, then say kaṇicamāka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a broker, then the Tamil for to lift up, then say *kaṇicamāka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கணிசமாக (kaṇicamāka) mean? (\"Considerably\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C545-matiri",
+      "sequence": 31140,
+      "title": "மாதிரி (mātiri) — a model; a sample",
+      "headword": "மாதிரி",
+      "romanization": "mātiri",
+      "gloss": "a model; a sample",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae88b01e4699720d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to lift up, then the Tamil for considerably."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மாதிரி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாதிரி — mātiri — \"a model; a sample\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கடைக்காரர் துணியின் மாதிரியைக் காட்டினார். kaṭaikkārar tuṇiyiṉ mātiriyaik kāṭṭiṉār. The shopkeeper showed a sample of the cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "In speech it also means \"like\": அவனை மாதிரி (mātiri), like him."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of மாதிரி (mātiri) is not settled: no dictionary we can check gives its source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātiri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātiri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātiri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātiri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaikkārar tuṇiyiṉ mātiriyaik kāṭṭiṉār. — The shopkeeper showed a sample of the cloth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaikkārar tuṇiyiṉ mātiriyaik kāṭṭiṉār.* — The shopkeeper showed a sample of the cloth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to lift up, then the Tamil for considerably, then say mātiri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to lift up, then the Tamil for considerably, then say *mātiri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மாதிரி (mātiri) mean? (\"A model; a sample\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

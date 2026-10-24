@@ -1,0 +1,11 @@
+{
+  "id": "MR-C514-urakne",
+  "pathSegment": "MR-PATH-514-KAMKAJ514",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-514-KAMKAJ514",
+      "order": 3
+    }
+  ]
+}

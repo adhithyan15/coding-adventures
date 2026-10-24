@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C398-tikitghar",
+    "language": "marathi",
+    "chapter": 398,
+    "sequence": 23100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7d79114371d2d34"
+  },
+  "findings": []
+}

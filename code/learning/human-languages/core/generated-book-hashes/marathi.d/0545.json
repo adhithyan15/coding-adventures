@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:80019697497fd4ad",
+  "lessonIds": [
+    "MR-C545-bhavitavya",
+    "MR-C545-suvarnasandhi",
+    "MR-C545-soy",
+    "MR-C545-atkal-bandhne",
+    "MR-C545-vartavne"
+  ],
+  "tex": "marathi/book/chapters/ch545-guessing-the-future.tex"
+}

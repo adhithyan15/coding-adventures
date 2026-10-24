@@ -1,0 +1,21 @@
+{
+  "chapter": 437,
+  "title": "The Monsoon",
+  "label": "ch:hi-the-monsoon",
+  "canDo": "I can talk about the monsoon and the rainy season, damp walls, clouds spreading over and sweaty hands.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-R437-review-430-437",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can talk about the monsoon and the rainy season, damp walls, clouds spreading over and sweaty hands.",
+    "assesses": [
+      "HI-LEX-C437-MANSUN437-01",
+      "HI-LEX-C437-MANSUN437-02",
+      "HI-LEX-C437-MANSUN437-03",
+      "HI-LEX-C437-MANSUN437-04",
+      "HI-LEX-C437-MANSUN437-05"
+    ]
+  }
+}

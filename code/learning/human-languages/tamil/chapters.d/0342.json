@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "Old Things Made New",
+  "label": "ch:ta-old-things-made-new",
+  "canDo": "I can talk about restoring and studying ancient places.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C342-tolliyal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can talk about restoring and studying ancient places.",
+    "assesses": [
+      "TA-LEX-C342-PANDAIYA342-03",
+      "TA-LEX-C342-PANDAIYA342-04",
+      "TA-LEX-C342-PANDAIYA342-05"
+    ]
+  }
+}

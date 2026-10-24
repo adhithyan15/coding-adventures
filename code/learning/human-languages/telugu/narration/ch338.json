@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 338,
+  "title": "Little by Little",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:933edf5a2b8d80d2",
+  "lessons": [
+    {
+      "id": "TE-C338-kramanga",
+      "sequence": 16610,
+      "title": "క్రమంగా (kramaṅgā) — gradually; step by step",
+      "headword": "క్రమంగా",
+      "romanization": "kramaṅgā",
+      "gloss": "gradually; step by step",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01a0196aeead2183",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for shackles, then the Telugu for the accused."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: క్రమంగా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్రమంగా — kramaṅgā — \"gradually; step by step\"."
+            },
+            {
+              "kind": "speech",
+              "text": "క్రమంగా అతని ఆరోగ్యం బాగుపడింది. kramaṅgā atani ārōgyaṁ bāgupaḍindi. Gradually his health got better."
+            },
+            {
+              "kind": "speech",
+              "text": "క్రమం, order or sequence, with -గా: in order, step by step."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్రమంగా (kramaṅgā) is built on Sanskrit krama, \"a step, a series\" (CDIAL 3577), with the Telugu adverb ending -gā; CDIAL notes that Sanskrit kramēṇa already meant \"by degrees\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramaṅgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramaṅgā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramaṅgā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramaṅgā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramaṅgā atani ārōgyaṁ bāgupaḍindi. — Gradually his health got better.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramaṅgā atani ārōgyaṁ bāgupaḍindi.* — Gradually his health got better.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for shackles, then the Telugu for the accused, then say kramaṅgā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for shackles, then the Telugu for the accused, then say *kramaṅgā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does క్రమంగా (kramaṅgā) mean? (\"Gradually; step by step\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C338-ranuranu",
+      "sequence": 16620,
+      "title": "రానురాను (rānurānu) — as time went by",
+      "headword": "రానురాను",
+      "romanization": "rānurānu",
+      "gloss": "as time went by",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a011c7ea0f20644",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for the accused, then the Telugu for gradually."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రానురాను",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రానురాను — rānurānu — \"as time went by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రానురాను ఆ పల్లె పట్టణంగా మారింది. rānurānu ā palle paṭṭaṇaṅgā mārindi. As time went by, that village grew into a town."
+            },
+            {
+              "kind": "speech",
+              "text": "రాను, coming, said twice: as the days keep coming."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రానురాను (rānurānu) is native Telugu: the verb rā, \"to come\" (DEDR 5270), said twice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rānurānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rānurānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rānurānu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rānurānu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rānurānu ā palle paṭṭaṇaṅgā mārindi. — As time went by, that village grew into a town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rānurānu ā palle paṭṭaṇaṅgā mārindi.* — As time went by, that village grew into a town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for the accused, then the Telugu for gradually, then say rānurānu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for the accused, then the Telugu for gradually, then say *rānurānu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రానురాను (rānurānu) mean? (\"As time went by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C338-munupu",
+      "sequence": 16630,
+      "title": "మునుపు (munupu) — previously; before",
+      "headword": "మునుపు",
+      "romanization": "munupu",
+      "gloss": "previously; before",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6601d8dc17e08814",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for gradually, then the Telugu for as time went by."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మునుపు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మునుపు — munupu — \"previously; before\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మునుపు ఇక్కడ ఒక చెరువు ఉండేది. munupu ikkaḍa oka ceruvu uṇḍēdi. Previously there was a pond here."
+            },
+            {
+              "kind": "speech",
+              "text": "Close to ముందు; మునుపటి means former: మునుపటి రాజు, the former king."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మునుపు (munupu) is native Dravidian: DEDR 5020 lists Telugu munupu, \"former time; before\", with Tamil muṉpu; ముందు comes from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munupu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munupu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munupu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munupu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munupu ikkaḍa oka ceruvu uṇḍēdi. — Previously there was a pond here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munupu ikkaḍa oka ceruvu uṇḍēdi.* — Previously there was a pond here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for gradually, then the Telugu for as time went by, then say munupu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for gradually, then the Telugu for as time went by, then say *munupu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మునుపు (munupu) mean? (\"Previously; before\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C338-gatam",
+      "sequence": 16640,
+      "title": "గతం (gataṁ) — the past",
+      "headword": "గతం",
+      "romanization": "gataṁ",
+      "gloss": "the past",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6fea6ca55ffb2595",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for as time went by, then the Telugu for previously."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గతం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గతం — gataṁ — \"the past\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె తరచుగా గతం గుర్తుచేసుకుంటుంది. āme taracugā gataṁ gurtucēsukuṇṭundi. She often recalls the past."
+            },
+            {
+              "kind": "speech",
+              "text": "You know గత, last or past: గత వారం. గతం (gataṁ) is the noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గతం (gataṁ) is borrowed from Sanskrit gata, \"gone, past\" (CDIAL 4008); as a noun it is what has gone by."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gataṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gataṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gataṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gataṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme taracugā gataṁ gurtucēsukuṇṭundi. — She often recalls the past.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme taracugā gataṁ gurtucēsukuṇṭundi.* — She often recalls the past.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for as time went by, then the Telugu for previously, then say gataṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for as time went by, then the Telugu for previously, then say *gataṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గతం (gataṁ) mean? (\"The past\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C338-appatlo",
+      "sequence": 16650,
+      "title": "అప్పట్లో (appaṭlō) — in those days",
+      "headword": "అప్పట్లో",
+      "romanization": "appaṭlō",
+      "gloss": "in those days",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df5fd91c29a8c1a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for previously, then the Telugu for the past."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అప్పట్లో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అప్పట్లో — appaṭlō — \"in those days\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అప్పట్లో ఇక్కడ బస్సులు లేవు. appaṭlō ikkaḍa bassulu lēvu. In those days there were no buses here."
+            },
+            {
+              "kind": "speech",
+              "text": "A spoken form: అప్పట్లో (appaṭlō) looks back at a whole period, అప్పుడు at one moment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అప్పట్లో (appaṭlō) is native Telugu: appaṭi, \"of that time\", from appuḍu, \"then\" (DEDR 4559), with the locative -lō, \"in\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appaṭlō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appaṭlō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appaṭlō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appaṭlō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appaṭlō ikkaḍa bassulu lēvu. — In those days there were no buses here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appaṭlō ikkaḍa bassulu lēvu.* — In those days there were no buses here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for previously, then the Telugu for the past, then say appaṭlō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for previously, then the Telugu for the past, then say *appaṭlō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అప్పట్లో (appaṭlō) mean? (\"In those days\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

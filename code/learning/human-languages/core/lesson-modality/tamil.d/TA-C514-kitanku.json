@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C514-kitanku",
+    "language": "tamil",
+    "chapter": 514,
+    "sequence": 29540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c07c81425bb78e4c"
+  },
+  "findings": []
+}

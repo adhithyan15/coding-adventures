@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:93e34c2c1d166958",
+  "lessonIds": [
+    "HI-C462-abhiman",
+    "HI-C462-itrana",
+    "HI-C462-sekhi",
+    "HI-C462-akarna",
+    "HI-C462-nakhra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch462.txt",
+  "json": "hindi/narration/ch462.json",
+  "textHash": "fnv1a64:91993921c536e2ec",
+  "jsonHash": "fnv1a64:d29817945cfeba68",
+  "findings": []
+}

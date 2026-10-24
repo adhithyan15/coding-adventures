@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:4c9460c05c1082ce",
+  "lessonIds": [
+    "TE-C484-ammakam",
+    "TE-C484-viniyogadarudu",
+    "TE-C484-nanyata",
+    "TE-C484-rayiti",
+    "TE-C484-beramadu"
+  ],
+  "tex": "telugu/book/chapters/ch484-buying-and-selling.tex"
+}

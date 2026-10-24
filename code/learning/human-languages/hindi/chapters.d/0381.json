@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "If Only",
+  "label": "ch:hi-if-only",
+  "canDo": "I can say what I wish had happened.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C381-bhala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can say what I wish had happened.",
+    "assesses": [
+      "HI-LEX-C381-KASH381-03",
+      "HI-LEX-C381-KASH381-04",
+      "HI-LEX-C381-KASH381-05"
+    ]
+  }
+}

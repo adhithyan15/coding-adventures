@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 548,
+  "sourceHash": "fnv1a64:f6c362da9af0dce4",
+  "lessonIds": [
+    "TE-C548-kacu",
+    "TE-C548-madcu",
+    "TE-C548-tarugu",
+    "TE-C548-jallincu",
+    "TE-C548-talimpu"
+  ],
+  "tex": "telugu/book/chapters/ch548-in-the-kitchen.tex"
+}

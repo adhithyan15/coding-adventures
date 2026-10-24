@@ -1,0 +1,11 @@
+{
+  "id": "TE-C338-ranuranu",
+  "pathSegment": "TE-PATH-338-KRAMANGA338",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-338-KRAMANGA338",
+      "order": 1
+    }
+  ]
+}

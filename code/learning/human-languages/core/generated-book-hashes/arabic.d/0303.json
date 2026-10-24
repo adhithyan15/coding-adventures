@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:dec0866a7f6eae97",
+  "lessonIds": [
+    "AR-C303-ustura",
+    "AR-C303-khurafa",
+    "AR-C303-batal",
+    "AR-C303-shirrir",
+    "AR-C303-takhayyala"
+  ],
+  "tex": "arabic/book/chapters/ch303-legends-and-heroes.tex"
+}

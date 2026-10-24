@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:8237121d7a9ff14c",
+  "lessonIds": [
+    "AR-C339-ghaza",
+    "AR-C339-hajama",
+    "AR-C339-ihtalla",
+    "AR-C339-qada-lead",
+    "AR-C339-insahaba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch339.txt",
+  "json": "arabic/narration/ch339.json",
+  "textHash": "fnv1a64:e552c555e3fd4803",
+  "jsonHash": "fnv1a64:2b30e0b0a027461d",
+  "findings": []
+}

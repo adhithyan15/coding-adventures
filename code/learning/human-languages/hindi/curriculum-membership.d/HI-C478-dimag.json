@@ -1,0 +1,11 @@
+{
+  "id": "HI-C478-dimag",
+  "pathSegment": "HI-PATH-478-PHEPHDA478",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-478-PHEPHDA478",
+      "order": 1
+    }
+  ]
+}

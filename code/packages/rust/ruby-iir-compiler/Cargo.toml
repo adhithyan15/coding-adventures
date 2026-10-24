@@ -18,3 +18,6 @@ vm-core = { path = "../vm-core" }
 # tables are used; the hand-written lexer is not on any path here.
 coding-adventures-ruby-lexer = { path = "../ruby-lexer" }
 grammar-tools = { path = "../grammar-tools" }
+# The release sweep (tests/release_sweep.rs) names each IIR-identity class
+# by a SHA-256 digest.
+coding_adventures_sha256 = { path = "../sha256" }

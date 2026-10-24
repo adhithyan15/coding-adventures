@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/x509-rsa-sha256-reviewed-server-link",
   "capabilities": [],
-  "justification": "Pure evidence binding over already validated public certificate and reviewed trust-anchor evidence. No filesystem, network, process, environment, clock, FFI, secret-key, or signing access is required."
+  "justification": "Pure evidence binding plus bounded parsing and DNS matching over public certificate and reviewed trust-anchor data. No filesystem, network, process, environment, clock, FFI, secret-key, signing, or external-provider access is required."
 }

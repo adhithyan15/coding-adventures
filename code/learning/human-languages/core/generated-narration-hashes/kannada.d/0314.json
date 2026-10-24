@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:9af5f047179d049c",
+  "lessonIds": [
+    "KA-C314-situ",
+    "KA-C314-tiket-kodi",
+    "KA-C314-ausadha",
+    "KA-S175-letter-au",
+    "KA-C314-kaleduhoyitu",
+    "KA-R314-at-the-station"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "kannada/narration/ch314.txt",
+  "json": "kannada/narration/ch314.json",
+  "textHash": "fnv1a64:13ff5880eacb3ec9",
+  "jsonHash": "fnv1a64:cdcba8b7be7d826e",
+  "findings": []
+}

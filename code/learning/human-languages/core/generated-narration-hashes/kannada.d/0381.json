@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:a111513e06a82f00",
+  "lessonIds": [
+    "KA-C381-pariganisu",
+    "KA-C381-bhavisu",
+    "KA-C381-viveka",
+    "KA-C381-manana-madu",
+    "KA-C381-buddhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch381.txt",
+  "json": "kannada/narration/ch381.json",
+  "textHash": "fnv1a64:86563b8ebddb9beb",
+  "jsonHash": "fnv1a64:9df7f1bba241b60f",
+  "findings": []
+}

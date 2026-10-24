@@ -1,0 +1,11 @@
+{
+  "id": "BN-C338-sakkhyo",
+  "pathSegment": "BN-PATH-338-DOLIL338",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-338-DOLIL338",
+      "order": 2
+    }
+  ]
+}

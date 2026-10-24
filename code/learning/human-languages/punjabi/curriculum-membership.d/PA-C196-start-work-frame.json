@@ -1,0 +1,11 @@
+{
+  "id": "PA-C196-start-work-frame",
+  "pathSegment": "PA-PATH-196-A2-SHURU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-196-A2-SHURU",
+      "order": 3
+    }
+  ]
+}

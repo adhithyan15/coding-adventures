@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Demands",
+  "label": "ch:ml-demands",
+  "canDo": "I can say to boycott, to demand, a memorandum, to submit and a petition.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C426-harji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can say to boycott, to demand, a memorandum, to submit and a petition.",
+    "assesses": [
+      "ML-LEX-C426-NIVEDANAM426-03",
+      "ML-LEX-C426-NIVEDANAM426-04",
+      "ML-LEX-C426-NIVEDANAM426-05"
+    ]
+  }
+}

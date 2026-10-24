@@ -1,0 +1,11 @@
+{
+  "id": "BN-C295-phire-paoya",
+  "pathSegment": "BN-PATH-295-KHOTI295",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-295-KHOTI295",
+      "order": 4
+    }
+  ]
+}

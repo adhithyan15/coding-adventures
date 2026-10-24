@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Weapons",
+  "label": "ch:te-weapons",
+  "canDo": "I can say a sword, armour, a weapon, a bow and a gun.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C360-tupaki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can say a sword, armour, a weapon, a bow and a gun.",
+    "assesses": [
+      "TE-LEX-C360-AYUDHAM360-03",
+      "TE-LEX-C360-AYUDHAM360-04",
+      "TE-LEX-C360-AYUDHAM360-05"
+    ]
+  }
+}

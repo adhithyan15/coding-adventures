@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C509-galicha",
+    "language": "bengali",
+    "chapter": 509,
+    "sequence": 30870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2ee95589df6eba6"
+  },
+  "findings": []
+}

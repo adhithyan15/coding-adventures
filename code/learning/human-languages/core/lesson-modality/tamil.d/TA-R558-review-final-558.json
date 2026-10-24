@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R558-review-final-558",
+    "language": "tamil",
+    "chapter": 558,
+    "sequence": 31820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a89d4ae812e56b1b"
+  },
+  "findings": []
+}

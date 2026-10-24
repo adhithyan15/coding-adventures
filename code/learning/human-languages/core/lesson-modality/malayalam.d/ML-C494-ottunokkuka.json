@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C494-ottunokkuka",
+    "language": "malayalam",
+    "chapter": 494,
+    "sequence": 24710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10152220585c8775"
+  },
+  "findings": []
+}

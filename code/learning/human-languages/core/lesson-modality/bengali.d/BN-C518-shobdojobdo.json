@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C518-shobdojobdo",
+    "language": "bengali",
+    "chapter": 518,
+    "sequence": 31360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c96be8fd498d3cb"
+  },
+  "findings": []
+}

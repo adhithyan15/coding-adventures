@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:939f6ce776a5355f",
+  "lessonIds": [
+    "TA-C312-virivaka",
+    "TA-C312-neratiyaka",
+    "TA-C312-varni",
+    "TA-C312-oppi",
+    "TA-C312-vaymoli"
+  ],
+  "tex": "tamil/book/chapters/ch312-telling-it-clearly.tex"
+}

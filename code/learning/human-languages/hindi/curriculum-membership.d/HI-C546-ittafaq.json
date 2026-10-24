@@ -1,0 +1,11 @@
+{
+  "id": "HI-C546-ittafaq",
+  "pathSegment": "HI-PATH-546-TAQDIR546",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-546-TAQDIR546",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C423-vattaram",
+    "language": "tamil",
+    "chapter": 423,
+    "sequence": 24300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1733cb8cc790aa16"
+  },
+  "findings": []
+}

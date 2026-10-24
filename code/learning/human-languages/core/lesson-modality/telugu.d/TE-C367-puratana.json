@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C367-puratana",
+    "language": "telugu",
+    "chapter": 367,
+    "sequence": 18110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e791382191ca9c06"
+  },
+  "findings": []
+}

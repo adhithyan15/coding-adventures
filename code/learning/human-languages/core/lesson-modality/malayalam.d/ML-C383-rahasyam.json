@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C383-rahasyam",
+    "language": "malayalam",
+    "chapter": 383,
+    "sequence": 18740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f463baadc558b925"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:37ecc79553ead5c3",
+  "lessonIds": [
+    "ML-C442-apakatasadhyata",
+    "ML-C442-munkarutal",
+    "ML-C442-pravacikkuka",
+    "ML-C442-kanakkakkuka",
+    "ML-C442-anantaraphalam"
+  ],
+  "tex": "malayalam/book/chapters/ch442-risks.tex"
+}

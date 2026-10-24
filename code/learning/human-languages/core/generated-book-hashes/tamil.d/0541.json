@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:23ceb4583d32538a",
+  "lessonIds": [
+    "TA-C541-kappitu",
+    "TA-C541-itar",
+    "TA-C541-apayam",
+    "TA-C541-mukavar",
+    "TA-C541-pinai"
+  ],
+  "tex": "tamil/book/chapters/ch541-insurance-and-risk.tex"
+}

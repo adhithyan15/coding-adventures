@@ -1,0 +1,11 @@
+{
+  "id": "AR-C346-tasallala",
+  "pathSegment": "AR-PATH-346-JASUS346",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-346-JASUS346",
+      "order": 3
+    }
+  ]
+}

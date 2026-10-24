@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C531-kannamuccale",
+    "language": "kannada",
+    "chapter": 531,
+    "sequence": 27120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9813f4fb83b1420a"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:115cc633bcbd2a9e",
+  "lessonIds": [
+    "TA-C338-atimai",
+    "TA-C338-vitutalai",
+    "TA-C338-puratci",
+    "TA-C338-kalakam",
+    "TA-C338-ciraiyilatai"
+  ],
+  "tex": "tamil/book/chapters/ch338-freedom.tex"
+}

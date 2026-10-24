@@ -1,0 +1,11 @@
+{
+  "id": "MR-C371-napas-hone",
+  "pathSegment": "MR-PATH-371-PARIKSHA371",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-371-PARIKSHA371",
+      "order": 1
+    }
+  ]
+}

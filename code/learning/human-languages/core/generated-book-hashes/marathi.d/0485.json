@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:f56211e2d3d1b038",
+  "lessonIds": [
+    "MR-C485-madhumeh",
+    "MR-C485-raktadab",
+    "MR-C485-dama",
+    "MR-C485-kavil",
+    "MR-C485-kanjinya"
+  ],
+  "tex": "marathi/book/chapters/ch485-long-illnesses.tex"
+}

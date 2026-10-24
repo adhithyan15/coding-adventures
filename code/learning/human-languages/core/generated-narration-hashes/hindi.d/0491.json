@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:c9b17203ae1e9b69",
+  "lessonIds": [
+    "HI-C491-dakhil",
+    "HI-C491-vard",
+    "HI-C491-strecar",
+    "HI-C491-bulvana",
+    "HI-C491-jan",
+    "HI-R491-review-484-491"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch491.txt",
+  "json": "hindi/narration/ch491.json",
+  "textHash": "fnv1a64:5a45b61ed50e3874",
+  "jsonHash": "fnv1a64:294e5e981a9ffe49",
+  "findings": []
+}

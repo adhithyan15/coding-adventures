@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C373-akramanam",
+    "language": "malayalam",
+    "chapter": 373,
+    "sequence": 18230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50aff53006739696"
+  },
+  "findings": []
+}

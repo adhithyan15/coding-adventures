@@ -1,0 +1,11 @@
+{
+  "id": "TA-C490-utaru",
+  "pathSegment": "TA-PATH-490-NIMIR490",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-490-NIMIR490",
+      "order": 3
+    }
+  ]
+}

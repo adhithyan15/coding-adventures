@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:b896b9f757b84adc",
+  "lessonIds": [
+    "BN-C447-aphsos",
+    "BN-C447-onushochona",
+    "BN-C447-onutopto",
+    "BN-C447-postano",
+    "BN-C447-svikar-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch447.txt",
+  "json": "bengali/narration/ch447.json",
+  "textHash": "fnv1a64:9389dcc22c97ccd9",
+  "jsonHash": "fnv1a64:1a82446af70a27b1",
+  "findings": []
+}

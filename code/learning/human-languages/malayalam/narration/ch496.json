@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 496,
+  "title": "Rivers and Springs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bdbc33e062168713",
+  "lessons": [
+    {
+      "id": "ML-C496-nadi",
+      "sequence": 24790,
+      "title": "നദി (nadi) — a large river",
+      "headword": "നദി",
+      "romanization": "nadi",
+      "gloss": "a large river",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18c824a7b007bc54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a meadow, then the Malayalam for shade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നദി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നദി — nadi — \"a large river\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ നദി കടലിൽ ചേരുന്നു. ā nadi kaṭalil cērunnu. That river flows into the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: നദികൾ, nadikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word, used for the big rivers; in speech any river is a പുഴ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നദി (nadi) is borrowed from Sanskrit nadī, \"a river\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā nadi kaṭalil cērunnu. — That river flows into the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā nadi kaṭalil cērunnu.* — That river flows into the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a meadow, then the Malayalam for shade, then say nadi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a meadow, then the Malayalam for shade, then say *nadi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നദി (nadi) mean? (\"A large river\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C496-aruvi",
+      "sequence": 24800,
+      "title": "അരുവി (aruvi) — a brook; a stream",
+      "headword": "അരുവി",
+      "romanization": "aruvi",
+      "gloss": "a brook; a stream",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7d29db49d71d782",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for shade, then the Malayalam for a large river."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അരുവി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അരുവി — aruvi — \"a brook; a stream\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കാട്ടിലൂടെ ഒരു ചെറിയ അരുവി ഒഴുകുന്നു. kāṭṭilūṭe oru ceṟiya aruvi oḻukunnu. A little stream flows through the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "Smaller than a പുഴ: water that runs down from the hills."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അരുവി (aruvi) is native Dravidian, from a root that means to spring out and flow down gently (DEDR 226)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruvi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruvi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruvi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruvi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭṭilūṭe oru ceṟiya aruvi oḻukunnu. — A little stream flows through the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭṭilūṭe oru ceṟiya aruvi oḻukunnu.* — A little stream flows through the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for shade, then the Malayalam for a large river, then say aruvi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for shade, then the Malayalam for a large river, then say *aruvi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അരുവി (aruvi) mean? (\"A brook; a stream\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C496-urava",
+      "sequence": 24810,
+      "title": "ഉറവ (uṟava) — a water spring",
+      "headword": "ഉറവ",
+      "romanization": "uṟava",
+      "gloss": "a water spring",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:680c9889fa0021b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a large river, then the Malayalam for a brook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉറവ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉറവ — uṟava — \"a water spring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മലയുടെ ചുവട്ടിൽ ഒരു തണുത്ത ഉറവ ഉണ്ട്. malayuṭe cuvaṭṭil oru taṇutta uṟava uṇṭŭ. There is a cold spring at the foot of the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Where water comes up out of the ground; a well fills from its ഉറവ (uṟava)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉറവ (uṟava) is native Dravidian, from a root that means to ooze or spring up (DEDR 761)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟava, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟava*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malayuṭe cuvaṭṭil oru taṇutta uṟava uṇṭŭ. — There is a cold spring at the foot of the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malayuṭe cuvaṭṭil oru taṇutta uṟava uṇṭŭ.* — There is a cold spring at the foot of the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a large river, then the Malayalam for a brook, then say uṟava again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a large river, then the Malayalam for a brook, then say *uṟava* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉറവ (uṟava) mean? (\"A water spring\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C496-anakkettu",
+      "sequence": 24820,
+      "title": "അണക്കെട്ട് (aṇakkeṭṭŭ) — a dam",
+      "headword": "അണക്കെട്ട്",
+      "romanization": "aṇakkeṭṭŭ",
+      "gloss": "a dam",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b9b01520c66834e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a brook, then the Malayalam for a water spring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അണക്കെട്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അണക്കെട്ട് — aṇakkeṭṭŭ — \"a dam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴക്കാലത്ത് അണക്കെട്ടിൽ ധാരാളം വെള്ളം ഉണ്ടാകും. maḻakkālattŭ aṇakkeṭṭil dhārāḷaṁ veḷḷaṁ uṇṭākuṁ. In the rainy season the dam holds a lot of water."
+            },
+            {
+              "kind": "speech",
+              "text": "അണ, a dam or bank, plus കെട്ട്, something built or tied. The shutters are opened when it is full."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അണക്കെട്ട് (aṇakkeṭṭŭ) is a native Dravidian compound of അണ, a dam or embankment (DEDR 122), and കെട്ട്, a thing built or tied (DEDR 1147)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇakkeṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇakkeṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇakkeṭṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇakkeṭṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻakkālattŭ aṇakkeṭṭil dhārāḷaṁ veḷḷaṁ uṇṭākuṁ. — In the rainy season the dam holds a lot of water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻakkālattŭ aṇakkeṭṭil dhārāḷaṁ veḷḷaṁ uṇṭākuṁ.* — In the rainy season the dam holds a lot of water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a brook, then the Malayalam for a water spring, then say aṇakkeṭṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a brook, then the Malayalam for a water spring, then say *aṇakkeṭṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അണക്കെട്ട് (aṇakkeṭṭŭ) mean? (\"A dam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C496-varruka",
+      "sequence": 24830,
+      "title": "വറ്റുക (vaṟṟuka) — to dry up",
+      "headword": "വറ്റുക",
+      "romanization": "vaṟṟuka",
+      "gloss": "to dry up",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e51e7a0f31d54e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a water spring, then the Malayalam for a dam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വറ്റുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വറ്റുക — vaṟṟuka — \"to dry up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വേനലിൽ ഗ്രാമത്തിലെ കിണറുകൾ വറ്റി. vēnalil grāmattile kiṇaṟukaḷ vaṟṟi. In the dry season the village wells dried up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വറ്റി, vaṟṟi."
+            },
+            {
+              "kind": "speech",
+              "text": "Water dries up: a well, a river, a pond. Clothes and grain ഉണങ്ങുക instead."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വറ്റുക (vaṟṟuka) is native Dravidian, \"to dry up, to grow lean\" (DEDR 5320)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṟṟuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṟṟuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṟṟuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṟṟuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēnalil grāmattile kiṇaṟukaḷ vaṟṟi. — In the dry season the village wells dried up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēnalil grāmattile kiṇaṟukaḷ vaṟṟi.* — In the dry season the village wells dried up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a water spring, then the Malayalam for a dam, then say vaṟṟuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a water spring, then the Malayalam for a dam, then say *vaṟṟuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വറ്റുക (vaṟṟuka) mean? (\"To dry up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

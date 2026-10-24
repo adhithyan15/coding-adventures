@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Laws and Rules",
+  "label": "ch:ta-laws-and-rules",
+  "canDo": "I can say that someone keeps or breaks a law.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C372-inanku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can say that someone keeps or breaks a law.",
+    "assesses": [
+      "TA-LEX-C372-CATTAM372-03",
+      "TA-LEX-C372-CATTAM372-04",
+      "TA-LEX-C372-CATTAM372-05"
+    ]
+  }
+}

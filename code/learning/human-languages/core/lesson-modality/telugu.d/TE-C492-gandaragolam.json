@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C492-gandaragolam",
+    "language": "telugu",
+    "chapter": 492,
+    "sequence": 24800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41e0913ab6b1413f"
+  },
+  "findings": []
+}

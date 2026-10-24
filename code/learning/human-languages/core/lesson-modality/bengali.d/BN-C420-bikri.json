@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C420-bikri",
+    "language": "bengali",
+    "chapter": 420,
+    "sequence": 25840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9955b9e3b74175ed"
+  },
+  "findings": []
+}

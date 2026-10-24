@@ -1,0 +1,11 @@
+{
+  "id": "TA-C539-mittu",
+  "pathSegment": "TA-PATH-539-ISAI539",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-539-ISAI539",
+      "order": 3
+    }
+  ]
+}

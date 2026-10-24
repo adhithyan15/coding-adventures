@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C353-riti",
+    "language": "bengali",
+    "chapter": 353,
+    "sequence": 22180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf046f599e5b6840"
+  },
+  "findings": []
+}

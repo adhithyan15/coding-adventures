@@ -1,0 +1,11 @@
+{
+  "id": "BN-C308-kolakuli-kora",
+  "pathSegment": "BN-PATH-308-BISORJON308",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-308-BISORJON308",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C544-svic",
+    "language": "kannada",
+    "chapter": 544,
+    "sequence": 27770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2916c37f0b44c0f5"
+  },
+  "findings": []
+}

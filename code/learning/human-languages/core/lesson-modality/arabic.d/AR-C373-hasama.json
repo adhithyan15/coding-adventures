@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C373-hasama",
+    "language": "arabic",
+    "chapter": 373,
+    "sequence": 21200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20046a0e0d460af5"
+  },
+  "findings": []
+}

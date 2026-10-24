@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER declaration-order aliases and class shorthand vertical slice",
+  "fixtures": [
+    {
+      "name": "relationship-before-aliased-declaration",
+      "source": "erDiagram\nORDER ||--o{ customer : placed_by\ncustomer[\"Customer Account\"]:::primary {\n  string id PK\n}\nclassDef primary fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px"
+    },
+    {
+      "name": "aliased-declaration-before-relationship",
+      "source": "erDiagram\nsupplier[SUPPLIER] {\n  string id PK\n}\nsupplier ||--o{ ORDER : fulfills"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "language": "arabic",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:8c04d7f37a93aa28",
+  "lessonIds": [
+    "AR-C289-kuntu-saidan",
+    "AR-C289-tajriba",
+    "AR-C289-atamanna-an",
+    "AR-R289-feelings-and-hopes"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "arabic/narration/ch289.txt",
+  "json": "arabic/narration/ch289.json",
+  "textHash": "fnv1a64:15aa0034ab581d0c",
+  "jsonHash": "fnv1a64:80bcdb867d88c7ac",
+  "findings": []
+}

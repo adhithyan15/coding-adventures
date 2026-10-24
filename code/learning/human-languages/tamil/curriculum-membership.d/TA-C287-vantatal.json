@@ -1,0 +1,11 @@
+{
+  "id": "TA-C287-vantatal",
+  "pathSegment": "TA-PATH-287-MUST-BECAUSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-287-MUST-BECAUSE",
+      "order": 1
+    }
+  ]
+}

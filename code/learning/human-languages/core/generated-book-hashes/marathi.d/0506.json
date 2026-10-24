@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:8edb43a6b5372105",
+  "lessonIds": [
+    "MR-C506-lipik",
+    "MR-C506-sipai",
+    "MR-C506-sikka",
+    "MR-C506-kagadpatra",
+    "MR-C506-channi-karne"
+  ],
+  "tex": "marathi/book/chapters/ch506-office-life.tex"
+}

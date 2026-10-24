@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:9ee43161fd863760",
+  "lessonIds": [
+    "KA-C367-khalanayaka",
+    "KA-C367-vira",
+    "KA-C367-satru",
+    "KA-C367-nasamadu",
+    "KA-C367-kanmareyagu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch367.txt",
+  "json": "kannada/narration/ch367.json",
+  "textHash": "fnv1a64:a0017c1439801b7e",
+  "jsonHash": "fnv1a64:f8bffb366d00e301",
+  "findings": []
+}

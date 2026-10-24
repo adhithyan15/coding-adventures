@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Suggestions and Proposals",
+  "label": "ch:te-suggestions-and-proposals",
+  "canDo": "I can suggest, propose and recommend.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C384-amsam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can suggest, propose and recommend.",
+    "assesses": [
+      "TE-LEX-C384-SUCANA384-03",
+      "TE-LEX-C384-SUCANA384-04",
+      "TE-LEX-C384-SUCANA384-05"
+    ]
+  }
+}

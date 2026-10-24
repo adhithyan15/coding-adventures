@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-511-JURA511",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-511-JURA511"
+  ],
+  "after": []
+}

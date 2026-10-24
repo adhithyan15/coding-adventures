@@ -1,0 +1,869 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 361,
+  "title": "Remembering the Fallen",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:4643be82fe549a34",
+  "lessons": [
+    {
+      "id": "KA-C361-smaraka",
+      "sequence": 18150,
+      "title": "ಸ್ಮಾರಕ (smāraka) — a memorial; a monument",
+      "headword": "ಸ್ಮಾರಕ",
+      "romanization": "smāraka",
+      "gloss": "a memorial; a monument",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea8c07f58bb0fb62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to barge in, then the Kannada for to snap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ಮಾರಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ಮಾರಕ — smāraka — \"a memorial; a monument\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊರಿನ ಮಧ್ಯದಲ್ಲಿ ಸೈನಿಕರ ಸ್ಮಾರಕ ಇದೆ. ūrina madhyadalli sainikara smāraka ide. There is a soldiers' memorial in the middle of the town."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸ್ಮಾರಕಗಳು, smārakagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Old temples and forts are ಐತಿಹಾಸಿಕ ಸ್ಮಾರಕಗಳು, historic monuments."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ಮಾರಕ (smāraka) is borrowed from Sanskrit smāraka, \"recalling, reminding of\" (Monier-Williams), from smṛ, \"to remember\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smāraka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *smāraka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smāraka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *smāraka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrina madhyadalli sainikara smāraka ide. — There is a soldiers' memorial in the middle of the town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrina madhyadalli sainikara smāraka ide.* — There is a soldiers' memorial in the middle of the town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to barge in, then the Kannada for to snap, then say smāraka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to barge in, then the Kannada for to snap, then say *smāraka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ಮಾರಕ (smāraka) mean? (\"A memorial; a monument\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C361-samadhi",
+      "sequence": 18160,
+      "title": "ಸಮಾಧಿ (samādhi) — a tomb; a grave",
+      "headword": "ಸಮಾಧಿ",
+      "romanization": "samādhi",
+      "gloss": "a tomb; a grave",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7031381448524f76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to snap, then the Kannada for a memorial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಮಾಧಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಾಧಿ — samādhi — \"a tomb; a grave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಳೆಯ ರಾಜನ ಸಮಾಧಿ ಬೆಟ್ಟದ ಕೆಳಗೆ ಇದೆ. haḷeya rājana samādhi beṭṭada keḷage ide. The old king's tomb is below the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸಮಾಧಿಗಳು, samādhigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "In religion ಸಮಾಧಿ (samādhi) is also deep meditation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಾಧಿ (samādhi) is borrowed from Sanskrit samādhi, \"putting together, joining\", with later senses that include deep meditation and a tomb (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samādhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samādhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samādhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samādhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḷeya rājana samādhi beṭṭada keḷage ide. — The old king's tomb is below the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḷeya rājana samādhi beṭṭada keḷage ide.* — The old king's tomb is below the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to snap, then the Kannada for a memorial, then say samādhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to snap, then the Kannada for a memorial, then say *samādhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಮಾಧಿ (samādhi) mean? (\"A tomb; a grave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C361-smarisu",
+      "sequence": 18170,
+      "title": "ಸ್ಮರಿಸು (smarisu) — to commemorate; to remember",
+      "headword": "ಸ್ಮರಿಸು",
+      "romanization": "smarisu",
+      "gloss": "to commemorate; to remember",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:863f854d9bfc4dd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a memorial, then the Kannada for a tomb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ಮರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ಮರಿಸು — smarisu — \"to commemorate; to remember\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿ ವರ್ಷ ಊರಿನವರು ಆ ಯೋಧರನ್ನು ಸ್ಮರಿಸುತ್ತಾರೆ. prati varṣa ūrinavaru ā yōdharannu smarisuttāre. Every year the townspeople commemorate those warriors."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಸ್ಮರಿಸಿದೆ, smariside."
+            },
+            {
+              "kind": "speech",
+              "text": "Who is remembered takes -ಅನ್ನು. A formal word; in talk, ನೆನಪಿಸಿಕೊಳ್ಳು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ಮರಿಸು (smarisu) is built on Sanskrit smaraṇa, \"remembering, memory\" (CDIAL 13862), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *smarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *smarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prati varṣa ūrinavaru ā yōdharannu smarisuttāre. — Every year the townspeople commemorate those warriors.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prati varṣa ūrinavaru ā yōdharannu smarisuttāre.* — Every year the townspeople commemorate those warriors.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a memorial, then the Kannada for a tomb, then say smarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a memorial, then the Kannada for a tomb, then say *smarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ಮರಿಸು (smarisu) mean? (\"To commemorate; to remember\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C361-buruju",
+      "sequence": 18180,
+      "title": "ಬುರುಜು (buruju) — a bastion; a tower",
+      "headword": "ಬುರುಜು",
+      "romanization": "buruju",
+      "gloss": "a bastion; a tower",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb19a78a89624d3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a tomb, then the Kannada for to commemorate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬುರುಜು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬುರುಜು — buruju — \"a bastion; a tower\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೋಟೆಯ ಬುರುಜಿನ ಮೇಲೆ ಸೈನಿಕರ ಸ್ಮಾರಕ ಇದೆ. kōṭeya burujina mēle sainikara smāraka ide. There is a soldiers' memorial on the fort's bastion."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಬುರುಜುಗಳು, burujugaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "The round towers on a fort wall where guns stood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬುರುಜು (buruju) is a loan from Arabic burj, \"a tower\", which came through Persian and Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buruju",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buruju*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buruju, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buruju*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōṭeya burujina mēle sainikara smāraka ide. — There is a soldiers' memorial on the fort's bastion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōṭeya burujina mēle sainikara smāraka ide.* — There is a soldiers' memorial on the fort's bastion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a tomb, then the Kannada for to commemorate, then say buruju again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a tomb, then the Kannada for to commemorate, then say *buruju* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬುರುಜು (buruju) mean? (\"A bastion; a tower\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C361-hulu",
+      "sequence": 18190,
+      "title": "ಹೂಳು (hūḷu) — to bury",
+      "headword": "ಹೂಳು",
+      "romanization": "hūḷu",
+      "gloss": "to bury",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d38a8dad98eccfe8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to commemorate, then the Kannada for a bastion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೂಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೂಳು — hūḷu — \"to bury\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರು ಸತ್ತ ನಾಯಿಯನ್ನು ತೋಟದಲ್ಲಿ ಹೂಳಿದರು. avaru satta nāyiyannu tōṭadalli hūḷidaru. They buried the dead dog in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಹೂಳಿದೆ, hūḷide."
+            },
+            {
+              "kind": "speech",
+              "text": "What is buried takes -ಅನ್ನು; where takes -ಅಲ್ಲಿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೂಳು (hūḷu) is native Dravidian: DEDR 4376 lists the older Kannada forms of this verb, \"to cover, to bury\", beginning with p- and later h-."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hūḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hūḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hūḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hūḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaru satta nāyiyannu tōṭadalli hūḷidaru. — They buried the dead dog in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaru satta nāyiyannu tōṭadalli hūḷidaru.* — They buried the dead dog in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to commemorate, then the Kannada for a bastion, then say hūḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to commemorate, then the Kannada for a bastion, then say *hūḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೂಳು (hūḷu) mean? (\"To bury\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R361-review-355-361",
+      "sequence": 18200,
+      "title": "Looking back: from Digging Up the Past to Remembering the Fallen",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Digging Up the Past to Remembering the Fallen",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acab0e6d82a71e72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for an excavation and archaeology."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an excavation, archaeology, ruins, an inscription, a manuscript",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an excavation, archaeology, ruins, an inscription, a manuscript]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "folklore, a vassal king, a battle, a ballad, a moral",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: folklore, a vassal king, a battle, a ballad, a moral]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to swindle, confidential, to cover up, to reveal, a plot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to swindle, confidential, to cover up, to reveal, a plot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hearing, a lawsuit, a case, bail, to confess",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hearing, a lawsuit, a case, bail, to confess]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a public festival, a procession, a slogan, to parade, a flag",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a public festival, a procession, a slogan, to parade, a flag]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hunt, to wander, to lie in wait, to barge in, to snap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hunt, to wander, to lie in wait, to barge in, to snap]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a memorial, a tomb, to commemorate, a bastion, to bury",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a memorial, a tomb, to commemorate, a bastion, to bury]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An excavation? (ಉತ್ಖನನ, utkhanana.) Archaeology? (ಪುರಾತತ್ವ, purātatva.) Ruins? (ಅವಶೇಷ, avaśēṣa.) An inscription? (ಶಾಸನ, śāsana.) A manuscript? (ಹಸ್ತಪ್ರತಿ, hastaprati.) Folklore? (ಜಾನಪದ, jānapada.) A vassal king? (ಸಾಮಂತ, sāmanta.) A battle? (ಸಮರ, samara.) A ballad? (ಲಾವಣಿ, lāvaṇi.) A moral? (ನೀತಿ, nīti.) To swindle? (ವಂಚಿಸು, vañcisu.) Confidential? (ಗೌಪ್ಯ, gaupya.) To cover up? (ಮುಚ್ಚಿಡು, mucciḍu.) To reveal? (ಬಹಿರಂಗಪಡಿಸು, bahiraṅgapaḍisu.) A plot? (ಸಂಚು, sañcu.) A hearing? (ವಿಚಾರಣೆ, vicāraṇe.) A lawsuit? (ಮೊಕದ್ದಮೆ, mokaddame.) A case? (ಪ್ರಕರಣ, prakaraṇa.) Bail? (ಜಾಮೀನು, jāmīnu.) To confess? (ತಪ್ಪೊಪ್ಪಿಕೊ, tappoppiko.) A public festival? (ಉತ್ಸವ, utsava.) A procession? (ಮೆರವಣಿಗೆ, meravaṇige.) A slogan? (ಘೋಷವಾಕ್ಯ, ghōṣavākya.) To parade? (ಮೆರೆಸು, meresu.) A flag? (ಧ್ವಜ, dhvaja.) To hunt? (ಬೇಟೆಯಾಡು, bēṭeyāḍu.) To wander? (ಅಲೆದಾಡು, aledāḍu.) To lie in wait? (ಹೊಂಚು ಹಾಕು, hoñcu hāku.) To barge in? (ನುಗ್ಗು, nuggu.) To snap? (ಮುರಿ, muri.) A memorial? (ಸ್ಮಾರಕ, smāraka.) A tomb? (ಸಮಾಧಿ, samādhi.) To commemorate? (ಸ್ಮರಿಸು, smarisu.) A bastion? (ಬುರುಜು, buruju.) To bury? (ಹೂಳು, hūḷu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

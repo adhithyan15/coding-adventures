@@ -1,0 +1,11 @@
+{
+  "id": "HI-C483-thakana",
+  "pathSegment": "HI-PATH-483-TAQAT483",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-483-TAQAT483",
+      "order": 4
+    }
+  ]
+}

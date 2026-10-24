@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C351-sampresanam",
+    "language": "malayalam",
+    "chapter": 351,
+    "sequence": 17100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f53c9b6f95d1952c"
+  },
+  "findings": []
+}

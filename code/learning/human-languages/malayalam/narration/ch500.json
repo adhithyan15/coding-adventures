@@ -1,0 +1,866 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 500,
+  "title": "Birds",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:75fa8aac7cfa400f",
+  "lessons": [
+    {
+      "id": "ML-C500-velampal",
+      "sequence": 24990,
+      "title": "വേഴാമ്പൽ (vēḻāmpal) — a hornbill",
+      "headword": "വേഴാമ്പൽ",
+      "romanization": "vēḻāmpal",
+      "gloss": "a hornbill",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8eb4ff3ab7b5117",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a wild elephant, then the Malayalam for a gaur."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വേഴാമ്പൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേഴാമ്പൽ — vēḻāmpal — \"a hornbill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വേഴാമ്പൽ ഉയരമുള്ള മരങ്ങളിൽ താമസിക്കുന്നു. vēḻāmpal uyaramuḷḷa maraṅṅaḷil tāmasikkunnu. The hornbill lives in tall trees."
+            },
+            {
+              "kind": "speech",
+              "text": "A big forest bird with a heavy beak; it is the state bird."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേഴാമ്പൽ (vēḻāmpal) is a Malayalam bird name whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēḻāmpal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēḻāmpal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēḻāmpal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēḻāmpal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēḻāmpal uyaramuḷḷa maraṅṅaḷil tāmasikkunnu. — The hornbill lives in tall trees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēḻāmpal uyaramuḷḷa maraṅṅaḷil tāmasikkunnu.* — The hornbill lives in tall trees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a wild elephant, then the Malayalam for a gaur, then say vēḻāmpal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a wild elephant, then the Malayalam for a gaur, then say *vēḻāmpal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വേഴാമ്പൽ (vēḻāmpal) mean? (\"A hornbill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C500-maramkotti",
+      "sequence": 25000,
+      "title": "മരംകൊത്തി (maraṁkotti) — a woodpecker",
+      "headword": "മരംകൊത്തി",
+      "romanization": "maraṁkotti",
+      "gloss": "a woodpecker",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53583310c5448519",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a gaur, then the Malayalam for a hornbill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മരംകൊത്തി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മരംകൊത്തി — maraṁkotti — \"a woodpecker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒരു മരംകൊത്തി പഴയ മരത്തിൽ കൊത്തി. oru maraṁkotti paḻaya marattil kotti. A woodpecker pecked at the old tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally the tree-pecker: മരം plus കൊത്തുക, to peck, with -ഇ for the one who does it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മരംകൊത്തി (maraṁkotti) is a native Dravidian compound of മരം, a tree (DEDR 4711), and കൊത്തുക, to peck (DEDR 2091)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraṁkotti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraṁkotti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraṁkotti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraṁkotti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru maraṁkotti paḻaya marattil kotti. — A woodpecker pecked at the old tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru maraṁkotti paḻaya marattil kotti.* — A woodpecker pecked at the old tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a gaur, then the Malayalam for a hornbill, then say maraṁkotti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a gaur, then the Malayalam for a hornbill, then say *maraṁkotti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മരംകൊത്തി (maraṁkotti) mean? (\"A woodpecker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C500-desatanam",
+      "sequence": 25010,
+      "title": "ദേശാടനം (dēśāṭanaṁ) — migration (of birds)",
+      "headword": "ദേശാടനം",
+      "romanization": "dēśāṭanaṁ",
+      "gloss": "migration (of birds)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8f709bda8d3afd7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a hornbill, then the Malayalam for a woodpecker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ദേശാടനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദേശാടനം — dēśāṭanaṁ — \"migration (of birds)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തണുപ്പുകാലത്ത് പല പക്ഷികളും ദേശാടനം നടത്തുന്നു. taṇuppukālattŭ pala pakṣikaḷuṁ dēśāṭanaṁ naṭattunnu. In the cold season many birds migrate."
+            },
+            {
+              "kind": "speech",
+              "text": "A migrating bird is a ദേശാടനപ്പക്ഷി. The verb phrase is ദേശാടനം (dēśāṭanaṁ) നടത്തുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദേശാടനം (dēśāṭanaṁ) is a Malayalam compound built from two Sanskrit words, deśa, \"a country\", and aṭana, \"roaming about\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēśāṭanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēśāṭanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēśāṭanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēśāṭanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇuppukālattŭ pala pakṣikaḷuṁ dēśāṭanaṁ naṭattunnu. — In the cold season many birds migrate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇuppukālattŭ pala pakṣikaḷuṁ dēśāṭanaṁ naṭattunnu.* — In the cold season many birds migrate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a hornbill, then the Malayalam for a woodpecker, then say dēśāṭanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a hornbill, then the Malayalam for a woodpecker, then say *dēśāṭanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ദേശാടനം (dēśāṭanaṁ) mean? (\"Migration (of birds)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C500-cekkeruka",
+      "sequence": 25020,
+      "title": "ചേക്കേറുക (cēkkēṟuka) — to roost; to come home to roost",
+      "headword": "ചേക്കേറുക",
+      "romanization": "cēkkēṟuka",
+      "gloss": "to roost; to come home to roost",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7adcfa2a9ddaf800",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a woodpecker, then the Malayalam for migration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചേക്കേറുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചേക്കേറുക — cēkkēṟuka — \"to roost; to come home to roost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സന്ധ്യയ്ക്ക് കാക്കകൾ മരങ്ങളിൽ ചേക്കേറി. sandhyaykkŭ kākkakaḷ maraṅṅaḷil cēkkēṟi. At dusk the crows went to roost in the trees."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചേക്കേറി, cēkkēṟi."
+            },
+            {
+              "kind": "speech",
+              "text": "ചേക്ക്, a roost, plus ഏറുക, to climb up. People who settle somewhere new are said to ചേക്കേറുക (cēkkēṟuka) too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചേക്കേറുക (cēkkēṟuka) is a native Dravidian compound of ചേക്ക്, a roost (DEDR 1990), and ഏറുക, to climb up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēkkēṟuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēkkēṟuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēkkēṟuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēkkēṟuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhyaykkŭ kākkakaḷ maraṅṅaḷil cēkkēṟi. — At dusk the crows went to roost in the trees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhyaykkŭ kākkakaḷ maraṅṅaḷil cēkkēṟi.* — At dusk the crows went to roost in the trees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a woodpecker, then the Malayalam for migration, then say cēkkēṟuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a woodpecker, then the Malayalam for migration, then say *cēkkēṟuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചേക്കേറുക (cēkkēṟuka) mean? (\"To roost; to come home to roost\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C500-kutukuttuka",
+      "sequence": 25030,
+      "title": "കൂടുകൂട്ടുക (kūṭukūṭṭuka) — to build a nest",
+      "headword": "കൂടുകൂട്ടുക",
+      "romanization": "kūṭukūṭṭuka",
+      "gloss": "to build a nest",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7a273a12c7bc6ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for migration, then the Malayalam for to roost."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൂടുകൂട്ടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂടുകൂട്ടുക — kūṭukūṭṭuka — \"to build a nest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കുരുവികൾ വരാന്തയിൽ കൂടുകൂട്ടി. kuruvikaḷ varāntayil kūṭukūṭṭi. Sparrows built a nest on the verandah."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കൂടുകൂട്ടി, kūṭukūṭṭi."
+            },
+            {
+              "kind": "speech",
+              "text": "കൂട്, a nest, plus കൂട്ടുക, to put together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂടുകൂട്ടുക (kūṭukūṭṭuka) is a native Dravidian compound of കൂട്, a nest (DEDR 1883), and കൂട്ടുക, to put together (DEDR 1882)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭukūṭṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭukūṭṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭukūṭṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭukūṭṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuruvikaḷ varāntayil kūṭukūṭṭi. — Sparrows built a nest on the verandah.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuruvikaḷ varāntayil kūṭukūṭṭi.* — Sparrows built a nest on the verandah.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for migration, then the Malayalam for to roost, then say kūṭukūṭṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for migration, then the Malayalam for to roost, then say *kūṭukūṭṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൂടുകൂട്ടുക (kūṭukūṭṭuka) mean? (\"To build a nest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R500-review-493-500",
+      "sequence": 25040,
+      "title": "Words from chapters 493–500 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 493-500",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f66358f719fa480f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for a consumer and a customer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a consumer, a customer, a warranty, to test, to swap for another",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a consumer, a customer, a warranty, to test, to swap for another]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to take back, an expense, to tally, to count and check, to sell off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to take back, an expense, to tally, to count and check, to sell off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a peak, a hillside, a mountain pass, a meadow, shade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a peak, a hillside, a mountain pass, a meadow, shade]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a large river, a brook, a water spring, a dam, to dry up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a large river, a brook, a water spring, a dam, to dry up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the coastal region, an estuary, high tide, low tide, a sea surge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the coastal region, an estuary, high tide, low tide, a sea surge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mangrove forest, a swamp, a coral reef, a shark, to accumulate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mangrove forest, a swamp, a coral reef, a shark, to accumulate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a forest, a wild animal, a sanctuary, a wild elephant, a gaur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a forest, a wild animal, a sanctuary, a wild elephant, a gaur]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hornbill, a woodpecker, migration, to roost, to build a nest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hornbill, a woodpecker, migration, to roost, to build a nest]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A consumer? (ഉപഭോക്താവ്, upabhōktāvŭ.) A customer? (ഇടപാടുകാരൻ, iṭapāṭukāran.) A warranty? (വാറന്റി, vāṟanṟi.) To test? (പരീക്ഷിക്കുക, parīkṣikkuka.) To swap for another? (മാറ്റിയെടുക്കുക, māṟṟiyeṭukkuka.) To take back? (തിരിച്ചെടുക്കുക, tiricceṭukkuka.) An expense? (ചെലവ്, celavŭ.) To tally? (ഒത്തുനോക്കുക, ottunōkkuka.) To count and check? (എണ്ണിനോക്കുക, eṇṇinōkkuka.) To sell off? (വിറ്റഴിക്കുക, viṟṟaḻikkuka.) A peak? (കൊടുമുടി, koṭumuṭi.) A hillside? (മലഞ്ചെരിവ്, malañcerivŭ.) A mountain pass? (ചുരം, curaṁ.) A meadow? (പുൽമേട്, pulmēṭŭ.) Shade? (തണൽ, taṇal.) A large river? (നദി, nadi.) A brook? (അരുവി, aruvi.) A water spring? (ഉറവ, uṟava.) A dam? (അണക്കെട്ട്, aṇakkeṭṭŭ.) To dry up? (വറ്റുക, vaṟṟuka.) The coastal region? (തീരദേശം, tīradēśaṁ.) An estuary? (അഴിമുഖം, aḻimukhaṁ.) High tide? (വേലിയേറ്റം, vēliyēṟṟaṁ.) Low tide? (വേലിയിറക്കം, vēliyiṟakkaṁ.) A sea surge? (കടലാക്രമണം, kaṭalākramaṇaṁ.) A mangrove forest? (കണ്ടൽക്കാട്, kaṇṭalkkāṭŭ.) A swamp? (ചതുപ്പ്, catuppŭ.) A coral reef? (പവിഴപ്പുറ്റ്, paviḻappuṟṟŭ.) A shark? (സ്രാവ്, srāvŭ.) To accumulate? (അടിഞ്ഞുകൂടുക, aṭiññukūṭuka.) A forest? (വനം, vanaṁ.) A wild animal? (വന്യജീവി, vanyajīvi.) A sanctuary? (സങ്കേതം, saṅkētaṁ.) A wild elephant? (കാട്ടാന, kāṭṭāna.) A gaur? (കാട്ടുപോത്ത്, kāṭṭupōttŭ.) A hornbill? (വേഴാമ്പൽ, vēḻāmpal.) A woodpecker? (മരംകൊത്തി, maraṁkotti.) Migration? (ദേശാടനം, dēśāṭanaṁ.) To roost? (ചേക്കേറുക, cēkkēṟuka.) To build a nest? (കൂടുകൂട്ടുക, kūṭukūṭṭuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

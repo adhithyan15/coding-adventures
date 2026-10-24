@@ -1,0 +1,11 @@
+{
+  "id": "MR-C554-ainveli",
+  "pathSegment": "MR-PATH-554-VEL554",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-554-VEL554",
+      "order": 2
+    }
+  ]
+}

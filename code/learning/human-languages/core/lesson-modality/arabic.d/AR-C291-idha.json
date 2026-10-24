@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C291-idha",
+    "language": "arabic",
+    "chapter": 291,
+    "sequence": 16770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:127a5352344cda00"
+  },
+  "findings": []
+}

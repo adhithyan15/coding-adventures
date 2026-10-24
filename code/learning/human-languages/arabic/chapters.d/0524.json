@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Talks, turns and headquarters",
+  "label": "ch:ar-talks-turns-and-headquarters",
+  "canDo": "I can say that people held talks, worked hard, took turns on duty or were promoted, and talk about headquarters.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C524-maqarr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can say that people held talks, worked hard, took turns on duty or were promoted, and talk about headquarters.",
+    "assesses": [
+      "AR-LEX-C524-TAAWUN524-03",
+      "AR-LEX-C524-TAAWUN524-04",
+      "AR-LEX-C524-TAAWUN524-05"
+    ]
+  }
+}

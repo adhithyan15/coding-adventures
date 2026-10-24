@@ -1,0 +1,11 @@
+{
+  "id": "AR-C420-tasawa",
+  "pathSegment": "AR-PATH-420-ISTIJABA420",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-420-ISTIJABA420",
+      "order": 3
+    }
+  ]
+}

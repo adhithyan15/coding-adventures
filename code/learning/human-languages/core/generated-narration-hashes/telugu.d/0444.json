@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:64695faa82b269ea",
+  "lessonIds": [
+    "TE-C444-indhanam",
+    "TE-C444-cedipovu",
+    "TE-C444-morayincu",
+    "TE-C444-pankcaru",
+    "TE-C444-marammatu-ceyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch444.txt",
+  "json": "telugu/narration/ch444.json",
+  "textHash": "fnv1a64:81a7e92c2f538836",
+  "jsonHash": "fnv1a64:6ab8f7f31e00717d",
+  "findings": []
+}

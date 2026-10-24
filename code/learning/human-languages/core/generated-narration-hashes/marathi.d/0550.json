@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:34caa14e06d9c9af",
+  "lessonIds": [
+    "MR-C550-yogayog",
+    "MR-C550-jugar",
+    "MR-C550-bhagya",
+    "MR-C550-nanephek",
+    "MR-C550-paij-lavne",
+    "MR-R550-review-544-550"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch550.txt",
+  "json": "marathi/narration/ch550.json",
+  "textHash": "fnv1a64:2defa4d4bcf7ef89",
+  "jsonHash": "fnv1a64:ab455277fe2ad017",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Ancestors and Customs",
+  "label": "ch:ml-ancestors-and-customs",
+  "canDo": "I can say an ancestor, a successor, a custom, an origin and a grandmother's tale.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C395-muttassikkatha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can say an ancestor, a successor, a custom, an origin and a grandmother's tale.",
+    "assesses": [
+      "ML-LEX-C395-PURVIKAN395-03",
+      "ML-LEX-C395-PURVIKAN395-04",
+      "ML-LEX-C395-PURVIKAN395-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:aa862d4e59227ce6",
+  "lessonIds": [
+    "HI-C295-giraftarkarna",
+    "HI-C295-muqadma",
+    "HI-C295-saza",
+    "HI-C295-jurmana",
+    "HI-C295-hathkari",
+    "HI-R295-review-288-295"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch295.txt",
+  "json": "hindi/narration/ch295.json",
+  "textHash": "fnv1a64:4c9ecf48acb7696f",
+  "jsonHash": "fnv1a64:b03a4538dd78f0f0",
+  "findings": []
+}

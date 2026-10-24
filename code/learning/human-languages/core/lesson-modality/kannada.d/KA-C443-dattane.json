@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C443-dattane",
+    "language": "kannada",
+    "chapter": 443,
+    "sequence": 22540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ab35ac3369106c5"
+  },
+  "findings": []
+}

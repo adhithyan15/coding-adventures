@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:eef2144ef076b5ec",
+  "lessonIds": [
+    "HI-C331-vrat",
+    "HI-C331-arti",
+    "HI-C331-bhajan",
+    "HI-C331-prasad",
+    "HI-C331-pakvan"
+  ],
+  "tex": "hindi/book/chapters/ch331-fasting-and-offerings.tex"
+}

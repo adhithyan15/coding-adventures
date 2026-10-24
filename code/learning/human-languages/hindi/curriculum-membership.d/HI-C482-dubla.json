@@ -1,0 +1,11 @@
+{
+  "id": "HI-C482-dubla",
+  "pathSegment": "HI-PATH-482-KAD482",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-482-KAD482",
+      "order": 4
+    }
+  ]
+}

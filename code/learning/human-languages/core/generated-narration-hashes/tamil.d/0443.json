@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:488903417834301d",
+  "lessonIds": [
+    "TA-C443-oti",
+    "TA-C443-norunku",
+    "TA-C443-virical",
+    "TA-C443-ottai",
+    "TA-C443-kiru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch443.txt",
+  "json": "tamil/narration/ch443.json",
+  "textHash": "fnv1a64:0de16850980498a1",
+  "jsonHash": "fnv1a64:bbcef239a189cf09",
+  "findings": []
+}

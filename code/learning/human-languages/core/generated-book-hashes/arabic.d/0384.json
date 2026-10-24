@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:86561b0976dd5496",
+  "lessonIds": [
+    "AR-C384-mawwala",
+    "AR-C384-khassasa",
+    "AR-C384-sinaa",
+    "AR-C384-ziraa",
+    "AR-C384-tanmiya"
+  ],
+  "tex": "arabic/book/chapters/ch384-funding-and-development.tex"
+}

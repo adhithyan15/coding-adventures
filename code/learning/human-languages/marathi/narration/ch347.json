@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 347,
+  "title": "For and Against",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e0d942dc006e317e",
+  "lessons": [
+    {
+      "id": "MR-C347-virodh-karne",
+      "sequence": 20250,
+      "title": "विरोध करणे (virodh karṇe) — to oppose",
+      "headword": "विरोध करणे",
+      "romanization": "virodh karṇe",
+      "gloss": "to oppose",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eec64078bd6067be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to verify, then the Marathi for to reject."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विरोध करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरोध करणे — virodh karṇe — \"to oppose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोकांनी नव्या रस्त्याला विरोध केला. lokānnī navyā rastyālā virodh kelā. People opposed the new road."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने विरोध केला, tyāne virodh kelā."
+            },
+            {
+              "kind": "speech",
+              "text": "What is opposed takes -ला: रस्त्याला विरोध करणे (virodh karṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरोध करणे (virodh karṇe) joins the tatsama विरोध, Sanskrit virodha, \"opposition, hindrance\" (Monier-Williams), to करणे, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virodh karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virodh karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virodh karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virodh karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokānnī navyā rastyālā virodh kelā. — People opposed the new road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokānnī navyā rastyālā virodh kelā.* — People opposed the new road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to verify, then the Marathi for to reject, then say virodh karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to verify, then the Marathi for to reject, then say *virodh karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विरोध करणे (virodh karṇe) mean? (\"To oppose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C347-pathimba-dene",
+      "sequence": 20260,
+      "title": "पाठिंबा देणे (pāṭhimbā deṇe) — to support; to back",
+      "headword": "पाठिंबा देणे",
+      "romanization": "pāṭhimbā deṇe",
+      "gloss": "to support; to back",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22d45c5c499c43b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to reject, then the Marathi for to oppose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाठिंबा देणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाठिंबा देणे — pāṭhimbā deṇe — \"to support; to back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझ्या मित्रांनी मला पूर्ण पाठिंबा दिला. mājhyā mitrānnī malā pūrṇa pāṭhimbā dilā. My friends gave me full support."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने पाठिंबा दिला, tyāne pāṭhimbā dilā."
+            },
+            {
+              "kind": "speech",
+              "text": "The person backed takes -ला: मला पाठिंबा दिला."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाठिंबा देणे (pāṭhimbā deṇe) joins पाठिंबा, \"backing\", a Marathi noun whose origin is not settled, to देणे, \"to give\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhimbā deṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhimbā deṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhimbā deṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhimbā deṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhyā mitrānnī malā pūrṇa pāṭhimbā dilā. — My friends gave me full support.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhyā mitrānnī malā pūrṇa pāṭhimbā dilā.* — My friends gave me full support.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to reject, then the Marathi for to oppose, then say pāṭhimbā deṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to reject, then the Marathi for to oppose, then say *pāṭhimbā deṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पाठिंबा देणे (pāṭhimbā deṇe) mean? (\"To support; to back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C347-samarthan-karne",
+      "sequence": 20270,
+      "title": "समर्थन करणे (samarthan karṇe) — to justify; to defend (a view)",
+      "headword": "समर्थन करणे",
+      "romanization": "samarthan karṇe",
+      "gloss": "to justify; to defend (a view)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9113ed6e56bbe26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to oppose, then the Marathi for to support."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: समर्थन करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समर्थन करणे — samarthan karṇe — \"to justify; to defend (a view)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तो नेहमी आपल्या चुकीचं समर्थन करतो. to nehmī āpalyā cukīcaṁ samarthan karto. He always justifies his mistakes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने समर्थन केलं, tyāne samarthan kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The view defended takes -चं: निर्णयाचं समर्थन करणे (samarthan karṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समर्थन करणे (samarthan karṇe) joins the tatsama समर्थन, Sanskrit samarthana, \"establishing, supporting an argument\" (Monier-Williams), to करणे, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarthan karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarthan karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarthan karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarthan karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to nehmī āpalyā cukīcaṁ samarthan karto. — He always justifies his mistakes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *to nehmī āpalyā cukīcaṁ samarthan karto.* — He always justifies his mistakes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to oppose, then the Marathi for to support, then say samarthan karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to oppose, then the Marathi for to support, then say *samarthan karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does समर्थन करणे (samarthan karṇe) mean? (\"To justify; to defend (a view)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C347-tatastha",
+      "sequence": 20280,
+      "title": "तटस्थ (taṭastha) — neutral",
+      "headword": "तटस्थ",
+      "romanization": "taṭastha",
+      "gloss": "neutral",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:073fb0286137abc0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to support, then the Marathi for to justify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तटस्थ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तटस्थ — taṭastha — \"neutral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "या वादात मी तटस्थ राहणार आहे. yā vādāt mī taṭastha rāhṇār āhe. I am going to stay neutral in this dispute."
+            },
+            {
+              "kind": "speech",
+              "text": "Invariable: तो तटस्थ (taṭastha) आहे, ती तटस्थ (taṭastha) आहे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तटस्थ (taṭastha) is a tatsama, taken from Sanskrit taṭastha, \"standing on the bank; standing aloof\" (Monier-Williams). One who watches from the bank (taṭa) takes no side."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭastha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭastha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭastha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭastha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā vādāt mī taṭastha rāhṇār āhe. — I am going to stay neutral in this dispute.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā vādāt mī taṭastha rāhṇār āhe.* — I am going to stay neutral in this dispute.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to support, then the Marathi for to justify, then say taṭastha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to support, then the Marathi for to justify, then say *taṭastha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तटस्थ (taṭastha) mean? (\"Neutral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C347-viruddha",
+      "sequence": 20290,
+      "title": "विरुद्ध (viruddha) — against; opposite",
+      "headword": "विरुद्ध",
+      "romanization": "viruddha",
+      "gloss": "against; opposite",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53783a73ca624dc6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to justify, then the Marathi for neutral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विरुद्ध",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरुद्ध — viruddha — \"against; opposite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आमचं मत तुमच्या मताच्या अगदी विरुद्ध आहे. āmcaṁ mat tumacyā matācyā agdī viruddha āhe. Our view is the exact opposite of yours."
+            },
+            {
+              "kind": "speech",
+              "text": "After -च्या or attached: तुमच्या विरुद्ध (viruddha), संघाविरुद्ध, against the team."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरुद्ध (viruddha) is a tatsama, taken from Sanskrit viruddha, \"opposed, hindered\" (CDIAL 11864)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viruddha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viruddha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viruddha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viruddha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmcaṁ mat tumacyā matācyā agdī viruddha āhe. — Our view is the exact opposite of yours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmcaṁ mat tumacyā matācyā agdī viruddha āhe.* — Our view is the exact opposite of yours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to justify, then the Marathi for neutral, then say viruddha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to justify, then the Marathi for neutral, then say *viruddha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विरुद्ध (viruddha) mean? (\"Against; opposite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

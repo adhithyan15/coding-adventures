@@ -11,3 +11,8 @@ vowel **ô** (not "a"), *s→sh*, *v→b* — which disguises familiar Sanskrit 
 the learner is taught to un-shift them. The script is taught **inline**, never as
 a gated reading course.
 
+Coverage note: canonical lessons now continue through Chapter 545 (the B1
+core in chapters 264–275 and the 1,350-word B1 vocabulary in chapters
+276–545; Bengali attains B1 on the level gate), while the sections below
+still describe the opening chapters only.
+

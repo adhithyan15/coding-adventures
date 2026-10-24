@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:6e67f5e809789918",
+  "lessonIds": [
+    "KA-C442-heddari",
+    "KA-C442-tol",
+    "KA-C442-melsetuve",
+    "KA-C442-ghati",
+    "KA-C442-marga"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch442.txt",
+  "json": "kannada/narration/ch442.json",
+  "textHash": "fnv1a64:ada556667667073d",
+  "jsonHash": "fnv1a64:bc77361ac90d9f7c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:753783f195b9b572",
+  "lessonIds": [
+    "AR-C476-aqrab",
+    "AR-C476-jarada",
+    "AR-C476-tuhlub",
+    "AR-C476-mikhlab",
+    "AR-C476-iftarasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch476.txt",
+  "json": "arabic/narration/ch476.json",
+  "textHash": "fnv1a64:eb0dd0a7c2780054",
+  "jsonHash": "fnv1a64:786f5dfb0af3749d",
+  "findings": []
+}

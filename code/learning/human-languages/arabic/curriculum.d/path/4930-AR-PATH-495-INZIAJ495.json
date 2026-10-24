@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-495-INZIAJ495",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-495-INZIAJ495"
+  ],
+  "after": []
+}

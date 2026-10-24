@@ -1,0 +1,11 @@
+{
+  "id": "TA-C340-natukatattu",
+  "pathSegment": "TA-PATH-340-VEEZHCHI340",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-340-VEEZHCHI340",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 494,
+  "title": "Shock and Dismay",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c3bb1f259848a20b",
+  "lessons": [
+    {
+      "id": "KA-C494-mududu",
+      "sequence": 25200,
+      "title": "ಮುದುಡು (muduḍu) — to shrink back; to curl up",
+      "headword": "ಮುದುಡು",
+      "romanization": "muduḍu",
+      "gloss": "to shrink back; to curl up",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b31c8703a314446a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for frustration, then the Kannada for agitation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮುದುಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುದುಡು — muduḍu — \"to shrink back; to curl up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗುಡುಗಿನ ಸದ್ದಿಗೆ ನಾಯಿ ಮೂಲೆಯಲ್ಲಿ ಮುದುಡಿ ಮಲಗಿತು. guḍugina saddige nāyi mūleyalli muduḍi malagitu. At the sound of thunder the dog curled up in a corner."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮುದುಡಿದೆ, muduḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "Of fear, cold or a wilting leaf; ಮುದುಡಿಕೊ, to huddle up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುದುಡು (muduḍu) is a native Kannada verb, \"to shrink, to curl up\"; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muduḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muduḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muduḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muduḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guḍugina saddige nāyi mūleyalli muduḍi malagitu. — At the sound of thunder the dog curled up in a corner.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guḍugina saddige nāyi mūleyalli muduḍi malagitu.* — At the sound of thunder the dog curled up in a corner.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for frustration, then the Kannada for agitation, then say muduḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for frustration, then the Kannada for agitation, then say *muduḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮುದುಡು (muduḍu) mean? (\"To shrink back; to curl up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C494-tadavarisu",
+      "sequence": 25210,
+      "title": "ತಡವರಿಸು (taḍavarisu) — to fumble; to falter",
+      "headword": "ತಡವರಿಸು",
+      "romanization": "taḍavarisu",
+      "gloss": "to fumble; to falter",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a5f958d80c4f67b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for agitation, then the Kannada for to shrink back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಡವರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಡವರಿಸು — taḍavarisu — \"to fumble; to falter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಶ್ನೆ ಕೇಳಿದಾಗ ಅವನು ಉತ್ತರಕ್ಕಾಗಿ ತಡವರಿಸಿದನು. praśne kēḷidāga avanu uttarakkāgi taḍavarisidanu. When he was asked, he fumbled for an answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತಡವರಿಸಿದೆ, taḍavariside."
+            },
+            {
+              "kind": "speech",
+              "text": "For words: ಮಾತಿಗೆ ತಡವರಿಸು (taḍavarisu), to grope for words. In the dark it is feeling your way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಡವರಿಸು (taḍavarisu) is native Dravidian: DEDR 3025 gives Kannada taḍavu, \"to touch gently, grope\", and taḍa-varisu, \"to feel one's way with the hands or feet\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍavarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍavarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍavarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍavarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśne kēḷidāga avanu uttarakkāgi taḍavarisidanu. — When he was asked, he fumbled for an answer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśne kēḷidāga avanu uttarakkāgi taḍavarisidanu.* — When he was asked, he fumbled for an answer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for agitation, then the Kannada for to shrink back, then say taḍavarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for agitation, then the Kannada for to shrink back, then say *taḍavarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಡವರಿಸು (taḍavarisu) mean? (\"To fumble; to falter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C494-beragu",
+      "sequence": 25220,
+      "title": "ಬೆರಗು (beragu) — amazement; astonishment",
+      "headword": "ಬೆರಗು",
+      "romanization": "beragu",
+      "gloss": "amazement; astonishment",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:873ba56a77b67d0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to shrink back, then the Kannada for to fumble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೆರಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆರಗು — beragu — \"amazement; astonishment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜಲಪಾತವನ್ನು ನೋಡಿ ಮಕ್ಕಳು ಬೆರಗಾದರು. jalapātavannu nōḍi makkaḷu beragādaru. Seeing the waterfall, the children were amazed."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೆರಗಾಗು, to be amazed: the noun joined to ಆಗು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆರಗು (beragu) is native Dravidian: DEDR 5443 lists Kannada beṟagu, \"amazement, astonishment, alarm\", beside Tamil words for being bewildered."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beragu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beragu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beragu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beragu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jalapātavannu nōḍi makkaḷu beragādaru. — Seeing the waterfall, the children were amazed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jalapātavannu nōḍi makkaḷu beragādaru.* — Seeing the waterfall, the children were amazed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to shrink back, then the Kannada for to fumble, then say beragu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to shrink back, then the Kannada for to fumble, then say *beragu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೆರಗು (beragu) mean? (\"Amazement; astonishment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C494-kangedu",
+      "sequence": 25230,
+      "title": "ಕಂಗೆಡು (kaṅgeḍu) — to lose heart; to be dismayed",
+      "headword": "ಕಂಗೆಡು",
+      "romanization": "kaṅgeḍu",
+      "gloss": "to lose heart; to be dismayed",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bba9f25a2badcb8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to fumble, then the Kannada for amazement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಂಗೆಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂಗೆಡು — kaṅgeḍu — \"to lose heart; to be dismayed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪರೀಕ್ಷೆಯಲ್ಲಿ ಫೇಲಾದರೂ ಅವನು ಕಂಗೆಡಲಿಲ್ಲ. parīkṣeyalli phēlādarū avanu kaṅgeḍalilla. Though he failed the exam, he did not lose heart."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಕಂಗೆಟ್ಟೆ, kaṅgeṭṭe."
+            },
+            {
+              "kind": "speech",
+              "text": "Often in the negative, as praise: ಕಂಗೆಡಲಿಲ್ಲ, did not lose heart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂಗೆಡು (kaṅgeḍu) is a native Kannada verb, \"to be dismayed, to lose heart\"; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṅgeḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṅgeḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṅgeḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṅgeḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parīkṣeyalli phēlādarū avanu kaṅgeḍalilla. — Though he failed the exam, he did not lose heart.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parīkṣeyalli phēlādarū avanu kaṅgeḍalilla.* — Though he failed the exam, he did not lose heart.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to fumble, then the Kannada for amazement, then say kaṅgeḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to fumble, then the Kannada for amazement, then say *kaṅgeḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಂಗೆಡು (kaṅgeḍu) mean? (\"To lose heart; to be dismayed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C494-digbhrame",
+      "sequence": 25240,
+      "title": "ದಿಗ್ಭ್ರಮೆ (digbhrame) — bewilderment; stunned shock",
+      "headword": "ದಿಗ್ಭ್ರಮೆ",
+      "romanization": "digbhrame",
+      "gloss": "bewilderment; stunned shock",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24fd9719df5f1b83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for amazement, then the Kannada for to lose heart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದಿಗ್ಭ್ರಮೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದಿಗ್ಭ್ರಮೆ — digbhrame — \"bewilderment; stunned shock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮನೆಗೆ ಬಂದಾಗ ಬಾಗಿಲು ತೆರೆದಿತ್ತು, ನಾನು ದಿಗ್ಭ್ರಮೆಗೊಂಡೆ. manege bandāga bāgilu teredittu, nānu digbhramegoṇḍe. When I came home the door was open; I was stunned."
+            },
+            {
+              "kind": "speech",
+              "text": "ದಿಗ್ಭ್ರಮೆಗೊಳ್ಳು, to be stunned. Literally a whirling of the directions: not knowing which way to turn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದಿಗ್ಭ್ರಮೆ (digbhrame) is borrowed from Sanskrit digbhrama, \"perplexity about the points of the compass\" (Monier-Williams): dik, \"direction\", and bhrama, \"giddiness\" (CDIAL 9646)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digbhrame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digbhrame*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digbhrame, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digbhrame*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manege bandāga bāgilu teredittu, nānu digbhramegoṇḍe. — When I came home the door was open; I was stunned.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manege bandāga bāgilu teredittu, nānu digbhramegoṇḍe.* — When I came home the door was open; I was stunned.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for amazement, then the Kannada for to lose heart, then say digbhrame again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for amazement, then the Kannada for to lose heart, then say *digbhrame* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದಿಗ್ಭ್ರಮೆ (digbhrame) mean? (\"Bewilderment; stunned shock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

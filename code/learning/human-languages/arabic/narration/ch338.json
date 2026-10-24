@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 338,
+  "title": "Remembering the dead",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1e7bc0bdd718e63c",
+  "lessons": [
+    {
+      "id": "AR-C338-tabin",
+      "sequence": 19300,
+      "title": "تأبين (taʾbīn) — a eulogy, a memorial tribute",
+      "headword": "تأبين",
+      "romanization": "taʾbīn",
+      "gloss": "a eulogy, a memorial tribute",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:058883a6284e431a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an heir, then the Arabic for a widow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تأبين",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تأبين — taʾbīn — \"a eulogy, a memorial tribute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حضر الكتاب حفل تأبين الشاعر. ḥaḍara al-kuttāb ḥafl taʾbīn ash-shāʿir. The writers attended the poet’s memorial."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تأبين (taʾbīn) is built on the native Arabic root ʾ-b-n (Lane), where Form II abbana is \"to praise a person after his death\"; taʾbīn is its verbal noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʾbīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʾbīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʾbīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʾbīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaḍara al-kuttāb ḥafl taʾbīn ash-shāʿir. — The writers attended the poet’s memorial.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaḍara al-kuttāb ḥafl taʾbīn ash-shāʿir.* — The writers attended the poet’s memorial.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an heir, then the Arabic for a widow, then say taʾbīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an heir, then the Arabic for a widow, then say *taʾbīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تأبين (taʾbīn) mean? (\"A eulogy, a memorial tribute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C338-darih",
+      "sequence": 19310,
+      "title": "ضريح (ḍarīḥ) — a tomb, a mausoleum",
+      "headword": "ضريح",
+      "romanization": "ḍarīḥ",
+      "gloss": "a tomb, a mausoleum",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cdddd4cf1a0ed75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a widow, then the Arabic for a eulogy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ضريح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضريح — ḍarīḥ — \"a tomb, a mausoleum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "زار السياح ضريح الملك القديم. zāra as-suyyāḥ ḍarīḥ al-malik al-qadīm. The tourists visited the old king’s tomb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضريح (ḍarīḥ) is built on the native Arabic root ḍ-r-ḥ (Lane), \"to dig a trench for the dead\"; a ḍarīḥ is first that grave, then a built tomb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍarīḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍarīḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍarīḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍarīḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zāra as-suyyāḥ ḍarīḥ al-malik al-qadīm. — The tourists visited the old king’s tomb.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zāra as-suyyāḥ ḍarīḥ al-malik al-qadīm.* — The tourists visited the old king’s tomb.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a widow, then the Arabic for a eulogy, then say ḍarīḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a widow, then the Arabic for a eulogy, then say *ḍarīḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ضريح (ḍarīḥ) mean? (\"A tomb, a mausoleum\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C338-wafah",
+      "sequence": 19320,
+      "title": "وفاة (wafāh) — a death, a passing",
+      "headword": "وفاة",
+      "romanization": "wafāh",
+      "gloss": "a death, a passing",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2593c1d17ac1c79c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a eulogy, then the Arabic for a tomb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وفاة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وفاة — wafāh — \"a death, a passing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بكى الجميع بعد وفاة (wafāh) الجدة. bakā al-jamīʿ baʿda wafāt al-jadda. Everyone wept after the grandmother’s death."
+            },
+            {
+              "kind": "speech",
+              "text": "The polite noun beside موت."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وفاة (wafāh) is built on the native Arabic root w-f-y (Lane), \"to be complete, to fulfil\". Wafāh is a life brought to its full term."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wafāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wafāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wafāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wafāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bakā al-jamīʿ baʿda wafāt al-jadda. — Everyone wept after the grandmother’s death.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bakā al-jamīʿ baʿda wafāt al-jadda.* — Everyone wept after the grandmother’s death.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a eulogy, then the Arabic for a tomb, then say wafāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a eulogy, then the Arabic for a tomb, then say *wafāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وفاة (wafāh) mean? (\"A death, a passing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C338-maqbara",
+      "sequence": 19330,
+      "title": "مقبرة (maqbara) — a cemetery",
+      "headword": "مقبرة",
+      "romanization": "maqbara",
+      "gloss": "a cemetery",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c5daef996a4231d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a tomb, then the Arabic for a death."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مقبرة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقبرة — maqbara — \"a cemetery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "زرنا المقبرة صباح العيد. zurnā al-maqbara ṣabāḥ al-ʿīd. We visited the cemetery on the morning of the holiday."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: مقابر, maqābir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقبرة (maqbara) is built on the native Arabic root q-b-r (Lane), \"to bury\". The mafʿala pattern names a place: \"the place of graves\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maqbara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maqbara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maqbara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maqbara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zurnā al-maqbara ṣabāḥ al-ʿīd. — We visited the cemetery on the morning of the holiday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zurnā al-maqbara ṣabāḥ al-ʿīd.* — We visited the cemetery on the morning of the holiday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a tomb, then the Arabic for a death, then say maqbara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a tomb, then the Arabic for a death, then say *maqbara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مقبرة (maqbara) mean? (\"A cemetery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C338-nash",
+      "sequence": 19340,
+      "title": "نعش (naʿsh) — a coffin, a bier",
+      "headword": "نعش",
+      "romanization": "naʿsh",
+      "gloss": "a coffin, a bier",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09dda31ea592e191",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a death, then the Arabic for a cemetery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نعش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نعش — naʿsh — \"a coffin, a bier\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حمل أربعة رجال النعش. ḥamala arbaʿat rijāl an-naʿsh. Four men carried the coffin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نعش (naʿsh) is built on the native Arabic root n-ʿ-sh (Lane), \"to raise up\". The stars of the Great Bear are banāt naʿsh, \"the daughters of the bier\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naʿsh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naʿsh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naʿsh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naʿsh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥamala arbaʿat rijāl an-naʿsh. — Four men carried the coffin.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥamala arbaʿat rijāl an-naʿsh.* — Four men carried the coffin.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a death, then the Arabic for a cemetery, then say naʿsh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a death, then the Arabic for a cemetery, then say *naʿsh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نعش (naʿsh) mean? (\"A coffin, a bier\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

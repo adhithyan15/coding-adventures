@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C377-aksepisu",
+    "language": "kannada",
+    "chapter": 377,
+    "sequence": 19080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70fa6fcd6bb1a684"
+  },
+  "findings": []
+}

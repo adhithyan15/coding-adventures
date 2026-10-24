@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:b9b2998edea11447",
+  "lessonIds": [
+    "ML-C411-atinal",
+    "ML-C411-ayatinal",
+    "ML-C411-mulam",
+    "ML-C411-yathartthattil",
+    "ML-C411-vastavattil"
+  ],
+  "tex": "malayalam/book/chapters/ch411-because-and-therefore.tex"
+}

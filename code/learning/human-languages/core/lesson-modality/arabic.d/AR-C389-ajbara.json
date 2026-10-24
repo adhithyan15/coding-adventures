@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C389-ajbara",
+    "language": "arabic",
+    "chapter": 389,
+    "sequence": 22010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51d826125b016664"
+  },
+  "findings": []
+}

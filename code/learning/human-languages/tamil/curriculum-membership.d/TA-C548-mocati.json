@@ -1,0 +1,11 @@
+{
+  "id": "TA-C548-mocati",
+  "pathSegment": "TA-PATH-548-SIKKANAM548",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-548-SIKKANAM548",
+      "order": 3
+    }
+  ]
+}

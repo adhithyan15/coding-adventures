@@ -1,0 +1,19 @@
+{
+  "chapter": 541,
+  "title": "At the exhibition",
+  "label": "ch:ar-at-the-exhibition",
+  "canDo": "I can name an artist, an exhibition, a sculptor and a painter, and say that someone carved a figure.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C541-rassam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can name an artist, an exhibition, a sculptor and a painter, and say that someone carved a figure.",
+    "assesses": [
+      "AR-LEX-C541-FANN541-03",
+      "AR-LEX-C541-FANN541-04",
+      "AR-LEX-C541-FANN541-05"
+    ]
+  }
+}

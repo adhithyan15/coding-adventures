@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C458-alavatupadu",
+    "language": "telugu",
+    "chapter": 458,
+    "sequence": 23030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcb3dd02b0887e49"
+  },
+  "findings": []
+}

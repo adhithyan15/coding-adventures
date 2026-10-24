@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:e22be35be3ecf0d6",
+  "lessonIds": [
+    "TE-C376-spandana",
+    "TE-C376-prarambham",
+    "TE-C376-mugimpu",
+    "TE-C376-ghattam",
+    "TE-C376-yadrcchikanga"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch376.txt",
+  "json": "telugu/narration/ch376.json",
+  "textHash": "fnv1a64:efa31f2ed9ec26b4",
+  "jsonHash": "fnv1a64:ab8b0b91729ba6e7",
+  "findings": []
+}

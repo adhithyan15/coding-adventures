@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "For and Against",
+  "label": "ch:ml-for-and-against",
+  "canDo": "I can say to vote, to support, an objection, to question and to respond.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C453-pratikarikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can say to vote, to support, an objection, to question and to respond.",
+    "assesses": [
+      "ML-LEX-C453-PINTUNA453-03",
+      "ML-LEX-C453-PINTUNA453-04",
+      "ML-LEX-C453-PINTUNA453-05"
+    ]
+  }
+}

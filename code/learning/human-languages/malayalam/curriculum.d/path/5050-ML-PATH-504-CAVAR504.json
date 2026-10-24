@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-504-CAVAR504",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-504-CAVAR504"
+  ],
+  "after": []
+}

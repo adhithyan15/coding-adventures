@@ -1,0 +1,424 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 316,
+  "title": "Bigger, Best and How Long",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:253a1c4cecc99369",
+  "lessons": [
+    {
+      "id": "KA-C316-maneginta",
+      "sequence": 15300,
+      "title": "ಮನೆಗಿಂತ (maneginta) — bigger than, best of all",
+      "headword": "ಮನೆಗಿಂತ",
+      "romanization": "maneginta",
+      "gloss": "than the house — comparing with -ಗಿಂತ, and ಎಲ್ಲಕ್ಕಿಂತ, 'most of all'",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bd4a02b33f29c63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"big\", \"small\" and \"more\". (doḍḍa, cikka, heccu.) Then \"I would love to go to Mysuru one day.\" (nanage ondu dina maisūrige hōgabēku anta āse ide.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ಗಿಂತ, than",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಈ ಮನೆ ಆ ಮನೆಗಿಂತ ದೊಡ್ಡದು. ī mane ā maneginta doḍḍadu. — \"This house is bigger than that house.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The thing you measure against takes -ಗಿಂತ, \"than\". It is the \"to\" ending with -ಇಂತ on it: ಮನೆಗೆ becomes ಮನೆಗಿಂತ (maneginta); ನನಗೆ becomes ನನಗಿಂತ (nanaginta, \"than me\"). Where \"to\" is -ಕ್ಕೆ, \"than\" is -ಕ್ಕಿಂತ: ಮರಕ್ಕೆ becomes ಮರಕ್ಕಿಂತ (marakkinta, \"than the tree\")."
+            },
+            {
+              "kind": "speech",
+              "text": "The adjective needs no \"-er\". ದೊಡ್ಡ stays ದೊಡ್ಡ; at the end of the sentence it takes -ದು: ದೊಡ್ಡದು (doḍḍadu, \"(it is) big\"), ಚಿಕ್ಕದು (cikkadu, \"(it is) small\"), like the ಒಳ್ಳೆಯದು of \"it is good\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಸ್ಸಿಗಿಂತ ರೈಲು ಬೇಗ ಹೋಗುತ್ತದೆ. bassiginta railu bēga hōguttade. — \"The train goes faster than the bus.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಾಫಿಗಿಂತ ಚಹಾ ನನಗೆ ಹೆಚ್ಚು ಇಷ್ಟ. kāphiginta cahā nanage heccu iṣṭa. — \"I like tea more than coffee.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With a liking, ಹೆಚ್ಚು, \"more\", says how much more."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: ಎಲ್ಲಕ್ಕಿಂತ, most of all",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇದು ಎಲ್ಲಕ್ಕಿಂತ ಚಿಕ್ಕ ಕೋಣೆ. idu ellakkinta cikka kōṇe. — \"This is the smallest room.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಎಲ್ಲಕ್ಕಿಂತ is ಎಲ್ಲ, \"all\", the ಎಲ್ಲಾ you know, with -ಕ್ಕಿಂತ: \"than all\", so \"most\". For people it is ಎಲ್ಲರಿಗಿಂತ (ellariginta, \"than everyone\"):"
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳು ಎಲ್ಲರಿಗಿಂತ ಬೇಗ ಬಂದಳು. avaḷu ellariginta bēga bandaḷu. — \"She came earliest of all.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This house is bigger than that house\" — ī mane ā maneginta doḍḍadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This house is bigger than that house\" — *ī mane ā maneginta doḍḍadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The train goes faster than the bus\" — bassiginta railu bēga hōguttade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The train goes faster than the bus\" — *bassiginta railu bēga hōguttade*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like tea more than coffee\" — kāphiginta cahā nanage heccu iṣṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like tea more than coffee\" — *kāphiginta cahā nanage heccu iṣṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This is the smallest room\" — idu ellakkinta cikka kōṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This is the smallest room\" — *idu ellakkinta cikka kōṇe*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than the house\"? (ಮನೆಗಿಂತ (maneginta).) \"Than me\"? (ನನಗಿಂತ.) \"It is bigger\"? (ದೊಡ್ಡದು: no \"-er\".) \"Most of all\"? (ಎಲ್ಲಕ್ಕಿಂತ; for people, ಎಲ್ಲರಿಗಿಂತ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C316-tingalinda",
+      "sequence": 15310,
+      "title": "ಎರಡು ತಿಂಗಳಿಂದ (eraḍu tiṅgaḷinda) — how long",
+      "headword": "ಎರಡು ತಿಂಗಳಿಂದ",
+      "romanization": "eraḍu tiṅgaḷinda",
+      "gloss": "for two months now — how long, with -ಇಂದ, and from … until",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cac5fdbb887f54df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"time\" (samaya) and \"until\" (varege). Then \"This house is bigger than that house.\" (ī mane ā maneginta doḍḍadu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ಇಂದ, for … now",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಎರಡು ತಿಂಗಳಿಂದ ಕನ್ನಡ ಕಲಿಯುತ್ತಿದ್ದೇನೆ. nānu eraḍu tiṅgaḷinda kannaḍa kaliyuttiddēne. — \"I have been learning Kannada for two months.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ತಿಂಗಳು (tiṅgaḷu, \"a month\") with -ಇಂದ, \"from\": \"from two months (back to now)\". The -ಇಂದ of ಇಲ್ಲಿಂದ, \"from here\", now measures time. The verb stays in the present, because the learning is still going on: ಕಲಿಯುತ್ತಿದ್ದೇನೆ is ಕಲಿಯುತ್ತ + ಇದ್ದೇನೆ, \"I am, learning\", the present twin of ಓದುತ್ತಿದ್ದೆ. English says \"have been\"; Kannada says \"am\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೀವು ಎಷ್ಟು ಸಮಯದಿಂದ ಇಲ್ಲಿ ಇದ್ದೀರಿ? nīvu eṣṭu samayadinda illi iddīri? — \"How long have you been here?\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಇದ್ದೀರಿ (iddīri, \"you are\"), said with respect. The answer: ಮೂರು ವರ್ಷದಿಂದ (mūru varṣadinda, \"for three years\")."
+            },
+            {
+              "kind": "speech",
+              "text": "A stretch that is over takes no ending at all: ನಾನು ಒಂದು ವಾರ ಮೈಸೂರಿನಲ್ಲಿ ಇದ್ದೆ (nānu ondu vāra maisūrinalli idde, \"I was in Mysuru for a week\"). ವಾರ (vāra, \"a week\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: from … until",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಬೆಳಗ್ಗೆ ಒಂಬತ್ತು ಗಂಟೆಯಿಂದ ಸಂಜೆ ಐದು ಗಂಟೆಯವರೆಗೆ ಕೆಲಸ ಮಾಡುತ್ತೇನೆ. nānu beḷagge ombattu gaṇṭeyinda sañje aidu gaṇṭeyavarege kelasa māḍuttēne. — \"I work from nine in the morning until five in the evening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "-ಇಂದ marks where the stretch starts, ವರೆಗೆ where it ends: ಗಂಟೆಯಿಂದ … ಗಂಟೆಯವರೆಗೆ. The same pair works for places: ಇಲ್ಲಿಂದ ನಿಲ್ದಾಣದವರೆಗೆ (illinda nildāṇadavarege, \"from here to the station\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have been learning Kannada for two months\" — nānu eraḍu tiṅgaḷinda kannaḍa kaliyuttiddēne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have been learning Kannada for two months\" — *nānu eraḍu tiṅgaḷinda kannaḍa kaliyuttiddēne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How long have you been here?\" — nīvu eṣṭu samayadinda illi iddīri?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How long have you been here?\" — *nīvu eṣṭu samayadinda illi iddīri?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"For three years\" — mūru varṣadinda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"For three years\" — *mūru varṣadinda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work from nine in the morning until five in the evening\" — nānu beḷagge ombattu gaṇṭeyinda sañje aidu gaṇṭeyavarege kelasa māḍuttēne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work from nine in the morning until five in the evening\" — *nānu beḷagge ombattu gaṇṭeyinda sañje aidu gaṇṭeyavarege kelasa māḍuttēne*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"For two months now\"? (ಎರಡು ತಿಂಗಳಿಂದ (eraḍu tiṅgaḷinda).) Which tense goes with it? (The present, for what is still going on.) \"How long?\" (ಎಷ್ಟು ಸಮಯದಿಂದ?) \"From … until\"? (-ಇಂದ … ವರೆಗೆ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R316-comparing-and-time",
+      "sequence": 15320,
+      "title": "Review — comparing, and how long",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "bigger, best of all, how long, and from when until when",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:2e3d2944038dc9fa",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ಸ್ವಚ್ಛ and ಔಷಧ aloud. (svaccha, auṣadha.) Name the letter each one taught you. (ಛ; ಔ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My town is smaller than Mysuru.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My town is smaller than Mysuru.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I like the train more than the bus. One ticket to Mysuru, please.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I like the train more than the bus. One ticket to Mysuru, please.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "This is the biggest shop in our town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: This is the biggest shop in our town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have been learning Kannada for two months, and I am glad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have been learning Kannada for two months, and I am glad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I was in Mysuru from Monday until Friday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I was in Mysuru from Monday until Friday.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than the bus\"? (ಬಸ್ಸಿಗಿಂತ.) \"Most of all\"? (ಎಲ್ಲಕ್ಕಿಂತ.) \"For three years now\"? (ಮೂರು ವರ್ಷದಿಂದ.) \"From nine until five\"? (ಒಂಬತ್ತು ಗಂಟೆಯಿಂದ ಐದು ಗಂಟೆಯವರೆಗೆ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

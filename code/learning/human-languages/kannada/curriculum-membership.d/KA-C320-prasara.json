@@ -1,0 +1,11 @@
+{
+  "id": "KA-C320-prasara",
+  "pathSegment": "KA-PATH-320-VARADI320",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-320-VARADI320",
+      "order": 2
+    }
+  ]
+}

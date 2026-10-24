@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:3259bfbfb7fbf0ea",
+  "lessonIds": [
+    "KA-C473-parisara",
+    "KA-C473-malinya",
+    "KA-C473-kalusitagolisu",
+    "KA-C473-masi",
+    "KA-C473-ingala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch473.txt",
+  "json": "kannada/narration/ch473.json",
+  "textHash": "fnv1a64:641594b1b91db8e0",
+  "jsonHash": "fnv1a64:5d9197b33141247d",
+  "findings": []
+}

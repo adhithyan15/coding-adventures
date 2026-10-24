@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C517-dhaoya-kora",
+    "language": "bengali",
+    "chapter": 517,
+    "sequence": 31290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92643794d8763342"
+  },
+  "findings": []
+}

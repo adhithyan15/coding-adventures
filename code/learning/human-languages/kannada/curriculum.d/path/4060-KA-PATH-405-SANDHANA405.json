@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-405-SANDHANA405",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-405-SANDHANA405"
+  ],
+  "after": []
+}

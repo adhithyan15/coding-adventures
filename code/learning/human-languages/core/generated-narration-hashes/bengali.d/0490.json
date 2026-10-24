@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:3bf340e542044dd3",
+  "lessonIds": [
+    "BN-C490-bichchhed",
+    "BN-C490-bidhoba",
+    "BN-C490-onath",
+    "BN-C490-dottok-neoya",
+    "BN-C490-obosor-neoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch490.txt",
+  "json": "bengali/narration/ch490.json",
+  "textHash": "fnv1a64:297fc85dadb4ea87",
+  "jsonHash": "fnv1a64:c01b3437a64b0b31",
+  "findings": []
+}

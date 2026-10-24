@@ -1,0 +1,11 @@
+{
+  "id": "ML-C472-gatagatakkurukku",
+  "pathSegment": "ML-PATH-472-GATAGATAM472",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-472-GATAGATAM472",
+      "order": 1
+    }
+  ]
+}

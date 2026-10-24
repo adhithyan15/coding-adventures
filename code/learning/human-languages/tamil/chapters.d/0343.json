@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Legends",
+  "label": "ch:ta-legends",
+  "canDo": "I can talk about legends, myths and proverbs.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C343-palamoli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can talk about legends, myths and proverbs.",
+    "assesses": [
+      "TA-LEX-C343-PAZHANKATHAI343-03",
+      "TA-LEX-C343-PAZHANKATHAI343-04",
+      "TA-LEX-C343-PAZHANKATHAI343-05"
+    ]
+  }
+}

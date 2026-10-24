@@ -1,0 +1,11 @@
+{
+  "id": "KA-C526-avali",
+  "pathSegment": "KA-PATH-526-BALAGA526",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-526-BALAGA526",
+      "order": 2
+    }
+  ]
+}

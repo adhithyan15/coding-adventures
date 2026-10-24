@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:ab0cfb78c2236d6c",
+  "lessonIds": [
+    "AR-C428-sikkat-hadid",
+    "AR-C428-araba",
+    "AR-C428-maqsura",
+    "AR-C428-mitru",
+    "AR-C428-anzala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch428.txt",
+  "json": "arabic/narration/ch428.json",
+  "textHash": "fnv1a64:f8d52fb3f6089b91",
+  "jsonHash": "fnv1a64:4df7299d07cd33a7",
+  "findings": []
+}

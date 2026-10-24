@@ -1,0 +1,19 @@
+{
+  "chapter": 540,
+  "title": "Insurance and Risk",
+  "label": "ch:mr-insurance-and-risk",
+  "canDo": "I can talk about insurance, risks and what I can afford.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C540-parvadne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can talk about insurance, risks and what I can afford.",
+    "assesses": [
+      "MR-LEX-C540-VIMA540-03",
+      "MR-LEX-C540-VIMA540-04",
+      "MR-LEX-C540-VIMA540-05"
+    ]
+  }
+}

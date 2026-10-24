@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R493-review-final-493",
+    "language": "telugu",
+    "chapter": 493,
+    "sequence": 24870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f2e46a10aa407a5"
+  },
+  "findings": []
+}

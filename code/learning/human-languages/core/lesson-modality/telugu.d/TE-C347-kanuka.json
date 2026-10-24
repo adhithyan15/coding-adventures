@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C347-kanuka",
+    "language": "telugu",
+    "chapter": 347,
+    "sequence": 17080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90cfabe6985142ed"
+  },
+  "findings": []
+}

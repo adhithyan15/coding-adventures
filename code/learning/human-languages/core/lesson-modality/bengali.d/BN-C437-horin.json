@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C437-horin",
+    "language": "bengali",
+    "chapter": 437,
+    "sequence": 26720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:877b1cae35607836"
+  },
+  "findings": []
+}

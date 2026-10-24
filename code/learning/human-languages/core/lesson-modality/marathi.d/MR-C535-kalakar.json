@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C535-kalakar",
+    "language": "marathi",
+    "chapter": 535,
+    "sequence": 30590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:885979f4f0cbe138"
+  },
+  "findings": []
+}

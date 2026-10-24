@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C342-audyogikamaya",
+    "language": "malayalam",
+    "chapter": 342,
+    "sequence": 16270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a75714374f0ee42b"
+  },
+  "findings": []
+}

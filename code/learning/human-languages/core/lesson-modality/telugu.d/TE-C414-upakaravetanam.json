@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C414-upakaravetanam",
+    "language": "telugu",
+    "chapter": 414,
+    "sequence": 20670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7de4205f8964de0b"
+  },
+  "findings": []
+}

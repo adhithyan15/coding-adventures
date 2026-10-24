@@ -1,0 +1,11 @@
+{
+  "id": "BN-C462-gorimosi-kora",
+  "pathSegment": "BN-PATH-462-OLOS462",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-462-OLOS462",
+      "order": 4
+    }
+  ]
+}

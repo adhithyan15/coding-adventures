@@ -1,0 +1,11 @@
+{
+  "id": "TA-C472-utari",
+  "pathSegment": "TA-PATH-472-MANITAR472",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-472-MANITAR472",
+      "order": 4
+    }
+  ]
+}

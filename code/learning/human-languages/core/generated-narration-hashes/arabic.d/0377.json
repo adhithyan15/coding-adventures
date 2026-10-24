@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:d2f01fb777f07f82",
+  "lessonIds": [
+    "AR-C377-hukuma",
+    "AR-C377-wazir",
+    "AR-C377-wizara",
+    "AR-C377-barlaman",
+    "AR-C377-dustur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch377.txt",
+  "json": "arabic/narration/ch377.json",
+  "textHash": "fnv1a64:37c4b9ec2875c149",
+  "jsonHash": "fnv1a64:8a33de1c9596c983",
+  "findings": []
+}

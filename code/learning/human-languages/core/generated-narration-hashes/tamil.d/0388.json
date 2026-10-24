@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:0d85581adb93d83b",
+  "lessonIds": [
+    "TA-C388-opputal",
+    "TA-C388-ankikari",
+    "TA-C388-niyami",
+    "TA-C388-terivi",
+    "TA-C388-amarvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch388.txt",
+  "json": "tamil/narration/ch388.json",
+  "textHash": "fnv1a64:185e1e173d70b60f",
+  "jsonHash": "fnv1a64:9cb15250dcd4311c",
+  "findings": []
+}

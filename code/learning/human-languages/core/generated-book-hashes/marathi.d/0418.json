@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:0586d038a59317a6",
+  "lessonIds": [
+    "MR-C418-nagar",
+    "MR-C418-mahanagar",
+    "MR-C418-nagarpalika",
+    "MR-C418-khede",
+    "MR-C418-taluka"
+  ],
+  "tex": "marathi/book/chapters/ch418-town-and-metropolis.tex"
+}

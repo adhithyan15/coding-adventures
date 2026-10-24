@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:8cc6adcb90ffadba",
+  "lessonIds": [
+    "AR-C406-tatallaba",
+    "AR-C406-tawaffara",
+    "AR-C406-kafa",
+    "AR-C406-iftaqara",
+    "AR-C406-ijra"
+  ],
+  "tex": "arabic/book/chapters/ch406-what-it-takes.tex"
+}

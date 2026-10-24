@@ -1,0 +1,11 @@
+{
+  "language": "kannada",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:abd5353b41e89582",
+  "lessonIds": [
+    "KA-C317-bandare",
+    "KA-C317-male-bandare",
+    "KA-R317-if-and-otherwise"
+  ],
+  "tex": "kannada/book/chapters/ch317-if-it-rains.tex"
+}

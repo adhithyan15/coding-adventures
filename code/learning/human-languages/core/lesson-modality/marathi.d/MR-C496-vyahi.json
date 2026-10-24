@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C496-vyahi",
+    "language": "marathi",
+    "chapter": 496,
+    "sequence": 28390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ca6353c960d9f90"
+  },
+  "findings": []
+}

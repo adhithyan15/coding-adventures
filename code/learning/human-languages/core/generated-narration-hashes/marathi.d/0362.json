@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:00a76942e7e33216",
+  "lessonIds": [
+    "MR-C362-andolan",
+    "MR-C362-nidarsan",
+    "MR-C362-uposan",
+    "MR-C362-nisedh-karne",
+    "MR-C362-bahiskar-ghalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch362.txt",
+  "json": "marathi/narration/ch362.json",
+  "textHash": "fnv1a64:b029ec003a0fde28",
+  "jsonHash": "fnv1a64:893f7b3a58fa8863",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C533-atithyam",
+    "language": "telugu",
+    "chapter": 533,
+    "sequence": 27020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:710d39409bd3f765"
+  },
+  "findings": []
+}

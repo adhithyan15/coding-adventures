@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-291-COMPARE-DURATION",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-291-COMPARE-DURATION"
+  ],
+  "after": []
+}

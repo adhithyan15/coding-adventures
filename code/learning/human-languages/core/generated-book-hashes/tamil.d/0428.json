@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:710d5c3b34c40fc1",
+  "lessonIds": [
+    "TA-C428-caral",
+    "TA-C428-turu",
+    "TA-C428-poli",
+    "TA-C428-tenku",
+    "TA-C428-vati"
+  ],
+  "tex": "tamil/book/chapters/ch428-a-spray-of-rain.tex"
+}

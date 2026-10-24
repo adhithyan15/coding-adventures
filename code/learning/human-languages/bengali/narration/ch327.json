@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 327,
+  "title": "Books to Remember",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c2b6839edc41ec7c",
+  "lessons": [
+    {
+      "id": "BN-C327-uponyas",
+      "sequence": 20610,
+      "title": "উপন্যাস (upônyās) — a novel",
+      "headword": "উপন্যাস",
+      "romanization": "upônyās",
+      "gloss": "a novel",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da3544484113d87b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a hidden treasure, then the Bengali for to vanish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপন্যাস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপন্যাস — upônyās — \"a novel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি ছুটিতে একটা লম্বা উপন্যাস পড়লাম। āmi chhuṭite ekṭā lômbā upônyās pôṛlām. I read a long novel during the holidays."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপন্যাস (upônyās) is Sanskrit upanyāsa, 'a putting down, a placing near' (Monier-Williams); the sense 'a novel' is the modern Bengali one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upônyās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upônyās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upônyās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upônyās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmi chhuṭite ekṭā lômbā upônyās pôṛlām. — I read a long novel during the holidays.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmi chhuṭite ekṭā lômbā upônyās pôṛlām.* — I read a long novel during the holidays.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a hidden treasure, then the Bengali for to vanish, then say upônyās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a hidden treasure, then the Bengali for to vanish, then say *upônyās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপন্যাস (upônyās) mean? (\"A novel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C327-jiboni",
+      "sequence": 20620,
+      "title": "জীবনী (jībônī) — a biography",
+      "headword": "জীবনী",
+      "romanization": "jībônī",
+      "gloss": "a biography",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99a75f448e2f5531",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to vanish, then the Bengali for a novel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জীবনী",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জীবনী — jībônī — \"a biography\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তিনি এক বিখ্যাত বিজ্ঞানীর জীবনী লিখলেন। tini ek bikhyātô bigyānīr jībônī likhlen. He wrote a biography of a famous scientist."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জীবনী (jībônī) is জীবন, life — Sanskrit jīvana (Monier-Williams) — with the ending -ī: the written story of a life."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jībônī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jībônī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jībônī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jībônī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tini ek bikhyātô bigyānīr jībônī likhlen. — He wrote a biography of a famous scientist.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tini ek bikhyātô bigyānīr jībônī likhlen.* — He wrote a biography of a famous scientist.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to vanish, then the Bengali for a novel, then say jībônī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to vanish, then the Bengali for a novel, then say *jībônī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জীবনী (jībônī) mean? (\"A biography\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C327-grontho",
+      "sequence": 20630,
+      "title": "গ্রন্থ (grônthô) — a volume; a book (formal)",
+      "headword": "গ্রন্থ",
+      "romanization": "grônthô",
+      "gloss": "a volume; a book (formal)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7c2cc8001360aba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a novel, then the Bengali for a biography."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গ্রন্থ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গ্রন্থ — grônthô — \"a volume; a book (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "লাইব্রেরিতে কবির পুরনো গ্রন্থগুলো আছে। lāibrerite kôbir purôno grônthôgulo āchhe. The library has the poet's old volumes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গ্রন্থ (grônthô) is Sanskrit grantha, 'tying, binding, stringing together' (Monier-Williams): leaves strung together into a book. It is the formal word; বই is the everyday one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grônthô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grônthô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grônthô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grônthô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāibrerite kôbir purôno grônthôgulo āchhe. — The library has the poet's old volumes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāibrerite kôbir purôno grônthôgulo āchhe.* — The library has the poet's old volumes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a novel, then the Bengali for a biography, then say grônthô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a novel, then the Bengali for a biography, then say *grônthô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গ্রন্থ (grônthô) mean? (\"A volume; a book (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C327-odhyay",
+      "sequence": 20640,
+      "title": "অধ্যায় (ôdhyāy) — a chapter of a book; a section",
+      "headword": "অধ্যায়",
+      "romanization": "ôdhyāy",
+      "gloss": "a chapter of a book; a section",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e1edc08e0044bbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a biography, then the Bengali for a volume."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অধ্যায়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অধ্যায় — ôdhyāy — \"a chapter of a book; a section\"."
+            },
+            {
+              "kind": "speech",
+              "text": "উপন্যাসের প্রথম অধ্যায়ে নায়ক গ্রাম ছেড়ে শহরে আসে। upônyāser prothom ôdhyāye nāyôk grām chheṛe shôhôre āse. In the novel's opening section the hero leaves his village for the city."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অধ্যায় (ôdhyāy) is Sanskrit adhyāya, 'a lesson, a lecture; a reading' (Monier-Williams), a part of a text read at one sitting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôdhyāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôdhyāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôdhyāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôdhyāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upônyāser prothom ôdhyāye nāyôk grām chheṛe shôhôre āse. — In the novel's opening section the hero leaves his village for the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upônyāser prothom ôdhyāye nāyôk grām chheṛe shôhôre āse.* — In the novel's opening section the hero leaves his village for the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a biography, then the Bengali for a volume, then say ôdhyāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a biography, then the Bengali for a volume, then say *ôdhyāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অধ্যায় (ôdhyāy) mean? (\"A chapter of a book; a section\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C327-prokashok",
+      "sequence": 20650,
+      "title": "প্রকাশক (prôkāshôk) — a publisher",
+      "headword": "প্রকাশক",
+      "romanization": "prôkāshôk",
+      "gloss": "a publisher",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8727ee21b0a44023",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a volume, then the Bengali for a chapter of a book."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রকাশক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রকাশক — prôkāshôk — \"a publisher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "প্রকাশক লেখকের নতুন উপন্যাস ছাপলেন। prôkāshôk lekhôker nôtun upônyās chhāplen. The publisher printed the writer's new novel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রকাশক (prôkāshôk) is Sanskrit prakāśaka, 'clear, shining; well known' (Monier-Williams), the agent noun beside প্রকাশ করা; the sense 'a publisher' is the modern one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôkāshôk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôkāshôk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôkāshôk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôkāshôk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôkāshôk lekhôker nôtun upônyās chhāplen. — The publisher printed the writer's new novel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôkāshôk lekhôker nôtun upônyās chhāplen.* — The publisher printed the writer's new novel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a volume, then the Bengali for a chapter of a book, then say prôkāshôk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a volume, then the Bengali for a chapter of a book, then say *prôkāshôk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রকাশক (prôkāshôk) mean? (\"A publisher\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C548-tivalaku",
+    "language": "tamil",
+    "chapter": 548,
+    "sequence": 31260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6465fd756da9e5a5"
+  },
+  "findings": []
+}

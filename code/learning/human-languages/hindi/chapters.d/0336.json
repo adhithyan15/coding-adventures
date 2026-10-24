@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "The Curse",
+  "label": "ch:hi-the-curse",
+  "canDo": "I can tell how a curse was laid and what followed.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C336-ruthna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can tell how a curse was laid and what followed.",
+    "assesses": [
+      "HI-LEX-C336-SHAAP336-03",
+      "HI-LEX-C336-SHAAP336-04",
+      "HI-LEX-C336-SHAAP336-05"
+    ]
+  }
+}

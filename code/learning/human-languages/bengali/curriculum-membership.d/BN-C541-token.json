@@ -1,0 +1,11 @@
+{
+  "id": "BN-C541-token",
+  "pathSegment": "BN-PATH-541-PROTIKSHA541",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-541-PROTIKSHA541",
+      "order": 3
+    }
+  ]
+}

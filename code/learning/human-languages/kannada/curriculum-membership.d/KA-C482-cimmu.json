@@ -1,0 +1,11 @@
+{
+  "id": "KA-C482-cimmu",
+  "pathSegment": "KA-PATH-482-TORE482",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-482-TORE482",
+      "order": 3
+    }
+  ]
+}

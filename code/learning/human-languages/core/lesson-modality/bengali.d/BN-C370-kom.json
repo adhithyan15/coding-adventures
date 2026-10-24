@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C370-kom",
+    "language": "bengali",
+    "chapter": 370,
+    "sequence": 23080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c2a5e8e0e01421c"
+  },
+  "findings": []
+}

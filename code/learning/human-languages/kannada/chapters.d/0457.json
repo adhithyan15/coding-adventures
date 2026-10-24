@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Wandering About",
+  "label": "ch:ka-wandering-about",
+  "canDo": "I can say a lane, to pass through, to explore, a spot and to look splendid.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C457-kangolisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can say a lane, to pass through, to explore, a spot and to look splendid.",
+    "assesses": [
+      "KA-LEX-C457-VIHARA457-03",
+      "KA-LEX-C457-VIHARA457-04",
+      "KA-LEX-C457-VIHARA457-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C297-chilna",
+  "pathSegment": "HI-PATH-297-PHISAL297",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-297-PHISAL297",
+      "order": 3
+    }
+  ]
+}

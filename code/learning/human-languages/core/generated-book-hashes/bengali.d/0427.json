@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:f7e255d22429e778",
+  "lessonIds": [
+    "BN-C427-grishmo",
+    "BN-C427-shorot",
+    "BN-C427-mousum",
+    "BN-C427-tapmatra",
+    "BN-C427-uttap"
+  ],
+  "tex": "bengali/book/chapters/ch427-seasons-and-heat.tex"
+}

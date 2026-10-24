@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:05ac00cb699a3561",
+  "lessonIds": [
+    "KA-C348-nidhi",
+    "KA-C348-kadalgalla",
+    "KA-C348-sahasa",
+    "KA-C348-rahasya",
+    "KA-C348-mantrika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch348.txt",
+  "json": "kannada/narration/ch348.json",
+  "textHash": "fnv1a64:b5fd04d81b4fe206",
+  "jsonHash": "fnv1a64:05ed0d02700eaf40",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C512-prajne-tappu",
+  "pathSegment": "KA-PATH-512-ROGA512",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-512-ROGA512",
+      "order": 4
+    }
+  ]
+}

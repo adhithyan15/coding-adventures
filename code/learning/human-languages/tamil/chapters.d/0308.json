@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "Rumours and a Stir",
+  "label": "ch:ta-rumours-and-a-stir",
+  "canDo": "I can talk about rumours and gossip.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C308-pakirankamaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can talk about rumours and gossip.",
+    "assesses": [
+      "TA-LEX-C308-PARAPARAPPU308-03",
+      "TA-LEX-C308-PARAPARAPPU308-04",
+      "TA-LEX-C308-PARAPARAPPU308-05"
+    ]
+  }
+}

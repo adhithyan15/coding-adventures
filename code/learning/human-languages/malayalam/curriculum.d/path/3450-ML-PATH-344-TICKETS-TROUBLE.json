@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-344-TICKETS-TROUBLE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-344-TICKETS-TROUBLE"
+  ],
+  "after": []
+}

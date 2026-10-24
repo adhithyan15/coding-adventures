@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C447-onutopto",
+    "language": "bengali",
+    "chapter": 447,
+    "sequence": 27480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e1843526176dfae"
+  },
+  "findings": []
+}

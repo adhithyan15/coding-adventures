@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C466-vasisu",
+    "language": "kannada",
+    "chapter": 466,
+    "sequence": 23700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a236bff8a21037f1"
+  },
+  "findings": []
+}

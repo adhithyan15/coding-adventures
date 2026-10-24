@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 290,
+  "title": "At the Police Station",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4f5619997b93c3a0",
+  "lessons": [
+    {
+      "id": "MR-C290-havaldar",
+      "sequence": 17100,
+      "title": "हवालदार (havāldār) — a constable",
+      "headword": "हवालदार",
+      "romanization": "havāldār",
+      "gloss": "a constable",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:710f38ea8605d1b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a pickpocket, then the Marathi for to cheat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हवालदार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हवालदार — havāldār — \"a constable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आम्हाला किती वेळ थांबावं लागेल, हे हवालदारावर अवलंबून आहे. āmhālā kitī veḷ thāmbāvaṁ lāgel, he havāldārāvar avlambūn āhe. How long we will have to wait depends on the constable."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "हवालदाराला, to the constable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हवालदार (havāldār) is a loan from Persian ḥavāladār, 'one entrusted with a charge', usually traced to Arabic ḥawāla, 'a charge, a trust'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "havāldār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *havāldār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "havāldār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *havāldār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmhālā kitī veḷ thāmbāvaṁ lāgel, he havāldārāvar avlambūn āhe. — How long we will have to wait depends on the constable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmhālā kitī veḷ thāmbāvaṁ lāgel, he havāldārāvar avlambūn āhe.* — How long we will have to wait depends on the constable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a pickpocket, then the Marathi for to cheat, then say havāldār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a pickpocket, then the Marathi for to cheat, then say *havāldār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हवालदार (havāldār) mean? (\"A constable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C290-atak-karne",
+      "sequence": 17110,
+      "title": "अटक करणे (aṭak karṇe) — to arrest",
+      "headword": "अटक करणे",
+      "romanization": "aṭak karṇe",
+      "gloss": "to arrest",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83668d7959059eb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to cheat, then the Marathi for a constable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अटक करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अटक करणे — aṭak karṇe — \"to arrest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पोलिसांनी चोराला संध्याकाळी अटक केली. polisānnī corālā sandhyākāḷī aṭak kelī. The police arrested the thief in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने अटक केली, tyāne aṭak kelī."
+            },
+            {
+              "kind": "speech",
+              "text": "The person arrested takes -ला; अटक is feminine, so the past is अटक केली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अटक करणे (aṭak karṇe) is built from aṭak, 'a hold, a stop', of the family CDIAL lists under aṭṭakk, 'obstruct, stop', with Marathi aṭakṇe, 'to be stopped' (CDIAL 182), and karṇe, 'to do'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭak karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭak karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭak karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭak karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polisānnī corālā sandhyākāḷī aṭak kelī. — The police arrested the thief in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polisānnī corālā sandhyākāḷī aṭak kelī.* — The police arrested the thief in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to cheat, then the Marathi for a constable, then say aṭak karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to cheat, then the Marathi for a constable, then say *aṭak karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अटक करणे (aṭak karṇe) mean? (\"To arrest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C290-cauksi-karne",
+      "sequence": 17120,
+      "title": "चौकशी करणे (caukśī karṇe) — to inquire; to question",
+      "headword": "चौकशी करणे",
+      "romanization": "caukśī karṇe",
+      "gloss": "to inquire; to question",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16946b89a98efbcd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a constable, then the Marathi for to arrest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चौकशी करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौकशी करणे — caukśī karṇe — \"to inquire; to question\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हवालदाराने दुकानदाराकडे चौकशी केली. havāldārāne dukāndārākaḍe caukśī kelī. The constable made inquiries with the shopkeeper."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने चौकशी केली, tyāne caukśī kelī."
+            },
+            {
+              "kind": "speech",
+              "text": "The person asked takes -कडे; the matter takes -ची: अपघाताची चौकशी करणे (caukśī karṇe), to look into an accident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौकशी करणे (caukśī karṇe) joins caukśī, 'an inquiry', to karṇe, 'to do'; the origin of caukśī is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caukśī karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caukśī karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caukśī karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caukśī karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "havāldārāne dukāndārākaḍe caukśī kelī. — The constable made inquiries with the shopkeeper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *havāldārāne dukāndārākaḍe caukśī kelī.* — The constable made inquiries with the shopkeeper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a constable, then the Marathi for to arrest, then say caukśī karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a constable, then the Marathi for to arrest, then say *caukśī karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चौकशी करणे (caukśī karṇe) mean? (\"To inquire; to question\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C290-turung",
+      "sequence": 17130,
+      "title": "तुरुंग (turuṅg) — a prison; a jail",
+      "headword": "तुरुंग",
+      "romanization": "turuṅg",
+      "gloss": "a prison; a jail",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e573b5fff9a43de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to arrest, then the Marathi for to inquire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तुरुंग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुरुंग — turuṅg — \"a prison; a jail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "न्यायाधीशांनी त्या चोराला तुरुंगात पाठवलं. nyāyādhīśānnī tyā corālā turuṅgāt pāṭhavlaṁ. The judge sent that thief to prison."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "तुरुंगात, in prison; तुरुंगातून, out of prison."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुरुंग (turuṅg) is the everyday Marathi word for a jail; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turuṅg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *turuṅg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turuṅg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *turuṅg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyādhīśānnī tyā corālā turuṅgāt pāṭhavlaṁ. — The judge sent that thief to prison.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyādhīśānnī tyā corālā turuṅgāt pāṭhavlaṁ.* — The judge sent that thief to prison.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to arrest, then the Marathi for to inquire, then say turuṅg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to arrest, then the Marathi for to inquire, then say *turuṅg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तुरुंग (turuṅg) mean? (\"A prison; a jail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C290-kaidi",
+      "sequence": 17140,
+      "title": "कैदी (kaidī) — a prisoner",
+      "headword": "कैदी",
+      "romanization": "kaidī",
+      "gloss": "a prisoner",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2ccd275784fb9d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to inquire, then the Marathi for a prison."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कैदी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कैदी — kaidī — \"a prisoner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एक कैदी रात्री तुरुंगातून पळाला. ek kaidī rātrī turuṅgātūn paḷālā. A prisoner ran away from the prison at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "कैदी (kaidī) keeps its form in the plural: दोन कैदी (kaidī)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कैदी (kaidī) is a loan from Persian qaidī, 'a captive', usually traced to Arabic qayd, 'a fetter'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaidī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaidī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaidī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaidī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek kaidī rātrī turuṅgātūn paḷālā. — A prisoner ran away from the prison at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek kaidī rātrī turuṅgātūn paḷālā.* — A prisoner ran away from the prison at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to inquire, then the Marathi for a prison, then say kaidī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to inquire, then the Marathi for a prison, then say *kaidī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कैदी (kaidī) mean? (\"A prisoner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

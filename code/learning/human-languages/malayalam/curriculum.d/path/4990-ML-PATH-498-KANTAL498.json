@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-498-KANTAL498",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-498-KANTAL498"
+  ],
+  "after": []
+}

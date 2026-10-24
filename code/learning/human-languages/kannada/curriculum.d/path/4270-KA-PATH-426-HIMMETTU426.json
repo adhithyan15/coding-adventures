@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-426-HIMMETTU426",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "KA-EXT-426-HIMMETTU426"
+  ],
+  "after": []
+}

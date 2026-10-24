@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C470-kalusyam",
+    "language": "telugu",
+    "chapter": 470,
+    "sequence": 23640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7bb8b02373856a8"
+  },
+  "findings": []
+}

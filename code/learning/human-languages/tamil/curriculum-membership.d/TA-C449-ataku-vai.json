@@ -1,0 +1,11 @@
+{
+  "id": "TA-C449-ataku-vai",
+  "pathSegment": "TA-PATH-449-ELAM449",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-449-ELAM449",
+      "order": 4
+    }
+  ]
+}

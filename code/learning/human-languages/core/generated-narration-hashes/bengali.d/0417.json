@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:f11d34cd94a7714b",
+  "lessonIds": [
+    "BN-C417-not",
+    "BN-C417-etiem",
+    "BN-C417-belans",
+    "BN-C417-transphar-kora",
+    "BN-C417-chada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch417.txt",
+  "json": "bengali/narration/ch417.json",
+  "textHash": "fnv1a64:ea70351a0f43c2e3",
+  "jsonHash": "fnv1a64:937d44c16319be36",
+  "findings": []
+}

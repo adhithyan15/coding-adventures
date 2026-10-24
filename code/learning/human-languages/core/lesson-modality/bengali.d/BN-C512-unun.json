@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C512-unun",
+    "language": "bengali",
+    "chapter": 512,
+    "sequence": 31020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:312104b8b62476d8"
+  },
+  "findings": []
+}

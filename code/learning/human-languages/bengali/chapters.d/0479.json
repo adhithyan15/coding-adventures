@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Sleep",
+  "label": "ch:bn-sleep",
+  "canDo": "I can talk about sleep, sleeplessness and dozing off.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C479-armora-bhanga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about sleep, sleeplessness and dozing off.",
+    "assesses": [
+      "BN-LEX-C479-GHUM479-03",
+      "BN-LEX-C479-GHUM479-04",
+      "BN-LEX-C479-GHUM479-05"
+    ]
+  }
+}

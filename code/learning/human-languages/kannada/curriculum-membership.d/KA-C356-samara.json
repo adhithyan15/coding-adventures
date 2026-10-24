@@ -1,0 +1,11 @@
+{
+  "id": "KA-C356-samara",
+  "pathSegment": "KA-PATH-356-JANAPADA356",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-356-JANAPADA356",
+      "order": 2
+    }
+  ]
+}

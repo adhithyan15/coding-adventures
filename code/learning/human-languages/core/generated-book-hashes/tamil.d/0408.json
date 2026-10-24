@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:55afcf243f642e47",
+  "lessonIds": [
+    "TA-C408-valaivu",
+    "TA-C408-carivu",
+    "TA-C408-erram",
+    "TA-C408-kavil",
+    "TA-C408-culal"
+  ],
+  "tex": "tamil/book/chapters/ch408-bends-and-slopes.tex"
+}

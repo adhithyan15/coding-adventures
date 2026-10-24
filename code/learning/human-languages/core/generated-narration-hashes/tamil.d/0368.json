@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:87c375baafa010f7",
+  "lessonIds": [
+    "TA-C368-kalviyarivu",
+    "TA-C368-vilippunarvu",
+    "TA-C368-utavittokai",
+    "TA-C368-karuttaranku",
+    "TA-C368-vina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch368.txt",
+  "json": "tamil/narration/ch368.json",
+  "textHash": "fnv1a64:f693eecb8a04d16c",
+  "jsonHash": "fnv1a64:1295446250daa9bf",
+  "findings": []
+}

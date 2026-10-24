@@ -1,0 +1,746 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 353,
+  "title": "Confirming and Refuting",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:fdbd6533295aa63d",
+  "lessons": [
+    {
+      "id": "MR-C353-pusti-karne",
+      "sequence": 20560,
+      "title": "पुष्टी करणे (puṣṭī karṇe) — to confirm",
+      "headword": "पुष्टी करणे",
+      "romanization": "puṣṭī karṇe",
+      "gloss": "to confirm",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19bb5f41e023de92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for especially, then the Marathi for leading."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुष्टी करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुष्टी करणे — puṣṭī karṇe — \"to confirm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पोलिसांनी अपघाताची पुष्टी केली. polisānnī apghātācī puṣṭī kelī. The police confirmed the accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने पुष्टी केली, tyāne puṣṭī kelī."
+            },
+            {
+              "kind": "speech",
+              "text": "पुष्टी is feminine, so the past is केली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुष्टी करणे (puṣṭī karṇe) joins the tatsama पुष्टी, Sanskrit puṣṭi, \"growth, thriving\" (Monier-Williams), to करणे, \"to make\": to strengthen a report until it is sure."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṣṭī karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṣṭī karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṣṭī karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṣṭī karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polisānnī apghātācī puṣṭī kelī. — The police confirmed the accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polisānnī apghātācī puṣṭī kelī.* — The police confirmed the accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for especially, then the Marathi for leading, then say puṣṭī karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for especially, then the Marathi for leading, then say *puṣṭī karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुष्टी करणे (puṣṭī karṇe) mean? (\"To confirm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C353-dujora-dene",
+      "sequence": 20570,
+      "title": "दुजोरा देणे (dujorā deṇe) — to corroborate",
+      "headword": "दुजोरा देणे",
+      "romanization": "dujorā deṇe",
+      "gloss": "to corroborate",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f1e72a675d5dbd5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for leading, then the Marathi for to confirm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुजोरा देणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुजोरा देणे — dujorā deṇe — \"to corroborate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीराच्या बोलण्याला तिच्या भावाने दुजोरा दिला. mīrācyā bolaṇyālā ticyā bhāvāne dujorā dilā. Her brother backed up what Meera said."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने दुजोरा दिला, tyāne dujorā dilā."
+            },
+            {
+              "kind": "speech",
+              "text": "The statement backed takes -ला."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुजोरा देणे (dujorā deṇe) joins दुजोरा, \"support, backing\", a Marathi noun whose origin is not settled, to देणे, \"to give\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dujorā deṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dujorā deṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dujorā deṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dujorā deṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrācyā bolaṇyālā ticyā bhāvāne dujorā dilā. — Her brother backed up what Meera said.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrācyā bolaṇyālā ticyā bhāvāne dujorā dilā.* — Her brother backed up what Meera said.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for leading, then the Marathi for to confirm, then say dujorā deṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for leading, then the Marathi for to confirm, then say *dujorā deṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुजोरा देणे (dujorā deṇe) mean? (\"To corroborate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C353-khandan-karne",
+      "sequence": 20580,
+      "title": "खंडन करणे (khaṇḍan karṇe) — to refute",
+      "headword": "खंडन करणे",
+      "romanization": "khaṇḍan karṇe",
+      "gloss": "to refute",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:1bdd07d10bf41ef8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to confirm, then the Marathi for to corroborate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खंडन करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खंडन करणे — khaṇḍan karṇe — \"to refute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याने एकेक मुद्दा घेऊन आरोपांचं खंडन केलं. tyāne ekek muddā gheūn āropāñcaṁ khaṇḍan kelaṁ. He refuted the accusations point by point."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने खंडन केलं, tyāne khaṇḍan kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; the claim refuted takes -चं: आरोपांचं खंडन."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खंडन करणे (khaṇḍan karṇe) joins the tatsama खंडन, Sanskrit khaṇḍana, \"breaking\" (CDIAL 3796), to करणे, \"to do\": to break an argument."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṇḍan karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṇḍan karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṇḍan karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṇḍan karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāne ekek muddā gheūn āropāñcaṁ khaṇḍan kelaṁ. — He refuted the accusations point by point.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāne ekek muddā gheūn āropāñcaṁ khaṇḍan kelaṁ.* — He refuted the accusations point by point.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to confirm, then the Marathi for to corroborate, then say khaṇḍan karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to confirm, then the Marathi for to corroborate, then say *khaṇḍan karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खंडन करणे (khaṇḍan karṇe) mean? (\"To refute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C353-vastavik",
+      "sequence": 20590,
+      "title": "वास्तविक (vāstavik) — actual; real",
+      "headword": "वास्तविक",
+      "romanization": "vāstavik",
+      "gloss": "actual; real",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e15ab9fe8af30c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to corroborate, then the Marathi for to refute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वास्तविक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वास्तविक — vāstavik — \"actual; real\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याने सांगितलेलं कारण वास्तविक नव्हतं. tyāne sāṅgitlelaṁ kāraṇ vāstavik navhataṁ. The reason he gave was not the real one."
+            },
+            {
+              "kind": "speech",
+              "text": "Also in fact: वास्तविक (vāstavik) पाहता, in actual fact."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वास्तविक (vāstavik) is a tatsama, taken from Sanskrit vāstavika, \"substantial, real\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāstavik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāstavik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāstavik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāstavik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāne sāṅgitlelaṁ kāraṇ vāstavik navhataṁ. — The reason he gave was not the real one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāne sāṅgitlelaṁ kāraṇ vāstavik navhataṁ.* — The reason he gave was not the real one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to corroborate, then the Marathi for to refute, then say vāstavik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to corroborate, then the Marathi for to refute, then say *vāstavik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वास्तविक (vāstavik) mean? (\"Actual; real\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C353-pratikriya-dene",
+      "sequence": 20600,
+      "title": "प्रतिक्रिया देणे (pratikriyā deṇe) — to react; to respond",
+      "headword": "प्रतिक्रिया देणे",
+      "romanization": "pratikriyā deṇe",
+      "gloss": "to react; to respond",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e27ea2a642483bac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to refute, then the Marathi for actual."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रतिक्रिया देणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिक्रिया देणे — pratikriyā deṇe — \"to react; to respond\"."
+            },
+            {
+              "kind": "speech",
+              "text": "या बातमीवर तिने लगेच प्रतिक्रिया दिली. yā bātmīvar tine lagec pratikriyā dilī. She reacted to the news at once."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने प्रतिक्रिया दिली, tyāne pratikriyā dilī."
+            },
+            {
+              "kind": "speech",
+              "text": "What is reacted to takes -वर."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिक्रिया देणे (pratikriyā deṇe) joins the tatsama प्रतिक्रिया, Sanskrit pratikriyā, \"requital, counteraction\" (Monier-Williams), to देणे, \"to give\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratikriyā deṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratikriyā deṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratikriyā deṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratikriyā deṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā bātmīvar tine lagec pratikriyā dilī. — She reacted to the news at once.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā bātmīvar tine lagec pratikriyā dilī.* — She reacted to the news at once.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to refute, then the Marathi for actual, then say pratikriyā deṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to refute, then the Marathi for actual, then say *pratikriyā deṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रतिक्रिया देणे (pratikriyā deṇe) mean? (\"To react; to respond\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

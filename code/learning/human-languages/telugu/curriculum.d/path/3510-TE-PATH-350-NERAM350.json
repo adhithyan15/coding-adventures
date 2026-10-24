@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-350-NERAM350",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-350-NERAM350"
+  ],
+  "after": []
+}

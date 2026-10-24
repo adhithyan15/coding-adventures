@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C448-akangkha",
+    "language": "bengali",
+    "chapter": 448,
+    "sequence": 27520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56c12e692bd7b635"
+  },
+  "findings": []
+}

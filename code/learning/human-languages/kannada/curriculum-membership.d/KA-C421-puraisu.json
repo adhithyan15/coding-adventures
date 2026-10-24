@@ -1,0 +1,11 @@
+{
+  "id": "KA-C421-puraisu",
+  "pathSegment": "KA-PATH-421-BEDIKE421",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-421-BEDIKE421",
+      "order": 1
+    }
+  ]
+}

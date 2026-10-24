@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C467-kintal",
+    "language": "tamil",
+    "chapter": 467,
+    "sequence": 26810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea987c46ec7a34ae"
+  },
+  "findings": []
+}

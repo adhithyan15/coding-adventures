@@ -1,0 +1,11 @@
+{
+  "id": "AR-C408-riaya",
+  "pathSegment": "AR-PATH-408-MASLAHA408",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-408-MASLAHA408",
+      "order": 4
+    }
+  ]
+}

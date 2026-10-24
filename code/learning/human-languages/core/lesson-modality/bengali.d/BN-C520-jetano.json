@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C520-jetano",
+    "language": "bengali",
+    "chapter": 520,
+    "sequence": 31470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21e2447eec3ca0a9"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C390-vyatirikta",
+  "pathSegment": "MR-PATH-390-EKUN390",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-390-EKUN390",
+      "order": 4
+    }
+  ]
+}

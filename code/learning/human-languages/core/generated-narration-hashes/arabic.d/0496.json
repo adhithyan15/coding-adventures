@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:f972bb2603a1b26a",
+  "lessonIds": [
+    "AR-C496-mutahammis",
+    "AR-C496-tahammasa",
+    "AR-C496-irtiyah",
+    "AR-C496-murtah",
+    "AR-C496-irtaha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch496.txt",
+  "json": "arabic/narration/ch496.json",
+  "textHash": "fnv1a64:9a3165d5f9a91d45",
+  "jsonHash": "fnv1a64:8711fa38742c881c",
+  "findings": []
+}

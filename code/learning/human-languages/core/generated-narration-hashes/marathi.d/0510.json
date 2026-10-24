@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:2dffb5ccf0a849be",
+  "lessonIds": [
+    "MR-C510-raja-leave",
+    "MR-C510-bekari",
+    "MR-C510-rajinama-dene",
+    "MR-C510-nivrtta-hone",
+    "MR-C510-badtarph-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch510.txt",
+  "json": "marathi/narration/ch510.json",
+  "textHash": "fnv1a64:cf2c7c50856fb75f",
+  "jsonHash": "fnv1a64:d6cc7e3ae96a0871",
+  "findings": []
+}

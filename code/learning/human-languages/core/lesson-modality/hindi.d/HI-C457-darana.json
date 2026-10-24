@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C457-darana",
+    "language": "hindi",
+    "chapter": 457,
+    "sequence": 25270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7efcc1b3aba08a2"
+  },
+  "findings": []
+}

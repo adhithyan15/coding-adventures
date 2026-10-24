@@ -1,0 +1,11 @@
+{
+  "id": "MR-C283-tikit-dya",
+  "pathSegment": "MR-PATH-283-TICKET-TROUBLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-283-TICKET-TROUBLE",
+      "order": 1
+    }
+  ]
+}

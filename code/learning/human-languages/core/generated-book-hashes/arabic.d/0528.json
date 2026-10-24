@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:f605f4e1b1d5693e",
+  "lessonIds": [
+    "AR-C528-khatib",
+    "AR-C528-zawaj",
+    "AR-C528-hamah",
+    "AR-C528-azab",
+    "AR-C528-ashiqa"
+  ],
+  "tex": "arabic/book/chapters/ch528-single-engaged-and-married.tex"
+}

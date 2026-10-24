@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 368,
+  "title": "Learning for Everyone",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:87c375baafa010f7",
+  "lessons": [
+    {
+      "id": "TA-C368-kalviyarivu",
+      "sequence": 21170,
+      "title": "கல்வியறிவு (kalviyaṟivu) — literacy",
+      "headword": "கல்வியறிவு",
+      "romanization": "kalviyaṟivu",
+      "gloss": "literacy",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddc6cbb419647353",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a genius, then the Tamil for to teach formally."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கல்வியறிவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கல்வியறிவு — kalviyaṟivu — \"literacy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த மாவட்டத்தில் கல்வியறிவு அதிகரித்திருக்கிறது. inta māvaṭṭattil kalviyaṟivu atikarittirukkiṟatu. Literacy has risen in this district."
+            },
+            {
+              "kind": "speech",
+              "text": "கல்வி, education + அறிவு, knowledge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கல்வியறிவு (kalviyaṟivu) is native: kalvi, \"learning, education\", from kal, \"to learn\" (DEDR 1297), and aṟivu, \"knowledge\" (DEDR 314)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalviyaṟivu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalviyaṟivu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalviyaṟivu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalviyaṟivu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta māvaṭṭattil kalviyaṟivu atikarittirukkiṟatu. — Literacy has risen in this district.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta māvaṭṭattil kalviyaṟivu atikarittirukkiṟatu.* — Literacy has risen in this district.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a genius, then the Tamil for to teach formally, then say kalviyaṟivu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a genius, then the Tamil for to teach formally, then say *kalviyaṟivu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கல்வியறிவு (kalviyaṟivu) mean? (\"Literacy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C368-vilippunarvu",
+      "sequence": 21180,
+      "title": "விழிப்புணர்வு (viḻippuṇarvu) — awareness",
+      "headword": "விழிப்புணர்வு",
+      "romanization": "viḻippuṇarvu",
+      "gloss": "awareness",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92ed9c4d6ebb1508",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to teach formally, then the Tamil for literacy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விழிப்புணர்வு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விழிப்புணர்வு — viḻippuṇarvu — \"awareness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சுத்தத்தைப் பற்றி மக்களிடையே விழிப்புணர்வு தேவை. cuttattaip paṟṟi makkaḷiṭaiyē viḻippuṇarvu tēvai. Awareness of cleanliness is needed among people."
+            },
+            {
+              "kind": "speech",
+              "text": "விழிப்புணர்வு (viḻippuṇarvu) ஏற்படுத்து, to raise awareness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விழிப்புணர்வு (viḻippuṇarvu) is native: viḻippu, \"wakefulness\", from viḻi, \"to open the eyes, wake\" (DEDR 5429), and uṇarvu, \"feeling, consciousness\" (DEDR 603)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viḻippuṇarvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viḻippuṇarvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viḻippuṇarvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viḻippuṇarvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuttattaip paṟṟi makkaḷiṭaiyē viḻippuṇarvu tēvai. — Awareness of cleanliness is needed among people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuttattaip paṟṟi makkaḷiṭaiyē viḻippuṇarvu tēvai.* — Awareness of cleanliness is needed among people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to teach formally, then the Tamil for literacy, then say viḻippuṇarvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to teach formally, then the Tamil for literacy, then say *viḻippuṇarvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விழிப்புணர்வு (viḻippuṇarvu) mean? (\"Awareness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C368-utavittokai",
+      "sequence": 21190,
+      "title": "உதவித்தொகை (utavittokai) — a scholarship; a grant",
+      "headword": "உதவித்தொகை",
+      "romanization": "utavittokai",
+      "gloss": "a scholarship; a grant",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30c8003e3bfee7fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for literacy, then the Tamil for awareness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உதவித்தொகை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உதவித்தொகை — utavittokai — \"a scholarship; a grant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவளுக்குப் படிப்பதற்கு உதவித்தொகை கிடைத்தது. avaḷukkup paṭippataṟku utavittokai kiṭaittatu. She got a scholarship for her studies."
+            },
+            {
+              "kind": "speech",
+              "text": "உதவி, help, + a word for a sum of money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உதவித்தொகை (utavittokai) is native: utavi, \"help, aid\", from utavu (DEDR 609), and tokai, \"collection, sum, total\" (DEDR 3476)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utavittokai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utavittokai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utavittokai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utavittokai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷukkup paṭippataṟku utavittokai kiṭaittatu. — She got a scholarship for her studies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷukkup paṭippataṟku utavittokai kiṭaittatu.* — She got a scholarship for her studies.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for literacy, then the Tamil for awareness, then say utavittokai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for literacy, then the Tamil for awareness, then say *utavittokai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உதவித்தொகை (utavittokai) mean? (\"A scholarship; a grant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C368-karuttaranku",
+      "sequence": 21200,
+      "title": "கருத்தரங்கு (karuttaraṅku) — a seminar",
+      "headword": "கருத்தரங்கு",
+      "romanization": "karuttaraṅku",
+      "gloss": "a seminar",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afa60e5002a483d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for awareness, then the Tamil for a scholarship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கருத்தரங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கருத்தரங்கு — karuttaraṅku — \"a seminar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாளை பல்கலைக்கழகத்தில் ஒரு கருத்தரங்கு நடக்கிறது. nāḷai palkalaikkaḻakattil oru karuttaraṅku naṭakkiṟatu. A seminar is being held at the university tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "கருத்து, opinion + அரங்கு, hall: a hall for ideas."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கருத்தரங்கு (karuttaraṅku) is a modern coinage: native karuttu, \"idea, opinion\", from karutu, \"to consider\" (DEDR 1283), and araṅku, \"stage, assembly hall\", which DEDR lists among Indo-Aryan loans (DEDR App. 8)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karuttaraṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karuttaraṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karuttaraṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karuttaraṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḷai palkalaikkaḻakattil oru karuttaraṅku naṭakkiṟatu. — A seminar is being held at the university tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḷai palkalaikkaḻakattil oru karuttaraṅku naṭakkiṟatu.* — A seminar is being held at the university tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for awareness, then the Tamil for a scholarship, then say karuttaraṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for awareness, then the Tamil for a scholarship, then say *karuttaraṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கருத்தரங்கு (karuttaraṅku) mean? (\"A seminar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C368-vina",
+      "sequence": 21210,
+      "title": "வினா (viṉā) — a question",
+      "headword": "வினா",
+      "romanization": "viṉā",
+      "gloss": "a question",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bf825df6c52f2ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a scholarship, then the Tamil for a seminar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வினா",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வினா — viṉā — \"a question\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தேர்வில் பத்து வினாக்கள் இருந்தன. tērvil pattu viṉākkaḷ iruntaṉa. There were ten questions in the exam."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: வினாக்கள், viṉākkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "A written word for கேள்வி; வினாத்தாள், a question paper."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வினா (viṉā) is native Dravidian: DEDR 5516 lists Tamil viṉā, \"to ask, investigate, listen; question\", with Malayalam vinavuka, \"to ask\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṉā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṉā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṉā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṉā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tērvil pattu viṉākkaḷ iruntaṉa. — There were ten questions in the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tērvil pattu viṉākkaḷ iruntaṉa.* — There were ten questions in the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a scholarship, then the Tamil for a seminar, then say viṉā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a scholarship, then the Tamil for a seminar, then say *viṉā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வினா (viṉā) mean? (\"A question\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

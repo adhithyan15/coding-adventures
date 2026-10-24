@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Heat and Dry Spells",
+  "label": "ch:ka-heat-and-dry-spells",
+  "canDo": "I can say a heatwave, scorching sun, to run dry, a crack and to subside.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C488-taggu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can say a heatwave, scorching sun, to run dry, a crack and to subside.",
+    "assesses": [
+      "KA-LEX-C488-BISIGALI488-03",
+      "KA-LEX-C488-BISIGALI488-04",
+      "KA-LEX-C488-BISIGALI488-05"
+    ]
+  }
+}

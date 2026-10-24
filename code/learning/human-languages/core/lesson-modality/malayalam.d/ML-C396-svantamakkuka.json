@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C396-svantamakkuka",
+    "language": "malayalam",
+    "chapter": 396,
+    "sequence": 19440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d484abe7470c60c"
+  },
+  "findings": []
+}

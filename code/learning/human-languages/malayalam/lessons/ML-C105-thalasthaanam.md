@@ -11,7 +11,7 @@ romanization: "talasthānaṁ"
 concept_tag: ML-NOUN-CAPITAL
 prerequisites: [ML-C105-nagaram, ML-C13-shareera-bhaagangal]
 sounds: [malayalam-anusvara]
-roots: [dravidian-tala-kai, sanskrit-sthana-place]
+roots: [dravidian-talai-head, sanskrit-sthana-place]
 etymology_hook: "talasthaanaM is thala, the head you already name among your body parts, plus sthaanaM, a place — the capital is the head-place, and English says the same thing in Latin, where capital is caput"
 duration:
   max_seconds: 240

@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Opinions and Praise",
+  "label": "ch:ml-opinions-and-praise",
+  "canDo": "I can say to recommend, to remark, to praise, to urge and to express.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C413-prakatippikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can say to recommend, to remark, to praise, to urge and to express.",
+    "assesses": [
+      "ML-LEX-C413-UPADESAM413-03",
+      "ML-LEX-C413-UPADESAM413-04",
+      "ML-LEX-C413-UPADESAM413-05"
+    ]
+  }
+}

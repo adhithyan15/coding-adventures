@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C423-maiyam",
+    "language": "tamil",
+    "chapter": 423,
+    "sequence": 24310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6ac70398e9c2db4"
+  },
+  "findings": []
+}

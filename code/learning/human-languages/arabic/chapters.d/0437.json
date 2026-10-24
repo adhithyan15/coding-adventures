@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Finding the way",
+  "label": "ch:ar-finding-the-way",
+  "canDo": "I can say a compass, speed, a tour guide, to guide and an itinerary.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C437-khatt-sayr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can say a compass, speed, a tour guide, to guide and an itinerary.",
+    "assesses": [
+      "AR-LEX-C437-BUSALA437-03",
+      "AR-LEX-C437-BUSALA437-04",
+      "AR-LEX-C437-BUSALA437-05"
+    ]
+  }
+}

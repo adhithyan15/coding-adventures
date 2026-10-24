@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:a7247cbe6fb9355c",
+  "lessonIds": [
+    "ML-C424-pariskarikkuka",
+    "ML-C424-niyamanam",
+    "ML-C424-janadhipatyam",
+    "ML-C424-adhikaram",
+    "ML-C424-netavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch424.txt",
+  "json": "malayalam/narration/ch424.json",
+  "textHash": "fnv1a64:ebad4c6cf32c50dc",
+  "jsonHash": "fnv1a64:d033613ec5edcdc3",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C194-payoff",
+  "pathSegment": "PA-PATH-194-A2-VIDIARTHI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-194-A2-VIDIARTHI",
+      "order": 4
+    }
+  ]
+}

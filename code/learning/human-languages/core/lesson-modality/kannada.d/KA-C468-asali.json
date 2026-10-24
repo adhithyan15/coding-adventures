@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C468-asali",
+    "language": "kannada",
+    "chapter": 468,
+    "sequence": 23800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39a27da3f32dea30"
+  },
+  "findings": []
+}

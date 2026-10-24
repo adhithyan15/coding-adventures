@@ -1,0 +1,11 @@
+{
+  "id": "KA-R312-advice-and-reasons",
+  "pathSegment": "KA-PATH-312-MUST-BECAUSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-312-MUST-BECAUSE",
+      "order": 2
+    }
+  ]
+}

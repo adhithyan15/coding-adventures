@@ -1,0 +1,11 @@
+{
+  "id": "TE-C390-prakriya",
+  "pathSegment": "TE-PATH-390-SIDDHANTAM390",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-390-SIDDHANTAM390",
+      "order": 3
+    }
+  ]
+}

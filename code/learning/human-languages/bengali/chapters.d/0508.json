@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Rooms of a House",
+  "label": "ch:bn-rooms-of-a-house",
+  "canDo": "I can name the rooms of a house and hang things on the walls.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C508-tangano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can name the rooms of a house and hang things on the walls.",
+    "assesses": [
+      "BN-LEX-C508-GHOR508-03",
+      "BN-LEX-C508-GHOR508-04",
+      "BN-LEX-C508-GHOR508-05"
+    ]
+  }
+}

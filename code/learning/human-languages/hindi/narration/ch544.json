@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 544,
+  "title": "A Stroke of Luck",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:799604d6b19c3826",
+  "lessons": [
+    {
+      "id": "HI-C544-qismat",
+      "sequence": 29940,
+      "title": "क़िस्मत (qismat) — luck; fortune",
+      "headword": "क़िस्मत",
+      "romanization": "qismat",
+      "gloss": "luck; fortune",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69e6d2b71f45729a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an oath (formal), then the Hindi for bound (by a rule or a time)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क़िस्मत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क़िस्मत — qismat — \"luck; fortune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उसकी क़िस्मत अच्छी है, उसे हमेशा सीट मिल जाती है। Uskī qismat acchī hai, use hameśā sīṭ mil jātī hai. He is lucky: he always gets a seat."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क़िस्मत (qismat) is usually traced to Arabic qisma, \"a share, a portion\", through Persian. One's share, handed out in advance, is one's luck."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qismat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qismat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qismat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qismat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Uskī qismat acchī hai, use hameśā sīṭ mil jātī hai. — He is lucky: he always gets a seat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Uskī qismat acchī hai, use hameśā sīṭ mil jātī hai.* — He is lucky: he always gets a seat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an oath (formal), then the Hindi for bound (by a rule or a time), then say qismat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an oath (formal), then the Hindi for bound (by a rule or a time), then say *qismat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क़िस्मत (qismat) mean? (\"Luck; fortune\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C544-samyog",
+      "sequence": 29950,
+      "title": "संयोग (saṁyog) — a coincidence",
+      "headword": "संयोग",
+      "romanization": "saṁyog",
+      "gloss": "a coincidence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e7faff17f85dd40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for bound (by a rule or a time), then the Hindi for luck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संयोग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संयोग — saṁyog — \"a coincidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "क्या संयोग है, हम दोनों का जन्मदिन एक ही दिन है! Kyā saṁyog hai, ham donõ kā janmdin ek hī din hai! What a coincidence: we both have our birthday on the same day!"
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संयोग (saṁyog) is a tatsama, taken whole from Sanskrit saṃyoga, \"conjunction, connection\" (Monier-Williams). Hindi uses it for things that come together by chance."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁyog",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁyog*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁyog, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁyog*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kyā saṁyog hai, ham donõ kā janmdin ek hī din hai! — What a coincidence: we both have our birthday on the same day!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Kyā saṁyog hai, ham donõ kā janmdin ek hī din hai!* — What a coincidence: we both have our birthday on the same day!]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for bound (by a rule or a time), then the Hindi for luck, then say saṁyog again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for bound (by a rule or a time), then the Hindi for luck, then say *saṁyog* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संयोग (saṁyog) mean? (\"A coincidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C544-mauqa",
+      "sequence": 29960,
+      "title": "मौक़ा (mauqā) — a chance; an occasion",
+      "headword": "मौक़ा",
+      "romanization": "mauqā",
+      "gloss": "a chance; an occasion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ce4a433e85356c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for luck, then the Hindi for a coincidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मौक़ा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मौक़ा — mauqā — \"a chance; an occasion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे मंच पर गाने का मौक़ा मिला। Mujhe mañc par gāne kā mauqā milā. I got the chance to sing on stage."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मौक़ा (mauqā) is usually traced to Arabic mauqiʿ, \"a place where something falls\", through Persian. Hindi and Urdu use it for the moment when something can happen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mauqā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mauqā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mauqā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mauqā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mujhe mañc par gāne kā mauqā milā. — I got the chance to sing on stage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mujhe mañc par gāne kā mauqā milā.* — I got the chance to sing on stage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for luck, then the Hindi for a coincidence, then say mauqā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for luck, then the Hindi for a coincidence, then say *mauqā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मौक़ा (mauqā) mean? (\"A chance; an occasion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C544-avsar",
+      "sequence": 29970,
+      "title": "अवसर (avsar) — an opportunity (formal)",
+      "headword": "अवसर",
+      "romanization": "avsar",
+      "gloss": "an opportunity (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e986253541ba340d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a coincidence, then the Hindi for a chance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवसर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवसर — avsar — \"an opportunity (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ऐसा अवसर रोज़ नहीं आता। Aisā avsar roz nahīṃ ātā. An opportunity like this does not come every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word; everyday speech says मौक़ा (mauqā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवसर (avsar) is a tatsama, taken whole from Sanskrit avasara, \"an occasion, a favourable opportunity\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avsar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avsar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avsar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avsar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aisā avsar roz nahīṃ ātā. — An opportunity like this does not come every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aisā avsar roz nahīṃ ātā.* — An opportunity like this does not come every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a coincidence, then the Hindi for a chance, then say avsar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a coincidence, then the Hindi for a chance, then say *avsar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवसर (avsar) mean? (\"An opportunity (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C544-dav",
+      "sequence": 29980,
+      "title": "दाँव (dā̃v) — a turn (in a game); a stake",
+      "headword": "दाँव",
+      "romanization": "dā̃v",
+      "gloss": "a turn (in a game); a stake",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b530997af2e13f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a chance, then the Hindi for an opportunity (formal)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दाँव",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दाँव — dā̃v — \"a turn (in a game); a stake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर इस बार मेरा दाँव लग गया, तो मैं जीत जाऊँगा। Agar is bār merā dā̃v lag gayā, to maiṁ jīt jāūṅgā. If my luck holds this time, I will win."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "दाँव (dā̃v) लगना: one's turn or one's gamble comes off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दाँव (dā̃v) is a tadbhava, inherited from Sanskrit dātu, \"a share\" (CDIAL 6258). CDIAL gives the Hindi word as \"a turn\": one's share of the play."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dā̃v",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dā̃v*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dā̃v, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dā̃v*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Agar is bār merā dā̃v lag gayā, to maiṁ jīt jāūṅgā. — If my luck holds this time, I will win.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Agar is bār merā dā̃v lag gayā, to maiṁ jīt jāūṅgā.* — If my luck holds this time, I will win.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a chance, then the Hindi for an opportunity (formal), then say dā̃v again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a chance, then the Hindi for an opportunity (formal), then say *dā̃v* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दाँव (dā̃v) mean? (\"A turn (in a game); a stake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

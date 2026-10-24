@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:92853ae13137d254",
+  "lessonIds": [
+    "TE-C367-sithilalu",
+    "TE-C367-puratana",
+    "TE-C367-tavvakalu",
+    "TE-C367-avasesalu",
+    "TE-C367-velikitiyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch367.txt",
+  "json": "telugu/narration/ch367.json",
+  "textHash": "fnv1a64:2e68273e8d3927de",
+  "jsonHash": "fnv1a64:993b85554a1610a6",
+  "findings": []
+}

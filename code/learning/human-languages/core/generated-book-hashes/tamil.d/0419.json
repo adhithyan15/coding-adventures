@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:50f48d90897d710e",
+  "lessonIds": [
+    "TA-C419-kulirutti",
+    "TA-C419-vennir",
+    "TA-C419-porttu",
+    "TA-C419-ilaipparu",
+    "TA-C419-viruntompal"
+  ],
+  "tex": "tamil/book/chapters/ch419-a-comfortable-room.tex"
+}

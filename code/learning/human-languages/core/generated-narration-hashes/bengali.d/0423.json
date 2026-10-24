@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:b75affe5589f9a5e",
+  "lessonIds": [
+    "BN-C423-thonga",
+    "BN-C423-morok",
+    "BN-C423-keribyag",
+    "BN-C423-saij",
+    "BN-C423-gochhano",
+    "BN-R423-review-416-423"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch423.txt",
+  "json": "bengali/narration/ch423.json",
+  "textHash": "fnv1a64:9ef3b96e83bb68af",
+  "jsonHash": "fnv1a64:abb688a84a1867c6",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-380-OPOJUKTO380",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "BN-EXT-380-OPOJUKTO380"
+  ],
+  "after": []
+}

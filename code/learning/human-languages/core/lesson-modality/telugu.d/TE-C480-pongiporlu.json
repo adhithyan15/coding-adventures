@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C480-pongiporlu",
+    "language": "telugu",
+    "chapter": 480,
+    "sequence": 24160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc39ce55ee3e2e2a"
+  },
+  "findings": []
+}

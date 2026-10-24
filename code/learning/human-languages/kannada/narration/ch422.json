@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 422,
+  "title": "Rules and Methods",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5affd025fd8c4722",
+  "lessons": [
+    {
+      "id": "KA-C422-paramarsisu",
+      "sequence": 21360,
+      "title": "ಪರಾಮರ್ಶಿಸು (parāmarśisu) — to refer to; to consult",
+      "headword": "ಪರಾಮರ್ಶಿಸು",
+      "romanization": "parāmarśisu",
+      "gloss": "to refer to; to consult",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0fc63772390e6ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for export, then the Kannada for inflation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪರಾಮರ್ಶಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಾಮರ್ಶಿಸು — parāmarśisu — \"to refer to; to consult\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಉತ್ತರ ಬರೆಯುವ ಮೊದಲು ನಾನು ನಿಘಂಟನ್ನು ಪರಾಮರ್ಶಿಸಿದೆ. uttara bareyuva modalu nānu nighaṇṭannu parāmarśiside. Before writing the answer I consulted the dictionary."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪರಾಮರ್ಶಿಸಿದೆ, parāmarśiside."
+            },
+            {
+              "kind": "speech",
+              "text": "Of books and records. ಪರಾಮರ್ಶನ ಗ್ರಂಥ, a reference book."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಾಮರ್ಶಿಸು (parāmarśisu) is built on Sanskrit parāmarśa, \"seizing; consideration\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parāmarśisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parāmarśisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parāmarśisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parāmarśisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttara bareyuva modalu nānu nighaṇṭannu parāmarśiside. — Before writing the answer I consulted the dictionary.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttara bareyuva modalu nānu nighaṇṭannu parāmarśiside.* — Before writing the answer I consulted the dictionary.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for export, then the Kannada for inflation, then say parāmarśisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for export, then the Kannada for inflation, then say *parāmarśisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪರಾಮರ್ಶಿಸು (parāmarśisu) mean? (\"To refer to; to consult\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C422-manadanda",
+      "sequence": 21370,
+      "title": "ಮಾನದಂಡ (mānadaṇḍa) — a criterion; a standard",
+      "headword": "ಮಾನದಂಡ",
+      "romanization": "mānadaṇḍa",
+      "gloss": "a criterion; a standard",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6a0a2860d2204bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for inflation, then the Kannada for to refer to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಾನದಂಡ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾನದಂಡ — mānadaṇḍa — \"a criterion; a standard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆಯ್ಕೆಗೆ ಅಂಕಗಳೇ ಮುಖ್ಯ ಮಾನದಂಡ. āykege aṅkagaḷē mukhya mānadaṇḍa. Marks are the main criterion for selection."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಾನ (measure) + ದಂಡ (rod): a measuring rod."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾನದಂಡ (mānadaṇḍa) is built from Sanskrit māna, \"a measure\" (Monier-Williams), and daṇḍa, \"a stick, a rod\" (CDIAL 6128): a measuring rod."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānadaṇḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānadaṇḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānadaṇḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānadaṇḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āykege aṅkagaḷē mukhya mānadaṇḍa. — Marks are the main criterion for selection.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āykege aṅkagaḷē mukhya mānadaṇḍa.* — Marks are the main criterion for selection.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for inflation, then the Kannada for to refer to, then say mānadaṇḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for inflation, then the Kannada for to refer to, then say *mānadaṇḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಾನದಂಡ (mānadaṇḍa) mean? (\"A criterion; a standard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C422-krama",
+      "sequence": 21380,
+      "title": "ಕ್ರಮ (krama) — a course of action; a measure",
+      "headword": "ಕ್ರಮ",
+      "romanization": "krama",
+      "gloss": "a course of action; a measure",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcd7046ca2099f03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to refer to, then the Kannada for a criterion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕ್ರಮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕ್ರಮ — krama — \"a course of action; a measure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಳ್ಳತನ ತಡೆಯಲು ಪೊಲೀಸರು ಹೊಸ ಕ್ರಮ ತೆಗೆದುಕೊಂಡರು. kaḷḷatana taḍeyalu polīsaru hosa krama tegedukoṇḍaru. The police took new measures to stop theft."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕ್ರಮವಾಗಿ, in order; ಕ್ರಮ (krama) ಕೈಗೊಳ್ಳು, to take action."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕ್ರಮ (krama) is borrowed from Sanskrit krama, \"a step, going, order\" (CDIAL 3577)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷatana taḍeyalu polīsaru hosa krama tegedukoṇḍaru. — The police took new measures to stop theft.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷatana taḍeyalu polīsaru hosa krama tegedukoṇḍaru.* — The police took new measures to stop theft.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to refer to, then the Kannada for a criterion, then say krama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to refer to, then the Kannada for a criterion, then say *krama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕ್ರಮ (krama) mean? (\"A course of action; a measure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C422-vidhana",
+      "sequence": 21390,
+      "title": "ವಿಧಾನ (vidhāna) — a method; a procedure",
+      "headword": "ವಿಧಾನ",
+      "romanization": "vidhāna",
+      "gloss": "a method; a procedure",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bffa8740aafdfe36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a criterion, then the Kannada for a course of action."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿಧಾನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಧಾನ — vidhāna — \"a method; a procedure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಮ್ಮನ ಅಡುಗೆಯ ವಿಧಾನ ಬೇರೆ. ammana aḍugeya vidhāna bēre. Mother's way of cooking is different."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿಧಾನಸಭೆ, the legislative assembly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಧಾನ (vidhāna) is borrowed from Sanskrit vidhāna, \"arranging, regulating, a rule\" (CDIAL 11754)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidhāna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidhāna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidhāna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidhāna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammana aḍugeya vidhāna bēre. — Mother's way of cooking is different.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammana aḍugeya vidhāna bēre.* — Mother's way of cooking is different.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a criterion, then the Kannada for a course of action, then say vidhāna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a criterion, then the Kannada for a course of action, then say *vidhāna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿಧಾನ (vidhāna) mean? (\"A method; a procedure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C422-prakriye",
+      "sequence": 21400,
+      "title": "ಪ್ರಕ್ರಿಯೆ (prakriye) — a process",
+      "headword": "ಪ್ರಕ್ರಿಯೆ",
+      "romanization": "prakriye",
+      "gloss": "a process",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8baf9e12410a5276",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a course of action, then the Kannada for a method."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಕ್ರಿಯೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕ್ರಿಯೆ — prakriye — \"a process\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮನೆ ಕೊಳ್ಳುವ ಪ್ರಕ್ರಿಯೆ ತುಂಬಾ ಉದ್ದ. mane koḷḷuva prakriye tumbā udda. The process of buying a house is very long."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕ್ರಿಯೆ (prakriye) ಮುಗಿಸು, to complete a process."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕ್ರಿಯೆ (prakriye) is borrowed from Sanskrit prakriyā, \"production; procedure, way, manner\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakriye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakriye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakriye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakriye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mane koḷḷuva prakriye tumbā udda. — The process of buying a house is very long.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mane koḷḷuva prakriye tumbā udda.* — The process of buying a house is very long.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a course of action, then the Kannada for a method, then say prakriye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a course of action, then the Kannada for a method, then say *prakriye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಕ್ರಿಯೆ (prakriye) mean? (\"A process\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

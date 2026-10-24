@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:e5f12b95eb14f8b5",
+  "lessonIds": [
+    "ML-C471-encin",
+    "ML-C471-cakram",
+    "ML-C471-takararu",
+    "ML-C471-hon",
+    "ML-C471-calunnuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch471.txt",
+  "json": "malayalam/narration/ch471.json",
+  "textHash": "fnv1a64:b2700f9988f8a030",
+  "jsonHash": "fnv1a64:dfb7d6974b77910b",
+  "findings": []
+}

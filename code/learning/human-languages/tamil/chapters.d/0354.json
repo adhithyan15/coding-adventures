@@ -1,0 +1,21 @@
+{
+  "chapter": 354,
+  "title": "What Matters Most",
+  "label": "ch:ta-what-matters-most",
+  "canDo": "I can say what is important, what comes first and what is needed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-R354-review-347-354",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say what is important, what comes first and what is needed.",
+    "assesses": [
+      "TA-LEX-C354-MUKKIYATTUVA354-01",
+      "TA-LEX-C354-MUKKIYATTUVA354-02",
+      "TA-LEX-C354-MUKKIYATTUVA354-03",
+      "TA-LEX-C354-MUKKIYATTUVA354-04",
+      "TA-LEX-C354-MUKKIYATTUVA354-05"
+    ]
+  }
+}

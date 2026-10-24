@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:c7e4a17ec9c49fe7",
+  "lessonIds": [
+    "BN-C368-shorto",
+    "BN-C368-obostha",
+    "BN-C368-poristhiti",
+    "BN-C368-jotokkhon",
+    "BN-C368-othoba"
+  ],
+  "tex": "bengali/book/chapters/ch368-on-one-condition.tex"
+}

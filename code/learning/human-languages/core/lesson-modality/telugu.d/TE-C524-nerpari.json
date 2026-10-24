@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C524-nerpari",
+    "language": "telugu",
+    "chapter": 524,
+    "sequence": 26560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:719ae4f2144e2d2e"
+  },
+  "findings": []
+}

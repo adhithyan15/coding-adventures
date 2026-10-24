@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C494-virralikkuka",
+    "language": "malayalam",
+    "chapter": 494,
+    "sequence": 24730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2945c8567a6201ae"
+  },
+  "findings": []
+}

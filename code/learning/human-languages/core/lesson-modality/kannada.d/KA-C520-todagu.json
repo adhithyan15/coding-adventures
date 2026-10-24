@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C520-todagu",
+    "language": "kannada",
+    "chapter": 520,
+    "sequence": 26540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d52cd4975f24a01"
+  },
+  "findings": []
+}

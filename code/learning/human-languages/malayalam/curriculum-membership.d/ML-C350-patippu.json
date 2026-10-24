@@ -1,0 +1,11 @@
+{
+  "id": "ML-C350-patippu",
+  "pathSegment": "ML-PATH-350-PATRAM350",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-350-PATRAM350",
+      "order": 2
+    }
+  ]
+}

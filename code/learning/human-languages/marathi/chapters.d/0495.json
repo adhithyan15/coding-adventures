@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Nephews and Grandchildren",
+  "label": "ch:mr-nephews-and-grandchildren",
+  "canDo": "I can name a nephew, a grandson, a great-grandfather and a father's sister.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C495-atya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can name a nephew, a grandson, a great-grandfather and a father's sister.",
+    "assesses": [
+      "MR-LEX-C495-NATU495-03",
+      "MR-LEX-C495-NATU495-04",
+      "MR-LEX-C495-NATU495-05"
+    ]
+  }
+}

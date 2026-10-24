@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C458-dilasa",
+    "language": "marathi",
+    "chapter": 458,
+    "sequence": 26410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a6575045f7d8d68"
+  },
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-288-ASK-THE-WAY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask the way with … eppaṭip pōka vēṇṭum? and eṅkē irukkiṟatu?, ask how far it is, and give directions with nērākap pōṅkaḷ, tirumpuṅkaḷ and landmarks such as kōyilukku etirē.",
+  "prerequisites": [
+    "TA-EXT-287-MUST-BECAUSE"
+  ]
+}

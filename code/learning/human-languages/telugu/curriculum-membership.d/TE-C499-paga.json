@@ -1,0 +1,11 @@
+{
+  "id": "TE-C499-paga",
+  "pathSegment": "TE-PATH-499-ASUYA499",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-499-ASUYA499",
+      "order": 3
+    }
+  ]
+}

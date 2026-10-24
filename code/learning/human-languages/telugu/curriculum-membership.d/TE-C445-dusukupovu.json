@@ -1,0 +1,11 @@
+{
+  "id": "TE-C445-dusukupovu",
+  "pathSegment": "TE-PATH-445-RAHADARI445",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-445-RAHADARI445",
+      "order": 2
+    }
+  ]
+}

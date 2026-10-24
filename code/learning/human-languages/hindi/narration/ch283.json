@@ -1,0 +1,708 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 283,
+  "title": "Tickets, Trains and Trouble",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5fbff62880455557",
+  "lessons": [
+    {
+      "id": "HI-C283-agla",
+      "sequence": 15580,
+      "title": "अगला (aglā) — next",
+      "headword": "अगला",
+      "romanization": "aglā",
+      "gloss": "next",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08a9d690b6d0bd8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"last week\". (पिछले हफ़्ते.) Then आगे, \"ahead\". This lesson's word is the partner of the first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अगला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अगला — aglā — \"next\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगली ट्रेन कब आएगी? aglī ṭren kab āegī? — \"When will the next train come?\""
+            },
+            {
+              "kind": "speech",
+              "text": "It agrees as पिछला does: अगला स्टेशन (aglā sṭeśan), \"the next station\", but अगली ट्रेन, because ट्रेन is feminine. As a time it takes the form of पिछले हफ़्ते: अगले हफ़्ते (agle hafte), \"next week\"; अगले साल (agle sāl), \"next year\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगले हफ़्ते हम गाँव जाएँगे। agle hafte ham gā̃v jāeṅge. — \"Next week we will go to the village.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अगला (aglā) has no row of its own in CDIAL. It is usually connected with आगे (āge), \"ahead\", which CDIAL traces to Sanskrit agra, \"top, front\" (CDIAL 68); under the same entry CDIAL lists a Hindi āgil, \"foremost\". पिछला and अगला make a pair: the one behind you and the one in front."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aglā, then aglī ṭren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aglā*, then *aglī ṭren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When will the next train come?\" — aglī ṭren kab āegī?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When will the next train come?\" — *aglī ṭren kab āegī?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Last week I was at home; next week I will go to the village\" — pichle hafte maiṁ ghar par thā; agle hafte maiṁ gā̃v jāūṅgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Last week I was at home; next week I will go to the village\" — *pichle hafte maiṁ ghar par thā; agle hafte maiṁ gā̃v jāūṅgā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अगला (aglā) mean? (\"Next\".) \"Next week\"? (अगले हफ़्ते.) \"The next train\"? (अगली ट्रेन: ट्रेन is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C283-ektikat",
+      "sequence": 15590,
+      "title": "शहर के लिए दो टिकट दीजिए (śahar ke liye do ṭikaṭ dījie) — at the ticket window",
+      "headword": "शहर के लिए दो टिकट दीजिए",
+      "romanization": "śahar ke liye do ṭikaṭ dījie",
+      "gloss": "two tickets for the city, please — buying a ticket, and asking when the train leaves",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:851223818a9bc3b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have asked for a ticket since you first learned the word: एक टिकट दीजिए. Say it, then \"the next train\". (aglī ṭren.) This lesson buys the right ticket for the right train."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: buying a ticket",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शहर के लिए दो टिकट दीजिए। śahar ke liye do ṭikaṭ dījie. — \"Two tickets for the city, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The place you are going takes के लिए, \"for\". टिकट is masculine in standard Hindi, though you will hear it made feminine too, and it does not change for two."
+            },
+            {
+              "kind": "speech",
+              "text": "एक टिकट कितने का है? (ek ṭikaṭ kitne kā hai?) — How much is one ticket?"
+            },
+            {
+              "kind": "speech",
+              "text": "सौ रुपये का है। (sau rupaye kā hai.) — It's a hundred rupees."
+            },
+            {
+              "kind": "speech",
+              "text": "In कितने का, \"of how much\", the का agrees with the ticket."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: when it leaves, and how long",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अगली ट्रेन कितने बजे चलेगी? aglī ṭren kitne baje calegī? — \"What time does the next train leave?\""
+            },
+            {
+              "kind": "speech",
+              "text": "A train चलती है, \"moves off\", and चलेगी is its future. \"At what time\" is कितने बजे, and the answer is a time you know: पाँच बजे."
+            },
+            {
+              "kind": "speech",
+              "text": "How long will it take? लगना again, with the time as the thing:"
+            },
+            {
+              "kind": "speech",
+              "text": "कितना समय लगेगा? (kitnā samay lagegā?) — How long will it take?"
+            },
+            {
+              "kind": "speech",
+              "text": "दो घंटे लगेंगे। (do ghaṇṭe lageṅge.) — It will take two hours."
+            },
+            {
+              "kind": "speech",
+              "text": "लगेगा follows समय; लगेंगे follows दो घंटे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It will take two hours\" — do ghaṇṭe lageṅge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It will take two hours\" — *do ghaṇṭe lageṅge*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C283-ektikat-r1",
+              "prompt": "Ask for two tickets for the city, then ask what time the next train leaves.",
+              "assesses": [
+                "HI-GRAMMAR-C283-BUY-TICKET-01",
+                "HI-GRAMMAR-C283-WHEN-LEAVES-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "śahar ke liye do ṭikaṭ dījie; aglī ṭren kitne baje calegī?",
+                "शहर के लिए दो टिकट दीजिए। अगली ट्रेन कितने बजे चलेगी?"
+              ],
+              "feedback": {
+                "correct": "ke liye for the place; aglī and calegī for the train, which is feminine.",
+                "incorrect": "The place takes ke liye; ask the time with kitne baje, and the train's future is calegī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Two tickets for the city\"? (शहर के लिए दो टिकट दीजिए (śahar ke liye do ṭikaṭ dījie).) \"How much is one ticket?\" (एक टिकट कितने का है?) \"What time does it leave?\" (कितने बजे चलेगी?) \"How long will it take?\" (कितना समय लगेगा?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C283-khona",
+      "sequence": 15600,
+      "title": "खोना (khonā) — to lose, to be lost",
+      "headword": "खोना",
+      "romanization": "khonā",
+      "gloss": "to lose; to be lost",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b01df54dc028242c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say a bag and a key. (thailā, cābī.) Then \"he fell asleep\". (vah so gayā.) The new verb works like that last one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खोना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोना — khonā — \"to lose; to be lost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरा थैला खो गया। merā thailā kho gayā. — \"My bag got lost.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With गया after it, as in सो गया, the lost thing is the subject, and the verb follows it: मेरी चाबी खो गई (merī cābī kho gaī), \"my key got lost\", because चाबी is feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "With दिया after it, you are the one who lost it, and ने comes in:"
+            },
+            {
+              "kind": "speech",
+              "text": "मैंने अपनी चाबी खो दी। maiṁne apnī cābī kho dī. — \"I lost my key.\""
+            },
+            {
+              "kind": "speech",
+              "text": "दी follows चाबी. अपनी is \"my own\", the अपना you use wherever the owner is also the doer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोना (khonā) is a tadbhava. CDIAL traces it to Sanskrit kṣapayati, \"destroys; throws\" (CDIAL 3651), and gives \"to lose, waste, throw away\" for Hindi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khonā, then kho gayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khonā*, then *kho gayā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My key got lost\" — merī cābī kho gaī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My key got lost\" — *merī cābī kho gaī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I lost my key\" — maiṁne apnī cābī kho dī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I lost my key\" — *maiṁne apnī cābī kho dī*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खोना (khonā) mean? (\"To lose; to be lost\".) \"My bag got lost\"? (मेरा थैला खो गया.) Why खो गई for a key? (चाबी is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C283-chutgayi",
+      "sequence": 15610,
+      "title": "मेरी ट्रेन छूट गई (merī ṭren chūṭ gaī) — when something goes wrong",
+      "headword": "मेरी ट्रेन छूट गई",
+      "romanization": "merī ṭren chūṭ gaī",
+      "gloss": "I missed my train — reporting a loss, and a missed train",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ade6b621b65a6562",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my bag got lost\". (merā thailā kho gayā.) Then छूटना, \"to be left behind\". (chūṭnā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: reporting a loss",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेरा थैला खो गया। उसमें मेरा बटुआ था। merā thailā kho gayā. usmeṁ merā baṭuā thā. — \"My bag got lost. My wallet was in it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "उसमें is उस with में: \"in it\". Then ask for help, and say whom you told:"
+            },
+            {
+              "kind": "speech",
+              "text": "मेरी मदद कीजिए। (merī madad kījiye.) — Please help me. मदद is feminine: मेरी."
+            },
+            {
+              "kind": "speech",
+              "text": "मैंने पुलिस को बताया। (maiṁne pulis ko batāyā.) — I told the police."
+            },
+            {
+              "kind": "speech",
+              "text": "थाना कहाँ है? (thānā kahā̃ hai?) — Where is the police station?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: missing a train",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेरी ट्रेन छूट गई। merī ṭren chūṭ gaī. — \"I missed my train.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"my train got left behind\". The train is the subject, so छूट गई follows it, and there is no मैंने. With a bus, the same: मेरी बस छूट गई (merī bas chūṭ gaī)."
+            },
+            {
+              "kind": "speech",
+              "text": "The cause goes first, with इसलिए:"
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे देर हो गई, इसलिए मेरी ट्रेन छूट गई। mujhe der ho gaī, isliye merī ṭren chūṭ gaī. — \"I was late, so I missed my train.\""
+            },
+            {
+              "kind": "speech",
+              "text": "And what it cost you, with पड़ना: मुझे बस से जाना पड़ा (mujhe bas se jānā paṛā), \"I had to go by bus\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Please help me\" — merī madad kījiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Please help me\" — *merī madad kījiye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I told the police\" — maiṁne pulis ko batāyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I told the police\" — *maiṁne pulis ko batāyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I was late, so I missed my bus\" — mujhe der ho gaī, isliye merī bas chūṭ gaī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I was late, so I missed my bus\" — *mujhe der ho gaī, isliye merī bas chūṭ gaī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C283-chutgayi-r1",
+              "prompt": "Say that your bag got lost and your wallet was in it, then that you missed your train.",
+              "assesses": [
+                "HI-GRAMMAR-C283-LOST-REPORT-01",
+                "HI-GRAMMAR-C283-MISSED-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "merā thailā kho gayā, usmeṁ merā baṭuā thā; merī ṭren chūṭ gaī",
+                "मेरा थैला खो गया। उसमें मेरा बटुआ था। मेरी ट्रेन छूट गई।"
+              ],
+              "feedback": {
+                "correct": "The bag and the train are the subjects: kho gayā, chūṭ gaī.",
+                "incorrect": "Let the lost thing be the subject: thailā kho gayā; the train too: ṭren chūṭ gaī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"My bag got lost\"? (मेरा थैला खो गया.) \"My wallet was in it\"? (उसमें मेरा बटुआ था.) \"I missed my train\"? (मेरी ट्रेन छूट गई (merī ṭren chūṭ gaī).) Why no मैंने? (The train is the subject: it got left behind.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R283-at-the-station",
+      "sequence": 15620,
+      "title": "Review — at the station",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "tickets, the next train, and trouble",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e9c565e554ae086",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the next train\" and \"next week\". (aglī ṭren, agle hafte.) Then \"my bag got lost\". (merā thailā kho gayā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Excuse me, where is the ticket office? Go straight on, then turn left.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Excuse me, where is the ticket office? Go straight on, then turn left.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "One ticket for the village, please. How much is it?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: One ticket for the village, please. How much is it?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "When will the next train come? How long will it take?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: When will the next train come? How long will it take?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My key got lost. Then the other way: I lost my key.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My key got lost. Then the other way: I lost my key.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I was late, so I missed my train. Please help me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I was late, so I missed my train. Please help me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Next week I will go by bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Next week I will go by bus.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"The next train\"? (अगली ट्रेन.) \"How much is one ticket?\" (एक टिकट कितने का है?) \"What time does it leave?\" (कितने बजे चलेगी?) \"I lost my key\"? (मैंने अपनी चाबी खो दी: ने, and दी for the key.) \"I missed my train\"? (मेरी ट्रेन छूट गई (merī ṭren chūṭ gaī).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

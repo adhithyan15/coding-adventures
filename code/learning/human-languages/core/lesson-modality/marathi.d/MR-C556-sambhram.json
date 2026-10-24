@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C556-sambhram",
+    "language": "marathi",
+    "chapter": 556,
+    "sequence": 31700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b409b0ffe282975"
+  },
+  "findings": []
+}

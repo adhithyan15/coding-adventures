@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Issues and questions",
+  "label": "ch:ar-issues-and-questions",
+  "canDo": "I can talk about an issue, a matter and a context, and say that something raised questions.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C361-tasaala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can talk about an issue, a matter and a context, and say that something raised questions.",
+    "assesses": [
+      "AR-LEX-C361-QADIYYA361-03",
+      "AR-LEX-C361-QADIYYA361-04",
+      "AR-LEX-C361-QADIYYA361-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C369-vidhi",
+    "language": "malayalam",
+    "chapter": 369,
+    "sequence": 18020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f1db8e065f795a4"
+  },
+  "findings": []
+}

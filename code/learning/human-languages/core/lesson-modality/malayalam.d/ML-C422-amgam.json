@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C422-amgam",
+    "language": "malayalam",
+    "chapter": 422,
+    "sequence": 20880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65dacc22a0274c88"
+  },
+  "findings": []
+}

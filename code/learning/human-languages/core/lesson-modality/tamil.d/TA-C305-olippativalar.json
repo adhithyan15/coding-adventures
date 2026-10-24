@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C305-olippativalar",
+    "language": "tamil",
+    "chapter": 305,
+    "sequence": 17700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b1e8fa3e41644ee"
+  },
+  "findings": []
+}

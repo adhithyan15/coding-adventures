@@ -1,0 +1,11 @@
+{
+  "id": "MR-C464-cikati",
+  "pathSegment": "MR-PATH-464-HIMMAT464",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-464-HIMMAT464",
+      "order": 2
+    }
+  ]
+}

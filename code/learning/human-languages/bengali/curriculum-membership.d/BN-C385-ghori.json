@@ -1,0 +1,11 @@
+{
+  "id": "BN-C385-ghori",
+  "pathSegment": "BN-PATH-385-GHONTA385",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-385-GHONTA385",
+      "order": 1
+    }
+  ]
+}

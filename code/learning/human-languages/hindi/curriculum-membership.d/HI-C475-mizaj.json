@@ -1,0 +1,11 @@
+{
+  "id": "HI-C475-mizaj",
+  "pathSegment": "HI-PATH-475-CHARITRA475",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-475-CHARITRA475",
+      "order": 2
+    }
+  ]
+}

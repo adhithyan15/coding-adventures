@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Mourning",
+  "label": "ch:ml-mourning",
+  "canDo": "I can say condolence, a tribute, a death anniversary, a cemetery and to offer condolences.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C392-anusocikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can say condolence, a tribute, a death anniversary, a cemetery and to offer condolences.",
+    "assesses": [
+      "ML-LEX-C392-ANUSOCHANAM392-03",
+      "ML-LEX-C392-ANUSOCHANAM392-04",
+      "ML-LEX-C392-ANUSOCHANAM392-05"
+    ]
+  }
+}

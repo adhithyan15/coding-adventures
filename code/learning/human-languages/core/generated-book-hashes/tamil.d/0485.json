@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:48ccd046ea9724d7",
+  "lessonIds": [
+    "TA-C485-kasayam",
+    "TA-C485-cukku",
+    "TA-C485-kanci",
+    "TA-C485-tailam",
+    "TA-C485-kalimpu"
+  ],
+  "tex": "tamil/book/chapters/ch485-home-remedies.tex"
+}

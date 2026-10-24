@@ -1,0 +1,11 @@
+{
+  "id": "TE-R317-a-story-in-order",
+  "pathSegment": "TE-PATH-317-STORY-ORDER",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TE-EXT-317-STORY-ORDER",
+      "order": 5
+    }
+  ]
+}

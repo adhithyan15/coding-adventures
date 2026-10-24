@@ -1,0 +1,11 @@
+{
+  "id": "MR-C493-cakkar-yene",
+  "pathSegment": "MR-PATH-493-TOL493",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-493-TOL493",
+      "order": 1
+    }
+  ]
+}

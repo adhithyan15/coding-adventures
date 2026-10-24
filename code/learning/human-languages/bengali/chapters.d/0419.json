@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Want and Waste",
+  "label": "ch:bn-want-and-waste",
+  "canDo": "I can talk about being short of money, wasting it and making it last.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C419-sombol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can talk about being short of money, wasting it and making it last.",
+    "assesses": [
+      "BN-LEX-C419-ABHAB419-03",
+      "BN-LEX-C419-ABHAB419-04",
+      "BN-LEX-C419-ABHAB419-05"
+    ]
+  }
+}

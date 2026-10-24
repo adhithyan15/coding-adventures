@@ -1,0 +1,21 @@
+{
+  "chapter": 515,
+  "title": "At the Table",
+  "label": "ch:bn-at-the-table",
+  "canDo": "I can talk about serving food, mouthfuls and leftovers.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R515-review-508-515",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can talk about serving food, mouthfuls and leftovers.",
+    "assesses": [
+      "BN-LEX-C515-PORIBESHON515-01",
+      "BN-LEX-C515-PORIBESHON515-02",
+      "BN-LEX-C515-PORIBESHON515-03",
+      "BN-LEX-C515-PORIBESHON515-04",
+      "BN-LEX-C515-PORIBESHON515-05"
+    ]
+  }
+}

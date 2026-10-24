@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:fbc14c06120d0642",
+  "lessonIds": [
+    "MR-C331-vedha",
+    "MR-C331-gherne",
+    "MR-C331-khandak",
+    "MR-C331-tatbandi",
+    "MR-C331-buruj"
+  ],
+  "tex": "marathi/book/chapters/ch331-the-siege.tex"
+}

@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 551,
+  "title": "Sheets, cushions and a couch",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c94ed910e5c30bed",
+  "lessons": [
+    {
+      "id": "AR-C551-sharshaf",
+      "sequence": 30420,
+      "title": "شرشف (sharshaf) — a bedsheet",
+      "headword": "شرشف",
+      "romanization": "sharshaf",
+      "gloss": "a bedsheet",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7bd6a7a7464d762",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to polish, then the Arabic for to maintain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شرشف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شرشف — sharshaf — \"a bedsheet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غيرت أمي شراشف السرير. ghayyarat ummī sharāshif as-sarīr. My mother changed the bedsheets."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: شراشف, sharāshif."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شرشف (sharshaf) is usually traced to Persian chādar-shab, \"a night sheet\", which reached Arabic through Turkish."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sharshaf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sharshaf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sharshaf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sharshaf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghayyarat ummī sharāshif as-sarīr. — My mother changed the bedsheets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghayyarat ummī sharāshif as-sarīr.* — My mother changed the bedsheets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to polish, then the Arabic for to maintain, then say sharshaf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to polish, then the Arabic for to maintain, then say *sharshaf* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شرشف (sharshaf) mean? (\"A bedsheet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C551-mikhadda",
+      "sequence": 30430,
+      "title": "مخدة (mikhadda) — a cushion; a pillow",
+      "headword": "مخدة",
+      "romanization": "mikhadda",
+      "gloss": "a cushion; a pillow",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22431b8707d66bc1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to maintain, then the Arabic for a bedsheet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مخدة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخدة — mikhadda — \"a cushion; a pillow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وضعت المخدة تحت رأسي. waḍaʿtu al-mikhadda taḥta raʾsī. I put the cushion under my head."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخدة (mikhadda) is built on the native Arabic root kh-d-d, \"to furrow; the cheek\" (Lane). Lane gives mikhadda as a pillow, so called because it is put under the cheek, khadd, which you know."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikhadda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikhadda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikhadda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikhadda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waḍaʿtu al-mikhadda taḥta raʾsī. — I put the cushion under my head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waḍaʿtu al-mikhadda taḥta raʾsī.* — I put the cushion under my head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to maintain, then the Arabic for a bedsheet, then say mikhadda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to maintain, then the Arabic for a bedsheet, then say *mikhadda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مخدة (mikhadda) mean? (\"A cushion; a pillow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C551-hawd",
+      "sequence": 30440,
+      "title": "حوض (ḥawḍ) — a basin, a tub",
+      "headword": "حوض",
+      "romanization": "ḥawḍ",
+      "gloss": "a basin, a tub",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f538251ee17572de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a bedsheet, then the Arabic for a cushion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حوض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حوض — ḥawḍ — \"a basin, a tub\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ملأ الولد حوض الاستحمام بالماء. malaʾa al-walad ḥawḍ al-istiḥmām bi-l-māʾ. The boy filled the bathtub with water."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أحواض, aḥwāḍ."
+            },
+            {
+              "kind": "speech",
+              "text": "حوض (ḥawḍ) الاستحمام is a bathtub."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حوض (ḥawḍ) is built on the native Arabic root ḥ-w-ḍ, \"a watering trough\" (Lane). Lane gives ḥawḍ as a trough or cistern for water."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥawḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥawḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥawḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥawḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malaʾa al-walad ḥawḍ al-istiḥmām bi-l-māʾ. — The boy filled the bathtub with water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malaʾa al-walad ḥawḍ al-istiḥmām bi-l-māʾ.* — The boy filled the bathtub with water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a bedsheet, then the Arabic for a cushion, then say ḥawḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a bedsheet, then the Arabic for a cushion, then say *ḥawḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حوض (ḥawḍ) mean? (\"A basin, a tub\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C551-mimsaha",
+      "sequence": 30450,
+      "title": "ممسحة (mimsaḥa) — a mop",
+      "headword": "ممسحة",
+      "romanization": "mimsaḥa",
+      "gloss": "a mop",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d2172e61f28d04b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a cushion, then the Arabic for a basin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ممسحة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ممسحة — mimsaḥa — \"a mop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نظفت الأرض بالممسحة. naẓẓaftu al-arḍ bi-l-mimsaḥa. I cleaned the floor with the mop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ممسحة (mimsaḥa) is built on the native Arabic root m-s-ḥ, \"to wipe\" (Lane). Masaḥa, to wipe, which you know, is from the same root; the pattern mifʿala names a tool."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mimsaḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mimsaḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mimsaḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mimsaḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naẓẓaftu al-arḍ bi-l-mimsaḥa. — I cleaned the floor with the mop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naẓẓaftu al-arḍ bi-l-mimsaḥa.* — I cleaned the floor with the mop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a cushion, then the Arabic for a basin, then say mimsaḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a cushion, then the Arabic for a basin, then say *mimsaḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ممسحة (mimsaḥa) mean? (\"A mop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C551-kanaba",
+      "sequence": 30460,
+      "title": "كنبة (kanaba) — a couch",
+      "headword": "كنبة",
+      "romanization": "kanaba",
+      "gloss": "a couch",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93cb0706c485a906",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a basin, then the Arabic for a mop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كنبة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كنبة — kanaba — \"a couch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جلسنا على الكنبة وشاهدنا فيلما. jalasnā ʿalā al-kanaba wa-shāhadnā fīlman. We sat on the couch and watched a film."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كنبة (kanaba) is a modern word, usually traced to French canapé, a sofa."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jalasnā ʿalā al-kanaba wa-shāhadnā fīlman. — We sat on the couch and watched a film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jalasnā ʿalā al-kanaba wa-shāhadnā fīlman.* — We sat on the couch and watched a film.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a basin, then the Arabic for a mop, then say kanaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a basin, then the Arabic for a mop, then say *kanaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does كنبة (kanaba) mean? (\"A couch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R551-review-544-551",
+      "sequence": 30470,
+      "title": "Words from chapters 544–551 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 544-551",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a215c2bb51d382d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for an oud and a violin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an oud, a violin, a drum, a reed flute, a band",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an oud, a violin, a drum, a reed flute, a band]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a poet, a rhyme, to recite, to create, to direct films",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a poet, a rhyme, to recite, to create, to direct films]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a half, a supporter, to finish level, to pass the ball, to compete",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a half, a supporter, to finish level, to pass the ball, to compete]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a triumph, a championship, a trophy, a medal, to qualify",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a triumph, a championship, a trophy, a medal, to qualify]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "swimming, boxing, to wrestle, to compete with, to punch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: swimming, boxing, to wrestle, to compete with, to punch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an attic, a bell, a handle, a bolt, a drain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an attic, a bell, a handle, a bolt, a drain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a chandelier, a vase, to shake out, to polish, to maintain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a chandelier, a vase, to shake out, to polish, to maintain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bedsheet, a cushion, a basin, a mop, a couch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bedsheet, a cushion, a basin, a mop, a couch]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An oud? (عود, ʿūd.) A violin? (كمان, kamān.) A drum? (طبل, ṭabl.) A reed flute? (ناي, nāy.) A band? (فرقة, firqa.) A poet? (شاعر, shāʿir.) A rhyme? (قافية, qāfiya.) To recite? (أنشد, anshada.) To create? (أبدع, abdaʿa.) To direct films? (أخرج, akhraja.) A half? (شوط, shawṭ.) A supporter? (مشجع, mushajjiʿ.) To finish level? (تعادل, taʿādala.) To pass the ball? (مرر, marrara.) To compete? (تنافس, tanāfasa.) A triumph? (فوز, fawz.) A championship? (بطولة, buṭūla.) A trophy? (كأس, kaʾs.) A medal? (ميدالية, mīdāliya.) To qualify? (تأهل, taʾahhala.) Swimming? (سباحة, sibāḥa.) Boxing? (ملاكمة, mulākama.) To wrestle? (صارع, ṣāraʿa.) To compete with? (نافس, nāfasa.) To punch? (لكم, lakama.) An attic? (علية, ʿulliyya.) A bell? (جرس, jaras.) A handle? (مقبض, miqbaḍ.) A bolt? (مزلاج, mizlāj.) A drain? (بالوعة, bālūʿa.) A chandelier? (ثريا, thurayyā.) A vase? (مزهرية, mazhariyya.) To shake out? (نفض, nafaḍa.) To polish? (لمع, lammaʿa.) To maintain? (صان, ṣāna.) A bedsheet? (شرشف, sharshaf.) A cushion? (مخدة, mikhadda.) A basin? (حوض, ḥawḍ.) A mop? (ممسحة, mimsaḥa.) A couch? (كنبة, kanaba.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

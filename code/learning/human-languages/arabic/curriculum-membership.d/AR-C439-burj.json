@@ -1,0 +1,11 @@
+{
+  "id": "AR-C439-burj",
+  "pathSegment": "AR-PATH-439-MANZAR439",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-439-MANZAR439",
+      "order": 1
+    }
+  ]
+}

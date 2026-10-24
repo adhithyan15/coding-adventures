@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Fairness for All",
+  "label": "ch:ka-fairness-for-all",
+  "canDo": "I can say equality, to discriminate, to exploit, empowerment and commitment.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C391-baddhate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can say equality, to discriminate, to exploit, empowerment and commitment.",
+    "assesses": [
+      "KA-LEX-C391-SAMANATE391-03",
+      "KA-LEX-C391-SAMANATE391-04",
+      "KA-LEX-C391-SAMANATE391-05"
+    ]
+  }
+}

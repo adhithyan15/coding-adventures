@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-322-RAKKHOSH322",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "BN-EXT-322-RAKKHOSH322"
+  ],
+  "after": []
+}

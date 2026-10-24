@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:7cd14698f959c5c9",
+  "lessonIds": [
+    "BN-C322-rakkhos",
+    "BN-C322-pori",
+    "BN-C322-daini",
+    "BN-C322-obhishap",
+    "BN-C322-bhut",
+    "BN-R322-review-316-322"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch322.txt",
+  "json": "bengali/narration/ch322.json",
+  "textHash": "fnv1a64:ab3e8878f444b3df",
+  "jsonHash": "fnv1a64:9a7a5297b5d52ddf",
+  "findings": []
+}

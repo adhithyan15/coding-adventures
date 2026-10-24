@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:f3ee5188543e11c7",
+  "lessonIds": [
+    "TE-C504-aradhincu",
+    "TE-C504-abhimanincu",
+    "TE-C504-abhimani",
+    "TE-C504-meccuko",
+    "TE-C504-prasamsa"
+  ],
+  "tex": "telugu/book/chapters/ch504-admiration-and-praise.tex"
+}

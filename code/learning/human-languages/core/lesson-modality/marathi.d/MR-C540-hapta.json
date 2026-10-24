@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C540-hapta",
+    "language": "marathi",
+    "chapter": 540,
+    "sequence": 30870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ceff515adce8e57c"
+  },
+  "findings": []
+}

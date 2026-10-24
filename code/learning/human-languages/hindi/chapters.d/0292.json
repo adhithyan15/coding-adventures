@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Robbers on the Road",
+  "label": "ch:hi-robbers-on-the-road",
+  "canDo": "I can tell what robbers did and say what will happen if they come back.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C292-badhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can tell what robbers did and say what will happen if they come back.",
+    "assesses": [
+      "HI-LEX-C292-DAKAITI292-03",
+      "HI-LEX-C292-DAKAITI292-04",
+      "HI-LEX-C292-DAKAITI292-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:565b6779cc920c98",
+  "lessonIds": [
+    "TE-C463-rayabara-karyalayam",
+    "TE-C463-rayabari",
+    "TE-C463-ketayincu",
+    "TE-C463-podigincu",
+    "TE-C463-punaruddharincu"
+  ],
+  "tex": "telugu/book/chapters/ch463-the-embassy.tex"
+}

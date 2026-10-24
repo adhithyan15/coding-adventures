@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C438-margam",
+    "language": "telugu",
+    "chapter": 438,
+    "sequence": 22030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07deacf428ae79ff"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C368-ghatta",
+  "pathSegment": "KA-PATH-368-KRAMA368",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-368-KRAMA368",
+      "order": 3
+    }
+  ]
+}

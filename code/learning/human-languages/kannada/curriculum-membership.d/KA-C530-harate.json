@@ -1,0 +1,11 @@
+{
+  "id": "KA-C530-harate",
+  "pathSegment": "KA-PATH-530-BIDUVU530",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-530-BIDUVU530",
+      "order": 2
+    }
+  ]
+}

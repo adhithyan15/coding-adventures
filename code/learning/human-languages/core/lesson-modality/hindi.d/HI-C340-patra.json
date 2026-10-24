@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C340-patra",
+    "language": "hindi",
+    "chapter": 340,
+    "sequence": 18680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa58ccef89909873"
+  },
+  "findings": []
+}

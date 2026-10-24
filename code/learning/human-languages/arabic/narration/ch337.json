@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 337,
+  "title": "Wills and inheritance",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:280882af083dab13",
+  "lessons": [
+    {
+      "id": "AR-C337-wasiyya",
+      "sequence": 19250,
+      "title": "وصية (waṣiyya) — a will, a testament; advice",
+      "headword": "وصية",
+      "romanization": "waṣiyya",
+      "gloss": "a will, a testament; advice",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cebe7c19e6a2dc24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a dowry, then the Arabic for the eve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وصية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وصية — waṣiyya — \"a will, a testament; advice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كتب الرجل وصيته قبل موته. kataba ar-rajul waṣiyyatahu qabla mawtihi. The man wrote his will before he died."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: وصايا, waṣāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وصية (waṣiyya) is built on the native Arabic root w-ṣ-y (Lane), \"to enjoin, to give a charge\". A waṣiyya is the charge a person leaves behind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waṣiyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waṣiyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waṣiyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waṣiyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kataba ar-rajul waṣiyyatahu qabla mawtihi. — The man wrote his will before he died.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kataba ar-rajul waṣiyyatahu qabla mawtihi.* — The man wrote his will before he died.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a dowry, then the Arabic for the eve, then say waṣiyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a dowry, then the Arabic for the eve, then say *waṣiyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وصية (waṣiyya) mean? (\"A will, a testament; advice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C337-mirath",
+      "sequence": 19260,
+      "title": "ميراث (mīrāth) — an inheritance",
+      "headword": "ميراث",
+      "romanization": "mīrāth",
+      "gloss": "an inheritance",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e5af584a0f5580d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for the eve, then the Arabic for a will."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ميراث",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ميراث — mīrāth — \"an inheritance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ترك الأب لأولاده ميراثا صغيرا. taraka al-ab li-awlādihi mīrāthan ṣaghīran. The father left his children a small inheritance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ميراث (mīrāth) is built on the native Arabic root w-r-th (Lane), \"to inherit\". The w of the root shows as ī after the mi- of the pattern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrāth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrāth*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrāth, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrāth*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taraka al-ab li-awlādihi mīrāthan ṣaghīran. — The father left his children a small inheritance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taraka al-ab li-awlādihi mīrāthan ṣaghīran.* — The father left his children a small inheritance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for the eve, then the Arabic for a will, then say mīrāth again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for the eve, then the Arabic for a will, then say *mīrāth* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ميراث (mīrāth) mean? (\"An inheritance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C337-waritha",
+      "sequence": 19270,
+      "title": "ورث (waritha) — to inherit",
+      "headword": "ورث",
+      "romanization": "waritha",
+      "gloss": "to inherit",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:889465eeb600893d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a will, then the Arabic for an inheritance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ورث",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ورث — waritha — \"to inherit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ورثت البنت بيتا من جدتها. warithat al-bint baytan min jaddatihā. The girl inherited a house from her grandmother."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يرث, yarith."
+            },
+            {
+              "kind": "speech",
+              "text": "The present drops the و: يرث."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ورث (waritha) is built on the native Arabic root w-r-th (Lane), \"to inherit\"; mīrāth and turāth are both what is inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waritha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waritha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waritha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waritha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "warithat al-bint baytan min jaddatihā. — The girl inherited a house from her grandmother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *warithat al-bint baytan min jaddatihā.* — The girl inherited a house from her grandmother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a will, then the Arabic for an inheritance, then say waritha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a will, then the Arabic for an inheritance, then say *waritha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ورث (waritha) mean? (\"To inherit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C337-warith",
+      "sequence": 19280,
+      "title": "وارث (wārith) — an heir",
+      "headword": "وارث",
+      "romanization": "wārith",
+      "gloss": "an heir",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b4398d424e874b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an inheritance, then the Arabic for to inherit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وارث",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وارث — wārith — \"an heir\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان الابن الوارث الوحيد. kāna al-ibn al-wārith al-waḥīd. The son was the only heir."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ورثة, waratha."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وارث (wārith) is built on the native Arabic root w-r-th (Lane), \"to inherit\". Wārith is the active participle, \"one who inherits\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wārith",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wārith*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wārith, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wārith*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna al-ibn al-wārith al-waḥīd. — The son was the only heir.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna al-ibn al-wārith al-waḥīd.* — The son was the only heir.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an inheritance, then the Arabic for to inherit, then say wārith again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an inheritance, then the Arabic for to inherit, then say *wārith* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وارث (wārith) mean? (\"An heir\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C337-armala",
+      "sequence": 19290,
+      "title": "أرملة (armala) — a widow",
+      "headword": "أرملة",
+      "romanization": "armala",
+      "gloss": "a widow",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01294f809e88c41f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to inherit, then the Arabic for an heir."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أرملة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أرملة — armala — \"a widow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عاشت الأرملة مع ابنتها. ʿāshat al-armala maʿa ibnatihā. The widow lived with her daughter."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أرامل, arāmil."
+            },
+            {
+              "kind": "speech",
+              "text": "A widower is أرمل."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أرملة (armala) is built on the native Arabic root r-m-l (Lane), where Lane gives armala as a woman without a husband, and armal, a man in need."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "armala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *armala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "armala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *armala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿāshat al-armala maʿa ibnatihā. — The widow lived with her daughter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿāshat al-armala maʿa ibnatihā.* — The widow lived with her daughter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to inherit, then the Arabic for an heir, then say armala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to inherit, then the Arabic for an heir, then say *armala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أرملة (armala) mean? (\"A widow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

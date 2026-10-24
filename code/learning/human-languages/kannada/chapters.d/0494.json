@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Shock and Dismay",
+  "label": "ch:ka-shock-and-dismay",
+  "canDo": "I can say to shrink back, to fumble, amazement, to lose heart and bewilderment.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C494-digbhrame",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can say to shrink back, to fumble, amazement, to lose heart and bewilderment.",
+    "assesses": [
+      "KA-LEX-C494-BERAGU494-03",
+      "KA-LEX-C494-BERAGU494-04",
+      "KA-LEX-C494-BERAGU494-05"
+    ]
+  }
+}

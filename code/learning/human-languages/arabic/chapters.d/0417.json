@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Clear or vague",
+  "label": "ch:ar-clear-or-vague",
+  "canDo": "I can say vague, frank and specific, and say that something became evident or that someone referred to it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C417-ashara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can say vague, frank and specific, and say that something became evident or that someone referred to it.",
+    "assesses": [
+      "AR-LEX-C417-WUDUH417-03",
+      "AR-LEX-C417-WUDUH417-04",
+      "AR-LEX-C417-WUDUH417-05"
+    ]
+  }
+}

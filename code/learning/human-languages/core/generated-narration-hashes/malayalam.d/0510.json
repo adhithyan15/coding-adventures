@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:7d3551476ff74908",
+  "lessonIds": [
+    "ML-C510-mutalmannu",
+    "ML-C510-alippalam",
+    "ML-C510-mutikkettuka",
+    "ML-C510-tanukkuka",
+    "ML-C510-irampuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch510.txt",
+  "json": "malayalam/narration/ch510.json",
+  "textHash": "fnv1a64:c169f048a80002e0",
+  "jsonHash": "fnv1a64:49ae1cfee3c29260",
+  "findings": []
+}

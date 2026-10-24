@@ -1,0 +1,11 @@
+{
+  "id": "BN-C530-sabyosto-kora",
+  "pathSegment": "BN-PATH-530-BATIL530",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-530-BATIL530",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 458,
+  "title": "Using Resources",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:452ddb7f3e18ceff",
+  "lessons": [
+    {
+      "id": "ML-C458-upayogappetuttuka",
+      "sequence": 22710,
+      "title": "ഉപയോഗപ്പെടുത്തുക (upayōgappeṭuttuka) — to make use of",
+      "headword": "ഉപയോഗപ്പെടുത്തുക",
+      "romanization": "upayōgappeṭuttuka",
+      "gloss": "to make use of",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b50ad929371208e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to establish, then the Malayalam for to maintain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉപയോഗപ്പെടുത്തുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉപയോഗപ്പെടുത്തുക — upayōgappeṭuttuka — \"to make use of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ ആ അവസരം നന്നായി ഉപയോഗപ്പെടുത്തി. avan ā avasaraṁ nannāyi upayōgappeṭutti. He made good use of that opportunity."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഉപയോഗപ്പെടുത്തി, upayōgappeṭutti."
+            },
+            {
+              "kind": "speech",
+              "text": "A fuller form of ഉപയോഗിക്കുക, to use."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉപയോഗപ്പെടുത്തുക (upayōgappeṭuttuka) is built from Sanskrit upayoga, \"employment, use\" (Monier-Williams), with -പ്പെടുത്തുക, \"to cause to be\", from native പെടുക (DEDR 3853): to bring a thing into use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upayōgappeṭuttuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upayōgappeṭuttuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upayōgappeṭuttuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upayōgappeṭuttuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan ā avasaraṁ nannāyi upayōgappeṭutti. — He made good use of that opportunity.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan ā avasaraṁ nannāyi upayōgappeṭutti.* — He made good use of that opportunity.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to establish, then the Malayalam for to maintain, then say upayōgappeṭuttuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to establish, then the Malayalam for to maintain, then say *upayōgappeṭuttuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉപയോഗപ്പെടുത്തുക (upayōgappeṭuttuka) mean? (\"To make use of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C458-viniyogikkuka",
+      "sequence": 22720,
+      "title": "വിനിയോഗിക്കുക (viniyōgikkuka) — to allocate funds; to spend",
+      "headword": "വിനിയോഗിക്കുക",
+      "romanization": "viniyōgikkuka",
+      "gloss": "to allocate funds; to spend",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90b35102b499a116",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to maintain, then the Malayalam for to make use of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിനിയോഗിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിനിയോഗിക്കുക — viniyōgikkuka — \"to allocate funds; to spend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പഞ്ചായത്ത് ആ പണം കുടിവെള്ളത്തിന് വിനിയോഗിച്ചു. pañcāyattŭ ā paṇaṁ kuṭiveḷḷattinŭ viniyōgiccu. The panchayat spent that money on drinking water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വിനിയോഗിച്ചു, viniyōgiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of funds and powers; people say ചെലവാക്കുക for everyday spending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിനിയോഗിക്കുക (viniyōgikkuka) is built from Sanskrit viniyoga, \"apportionment, distribution; employment\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viniyōgikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viniyōgikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viniyōgikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viniyōgikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pañcāyattŭ ā paṇaṁ kuṭiveḷḷattinŭ viniyōgiccu. — The panchayat spent that money on drinking water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pañcāyattŭ ā paṇaṁ kuṭiveḷḷattinŭ viniyōgiccu.* — The panchayat spent that money on drinking water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to maintain, then the Malayalam for to make use of, then say viniyōgikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to maintain, then the Malayalam for to make use of, then say *viniyōgikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിനിയോഗിക്കുക (viniyōgikkuka) mean? (\"To allocate funds; to spend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C458-palakkuka",
+      "sequence": 22730,
+      "title": "പാഴാക്കുക (pāḻākkuka) — to waste",
+      "headword": "പാഴാക്കുക",
+      "romanization": "pāḻākkuka",
+      "gloss": "to waste",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15400ddd792421dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to make use of, then the Malayalam for to allocate funds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പാഴാക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാഴാക്കുക — pāḻākkuka — \"to waste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ സമയം ഒട്ടും പാഴാക്കിയില്ല. avan samayaṁ oṭṭuṁ pāḻākkiyilla. He did not waste any time at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പാഴാക്കി, pāḻākki."
+            },
+            {
+              "kind": "speech",
+              "text": "പാഴ്, waste, with ആക്കുക, to make."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാഴാക്കുക (pāḻākkuka) is a native Malayalam compound: പാഴ്, \"an empty place; waste, useless\" (DEDR 4110), and ആക്കുക, \"to make\" (DEDR 333): to make a thing useless."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāḻākkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāḻākkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāḻākkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāḻākkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan samayaṁ oṭṭuṁ pāḻākkiyilla. — He did not waste any time at all.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan samayaṁ oṭṭuṁ pāḻākkiyilla.* — He did not waste any time at all.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to make use of, then the Malayalam for to allocate funds, then say pāḻākkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to make use of, then the Malayalam for to allocate funds, then say *pāḻākkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പാഴാക്കുക (pāḻākkuka) mean? (\"To waste\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C458-vaypa",
+      "sequence": 22740,
+      "title": "വായ്പ (vāypa) — a loan",
+      "headword": "വായ്പ",
+      "romanization": "vāypa",
+      "gloss": "a loan",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07adaccd1180ba30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to allocate funds, then the Malayalam for to waste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വായ്പ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വായ്പ — vāypa — \"a loan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വീട് പണിയാൻ അവർ ബാങ്കിൽ നിന്ന് വായ്പ എടുത്തു. vīṭŭ paṇiyān avar bāṅkil ninnŭ vāypa eṭuttu. They took a loan from the bank to build a house."
+            },
+            {
+              "kind": "speech",
+              "text": "A bank loan is വായ്പ (vāypa); a private debt is usually കടം."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വായ്പ (vāypa) is native Dravidian: DEDR 5355 lists Malayalam vāypa, \"a loan\", with Tamil vāyppai, \"a debt\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāypa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāypa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāypa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāypa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīṭŭ paṇiyān avar bāṅkil ninnŭ vāypa eṭuttu. — They took a loan from the bank to build a house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīṭŭ paṇiyān avar bāṅkil ninnŭ vāypa eṭuttu.* — They took a loan from the bank to build a house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to allocate funds, then the Malayalam for to waste, then say vāypa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to allocate funds, then the Malayalam for to waste, then say *vāypa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വായ്പ (vāypa) mean? (\"A loan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C458-sambhavana-ceyyuka",
+      "sequence": 22750,
+      "title": "സംഭാവന ചെയ്യുക (sambhāvana ceyyuka) — to donate; to contribute",
+      "headword": "സംഭാവന ചെയ്യുക",
+      "romanization": "sambhāvana ceyyuka",
+      "gloss": "to donate; to contribute",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4853f96800edead8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to waste, then the Malayalam for a loan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സംഭാവന ചെയ്യുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംഭാവന ചെയ്യുക — sambhāvana ceyyuka — \"to donate; to contribute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട്ടുകാർ ആശുപത്രിക്ക് പണം സംഭാവന ചെയ്തു. nāṭṭukār āśupatrikkŭ paṇaṁ sambhāvana ceytu. The local people donated money to the hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സംഭാവന ചെയ്തു, sambhāvana ceytu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun സംഭാവന is a donation, a contribution."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംഭാവന ചെയ്യുക (sambhāvana ceyyuka) is a phrase verb built on സംഭാവന, \"a donation\", from Sanskrit saṁbhāvanā, \"bringing together; honour, respect\" (Monier-Williams), with ചെയ്യുക, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāvana ceyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāvana ceyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāvana ceyyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāvana ceyyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭukār āśupatrikkŭ paṇaṁ sambhāvana ceytu. — The local people donated money to the hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭukār āśupatrikkŭ paṇaṁ sambhāvana ceytu.* — The local people donated money to the hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to waste, then the Malayalam for a loan, then say sambhāvana ceyyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to waste, then the Malayalam for a loan, then say *sambhāvana ceyyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സംഭാവന ചെയ്യുക (sambhāvana ceyyuka) mean? (\"To donate; to contribute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

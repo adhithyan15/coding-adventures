@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 332,
+  "title": "After the Disaster",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7d14c90fa33ae411",
+  "lessons": [
+    {
+      "id": "KA-C332-vipattu",
+      "sequence": 16660,
+      "title": "ವಿಪತ್ತು (vipattu) — a disaster; a calamity",
+      "headword": "ವಿಪತ್ತು",
+      "romanization": "vipattu",
+      "gloss": "a disaster; a calamity",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4306f3e2a02bd0b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for ancient, then the Kannada for an era."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿಪತ್ತು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಪತ್ತು — vipattu — \"a disaster; a calamity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರವಾಹ ಆ ಜಿಲ್ಲೆಗೆ ದೊಡ್ಡ ವಿಪತ್ತು ತಂದಿತು. pravāha ā jillege doḍḍa vipattu tanditu. The flood brought a great disaster to that district."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ವಿಪತ್ತುಗಳು, vipattugaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕೃತಿ ವಿಕೋಪ is the news phrase for a natural disaster."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಪತ್ತು (vipattu) is borrowed from Sanskrit vipatti, \"misfortune, adversity, disaster\" (CDIAL 11788)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vipattu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vipattu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vipattu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vipattu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravāha ā jillege doḍḍa vipattu tanditu. — The flood brought a great disaster to that district.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravāha ā jillege doḍḍa vipattu tanditu.* — The flood brought a great disaster to that district.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for ancient, then the Kannada for an era, then say vipattu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for ancient, then the Kannada for an era, then say *vipattu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿಪತ್ತು (vipattu) mean? (\"A disaster; a calamity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C332-siluku",
+      "sequence": 16670,
+      "title": "ಸಿಲುಕು (siluku) — to be caught; to be trapped",
+      "headword": "ಸಿಲುಕು",
+      "romanization": "siluku",
+      "gloss": "to be caught; to be trapped",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89031ec3cc397cc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an era, then the Kannada for a disaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಿಲುಕು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಿಲುಕು — siluku — \"to be caught; to be trapped\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರವಾಹದಲ್ಲಿ ನೂರು ಜನ ಸಿಲುಕಿದರು. pravāhadalli nūru jana silukidaru. A hundred people were trapped in the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಸಿಲುಕಿದೆ, silukide."
+            },
+            {
+              "kind": "speech",
+              "text": "Where one is trapped takes -ಅಲ್ಲಿ: ಮನೆಯಲ್ಲಿ ಸಿಲುಕು (siluku)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಿಲುಕು (siluku) is native Dravidian: DEDR 2498 lists Kannada siluku beside Tamil cikku, \"to be entangled, caught, ensnared\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siluku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siluku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siluku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siluku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravāhadalli nūru jana silukidaru. — A hundred people were trapped in the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravāhadalli nūru jana silukidaru.* — A hundred people were trapped in the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an era, then the Kannada for a disaster, then say siluku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an era, then the Kannada for a disaster, then say *siluku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಿಲುಕು (siluku) mean? (\"To be caught; to be trapped\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C332-badukuli",
+      "sequence": 16680,
+      "title": "ಬದುಕುಳಿ (badukuḷi) — to survive",
+      "headword": "ಬದುಕುಳಿ",
+      "romanization": "badukuḷi",
+      "gloss": "to survive",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:498e2e0b5cfc4a11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a disaster, then the Kannada for to be caught."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬದುಕುಳಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬದುಕುಳಿ — badukuḷi — \"to survive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಅಪಘಾತದಲ್ಲಿ ಒಬ್ಬನೇ ಬದುಕುಳಿದನು. ā apaghātadalli obbanē badukuḷidanu. Only one man survived that accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಬದುಕುಳಿದೆ, badukuḷide."
+            },
+            {
+              "kind": "speech",
+              "text": "To be left alive after danger; ಉಳಿ is to remain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬದುಕುಳಿ (badukuḷi) is a native Dravidian compound: baduku, \"to live\" (DEDR 5372), and uḷi, \"to remain\" (DEDR 1009)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badukuḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badukuḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badukuḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badukuḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā apaghātadalli obbanē badukuḷidanu. — Only one man survived that accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā apaghātadalli obbanē badukuḷidanu.* — Only one man survived that accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a disaster, then the Kannada for to be caught, then say badukuḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a disaster, then the Kannada for to be caught, then say *badukuḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬದುಕುಳಿ (badukuḷi) mean? (\"To survive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C332-santrasta",
+      "sequence": 16690,
+      "title": "ಸಂತ್ರಸ್ತ (santrasta) — a victim; one affected",
+      "headword": "ಸಂತ್ರಸ್ತ",
+      "romanization": "santrasta",
+      "gloss": "a victim; one affected",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:809f6c425bff1ab8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to be caught, then the Kannada for to survive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂತ್ರಸ್ತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂತ್ರಸ್ತ — santrasta — \"a victim; one affected\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂತ್ರಸ್ತರಿಗೆ ಊಟ ಮತ್ತು ಬಟ್ಟೆ ಕೊಟ್ಟರು. santrastarige ūṭa mattu baṭṭe koṭṭaru. They gave food and clothes to the victims."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸಂತ್ರಸ್ತರು, santrastaru."
+            },
+            {
+              "kind": "speech",
+              "text": "A news word for people hit by a flood, a fire or a quake: ಪ್ರವಾಹ ಸಂತ್ರಸ್ತರು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂತ್ರಸ್ತ (santrasta) is borrowed from Sanskrit saṃtrasta, \"trembling with fear, alarmed\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "santrasta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *santrasta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "santrasta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *santrasta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "santrastarige ūṭa mattu baṭṭe koṭṭaru. — They gave food and clothes to the victims.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *santrastarige ūṭa mattu baṭṭe koṭṭaru.* — They gave food and clothes to the victims.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to be caught, then the Kannada for to survive, then say santrasta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to be caught, then the Kannada for to survive, then say *santrasta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂತ್ರಸ್ತ (santrasta) mean? (\"A victim; one affected\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C332-munsucane",
+      "sequence": 16700,
+      "title": "ಮುನ್ಸೂಚನೆ (munsūcane) — a forewarning; a forecast",
+      "headword": "ಮುನ್ಸೂಚನೆ",
+      "romanization": "munsūcane",
+      "gloss": "a forewarning; a forecast",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c191b019f5f3a010",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to survive, then the Kannada for a victim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮುನ್ಸೂಚನೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುನ್ಸೂಚನೆ — munsūcane — \"a forewarning; a forecast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹವಾಮಾನ ಇಲಾಖೆ ಮೂರು ದಿನದ ಮುಂಚೆ ಮುನ್ಸೂಚನೆ ಕೊಟ್ಟಿತ್ತು. havāmāna ilākhe mūru dinada muñce munsūcane koṭṭittu. The weather department had given a warning three days earlier."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮುನ್, before, and ಸೂಚನೆ, a notice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುನ್ಸೂಚನೆ (munsūcane) is a Kannada compound of native mun, \"before, in front\" (DEDR 5020), and ಸೂಚನೆ, from Sanskrit sūcanā, \"an indication, a communication\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munsūcane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munsūcane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munsūcane, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munsūcane*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "havāmāna ilākhe mūru dinada muñce munsūcane koṭṭittu. — The weather department had given a warning three days earlier.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *havāmāna ilākhe mūru dinada muñce munsūcane koṭṭittu.* — The weather department had given a warning three days earlier.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to survive, then the Kannada for a victim, then say munsūcane again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to survive, then the Kannada for a victim, then say *munsūcane* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮುನ್ಸೂಚನೆ (munsūcane) mean? (\"A forewarning; a forecast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

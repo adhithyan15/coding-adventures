@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C509-pakkelubu",
+    "language": "kannada",
+    "chapter": 509,
+    "sequence": 25980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58743c7d06a38790"
+  },
+  "findings": []
+}

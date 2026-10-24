@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-291-SUTKA291",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone escaped, was rescued, or went missing.",
+  "prerequisites": []
+}

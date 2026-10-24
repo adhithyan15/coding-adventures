@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:0493a6d83829f47a",
+  "lessonIds": [
+    "TE-C336-pukaru",
+    "TE-C336-vadanti",
+    "TE-C336-atisayokti",
+    "TE-C336-kalakalam",
+    "TE-C336-velladincu"
+  ],
+  "tex": "telugu/book/chapters/ch336-a-rumour-spreads.tex"
+}

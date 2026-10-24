@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-286-OPINION-SO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-286-OPINION-SO"
+  ],
+  "after": []
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 461,
+  "title": "At the Platform",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:624e39c277c1042a",
+  "lessons": [
+    {
+      "id": "ML-C461-plarrphom",
+      "sequence": 23000,
+      "title": "പ്ലാറ്റ്ഫോം (plāṟṟphōṁ) — a platform",
+      "headword": "പ്ലാറ്റ്ഫോം",
+      "romanization": "plāṟṟphōṁ",
+      "gloss": "a platform",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e070fc516ccff26e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a principal, then the Malayalam for tuition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്ലാറ്റ്ഫോം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്ലാറ്റ്ഫോം — plāṟṟphōṁ — \"a platform\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തീവണ്ടി മൂന്നാം പ്ലാറ്റ്ഫോമിൽ എത്തി. tīvaṇṭi mūnnāṁ plāṟṟphōmil etti. The train arrived at platform three."
+            },
+            {
+              "kind": "speech",
+              "text": "Platforms are counted with the ordinal: ഒന്നാം പ്ലാറ്റ്ഫോം (plāṟṟphōṁ), platform one; രണ്ടാം പ്ലാറ്റ്ഫോം (plāṟṟphōṁ), platform two."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്ലാറ്റ്ഫോം (plāṟṟphōṁ) was borrowed from English platform, the raised floor beside a railway line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plāṟṟphōṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plāṟṟphōṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plāṟṟphōṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plāṟṟphōṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīvaṇṭi mūnnāṁ plāṟṟphōmil etti. — The train arrived at platform three.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīvaṇṭi mūnnāṁ plāṟṟphōmil etti.* — The train arrived at platform three.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a principal, then the Malayalam for tuition, then say plāṟṟphōṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a principal, then the Malayalam for tuition, then say *plāṟṟphōṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്ലാറ്റ്ഫോം (plāṟṟphōṁ) mean? (\"A platform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C461-kantaktar",
+      "sequence": 23010,
+      "title": "കണ്ടക്ടർ (kaṇṭakṭar) — a bus conductor",
+      "headword": "കണ്ടക്ടർ",
+      "romanization": "kaṇṭakṭar",
+      "gloss": "a bus conductor",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:159212506bfe6922",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for tuition, then the Malayalam for a platform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കണ്ടക്ടർ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കണ്ടക്ടർ — kaṇṭakṭar — \"a bus conductor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കണ്ടക്ടർ എനിക്ക് ടിക്കറ്റ് തന്നു. kaṇṭakṭar enikkŭ ṭikkaṟṟŭ tannu. The conductor gave me a ticket."
+            },
+            {
+              "kind": "speech",
+              "text": "On a bus the conductor sells the tickets and gives the change; the one who drives is a separate person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കണ്ടക്ടർ (kaṇṭakṭar) was borrowed from English conductor, the person who takes the fares on a bus or tram."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭakṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭakṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭakṭar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭakṭar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭakṭar enikkŭ ṭikkaṟṟŭ tannu. — The conductor gave me a ticket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭakṭar enikkŭ ṭikkaṟṟŭ tannu.* — The conductor gave me a ticket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for tuition, then the Malayalam for a platform, then say kaṇṭakṭar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for tuition, then the Malayalam for a platform, then say *kaṇṭakṭar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കണ്ടക്ടർ (kaṇṭakṭar) mean? (\"A bus conductor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C461-yatrakkuli",
+      "sequence": 23020,
+      "title": "യാത്രാക്കൂലി (yātrākkūli) — a fare",
+      "headword": "യാത്രാക്കൂലി",
+      "romanization": "yātrākkūli",
+      "gloss": "a fare",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5bc5e15fa819ad12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a platform, then the Malayalam for a bus conductor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: യാത്രാക്കൂലി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യാത്രാക്കൂലി — yātrākkūli — \"a fare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ബസിലെ യാത്രാക്കൂലി ഇപ്പോൾ കൂടുതലാണ്. basile yātrākkūli ippōḷ kūṭutalāṇŭ. The bus fare is higher now."
+            },
+            {
+              "kind": "speech",
+              "text": "Built from യാത്ര, a journey, and കൂലി, wages: the price of a journey. Before a joined word യാത്ര takes a long -ആ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യാത്രാക്കൂലി (yātrākkūli) is a Malayalam compound built from യാത്ര, a journey, borrowed from Sanskrit yātrā (CDIAL 10456), and the native word കൂലി, hire or wages (DEDR 1905)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrākkūli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrākkūli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrākkūli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrākkūli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basile yātrākkūli ippōḷ kūṭutalāṇŭ. — The bus fare is higher now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *basile yātrākkūli ippōḷ kūṭutalāṇŭ.* — The bus fare is higher now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a platform, then the Malayalam for a bus conductor, then say yātrākkūli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a platform, then the Malayalam for a bus conductor, then say *yātrākkūli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does യാത്രാക്കൂലി (yātrākkūli) mean? (\"A fare\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C461-kyu",
+      "sequence": 23030,
+      "title": "ക്യൂ (kyū) — a queue",
+      "headword": "ക്യൂ",
+      "romanization": "kyū",
+      "gloss": "a queue",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b53ffd7dab1f098",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a bus conductor, then the Malayalam for a fare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ക്യൂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്യൂ — kyū — \"a queue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ടിക്കറ്റിനായി വലിയ ക്യൂ ഉണ്ടായിരുന്നു. ṭikkaṟṟināyi valiya kyū uṇṭāyirunnu. There was a long queue for tickets."
+            },
+            {
+              "kind": "speech",
+              "text": "You stand in a queue: ക്യൂവിൽ നിൽക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്യൂ (kyū) was borrowed from English queue, a line of people waiting their turn."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭikkaṟṟināyi valiya kyū uṇṭāyirunnu. — There was a long queue for tickets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭikkaṟṟināyi valiya kyū uṇṭāyirunnu.* — There was a long queue for tickets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a bus conductor, then the Malayalam for a fare, then say kyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a bus conductor, then the Malayalam for a fare, then say *kyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്യൂ (kyū) mean? (\"A queue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C461-sancarikkuka",
+      "sequence": 23040,
+      "title": "സഞ്ചരിക്കുക (sañcarikkuka) — to travel; to move about",
+      "headword": "സഞ്ചരിക്കുക",
+      "romanization": "sañcarikkuka",
+      "gloss": "to travel; to move about",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d37684248744a3ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a fare, then the Malayalam for a queue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സഞ്ചരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഞ്ചരിക്കുക — sañcarikkuka — \"to travel; to move about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവർ തീവണ്ടിയിൽ പല നഗരങ്ങളിലും സഞ്ചരിച്ചു. avar tīvaṇṭiyil pala nagaraṅṅaḷiluṁ sañcariccu. They travelled to many cities by train."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സഞ്ചരിച്ചു, sañcariccu."
+            },
+            {
+              "kind": "speech",
+              "text": "A more formal word than യാത്ര ചെയ്യുക. The noun is സഞ്ചാരം, travel, and one who travels is a സഞ്ചാരി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഞ്ചരിക്കുക (sañcarikkuka) is built from Sanskrit saṁcara, \"going about, moving\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക, the ending many Sanskrit nouns take to become verbs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sañcarikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sañcarikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sañcarikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sañcarikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar tīvaṇṭiyil pala nagaraṅṅaḷiluṁ sañcariccu. — They travelled to many cities by train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar tīvaṇṭiyil pala nagaraṅṅaḷiluṁ sañcariccu.* — They travelled to many cities by train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a fare, then the Malayalam for a queue, then say sañcarikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a fare, then the Malayalam for a queue, then say *sañcarikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സഞ്ചരിക്കുക (sañcarikkuka) mean? (\"To travel; to move about\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

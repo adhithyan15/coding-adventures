@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 423,
+  "title": "At the gate",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d7a288ff0ef25fd0",
+  "lessons": [
+    {
+      "id": "AR-C423-bawwaba",
+      "sequence": 23800,
+      "title": "بوابة (bawwāba) — a gate; a gateway",
+      "headword": "بوابة",
+      "romanization": "bawwāba",
+      "gloss": "a gate; a gateway",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b70dbd9deca54ae0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a sentence, then the Arabic for a barber."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بوابة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بوابة — bawwāba — \"a gate; a gateway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انتظر المسافرون عند البوابة. intaẓara al-musāfirūn ʿinda al-bawwāba. The travellers waited at the gate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بوابة (bawwāba) is built on the native Arabic root b-w-b, \"a door\" (Lane). It shares its root with bāb, \"a door\"; Lane gives bawwāb, \"a door-keeper\", on the same root, and modern Arabic uses bawwāba for a gate or a gateway."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bawwāba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bawwāba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bawwāba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bawwāba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intaẓara al-musāfirūn ʿinda al-bawwāba. — The travellers waited at the gate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intaẓara al-musāfirūn ʿinda al-bawwāba.* — The travellers waited at the gate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a sentence, then the Arabic for a barber, then say bawwāba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a sentence, then the Arabic for a barber, then say *bawwāba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بوابة (bawwāba) mean? (\"A gate; a gateway\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C423-maqad",
+      "sequence": 23810,
+      "title": "مقعد (maqʿad) — a seat",
+      "headword": "مقعد",
+      "romanization": "maqʿad",
+      "gloss": "a seat",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6bf5d5e74777ec3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a barber, then the Arabic for a gate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مقعد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقعد — maqʿad — \"a seat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جلست في مقعد بجانب النافذة. jalastu fī maqʿad bi-jānib an-nāfidha. I sat in a seat beside the window."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: مقاعد, maqāʿid."
+            },
+            {
+              "kind": "speech",
+              "text": "The pattern mafʿal names a place: maqʿad is the place where one sits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقعد (maqʿad) is built on the native Arabic root q-ʿ-d, \"to sit down\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maqʿad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maqʿad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maqʿad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maqʿad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jalastu fī maqʿad bi-jānib an-nāfidha. — I sat in a seat beside the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jalastu fī maqʿad bi-jānib an-nāfidha.* — I sat in a seat beside the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a barber, then the Arabic for a gate, then say maqʿad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a barber, then the Arabic for a gate, then say *maqʿad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مقعد (maqʿad) mean? (\"A seat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C423-hajaza",
+      "sequence": 23820,
+      "title": "حجز (ḥajaza) — to reserve; to book",
+      "headword": "حجز",
+      "romanization": "ḥajaza",
+      "gloss": "to reserve; to book",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c30dda4d1b4abc48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a gate, then the Arabic for a seat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حجز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حجز — ḥajaza — \"to reserve; to book\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حجزت مقعدا في القطار. ḥajaztu maqʿadan fī al-qiṭār. I booked a seat on the train."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحجز, yaḥjiz."
+            },
+            {
+              "kind": "speech",
+              "text": "Lane gives the present both as yaḥjizu and yaḥjuzu. The noun ḥajz is a booking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حجز (ḥajaza) is built on the native Arabic root ḥ-j-z, \"to hold back, to withhold\" (Lane). A booking holds a place back for someone. It is the plain verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥajaza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥajaza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥajaza, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥajaza*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥajaztu maqʿadan fī al-qiṭār. — I booked a seat on the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥajaztu maqʿadan fī al-qiṭār.* — I booked a seat on the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a gate, then the Arabic for a seat, then say ḥajaza again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a gate, then the Arabic for a seat, then say *ḥajaza* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حجز (ḥajaza) mean? (\"To reserve; to book\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C423-suud",
+      "sequence": 23830,
+      "title": "صعود (ṣuʿūd) — boarding; going up",
+      "headword": "صعود",
+      "romanization": "ṣuʿūd",
+      "gloss": "boarding; going up",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8af4dca07dc23184",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a seat, then the Arabic for to reserve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صعود",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صعود — ṣuʿūd — \"boarding; going up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بدأ الصعود بعد التأخير. badaʾa aṣ-ṣuʿūd baʿda at-taʾkhīr. Boarding began after the delay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صعود (ṣuʿūd) is built on the native Arabic root ṣ-ʿ-d, \"to go up, to ascend\" (Lane). It is the verbal noun of ṣaʿida, \"to go up\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣuʿūd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣuʿūd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣuʿūd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣuʿūd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badaʾa aṣ-ṣuʿūd baʿda at-taʾkhīr. — Boarding began after the delay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badaʾa aṣ-ṣuʿūd baʿda at-taʾkhīr.* — Boarding began after the delay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a seat, then the Arabic for to reserve, then say ṣuʿūd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a seat, then the Arabic for to reserve, then say *ṣuʿūd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صعود (ṣuʿūd) mean? (\"Boarding; going up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C423-madraj",
+      "sequence": 23840,
+      "title": "مدرج (madraj) — a runway",
+      "headword": "مدرج",
+      "romanization": "madraj",
+      "gloss": "a runway",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:871d5e24d346813c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to reserve, then the Arabic for boarding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مدرج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مدرج — madraj — \"a runway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كانت الرحلة تنتظر على المدرج. kānat ar-riḥla tantaẓiru ʿalā al-madraj. The flight was waiting on the runway."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: مدارج, madārij."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مدرج (madraj) is built on the native Arabic root d-r-j, \"to go step by step\" (Lane). Lane gives madraj as a way or route one goes along; modern Arabic gave the word the runway."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madraj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madraj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madraj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madraj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānat ar-riḥla tantaẓiru ʿalā al-madraj. — The flight was waiting on the runway.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānat ar-riḥla tantaẓiru ʿalā al-madraj.* — The flight was waiting on the runway.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to reserve, then the Arabic for boarding, then say madraj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to reserve, then the Arabic for boarding, then say *madraj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مدرج (madraj) mean? (\"A runway\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

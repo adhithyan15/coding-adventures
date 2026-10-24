@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Publishing",
+  "label": "ch:ar-publishing",
+  "canDo": "I can say a publisher, an edition, a copy, a leaflet and a supplement.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C350-mulhaq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can say a publisher, an edition, a copy, a leaflet and a supplement.",
+    "assesses": [
+      "AR-LEX-C350-NASHIR350-03",
+      "AR-LEX-C350-NASHIR350-04",
+      "AR-LEX-C350-NASHIR350-05"
+    ]
+  }
+}

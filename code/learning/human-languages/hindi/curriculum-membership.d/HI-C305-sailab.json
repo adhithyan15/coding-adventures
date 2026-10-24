@@ -1,0 +1,11 @@
+{
+  "id": "HI-C305-sailab",
+  "pathSegment": "HI-PATH-305-BAADH305",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-305-BAADH305",
+      "order": 3
+    }
+  ]
+}

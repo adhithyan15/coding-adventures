@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:2f4f99bd632053db",
+  "lessonIds": [
+    "TA-C442-patuka",
+    "TA-C442-alivu",
+    "TA-C442-pacumai",
+    "TA-C442-cul",
+    "TA-C442-ucalatu"
+  ],
+  "tex": "tamil/book/chapters/ch442-keeping-it-green.tex"
+}

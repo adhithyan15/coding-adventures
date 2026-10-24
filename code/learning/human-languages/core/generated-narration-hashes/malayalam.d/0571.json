@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 571,
+  "sourceHash": "fnv1a64:4c4e8dece03d8459",
+  "lessonIds": [
+    "ML-C571-arrakurrappani",
+    "ML-C571-cavarrukutta",
+    "ML-C571-svikaranamuri",
+    "ML-C571-tukkiyituka",
+    "ML-C571-nanaykkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch571.txt",
+  "json": "malayalam/narration/ch571.json",
+  "textHash": "fnv1a64:351552bd56345ce3",
+  "jsonHash": "fnv1a64:f75ea572d5f6a86b",
+  "findings": []
+}

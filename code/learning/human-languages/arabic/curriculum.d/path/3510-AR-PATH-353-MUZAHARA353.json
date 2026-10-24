@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-353-MUZAHARA353",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-353-MUZAHARA353"
+  ],
+  "after": []
+}

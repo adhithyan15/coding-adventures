@@ -1,0 +1,11 @@
+{
+  "id": "ML-C384-maranam",
+  "pathSegment": "ML-PATH-384-JANANAM384",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-384-JANANAM384",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-422-HAMI422",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-422-HAMI422"
+  ],
+  "after": []
+}

@@ -1,0 +1,853 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 444,
+  "title": "Harbours and Bays",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:988bb2aa748d3caf",
+  "lessons": [
+    {
+      "id": "HI-C444-bandargah",
+      "sequence": 24350,
+      "title": "बंदरगाह (bandargāh) — a harbour, a port",
+      "headword": "बंदरगाह",
+      "romanization": "bandargāh",
+      "gloss": "a harbour, a port",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b5cde31f9763f4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to irrigate, then the Hindi for to weed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बंदरगाह",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बंदरगाह — bandargāh — \"a harbour, a port\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बंदरगाह पर बड़े जहाज़ खड़े थे। bandargāh par baṛe jahāz khaṛe the. Big ships were standing in the harbour."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बंदरगाह (bandargāh) is usually traced to Persian bandargāh, from bandar, \"a port\", and -gāh, \"a place\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandargāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandargāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandargāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandargāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandargāh par baṛe jahāz khaṛe the. — Big ships were standing in the harbour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandargāh par baṛe jahāz khaṛe the.* — Big ships were standing in the harbour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to irrigate, then the Hindi for to weed, then say bandargāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to irrigate, then the Hindi for to weed, then say *bandargāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बंदरगाह (bandargāh) mean? (\"A harbour, a port\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C444-langar",
+      "sequence": 24360,
+      "title": "लंगर (laṅgar) — an anchor; a free kitchen",
+      "headword": "लंगर",
+      "romanization": "laṅgar",
+      "gloss": "an anchor; a free kitchen",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98c7341b99c2c012",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to weed, then the Hindi for a harbour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लंगर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लंगर — laṅgar — \"an anchor; a free kitchen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जहाज़ का लंगर बहुत भारी था। jahāz kā laṅgar bahut bhārī thā. The ship's anchor was very heavy."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "At a gurdwara, the लंगर (laṅgar) is the free kitchen where everyone eats together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लंगर (laṅgar) is usually traced to Persian langar, \"an anchor\", and also a place where food is given out; both senses live in Hindi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laṅgar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laṅgar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laṅgar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laṅgar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jahāz kā laṅgar bahut bhārī thā. — The ship's anchor was very heavy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jahāz kā laṅgar bahut bhārī thā.* — The ship's anchor was very heavy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to weed, then the Hindi for a harbour, then say laṅgar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to weed, then the Hindi for a harbour, then say *laṅgar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लंगर (laṅgar) mean? (\"An anchor; a free kitchen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C444-khari",
+      "sequence": 24370,
+      "title": "खाड़ी (khāṛī) — a bay, a gulf",
+      "headword": "खाड़ी",
+      "romanization": "khāṛī",
+      "gloss": "a bay, a gulf",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82f2ab4838e09816",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a harbour, then the Hindi for an anchor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खाड़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खाड़ी — khāṛī — \"a bay, a gulf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हमारा गाँव खाड़ी के किनारे है। hamārā gā̃v khāṛī ke kināre hai. Our village is on the shore of the bay."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खाड़ी (khāṛī) goes back to khaḍḍa, \"a hole, a pit\", a form CDIAL reconstructs (CDIAL 3790), which lists Hindi khāṛī, \"a creek, an inlet\": the hollow the sea fills."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamārā gā̃v khāṛī ke kināre hai. — Our village is on the shore of the bay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamārā gā̃v khāṛī ke kināre hai.* — Our village is on the shore of the bay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a harbour, then the Hindi for an anchor, then say khāṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a harbour, then the Hindi for an anchor, then say *khāṛī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खाड़ी (khāṛī) mean? (\"A bay, a gulf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C444-tat",
+      "sequence": 24380,
+      "title": "तट (taṭ) — a coast; a bank",
+      "headword": "तट",
+      "romanization": "taṭ",
+      "gloss": "a coast; a bank",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8017efe9f9037d88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an anchor, then the Hindi for a bay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तट — taṭ — \"a coast; a bank\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हम समुद्र के तट पर टहले। ham samudra ke taṭ par ṭahle. We strolled along the seashore."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तट (taṭ) is a tatsama, Sanskrit taṭa, \"a slope, a bank, a shore\" (Monier-Williams): the formal partner of किनारा."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ham samudra ke taṭ par ṭahle. — We strolled along the seashore.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ham samudra ke taṭ par ṭahle.* — We strolled along the seashore.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an anchor, then the Hindi for a bay, then say taṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an anchor, then the Hindi for a bay, then say *taṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तट (taṭ) mean? (\"A coast; a bank\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C444-dubki",
+      "sequence": 24390,
+      "title": "डुबकी (ḍubkī) — a dip (in water)",
+      "headword": "डुबकी",
+      "romanization": "ḍubkī",
+      "gloss": "a dip (in water)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7b69ba55992f6bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a bay, then the Hindi for a coast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डुबकी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डुबकी — ḍubkī — \"a dip (in water)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ठंडे पानी में एक डुबकी के बाद मैं काँप रहा था। ṭhaṇḍe pānī meṁ ek ḍubkī ke bād maiṁ kā̃p rahā thā. After one dip in the cold water I was shivering."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डुबकी (ḍubkī) is built on the stem of डूबना, \"to sink\", from ḍubb, \"sink\", a form CDIAL reconstructs (CDIAL 5561); CDIAL does not list the noun itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍubkī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍubkī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍubkī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍubkī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhaṇḍe pānī meṁ ek ḍubkī ke bād maiṁ kā̃p rahā thā. — After one dip in the cold water I was shivering.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhaṇḍe pānī meṁ ek ḍubkī ke bād maiṁ kā̃p rahā thā.* — After one dip in the cold water I was shivering.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a bay, then the Hindi for a coast, then say ḍubkī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a bay, then the Hindi for a coast, then say *ḍubkī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डुबकी (ḍubkī) mean? (\"A dip (in water)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R444-review-438-444",
+      "sequence": 24400,
+      "title": "Looking back: from Winter Cold to Harbours and Bays",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Winter Cold to Harbours and Bays",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3429f04a49e32a76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for winter and a hailstone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "winter, a hailstone, cold (formal), snowfall, to wrap oneself in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: winter, a hailstone, cold (formal), snowfall, to wrap oneself in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heat (formal), mercury, temperature, a degree, to scorch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: heat (formal), mercury, temperature, a degree, to scorch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dust, to be surrounded, to let up, to clear (of clouds), to blow away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dust, to be surrounded, to let up, to clear (of clouds), to blow away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daybreak, sunrise, sunset, the horizon, dusk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: daybreak, sunrise, sunset, the horizon, dusk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a summit, a mound, a heap, a straw, to roll (something)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a summit, a mound, a heap, a straw, to roll (something)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a canal, a reservoir, a current, to irrigate, to weed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a canal, a reservoir, a current, to irrigate, to weed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a harbour, an anchor, a bay, a coast, a dip",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a harbour, an anchor, a bay, a coast, a dip]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Winter? (जाड़ा, jāṛā.) A hailstone? (ओला, olā.) Cold (formal)? (शीत, śīt.) Snowfall? (हिमपात, himpāt.) To wrap oneself in? (ओढ़ना, oṛhnā.) Heat (formal)? (ताप, tāp.) Mercury? (पारा, pārā.) Temperature? (तापमान, tāpmān.) A degree? (डिग्री, ḍigrī.) To scorch? (तपना, tapnā.) Dust? (धूल, dhūl.) To be surrounded? (घिरना, ghirnā.) To let up? (थमना, thamnā.) To clear (of clouds)? (छँटना, chãṭnā.) To blow away? (उड़ाना, uṛānā.) Daybreak? (सवेरा, saverā.) Sunrise? (सूर्योदय, sūryoday.) Sunset? (सूर्यास्त, sūryāst.) The horizon? (क्षितिज, kṣitij.) Dusk? (गोधूलि, godhūli.) A summit? (शिखर, śikhar.) A mound? (टीला, ṭīlā.) A heap? (ढेर, ḍher.) A straw? (तिनका, tinkā.) To roll (something)? (लुढ़काना, luṛhkānā.) A canal? (नहर, nahar.) A reservoir? (जलाशय, jalāśay.) A current? (धारा, dhārā.) To irrigate? (सींचना, sī̃cnā.) To weed? (निराना, nirānā.) A harbour? (बंदरगाह, bandargāh.) An anchor? (लंगर, laṅgar.) A bay? (खाड़ी, khāṛī.) A coast? (तट, taṭ.) A dip? (डुबकी, ḍubkī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

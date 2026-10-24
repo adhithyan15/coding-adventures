@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 352,
+  "title": "Mentioning and Stressing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e810862028cde391",
+  "lessons": [
+    {
+      "id": "MR-C352-ullekh-karne",
+      "sequence": 20510,
+      "title": "उल्लेख करणे (ullekh karṇe) — to mention",
+      "headword": "उल्लेख करणे",
+      "romanization": "ullekh karṇe",
+      "gloss": "to mention",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33c0d4af39500055",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for nevertheless, then the Marathi for for example."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उल्लेख करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उल्लेख करणे — ullekh karṇe — \"to mention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुणने पत्रात तुमचा उल्लेख केला. aruṇne patrāt tumcā ullekh kelā. Arun mentioned you in his letter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने उल्लेख केला, tyāne ullekh kelā."
+            },
+            {
+              "kind": "speech",
+              "text": "What is mentioned takes -चा: तुमचा उल्लेख."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उल्लेख करणे (ullekh karṇe) joins the tatsama उल्लेख, Sanskrit ullekha, \"causing to appear clearly\" (Monier-Williams), to करणे, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ullekh karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ullekh karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ullekh karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ullekh karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruṇne patrāt tumcā ullekh kelā. — Arun mentioned you in his letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruṇne patrāt tumcā ullekh kelā.* — Arun mentioned you in his letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for nevertheless, then the Marathi for for example, then say ullekh karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for nevertheless, then the Marathi for for example, then say *ullekh karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उल्लेख करणे (ullekh karṇe) mean? (\"To mention\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C352-namud-karne",
+      "sequence": 20520,
+      "title": "नमूद करणे (namūd karṇe) — to state (formally)",
+      "headword": "नमूद करणे",
+      "romanization": "namūd karṇe",
+      "gloss": "to state (formally)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d49ebb725897e7bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for for example, then the Marathi for to mention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नमूद करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमूद करणे — namūd karṇe — \"to state (formally)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अहवालात सगळे खर्च नमूद केले आहेत. ahvālāt sagḷe kharca namūd kele āhet. All the expenses are stated in the report."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने नमूद केलं, tyāne namūd kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal, of writing: अर्जात नमूद करणे (namūd karṇe), to state in an application."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमूद करणे (namūd karṇe) joins नमूद, a loan usually traced to Persian namūd, \"appearance, showing\", to करणे, \"to make\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namūd karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namūd karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namūd karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namūd karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahvālāt sagḷe kharca namūd kele āhet. — All the expenses are stated in the report.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahvālāt sagḷe kharca namūd kele āhet.* — All the expenses are stated in the report.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for for example, then the Marathi for to mention, then say namūd karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for for example, then the Marathi for to mention, then say *namūd karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नमूद करणे (namūd karṇe) mean? (\"To state (formally)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C352-bhar-dene",
+      "sequence": 20530,
+      "title": "भर देणे (bhar deṇe) — to emphasize; to stress",
+      "headword": "भर देणे",
+      "romanization": "bhar deṇe",
+      "gloss": "to emphasize; to stress",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f42190d54c0f3d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to mention, then the Marathi for to state."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भर देणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भर देणे — bhar deṇe — \"to emphasize; to stress\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिक्षकांनी वाचनावर भर दिला. śikṣakānnī vācnāvar bhar dilā. The teacher stressed reading."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने भर दिला, tyāne bhar dilā."
+            },
+            {
+              "kind": "speech",
+              "text": "The point stressed takes -वर: वाचनावर भर देणे (bhar deṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भर देणे (bhar deṇe) joins भर, \"weight, load\", inherited from Sanskrit bhara, \"carrying, weight\" (CDIAL 9393), to देणे, \"to give\": to put weight on a point."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhar deṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhar deṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhar deṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhar deṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikṣakānnī vācnāvar bhar dilā. — The teacher stressed reading.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikṣakānnī vācnāvar bhar dilā.* — The teacher stressed reading.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to mention, then the Marathi for to state, then say bhar deṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to mention, then the Marathi for to state, then say *bhar deṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भर देणे (bhar deṇe) mean? (\"To emphasize; to stress\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C352-visesatah",
+      "sequence": 20540,
+      "title": "विशेषतः (viśeṣataḥ) — especially",
+      "headword": "विशेषतः",
+      "romanization": "viśeṣataḥ",
+      "gloss": "especially",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:399f9ac5af284601",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to state, then the Marathi for to emphasize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विशेषतः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विशेषतः — viśeṣataḥ — \"especially\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हिवाळ्यात, विशेषतः सकाळी, खूप थंडी असते. hivāḷyāt, viśeṣataḥ sakāḷī, khūp thaṇḍī aste. In winter, especially in the mornings, it is very cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; in speech खास करून."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विशेषतः (viśeṣataḥ) is a tatsama, taken from Sanskrit viśeṣatas, \"especially, particularly\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśeṣataḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśeṣataḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśeṣataḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśeṣataḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hivāḷyāt, viśeṣataḥ sakāḷī, khūp thaṇḍī aste. — In winter, especially in the mornings, it is very cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hivāḷyāt, viśeṣataḥ sakāḷī, khūp thaṇḍī aste.* — In winter, especially in the mornings, it is very cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to state, then the Marathi for to emphasize, then say viśeṣataḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to state, then the Marathi for to emphasize, then say *viśeṣataḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विशेषतः (viśeṣataḥ) mean? (\"Especially\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C352-pramukh",
+      "sequence": 20550,
+      "title": "प्रमुख (pramukh) — leading; chief",
+      "headword": "प्रमुख",
+      "romanization": "pramukh",
+      "gloss": "leading; chief",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:043c3724364fe99d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to emphasize, then the Marathi for especially."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रमुख",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रमुख — pramukh — \"leading; chief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शहरातील प्रमुख रस्ते आज बंद आहेत. śahrātīl pramukh raste āj band āhet. The main roads in the city are closed today."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a noun, the head: संस्थेचा प्रमुख (pramukh)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रमुख (pramukh) is a tatsama, taken from Sanskrit pramukha, \"facing; foremost, chief\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramukh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramukh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramukh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramukh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śahrātīl pramukh raste āj band āhet. — The main roads in the city are closed today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śahrātīl pramukh raste āj band āhet.* — The main roads in the city are closed today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to emphasize, then the Marathi for especially, then say pramukh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to emphasize, then the Marathi for especially, then say *pramukh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रमुख (pramukh) mean? (\"Leading; chief\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

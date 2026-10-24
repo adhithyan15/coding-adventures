@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C476-mikhlab",
+    "language": "arabic",
+    "chapter": 476,
+    "sequence": 26540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b36e22dc0756fd13"
+  },
+  "findings": []
+}

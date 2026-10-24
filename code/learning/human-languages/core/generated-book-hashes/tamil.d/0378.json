@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:7cfa5b25bab2bd36",
+  "lessonIds": [
+    "TA-C378-amaippu",
+    "TA-C378-cankam",
+    "TA-C378-uruppinar",
+    "TA-C378-talaivar",
+    "TA-C378-porulalar",
+    "TA-R378-review-371-378"
+  ],
+  "tex": "tamil/book/chapters/ch378-organisations.tex"
+}

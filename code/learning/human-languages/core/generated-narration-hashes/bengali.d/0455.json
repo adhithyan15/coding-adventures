@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:4db373f84a47bb3d",
+  "lessonIds": [
+    "BN-C455-dhoirjo",
+    "BN-C455-utsaho",
+    "BN-C455-agroho",
+    "BN-C455-utsuk",
+    "BN-C455-tor-sooya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch455.txt",
+  "json": "bengali/narration/ch455.json",
+  "textHash": "fnv1a64:3f3b219f7f74bee9",
+  "jsonHash": "fnv1a64:97b8b38c0f4a775e",
+  "findings": []
+}

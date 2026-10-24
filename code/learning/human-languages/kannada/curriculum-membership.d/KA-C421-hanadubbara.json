@@ -1,0 +1,11 @@
+{
+  "id": "KA-C421-hanadubbara",
+  "pathSegment": "KA-PATH-421-BEDIKE421",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-421-BEDIKE421",
+      "order": 4
+    }
+  ]
+}

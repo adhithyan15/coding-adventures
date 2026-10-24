@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C382-bhrame",
+    "language": "kannada",
+    "chapter": 382,
+    "sequence": 19320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b80c06fb940f4ed0"
+  },
+  "findings": []
+}

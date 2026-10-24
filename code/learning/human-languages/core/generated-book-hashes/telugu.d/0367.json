@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:582004ab397dc291",
+  "lessonIds": [
+    "TE-C367-sithilalu",
+    "TE-C367-puratana",
+    "TE-C367-tavvakalu",
+    "TE-C367-avasesalu",
+    "TE-C367-velikitiyu"
+  ],
+  "tex": "telugu/book/chapters/ch367-digging-up-the-past.tex"
+}

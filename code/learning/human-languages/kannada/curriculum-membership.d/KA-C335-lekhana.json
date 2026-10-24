@@ -1,0 +1,11 @@
+{
+  "id": "KA-C335-lekhana",
+  "pathSegment": "KA-PATH-335-PATRIKE335",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-335-PATRIKE335",
+      "order": 1
+    }
+  ]
+}

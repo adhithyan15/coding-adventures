@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:b9bdbcc5be1ca552",
+  "lessonIds": [
+    "MR-C324-nidhan",
+    "MR-C324-sraddhanjali",
+    "MR-C324-ayojan-karne",
+    "MR-C324-par-padne",
+    "MR-C324-racne"
+  ],
+  "tex": "marathi/book/chapters/ch324-remembering-a-life.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C464-samakurcu",
+    "language": "telugu",
+    "chapter": 464,
+    "sequence": 23340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38c729622ffa71a7"
+  },
+  "findings": []
+}

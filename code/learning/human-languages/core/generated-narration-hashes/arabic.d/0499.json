@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:df2cd199c0418d6b",
+  "lessonIds": [
+    "AR-C499-amin",
+    "AR-C499-nazih",
+    "AR-C499-kadhib",
+    "AR-C499-mukhlis",
+    "AR-C499-wafi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch499.txt",
+  "json": "arabic/narration/ch499.json",
+  "textHash": "fnv1a64:8c98f6f45e155bb0",
+  "jsonHash": "fnv1a64:bc8dab4693505441",
+  "findings": []
+}

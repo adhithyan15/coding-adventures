@@ -1,0 +1,11 @@
+{
+  "id": "BN-C529-dotana",
+  "pathSegment": "BN-PATH-529-DOTANA529",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-529-DOTANA529",
+      "order": 1
+    }
+  ]
+}

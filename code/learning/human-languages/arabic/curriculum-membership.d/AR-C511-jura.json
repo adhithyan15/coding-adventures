@@ -1,0 +1,11 @@
+{
+  "id": "AR-C511-jura",
+  "pathSegment": "AR-PATH-511-JURA511",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-511-JURA511",
+      "order": 0
+    }
+  ]
+}

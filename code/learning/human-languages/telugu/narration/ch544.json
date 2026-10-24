@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 544,
+  "title": "Sport",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1408f4428a2c60db",
+  "lessons": [
+    {
+      "id": "TE-C544-kridakarudu",
+      "sequence": 27560,
+      "title": "క్రీడాకారుడు (krīḍākāruḍu) — a sportsman; an athlete",
+      "headword": "క్రీడాకారుడు",
+      "romanization": "krīḍākāruḍu",
+      "gloss": "a sportsman; an athlete",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b98febf789543be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to savour, then the Telugu for a stick dance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: క్రీడాకారుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్రీడాకారుడు — krīḍākāruḍu — \"a sportsman; an athlete\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ క్రీడాకారుడు దేశానికి పతకం తెచ్చాడు. ā krīḍākāruḍu dēśāniki patakaṁ teccāḍu. That sportsman won a medal for the country."
+            },
+            {
+              "kind": "speech",
+              "text": "క్రీడ, sport, + -కారుడు, one who does it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్రీడాకారుడు (krīḍākāruḍu) is built on Sanskrit krīḍā, \"sport, play, pastime\" (Monier-Williams), with -కారుడు, \"one who does\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krīḍākāruḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krīḍākāruḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krīḍākāruḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krīḍākāruḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā krīḍākāruḍu dēśāniki patakaṁ teccāḍu. — That sportsman won a medal for the country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā krīḍākāruḍu dēśāniki patakaṁ teccāḍu.* — That sportsman won a medal for the country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to savour, then the Telugu for a stick dance, then say krīḍākāruḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to savour, then the Telugu for a stick dance, then say *krīḍākāruḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does క్రీడాకారుడు (krīḍākāruḍu) mean? (\"A sportsman; an athlete\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C544-pratyarthi",
+      "sequence": 27570,
+      "title": "ప్రత్యర్థి (pratyarthi) — an opponent; a rival",
+      "headword": "ప్రత్యర్థి",
+      "romanization": "pratyarthi",
+      "gloss": "an opponent; a rival",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52d15912637f1ae0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a stick dance, then the Telugu for a sportsman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రత్యర్థి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రత్యర్థి — pratyarthi — \"an opponent; a rival\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా ప్రత్యర్థి చాలా బలమైన జట్టు. mā pratyarthi cālā balamaina jaṭṭu. Our opponent is a very strong team."
+            },
+            {
+              "kind": "speech",
+              "text": "In sport, politics or business."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రత్యర్థి (pratyarthi) is borrowed from Sanskrit pratyarthin, \"an adversary, an opponent, a rival\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyarthi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyarthi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyarthi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyarthi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā pratyarthi cālā balamaina jaṭṭu. — Our opponent is a very strong team.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā pratyarthi cālā balamaina jaṭṭu.* — Our opponent is a very strong team.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a stick dance, then the Telugu for a sportsman, then say pratyarthi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a stick dance, then the Telugu for a sportsman, then say *pratyarthi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రత్యర్థి (pratyarthi) mean? (\"An opponent; a rival\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C544-talapadu",
+      "sequence": 27580,
+      "title": "తలపడు (talapaḍu) — to clash; to take on",
+      "headword": "తలపడు",
+      "romanization": "talapaḍu",
+      "gloss": "to clash; to take on",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1ed510a618da4db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a sportsman, then the Telugu for an opponent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తలపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తలపడు — talapaḍu — \"to clash; to take on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రేపు రెండు జట్లు ఫైనల్లో తలపడతాయి. rēpu reṇḍu jaṭlu phainallō talapaḍatāyi. Tomorrow the two teams clash in the final."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తలపడ్డాను, talapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "-తో తలపడు (talapaḍu), to take someone on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తలపడు (talapaḍu) is a native compound: tala, \"head\" (DEDR 3103), and the native verb paḍu, \"to feel, to suffer\" (DEDR 3853): to meet head to head."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rēpu reṇḍu jaṭlu phainallō talapaḍatāyi. — Tomorrow the two teams clash in the final.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rēpu reṇḍu jaṭlu phainallō talapaḍatāyi.* — Tomorrow the two teams clash in the final.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a sportsman, then the Telugu for an opponent, then say talapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a sportsman, then the Telugu for an opponent, then say *talapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తలపడు (talapaḍu) mean? (\"To clash; to take on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C544-neggu",
+      "sequence": 27590,
+      "title": "నెగ్గు (neggu) — to prevail; to win through",
+      "headword": "నెగ్గు",
+      "romanization": "neggu",
+      "gloss": "to prevail; to win through",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d06db3faeeaac1e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an opponent, then the Telugu for to clash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నెగ్గు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నెగ్గు — neggu — \"to prevail; to win through\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చివరి బంతికి మా జట్టు నెగ్గింది. civari bantiki mā jaṭṭu neggindi. Our team won on the last ball."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): నెగ్గాను, neggānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also in arguments and elections; గెలుచు is the everyday word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నెగ్గు (neggu) is native Dravidian: DEDR 3661 lists Telugu neggu, \"to be successful, to succeed, to thrive\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neggu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neggu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neggu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neggu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "civari bantiki mā jaṭṭu neggindi. — Our team won on the last ball.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *civari bantiki mā jaṭṭu neggindi.* — Our team won on the last ball.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an opponent, then the Telugu for to clash, then say neggu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an opponent, then the Telugu for to clash, then say *neggu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నెగ్గు (neggu) mean? (\"To prevail; to win through\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C544-parugu",
+      "sequence": 27600,
+      "title": "పరుగు (parugu) — running; a sprint",
+      "headword": "పరుగు",
+      "romanization": "parugu",
+      "gloss": "running; a sprint",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0a4b541f2c5be26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to clash, then the Telugu for to prevail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పరుగు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరుగు — parugu — \"running; a sprint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉదయం పరుగు ఆరోగ్యానికి మంచిది. udayaṁ parugu ārōgyāniki mañcidi. A morning run is good for your health."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun; పరిగెత్తు, to run, is the verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరుగు (parugu) is native Dravidian: DEDR 3963 lists Telugu parugu, \"running, a run\", in the article of Tamil pari, \"to run, to go fast\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parugu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parugu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udayaṁ parugu ārōgyāniki mañcidi. — A morning run is good for your health.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udayaṁ parugu ārōgyāniki mañcidi.* — A morning run is good for your health.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to clash, then the Telugu for to prevail, then say parugu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to clash, then the Telugu for to prevail, then say *parugu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పరుగు (parugu) mean? (\"Running; a sprint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

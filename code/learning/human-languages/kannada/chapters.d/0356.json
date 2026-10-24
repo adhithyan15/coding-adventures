@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Ballads and Vassal Kings",
+  "label": "ch:ka-ballads-and-vassal-kings",
+  "canDo": "I can say folklore, a vassal king, a battle, a ballad and a moral.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C356-niti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can say folklore, a vassal king, a battle, a ballad and a moral.",
+    "assesses": [
+      "KA-LEX-C356-JANAPADA356-03",
+      "KA-LEX-C356-JANAPADA356-04",
+      "KA-LEX-C356-JANAPADA356-05"
+    ]
+  }
+}

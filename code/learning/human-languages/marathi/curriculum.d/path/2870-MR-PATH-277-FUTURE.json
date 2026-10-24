@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-277-FUTURE",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "MR-EXT-277-FUTURE"
+  ],
+  "after": []
+}

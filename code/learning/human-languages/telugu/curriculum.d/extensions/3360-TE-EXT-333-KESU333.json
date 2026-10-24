@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-333-KESU333",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a police station, a case, an investigation, a trace and a fingerprint.",
+  "prerequisites": []
+}

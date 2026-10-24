@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "On a Crowded Bus",
+  "label": "ch:ta-on-a-crowded-bus",
+  "canDo": "I can talk about a bus conductor, a stop, a jolting ride and staggering.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C401-cavari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can talk about a bus conductor, a stop, a jolting ride and staggering.",
+    "assesses": [
+      "TA-LEX-C401-PERUNTU401-03",
+      "TA-LEX-C401-PERUNTU401-04",
+      "TA-LEX-C401-PERUNTU401-05"
+    ]
+  }
+}

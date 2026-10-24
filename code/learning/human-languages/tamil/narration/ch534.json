@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 534,
+  "title": "Winning and Losing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0e7ed092fef8eb31",
+  "lessons": [
+    {
+      "id": "TA-C534-torkati",
+      "sequence": 30530,
+      "title": "தோற்கடி (tōṟkaṭi) — to beat a rival; to defeat",
+      "headword": "தோற்கடி",
+      "romanization": "tōṟkaṭi",
+      "gloss": "to beat a rival; to defeat",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b97419275dfd9167",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to leap, then the Tamil for to dive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தோற்கடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தோற்கடி — tōṟkaṭi — \"to beat a rival; to defeat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எங்கள் அணி பலமான அணியைத் தோற்கடித்தது. eṅkaḷ aṇi palamāṉa aṇiyait tōṟkaṭittatu. Our team defeated a strong team."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தோற்கடித்தேன், tōṟkaṭittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The side beaten takes -ஐ. To be the side that loses is தோற்றுப்போ (tōṟṟuppō)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தோற்கடி (tōṟkaṭi) is usually read as a native compound: தோல் (tōl), \"to be defeated\" (DEDR 3558), in its stem தோற்-, and அடி (aṭi), \"to strike\": to strike someone into defeat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōṟkaṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōṟkaṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōṟkaṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōṟkaṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṅkaḷ aṇi palamāṉa aṇiyait tōṟkaṭittatu. — Our team defeated a strong team.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṅkaḷ aṇi palamāṉa aṇiyait tōṟkaṭittatu.* — Our team defeated a strong team.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to leap, then the Tamil for to dive, then say tōṟkaṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to leap, then the Tamil for to dive, then say *tōṟkaṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தோற்கடி (tōṟkaṭi) mean? (\"To beat a rival; to defeat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C534-camanilai",
+      "sequence": 30540,
+      "title": "சமநிலை (camanilai) — a draw; balance",
+      "headword": "சமநிலை",
+      "romanization": "camanilai",
+      "gloss": "a draw; balance",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54569da54d2ff4d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to dive, then the Tamil for to beat a rival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சமநிலை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சமநிலை — camanilai — \"a draw; balance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆட்டம் சமநிலையில் முடிந்தது. āṭṭam camanilaiyil muṭintatu. The match ended in a draw."
+            },
+            {
+              "kind": "speech",
+              "text": "In a game it is a draw; elsewhere it is balance: மனச் சமநிலை (camanilai), balance of mind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சமநிலை (camanilai) joins சம (cama), \"equal\", from Sanskrit sama (CDIAL 13173), and the native நிலை (nilai), \"a state\", from நில், \"to stand\" (DEDR 3675)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "camanilai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *camanilai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "camanilai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *camanilai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭṭam camanilaiyil muṭintatu. — The match ended in a draw.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭṭam camanilaiyil muṭintatu.* — The match ended in a draw.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to dive, then the Tamil for to beat a rival, then say camanilai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to dive, then the Tamil for to beat a rival, then say *camanilai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சமநிலை (camanilai) mean? (\"A draw; balance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C534-natuvar",
+      "sequence": 30550,
+      "title": "நடுவர் (naṭuvar) — a referee; an umpire",
+      "headword": "நடுவர்",
+      "romanization": "naṭuvar",
+      "gloss": "a referee; an umpire",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b13051988b28b8c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to beat a rival, then the Tamil for a draw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நடுவர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நடுவர் — naṭuvar — \"a referee; an umpire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நடுவர் விசில் ஊதினார். naṭuvar vicil ūtiṉār. The referee blew the whistle."
+            },
+            {
+              "kind": "speech",
+              "text": "From நடு, the middle: the one who stands between the two sides."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நடுவர் (naṭuvar) is native Dravidian: நடு (naṭu), \"the middle, fairness\" (DEDR 3584), with the personal ending -அர்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṭuvar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṭuvar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṭuvar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṭuvar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṭuvar vicil ūtiṉār. — The referee blew the whistle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṭuvar vicil ūtiṉār.* — The referee blew the whistle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to beat a rival, then the Tamil for a draw, then say naṭuvar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to beat a rival, then the Tamil for a draw, then say *naṭuvar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நடுவர் (naṭuvar) mean? (\"A referee; an umpire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C534-patakkam",
+      "sequence": 30560,
+      "title": "பதக்கம் (patakkam) — a medal",
+      "headword": "பதக்கம்",
+      "romanization": "patakkam",
+      "gloss": "a medal",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55ab86ed2676b138",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a draw, then the Tamil for a referee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பதக்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதக்கம் — patakkam — \"a medal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஓட்டப் போட்டியில் அவளுக்கு வெள்ளிப் பதக்கம் கிடைத்தது. ōṭṭap pōṭṭiyil avaḷukku veḷḷip patakkam kiṭaittatu. She got a silver medal in the running race."
+            },
+            {
+              "kind": "speech",
+              "text": "Gold, silver and bronze: தங்கப் பதக்கம் (patakkam), வெள்ளிப் பதக்கம் (patakkam), வெண்கலப் பதக்கம் (patakkam)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதக்கம் (patakkam) is borrowed from Sanskrit padaka, \"a kind of ornament\" (Monier-Williams), with the Tamil ending -அம் and a doubled க."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patakkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patakkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patakkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patakkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōṭṭap pōṭṭiyil avaḷukku veḷḷip patakkam kiṭaittatu. — She got a silver medal in the running race.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōṭṭap pōṭṭiyil avaḷukku veḷḷip patakkam kiṭaittatu.* — She got a silver medal in the running race.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a draw, then the Tamil for a referee, then say patakkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a draw, then the Tamil for a referee, then say *patakkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பதக்கம் (patakkam) mean? (\"A medal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C534-vakaiyalar",
+      "sequence": 30570,
+      "title": "வாகையாளர் (vākaiyāḷar) — a champion",
+      "headword": "வாகையாளர்",
+      "romanization": "vākaiyāḷar",
+      "gloss": "a champion",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54e980bb2974ce8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a referee, then the Tamil for a medal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வாகையாளர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாகையாளர் — vākaiyāḷar — \"a champion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த ஆண்டும் அவர்தான் சதுரங்க வாகையாளர். inta āṇṭum avartāṉ caturaṅka vākaiyāḷar. This year too he is the chess champion."
+            },
+            {
+              "kind": "speech",
+              "text": "வாகை, the garland of victory, + -ஆளர் \"one who …\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாகையாளர் (vākaiyāḷar) is built on வாகை (vākai) with -ஆளர், \"one who …\". DEDR 5333 gives வாகை as the name of the sirissa tree; how it came to mean victory is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vākaiyāḷar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vākaiyāḷar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vākaiyāḷar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vākaiyāḷar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta āṇṭum avartāṉ caturaṅka vākaiyāḷar. — This year too he is the chess champion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta āṇṭum avartāṉ caturaṅka vākaiyāḷar.* — This year too he is the chess champion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a referee, then the Tamil for a medal, then say vākaiyāḷar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a referee, then the Tamil for a medal, then say *vākaiyāḷar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வாகையாளர் (vākaiyāḷar) mean? (\"A champion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

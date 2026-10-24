@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:977f23e6714789cc",
+  "lessonIds": [
+    "ML-C403-pretam",
+    "ML-C403-mantrikan",
+    "ML-C403-nidhi",
+    "ML-C403-sapam",
+    "ML-C403-sapikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch403-ghosts-magic-and-treasure.tex"
+}

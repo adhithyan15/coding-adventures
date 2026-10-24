@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Trams and lorries",
+  "label": "ch:ar-trams-and-lorries",
+  "canDo": "I can say a tram, a lorry, a steering wheel, to slow down and to hamper.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C445-arqala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can say a tram, a lorry, a steering wheel, to slow down and to hamper.",
+    "assesses": [
+      "AR-LEX-C445-TRAM445-03",
+      "AR-LEX-C445-TRAM445-04",
+      "AR-LEX-C445-TRAM445-05"
+    ]
+  }
+}

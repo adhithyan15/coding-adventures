@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:8707aef27aac3060",
+  "lessonIds": [
+    "AR-C320-ilam",
+    "AR-C320-wakala",
+    "AR-C320-masdar",
+    "AR-C320-afada",
+    "AR-C320-awdaha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch320.txt",
+  "json": "arabic/narration/ch320.json",
+  "textHash": "fnv1a64:49639a1390d569eb",
+  "jsonHash": "fnv1a64:a3a75e793883b2f8",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 537,
+  "title": "Clay and Stone",
+  "label": "ch:ta-clay-and-stone",
+  "canDo": "I can talk about carving, polishing and firing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R537-review-530-537",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can talk about carving, polishing and firing.",
+    "assesses": [
+      "TA-LEX-C537-SIRPAM537-01",
+      "TA-LEX-C537-SIRPAM537-02",
+      "TA-LEX-C537-SIRPAM537-03",
+      "TA-LEX-C537-SIRPAM537-04",
+      "TA-LEX-C537-SIRPAM537-05"
+    ]
+  }
+}

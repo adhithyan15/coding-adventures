@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C454-svadesam",
+    "language": "telugu",
+    "chapter": 454,
+    "sequence": 22840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ef5646faf9a6aeb"
+  },
+  "findings": []
+}

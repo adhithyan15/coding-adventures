@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R283-at-the-station",
+    "language": "hindi",
+    "chapter": 283,
+    "sequence": 15620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e9c565e554ae086"
+  },
+  "findings": []
+}

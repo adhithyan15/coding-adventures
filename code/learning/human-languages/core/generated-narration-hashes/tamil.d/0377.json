@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:b93b7f5bde160863",
+  "lessonIds": [
+    "TA-C377-vanmurai",
+    "TA-C377-akimcai",
+    "TA-C377-orrumai",
+    "TA-C377-verrumai",
+    "TA-C377-pilavupatu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch377.txt",
+  "json": "tamil/narration/ch377.json",
+  "textHash": "fnv1a64:1bdc7763d281eda6",
+  "jsonHash": "fnv1a64:33e19b090cc701a7",
+  "findings": []
+}

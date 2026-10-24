@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:0413feff0c503775",
+  "lessonIds": [
+    "TA-C499-varatatcanai",
+    "TA-C499-acirvatam",
+    "TA-C499-mana",
+    "TA-C499-tampati",
+    "TA-C499-illaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch499.txt",
+  "json": "tamil/narration/ch499.json",
+  "textHash": "fnv1a64:346ce518b125cabf",
+  "jsonHash": "fnv1a64:ea7a259cc652be0c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Ghosts, Magic and Treasure",
+  "label": "ch:ml-ghosts-magic-and-treasure",
+  "canDo": "I can say a ghost, a magician, a treasure, a curse and to curse.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C403-sapikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can say a ghost, a magician, a treasure, a curse and to curse.",
+    "assesses": [
+      "ML-LEX-C403-PRETHAM403-03",
+      "ML-LEX-C403-PRETHAM403-04",
+      "ML-LEX-C403-PRETHAM403-05"
+    ]
+  }
+}

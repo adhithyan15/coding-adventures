@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C188-milna-review",
+    "language": "punjabi",
+    "chapter": 188,
+    "sequence": 10100,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:76ff73e77f06b657"
+  },
+  "findings": []
+}

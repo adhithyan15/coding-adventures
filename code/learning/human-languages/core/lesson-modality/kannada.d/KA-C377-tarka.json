@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C377-tarka",
+    "language": "kannada",
+    "chapter": 377,
+    "sequence": 19050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:378dce3246fdc0ba"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:48dde189804ae9ea",
+  "lessonIds": [
+    "MR-C501-sparsa",
+    "MR-C501-mithi-marne",
+    "MR-C501-gonjarne",
+    "MR-C501-thopatne",
+    "MR-C501-kurvalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch501.txt",
+  "json": "marathi/narration/ch501.json",
+  "textHash": "fnv1a64:6b76491b450e026a",
+  "jsonHash": "fnv1a64:109fce6fe6a6f08e",
+  "findings": []
+}

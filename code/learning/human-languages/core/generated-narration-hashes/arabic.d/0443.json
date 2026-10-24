@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:b5874577347f8f1a",
+  "lessonIds": [
+    "AR-C443-bawwab",
+    "AR-C443-mulaa",
+    "AR-C443-nazafa",
+    "AR-C443-atalla",
+    "AR-C443-khazna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch443.txt",
+  "json": "arabic/narration/ch443.json",
+  "textHash": "fnv1a64:af6b7dbe77525e93",
+  "jsonHash": "fnv1a64:eabfec8ef493ea94",
+  "findings": []
+}

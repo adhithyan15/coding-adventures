@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C489-rub",
+    "language": "arabic",
+    "chapter": 489,
+    "sequence": 27260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:750c6ade48899bde"
+  },
+  "findings": []
+}

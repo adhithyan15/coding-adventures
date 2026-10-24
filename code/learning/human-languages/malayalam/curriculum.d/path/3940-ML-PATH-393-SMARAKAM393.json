@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-393-SMARAKAM393",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-393-SMARAKAM393"
+  ],
+  "after": []
+}

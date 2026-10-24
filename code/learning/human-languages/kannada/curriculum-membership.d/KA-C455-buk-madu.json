@@ -1,0 +1,11 @@
+{
+  "id": "KA-C455-buk-madu",
+  "pathSegment": "KA-PATH-455-PRAVASA455",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-455-PRAVASA455",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:12291010064a9fd2",
+  "lessonIds": [
+    "AR-C459-mustahlik",
+    "AR-C459-mizaniyya",
+    "AR-C459-masarif",
+    "AR-C459-mushtarayat",
+    "AR-C459-iqtasada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch459.txt",
+  "json": "arabic/narration/ch459.json",
+  "textHash": "fnv1a64:9ce30bdd493e14b9",
+  "jsonHash": "fnv1a64:9b50fba0a9c53869",
+  "findings": []
+}

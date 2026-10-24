@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:1fdf6967aedb5424",
+  "lessonIds": [
+    "ML-C525-narannuka",
+    "ML-C525-pottikkarayuka",
+    "ML-C525-paribhavam",
+    "ML-C525-potticcirikkuka",
+    "ML-C525-asayakkulappam"
+  ],
+  "tex": "malayalam/book/chapters/ch525-tears-and-laughter.tex"
+}

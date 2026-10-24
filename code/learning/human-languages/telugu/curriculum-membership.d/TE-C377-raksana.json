@@ -1,0 +1,11 @@
+{
+  "id": "TE-C377-raksana",
+  "pathSegment": "TE-PATH-377-VIPATTU377",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-377-VIPATTU377",
+      "order": 2
+    }
+  ]
+}

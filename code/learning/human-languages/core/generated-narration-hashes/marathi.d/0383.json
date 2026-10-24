@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:6c0f8cedeb4a3380",
+  "lessonIds": [
+    "MR-C383-bhakit",
+    "MR-C383-grhit-dharne",
+    "MR-C383-apeksa",
+    "MR-C383-kal",
+    "MR-C383-tadne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch383.txt",
+  "json": "marathi/narration/ch383.json",
+  "textHash": "fnv1a64:a9fbf1e1022d1232",
+  "jsonHash": "fnv1a64:ea06b532d38b1e01",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:01d2ad44d0cd5cba",
+  "lessonIds": [
+    "KA-C387-savalu",
+    "KA-C387-misalidu",
+    "KA-C387-samatolana",
+    "KA-C387-adyate",
+    "KA-C387-maulya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch387.txt",
+  "json": "kannada/narration/ch387.json",
+  "textHash": "fnv1a64:4bae82588ee8df71",
+  "jsonHash": "fnv1a64:ba60cc17e6b53140",
+  "findings": []
+}

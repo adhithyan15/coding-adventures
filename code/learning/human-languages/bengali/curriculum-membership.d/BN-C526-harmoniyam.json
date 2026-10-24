@@ -1,0 +1,11 @@
+{
+  "id": "BN-C526-harmoniyam",
+  "pathSegment": "BN-PATH-526-BAJNA526",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-526-BAJNA526",
+      "order": 2
+    }
+  ]
+}

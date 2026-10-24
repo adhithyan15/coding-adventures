@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C295-apatti",
+    "language": "marathi",
+    "chapter": 295,
+    "sequence": 17370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9eca245095b25f00"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C297-hiskavne",
+    "language": "marathi",
+    "chapter": 297,
+    "sequence": 17480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef150293c1cef2e8"
+  },
+  "findings": []
+}

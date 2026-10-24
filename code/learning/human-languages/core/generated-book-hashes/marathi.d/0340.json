@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:cefb28a002e02ba7",
+  "lessonIds": [
+    "MR-C340-rahasya",
+    "MR-C340-tatparya",
+    "MR-C340-vilaksan",
+    "MR-C340-thararak",
+    "MR-C340-jhagadne"
+  ],
+  "tex": "marathi/book/chapters/ch340-mysteries.tex"
+}

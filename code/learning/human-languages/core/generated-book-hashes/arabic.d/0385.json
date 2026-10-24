@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:204405662aea97c8",
+  "lessonIds": [
+    "AR-C385-munazzama",
+    "AR-C385-jamiyya",
+    "AR-C385-niqaba",
+    "AR-C385-majlis",
+    "AR-C385-udw"
+  ],
+  "tex": "arabic/book/chapters/ch385-organizations.tex"
+}

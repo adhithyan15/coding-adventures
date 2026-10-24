@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C533-talaruka",
+    "language": "malayalam",
+    "chapter": 533,
+    "sequence": 26850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e02191ea1e85130d"
+  },
+  "findings": []
+}

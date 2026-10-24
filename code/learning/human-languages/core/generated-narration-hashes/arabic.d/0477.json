@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:489c9b2a3108597a",
+  "lessonIds": [
+    "AR-C477-qirsh",
+    "AR-C477-saltaun",
+    "AR-C477-mahar",
+    "AR-C477-naqi",
+    "AR-C477-madiq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch477.txt",
+  "json": "arabic/narration/ch477.json",
+  "textHash": "fnv1a64:d90b22011e803f42",
+  "jsonHash": "fnv1a64:be9b4e2889ddd7e1",
+  "findings": []
+}

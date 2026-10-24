@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:91797a3a9b5ad974",
+  "lessonIds": [
+    "BN-C372-bara",
+    "BN-C372-koma",
+    "BN-C372-dvigun",
+    "BN-C372-stor",
+    "BN-C372-poriman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch372.txt",
+  "json": "bengali/narration/ch372.json",
+  "textHash": "fnv1a64:fa07217f7965462a",
+  "jsonHash": "fnv1a64:5c76f353154a96eb",
+  "findings": []
+}

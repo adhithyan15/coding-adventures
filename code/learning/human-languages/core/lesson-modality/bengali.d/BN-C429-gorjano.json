@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C429-gorjano",
+    "language": "bengali",
+    "chapter": 429,
+    "sequence": 26320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cade623bdc7491c1"
+  },
+  "findings": []
+}

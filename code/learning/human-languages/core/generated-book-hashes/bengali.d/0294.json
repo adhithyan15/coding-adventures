@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:6fb172d8e68987ed",
+  "lessonIds": [
+    "BN-C294-sotorko",
+    "BN-C294-sabdhan",
+    "BN-C294-songket",
+    "BN-C294-ashongka",
+    "BN-C294-erano"
+  ],
+  "tex": "bengali/book/chapters/ch294-warnings.tex"
+}

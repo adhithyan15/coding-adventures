@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 361,
+  "title": "Issues and questions",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:46a09c9a0cfbe16e",
+  "lessons": [
+    {
+      "id": "AR-C361-qadiyya",
+      "sequence": 20550,
+      "title": "قضية (qaḍiyya) — a public issue; a cause; a court case",
+      "headword": "قضية",
+      "romanization": "qaḍiyya",
+      "gloss": "a public issue; a cause; a court case",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95019fb963ae6e8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to argue, then the Arabic for a controversy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قضية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قضية — qaḍiyya — \"a public issue; a cause; a court case\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تكلمنا عن قضية (qaḍiyya) الماء في القرية. takallamnā ʿan qaḍiyyat al-māʾ fī al-qarya. We talked about the issue of water in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural قضايا, qaḍāyā. In a court it is a case."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قضية (qaḍiyya) is built on the native Arabic root q-ḍ-y, \"to decide, to settle\" (Lane). A qaḍiyya is a matter to be decided: a case, a cause, an issue."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qaḍiyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qaḍiyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qaḍiyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qaḍiyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takallamnā ʿan qaḍiyyat al-māʾ fī al-qarya. — We talked about the issue of water in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takallamnā ʿan qaḍiyyat al-māʾ fī al-qarya.* — We talked about the issue of water in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to argue, then the Arabic for a controversy, then say qaḍiyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to argue, then the Arabic for a controversy, then say *qaḍiyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قضية (qaḍiyya) mean? (\"A public issue; a cause; a court case\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C361-masala",
+      "sequence": 20560,
+      "title": "مسألة (masʾala) — a matter",
+      "headword": "مسألة",
+      "romanization": "masʾala",
+      "gloss": "a matter",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc3af11d0d1372b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a controversy, then the Arabic for a public issue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مسألة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسألة — masʾala — \"a matter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هذه مسألة صعبة. hādhihi masʾala ṣaʿba. This is a difficult matter."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a problem in arithmetic: مسألة (masʾala) حساب."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسألة (masʾala) is built on the native Arabic root s-ʾ-l, \"to ask\" (Lane). A masʾala is a thing asked about: a question to settle, a matter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masʾala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masʾala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masʾala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masʾala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hādhihi masʾala ṣaʿba. — This is a difficult matter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hādhihi masʾala ṣaʿba.* — This is a difficult matter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a controversy, then the Arabic for a public issue, then say masʾala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a controversy, then the Arabic for a public issue, then say *masʾala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مسألة (masʾala) mean? (\"A matter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C361-siyaq",
+      "sequence": 20570,
+      "title": "سياق (siyāq) — a context",
+      "headword": "سياق",
+      "romanization": "siyāq",
+      "gloss": "a context",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd5e419a4d20136a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a public issue, then the Arabic for a matter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سياق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سياق — siyāq — \"a context\"."
+            },
+            {
+              "kind": "speech",
+              "text": "فهمت معنى الكلمة من السياق. fahimtu maʿnā al-kalima min as-siyāq. I understood the meaning of the word from the context."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سياق (siyāq) is built on the native Arabic root s-w-q, \"to drive along\" (Lane). A siyāq is a driving along in order; in modern use, the run of words around a word: its context."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siyāq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siyāq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siyāq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siyāq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fahimtu maʿnā al-kalima min as-siyāq. — I understood the meaning of the word from the context.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fahimtu maʿnā al-kalima min as-siyāq.* — I understood the meaning of the word from the context.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a public issue, then the Arabic for a matter, then say siyāq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a public issue, then the Arabic for a matter, then say *siyāq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سياق (siyāq) mean? (\"A context\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C361-athara",
+      "sequence": 20580,
+      "title": "أثار (athāra) — to stir up; to raise",
+      "headword": "أثار",
+      "romanization": "athāra",
+      "gloss": "to stir up; to raise",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5aafbdb90ca537bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a matter, then the Arabic for a context."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أثار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أثار — athāra — \"to stir up; to raise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أثار الخبر اهتمام الناس. athāra al-khabar ihtimām an-nās. The news stirred up people's interest."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يثير, yuthīr."
+            },
+            {
+              "kind": "speech",
+              "text": "أثار (athāra) مشكلة, raised a problem."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أثار (athāra) is built on the native Arabic root th-w-r, \"to rise up, to be stirred\" (Lane). It is Form IV, to stir up: to raise dust, and so to raise feelings or a question."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "athāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *athāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "athāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *athāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "athāra al-khabar ihtimām an-nās. — The news stirred up people's interest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *athāra al-khabar ihtimām an-nās.* — The news stirred up people's interest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a matter, then the Arabic for a context, then say athāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a matter, then the Arabic for a context, then say *athāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أثار (athāra) mean? (\"To stir up; to raise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C361-tasaala",
+      "sequence": 20590,
+      "title": "تساءل (tasāʾala) — to wonder",
+      "headword": "تساءل",
+      "romanization": "tasāʾala",
+      "gloss": "to wonder",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1ea4c2fc7dea617",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a context, then the Arabic for to stir up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تساءل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تساءل — tasāʾala — \"to wonder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تساءلت أمي عن سبب التأخير. tasāʾalat ummī ʿan sabab at-taʾkhīr. My mother wondered about the reason for the delay."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتساءل, yatasāʾal."
+            },
+            {
+              "kind": "speech",
+              "text": "Form VI of the root of سأل, to ask: to ask oneself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تساءل (tasāʾala) is built on the native Arabic root s-ʾ-l, \"to ask\" (Lane). It is Form VI of saʾala, \"to ask\": to ask oneself, to wonder."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasāʾala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasāʾala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasāʾala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasāʾala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasāʾalat ummī ʿan sabab at-taʾkhīr. — My mother wondered about the reason for the delay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasāʾalat ummī ʿan sabab at-taʾkhīr.* — My mother wondered about the reason for the delay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a context, then the Arabic for to stir up, then say tasāʾala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a context, then the Arabic for to stir up, then say *tasāʾala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تساءل (tasāʾala) mean? (\"To wonder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

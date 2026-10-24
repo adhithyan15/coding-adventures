@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:afa544f5318e365b",
+  "lessonIds": [
+    "AR-C436-mirab",
+    "AR-C436-kushk",
+    "AR-C436-shubbak",
+    "AR-C436-hammal",
+    "AR-C436-tanaqqala"
+  ],
+  "tex": "arabic/book/chapters/ch436-around-the-station.tex"
+}

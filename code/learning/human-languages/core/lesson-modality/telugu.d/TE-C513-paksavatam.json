@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C513-paksavatam",
+    "language": "telugu",
+    "chapter": 513,
+    "sequence": 26000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aad487839c486803"
+  },
+  "findings": []
+}

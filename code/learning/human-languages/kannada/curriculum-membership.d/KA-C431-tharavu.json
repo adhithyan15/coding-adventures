@@ -1,0 +1,11 @@
+{
+  "id": "KA-C431-tharavu",
+  "pathSegment": "KA-PATH-431-TIRMANISU431",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-431-TIRMANISU431",
+      "order": 3
+    }
+  ]
+}

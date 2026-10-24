@@ -1,0 +1,11 @@
+{
+  "id": "AR-C390-amid",
+  "pathSegment": "AR-PATH-390-KULLIYYA390",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-390-KULLIYYA390",
+      "order": 2
+    }
+  ]
+}

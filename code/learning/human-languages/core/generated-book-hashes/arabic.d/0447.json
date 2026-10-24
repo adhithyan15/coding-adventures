@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:e28456961bcbd0d7",
+  "lessonIds": [
+    "AR-C447-dush",
+    "AR-C447-mikwah",
+    "AR-C447-mujaffif",
+    "AR-C447-taattala",
+    "AR-C447-tafaqqada"
+  ],
+  "tex": "arabic/book/chapters/ch447-fixing-the-room.tex"
+}

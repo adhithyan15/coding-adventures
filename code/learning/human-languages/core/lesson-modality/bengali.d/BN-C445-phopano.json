@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C445-phopano",
+    "language": "bengali",
+    "chapter": 445,
+    "sequence": 27380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09f6f9baa4d7e613"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Mocking and Encouraging",
+  "label": "ch:ml-mocking-and-encouraging",
+  "canDo": "I can say to mock, to boast, to imitate, showing off and to bother.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C531-salyappetuttuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can say to mock, to boast, to imitate, showing off and to bother.",
+    "assesses": [
+      "ML-LEX-C531-PERUMATTAM531-03",
+      "ML-LEX-C531-PERUMATTAM531-04",
+      "ML-LEX-C531-PERUMATTAM531-05"
+    ]
+  }
+}

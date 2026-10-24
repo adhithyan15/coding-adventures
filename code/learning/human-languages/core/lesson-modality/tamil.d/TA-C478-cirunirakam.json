@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C478-cirunirakam",
+    "language": "tamil",
+    "chapter": 478,
+    "sequence": 27410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:762a57288b86e28b"
+  },
+  "findings": []
+}

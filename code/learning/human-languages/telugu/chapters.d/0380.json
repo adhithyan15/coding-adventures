@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Ever Since",
+  "label": "ch:te-ever-since",
+  "canDo": "I can say ago, before that, from then on, a dead body and to haunt.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C380-ventadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can say ago, before that, from then on, a dead body and to haunt.",
+    "assesses": [
+      "TE-LEX-C380-KRITAM380-03",
+      "TE-LEX-C380-KRITAM380-04",
+      "TE-LEX-C380-KRITAM380-05"
+    ]
+  }
+}

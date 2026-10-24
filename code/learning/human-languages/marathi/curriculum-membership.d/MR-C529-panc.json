@@ -1,0 +1,11 @@
+{
+  "id": "MR-C529-panc",
+  "pathSegment": "MR-PATH-529-SAMNA529",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-529-SAMNA529",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C496-halahalisu",
+  "pathSegment": "KA-PATH-496-ASHE496",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-496-ASHE496",
+      "order": 1
+    }
+  ]
+}

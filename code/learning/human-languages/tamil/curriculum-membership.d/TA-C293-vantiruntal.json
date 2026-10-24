@@ -1,0 +1,11 @@
+{
+  "id": "TA-C293-vantiruntal",
+  "pathSegment": "TA-PATH-293-WOULD-DEPENDS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-293-WOULD-DEPENDS",
+      "order": 1
+    }
+  ]
+}

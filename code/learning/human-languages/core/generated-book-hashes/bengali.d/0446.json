@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:f0ed338967068992",
+  "lessonIds": [
+    "BN-C446-santvona",
+    "BN-C446-svosti",
+    "BN-C446-bhorsa",
+    "BN-C446-haph-chhara",
+    "BN-C446-samlano"
+  ],
+  "tex": "bengali/book/chapters/ch446-comfort-and-relief.tex"
+}

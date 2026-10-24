@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C468-mrdu",
+    "language": "marathi",
+    "chapter": 468,
+    "sequence": 26920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e7352d3b6074e5a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Holding a celebration",
+  "label": "ch:ar-holding-a-celebration",
+  "canDo": "I can say to hold, to perform at, a procession, a banquet and a guest.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C328-maduww",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can say to hold, to perform at, a procession, a banquet and a guest.",
+    "assesses": [
+      "AR-LEX-C328-HAFL328-03",
+      "AR-LEX-C328-HAFL328-04",
+      "AR-LEX-C328-HAFL328-05"
+    ]
+  }
+}

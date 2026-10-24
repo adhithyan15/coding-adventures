@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C369-kanisiko",
+    "language": "kannada",
+    "chapter": 369,
+    "sequence": 18610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dec851f5e62d2e6"
+  },
+  "findings": []
+}

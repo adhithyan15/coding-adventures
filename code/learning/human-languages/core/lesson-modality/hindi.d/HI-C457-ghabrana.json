@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C457-ghabrana",
+    "language": "hindi",
+    "chapter": 457,
+    "sequence": 25260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f05a8347dec467c3"
+  },
+  "findings": []
+}

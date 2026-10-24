@@ -1,0 +1,11 @@
+{
+  "id": "BN-C528-jotano",
+  "pathSegment": "BN-PATH-528-UPAY528",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-528-UPAY528",
+      "order": 4
+    }
+  ]
+}

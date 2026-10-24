@@ -1,0 +1,11 @@
+{
+  "id": "TA-C346-pirkalattil",
+  "pathSegment": "TA-PATH-346-MUDIVU346",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-346-MUDIVU346",
+      "order": 1
+    }
+  ]
+}

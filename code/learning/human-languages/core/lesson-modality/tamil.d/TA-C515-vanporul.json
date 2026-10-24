@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C515-vanporul",
+    "language": "tamil",
+    "chapter": 515,
+    "sequence": 29580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d53cb118a120295"
+  },
+  "findings": []
+}

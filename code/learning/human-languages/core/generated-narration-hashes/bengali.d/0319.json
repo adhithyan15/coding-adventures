@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:2770f3b09192b557",
+  "lessonIds": [
+    "BN-C319-dhvongsaboshesh",
+    "BN-C319-murti",
+    "BN-C319-khonon-kora",
+    "BN-C319-shilalipi",
+    "BN-C319-mudra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch319.txt",
+  "json": "bengali/narration/ch319.json",
+  "textHash": "fnv1a64:67bca999053dc85e",
+  "jsonHash": "fnv1a64:6ee4f640a0e47488",
+  "findings": []
+}

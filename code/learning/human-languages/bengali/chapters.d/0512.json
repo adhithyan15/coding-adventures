@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Kitchen Tools",
+  "label": "ch:bn-kitchen-tools",
+  "canDo": "I can name some kitchen tools and say what they do.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C512-bata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can name some kitchen tools and say what they do.",
+    "assesses": [
+      "BN-LEX-C512-UNUN512-03",
+      "BN-LEX-C512-UNUN512-04",
+      "BN-LEX-C512-UNUN512-05"
+    ]
+  }
+}

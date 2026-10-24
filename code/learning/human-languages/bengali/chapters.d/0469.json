@@ -1,0 +1,21 @@
+{
+  "chapter": 469,
+  "title": "Sweat and Skin",
+  "label": "ch:bn-sweat-and-skin",
+  "canDo": "I can talk about sweat, spots, moles and stains.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R469-review-462-469",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can talk about sweat, spots, moles and stains.",
+    "assesses": [
+      "BN-LEX-C469-GHAM469-01",
+      "BN-LEX-C469-GHAM469-02",
+      "BN-LEX-C469-GHAM469-03",
+      "BN-LEX-C469-GHAM469-04",
+      "BN-LEX-C469-GHAM469-05"
+    ]
+  }
+}

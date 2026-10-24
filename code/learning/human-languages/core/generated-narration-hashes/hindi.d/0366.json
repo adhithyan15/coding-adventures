@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:5ae47ba7edd623f6",
+  "lessonIds": [
+    "HI-C366-vajib",
+    "HI-C366-jayaz",
+    "HI-C366-bhram",
+    "HI-C366-bahkana",
+    "HI-C366-majbur",
+    "HI-R366-review-359-366"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch366.txt",
+  "json": "hindi/narration/ch366.json",
+  "textHash": "fnv1a64:b4b98d191af7c13a",
+  "jsonHash": "fnv1a64:91fbc34ed8662710",
+  "findings": []
+}

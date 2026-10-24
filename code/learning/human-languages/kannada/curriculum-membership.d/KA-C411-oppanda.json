@@ -1,0 +1,11 @@
+{
+  "id": "KA-C411-oppanda",
+  "pathSegment": "KA-PATH-411-SHARATTU411",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-411-SHARATTU411",
+      "order": 1
+    }
+  ]
+}

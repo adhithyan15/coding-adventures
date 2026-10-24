@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C538-sukham-prapikkuka",
+    "language": "malayalam",
+    "chapter": 538,
+    "sequence": 27070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6a838d9e97a993f"
+  },
+  "findings": []
+}

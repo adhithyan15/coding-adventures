@@ -1,0 +1,939 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 375,
+  "title": "The Relief Camp",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:a1aab7a737017b32",
+  "lessons": [
+    {
+      "id": "KA-C375-sibira",
+      "sequence": 18870,
+      "title": "ಶಿಬಿರ (śibira) — a camp",
+      "headword": "ಶಿಬಿರ",
+      "romanization": "śibira",
+      "gloss": "a camp",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58a6fab27f0b8772",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a noise, then the Kannada for to kill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಶಿಬಿರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶಿಬಿರ — śibira — \"a camp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರವಾಹದ ನಂತರ ಶಾಲೆಯಲ್ಲಿ ಒಂದು ಶಿಬಿರ ತೆರೆದರು. pravāhada nantara śāleyalli ondu śibira teredaru. After the flood they opened a camp in the school."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಶಿಬಿರಗಳು, śibiragaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a training or health camp: ಆರೋಗ್ಯ ಶಿಬಿರ (śibira)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶಿಬಿರ (śibira) is borrowed from Sanskrit śibira, \"a royal camp, a tent, an entrenchment\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śibira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śibira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śibira, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śibira*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravāhada nantara śāleyalli ondu śibira teredaru. — After the flood they opened a camp in the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravāhada nantara śāleyalli ondu śibira teredaru.* — After the flood they opened a camp in the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a noise, then the Kannada for to kill, then say śibira again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a noise, then the Kannada for to kill, then say *śibira* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಶಿಬಿರ (śibira) mean? (\"A camp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C375-nirasrita",
+      "sequence": 18880,
+      "title": "ನಿರಾಶ್ರಿತ (nirāśrita) — a refugee; homeless",
+      "headword": "ನಿರಾಶ್ರಿತ",
+      "romanization": "nirāśrita",
+      "gloss": "a refugee; homeless",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b40e0307e5f2a19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to kill, then the Kannada for a camp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿರಾಶ್ರಿತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿರಾಶ್ರಿತ — nirāśrita — \"a refugee; homeless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಶಿಬಿರದಲ್ಲಿ ಐನೂರು ನಿರಾಶ್ರಿತರು ಇದ್ದರು. śibiradalli ainūru nirāśritaru iddaru. There were five hundred refugees in the camp."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ನಿರಾಶ್ರಿತರು, nirāśritaru."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿರ್-, without, and ಆಶ್ರಿತ, sheltered: one without shelter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿರಾಶ್ರಿತ (nirāśrita) is borrowed from Sanskrit: nir-, \"without\", with āśrita, \"sheltered, depending on\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirāśrita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirāśrita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirāśrita, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirāśrita*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śibiradalli ainūru nirāśritaru iddaru. — There were five hundred refugees in the camp.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śibiradalli ainūru nirāśritaru iddaru.* — There were five hundred refugees in the camp.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to kill, then the Kannada for a camp, then say nirāśrita again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to kill, then the Kannada for a camp, then say *nirāśrita* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿರಾಶ್ರಿತ (nirāśrita) mean? (\"A refugee; homeless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C375-santapa",
+      "sequence": 18890,
+      "title": "ಸಂತಾಪ (santāpa) — condolence; grief",
+      "headword": "ಸಂತಾಪ",
+      "romanization": "santāpa",
+      "gloss": "condolence; grief",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b1491d363237f2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a camp, then the Kannada for a refugee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂತಾಪ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂತಾಪ — santāpa — \"condolence; grief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊರಿನವರು ಸಂತ್ರಸ್ತರ ಕುಟುಂಬಗಳಿಗೆ ಸಂತಾಪ ತಿಳಿಸಿದರು. ūrinavaru santrastara kuṭumbagaḷige santāpa tiḷisidaru. The townspeople offered condolences to the victims' families."
+            },
+            {
+              "kind": "speech",
+              "text": "A condolence meeting is a ಸಂತಾಪ (santāpa) ಸಭೆ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂತಾಪ (santāpa) is borrowed from Sanskrit saṃtāpa, \"great heat\", and \"affliction, pain, sorrow\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "santāpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *santāpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "santāpa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *santāpa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrinavaru santrastara kuṭumbagaḷige santāpa tiḷisidaru. — The townspeople offered condolences to the victims' families.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrinavaru santrastara kuṭumbagaḷige santāpa tiḷisidaru.* — The townspeople offered condolences to the victims' families.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a camp, then the Kannada for a refugee, then say santāpa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a camp, then the Kannada for a refugee, then say *santāpa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂತಾಪ (santāpa) mean? (\"Condolence; grief\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C375-hastantarisu",
+      "sequence": 18900,
+      "title": "ಹಸ್ತಾಂತರಿಸು (hastāntarisu) — to hand over",
+      "headword": "ಹಸ್ತಾಂತರಿಸು",
+      "romanization": "hastāntarisu",
+      "gloss": "to hand over",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e1f7ac09d859bde",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a refugee, then the Kannada for condolence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಸ್ತಾಂತರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಸ್ತಾಂತರಿಸು — hastāntarisu — \"to hand over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಯಂಸೇವಕರು ಊಟದ ಪೊಟ್ಟಣಗಳನ್ನು ಅಧಿಕಾರಿಗಳಿಗೆ ಹಸ್ತಾಂತರಿಸಿದರು. svayaṃsēvakaru ūṭada poṭṭaṇagaḷannu adhikārigaḷige hastāntarisidaru. The volunteers handed over the food parcels to the officials."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಹಸ್ತಾಂತರಿಸಿದೆ, hastāntariside."
+            },
+            {
+              "kind": "speech",
+              "text": "What is handed over takes -ಅನ್ನು; who receives it takes -ಗೆ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಸ್ತಾಂತರಿಸು (hastāntarisu) is built from Sanskrit hasta, \"the hand\" (CDIAL 14024), and antara, \"the inside, another\" (CDIAL 357): into another's hand, with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hastāntarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hastāntarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hastāntarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hastāntarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svayaṃsēvakaru ūṭada poṭṭaṇagaḷannu adhikārigaḷige hastāntarisidaru. — The volunteers handed over the food parcels to the officials.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svayaṃsēvakaru ūṭada poṭṭaṇagaḷannu adhikārigaḷige hastāntarisidaru.* — The volunteers handed over the food parcels to the officials.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a refugee, then the Kannada for condolence, then say hastāntarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a refugee, then the Kannada for condolence, then say *hastāntarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಸ್ತಾಂತರಿಸು (hastāntarisu) mean? (\"To hand over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C375-dhavisu",
+      "sequence": 18910,
+      "title": "ಧಾವಿಸು (dhāvisu) — to rush; to hasten",
+      "headword": "ಧಾವಿಸು",
+      "romanization": "dhāvisu",
+      "gloss": "to rush; to hasten",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86bd224a039f6e8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for condolence, then the Kannada for to hand over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಧಾವಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಧಾವಿಸು — dhāvisu — \"to rush; to hasten\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸುದ್ದಿ ಕೇಳಿ ವೈದ್ಯರು ಶಿಬಿರಕ್ಕೆ ಧಾವಿಸಿದರು. suddi kēḷi vaidyaru śibirakke dhāvisidaru. Hearing the news, the doctors rushed to the camp."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಧಾವಿಸಿದೆ, dhāviside."
+            },
+            {
+              "kind": "speech",
+              "text": "Where one rushes takes -ಗೆ: ನೆರವಿಗೆ ಧಾವಿಸು (dhāvisu), to rush to help."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಧಾವಿಸು (dhāvisu) is built on Sanskrit dhāv, \"to run, to flow\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāvisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāvisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāvisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāvisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suddi kēḷi vaidyaru śibirakke dhāvisidaru. — Hearing the news, the doctors rushed to the camp.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suddi kēḷi vaidyaru śibirakke dhāvisidaru.* — Hearing the news, the doctors rushed to the camp.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for condolence, then the Kannada for to hand over, then say dhāvisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for condolence, then the Kannada for to hand over, then say *dhāvisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಧಾವಿಸು (dhāvisu) mean? (\"To rush; to hasten\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R375-review-369-375",
+      "sequence": 18920,
+      "title": "Telling what happened, the last stretch",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from At Last, with My Own Eyes to The Relief Camp",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4da5a91ac257a2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for at last and with one's own eyes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at last, with one's own eyes, unexpected, a jail, to appear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at last, with one's own eyes, unexpected, a jail, to appear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "journalism, a documentary, a reader, a listener, notorious",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: journalism, a documentary, a reader, a listener, notorious]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wedding pendant, a palanquin, a chieftain, a mansion, to set foot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wedding pendant, a palanquin, a chieftain, a mansion, to set foot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exile in the forest, to impose, banishment, former, theft",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: exile in the forest, to impose, banishment, former, theft]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rise, a downfall, the past, a narrative, a triumph",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rise, a downfall, the past, a narrative, a triumph]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "magic, a miracle, false, a noise, to kill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: magic, a miracle, false, a noise, to kill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a camp, a refugee, condolence, to hand over, to rush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a camp, a refugee, condolence, to hand over, to rush]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "At last? (ಅಂತೂ, antū.) With one's own eyes? (ಕಣ್ಣಾರೆ, kaṇṇāre.) Unexpected? (ಅನಿರೀಕ್ಷಿತ, anirīkṣita.) A jail? (ಜೈಲು, jailu.) To appear? (ಕಾಣಿಸಿಕೊ, kāṇisiko.) Journalism? (ಪತ್ರಿಕೋದ್ಯಮ, patrikōdyama.) A documentary? (ಸಾಕ್ಷ್ಯಚಿತ್ರ, sākṣyacitra.) A reader? (ಓದುಗ, ōduga.) A listener? (ಕೇಳುಗ, kēḷuga.) Notorious? (ಕುಖ್ಯಾತ, kukhyāta.) A wedding pendant? (ತಾಳಿ, tāḷi.) A palanquin? (ಪಲ್ಲಕ್ಕಿ, pallakki.) A chieftain? (ಪಾಳೆಗಾರ, pāḷegāra.) A mansion? (ಮಹಲು, mahalu.) To set foot? (ಕಾಲಿಡು, kāliḍu.) Exile in the forest? (ವನವಾಸ, vanavāsa.) To impose? (ವಿಧಿಸು, vidhisu.) Banishment? (ಗಡೀಪಾರು, gaḍīpāru.) Former? (ಮಾಜಿ, māji.) Theft? (ಕಳ್ಳತನ, kaḷḷatana.) A rise? (ಉದಯ, udaya.) A downfall? (ಪತನ, patana.) The past? (ಗತಕಾಲ, gatakāla.) A narrative? (ವೃತ್ತಾಂತ, vṛttānta.) A triumph? (ವಿಜಯ, vijaya.) Magic? (ಜಾದೂ, jādū.) A miracle? (ಪವಾಡ, pavāḍa.) False? (ಹುಸಿ, husi.) A noise? (ಸದ್ದು, saddu.) To kill? (ಕೊಲ್ಲು, kollu.) A camp? (ಶಿಬಿರ, śibira.) A refugee? (ನಿರಾಶ್ರಿತ, nirāśrita.) Condolence? (ಸಂತಾಪ, santāpa.) To hand over? (ಹಸ್ತಾಂತರಿಸು, hastāntarisu.) To rush? (ಧಾವಿಸು, dhāvisu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R375-review-final-375",
+      "sequence": 18930,
+      "title": "The Relief Camp — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec1b1a5e89d4a7df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for a camp and a refugee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a camp, a refugee, condolence, to hand over, to rush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a camp, a refugee, condolence, to hand over, to rush]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A camp? (ಶಿಬಿರ, śibira.) A refugee? (ನಿರಾಶ್ರಿತ, nirāśrita.) Condolence? (ಸಂತಾಪ, santāpa.) To hand over? (ಹಸ್ತಾಂತರಿಸು, hastāntarisu.) To rush? (ಧಾವಿಸು, dhāvisu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

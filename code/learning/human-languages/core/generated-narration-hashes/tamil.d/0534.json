@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:0e7ed092fef8eb31",
+  "lessonIds": [
+    "TA-C534-torkati",
+    "TA-C534-camanilai",
+    "TA-C534-natuvar",
+    "TA-C534-patakkam",
+    "TA-C534-vakaiyalar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch534.txt",
+  "json": "tamil/narration/ch534.json",
+  "textHash": "fnv1a64:2db92be257149964",
+  "jsonHash": "fnv1a64:8b5eec5fa1ca1f85",
+  "findings": []
+}

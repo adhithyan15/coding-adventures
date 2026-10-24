@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:fb38aa5eb9edb415",
+  "lessonIds": [
+    "AR-C353-muzahara",
+    "AR-C353-tajammaa",
+    "AR-C353-hatafa",
+    "AR-C353-iqtahama",
+    "AR-C353-intashara"
+  ],
+  "tex": "arabic/book/chapters/ch353-crowds-in-the-street.tex"
+}

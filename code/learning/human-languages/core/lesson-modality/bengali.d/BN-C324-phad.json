@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C324-phad",
+    "language": "bengali",
+    "chapter": 324,
+    "sequence": 20480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34d0ce83f6d639fa"
+  },
+  "findings": []
+}

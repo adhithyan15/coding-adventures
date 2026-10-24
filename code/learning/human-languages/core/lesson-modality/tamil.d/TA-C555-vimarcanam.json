@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C555-vimarcanam",
+    "language": "tamil",
+    "chapter": 555,
+    "sequence": 31640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42fa06e545f33133"
+  },
+  "findings": []
+}

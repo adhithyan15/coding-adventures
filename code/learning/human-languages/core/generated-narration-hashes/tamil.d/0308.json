@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:93ecc711cd5c8506",
+  "lessonIds": [
+    "TA-C308-paraparappu",
+    "TA-C308-vatanti",
+    "TA-C308-kicukicu",
+    "TA-C308-ampalappatuttu",
+    "TA-C308-pakirankamaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch308.txt",
+  "json": "tamil/narration/ch308.json",
+  "textHash": "fnv1a64:021342b65c92457d",
+  "jsonHash": "fnv1a64:10e74dfb9c140e17",
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "language": "tamil",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:f70df02356eeff64",
+  "lessonIds": [
+    "TA-C287-poka-ventum",
+    "TA-C287-vantatal",
+    "TA-R287-advice-and-reasons"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch287.txt",
+  "json": "tamil/narration/ch287.json",
+  "textHash": "fnv1a64:b9937ac3c54c93a7",
+  "jsonHash": "fnv1a64:fda1e00887331cca",
+  "findings": []
+}

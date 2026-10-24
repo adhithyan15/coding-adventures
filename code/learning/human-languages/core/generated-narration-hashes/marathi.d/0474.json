@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:27fd33b5f7825fec",
+  "lessonIds": [
+    "MR-C474-nitnetka",
+    "MR-C474-gabala",
+    "MR-C474-vendhla",
+    "MR-C474-pasara",
+    "MR-C474-sista"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch474.txt",
+  "json": "marathi/narration/ch474.json",
+  "textHash": "fnv1a64:54480140918e7d36",
+  "jsonHash": "fnv1a64:46cf8079ce5ffd38",
+  "findings": []
+}

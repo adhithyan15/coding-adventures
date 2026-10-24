@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Care at Home",
+  "label": "ch:ta-care-at-home",
+  "canDo": "I can talk about rubbing on ointment, massaging, gargling and recovering.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C486-mil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can talk about rubbing on ointment, massaging, gargling and recovering.",
+    "assesses": [
+      "TA-LEX-C486-VAITTIYAM486-03",
+      "TA-LEX-C486-VAITTIYAM486-04",
+      "TA-LEX-C486-VAITTIYAM486-05"
+    ]
+  }
+}

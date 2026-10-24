@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C378-tetuka",
+    "language": "malayalam",
+    "chapter": 378,
+    "sequence": 18520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ca45ebe9f06acbb"
+  },
+  "findings": []
+}

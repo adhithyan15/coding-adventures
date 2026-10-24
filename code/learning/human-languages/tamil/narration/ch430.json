@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 430,
+  "title": "Light in the Sky",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:42978a075bc3b942",
+  "lessons": [
+    {
+      "id": "TA-C430-utayam",
+      "sequence": 24630,
+      "title": "உதயம் (utayam) — sunrise; a rising",
+      "headword": "உதயம்",
+      "romanization": "utayam",
+      "gloss": "sunrise; a rising",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:261476b1fa70b78f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a downpour, then the Tamil for cloud cover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உதயம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உதயம் — utayam — \"sunrise; a rising\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மலை உச்சியில் சூரிய உதயத்தைப் பார்த்தோம். malai ucciyil cūriya utayattaip pārttōm. We watched the sunrise from the hilltop."
+            },
+            {
+              "kind": "speech",
+              "text": "சூரிய உதயம் (utayam) is sunrise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உதயம் (utayam) is borrowed from Sanskrit udaya, \"rise, the rising of the sun\" (CDIAL 1931)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utayam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utayam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utayam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utayam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malai ucciyil cūriya utayattaip pārttōm. — We watched the sunrise from the hilltop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malai ucciyil cūriya utayattaip pārttōm.* — We watched the sunrise from the hilltop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a downpour, then the Tamil for cloud cover, then say utayam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a downpour, then the Tamil for cloud cover, then say *utayam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உதயம் (utayam) mean? (\"Sunrise; a rising\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C430-veliccam",
+      "sequence": 24640,
+      "title": "வெளிச்சம் (veḷiccam) — brightness; light",
+      "headword": "வெளிச்சம்",
+      "romanization": "veḷiccam",
+      "gloss": "brightness; light",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe3fcf62d178fad5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for cloud cover, then the Tamil for sunrise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வெளிச்சம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெளிச்சம் — veḷiccam — \"brightness; light\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சன்னல் வழியாக வெளிச்சம் உள்ளே வந்தது. caṉṉal vaḻiyāka veḷiccam uḷḷē vantatu. Light came in through the window."
+            },
+            {
+              "kind": "speech",
+              "text": "The opposite is இருட்டு, darkness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெளிச்சம் (veḷiccam) is native Dravidian (DEDR 5496), \"light, clearness\", from the root of வெள், \"white, bright\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷiccam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷiccam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷiccam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷiccam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṉṉal vaḻiyāka veḷiccam uḷḷē vantatu. — Light came in through the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṉṉal vaḻiyāka veḷiccam uḷḷē vantatu.* — Light came in through the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for cloud cover, then the Tamil for sunrise, then say veḷiccam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for cloud cover, then the Tamil for sunrise, then say *veḷiccam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வெளிச்சம் (veḷiccam) mean? (\"Brightness; light\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C430-ativanam",
+      "sequence": 24650,
+      "title": "அடிவானம் (aṭivāṉam) — the horizon",
+      "headword": "அடிவானம்",
+      "romanization": "aṭivāṉam",
+      "gloss": "the horizon",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12d53141a96a5372",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for sunrise, then the Tamil for brightness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அடிவானம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடிவானம் — aṭivāṉam — \"the horizon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அடிவானத்தில் சூரியன் மறைந்தது. aṭivāṉattil cūriyaṉ maṟaintatu. The sun disappeared below the horizon."
+            },
+            {
+              "kind": "speech",
+              "text": "அடி, the bottom, + வானம், the sky."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடிவானம் (aṭivāṉam) is built from அடி, \"the foot, the bottom\" (DEDR 72), and வானம், \"the sky\" (DEDR 5381)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭivāṉam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭivāṉam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭivāṉam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭivāṉam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭivāṉattil cūriyaṉ maṟaintatu. — The sun disappeared below the horizon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭivāṉattil cūriyaṉ maṟaintatu.* — The sun disappeared below the horizon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for sunrise, then the Tamil for brightness, then say aṭivāṉam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for sunrise, then the Tamil for brightness, then say *aṭivāṉam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அடிவானம் (aṭivāṉam) mean? (\"The horizon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C430-minnu",
+      "sequence": 24660,
+      "title": "மின்னு (miṉṉu) — to glitter; to flash",
+      "headword": "மின்னு",
+      "romanization": "miṉṉu",
+      "gloss": "to glitter; to flash",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5d648380dd0b0e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for brightness, then the Tamil for the horizon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மின்னு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மின்னு — miṉṉu — \"to glitter; to flash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இரவில் நட்சத்திரங்கள் மின்னின. iravil naṭcattiraṅkaḷ miṉṉiṉa. At night the stars glittered."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): மின்னியது, miṉṉiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "மின்னல், lightning, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மின்னு (miṉṉu) is native Dravidian (DEDR 4876), \"to emit lightning, to shine, to glitter\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṉṉu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṉṉu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṉṉu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṉṉu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iravil naṭcattiraṅkaḷ miṉṉiṉa. — At night the stars glittered.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iravil naṭcattiraṅkaḷ miṉṉiṉa.* — At night the stars glittered.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for brightness, then the Tamil for the horizon, then say miṉṉu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for brightness, then the Tamil for the horizon, then say *miṉṉu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மின்னு (miṉṉu) mean? (\"To glitter; to flash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C430-oli",
+      "sequence": 24670,
+      "title": "ஒலி (oli) — to sound; to ring out",
+      "headword": "ஒலி",
+      "romanization": "oli",
+      "gloss": "to sound; to ring out",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af9c130c562874ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the horizon, then the Tamil for to glitter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒலி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒலி — oli — \"to sound; to ring out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ரயில் புறப்படும்போது மணி ஒலித்தது. rayil puṟappaṭumpōtu maṇi olittatu. As the train was leaving, a bell rang out."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ஒலித்தது, olittatu."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒலி (oli) is also the noun, a sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒலி (oli) is native Dravidian (DEDR 996), \"to sound; a sound, a noise\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rayil puṟappaṭumpōtu maṇi olittatu. — As the train was leaving, a bell rang out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rayil puṟappaṭumpōtu maṇi olittatu.* — As the train was leaving, a bell rang out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the horizon, then the Tamil for to glitter, then say oli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the horizon, then the Tamil for to glitter, then say *oli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒலி (oli) mean? (\"To sound; to ring out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

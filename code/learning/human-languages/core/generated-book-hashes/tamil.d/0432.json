@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:436d2fa99bfd8fd4",
+  "lessonIds": [
+    "TA-C432-nirnilai",
+    "TA-C432-kalvay",
+    "TA-C432-anaikkattu",
+    "TA-C432-kinaru",
+    "TA-C432-talumpu"
+  ],
+  "tex": "tamil/book/chapters/ch432-canals-and-wells.tex"
+}

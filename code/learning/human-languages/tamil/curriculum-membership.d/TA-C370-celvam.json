@@ -1,0 +1,11 @@
+{
+  "id": "TA-C370-celvam",
+  "pathSegment": "TA-PATH-370-VARUMAI370",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-370-VARUMAI370",
+      "order": 1
+    }
+  ]
+}

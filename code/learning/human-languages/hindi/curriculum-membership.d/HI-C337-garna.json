@@ -1,0 +1,11 @@
+{
+  "id": "HI-C337-garna",
+  "pathSegment": "HI-PATH-337-KHAZANA337",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-337-KHAZANA337",
+      "order": 1
+    }
+  ]
+}

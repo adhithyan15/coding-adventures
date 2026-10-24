@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:f342fd804a0e0480",
+  "lessonIds": [
+    "AR-C315-nasr",
+    "AR-C315-hazima",
+    "AR-C315-intasara",
+    "AR-C315-hazama-defeat",
+    "AR-C315-istaslama"
+  ],
+  "tex": "arabic/book/chapters/ch315-victory-and-defeat.tex"
+}

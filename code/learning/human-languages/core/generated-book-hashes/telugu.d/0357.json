@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:538d492d3bd2ffdf",
+  "lessonIds": [
+    "TE-C357-vamsam",
+    "TE-C357-taram",
+    "TE-C357-purvikulu",
+    "TE-C357-anatha",
+    "TE-C357-batuku",
+    "TE-R357-review-350-357"
+  ],
+  "tex": "telugu/book/chapters/ch357-generations.tex"
+}

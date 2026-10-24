@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C351-nirbandhincu",
+    "language": "telugu",
+    "chapter": 351,
+    "sequence": 17290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:695a583764db2269"
+  },
+  "findings": []
+}

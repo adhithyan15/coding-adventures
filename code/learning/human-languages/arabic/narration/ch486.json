@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 486,
+  "title": "Changing weather",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:5e98fcbb5b46b2cd",
+  "lessons": [
+    {
+      "id": "AR-C486-taqallaba",
+      "sequence": 27020,
+      "title": "تقلب (taqallaba) — to keep changing; to fluctuate",
+      "headword": "تقلب",
+      "romanization": "taqallaba",
+      "gloss": "to keep changing; to fluctuate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e79125d26a434d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to shine, then the Arabic for to grow dark."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تقلب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تقلب — taqallaba — \"to keep changing; to fluctuate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يتقلب الطقس كثيرا في الربيع. yataqallabu aṭ-ṭaqs kathīran fī ar-rabīʿ. The weather changes a lot in spring."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتقلب, yataqallab."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تقلب (taqallaba) is built on the native Arabic root q-l-b, \"to turn over\" (Lane). It is Form V, \"to turn this way and that\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taqallaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taqallaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taqallaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taqallaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yataqallabu aṭ-ṭaqs kathīran fī ar-rabīʿ. — The weather changes a lot in spring.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yataqallabu aṭ-ṭaqs kathīran fī ar-rabīʿ.* — The weather changes a lot in spring.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to shine, then the Arabic for to grow dark, then say taqallaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to shine, then the Arabic for to grow dark, then say *taqallaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تقلب (taqallaba) mean? (\"To keep changing; to fluctuate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C486-tadahwara",
+      "sequence": 27030,
+      "title": "تدهور (tadahwara) — to get worse; to deteriorate",
+      "headword": "تدهور",
+      "romanization": "tadahwara",
+      "gloss": "to get worse; to deteriorate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:046e12c1ad71248c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to grow dark, then the Arabic for to keep changing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تدهور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تدهور — tadahwara — \"to get worse; to deteriorate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تدهور الطقس فعدنا إلى الفندق. tadahwara aṭ-ṭaqs fa-ʿudnā ilā al-funduq. The weather got worse, so we went back to the hotel."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتدهور, yatadahwar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تدهور (tadahwara) is a verb with four root letters; the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadahwara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadahwara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadahwara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadahwara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadahwara aṭ-ṭaqs fa-ʿudnā ilā al-funduq. — The weather got worse, so we went back to the hotel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadahwara aṭ-ṭaqs fa-ʿudnā ilā al-funduq.* — The weather got worse, so we went back to the hotel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to grow dark, then the Arabic for to keep changing, then say tadahwara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to grow dark, then the Arabic for to keep changing, then say *tadahwara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تدهور (tadahwara) mean? (\"To get worse; to deteriorate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C486-tasaqata",
+      "sequence": 27040,
+      "title": "تساقط (tasāqaṭa) — to fall steadily (of snow or leaves)",
+      "headword": "تساقط",
+      "romanization": "tasāqaṭa",
+      "gloss": "to fall steadily (of snow or leaves)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e219faea7e23680c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to keep changing, then the Arabic for to get worse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تساقط",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تساقط — tasāqaṭa — \"to fall steadily (of snow or leaves)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تساقط الثلج في الليل. tasāqaṭa ath-thalj fī al-layl. Snow fell steadily in the night."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتساقط, yatasāqaṭ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تساقط (tasāqaṭa) is built on the native Arabic root s-q-ṭ, \"to fall\" (Lane). It is Form VI, \"to fall one after another\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasāqaṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasāqaṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasāqaṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasāqaṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasāqaṭa ath-thalj fī al-layl. — Snow fell steadily in the night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasāqaṭa ath-thalj fī al-layl.* — Snow fell steadily in the night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to keep changing, then the Arabic for to get worse, then say tasāqaṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to keep changing, then the Arabic for to get worse, then say *tasāqaṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تساقط (tasāqaṭa) mean? (\"To fall steadily (of snow or leaves)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C486-munish",
+      "sequence": 27050,
+      "title": "منعش (munʿish) — refreshing",
+      "headword": "منعش",
+      "romanization": "munʿish",
+      "gloss": "refreshing",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4aa8f48adee08ac8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to get worse, then the Arabic for to fall steadily."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: منعش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منعش — munʿish — \"refreshing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان الهواء في الصباح منعشا. kāna al-hawāʾ fī aṣ-ṣabāḥ munʿishan. The morning air was refreshing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منعش (munʿish) is built on the native Arabic root n-ʿ-sh, \"to raise up, to revive\" (Lane). It is the Form IV participle, \"that revives\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munʿish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munʿish*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munʿish, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munʿish*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna al-hawāʾ fī aṣ-ṣabāḥ munʿishan. — The morning air was refreshing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna al-hawāʾ fī aṣ-ṣabāḥ munʿishan.* — The morning air was refreshing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to get worse, then the Arabic for to fall steadily, then say munʿish again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to get worse, then the Arabic for to fall steadily, then say *munʿish* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does منعش (munʿish) mean? (\"Refreshing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C486-taarrada",
+      "sequence": 27060,
+      "title": "تعرض (taʿarraḍa) — to be exposed (to); to suffer",
+      "headword": "تعرض",
+      "romanization": "taʿarraḍa",
+      "gloss": "to be exposed (to); to suffer",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c1838bdb88a25a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to fall steadily, then the Arabic for refreshing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تعرض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعرض — taʿarraḍa — \"to be exposed (to); to suffer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعرض المسافرون للمطر. taʿarraḍa al-musāfirūn li-l-maṭar. The travellers were caught in the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتعرض, yataʿarraḍ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes li-: taʿarraḍa li-, \"to be exposed to\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعرض (taʿarraḍa) is built on the native Arabic root ʿ-r-ḍ, \"to show, to present\" (Lane). It is Form V, \"to put oneself in the way of\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿarraḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿarraḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿarraḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿarraḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿarraḍa al-musāfirūn li-l-maṭar. — The travellers were caught in the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿarraḍa al-musāfirūn li-l-maṭar.* — The travellers were caught in the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to fall steadily, then the Arabic for refreshing, then say taʿarraḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to fall steadily, then the Arabic for refreshing, then say *taʿarraḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تعرض (taʿarraḍa) mean? (\"To be exposed (to); to suffer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R486-review-479-486",
+      "sequence": 27070,
+      "title": "Words from chapters 479–486 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 479-486",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b923b052d370273",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for to ski and a wild beast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to ski, a wild beast, a plastic bag, to exchange, to pack",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to ski, a wild beast, a plastic bag, to exchange, to pack]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a weather forecast, a degree, to increase, to drop, mild",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a weather forecast, a degree, to increase, to drop, mild]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a shower of rain, drizzle, a downpour, to pour down, to clear up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a shower of rain, drizzle, a downpour, to pour down, to clear up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a breeze, a hurricane, to blow hard, to grow stronger, danger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a breeze, a hurricane, to blow hard, to grow stronger, danger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coldness, chilly, biting, frost, to get cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: coldness, chilly, biting, frost, to get cold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a heatwave, stifling, humidity, drought, to evaporate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a heatwave, stifling, humidity, drought, to evaporate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clear weather, a rainbow, dew, to shine, to grow dark",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: clear weather, a rainbow, dew, to shine, to grow dark]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to keep changing, to get worse, to fall steadily, refreshing, to be exposed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to keep changing, to get worse, to fall steadily, refreshing, to be exposed]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To ski? (تزلج, tazallaja.) A wild beast? (وحش, waḥsh.) A plastic bag? (كيس, kīs.) To exchange? (تبادل, tabādala.) To pack? (حزم, ḥazama.) A weather forecast? (نشرة جوية, nashra jawwiyya.) A degree? (درجة, daraja.) To increase? (ارتفع, irtafaʿa.) To drop? (انخفض, inkhafaḍa.) Mild? (معتدل, muʿtadil.) A shower of rain? (زخة, zakhkha.) Drizzle? (رذاذ, radhādh.) A downpour? (وابل, wābil.) To pour down? (هطل, haṭala.) To clear up? (صفا, ṣafā.) A breeze? (نسيم, nasīm.) A hurricane? (إعصار, iʿṣār.) To blow hard? (عصف, ʿaṣafa.) To grow stronger? (اشتد, ishtadda.) Danger? (خطر, khaṭar.) Coldness? (برودة, burūda.) Chilly? (بارد, bārid.) Biting? (قارس, qāris.) Frost? (صقيع, ṣaqīʿ.) To get cold? (برد, barada.) A heatwave? (موجة حر, mawjat ḥarr.) Stifling? (خانق, khāniq.) Humidity? (رطوبة, ruṭūba.) Drought? (جفاف, jafāf.) To evaporate? (تبخر, tabakhkhara.) Clear weather? (صحو, ṣaḥw.) A rainbow? (قوس قزح, qaws quzaḥ.) Dew? (ندى, nadā.) To shine? (أشرق, ashraqa.) To grow dark? (أظلم, aẓlama.) To keep changing? (تقلب, taqallaba.) To get worse? (تدهور, tadahwara.) To fall steadily? (تساقط, tasāqaṭa.) Refreshing? (منعش, munʿish.) To be exposed? (تعرض, taʿarraḍa.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

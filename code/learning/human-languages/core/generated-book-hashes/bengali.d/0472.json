@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:628a52e9f7cdbe54",
+  "lessonIds": [
+    "BN-C472-oshudh",
+    "BN-C472-chikitsa",
+    "BN-C472-pothyo",
+    "BN-C472-tika",
+    "BN-C472-sere-otha"
+  ],
+  "tex": "bengali/book/chapters/ch472-medicine-and-treatment.tex"
+}

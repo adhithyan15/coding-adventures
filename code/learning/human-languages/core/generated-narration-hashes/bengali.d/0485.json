@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:c1c6270c965f4192",
+  "lessonIds": [
+    "BN-C485-gorbhoboti",
+    "BN-C485-prosob",
+    "BN-C485-jonmano",
+    "BN-C485-bachcha",
+    "BN-C485-dolna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch485.txt",
+  "json": "bengali/narration/ch485.json",
+  "textHash": "fnv1a64:675d1f05fb671892",
+  "jsonHash": "fnv1a64:89babdd68df1de92",
+  "findings": []
+}

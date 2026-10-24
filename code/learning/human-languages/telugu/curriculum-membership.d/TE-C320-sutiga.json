@@ -1,0 +1,11 @@
+{
+  "id": "TE-C320-sutiga",
+  "pathSegment": "TE-PATH-320-ASK-THE-WAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-320-ASK-THE-WAY",
+      "order": 2
+    }
+  ]
+}

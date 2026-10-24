@@ -1,0 +1,11 @@
+{
+  "id": "AR-C346-tanakkara",
+  "pathSegment": "AR-PATH-346-JASUS346",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-346-JASUS346",
+      "order": 1
+    }
+  ]
+}

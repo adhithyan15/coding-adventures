@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:fe240bf88ae99e98",
+  "lessonIds": [
+    "KA-C366-khulase",
+    "KA-C366-kalanka",
+    "KA-C366-ghanate",
+    "KA-C366-ane",
+    "KA-C366-goladu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch366.txt",
+  "json": "kannada/narration/ch366.json",
+  "textHash": "fnv1a64:a3804dec9da70858",
+  "jsonHash": "fnv1a64:8400e3d3c175d730",
+  "findings": []
+}

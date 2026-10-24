@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-341-PANNA341",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a book and say how well it sold.",
+  "prerequisites": []
+}

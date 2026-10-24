@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:e322ffcfbd93d3d2",
+  "lessonIds": [
+    "BN-C524-ijel",
+    "BN-C524-jolrong",
+    "BN-C524-noksha",
+    "BN-C524-khodai-kora",
+    "BN-C524-rangano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch524.txt",
+  "json": "bengali/narration/ch524.json",
+  "textHash": "fnv1a64:5951ed74f58cff77",
+  "jsonHash": "fnv1a64:434a26f07ba13dc1",
+  "findings": []
+}

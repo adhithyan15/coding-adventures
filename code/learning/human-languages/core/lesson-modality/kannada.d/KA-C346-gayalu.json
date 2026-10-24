@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C346-gayalu",
+    "language": "kannada",
+    "chapter": 346,
+    "sequence": 17420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54e2f45fea9c50b4"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:8dfceae244dc814a",
+  "lessonIds": [
+    "BN-C412-pachil",
+    "BN-C412-get",
+    "BN-C412-dalan",
+    "BN-C412-lemppost",
+    "BN-C412-topkano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch412.txt",
+  "json": "bengali/narration/ch412.json",
+  "textHash": "fnv1a64:fad390b6b4e6a876",
+  "jsonHash": "fnv1a64:e21f4895705b1067",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Weighing the Bags",
+  "label": "ch:ka-weighing-the-bags",
+  "canDo": "I can say to weigh, a limit, to exceed, air travel and a helicopter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C438-helikaptar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can say to weigh, a limit, to exceed, air travel and a helicopter.",
+    "assesses": [
+      "KA-LEX-C438-TUKA438-03",
+      "KA-LEX-C438-TUKA438-04",
+      "KA-LEX-C438-TUKA438-05"
+    ]
+  }
+}

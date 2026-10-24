@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:100528f99f7365cd",
+  "lessonIds": [
+    "TE-C443-vahanam",
+    "TE-C443-injanu",
+    "TE-C443-tairu",
+    "TE-C443-breku",
+    "TE-C443-haranu"
+  ],
+  "tex": "telugu/book/chapters/ch443-wheels-and-engines.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:f6316cb0ca2835b4",
+  "lessonIds": [
+    "TE-C348-dopidi",
+    "TE-C348-dadi-ceyu",
+    "TE-C348-lakko",
+    "TE-C348-kapukacu",
+    "TE-C348-maruvesam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch348.txt",
+  "json": "telugu/narration/ch348.json",
+  "textHash": "fnv1a64:3b24d86ad29a0469",
+  "jsonHash": "fnv1a64:02181cb7ab50bd8d",
+  "findings": []
+}

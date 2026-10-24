@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:3a03bbad44ddb0bf",
+  "lessonIds": [
+    "MR-C327-praja",
+    "MR-C327-rajmudra",
+    "MR-C327-nisan",
+    "MR-C327-sardar",
+    "MR-C327-vasavne",
+    "MR-R327-review-320-327"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch327.txt",
+  "json": "marathi/narration/ch327.json",
+  "textHash": "fnv1a64:f9969a8dd494685e",
+  "jsonHash": "fnv1a64:6b56209e1b8706b9",
+  "findings": []
+}

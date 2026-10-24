@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:ed6e81e735aba4ad",
+  "lessonIds": [
+    "MR-C322-puraskar",
+    "MR-C322-satkar-karne",
+    "MR-C322-gaurav",
+    "MR-C322-abhinandan-karne",
+    "MR-C322-udghatan-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch322.txt",
+  "json": "marathi/narration/ch322.json",
+  "textHash": "fnv1a64:3f8d6c2bfdd99e48",
+  "jsonHash": "fnv1a64:5e14b9112447454d",
+  "findings": []
+}

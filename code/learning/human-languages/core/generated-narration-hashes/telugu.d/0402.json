@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:1bb37f840368b48c",
+  "lessonIds": [
+    "TE-C402-sasanasabha",
+    "TE-C402-mantri",
+    "TE-C402-adhikaram",
+    "TE-C402-palincu",
+    "TE-C402-amodincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch402.txt",
+  "json": "telugu/narration/ch402.json",
+  "textHash": "fnv1a64:e3431a06ce9f9b42",
+  "jsonHash": "fnv1a64:398c0cc63a4d7699",
+  "findings": []
+}

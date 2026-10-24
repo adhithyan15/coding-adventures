@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:61b5cf0d66059d21",
+  "lessonIds": [
+    "MR-C515-abhiyanta",
+    "MR-C515-sallagar",
+    "MR-C515-anuvadak",
+    "MR-C515-lekhapal",
+    "MR-C515-atopne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch515.txt",
+  "json": "marathi/narration/ch515.json",
+  "textHash": "fnv1a64:747737162314ecb5",
+  "jsonHash": "fnv1a64:125aeb8d73ea86f7",
+  "findings": []
+}

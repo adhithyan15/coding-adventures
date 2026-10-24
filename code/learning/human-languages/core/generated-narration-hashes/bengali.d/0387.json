@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:ed5ed5aab2fc5070",
+  "lessonIds": [
+    "BN-C387-poth",
+    "BN-C387-gontobyo",
+    "BN-C387-sophor",
+    "BN-C387-jatayat-kora",
+    "BN-C387-phirti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch387.txt",
+  "json": "bengali/narration/ch387.json",
+  "textHash": "fnv1a64:21e822bbd18756bf",
+  "jsonHash": "fnv1a64:904e637d48de0cb9",
+  "findings": []
+}

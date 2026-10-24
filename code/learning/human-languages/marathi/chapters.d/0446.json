@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Wildlife Sanctuaries",
+  "label": "ch:mr-wildlife-sanctuaries",
+  "canDo": "I can talk about wildlife, a sanctuary and a leopard, and say a tiger roared and cattle grazed.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C446-carne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can talk about wildlife, a sanctuary and a leopard, and say a tiger roared and cattle grazed.",
+    "assesses": [
+      "MR-LEX-C446-ABHAYARANYA446-03",
+      "MR-LEX-C446-ABHAYARANYA446-04",
+      "MR-LEX-C446-ABHAYARANYA446-05"
+    ]
+  }
+}

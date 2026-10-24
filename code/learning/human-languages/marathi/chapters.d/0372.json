@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Research",
+  "label": "ch:mr-research",
+  "canDo": "I can talk about research, experiments and theories.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C372-siddhant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can talk about research, experiments and theories.",
+    "assesses": [
+      "MR-LEX-C372-SANSHODHAN372-03",
+      "MR-LEX-C372-SANSHODHAN372-04",
+      "MR-LEX-C372-SANSHODHAN372-05"
+    ]
+  }
+}

@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 356,
+  "title": "Democracy and Majorities",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1b8dde6916da4c10",
+  "lessons": [
+    {
+      "id": "MR-C356-loksahi",
+      "sequence": 20710,
+      "title": "लोकशाही (lokśāhī) — democracy",
+      "headword": "लोकशाही",
+      "romanization": "lokśāhī",
+      "gloss": "democracy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09cc43c174497850",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for canvassing, then the Marathi for to be elected."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लोकशाही",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लोकशाही — lokśāhī — \"democracy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोकशाहीत जनता सरकार निवडते. lokśāhīt jantā sarkār nivaḍte. In a democracy, the people choose the government."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "लोक + शाही, people + rule; the opposite is हुकूमशाही, dictatorship."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लोकशाही (lokśāhī) is a Marathi compound built from लोक, \"people\", from Sanskrit loka (Monier-Williams), and शाही, \"rule\", a loan from Persian shāhī, \"kingship\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokśāhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokśāhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokśāhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokśāhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokśāhīt jantā sarkār nivaḍte. — In a democracy, the people choose the government.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokśāhīt jantā sarkār nivaḍte.* — In a democracy, the people choose the government.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for canvassing, then the Marathi for to be elected, then say lokśāhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for canvassing, then the Marathi for to be elected, then say *lokśāhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लोकशाही (lokśāhī) mean? (\"Democracy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C356-bahumat",
+      "sequence": 20720,
+      "title": "बहुमत (bahumat) — a majority",
+      "headword": "बहुमत",
+      "romanization": "bahumat",
+      "gloss": "a majority",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79ac5591fc6eb8bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to be elected, then the Marathi for democracy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बहुमत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहुमत — bahumat — \"a majority\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वर्गाच्या मतदानात मीराला बहुमत मिळालं. vargācyā matdānāt mīrālā bahumat miḷālaṁ. Meera got a majority in the class vote."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "बहु + मत, many + votes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहुमत (bahumat) is a learned compound built from Sanskrit bahu, \"much, many\", and mata, \"opinion\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahumat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahumat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahumat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahumat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vargācyā matdānāt mīrālā bahumat miḷālaṁ. — Meera got a majority in the class vote.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vargācyā matdānāt mīrālā bahumat miḷālaṁ.* — Meera got a majority in the class vote.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to be elected, then the Marathi for democracy, then say bahumat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to be elected, then the Marathi for democracy, then say *bahumat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बहुमत (bahumat) mean? (\"A majority\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C356-alpasankhyak",
+      "sequence": 20730,
+      "title": "अल्पसंख्याक (alpasaṅkhyāk) — a minority (group)",
+      "headword": "अल्पसंख्याक",
+      "romanization": "alpasaṅkhyāk",
+      "gloss": "a minority (group)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bacc075b4c3517c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for democracy, then the Marathi for a majority."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अल्पसंख्याक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अल्पसंख्याक — alpasaṅkhyāk — \"a minority (group)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अल्पसंख्याकांच्या हक्कांचं रक्षण झालं पाहिजे. alpasaṅkhyākāñcyā hakkāñcaṁ rakṣaṇ jhālaṁ pāhije. The rights of minorities must be protected."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Also an adjective: अल्पसंख्याक (alpasaṅkhyāk) समाज; the opposite is बहुसंख्याक."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अल्पसंख्याक (alpasaṅkhyāk) is a learned word built from Sanskrit alpa, \"small\", and saṁkhyā, \"number\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alpasaṅkhyāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alpasaṅkhyāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alpasaṅkhyāk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alpasaṅkhyāk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alpasaṅkhyākāñcyā hakkāñcaṁ rakṣaṇ jhālaṁ pāhije. — The rights of minorities must be protected.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alpasaṅkhyākāñcyā hakkāñcaṁ rakṣaṇ jhālaṁ pāhije.* — The rights of minorities must be protected.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for democracy, then the Marathi for a majority, then say alpasaṅkhyāk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for democracy, then the Marathi for a majority, then say *alpasaṅkhyāk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अल्पसंख्याक (alpasaṅkhyāk) mean? (\"A minority (group)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C356-janmat",
+      "sequence": 20740,
+      "title": "जनमत (janmat) — public opinion",
+      "headword": "जनमत",
+      "romanization": "janmat",
+      "gloss": "public opinion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a323bf6df1b601b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a majority, then the Marathi for a minority."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जनमत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जनमत — janmat — \"public opinion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जनमत या निर्णयाच्या बाजूने होतं. janmat yā nirṇayācyā bājūne hotaṁ. Public opinion was in favour of this decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "जन + मत, people + opinion; neuter, so होतं."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जनमत (janmat) is a learned compound built from Sanskrit jana, \"people\", and mata, \"opinion\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janmat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janmat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janmat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janmat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janmat yā nirṇayācyā bājūne hotaṁ. — Public opinion was in favour of this decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janmat yā nirṇayācyā bājūne hotaṁ.* — Public opinion was in favour of this decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a majority, then the Marathi for a minority, then say janmat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a majority, then the Marathi for a minority, then say *janmat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जनमत (janmat) mean? (\"Public opinion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C356-kaul-dene",
+      "sequence": 20750,
+      "title": "कौल देणे (kaul deṇe) — to give a mandate; to give a verdict",
+      "headword": "कौल देणे",
+      "romanization": "kaul deṇe",
+      "gloss": "to give a mandate; to give a verdict",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cc342c54901035d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a minority, then the Marathi for public opinion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कौल देणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कौल देणे — kaul deṇe — \"to give a mandate; to give a verdict\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोकांनी तरुण उमेदवाराला कौल दिला. lokānnī taruṇ umedvārālā kaul dilā. The people gave their mandate to the young candidate."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने कौल दिला, tyāne kaul dilā."
+            },
+            {
+              "kind": "speech",
+              "text": "The one chosen takes -ला: उमेदवाराला कौल देणे (kaul deṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कौल देणे (kaul deṇe) joins कौल, \"a verdict, a word given\", a loan usually traced to Arabic qaul, \"saying, word\", through Persian, to देणे, \"to give\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaul deṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaul deṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaul deṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaul deṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokānnī taruṇ umedvārālā kaul dilā. — The people gave their mandate to the young candidate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokānnī taruṇ umedvārālā kaul dilā.* — The people gave their mandate to the young candidate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a minority, then the Marathi for public opinion, then say kaul deṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a minority, then the Marathi for public opinion, then say *kaul deṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कौल देणे (kaul deṇe) mean? (\"To give a mandate; to give a verdict\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

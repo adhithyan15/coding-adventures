@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:656de266435d05ec",
+  "lessonIds": [
+    "TE-C326-saksi",
+    "TE-C326-yuddham",
+    "TE-C326-sanghatana",
+    "TE-C326-dongilincu",
+    "TE-C326-paripovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch326.txt",
+  "json": "telugu/narration/ch326.json",
+  "textHash": "fnv1a64:2d3ee8e8056c20d5",
+  "jsonHash": "fnv1a64:f2b5a4655f7d17c3",
+  "findings": []
+}

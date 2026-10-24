@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:3344d292850add5c",
+  "lessonIds": [
+    "ML-C534-astma",
+    "ML-C534-nencericcil",
+    "ML-C534-malabandham",
+    "ML-C534-urakkamillayma",
+    "ML-C534-cumaykkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch534.txt",
+  "json": "malayalam/narration/ch534.json",
+  "textHash": "fnv1a64:abf7b054682ae503",
+  "jsonHash": "fnv1a64:457448ee9917cf2c",
+  "findings": []
+}

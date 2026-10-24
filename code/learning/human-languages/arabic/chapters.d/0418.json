@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Stronger or weaker",
+  "label": "ch:ar-stronger-or-weaker",
+  "canDo": "I can say that something was strengthened, weakened or developed, and talk about effectiveness and independence.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C418-mustaqill",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can say that something was strengthened, weakened or developed, and talk about effectiveness and independence.",
+    "assesses": [
+      "AR-LEX-C418-TAQWIYA418-03",
+      "AR-LEX-C418-TAQWIYA418-04",
+      "AR-LEX-C418-TAQWIYA418-05"
+    ]
+  }
+}

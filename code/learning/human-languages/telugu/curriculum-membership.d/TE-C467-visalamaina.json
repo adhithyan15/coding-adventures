@@ -1,0 +1,11 @@
+{
+  "id": "TE-C467-visalamaina",
+  "pathSegment": "TE-PATH-467-ANTASTU467",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-467-ANTASTU467",
+      "order": 3
+    }
+  ]
+}

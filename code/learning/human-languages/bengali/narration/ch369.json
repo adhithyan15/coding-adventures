@@ -1,0 +1,842 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 369,
+  "title": "Whether or Not",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:892b70f83c3a4fab",
+  "lessons": [
+    {
+      "id": "BN-C369-kina",
+      "sequence": 22990,
+      "title": "কিনা (kinā) — whether (or not)",
+      "headword": "কিনা",
+      "romanization": "kinā",
+      "gloss": "whether (or not)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbcf57963cdafe88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for as long as, then the Bengali for or else."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কিনা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কিনা — kinā — \"whether (or not)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অরুণ আসবে কিনা জানি না; এলে আমরা একসঙ্গে খাব। ôrun āsbe kinā jāni nā; ele āmrā eksôngge khābô. I don't know whether Arun will come; if he does, we'll eat together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কিনা (kinā) is কি, 'what, whether' (CDIAL 3164 lists Bengali ki), with না, 'not': 'whether or not'. It comes after the verb it questions: আসবে কিনা."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôrun āsbe kinā jāni nā; ele āmrā eksôngge khābô. — I don't know whether Arun will come; if he does, we'll eat together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôrun āsbe kinā jāni nā; ele āmrā eksôngge khābô.* — I don't know whether Arun will come; if he does, we'll eat together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for as long as, then the Bengali for or else, then say kinā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for as long as, then the Bengali for or else, then say *kinā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কিনা (kinā) mean? (\"Whether (or not)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C369-emonki",
+      "sequence": 23000,
+      "title": "এমনকি (emônki) — even",
+      "headword": "এমনকি",
+      "romanization": "emônki",
+      "gloss": "even",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c1dad2302216b3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for or else, then the Bengali for whether."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: এমনকি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "এমনকি — emônki — \"even\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ঝড় হলে এমনকি বাসও বন্ধ থাকে। jhôṛ hôle emônki bāso bôndhô thāke. When there is a storm, even the buses stop running."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "এমনকি (emônki) is এমন, 'such, so', with কি, 'what' (CDIAL 3164 lists Bengali ki): 'is it even so?' The source of এমন is not settled. The word marks the most surprising member of a list."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "emônki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *emônki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "emônki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *emônki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhôṛ hôle emônki bāso bôndhô thāke. — When there is a storm, even the buses stop running.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhôṛ hôle emônki bāso bôndhô thāke.* — When there is a storm, even the buses stop running.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for or else, then the Bengali for whether, then say emônki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for or else, then the Bengali for whether, then say *emônki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does এমনকি (emônki) mean? (\"Even\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C369-onyothay",
+      "sequence": 23010,
+      "title": "অন্যথায় (ônyôthāy) — failing that; otherwise (formal)",
+      "headword": "অন্যথায়",
+      "romanization": "ônyôthāy",
+      "gloss": "failing that; otherwise (formal)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d46d4fd47b46dc24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for whether, then the Bengali for even."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অন্যথায়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অন্যথায় — ônyôthāy — \"failing that; otherwise (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "যদি সময় থাকে, তাহলে আজ এসো, অন্যথায় কাল এসো। jôdi sômôy thāke, tāhôle āj eso, ônyôthāy kāl eso. If you have time, come today; failing that, come tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অন্যথায় (ônyôthāy) is Sanskrit anyathā, otherwise (Monier-Williams), with the Bengali ending -য়. It is the formal partner of নাহলে, common on notices and in letters."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônyôthāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônyôthāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônyôthāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônyôthāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jôdi sômôy thāke, tāhôle āj eso, ônyôthāy kāl eso. — If you have time, come today; failing that, come tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jôdi sômôy thāke, tāhôle āj eso, ônyôthāy kāl eso.* — If you have time, come today; failing that, come tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for whether, then the Bengali for even, then say ônyôthāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for whether, then the Bengali for even, then say *ônyôthāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অন্যথায় (ônyôthāy) mean? (\"Failing that; otherwise (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C369-sottveo",
+      "sequence": 23020,
+      "title": "সত্ত্বেও (sôttveo) — in spite of; despite",
+      "headword": "সত্ত্বেও",
+      "romanization": "sôttveo",
+      "gloss": "in spite of; despite",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ed6d7efb2ac23a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for even, then the Bengali for failing that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সত্ত্বেও",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সত্ত্বেও — sôttveo — \"in spite of; despite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শীত সত্ত্বেও খেলা হবে, কিন্তু ঝড় হলে বন্ধ হবে। shīt sôttveo khælā hôbe, kintu jhôṛ hôle bôndhô hôbe. The match will go ahead despite the cold, but if there is a storm it will be called off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সত্ত্বেও (sôttveo) is Sanskrit sattva, being or existence (Monier-Williams), with the Bengali endings -এ and -ও: 'even with its being so'. The sense 'in spite of' is not one the dictionary gives; the word follows its noun: শীত সত্ত্বেও."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôttveo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôttveo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôttveo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôttveo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shīt sôttveo khælā hôbe, kintu jhôṛ hôle bôndhô hôbe. — The match will go ahead despite the cold, but if there is a storm it will be called off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shīt sôttveo khælā hôbe, kintu jhôṛ hôle bôndhô hôbe.* — The match will go ahead despite the cold, but if there is a storm it will be called off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for even, then the Bengali for failing that, then say sôttveo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for even, then the Bengali for failing that, then say *sôttveo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সত্ত্বেও (sôttveo) mean? (\"In spite of; despite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C369-nirdharon-kora",
+      "sequence": 23030,
+      "title": "নির্ধারণ করা (nirdhārôn kôrā) — to determine; to fix (a date, a price)",
+      "headword": "নির্ধারণ করা",
+      "romanization": "nirdhārôn kôrā",
+      "gloss": "to determine; to fix (a date, a price)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:826d44c1b7bb79c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for failing that, then the Bengali for in spite of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নির্ধারণ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নির্ধারণ করা — nirdhārôn kôrā — \"to determine; to fix (a date, a price)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আবহাওয়া ভালো থাকলে আমরা কাল খেলার তারিখ নির্ধারণ করব। ābôhāoyā bhālo thākle āmrā kāl khelār tārikh nirdhārôn kôrbô. If the weather stays fine, we'll fix the date of the match tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি দামটা নির্ধারণ করলেন, tini dāmṭā nirdhārôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নির্ধারণ করা (nirdhārôn kôrā) is Sanskrit nirdhāraṇa, settling or ascertaining (Monier-Williams), with করা: to fix a date, a price or a rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirdhārôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirdhārôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirdhārôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirdhārôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābôhāoyā bhālo thākle āmrā kāl khelār tārikh nirdhārôn kôrbô. — If the weather stays fine, we'll fix the date of the match tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābôhāoyā bhālo thākle āmrā kāl khelār tārikh nirdhārôn kôrbô.* — If the weather stays fine, we'll fix the date of the match tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for failing that, then the Bengali for in spite of, then say nirdhārôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for failing that, then the Bengali for in spite of, then say *nirdhārôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নির্ধারণ করা (nirdhārôn kôrā) mean? (\"To determine; to fix (a date, a price)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R369-review-362-369",
+      "sequence": 23040,
+      "title": "Looking back: from Making Sense of It to Whether or Not",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Making Sense of It to Whether or Not",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8be1f3c2ec18ff3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for concentration and misled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "concentration, misled, to realise, to sense, clear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: concentration, misled, to realise, to sense, clear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a problem, a means, an alternative, an answer, to come through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a problem, a means, an alternative, an answer, to come through]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "difficult, a crisis, poverty, to be devastated, extreme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: difficult, a crisis, poverty, to be devastated, extreme]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a difference of opinion, an agreement reached, a settlement, to talk round, unanimous",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a difference of opinion, an agreement reached, a settlement, to talk round, unanimous]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a likelihood, probably, inevitable, rare, to assume",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a likelihood, probably, inevitable, rare, to assume]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to suppose, to estimate, a hint, an expectation, the future",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to suppose, to estimate, a hint, an expectation, the future]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a condition, a state of things, a situation, as long as, or else",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a condition, a state of things, a situation, as long as, or else]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether, even, failing that, in spite of, to determine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether, even, failing that, in spite of, to determine]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Concentration? (মনোযোগ, mônojog.) Misled? (বিভ্রান্ত, bibhrāntô.) To realise? (উপলব্ধি করা, upôlôbdhi kôrā.) To sense? (বোধ করা, bodh kôrā.) Clear? (স্পষ্ট, spôshṭô.) A problem? (সমস্যা, sômôsyā.) A means? (উপায়, upāy.) An alternative? (বিকল্প, bikôlpô.) An answer? (উত্তর, uttôr.) To come through? (উতরে যাওয়া, utre jāoyā.) Difficult? (কঠিন, kôṭhin.) A crisis? (সংকট, sôngkôṭ.) Poverty? (দারিদ্র্য, dāridryô.) To be devastated? (বিপর্যস্ত হওয়া, bipôrjôstô hôoyā.) Extreme? (চরম, chôrôm.) A difference of opinion? (মতভেদ, môtbhed.) An agreement reached? (সমঝোতা, sômjhotā.) A settlement? (নিষ্পত্তি, nishpôtti.) To talk round? (মানানো, mānāno.) Unanimous? (সর্বসম্মত, sôrbôsômmôtô.) A likelihood? (সম্ভাবনা, sômbhābônā.) Probably? (সম্ভবত, sômbhôbôtô.) Inevitable? (অনিবার্য, ônibārjô.) Rare? (বিরল, birôl.) To assume? (ধরে নেওয়া, dhôre neoyā.) To suppose? (অনুমান করা, ônumān kôrā.) To estimate? (আন্দাজ করা, āndāj kôrā.) A hint? (আভাস, ābhās.) An expectation? (প্রত্যাশা, prôtyāshā.) The future? (ভবিষ্যৎ, bhôbishyôt.) A condition? (শর্ত, shôrtô.) A state of things? (অবস্থা, ôbôsthā.) A situation? (পরিস্থিতি, pôristhiti.) As long as? (যতক্ষণ, jôtôkkhôn.) Or else? (অথবা, ôthôbā.) Whether? (কিনা, kinā.) Even? (এমনকি, emônki.) Failing that? (অন্যথায়, ônyôthāy.) In spite of? (সত্ত্বেও, sôttveo.) To determine? (নির্ধারণ করা, nirdhārôn kôrā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

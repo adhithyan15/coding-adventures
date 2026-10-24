@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:46a09c9a0cfbe16e",
+  "lessonIds": [
+    "AR-C361-qadiyya",
+    "AR-C361-masala",
+    "AR-C361-siyaq",
+    "AR-C361-athara",
+    "AR-C361-tasaala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch361.txt",
+  "json": "arabic/narration/ch361.json",
+  "textHash": "fnv1a64:190ea30bb280174d",
+  "jsonHash": "fnv1a64:78f00d5e42b824fa",
+  "findings": []
+}

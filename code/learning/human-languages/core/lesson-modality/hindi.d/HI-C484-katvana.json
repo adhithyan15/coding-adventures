@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C484-katvana",
+    "language": "hindi",
+    "chapter": 484,
+    "sequence": 26650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f292c23d55019c6"
+  },
+  "findings": []
+}

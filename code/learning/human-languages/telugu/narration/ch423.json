@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 423,
+  "title": "Rewards and Waste",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:326127957809c6d2",
+  "lessons": [
+    {
+      "id": "TE-C423-pratiphalam",
+      "sequence": 21100,
+      "title": "ప్రతిఫలం (pratiphalaṁ) — a reward; a return",
+      "headword": "ప్రతిఫలం",
+      "romanization": "pratiphalaṁ",
+      "gloss": "a reward; a return",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6895d023923870a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a resolve, then the Telugu for to decide firmly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రతిఫలం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రతిఫలం — pratiphalaṁ — \"a reward; a return\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కష్టానికి ప్రతిఫలం తప్పకుండా వస్తుంది. kaṣṭāniki pratiphalaṁ tappakuṇḍā vastundi. Hard work is sure to bring its reward."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రతి, in return, + ఫలం, fruit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రతిఫలం (pratiphalaṁ) is built from Sanskrit prati-, \"back, in return\", and phala, \"fruit, result\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiphalaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiphalaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiphalaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiphalaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṣṭāniki pratiphalaṁ tappakuṇḍā vastundi. — Hard work is sure to bring its reward.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṣṭāniki pratiphalaṁ tappakuṇḍā vastundi.* — Hard work is sure to bring its reward.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a resolve, then the Telugu for to decide firmly, then say pratiphalaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a resolve, then the Telugu for to decide firmly, then say *pratiphalaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రతిఫలం (pratiphalaṁ) mean? (\"A reward; a return\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C423-vrtha",
+      "sequence": 21110,
+      "title": "వృథా (vṛthā) — in vain; a waste",
+      "headword": "వృథా",
+      "romanization": "vṛthā",
+      "gloss": "in vain; a waste",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88d800d952f52784",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to decide firmly, then the Telugu for a reward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వృథా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వృథా — vṛthā — \"in vain; a waste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతని కష్టం అంతా వృథా అయింది. atani kaṣṭaṁ antā vṛthā ayindi. All his effort went to waste."
+            },
+            {
+              "kind": "speech",
+              "text": "వృథా (vṛthā) చేయు, to waste: సమయం వృథా (vṛthā) చేయు, to waste time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వృథా (vṛthā) is borrowed from Sanskrit vṛthā, \"at random; in vain, uselessly\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛthā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛthā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛthā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛthā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atani kaṣṭaṁ antā vṛthā ayindi. — All his effort went to waste.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atani kaṣṭaṁ antā vṛthā ayindi.* — All his effort went to waste.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to decide firmly, then the Telugu for a reward, then say vṛthā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to decide firmly, then the Telugu for a reward, then say *vṛthā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వృథా (vṛthā) mean? (\"In vain; a waste\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C423-anavasaram",
+      "sequence": 21120,
+      "title": "అనవసరం (anavasaraṁ) — needless; unnecessary",
+      "headword": "అనవసరం",
+      "romanization": "anavasaraṁ",
+      "gloss": "needless; unnecessary",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4572ccccc1e230c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a reward, then the Telugu for in vain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అనవసరం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అనవసరం — anavasaraṁ — \"needless; unnecessary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ ప్రయాణం అనవసరం. ā prayāṇaṁ anavasaraṁ. That trip is unnecessary."
+            },
+            {
+              "kind": "speech",
+              "text": "అ-, not, + అవసరం, need, which you know. అనవసరంగా, needlessly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అనవసరం (anavasaraṁ) is borrowed from Sanskrit anavasara, \"having no leisure; inopportune\" (Monier-Williams), the negative of avasara, \"occasion\", the word in అవసరం."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anavasaraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anavasaraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anavasaraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anavasaraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā prayāṇaṁ anavasaraṁ. — That trip is unnecessary.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā prayāṇaṁ anavasaraṁ.* — That trip is unnecessary.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a reward, then the Telugu for in vain, then say anavasaraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a reward, then the Telugu for in vain, then say *anavasaraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అనవసరం (anavasaraṁ) mean? (\"Needless; unnecessary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C423-saripovu",
+      "sequence": 21130,
+      "title": "సరిపోవు (saripōvu) — to be enough; to suffice",
+      "headword": "సరిపోవు",
+      "romanization": "saripōvu",
+      "gloss": "to be enough; to suffice",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2873006bc990201",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for in vain, then the Telugu for needless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సరిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సరిపోవు — saripōvu — \"to be enough; to suffice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నా జీతం ఇంటి ఖర్చులకు సరిపోదు. nā jītaṁ iṇṭi kharculaku saripōdu. My salary is not enough for the household expenses."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): సరిపోయింది, saripōyindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Its past is shown as సరిపోయింది, it was enough. Also to fit: ఆ చొక్కా నాకు సరిపోయింది, that shirt fitted me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సరిపోవు (saripōvu) is built from sari, \"right, equal\", and the native verb pōvu, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saripōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saripōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saripōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saripōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nā jītaṁ iṇṭi kharculaku saripōdu. — My salary is not enough for the household expenses.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nā jītaṁ iṇṭi kharculaku saripōdu.* — My salary is not enough for the household expenses.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for in vain, then the Telugu for needless, then say saripōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for in vain, then the Telugu for needless, then say *saripōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సరిపోవు (saripōvu) mean? (\"To be enough; to suffice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C423-viniyogincu",
+      "sequence": 21140,
+      "title": "వినియోగించు (viniyōgiñcu) — to make use of; to utilise",
+      "headword": "వినియోగించు",
+      "romanization": "viniyōgiñcu",
+      "gloss": "to make use of; to utilise",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bd7b0b5c9bbd856",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for needless, then the Telugu for to be enough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వినియోగించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వినియోగించు — viniyōgiñcu — \"to make use of; to utilise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మనం నీటిని జాగ్రత్తగా వినియోగించాలి. manaṁ nīṭini jāgrattagā viniyōgiñcāli. We must use water carefully."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వినియోగించాను, viniyōgiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal beside ఉపయోగించు, which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వినియోగించు (viniyōgiñcu) is built on Sanskrit viniyoga, \"distribution; employment, use, application\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viniyōgiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viniyōgiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viniyōgiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viniyōgiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manaṁ nīṭini jāgrattagā viniyōgiñcāli. — We must use water carefully.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manaṁ nīṭini jāgrattagā viniyōgiñcāli.* — We must use water carefully.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for needless, then the Telugu for to be enough, then say viniyōgiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for needless, then the Telugu for to be enough, then say *viniyōgiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వినియోగించు (viniyōgiñcu) mean? (\"To make use of; to utilise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

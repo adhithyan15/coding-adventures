@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Breakdowns and Spare Parts",
+  "label": "ch:bn-breakdowns-and-spare-parts",
+  "canDo": "I can report a breakdown and talk about the parts that need fixing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C394-ghosha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can report a breakdown and talk about the parts that need fixing.",
+    "assesses": [
+      "BN-LEX-C394-JONTRANGSHO394-03",
+      "BN-LEX-C394-JONTRANGSHO394-04",
+      "BN-LEX-C394-JONTRANGSHO394-05"
+    ]
+  }
+}

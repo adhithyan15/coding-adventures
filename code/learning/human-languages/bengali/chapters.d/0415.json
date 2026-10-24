@@ -1,0 +1,21 @@
+{
+  "chapter": 415,
+  "title": "Interest and Investment",
+  "label": "ch:bn-interest-and-investment",
+  "canDo": "I can talk about interest, a passbook, transactions, investing and losing money.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-R415-review-408-415",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can talk about interest, a passbook, transactions, investing and losing money.",
+    "assesses": [
+      "BN-LEX-C415-SUD415-01",
+      "BN-LEX-C415-SUD415-02",
+      "BN-LEX-C415-SUD415-03",
+      "BN-LEX-C415-SUD415-04",
+      "BN-LEX-C415-SUD415-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C510-atmavisvasam",
+    "language": "telugu",
+    "chapter": 510,
+    "sequence": 25850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c0247c4ce6db110"
+  },
+  "findings": []
+}

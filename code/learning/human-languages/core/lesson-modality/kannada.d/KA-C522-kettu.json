@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C522-kettu",
+    "language": "kannada",
+    "chapter": 522,
+    "sequence": 26680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb0034afb4e4515a"
+  },
+  "findings": []
+}

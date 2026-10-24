@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:c7495e5242d89fbb",
+  "lessonIds": [
+    "TE-C411-janaganana",
+    "TE-C411-sarve",
+    "TE-C411-ganankalu",
+    "TE-C411-prajabhiprayam",
+    "TE-C411-satam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch411.txt",
+  "json": "telugu/narration/ch411.json",
+  "textHash": "fnv1a64:d5a28074f322f640",
+  "jsonHash": "fnv1a64:3116d8c69be55d60",
+  "findings": []
+}

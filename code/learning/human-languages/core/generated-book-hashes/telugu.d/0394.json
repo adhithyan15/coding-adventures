@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:854c793d5e1838c4",
+  "lessonIds": [
+    "TE-C394-vivarana",
+    "TE-C394-spastata",
+    "TE-C394-samarthana",
+    "TE-C394-samarthincu",
+    "TE-C394-khaccitamaina"
+  ],
+  "tex": "telugu/book/chapters/ch394-explaining-and-justifying.tex"
+}

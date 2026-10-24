@@ -1,0 +1,14 @@
+{
+  "language": "malayalam",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:8659b73db066b180",
+  "lessonIds": [
+    "ML-C540-klinikku",
+    "ML-C540-unnuvati",
+    "ML-C540-mukhakkuru",
+    "ML-C540-maravikkuka",
+    "ML-C540-kalaykkuka",
+    "ML-R540-review-533-540"
+  ],
+  "tex": "malayalam/book/chapters/ch540-at-the-clinic.tex"
+}

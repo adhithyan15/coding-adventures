@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "What the Law Allows",
+  "label": "ch:bn-what-the-law-allows",
+  "canDo": "I can say what the law allows, forbids and requires.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C340-proyog-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can say what the law allows, forbids and requires.",
+    "assesses": [
+      "BN-LEX-C340-BOIDHO340-03",
+      "BN-LEX-C340-BOIDHO340-04",
+      "BN-LEX-C340-BOIDHO340-05"
+    ]
+  }
+}

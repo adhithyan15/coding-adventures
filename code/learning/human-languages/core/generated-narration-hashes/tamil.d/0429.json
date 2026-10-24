@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:83eee3530a00a375",
+  "lessonIds": [
+    "TA-C429-munnarivippu",
+    "TA-C429-curavali",
+    "TA-C429-alankatti",
+    "TA-C429-ataimalai",
+    "TA-C429-mekamuttam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch429.txt",
+  "json": "tamil/narration/ch429.json",
+  "textHash": "fnv1a64:1d2660be5ec108e9",
+  "jsonHash": "fnv1a64:40c932395b1fb720",
+  "findings": []
+}

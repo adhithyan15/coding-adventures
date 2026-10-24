@@ -1,0 +1,11 @@
+{
+  "id": "TA-C353-patakam",
+  "pathSegment": "TA-PATH-353-CATAKAM353",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-353-CATAKAM353",
+      "order": 1
+    }
+  ]
+}

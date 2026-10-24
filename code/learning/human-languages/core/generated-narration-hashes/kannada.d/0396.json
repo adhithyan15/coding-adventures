@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:0ddb57ff38c11475",
+  "lessonIds": [
+    "KA-C396-masude",
+    "KA-C396-angikarisu",
+    "KA-C396-tiddupadi",
+    "KA-C396-sasaka",
+    "KA-C396-anumodisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch396.txt",
+  "json": "kannada/narration/ch396.json",
+  "textHash": "fnv1a64:f4f41b553cbe863e",
+  "jsonHash": "fnv1a64:5f4d0c18f7e039ca",
+  "findings": []
+}

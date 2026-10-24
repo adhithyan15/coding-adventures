@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-437-SANKLISTAM437",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-437-SANKLISTAM437"
+  ],
+  "after": []
+}

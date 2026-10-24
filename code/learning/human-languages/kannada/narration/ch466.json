@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 466,
+  "title": "Living in the Suburbs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d5be3aa64491e59a",
+  "lessons": [
+    {
+      "id": "KA-C466-upanagara",
+      "sequence": 23690,
+      "title": "ಉಪನಗರ (upanagara) — a suburb",
+      "headword": "ಉಪನಗರ",
+      "romanization": "upanagara",
+      "gloss": "a suburb",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba9ce63a9674947e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a place, then the Kannada for a centre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉಪನಗರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಪನಗರ — upanagara — \"a suburb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾವು ನಗರದ ಹೊರಗಿನ ಒಂದು ಉಪನಗರದಲ್ಲಿ ಮನೆ ಹುಡುಕಿದೆವು. nāvu nagarada horagina ondu upanagaradalli mane huḍukidevu. We looked for a house in a suburb outside the city."
+            },
+            {
+              "kind": "speech",
+              "text": "ಉಪ-, near or secondary, plus ನಗರ, a city."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಪನಗರ (upanagara) is borrowed from Sanskrit upanagara, \"a suburb\" (Monier-Williams), from upa-, \"near\", and nagara, \"a city\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanagara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanagara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanagara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanagara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvu nagarada horagina ondu upanagaradalli mane huḍukidevu. — We looked for a house in a suburb outside the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvu nagarada horagina ondu upanagaradalli mane huḍukidevu.* — We looked for a house in a suburb outside the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a place, then the Kannada for a centre, then say upanagara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a place, then the Kannada for a centre, then say *upanagara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉಪನಗರ (upanagara) mean? (\"A suburb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C466-vasisu",
+      "sequence": 23700,
+      "title": "ವಾಸಿಸು (vāsisu) — to reside; to live",
+      "headword": "ವಾಸಿಸು",
+      "romanization": "vāsisu",
+      "gloss": "to reside; to live",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a236bff8a21037f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a centre, then the Kannada for a suburb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಾಸಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಾಸಿಸು — vāsisu — \"to reside; to live\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಅಕ್ಕ ಉಪನಗರದಲ್ಲಿ ವಾಸಿಸುತ್ತಾಳೆ. nanna akka upanagaradalli vāsisuttāḷe. My elder sister lives in a suburb."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವಾಸಿಸಿದೆ, vāsiside."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word for ಇರು; ವಾಸ is a stay, a residence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಾಸಿಸು (vāsisu) is built from Sanskrit vāsa, \"an abode, staying\" (CDIAL 11591), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāsisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāsisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāsisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāsisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna akka upanagaradalli vāsisuttāḷe. — My elder sister lives in a suburb.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna akka upanagaradalli vāsisuttāḷe.* — My elder sister lives in a suburb.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a centre, then the Kannada for a suburb, then say vāsisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a centre, then the Kannada for a suburb, then say *vāsisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಾಸಿಸು (vāsisu) mean? (\"To reside; to live\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C466-purasabhe",
+      "sequence": 23710,
+      "title": "ಪುರಸಭೆ (purasabhe) — a town council; a municipality",
+      "headword": "ಪುರಸಭೆ",
+      "romanization": "purasabhe",
+      "gloss": "a town council; a municipality",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ff4430a3de761d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a suburb, then the Kannada for to reside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪುರಸಭೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪುರಸಭೆ — purasabhe — \"a town council; a municipality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪುರಸಭೆ ಬೀದಿಗಳಿಂದ ಕಸ ಸಂಗ್ರಹಿಸುತ್ತದೆ. purasabhe bīdigaḷinda kasa saṅgrahisuttade. The town council collects rubbish from the streets."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪುರ, a town, plus ಸಭೆ, a meeting or council."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪುರಸಭೆ (purasabhe) is built from two Sanskrit words: pura, \"a fortress, a town\" (CDIAL 8278), and sabhā, \"an assembly, a council\" (CDIAL 13167)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purasabhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purasabhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purasabhe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purasabhe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purasabhe bīdigaḷinda kasa saṅgrahisuttade. — The town council collects rubbish from the streets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purasabhe bīdigaḷinda kasa saṅgrahisuttade.* — The town council collects rubbish from the streets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a suburb, then the Kannada for to reside, then say purasabhe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a suburb, then the Kannada for to reside, then say *purasabhe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪುರಸಭೆ (purasabhe) mean? (\"A town council; a municipality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C466-bididipa",
+      "sequence": 23720,
+      "title": "ಬೀದಿದೀಪ (bīdidīpa) — a streetlight",
+      "headword": "ಬೀದಿದೀಪ",
+      "romanization": "bīdidīpa",
+      "gloss": "a streetlight",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:241181d27cc2a608",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to reside, then the Kannada for a town council."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೀದಿದೀಪ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೀದಿದೀಪ — bīdidīpa — \"a streetlight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಮ್ಮ ಬೀದಿಯ ಬೀದಿದೀಪ ಒಂದು ವಾರದಿಂದ ಉರಿಯುತ್ತಿಲ್ಲ. namma bīdiya bīdidīpa ondu vāradinda uriyuttilla. The streetlight on our street has not been on for a week."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೀದಿ, a street, plus ದೀಪ, a lamp."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೀದಿದೀಪ (bīdidīpa) is a Kannada compound built from ಬೀದಿ, \"a street\", from Sanskrit vīthi, \"a row, a road\" (Monier-Williams), and ದೀಪ, \"a lamp\" (CDIAL 6348)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīdidīpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīdidīpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīdidīpa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīdidīpa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namma bīdiya bīdidīpa ondu vāradinda uriyuttilla. — The streetlight on our street has not been on for a week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namma bīdiya bīdidīpa ondu vāradinda uriyuttilla.* — The streetlight on our street has not been on for a week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to reside, then the Kannada for a town council, then say bīdidīpa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to reside, then the Kannada for a town council, then say *bīdidīpa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೀದಿದೀಪ (bīdidīpa) mean? (\"A streetlight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C466-carandi",
+      "sequence": 23730,
+      "title": "ಚರಂಡಿ (caraṇḍi) — a drain",
+      "headword": "ಚರಂಡಿ",
+      "romanization": "caraṇḍi",
+      "gloss": "a drain",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1cd075892ad2209c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a town council, then the Kannada for a streetlight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚರಂಡಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚರಂಡಿ — caraṇḍi — \"a drain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಳೆಯಲ್ಲಿ ಚರಂಡಿ ತುಂಬಿ ನೀರು ರಸ್ತೆಗೆ ಬಂದಿತು. maḷeyalli caraṇḍi tumbi nīru rastege banditu. In the rain the drain filled up and water came onto the road."
+            },
+            {
+              "kind": "speech",
+              "text": "The open drain beside a street; ಒಳಚರಂಡಿ is an underground sewer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚರಂಡಿ (caraṇḍi) is a Kannada word for a drain whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caraṇḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caraṇḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caraṇḍi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caraṇḍi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷeyalli caraṇḍi tumbi nīru rastege banditu. — In the rain the drain filled up and water came onto the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷeyalli caraṇḍi tumbi nīru rastege banditu.* — In the rain the drain filled up and water came onto the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a town council, then the Kannada for a streetlight, then say caraṇḍi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a town council, then the Kannada for a streetlight, then say *caraṇḍi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚರಂಡಿ (caraṇḍi) mean? (\"A drain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

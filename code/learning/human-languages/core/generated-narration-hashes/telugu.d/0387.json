@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:ce1cc223329a76f3",
+  "lessonIds": [
+    "TE-C387-vimarsa",
+    "TE-C387-vimarsincu",
+    "TE-C387-prasamsincu",
+    "TE-C387-vyakhyanincu",
+    "TE-C387-tappubattu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch387.txt",
+  "json": "telugu/narration/ch387.json",
+  "textHash": "fnv1a64:ff7cad4c74c80a46",
+  "jsonHash": "fnv1a64:21d001e2f99317dc",
+  "findings": []
+}

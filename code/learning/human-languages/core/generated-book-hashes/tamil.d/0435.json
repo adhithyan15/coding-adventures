@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:baf8e4dbf63c1a99",
+  "lessonIds": [
+    "TA-C435-kataloram",
+    "TA-C435-valaikuta",
+    "TA-C435-munai",
+    "TA-C435-uppalam",
+    "TA-C435-kulankal"
+  ],
+  "tex": "tamil/book/chapters/ch435-bays-and-capes.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:445f962083a51d88",
+  "lessonIds": [
+    "BN-C336-gurutvo",
+    "BN-C336-bishesh",
+    "BN-C336-mul",
+    "BN-C336-bekhya-kora",
+    "BN-C336-songkkhepe"
+  ],
+  "tex": "bengali/book/chapters/ch336-what-matters-most.tex"
+}

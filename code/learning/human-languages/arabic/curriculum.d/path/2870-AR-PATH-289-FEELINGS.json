@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-289-FEELINGS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-289-FEELINGS"
+  ],
+  "after": []
+}

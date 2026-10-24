@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "On Air",
+  "label": "ch:ta-on-air",
+  "canDo": "I can talk about news on television and radio.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C305-olippativalar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can talk about news on television and radio.",
+    "assesses": [
+      "TA-LEX-C305-NERALAI305-03",
+      "TA-LEX-C305-NERALAI305-04",
+      "TA-LEX-C305-NERALAI305-05"
+    ]
+  }
+}

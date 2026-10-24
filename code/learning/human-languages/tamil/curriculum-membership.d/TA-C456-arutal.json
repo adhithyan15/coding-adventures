@@ -1,0 +1,11 @@
+{
+  "id": "TA-C456-arutal",
+  "pathSegment": "TA-PATH-456-NIMMATI456",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-456-NIMMATI456",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:d20fe4bf6b76edbe",
+  "lessonIds": [
+    "TA-C522-murram",
+    "TA-C522-tinnai",
+    "TA-C522-talvaram",
+    "TA-C522-tun",
+    "TA-C522-cakkatai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch522.txt",
+  "json": "tamil/narration/ch522.json",
+  "textHash": "fnv1a64:0475b6cd066172b1",
+  "jsonHash": "fnv1a64:b9bc8c5d36a9467c",
+  "findings": []
+}

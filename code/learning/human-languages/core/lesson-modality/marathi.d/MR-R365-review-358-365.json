@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R365-review-358-365",
+    "language": "marathi",
+    "chapter": 365,
+    "sequence": 21220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efd82fda552a8ab2"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C368-bajavne",
+    "language": "marathi",
+    "chapter": 368,
+    "sequence": 21350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f720a619af49625c"
+  },
+  "findings": []
+}

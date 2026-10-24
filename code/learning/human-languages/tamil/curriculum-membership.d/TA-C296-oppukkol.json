@@ -1,0 +1,11 @@
+{
+  "id": "TA-C296-oppukkol",
+  "pathSegment": "TA-PATH-296-KAVAL296",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-296-KAVAL296",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Games Outdoors",
+  "label": "ch:bn-games-outdoors",
+  "canDo": "I can talk about games outdoors, skipping and jumping over things.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C517-marbel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about games outdoors, skipping and jumping over things.",
+    "assesses": [
+      "BN-LEX-C517-KHELA517-03",
+      "BN-LEX-C517-KHELA517-04",
+      "BN-LEX-C517-KHELA517-05"
+    ]
+  }
+}

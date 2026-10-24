@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:2903cfdc40655620",
+  "lessonIds": [
+    "AR-C362-mantiq",
+    "AR-C362-mughalata",
+    "AR-C362-aql",
+    "AR-C362-istantaja",
+    "AR-C362-tanaqud"
+  ],
+  "tex": "arabic/book/chapters/ch362-logic-and-the-mind.tex"
+}

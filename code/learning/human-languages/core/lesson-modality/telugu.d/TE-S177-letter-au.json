@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "TE-S177-letter-au",
+    "language": "telugu",
+    "chapter": 321,
+    "sequence": 15470,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1b0961c7971752b1",
+    "detachableSegments": [
+      "Script you'll notice: ఔ",
+      "Writing: ఔ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

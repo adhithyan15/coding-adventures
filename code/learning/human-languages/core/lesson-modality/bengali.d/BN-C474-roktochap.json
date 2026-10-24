@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C474-roktochap",
+    "language": "bengali",
+    "chapter": 474,
+    "sequence": 28860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c0e5831bc7fe4f0"
+  },
+  "findings": []
+}

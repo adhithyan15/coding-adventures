@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-524-APAMANAM524",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-524-APAMANAM524"
+  ],
+  "after": []
+}

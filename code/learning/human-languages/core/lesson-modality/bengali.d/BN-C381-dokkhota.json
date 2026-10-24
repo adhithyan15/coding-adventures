@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C381-dokkhota",
+    "language": "bengali",
+    "chapter": 381,
+    "sequence": 23640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76c7901e55ff97b9"
+  },
+  "findings": []
+}

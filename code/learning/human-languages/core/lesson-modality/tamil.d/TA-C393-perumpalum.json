@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C393-perumpalum",
+    "language": "tamil",
+    "chapter": 393,
+    "sequence": 22500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e06e4d0f41792ed9"
+  },
+  "findings": []
+}

@@ -1,0 +1,866 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 532,
+  "title": "Symptoms and Surgery",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:0050582e8bbb08ce",
+  "lessons": [
+    {
+      "id": "ML-C532-laksanam",
+      "sequence": 26760,
+      "title": "ലക്ഷണം (lakṣaṇaṁ) — a symptom; a sign",
+      "headword": "ലക്ഷണം",
+      "romanization": "lakṣaṇaṁ",
+      "gloss": "a symptom; a sign",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7a02437a2028ca8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for showing off, then the Malayalam for to bother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ലക്ഷണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ലക്ഷണം — lakṣaṇaṁ — \"a symptom; a sign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പനിയും ചുമയും ആ രോഗത്തിന്റെ ലക്ഷണങ്ങളാണ്. paniyuṁ cumayuṁ ā rōgattinṟe lakṣaṇaṅṅaḷāṇŭ. Fever and a cough are symptoms of that illness."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ലക്ഷണങ്ങൾ, lakṣaṇaṅṅaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "It also means a sign or an omen: നല്ല ലക്ഷണം (lakṣaṇaṁ), a good sign."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ലക്ഷണം (lakṣaṇaṁ) is borrowed from Sanskrit lakṣaṇa, \"a line, a mark, a sign\" (CDIAL 10882). A symptom is the mark an illness leaves."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakṣaṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakṣaṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakṣaṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakṣaṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paniyuṁ cumayuṁ ā rōgattinṟe lakṣaṇaṅṅaḷāṇŭ. — Fever and a cough are symptoms of that illness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paniyuṁ cumayuṁ ā rōgattinṟe lakṣaṇaṅṅaḷāṇŭ.* — Fever and a cough are symptoms of that illness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for showing off, then the Malayalam for to bother, then say lakṣaṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for showing off, then the Malayalam for to bother, then say *lakṣaṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ലക്ഷണം (lakṣaṇaṁ) mean? (\"A symptom; a sign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C532-anubadha",
+      "sequence": 26770,
+      "title": "അണുബാധ (aṇubādha) — an infection",
+      "headword": "അണുബാധ",
+      "romanization": "aṇubādha",
+      "gloss": "an infection",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25f40316d0f5d057",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to bother, then the Malayalam for a symptom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അണുബാധ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അണുബാധ — aṇubādha — \"an infection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മുറിവിൽ അണുബാധ ഉണ്ടായി. muṟivil aṇubādha uṇṭāyi. The wound got infected."
+            },
+            {
+              "kind": "speech",
+              "text": "അണു a germ + ബാധ an affliction. അണു also means an atom."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അണുബാധ (aṇubādha) is a learned compound built from Sanskrit aṇu, \"fine, minute\" (CDIAL 193), and bādha, \"affliction, distress\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇubādha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇubādha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇubādha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇubādha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṟivil aṇubādha uṇṭāyi. — The wound got infected.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṟivil aṇubādha uṇṭāyi.* — The wound got infected.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to bother, then the Malayalam for a symptom, then say aṇubādha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to bother, then the Malayalam for a symptom, then say *aṇubādha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അണുബാധ (aṇubādha) mean? (\"An infection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C532-sastrakriya",
+      "sequence": 26780,
+      "title": "ശസ്ത്രക്രിയ (śastrakriya) — surgery; an operation",
+      "headword": "ശസ്ത്രക്രിയ",
+      "romanization": "śastrakriya",
+      "gloss": "surgery; an operation",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1995c4b97be1a92e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a symptom, then the Malayalam for an infection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശസ്ത്രക്രിയ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശസ്ത്രക്രിയ — śastrakriya — \"surgery; an operation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അച്ഛന് അടുത്ത ആഴ്ച ഒരു ശസ്ത്രക്രിയ ഉണ്ട്. acchanŭ aṭutta āḻca oru śastrakriya uṇṭŭ. Father has an operation next week."
+            },
+            {
+              "kind": "speech",
+              "text": "The formal word; in speech many say ഓപ്പറേഷൻ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശസ്ത്രക്രിയ (śastrakriya) is a learned compound built from Sanskrit śastra, \"an instrument for cutting\" (CDIAL 12367), and kriyā, \"work, an act\" (CDIAL 3587): work with the knife."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śastrakriya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śastrakriya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śastrakriya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śastrakriya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acchanŭ aṭutta āḻca oru śastrakriya uṇṭŭ. — Father has an operation next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acchanŭ aṭutta āḻca oru śastrakriya uṇṭŭ.* — Father has an operation next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a symptom, then the Malayalam for an infection, then say śastrakriya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a symptom, then the Malayalam for an infection, then say *śastrakriya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശസ്ത്രക്രിയ (śastrakriya) mean? (\"Surgery; an operation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C532-roganirnnayam",
+      "sequence": 26790,
+      "title": "രോഗനിർണ്ണയം (rōganirṇṇayaṁ) — a diagnosis",
+      "headword": "രോഗനിർണ്ണയം",
+      "romanization": "rōganirṇṇayaṁ",
+      "gloss": "a diagnosis",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3737d26a9c7ad024",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an infection, then the Malayalam for surgery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: രോഗനിർണ്ണയം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രോഗനിർണ്ണയം — rōganirṇṇayaṁ — \"a diagnosis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പരിശോധനയ്ക്ക് ശേഷം വൈദ്യൻ രോഗനിർണ്ണയം നടത്തി. pariśōdhanaykkŭ śēṣaṁ vaidyan rōganirṇṇayaṁ naṭatti. After the tests the doctor made a diagnosis."
+            },
+            {
+              "kind": "speech",
+              "text": "രോഗം an illness + നിർണ്ണയം a settling, a decision."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രോഗനിർണ്ണയം (rōganirṇṇayaṁ) is a learned compound built from Sanskrit roga, \"disease\", and nirṇaya, \"taking off, settling, a decision\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rōganirṇṇayaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rōganirṇṇayaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rōganirṇṇayaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rōganirṇṇayaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariśōdhanaykkŭ śēṣaṁ vaidyan rōganirṇṇayaṁ naṭatti. — After the tests the doctor made a diagnosis.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariśōdhanaykkŭ śēṣaṁ vaidyan rōganirṇṇayaṁ naṭatti.* — After the tests the doctor made a diagnosis.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an infection, then the Malayalam for surgery, then say rōganirṇṇayaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an infection, then the Malayalam for surgery, then say *rōganirṇṇayaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does രോഗനിർണ്ണയം (rōganirṇṇayaṁ) mean? (\"A diagnosis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C532-cikitsikkuka",
+      "sequence": 26800,
+      "title": "ചികിത്സിക്കുക (cikitsikkuka) — to treat (a patient)",
+      "headword": "ചികിത്സിക്കുക",
+      "romanization": "cikitsikkuka",
+      "gloss": "to treat (a patient)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13b5a20162845664",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for surgery, then the Malayalam for a diagnosis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചികിത്സിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചികിത്സിക്കുക — cikitsikkuka — \"to treat (a patient)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ വൈദ്യൻ ഒരുപാട് രോഗികളെ ചികിത്സിച്ചു. ā vaidyan orupāṭŭ rōgikaḷe cikitsiccu. That doctor treated a great many patients."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചികിത്സിച്ചു, cikitsiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun ചികിത്സ, treatment, is already familiar; the patient takes -എ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചികിത്സിക്കുക (cikitsikkuka) is built from Sanskrit cikitsā, \"medical attendance, the science of healing\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikitsikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikitsikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikitsikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikitsikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā vaidyan orupāṭŭ rōgikaḷe cikitsiccu. — That doctor treated a great many patients.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā vaidyan orupāṭŭ rōgikaḷe cikitsiccu.* — That doctor treated a great many patients.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for surgery, then the Malayalam for a diagnosis, then say cikitsikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for surgery, then the Malayalam for a diagnosis, then say *cikitsikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചികിത്സിക്കുക (cikitsikkuka) mean? (\"To treat (a patient)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R532-review-525-532",
+      "sequence": 26810,
+      "title": "Words from chapters 525–532 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 525-532",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30b61d15d9430c80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for to groan and to burst into tears."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to groan, to burst into tears, a hurt feeling, to burst out laughing, confusion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to groan, to burst into tears, a hurt feeling, to burst out laughing, confusion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be stumped, to get agitated, to thrill, to be amused, to grow weary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be stumped, to get agitated, to thrill, to be amused, to grow weary]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kind-hearted, patient by nature, a miser, generous, a loyal person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: kind-hearted, patient by nature, a miser, generous, a loyal person]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stubbornness, a hard worker, optimism, sincerity, discipline",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stubbornness, a hard worker, optimism, sincerity, discipline]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "good sense, self-assurance, guileless, a bad habit, tolerance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: good sense, self-assurance, guileless, a bad habit, tolerance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "energetic, briskness, obstinacy, a coward, to feel shy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: energetic, briskness, obstinacy, a coward, to feel shy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to mock, to boast, to imitate, showing off, to bother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to mock, to boast, to imitate, showing off, to bother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a symptom, an infection, surgery, a diagnosis, to treat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a symptom, an infection, surgery, a diagnosis, to treat]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To groan? (ഞരങ്ങുക, ñaraṅṅuka.) To burst into tears? (പൊട്ടിക്കരയുക, poṭṭikkarayuka.) A hurt feeling? (പരിഭവം, paribhavaṁ.) To burst out laughing? (പൊട്ടിച്ചിരിക്കുക, poṭṭiccirikkuka.) Confusion? (ആശയക്കുഴപ്പം, āśayakkuḻappaṁ.) To be stumped? (കുഴങ്ങുക, kuḻaṅṅuka.) To get agitated? (ക്ഷോഭിക്കുക, kṣōbhikkuka.) To thrill? (കോരിത്തരിക്കുക, kōrittarikkuka.) To be amused? (രസിക്കുക, rasikkuka.) To grow weary? (മുഷിയുക, muṣiyuka.) Kind-hearted? (ദയയുള്ള, dayayuḷḷa.) Patient by nature? (ക്ഷമയുള്ള, kṣamayuḷḷa.) A miser? (പിശുക്കൻ, piśukkan.) Generous? (ഉദാരമായ, udāramāya.) A loyal person? (വിശ്വസ്തൻ, viśvastan.) Stubbornness? (ശാഠ്യം, śāṭhyaṁ.) A hard worker? (കഠിനാധ്വാനി, kaṭhinādhvāni.) Optimism? (ശുഭാപ്തിവിശ്വാസം, śubhāptiviśvāsaṁ.) Sincerity? (ആത്മാർത്ഥത, ātmārtthata.) Discipline? (അച്ചടക്കം, accaṭakkaṁ.) Good sense? (വിവേകം, vivēkaṁ.) Self-assurance? (തന്റേടം, tanṟēṭaṁ.) Guileless? (നിഷ്കളങ്കമായ, niṣkaḷaṅkamāya.) A bad habit? (ദുശ്ശീലം, duśśīlaṁ.) Tolerance? (സഹിഷ്ണുത, sahiṣṇuta.) Energetic? (ഊർജ്ജസ്വലമായ, ūrjjasvalamāya.) Briskness? (ചുറുചുറുക്ക്, cuṟucuṟukkŭ.) Obstinacy? (വാശി, vāśi.) A coward? (ഭീരു, bhīru.) To feel shy? (നാണിക്കുക, nāṇikkuka.) To mock? (പരിഹസിക്കുക, parihasikkuka.) To boast? (വീമ്പിളക്കുക, vīmpiḷakkuka.) To imitate? (അനുകരിക്കുക, anukarikkuka.) Showing off? (പൊങ്ങച്ചം, poṅṅaccaṁ.) To bother? (ശല്യപ്പെടുത്തുക, śalyappeṭuttuka.) A symptom? (ലക്ഷണം, lakṣaṇaṁ.) An infection? (അണുബാധ, aṇubādha.) Surgery? (ശസ്ത്രക്രിയ, śastrakriya.) A diagnosis? (രോഗനിർണ്ണയം, rōganirṇṇayaṁ.) To treat? (ചികിത്സിക്കുക, cikitsikkuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

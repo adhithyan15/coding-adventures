@@ -1,0 +1,11 @@
+{
+  "id": "MR-C498-vay",
+  "pathSegment": "MR-PATH-498-VAY498",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-498-VAY498",
+      "order": 3
+    }
+  ]
+}

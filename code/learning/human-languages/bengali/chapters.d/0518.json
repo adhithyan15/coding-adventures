@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Games Indoors",
+  "label": "ch:bn-games-indoors",
+  "canDo": "I can talk about board games and crosswords.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C518-kerom",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about board games and crosswords.",
+    "assesses": [
+      "BN-LEX-C518-GHOROA518-03",
+      "BN-LEX-C518-GHOROA518-04",
+      "BN-LEX-C518-GHOROA518-05"
+    ]
+  }
+}

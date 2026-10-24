@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C484-beramadu",
+    "language": "telugu",
+    "chapter": 484,
+    "sequence": 24390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3d195581e0d03e8"
+  },
+  "findings": []
+}

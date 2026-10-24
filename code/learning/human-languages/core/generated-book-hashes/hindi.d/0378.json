@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:c74f33f851acbcca",
+  "lessonIds": [
+    "HI-C378-avasyak",
+    "HI-C378-anivarya",
+    "HI-C378-keval",
+    "HI-C378-sivay",
+    "HI-C378-manakarna"
+  ],
+  "tex": "hindi/book/chapters/ch378-what-must-happen-first.tex"
+}

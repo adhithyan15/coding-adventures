@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Workshops and Orders",
+  "label": "ch:mr-workshops-and-orders",
+  "canDo": "I can talk about workshops, departments and presenting work.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C513-sutrasancalan-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about workshops, departments and presenting work.",
+    "assesses": [
+      "MR-LEX-C513-KARYASHALA513-03",
+      "MR-LEX-C513-KARYASHALA513-04",
+      "MR-LEX-C513-KARYASHALA513-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "A Wedding",
+  "label": "ch:te-a-wedding",
+  "canDo": "I can say an engagement, a marriage, a wedding invitation, a wedding pendant and to invite.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C346-ahvanincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can say an engagement, a marriage, a wedding invitation, a wedding pendant and to invite.",
+    "assesses": [
+      "TE-LEX-C346-VIVAHAM346-03",
+      "TE-LEX-C346-VIVAHAM346-04",
+      "TE-LEX-C346-VIVAHAM346-05"
+    ]
+  }
+}

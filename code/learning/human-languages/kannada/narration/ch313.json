@@ -1,0 +1,407 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 313,
+  "title": "Asking the Way",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:9eddc87715b751f4",
+  "lessons": [
+    {
+      "id": "KA-C313-hege-hogabeku",
+      "sequence": 15160,
+      "title": "ಹೇಗೆ ಹೋಗಬೇಕು? (hēge hōgabēku?) — asking the way",
+      "headword": "ಹೇಗೆ ಹೋಗಬೇಕು?",
+      "romanization": "hēge hōgabēku?",
+      "gloss": "how do I get (there)? — asking the way, and how far",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:057c73aaf3a627cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"where?\" (elli) and \"how?\" (hēge). Then \"I must go early tomorrow.\" (nānu nāḷe bēga hōgabēku.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೇಗೆ ಹೋಗಬೇಕು? and ಎಲ್ಲಿದೆ?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕ್ಷಮಿಸಿ, ಬಸ್ ನಿಲ್ದಾಣಕ್ಕೆ ಹೇಗೆ ಹೋಗಬೇಕು? kṣamisi, bas nildāṇakke hēge hōgabēku? — \"Excuse me, how do I get to the bus station?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word it is \"how must (one) go to the bus station\", with the -ಬೇಕು of \"must\". The place takes the \"to\" ending: ನಿಲ್ದಾಣಕ್ಕೆ, ಆಸ್ಪತ್ರೆಗೆ. ಕ್ಷಮಿಸಿ, \"sorry\", opens the question politely, the way English says \"excuse me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆಸ್ಪತ್ರೆ ಎಲ್ಲಿದೆ? āspatre ellide? — \"Where is the hospital?\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಎಲ್ಲಿದೆ is ಎಲ್ಲಿ, \"where\", run together with ಇದೆ, \"is\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: how far",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇಲ್ಲಿಂದ ಎಷ್ಟು ದೂರ? illinda eṣṭu dūra? — \"How far is it from here?\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಇಲ್ಲಿಂದ is ಇಲ್ಲಿ, \"here\", with -ಇಂದ, \"from\". ಎಷ್ಟು ದೂರ is \"how much distance\". The answers:"
+            },
+            {
+              "kind": "speech",
+              "text": "ಹತ್ತಿರ ಇದೆ. hattira ide. — \"It's near.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಲ್ಪ ದೂರ ಇದೆ. svalpa dūra ide. — \"It's a little far.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Excuse me, how do I get to the bus station?\" — kṣamisi, bas nildāṇakke hēge hōgabēku?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Excuse me, how do I get to the bus station?\" — *kṣamisi, bas nildāṇakke hēge hōgabēku?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How far is it from here?\" — illinda eṣṭu dūra?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How far is it from here?\" — *illinda eṣṭu dūra?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It's near\" — hattira ide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It's near\" — *hattira ide*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How do I get to the station?\" (ನಿಲ್ದಾಣಕ್ಕೆ ಹೇಗೆ ಹೋಗಬೇಕು? (hēge hōgabēku?)) \"Where is it?\" (ಎಲ್ಲಿದೆ?) \"From here\"? (ಇಲ್ಲಿಂದ.) \"How far?\" (ಎಷ್ಟು ದೂರ?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C313-neravagi-hogi",
+      "sequence": 15170,
+      "title": "ನೇರವಾಗಿ ಹೋಗಿ (nēravāgi hōgi) — giving the way",
+      "headword": "ನೇರವಾಗಿ ಹೋಗಿ",
+      "romanization": "nēravāgi hōgi",
+      "gloss": "go straight on — giving the way, left, right and next to",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:840c7c864b7c29fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"left\", \"right\" and \"straight\". (eḍa, bala, nēra.) Then \"How far is it from here?\" (illinda eṣṭu dūra?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: straight on, left, right",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೇರವಾಗಿ ಹೋಗಿ. ಮೊದಲ ತಿರುವಿನಲ್ಲಿ ಎಡಕ್ಕೆ ಹೋಗಿ. nēravāgi hōgi. modala tiruvinalli eḍakke hōgi. — \"Go straight on. At the first turn, go left.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೋಗಿ here is a polite \"go\", said to a listener: the stem with -ಇ, as in ಫೋನ್ ಮಾಡಿ, \"please phone\". It sounds like the ಹೋಗಿ of \"having gone\", but it is a different form, and other verbs keep the two apart: \"please give\" is ಕೊಡಿ, \"having given\" is ಕೊಟ್ಟು. ನೇರವಾಗಿ is ನೇರ with -ವಾಗಿ, the piece you met in ಸ್ವಚ್ಛವಾಗಿದೆ: \"straight on\". ಎಡಕ್ಕೆ is ಎಡ with -ಕ್ಕೆ, \"to\": \"to the left\"; and ಬಲಕ್ಕೆ (balakke), \"to the right\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೊದಲ (modala, \"first\") is the ಮೊದಲು of a story, standing in front of a noun. ತಿರುವಿನಲ್ಲಿ (tiruvinalli, \"at the turn\") is ತಿರುವು with -ಇನ- and -ಅಲ್ಲಿ, \"at\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: what it is next to",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಸ್ಪತ್ರೆ ಬಲಕ್ಕೆ ಇದೆ, ಅಂಗಡಿಯ ಪಕ್ಕದಲ್ಲಿ. āspatre balakke ide, aṅgaḍiya pakkadalli. — \"The hospital is on the right, next to the shop.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಂಗಡಿಯ (aṅgaḍiya, \"of the shop\"); ಪಕ್ಕದಲ್ಲಿ (pakkadalli, \"at the side, next to\"), from ಪಕ್ಕ. Most directions are these few pieces in a row: straight on, a turn, left or right, and one thing it is next to."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಸ್ ನಿಲ್ದಾಣ ಎಡಕ್ಕೆ ಇದೆ, ಹೋಟೆಲ್ ಪಕ್ಕದಲ್ಲಿ. bas nildāṇa eḍakke ide, hōṭel pakkadalli. — \"The bus station is on the left, next to the hotel.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Go straight on. At the first turn, go left.\" — nēravāgi hōgi. modala tiruvinalli eḍakke hōgi.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Go straight on. At the first turn, go left.\" — *nēravāgi hōgi. modala tiruvinalli eḍakke hōgi.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Go to the right\" — balakke hōgi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Go to the right\" — *balakke hōgi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The hospital is on the right, next to the shop\" — āspatre balakke ide, aṅgaḍiya pakkadalli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The hospital is on the right, next to the shop\" — *āspatre balakke ide, aṅgaḍiya pakkadalli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the way from your door to the nearest shop, in three steps",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the way from your door to the nearest shop, in three steps]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Straight on\"? (ನೇರವಾಗಿ.) \"To the left\"? (ಎಡಕ್ಕೆ.) \"To the right\"? (ಬಲಕ್ಕೆ.) \"At the first turn\"? (ಮೊದಲ ತಿರುವಿನಲ್ಲಿ.) \"Next to the shop\"? (ಅಂಗಡಿಯ ಪಕ್ಕದಲ್ಲಿ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R313-asking-the-way",
+      "sequence": 15180,
+      "title": "Review — asking the way",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "asking the way and giving it, in both directions",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:39efa9f1087e7f09",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ಸ್ವಚ್ಛ aloud, and name its small letter. (svaccha; ಛ.) Then \"You should see a doctor.\" (nīvu vaidyarannu nōḍabēku.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Excuse me, where is the station? How far is it from here?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Excuse me, where is the station? How far is it from here?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It's near. Go straight on, then go right at the first turn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It's near. Go straight on, then go right at the first turn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The hotel is on the left, next to the hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The hotel is on the left, next to the hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "You must not go that way, because there is no path.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: You must not go that way, because there is no path.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask the way to a shop, then give the answer yourself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask the way to a shop, then give the answer yourself]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How do I get to …?\" (… ಹೇಗೆ ಹೋಗಬೇಕು? (hēge hōgabēku?)) \"How far?\" (ಎಷ್ಟು ದೂರ?) \"Go straight on\"? (ನೇರವಾಗಿ ಹೋಗಿ (nēravāgi hōgi).) \"Next to\"? (ಪಕ್ಕದಲ್ಲಿ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

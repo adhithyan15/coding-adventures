@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C543-qasam",
+    "language": "hindi",
+    "chapter": 543,
+    "sequence": 29900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d59cb98336c7ef30"
+  },
+  "findings": []
+}

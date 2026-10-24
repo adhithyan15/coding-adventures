@@ -1,5 +1,12 @@
 # Changelog — coding_adventures_conduit
 
+## Unreleased
+
+- Fix a double free of `current` in `dispatchAfter`: when an after-hook
+  threw (including `HaltException`), the response that had already been
+  freed was freed again, which is a native double free. It is now freed only
+  while still owned (same bug as the C#/F# bindings).
+
 ## 0.1.0 — 2026-06-14
 
 Initial release (WEB17).

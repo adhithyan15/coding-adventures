@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:3e5d15c82e1601df",
+  "lessonIds": [
+    "ML-C488-oppu",
+    "ML-C488-pakarppu",
+    "ML-C488-tiriccariyalrekha",
+    "ML-C488-kalavadhi",
+    "ML-C488-kalaharanappetuka"
+  ],
+  "tex": "malayalam/book/chapters/ch488-papers-and-signatures.tex"
+}

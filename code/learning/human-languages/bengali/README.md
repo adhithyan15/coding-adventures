@@ -418,6 +418,44 @@ because the letters they need have no lesson yet: **কারণ** needs ণ, **
 `core/exam-inventory-bengali-a1.json` beside the point it blocks, which turns a
 vocabulary gap into a named script lesson.
 
+## B1: chapters 264–545
+
+- **Chapters 264–275 — the B1 core** ([`lessons/`](./lessons/), `BN-C264-*` to
+  `BN-W275-six-lines`): 264–265 bridge the A2 past and future the track had
+  left empty (আমি গেলাম, the eight changed stems গেল, এল, খেল, নিল, দিল, হল,
+  চাইল, পেল; ছিলাম and ছিল না; আমি যাব), then two chapters for each of the
+  five B1 spine nodes. Narrating (-ছি and -ছিলাম, যখন … তখন, the -এ form with
+  a second verb that adds a shade, বসে পড়লাম; প্রথমে / তারপর / শেষে, a
+  ninety-eight-word reading), giving reasons (আমার মনে হয়, কারণ, কেননা, -এর
+  জন্য, উচিত, -তে হবে, তাই, সেজন্য), travel (কীভাবে যাব? কত দূর? a ticket, a
+  lost bag), experience (feelings with আমার, -তে চাই, -এর চেয়ে and সবচেয়ে,
+  … ধরে, থেকে … পর্যন্ত) and conditions (যদি … তাহলে, the -লে form, নাহলে,
+  … -এর ওপর নির্ভর করে, -তাম), closing on a six-line writing task. Twelve
+  letter and sign lessons — ঘ ষ ঠ ৎ ণ উ ূ ৌ অ ৈ ঢ ঙ — each sit right after
+  their anchor word and ask the learner to copy the printed shape; none
+  claims a stroke order the inventory cannot source.
+- **Chapters 276–545 — the B1 vocabulary** ([`lessons/`](./lessons/),
+  `BN-C276-*` to `BN-R545-*`): 1,350 headwords, 380 of them verbs (each shown
+  with its past, সেই দেয়াল ধসে পড়ল "that wall collapsed"), one word per
+  lesson, with eight reviews in each of the five tranches:
+  - 276–329: narrating (accidents, fire and rescue, crime and the police,
+    cyclones, floods and drought, the news, festivals and weddings, kingdoms
+    and wars, legends and books);
+  - 330–383: reasons and conditions (making a case, rights and the law,
+    government and public money, values and customs, research and
+    measurement, then likelihood, conditions, limits and goals);
+  - 384–437: travel (trains, roads and breakdowns, boats and ferries, a place
+    to stay, the town, the bank and the market, the weather and nature);
+  - 438–491: experience (feelings and character, the body and health, the
+    family from birth to old age);
+  - 492–545: work, machines and the home, the kitchen, free time, sport and
+    the arts, then means, plans, chance, obstacles and choices.
+
+  The first words of tranche a practise the core's last grammar points again
+  (… -এর ওপর নির্ভর করে, -তাম, the -লে form and যদি … তাহলে), two words each,
+  and four more bring back the letters ঢ and ঙ. With the core, Bengali teaches
+  2,581 headwords at or below B1 and attains B1 on the level gate.
+
 ## Files
 
 - [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)

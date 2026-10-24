@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:08520d4b8ba66431",
+  "lessonIds": [
+    "TA-C345-kataicolli",
+    "TA-C345-nitikkatai",
+    "TA-C345-villuppattu",
+    "TA-C345-kataikkalam",
+    "TA-C345-arankeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch345.txt",
+  "json": "tamil/narration/ch345.json",
+  "textHash": "fnv1a64:80fd8a5403fc1b1f",
+  "jsonHash": "fnv1a64:b00e4b303a21ce29",
+  "findings": []
+}

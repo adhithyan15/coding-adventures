@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C390-pich",
+    "language": "bengali",
+    "chapter": 390,
+    "sequence": 24330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78d8e5f0e4e58e3c"
+  },
+  "findings": []
+}

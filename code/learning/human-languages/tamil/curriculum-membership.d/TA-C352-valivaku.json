@@ -1,0 +1,11 @@
+{
+  "id": "TA-C352-valivaku",
+  "pathSegment": "TA-PATH-352-ERPATUTTU352",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-352-ERPATUTTU352",
+      "order": 3
+    }
+  ]
+}

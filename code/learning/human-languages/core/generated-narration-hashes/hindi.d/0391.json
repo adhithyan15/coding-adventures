@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:3403dad6d2b67a08",
+  "lessonIds": [
+    "HI-C391-prayas",
+    "HI-C391-parisram",
+    "HI-C391-jos",
+    "HI-C391-nirantar",
+    "HI-C391-dohrana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch391.txt",
+  "json": "hindi/narration/ch391.json",
+  "textHash": "fnv1a64:53bed0e507dcf862",
+  "jsonHash": "fnv1a64:91719109a8f9e58e",
+  "findings": []
+}

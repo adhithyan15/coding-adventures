@@ -1,0 +1,11 @@
+{
+  "id": "AR-C536-istajamma",
+  "pathSegment": "AR-PATH-536-SAYD536",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-536-SAYD536",
+      "order": 3
+    }
+  ]
+}

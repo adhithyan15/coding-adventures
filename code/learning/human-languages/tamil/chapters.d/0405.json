@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Taxis and the Metro",
+  "label": "ch:ta-taxis-and-the-metro",
+  "canDo": "I can talk about taxis, the metro, connections, a lounge and a break in a journey.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C405-itaivelai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can talk about taxis, the metro, connections, a lounge and a break in a journey.",
+    "assesses": [
+      "TA-LEX-C405-METRO405-03",
+      "TA-LEX-C405-METRO405-04",
+      "TA-LEX-C405-METRO405-05"
+    ]
+  }
+}

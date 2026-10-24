@@ -1,0 +1,11 @@
+{
+  "id": "ML-C560-citraracana",
+  "pathSegment": "ML-PATH-560-SILPAM560",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-560-SILPAM560",
+      "order": 1
+    }
+  ]
+}

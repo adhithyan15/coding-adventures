@@ -1,0 +1,21 @@
+{
+  "chapter": 418,
+  "title": "Other Options",
+  "label": "ch:ka-other-options",
+  "canDo": "I can say an alternative, a choice, temporary, permanent and to modify.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-R418-review-412-418",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can say an alternative, a choice, temporary, permanent and to modify.",
+    "assesses": [
+      "KA-LEX-C418-PARYAYA418-01",
+      "KA-LEX-C418-PARYAYA418-02",
+      "KA-LEX-C418-PARYAYA418-03",
+      "KA-LEX-C418-PARYAYA418-04",
+      "KA-LEX-C418-PARYAYA418-05"
+    ]
+  }
+}

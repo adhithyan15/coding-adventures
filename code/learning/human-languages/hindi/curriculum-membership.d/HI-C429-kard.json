@@ -1,0 +1,11 @@
+{
+  "id": "HI-C429-kard",
+  "pathSegment": "HI-PATH-429-PARCHI429",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-429-PARCHI429",
+      "order": 1
+    }
+  ]
+}

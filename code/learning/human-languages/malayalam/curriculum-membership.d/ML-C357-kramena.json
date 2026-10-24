@@ -1,0 +1,11 @@
+{
+  "id": "ML-C357-kramena",
+  "pathSegment": "ML-PATH-357-PINNITU357",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-357-PINNITU357",
+      "order": 1
+    }
+  ]
+}

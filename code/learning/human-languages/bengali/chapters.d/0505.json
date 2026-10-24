@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Light and Dark",
+  "label": "ch:bn-light-and-dark",
+  "canDo": "I can talk about light, darkness and lamps that flicker and go out.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C505-nebha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about light, darkness and lamps that flicker and go out.",
+    "assesses": [
+      "BN-LEX-C505-ALO505-03",
+      "BN-LEX-C505-ALO505-04",
+      "BN-LEX-C505-ALO505-05"
+    ]
+  }
+}

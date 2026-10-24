@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Moving Up",
+  "label": "ch:bn-moving-up",
+  "canDo": "I can talk about posts, promotions, seniors and assistants.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C496-bohal-thaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can talk about posts, promotions, seniors and assistants.",
+    "assesses": [
+      "BN-LEX-C496-PODONNOTI496-03",
+      "BN-LEX-C496-PODONNOTI496-04",
+      "BN-LEX-C496-PODONNOTI496-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C537-bhumika",
+    "language": "marathi",
+    "chapter": 537,
+    "sequence": 30700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab55ba8f9ba9278a"
+  },
+  "findings": []
+}

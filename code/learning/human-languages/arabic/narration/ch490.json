@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 490,
+  "title": "Surprise and admiration",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:41fccd661beb7040",
+  "lessons": [
+    {
+      "id": "AR-C490-dahsha",
+      "sequence": 27300,
+      "title": "دهشة (dahsha) — astonishment",
+      "headword": "دهشة",
+      "romanization": "dahsha",
+      "gloss": "astonishment",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98a9ae2705431369",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to shiver, then the Arabic for to frighten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دهشة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دهشة — dahsha — \"astonishment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "فتح الولد الهدية بدهشة. fataḥa al-walad al-hadiyya bi-dahsha. The boy opened the present in astonishment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دهشة (dahsha) is built on the native Arabic root d-h-sh, \"to be amazed, to be bewildered\" (Lane). Dahsha is that amazed state."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dahsha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dahsha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dahsha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dahsha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fataḥa al-walad al-hadiyya bi-dahsha. — The boy opened the present in astonishment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fataḥa al-walad al-hadiyya bi-dahsha.* — The boy opened the present in astonishment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to shiver, then the Arabic for to frighten, then say dahsha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to shiver, then the Arabic for to frighten, then say *dahsha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دهشة (dahsha) mean? (\"Astonishment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C490-mundahish",
+      "sequence": 27310,
+      "title": "مندهش (mundahish) — astonished",
+      "headword": "مندهش",
+      "romanization": "mundahish",
+      "gloss": "astonished",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:773a977a4fa1769c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to frighten, then the Arabic for astonishment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مندهش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مندهش — mundahish — \"astonished\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان أبي مندهشا من الخبر. kāna abī mundahishan min al-khabar. My father was astonished by the news."
+            },
+            {
+              "kind": "speech",
+              "text": "After كان it takes the accusative: كان مندهشا."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مندهش (mundahish) is built on the native Arabic root d-h-sh, \"to be amazed, to be bewildered\" (Lane). Mundahish is the participle of Form VII: one who has been struck with amazement."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mundahish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mundahish*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mundahish, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mundahish*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna abī mundahishan min al-khabar. — My father was astonished by the news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna abī mundahishan min al-khabar.* — My father was astonished by the news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to frighten, then the Arabic for astonishment, then say mundahish again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to frighten, then the Arabic for astonishment, then say *mundahish* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مندهش (mundahish) mean? (\"Astonished\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C490-indahasha",
+      "sequence": 27320,
+      "title": "اندهش (indahasha) — to be amazed",
+      "headword": "اندهش",
+      "romanization": "indahasha",
+      "gloss": "to be amazed",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f13d368e629b30a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for astonishment, then the Arabic for astonished."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اندهش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اندهش — indahasha — \"to be amazed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اندهشت المعلمة من جواب الطالب. indahashat al-muʿallima min jawāb aṭ-ṭālib. The teacher was amazed by the student's answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يندهش, yandahish."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes من for the cause."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اندهش (indahasha) is built on the native Arabic root d-h-sh, \"to be amazed, to be bewildered\" (Lane). It is Form VII, a pattern that often says a thing happened to you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indahasha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indahasha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indahasha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indahasha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indahashat al-muʿallima min jawāb aṭ-ṭālib. — The teacher was amazed by the student's answer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indahashat al-muʿallima min jawāb aṭ-ṭālib.* — The teacher was amazed by the student's answer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for astonishment, then the Arabic for astonished, then say indahasha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for astonishment, then the Arabic for astonished, then say *indahasha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اندهش (indahasha) mean? (\"To be amazed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C490-tafajaa",
+      "sequence": 27330,
+      "title": "تفاجأ (tafājaʾa) — to be surprised",
+      "headword": "تفاجأ",
+      "romanization": "tafājaʾa",
+      "gloss": "to be surprised",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b336f3ccb9054239",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for astonished, then the Arabic for to be amazed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تفاجأ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تفاجأ — tafājaʾa — \"to be surprised\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تفاجأت عندما رأيت صديقي في المطار. tafājaʾtu ʿindamā raʾaytu ṣadīqī fī al-maṭār. I was surprised when I saw my friend at the airport."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتفاجأ, yatafājaʾ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes بـ for the cause: تفاجأ (tafājaʾa) بالخبر."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تفاجأ (tafājaʾa) is built on the native Arabic root f-j-ʾ, \"to come upon suddenly\" (Lane). Tafājaʾa is to be come upon suddenly: to be taken by surprise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tafājaʾa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tafājaʾa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tafājaʾa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tafājaʾa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tafājaʾtu ʿindamā raʾaytu ṣadīqī fī al-maṭār. — I was surprised when I saw my friend at the airport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tafājaʾtu ʿindamā raʾaytu ṣadīqī fī al-maṭār.* — I was surprised when I saw my friend at the airport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for astonished, then the Arabic for to be amazed, then say tafājaʾa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for astonished, then the Arabic for to be amazed, then say *tafājaʾa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تفاجأ (tafājaʾa) mean? (\"To be surprised\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C490-ijab",
+      "sequence": 27340,
+      "title": "إعجاب (iʿjāb) — admiration",
+      "headword": "إعجاب",
+      "romanization": "iʿjāb",
+      "gloss": "admiration",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f121e9686c99d99c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be amazed, then the Arabic for to be surprised."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: إعجاب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إعجاب — iʿjāb — \"admiration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تكلم المدير عن عمل الفريق بإعجاب. takallama al-mudīr ʿan ʿamal al-farīq bi-iʿjāb. The manager spoke about the team's work with admiration."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes بـ for what is admired: إعجاب (iʿjāb) بالفريق."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إعجاب (iʿjāb) is built on the native Arabic root ʿ-j-b, \"to wonder, to marvel\" (Lane). Iʿjāb is the verbal noun of Form IV, to make someone marvel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iʿjāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iʿjāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iʿjāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iʿjāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takallama al-mudīr ʿan ʿamal al-farīq bi-iʿjāb. — The manager spoke about the team's work with admiration.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takallama al-mudīr ʿan ʿamal al-farīq bi-iʿjāb.* — The manager spoke about the team's work with admiration.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be amazed, then the Arabic for to be surprised, then say iʿjāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be amazed, then the Arabic for to be surprised, then say *iʿjāb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does إعجاب (iʿjāb) mean? (\"Admiration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

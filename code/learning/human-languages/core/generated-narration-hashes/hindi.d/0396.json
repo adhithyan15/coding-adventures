@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:6dd5ecd68e1c96d2",
+  "lessonIds": [
+    "HI-C396-samskar",
+    "HI-C396-adars",
+    "HI-C396-udar",
+    "HI-C396-punya",
+    "HI-C396-ratna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch396.txt",
+  "json": "hindi/narration/ch396.json",
+  "textHash": "fnv1a64:0d8afb4aa3988f4a",
+  "jsonHash": "fnv1a64:ab086d7568392b21",
+  "findings": []
+}

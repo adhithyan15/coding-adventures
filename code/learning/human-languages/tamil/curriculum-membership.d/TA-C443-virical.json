@@ -1,0 +1,11 @@
+{
+  "id": "TA-C443-virical",
+  "pathSegment": "TA-PATH-443-VIRISAL443",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-443-VIRISAL443",
+      "order": 2
+    }
+  ]
+}

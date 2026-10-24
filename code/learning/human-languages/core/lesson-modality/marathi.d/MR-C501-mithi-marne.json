@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C501-mithi-marne",
+    "language": "marathi",
+    "chapter": 501,
+    "sequence": 28620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:906019ffc147c183"
+  },
+  "findings": []
+}

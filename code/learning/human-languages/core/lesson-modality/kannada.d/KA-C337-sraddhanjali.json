@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C337-sraddhanjali",
+    "language": "kannada",
+    "chapter": 337,
+    "sequence": 16950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06793dc0a158debc"
+  },
+  "findings": []
+}

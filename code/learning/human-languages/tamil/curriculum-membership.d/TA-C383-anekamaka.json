@@ -1,0 +1,11 @@
+{
+  "id": "TA-C383-anekamaka",
+  "pathSegment": "TA-PATH-383-CATTIYAM383",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-383-CATTIYAM383",
+      "order": 2
+    }
+  ]
+}

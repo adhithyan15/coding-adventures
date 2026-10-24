@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-425-RAKIB425",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-425-RAKIB425"
+  ],
+  "after": []
+}

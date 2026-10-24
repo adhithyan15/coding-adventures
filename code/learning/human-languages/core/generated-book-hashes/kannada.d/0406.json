@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:16a78987f6037ea2",
+  "lessonIds": [
+    "KA-C406-visvavidyalaya",
+    "KA-C406-padavi",
+    "KA-C406-upanyasa",
+    "KA-C406-pradhyapaka",
+    "KA-C406-bodhisu"
+  ],
+  "tex": "kannada/book/chapters/ch406-at-the-university.tex"
+}

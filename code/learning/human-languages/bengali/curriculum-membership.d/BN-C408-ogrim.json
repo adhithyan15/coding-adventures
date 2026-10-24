@@ -1,0 +1,11 @@
+{
+  "id": "BN-C408-ogrim",
+  "pathSegment": "BN-PATH-408-BASA408",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-408-BASA408",
+      "order": 2
+    }
+  ]
+}

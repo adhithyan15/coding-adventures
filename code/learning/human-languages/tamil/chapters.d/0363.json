@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Numbers in an Argument",
+  "label": "ch:ta-numbers-in-an-argument",
+  "canDo": "I can use statistics, percentages, averages and ratios.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C363-kani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can use statistics, percentages, averages and ratios.",
+    "assesses": [
+      "TA-LEX-C363-PULLIVIVARAM363-03",
+      "TA-LEX-C363-PULLIVIVARAM363-04",
+      "TA-LEX-C363-PULLIVIVARAM363-05"
+    ]
+  }
+}

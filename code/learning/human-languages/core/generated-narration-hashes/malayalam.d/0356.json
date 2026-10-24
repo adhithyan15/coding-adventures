@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:bb77d0cb46fd0ec7",
+  "lessonIds": [
+    "ML-C356-sambhasanam",
+    "ML-C356-vivaranam",
+    "ML-C356-drsyam",
+    "ML-C356-kettariyuka",
+    "ML-C356-ketticcamaykkuka",
+    "ML-R356-review-349-356"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch356.txt",
+  "json": "malayalam/narration/ch356.json",
+  "textHash": "fnv1a64:e4a29b1b36adc097",
+  "jsonHash": "fnv1a64:396e25bafd2a2c9e",
+  "findings": []
+}

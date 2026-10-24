@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:0e09fa5bfd315549",
+  "lessonIds": [
+    "KA-C371-tali",
+    "KA-C371-pallakki",
+    "KA-C371-palegara",
+    "KA-C371-mahalu",
+    "KA-C371-kalidu"
+  ],
+  "tex": "kannada/book/chapters/ch371-the-chieftain-comes-home.tex"
+}

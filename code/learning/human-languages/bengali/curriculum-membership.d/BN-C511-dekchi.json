@@ -1,0 +1,11 @@
+{
+  "id": "BN-C511-dekchi",
+  "pathSegment": "BN-PATH-511-BASON511",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-511-BASON511",
+      "order": 1
+    }
+  ]
+}

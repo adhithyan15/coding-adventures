@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:644deae905168314",
+  "lessonIds": [
+    "AR-C524-fawada",
+    "AR-C524-ijtahada",
+    "AR-C524-nawaba",
+    "AR-C524-taraqqa",
+    "AR-C524-maqarr"
+  ],
+  "tex": "arabic/book/chapters/ch524-talks-turns-and-headquarters.tex"
+}

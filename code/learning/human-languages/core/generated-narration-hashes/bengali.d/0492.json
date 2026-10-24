@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:68b26a5e4325c96a",
+  "lessonIds": [
+    "BN-C492-karigor",
+    "BN-C492-sekra",
+    "BN-C492-jhalai-kora",
+    "BN-C492-kasari",
+    "BN-C492-gatha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch492.txt",
+  "json": "bengali/narration/ch492.json",
+  "textHash": "fnv1a64:35899f38ba75b22f",
+  "jsonHash": "fnv1a64:bac5b65c44bb7d97",
+  "findings": []
+}

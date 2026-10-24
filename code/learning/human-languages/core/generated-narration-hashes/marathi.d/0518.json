@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:33554bd0250c5357",
+  "lessonIds": [
+    "MR-C518-yantra",
+    "MR-C518-upakaran",
+    "MR-C518-yantramanav",
+    "MR-C518-svayancalit",
+    "MR-C518-phavarne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch518.txt",
+  "json": "marathi/narration/ch518.json",
+  "textHash": "fnv1a64:5be37bb0f3721b5c",
+  "jsonHash": "fnv1a64:3bd9b7b9607cd493",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Analysing things",
+  "label": "ch:ar-analysing-things",
+  "canDo": "I can say that someone analysed, specified or told things apart, and talk about elements and criteria.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C364-mayyaza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can say that someone analysed, specified or told things apart, and talk about elements and criteria.",
+    "assesses": [
+      "AR-LEX-C364-TAHLIL364-03",
+      "AR-LEX-C364-TAHLIL364-04",
+      "AR-LEX-C364-TAHLIL364-05"
+    ]
+  }
+}

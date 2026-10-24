@@ -1,0 +1,11 @@
+{
+  "id": "TE-C510-atmavisvasam",
+  "pathSegment": "TE-PATH-510-GUNAM510",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-510-GUNAM510",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 505,
+  "title": "Mourning",
+  "label": "ch:hi-mourning",
+  "canDo": "I can talk about a death in the family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-R505-review-final-505",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about a death in the family.",
+    "assesses": [
+      "HI-LEX-C505-SHOK505-01",
+      "HI-LEX-C505-SHOK505-02",
+      "HI-LEX-C505-SHOK505-03",
+      "HI-LEX-C505-SHOK505-04",
+      "HI-LEX-C505-SHOK505-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C501-krura",
+  "pathSegment": "KA-PATH-501-SAUMYA501",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-501-SAUMYA501",
+      "order": 2
+    }
+  ]
+}

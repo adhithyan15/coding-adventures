@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-196-A2-SHURU",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise and use the familiar word for start in one bounded polite work instruction.",
+  "prerequisites": [
+    "PA-EXT-195-A2-VALA-FORMS"
+  ]
+}

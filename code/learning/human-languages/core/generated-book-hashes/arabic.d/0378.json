@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:51c3cf11f612072d",
+  "lessonIds": [
+    "AR-C378-intikhab",
+    "AR-C378-intakhaba",
+    "AR-C378-sawwata",
+    "AR-C378-nakhib",
+    "AR-C378-murashshah"
+  ],
+  "tex": "arabic/book/chapters/ch378-elections.tex"
+}

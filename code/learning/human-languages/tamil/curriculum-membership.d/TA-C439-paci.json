@@ -1,0 +1,11 @@
+{
+  "id": "TA-C439-paci",
+  "pathSegment": "TA-PATH-439-MULAI439",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-439-MULAI439",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "The Siege",
+  "label": "ch:bn-the-siege",
+  "canDo": "I can describe a fort under siege: walls, moats, holding out.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C316-pichhono",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can describe a fort under siege: walls, moats, holding out.",
+    "assesses": [
+      "BN-LEX-C316-GHERA316-03",
+      "BN-LEX-C316-GHERA316-04",
+      "BN-LEX-C316-GHERA316-05"
+    ]
+  }
+}

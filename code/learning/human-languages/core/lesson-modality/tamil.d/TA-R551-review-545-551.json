@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R551-review-545-551",
+    "language": "tamil",
+    "chapter": 551,
+    "sequence": 31450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36a0e8d3795a3cdc"
+  },
+  "findings": []
+}

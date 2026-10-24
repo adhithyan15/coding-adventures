@@ -1,0 +1,19 @@
+{
+  "chapter": 540,
+  "title": "Ways and Means",
+  "label": "ch:hi-ways-and-means",
+  "canDo": "I can say how I tried to get something done.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C540-prayatn",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can say how I tried to get something done.",
+    "assesses": [
+      "HI-LEX-C540-KOSHISH540-03",
+      "HI-LEX-C540-KOSHISH540-04",
+      "HI-LEX-C540-KOSHISH540-05"
+    ]
+  }
+}

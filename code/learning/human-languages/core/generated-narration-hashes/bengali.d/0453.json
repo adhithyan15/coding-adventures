@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:7bbfe9ccb24cc31e",
+  "lessonIds": [
+    "BN-C453-atmobishvas",
+    "BN-C453-monobol",
+    "BN-C453-kapurush",
+    "BN-C453-rukhe-darano",
+    "BN-C453-pichhiye-jaoya",
+    "BN-R453-review-446-453"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch453.txt",
+  "json": "bengali/narration/ch453.json",
+  "textHash": "fnv1a64:71a776377fe65b72",
+  "jsonHash": "fnv1a64:8dc7303f73395c9f",
+  "findings": []
+}

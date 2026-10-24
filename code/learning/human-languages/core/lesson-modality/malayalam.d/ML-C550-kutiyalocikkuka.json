@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C550-kutiyalocikkuka",
+    "language": "malayalam",
+    "chapter": 550,
+    "sequence": 27720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40f360ef09965d99"
+  },
+  "findings": []
+}

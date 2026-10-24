@@ -1,0 +1,11 @@
+{
+  "id": "MR-C368-hatalne",
+  "pathSegment": "MR-PATH-368-PALAN368",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-368-PALAN368",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:a638e26bb75d0bdb",
+  "lessonIds": [
+    "MR-C302-dacakne",
+    "MR-C302-thabakne",
+    "MR-C302-ksan",
+    "MR-C302-tevadhyat",
+    "MR-C302-tabadtob"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch302.txt",
+  "json": "marathi/narration/ch302.json",
+  "textHash": "fnv1a64:0f6a19df77f02542",
+  "jsonHash": "fnv1a64:13bccc4b766545fc",
+  "findings": []
+}

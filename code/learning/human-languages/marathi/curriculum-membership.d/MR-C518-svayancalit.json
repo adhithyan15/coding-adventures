@@ -1,0 +1,11 @@
+{
+  "id": "MR-C518-svayancalit",
+  "pathSegment": "MR-PATH-518-YANTRA518",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-518-YANTRA518",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "Causes and Effects",
+  "label": "ch:ka-causes-and-effects",
+  "canDo": "I can say influence, to affect badly, to come about, a tendency and a source.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C385-mula",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can say influence, to affect badly, to come about, a tendency and a source.",
+    "assesses": [
+      "KA-LEX-C385-PRABHAVA385-03",
+      "KA-LEX-C385-PRABHAVA385-04",
+      "KA-LEX-C385-PRABHAVA385-05"
+    ]
+  }
+}

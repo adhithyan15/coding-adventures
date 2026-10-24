@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:730883d8f3a8fd84",
+  "lessonIds": [
+    "TE-C322-duhkham",
+    "TE-S178-sign-visarga",
+    "TE-C322-bhayanga-undi",
+    "TE-C322-vellalani-undi",
+    "TE-R322-feelings-and-hopes"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch322.txt",
+  "json": "telugu/narration/ch322.json",
+  "textHash": "fnv1a64:2d8838d866a229b7",
+  "jsonHash": "fnv1a64:4c3c3c0f34865ff5",
+  "findings": []
+}

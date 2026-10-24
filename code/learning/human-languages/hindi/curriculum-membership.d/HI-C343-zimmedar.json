@@ -1,0 +1,11 @@
+{
+  "id": "HI-C343-zimmedar",
+  "pathSegment": "HI-PATH-343-KARAN343",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-343-KARAN343",
+      "order": 4
+    }
+  ]
+}

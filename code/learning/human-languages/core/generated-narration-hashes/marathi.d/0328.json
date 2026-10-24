@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:1ca3bae81e850a2f",
+  "lessonIds": [
+    "MR-C328-satru",
+    "MR-C328-halla",
+    "MR-C328-akraman",
+    "MR-C328-ladhne",
+    "MR-C328-ranangan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch328.txt",
+  "json": "marathi/narration/ch328.json",
+  "textHash": "fnv1a64:d6012bf367dbbe22",
+  "jsonHash": "fnv1a64:5f5f15333d739b09",
+  "findings": []
+}

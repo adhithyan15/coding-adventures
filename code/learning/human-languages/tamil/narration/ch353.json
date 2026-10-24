@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 353,
+  "title": "Advantages and Drawbacks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:855862fbb9b13787",
+  "lessons": [
+    {
+      "id": "TA-C353-catakam",
+      "sequence": 20400,
+      "title": "சாதகம் (cātakam) — an advantage",
+      "headword": "சாதகம்",
+      "romanization": "cātakam",
+      "gloss": "an advantage",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9bbd80dc691a352c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to lead to, then the Tamil for to affect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சாதகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாதகம் — cātakam — \"an advantage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தத் திட்டத்தில் பல சாதகங்கள் இருக்கின்றன. intat tiṭṭattil pala cātakaṅkaḷ irukkiṉṟaṉa. This plan has many advantages."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: சாதகங்கள், cātakaṅkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "சாதகமாக, in one's favour. The wind is in our favour: காற்று நமக்குச் சாதகமாக இருக்கிறது."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாதகம் (cātakam) is borrowed from Sanskrit sādhaka, \"effective, conclusive\" (CDIAL 13333a), from sādh-, \"to succeed\": what helps a thing succeed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cātakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cātakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cātakam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cātakam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intat tiṭṭattil pala cātakaṅkaḷ irukkiṉṟaṉa. — This plan has many advantages.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intat tiṭṭattil pala cātakaṅkaḷ irukkiṉṟaṉa.* — This plan has many advantages.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to lead to, then the Tamil for to affect, then say cātakam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to lead to, then the Tamil for to affect, then say *cātakam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சாதகம் (cātakam) mean? (\"An advantage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C353-patakam",
+      "sequence": 20410,
+      "title": "பாதகம் (pātakam) — a drawback; a disadvantage",
+      "headword": "பாதகம்",
+      "romanization": "pātakam",
+      "gloss": "a drawback; a disadvantage",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76ad7cb30c574221",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to affect, then the Tamil for an advantage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பாதகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பாதகம் — pātakam — \"a drawback; a disadvantage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த முடிவில் சில பாதகங்களும் இருக்கின்றன. inta muṭivil cila pātakaṅkaḷum irukkiṉṟaṉa. This decision has some drawbacks too."
+            },
+            {
+              "kind": "speech",
+              "text": "சாதக பாதகங்கள், the pros and cons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பாதகம் (pātakam) is borrowed from Sanskrit bādhaka, \"opposing, hindering, injuring\" (Monier-Williams), and rhymes with its partner சாதகம் (cātakam)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātakam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātakam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta muṭivil cila pātakaṅkaḷum irukkiṉṟaṉa. — This decision has some drawbacks too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta muṭivil cila pātakaṅkaḷum irukkiṉṟaṉa.* — This decision has some drawbacks too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to affect, then the Tamil for an advantage, then say pātakam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to affect, then the Tamil for an advantage, then say *pātakam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பாதகம் (pātakam) mean? (\"A drawback; a disadvantage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C353-nanmai",
+      "sequence": 20420,
+      "title": "நன்மை (naṉmai) — goodness; a benefit; a good thing",
+      "headword": "நன்மை",
+      "romanization": "naṉmai",
+      "gloss": "goodness; a benefit; a good thing",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f030b321389726e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an advantage, then the Tamil for a drawback."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நன்மை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நன்மை — naṉmai — \"goodness; a benefit; a good thing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "உடற்பயிற்சியால் பல நன்மைகள் கிடைக்கின்றன. uṭaṟpayiṟciyāl pala naṉmaikaḷ kiṭaikkiṉṟaṉa. Exercise brings many benefits."
+            },
+            {
+              "kind": "speech",
+              "text": "நன்மை (naṉmai) செய், to do good: நன்மை (naṉmai), a benefit, with the abstract -மை."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நன்மை (naṉmai) is native Dravidian: DEDR 3610 lists Tamil nal, \"good\", and naṉmai, \"goodness, benefit\", with the abstract ending -மை."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṉmai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṉmai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṉmai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṉmai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭaṟpayiṟciyāl pala naṉmaikaḷ kiṭaikkiṉṟaṉa. — Exercise brings many benefits.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭaṟpayiṟciyāl pala naṉmaikaḷ kiṭaikkiṉṟaṉa.* — Exercise brings many benefits.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an advantage, then the Tamil for a drawback, then say naṉmai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an advantage, then the Tamil for a drawback, then say *naṉmai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நன்மை (naṉmai) mean? (\"Goodness; a benefit; a good thing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C353-timai",
+      "sequence": 20430,
+      "title": "தீமை (tīmai) — an evil; harm",
+      "headword": "தீமை",
+      "romanization": "tīmai",
+      "gloss": "an evil; harm",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e6612b84b4cf970",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a drawback, then the Tamil for goodness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தீமை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தீமை — tīmai — \"an evil; harm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புகை பிடிப்பதால் உடலுக்குத் தீமை ஏற்படுகிறது. pukai piṭippatāl uṭalukkut tīmai ēṟpaṭukiṟatu. Smoking does harm to the body."
+            },
+            {
+              "kind": "speech",
+              "text": "X-க்குத் தீமை (tīmai), harm to X. With நன்மை (naṉmai): நன்மை (naṉmai) தீமை (tīmai), good and bad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தீமை (tīmai) is native Dravidian: DEDR 3267 lists Tamil tī, \"evil\", tītu, \"fault, harm\", and tīmai, \"mischief, harm\", with the abstract ending -மை."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīmai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīmai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīmai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīmai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pukai piṭippatāl uṭalukkut tīmai ēṟpaṭukiṟatu. — Smoking does harm to the body.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pukai piṭippatāl uṭalukkut tīmai ēṟpaṭukiṟatu.* — Smoking does harm to the body.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a drawback, then the Tamil for goodness, then say tīmai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a drawback, then the Tamil for goodness, then say *tīmai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தீமை (tīmai) mean? (\"An evil; harm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C353-palan",
+      "sequence": 20440,
+      "title": "பலன் (palaṉ) — a benefit; a result",
+      "headword": "பலன்",
+      "romanization": "palaṉ",
+      "gloss": "a benefit; a result",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfe05cb691cb11e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for goodness, then the Tamil for an evil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பலன்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பலன் — palaṉ — \"a benefit; a result\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கடின உழைப்புக்குப் பலன் கிடைக்கும். kaṭiṉa uḻaippukkup palaṉ kiṭaikkum. Hard work pays off."
+            },
+            {
+              "kind": "speech",
+              "text": "பலன் (palaṉ) கிடை, to bear fruit, to pay off: the benefit is the subject."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பலன் (palaṉ) is borrowed from Sanskrit phala, \"fruit\" (CDIAL 9051): the fruit of an effort. Tamil writes the Sanskrit ph as ப."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palaṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palaṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palaṉ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palaṉ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭiṉa uḻaippukkup palaṉ kiṭaikkum. — Hard work pays off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭiṉa uḻaippukkup palaṉ kiṭaikkum.* — Hard work pays off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for goodness, then the Tamil for an evil, then say palaṉ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for goodness, then the Tamil for an evil, then say *palaṉ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பலன் (palaṉ) mean? (\"A benefit; a result\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

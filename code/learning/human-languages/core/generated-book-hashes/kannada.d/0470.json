@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:b1c64b9ce51b664c",
+  "lessonIds": [
+    "KA-C470-vistarisu",
+    "KA-C470-pravesadvara",
+    "KA-C470-kadita",
+    "KA-C470-sarabaraju",
+    "KA-C470-duravani"
+  ],
+  "tex": "kannada/book/chapters/ch470-city-works-and-supplies.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C529-tanretam",
+    "language": "malayalam",
+    "chapter": 529,
+    "sequence": 26620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45265f3d76da075b"
+  },
+  "findings": []
+}

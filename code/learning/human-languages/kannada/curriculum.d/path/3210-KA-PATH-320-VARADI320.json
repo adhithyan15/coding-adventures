@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-320-VARADI320",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-320-VARADI320"
+  ],
+  "after": []
+}

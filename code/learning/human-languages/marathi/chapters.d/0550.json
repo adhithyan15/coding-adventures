@@ -1,0 +1,21 @@
+{
+  "chapter": 550,
+  "title": "Luck and Chance",
+  "label": "ch:mr-luck-and-chance",
+  "canDo": "I can talk about luck, coincidences and bets.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-R550-review-544-550",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 550: I can talk about luck, coincidences and bets.",
+    "assesses": [
+      "MR-LEX-C550-NASHIB550-01",
+      "MR-LEX-C550-NASHIB550-02",
+      "MR-LEX-C550-NASHIB550-03",
+      "MR-LEX-C550-NASHIB550-04",
+      "MR-LEX-C550-NASHIB550-05"
+    ]
+  }
+}

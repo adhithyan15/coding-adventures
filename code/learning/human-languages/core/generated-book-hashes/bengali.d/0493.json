@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:ff4e2fffa2988a52",
+  "lessonIds": [
+    "BN-C493-desk",
+    "BN-C493-kerani",
+    "BN-C493-silmohor",
+    "BN-C493-pion",
+    "BN-C493-taip-kora"
+  ],
+  "tex": "bengali/book/chapters/ch493-at-the-office.tex"
+}

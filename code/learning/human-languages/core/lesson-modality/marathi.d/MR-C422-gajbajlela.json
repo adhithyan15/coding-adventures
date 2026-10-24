@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C422-gajbajlela",
+    "language": "marathi",
+    "chapter": 422,
+    "sequence": 24360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66c9d413c90ec97c"
+  },
+  "findings": []
+}

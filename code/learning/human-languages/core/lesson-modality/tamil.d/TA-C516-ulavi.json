@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C516-ulavi",
+    "language": "tamil",
+    "chapter": 516,
+    "sequence": 29610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f85027e86341b3e"
+  },
+  "findings": []
+}

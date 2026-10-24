@@ -1,0 +1,21 @@
+{
+  "chapter": 323,
+  "title": "Bigger, Best and How Long",
+  "label": "ch:te-bigger-best-and-how-long",
+  "canDo": "I can compare two things with kaṇṭē, pick the best with anniṭikaṇṭē, and say how long with a span and -gā, nuñci and varaku.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-R323-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete TE-R323-comparing-and-time: compare, pick the best, and say how long something has gone on and since when.",
+    "assesses": [
+      "TE-LEX-C323-KALAM-01",
+      "TE-GRAMMAR-C323-KANTE-01",
+      "TE-GRAMMAR-C323-MOST-01",
+      "TE-GRAMMAR-C323-SPAN-GA-01",
+      "TE-GRAMMAR-C323-FROM-UNTIL-01"
+    ]
+  }
+}

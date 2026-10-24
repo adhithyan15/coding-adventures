@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C361-prayogsala",
+    "language": "hindi",
+    "chapter": 361,
+    "sequence": 19960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d8c01f3c43e9cf2"
+  },
+  "findings": []
+}

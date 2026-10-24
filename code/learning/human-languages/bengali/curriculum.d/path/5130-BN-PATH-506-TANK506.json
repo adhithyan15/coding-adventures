@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-506-TANK506",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-506-TANK506"
+  ],
+  "after": []
+}

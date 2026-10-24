@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C459-charjaru",
+    "language": "telugu",
+    "chapter": 459,
+    "sequence": 23110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27d66772fb223b5d"
+  },
+  "findings": []
+}

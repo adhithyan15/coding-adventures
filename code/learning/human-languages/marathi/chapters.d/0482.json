@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Aches and Pains",
+  "label": "ch:mr-aches-and-pains",
+  "canDo": "I can say what aches and describe groaning in pain.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C482-vivhalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can say what aches and describe groaning in pain.",
+    "assesses": [
+      "MR-LEX-C482-DUKH482-03",
+      "MR-LEX-C482-DUKH482-04",
+      "MR-LEX-C482-DUKH482-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:9a2cf08baf6c9c8e",
+  "lessonIds": [
+    "TE-C538-svaram",
+    "TE-C538-gatram",
+    "TE-C538-vayincu",
+    "TE-C538-mrdangam",
+    "TE-C538-sannayi"
+  ],
+  "tex": "telugu/book/chapters/ch538-music.tex"
+}

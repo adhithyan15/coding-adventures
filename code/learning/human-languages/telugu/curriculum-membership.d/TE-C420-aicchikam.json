@@ -1,0 +1,11 @@
+{
+  "id": "TE-C420-aicchikam",
+  "pathSegment": "TE-PATH-420-ENPIKA420",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-420-ENPIKA420",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C512-teruko",
+  "pathSegment": "TE-PATH-512-JABBU512",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-512-JABBU512",
+      "order": 4
+    }
+  ]
+}

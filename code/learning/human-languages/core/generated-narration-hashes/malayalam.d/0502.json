@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:765839f2570c8430",
+  "lessonIds": [
+    "ML-C502-tottam",
+    "ML-C502-paccappu",
+    "ML-C502-talirkkuka",
+    "ML-C502-koliyuka",
+    "ML-C502-vettimarruka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch502.txt",
+  "json": "malayalam/narration/ch502.json",
+  "textHash": "fnv1a64:26e3877032f54213",
+  "jsonHash": "fnv1a64:4144a7d4771e651b",
+  "findings": []
+}

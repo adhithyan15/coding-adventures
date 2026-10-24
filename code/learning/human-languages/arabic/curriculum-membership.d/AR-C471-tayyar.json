@@ -1,0 +1,11 @@
+{
+  "id": "AR-C471-tayyar",
+  "pathSegment": "AR-PATH-471-KHALIJ471",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-471-KHALIJ471",
+      "order": 3
+    }
+  ]
+}

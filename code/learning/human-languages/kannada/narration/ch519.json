@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 519,
+  "title": "Running a Business",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bc8c800a460660b8",
+  "lessons": [
+    {
+      "id": "KA-C519-udyami",
+      "sequence": 26490,
+      "title": "ಉದ್ಯಮಿ (udyami) — an entrepreneur; an industrialist",
+      "headword": "ಉದ್ಯಮಿ",
+      "romanization": "udyami",
+      "gloss": "an entrepreneur; an industrialist",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:458600c77862a110",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for retirement, then the Kannada for a contract."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉದ್ಯಮಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉದ್ಯಮಿ — udyami — \"an entrepreneur; an industrialist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಯುವ ಉದ್ಯಮಿ ಹೊಸ ಕಾರ್ಖಾನೆ ತೆರೆದನು. ā yuva udyami hosa kārkhāne teredanu. That young entrepreneur opened a new factory."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಉದ್ಯಮಿಗಳು, udyamigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಉದ್ಯಮ, an industry or enterprise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉದ್ಯಮಿ (udyami) is borrowed from Sanskrit udyamin, \"undertaking, persevering\" (Monier-Williams), built on udyama, \"undertaking, striving after\" (CDIAL 2048)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyami",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyami*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyami, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyami*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā yuva udyami hosa kārkhāne teredanu. — That young entrepreneur opened a new factory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā yuva udyami hosa kārkhāne teredanu.* — That young entrepreneur opened a new factory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for retirement, then the Kannada for a contract, then say udyami again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for retirement, then the Kannada for a contract, then say *udyami* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉದ್ಯಮಿ (udyami) mean? (\"An entrepreneur; an industrialist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C519-vyavasthapaka",
+      "sequence": 26500,
+      "title": "ವ್ಯವಸ್ಥಾಪಕ (vyavasthāpaka) — a manager",
+      "headword": "ವ್ಯವಸ್ಥಾಪಕ",
+      "romanization": "vyavasthāpaka",
+      "gloss": "a manager",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e7745d9ba403e1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a contract, then the Kannada for an entrepreneur."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವ್ಯವಸ್ಥಾಪಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವ್ಯವಸ್ಥಾಪಕ — vyavasthāpaka — \"a manager\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬ್ಯಾಂಕಿನ ವ್ಯವಸ್ಥಾಪಕರು ನನ್ನ ಅರ್ಜಿಯನ್ನು ಪರಿಶೀಲಿಸಿದರು. byāṅkina vyavasthāpakaru nanna arjiyannu pariśīlisidaru. The bank manager checked my application."
+            },
+            {
+              "kind": "speech",
+              "text": "Everyday talk also says ಮ್ಯಾನೇಜರ್. ವ್ಯವಸ್ಥೆ is an arrangement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವ್ಯವಸ್ಥಾಪಕ (vyavasthāpaka) is borrowed from Sanskrit vyavasthāpaka, \"settling, arranging, establishing\" (Monier-Williams): the one who puts things in order."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyavasthāpaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyavasthāpaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyavasthāpaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyavasthāpaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byāṅkina vyavasthāpakaru nanna arjiyannu pariśīlisidaru. — The bank manager checked my application.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byāṅkina vyavasthāpakaru nanna arjiyannu pariśīlisidaru.* — The bank manager checked my application.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a contract, then the Kannada for an entrepreneur, then say vyavasthāpaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a contract, then the Kannada for an entrepreneur, then say *vyavasthāpaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವ್ಯವಸ್ಥಾಪಕ (vyavasthāpaka) mean? (\"A manager\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C519-sahayaka",
+      "sequence": 26510,
+      "title": "ಸಹಾಯಕ (sahāyaka) — an assistant; a helper",
+      "headword": "ಸಹಾಯಕ",
+      "romanization": "sahāyaka",
+      "gloss": "an assistant; a helper",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3cfa752098160cb6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an entrepreneur, then the Kannada for a manager."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಹಾಯಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಹಾಯಕ — sahāyaka — \"an assistant; a helper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವೈದ್ಯರ ಸಹಾಯಕ ನನ್ನ ಹೆಸರು ಕೇಳಿದನು. vaidyara sahāyaka nanna hesaru kēḷidanu. The doctor's assistant asked my name."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸಹಾಯಕರು, sahāyakaru."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ಸಹಾಯ, help, as in ಸಹಾಯ ಮಾಡು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಹಾಯಕ (sahāyaka) is borrowed from Sanskrit sahāyaka, the same as sahāya, \"companion, helper\" (CDIAL 13309)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahāyaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahāyaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahāyaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahāyaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaidyara sahāyaka nanna hesaru kēḷidanu. — The doctor's assistant asked my name.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaidyara sahāyaka nanna hesaru kēḷidanu.* — The doctor's assistant asked my name.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an entrepreneur, then the Kannada for a manager, then say sahāyaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an entrepreneur, then the Kannada for a manager, then say *sahāyaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಹಾಯಕ (sahāyaka) mean? (\"An assistant; a helper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C519-niyojisu",
+      "sequence": 26520,
+      "title": "ನಿಯೋಜಿಸು (niyōjisu) — to assign; to post",
+      "headword": "ನಿಯೋಜಿಸು",
+      "romanization": "niyōjisu",
+      "gloss": "to assign; to post",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57775ca44e8fd424",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a manager, then the Kannada for an assistant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿಯೋಜಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಯೋಜಿಸು — niyōjisu — \"to assign; to post\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಂಪನಿ ಅವಳನ್ನು ಹೊಸ ಶಾಖೆಗೆ ನಿಯೋಜಿಸಿತು. kampani avaḷannu hosa śākhege niyōjisitu. The company posted her to the new branch."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ನಿಯೋಜಿಸಿದೆ, niyōjiside."
+            },
+            {
+              "kind": "speech",
+              "text": "The person takes -ಅನ್ನು, the post or task -ಗೆ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಯೋಜಿಸು (niyōjisu) is built on Sanskrit niyojana, \"enjoining, directing, appointing to\" (Monier-Williams), with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyōjisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyōjisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyōjisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyōjisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampani avaḷannu hosa śākhege niyōjisitu. — The company posted her to the new branch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampani avaḷannu hosa śākhege niyōjisitu.* — The company posted her to the new branch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a manager, then the Kannada for an assistant, then say niyōjisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a manager, then the Kannada for an assistant, then say *niyōjisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿಯೋಜಿಸು (niyōjisu) mean? (\"To assign; to post\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C519-kudidu",
+      "sequence": 26530,
+      "title": "ಕೂಡಿಡು (kūḍiḍu) — to save up; to put by",
+      "headword": "ಕೂಡಿಡು",
+      "romanization": "kūḍiḍu",
+      "gloss": "to save up; to put by",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8f50497db9c582d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an assistant, then the Kannada for to assign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೂಡಿಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೂಡಿಡು — kūḍiḍu — \"to save up; to put by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಸ ಚೀಲಕ್ಕಾಗಿ ತಂಗಿ ದುಡ್ಡು ಕೂಡಿಟ್ಟಳು. hosa cīlakkāgi taṅgi duḍḍu kūḍiṭṭaḷu. My younger sister saved up money for a new bag."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಕೂಡಿಟ್ಟೆ, kūḍiṭṭe."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೂಡು, to gather + ಇಡು, to put: to gather together and keep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೂಡಿಡು (kūḍiḍu) is a native Dravidian compound: kūḍu, \"to join, come together\" (DEDR 1882), and iḍu, \"to put, keep\" (DEDR 442)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūḍiḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūḍiḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūḍiḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūḍiḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hosa cīlakkāgi taṅgi duḍḍu kūḍiṭṭaḷu. — My younger sister saved up money for a new bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hosa cīlakkāgi taṅgi duḍḍu kūḍiṭṭaḷu.* — My younger sister saved up money for a new bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an assistant, then the Kannada for to assign, then say kūḍiḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an assistant, then the Kannada for to assign, then say *kūḍiḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೂಡಿಡು (kūḍiḍu) mean? (\"To save up; to put by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

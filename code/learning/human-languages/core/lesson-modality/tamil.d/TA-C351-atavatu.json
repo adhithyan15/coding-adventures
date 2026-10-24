@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C351-atavatu",
+    "language": "tamil",
+    "chapter": 351,
+    "sequence": 20330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65ccc8e61bd10af2"
+  },
+  "findings": []
+}

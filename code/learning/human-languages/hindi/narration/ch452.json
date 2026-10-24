@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 452,
+  "title": "Naming a Feeling",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6424132f868193d9",
+  "lessons": [
+    {
+      "id": "HI-C452-bhavna",
+      "sequence": 25000,
+      "title": "भावना (bhāvnā) — a feeling; an emotion",
+      "headword": "भावना",
+      "romanization": "bhāvnā",
+      "gloss": "a feeling; an emotion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c38686824f6e0d8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for turning over (in bed), then the Hindi for a stretch (of the body)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भावना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भावना — bhāvnā — \"a feeling; an emotion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हर इंसान की भावना अलग होती है। har insān kī bhāvnā alag hotī hai. Every person's feelings are different."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भावना (bhāvnā) is a tatsama, borrowed from Sanskrit bhāvanā, which Monier-Williams gives with senses such as imagining and a feeling of devotion (Monier-Williams). Hindi uses it for any feeling."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāvnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāvnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāvnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāvnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "har insān kī bhāvnā alag hotī hai. — Every person's feelings are different.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *har insān kī bhāvnā alag hotī hai.* — Every person's feelings are different.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for turning over (in bed), then the Hindi for a stretch (of the body), then say bhāvnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for turning over (in bed), then the Hindi for a stretch (of the body), then say *bhāvnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भावना (bhāvnā) mean? (\"A feeling; an emotion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C452-ehsas",
+      "sequence": 25010,
+      "title": "एहसास (ehsās) — an awareness; a sense of something",
+      "headword": "एहसास",
+      "romanization": "ehsās",
+      "gloss": "an awareness; a sense of something",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4953f59bd7e96626",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a stretch (of the body), then the Hindi for a feeling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: एहसास",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एहसास — ehsās — \"an awareness; a sense of something\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुण को अपनी ग़लती का एहसास हुआ। Aruṇ ko apnī ġaltī kā ehsās huā. Arun realized he had made a mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एहसास (ehsās) is usually traced to Arabic iḥsās, \"perceiving, feeling\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ehsās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ehsās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ehsās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ehsās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ ko apnī ġaltī kā ehsās huā. — Arun realized he had made a mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ ko apnī ġaltī kā ehsās huā.* — Arun realized he had made a mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a stretch (of the body), then the Hindi for a feeling, then say ehsās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a stretch (of the body), then the Hindi for a feeling, then say *ehsās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does एहसास (ehsās) mean? (\"An awareness; a sense of something\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C452-anubhuti",
+      "sequence": 25020,
+      "title": "अनुभूति (anubhūti) — a deep feeling; an inner sense",
+      "headword": "अनुभूति",
+      "romanization": "anubhūti",
+      "gloss": "a deep feeling; an inner sense",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05bb424d57494d18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a feeling, then the Hindi for an awareness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुभूति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुभूति — anubhūti — \"a deep feeling; an inner sense\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गाना सुनकर मीरा को शांति की अनुभूति हुई। gānā sunkar Mīrā ko śānti kī anubhūti huī. Listening to the song, Mira felt a deep sense of peace."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुभूति (anubhūti) is a tatsama, borrowed from Sanskrit anubhūti, \"perception, knowledge\" (Monier-Williams). It is a formal word for a feeling sensed deep inside; anubhav is the experience itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anubhūti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anubhūti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anubhūti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anubhūti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gānā sunkar Mīrā ko śānti kī anubhūti huī. — Listening to the song, Mira felt a deep sense of peace.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gānā sunkar Mīrā ko śānti kī anubhūti huī.* — Listening to the song, Mira felt a deep sense of peace.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a feeling, then the Hindi for an awareness, then say anubhūti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a feeling, then the Hindi for an awareness, then say *anubhūti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुभूति (anubhūti) mean? (\"A deep feeling; an inner sense\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C452-mahsuskarna",
+      "sequence": 25030,
+      "title": "महसूस करना (mahsūs karnā) — to feel",
+      "headword": "महसूस करना",
+      "romanization": "mahsūs karnā",
+      "gloss": "to feel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76ed9f371f536238",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an awareness, then the Hindi for a deep feeling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: महसूस करना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "महसूस करना — mahsūs karnā — \"to feel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा ने कंधे में दर्द महसूस किया। Mīrā ne kandhe meṁ dard mahsūs kiyā. Mira felt a pain in her shoulder."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने दर्द महसूस किया, usne dard mahsūs kiyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "महसूस करना (mahsūs karnā) joins mahsūs, usually traced to Arabic maḥsūs, \"perceived, felt\", which came through Persian, with karnā, \"to do\": to do the feeling of something. The thing felt is the object, so the perfective agrees with it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahsūs karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahsūs karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahsūs karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahsūs karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā ne kandhe meṁ dard mahsūs kiyā. — Mira felt a pain in her shoulder.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā ne kandhe meṁ dard mahsūs kiyā.* — Mira felt a pain in her shoulder.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an awareness, then the Hindi for a deep feeling, then say mahsūs karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an awareness, then the Hindi for a deep feeling, then say *mahsūs karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does महसूस करना (mahsūs karnā) mean? (\"To feel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C452-umarna",
+      "sequence": 25040,
+      "title": "उमड़ना (umaṛnā) — to well up; to surge",
+      "headword": "उमड़ना",
+      "romanization": "umaṛnā",
+      "gloss": "to well up; to surge",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3fe24f53ea6736f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a deep feeling, then the Hindi for to feel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उमड़ना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उमड़ना — umaṛnā — \"to well up; to surge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बेटी को देखकर माँ की आँखों में आँसू उमड़ आए। beṭī ko dekhkar māṁ kī ā̃khoṁ meṁ ā̃sū umaṛ āe. When she saw her daughter, tears welled up in the mother's eyes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह नदी उमड़ पड़ी, vah nadī umaṛ paṛī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उमड़ना (umaṛnā) is a tadbhava: CDIAL lists Hindi umaḍnā, \"to swell, heave\", under ummaḍ, a form it reconstructs from its descendants (CDIAL 2344). Feelings, tears, rivers and crowds all well up with it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umaṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umaṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umaṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umaṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṭī ko dekhkar māṁ kī ā̃khoṁ meṁ ā̃sū umaṛ āe. — When she saw her daughter, tears welled up in the mother's eyes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṭī ko dekhkar māṁ kī ā̃khoṁ meṁ ā̃sū umaṛ āe.* — When she saw her daughter, tears welled up in the mother's eyes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a deep feeling, then the Hindi for to feel, then say umaṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a deep feeling, then the Hindi for to feel, then say *umaṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उमड़ना (umaṛnā) mean? (\"To well up; to surge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

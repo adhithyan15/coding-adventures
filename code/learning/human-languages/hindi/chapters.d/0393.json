@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Success",
+  "label": "ch:hi-success",
+  "canDo": "I can say what it will take to succeed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C393-gaurav",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can say what it will take to succeed.",
+    "assesses": [
+      "HI-LEX-C393-SAFALTA393-03",
+      "HI-LEX-C393-SAFALTA393-04",
+      "HI-LEX-C393-SAFALTA393-05"
+    ]
+  }
+}

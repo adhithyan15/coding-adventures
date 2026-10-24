@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-430-MARFA430",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a harbour, an anchorage, a lighthouse, a dinghy and to row.",
+  "prerequisites": []
+}

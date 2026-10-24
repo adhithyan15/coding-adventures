@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C476-hechki",
+    "language": "bengali",
+    "chapter": 476,
+    "sequence": 28950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57cc1f4442102a8b"
+  },
+  "findings": []
+}

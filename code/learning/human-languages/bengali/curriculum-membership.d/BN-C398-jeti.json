@@ -1,0 +1,11 @@
+{
+  "id": "BN-C398-jeti",
+  "pathSegment": "BN-PATH-398-SROT398",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-398-SROT398",
+      "order": 2
+    }
+  ]
+}

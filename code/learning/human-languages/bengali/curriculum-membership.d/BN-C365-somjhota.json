@@ -1,0 +1,11 @@
+{
+  "id": "BN-C365-somjhota",
+  "pathSegment": "BN-PATH-365-SOMJHOTA365",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-365-SOMJHOTA365",
+      "order": 1
+    }
+  ]
+}

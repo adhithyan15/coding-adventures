@@ -1,0 +1,11 @@
+{
+  "id": "TA-C409-cikku",
+  "pathSegment": "TA-PATH-409-KUZHI409",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-409-KUZHI409",
+      "order": 4
+    }
+  ]
+}

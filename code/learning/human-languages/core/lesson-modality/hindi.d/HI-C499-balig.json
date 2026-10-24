@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C499-balig",
+    "language": "hindi",
+    "chapter": 499,
+    "sequence": 27420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ea6167eac18fe32"
+  },
+  "findings": []
+}

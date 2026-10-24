@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:8227d2f42287a921",
+  "lessonIds": [
+    "BN-C516-binodon",
+    "BN-C516-phursot",
+    "BN-C516-saikling",
+    "BN-C516-mogno",
+    "BN-C516-shoukhin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch516.txt",
+  "json": "bengali/narration/ch516.json",
+  "textHash": "fnv1a64:63117a94eaf5e834",
+  "jsonHash": "fnv1a64:d6fc50538d25c0fa",
+  "findings": []
+}

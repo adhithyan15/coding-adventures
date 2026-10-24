@@ -1,0 +1,11 @@
+{
+  "id": "BN-C372-dvigun",
+  "pathSegment": "BN-PATH-372-BARA372",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-372-BARA372",
+      "order": 2
+    }
+  ]
+}

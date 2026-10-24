@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:ee093971880f2a16",
+  "lessonIds": [
+    "MR-C307-prarambh",
+    "MR-C307-ant",
+    "MR-C307-akher",
+    "MR-C307-kalkhand",
+    "MR-C307-smrti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch307.txt",
+  "json": "marathi/narration/ch307.json",
+  "textHash": "fnv1a64:4926b631caec58e4",
+  "jsonHash": "fnv1a64:75290797b0b59916",
+  "findings": []
+}

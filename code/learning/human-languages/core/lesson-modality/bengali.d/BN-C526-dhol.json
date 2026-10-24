@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C526-dhol",
+    "language": "bengali",
+    "chapter": 526,
+    "sequence": 31750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33df49a151d400f3"
+  },
+  "findings": []
+}

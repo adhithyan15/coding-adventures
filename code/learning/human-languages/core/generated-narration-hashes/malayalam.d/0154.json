@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 154,
-  "sourceHash": "fnv1a64:abb344fc8e3d9c9d",
+  "sourceHash": "fnv1a64:85a0dc9f552e9870",
   "lessonIds": [
     "ML-C154-kaimuttu",
     "ML-C154-kalmuttu",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch154.txt",
   "json": "malayalam/narration/ch154.json",
   "textHash": "fnv1a64:f00aa483efa0202c",
-  "jsonHash": "fnv1a64:99d548400d95ec0c",
+  "jsonHash": "fnv1a64:ce711a441a3e0a76",
   "findings": []
 }

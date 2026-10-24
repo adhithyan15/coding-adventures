@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C283-kana-yaktubu",
+    "language": "arabic",
+    "chapter": 283,
+    "sequence": 16430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ec133ef19021c6d"
+  },
+  "findings": []
+}

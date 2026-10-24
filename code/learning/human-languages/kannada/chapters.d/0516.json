@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Careers",
+  "label": "ch:ka-careers",
+  "canDo": "I can say a profession, a post, a qualification, an expert and expertise.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C516-parinati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can say a profession, a post, a qualification, an expert and expertise.",
+    "assesses": [
+      "KA-LEX-C516-VRITTI516-03",
+      "KA-LEX-C516-VRITTI516-04",
+      "KA-LEX-C516-VRITTI516-05"
+    ]
+  }
+}

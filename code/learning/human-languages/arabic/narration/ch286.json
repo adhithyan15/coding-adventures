@@ -1,0 +1,785 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 286,
+  "title": "Must, Should, Will, Because",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1adff198d690fe00",
+  "lessons": [
+    {
+      "id": "AR-C286-an-adhhaba",
+      "sequence": 16560,
+      "title": "أن أذهب (an adhhaba) — to go: the verb after an",
+      "headword": "أن أذهب",
+      "romanization": "an adhhaba",
+      "gloss": "to go, after a verb of wanting or deciding — an and the subjunctive: the present's -u turns to -a, and -ūna loses its -na",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e464843a3e292626",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think that the exam is hard\". (Aʿtaqidu anna al-imtiḥāna ṣaʿb.) Then \"in my opinion\". (Fī raʾyī.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have said anwī an azūra jaddatī, \"I intend to visit my grandmother\". Listen to the end of azūra. It is not the azūru of \"I visit\", and this lesson says why."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -u becomes -a",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "After أن — an, \"to\", \"that\" before a verb — the present changes its last vowel. Adhhabu, I go, becomes an adhhaba, to go:"
+            },
+            {
+              "kind": "speech",
+              "text": "أريد أن أذهب إلى السوق. — urīdu an adhhaba ilā as-sūq — I want to go to the market."
+            },
+            {
+              "kind": "speech",
+              "text": "This shape of the present is the subjunctive: the verb for a thing wanted, planned or needed, not yet a fact. Urīdu, I want, is the present of arāda."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the present ends in -ūna or -īna, the -na falls away: yadhhabūna, they go, becomes an yadhhabū; tadhhabīna, you go (to a woman), becomes an tadhhabī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: an and anna",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قررنا أن نسافر بالقطار. — qarrarnā an nusāfira bi-l-qiṭār — We decided to travel by train."
+            },
+            {
+              "kind": "speech",
+              "text": "An takes a verb: what someone wants or decides to do. Anna, with the doubled n, takes a sentence: what someone thinks is so. Aʿtaqidu anna al-qiṭāra sarīʿ; urīdu an arkaba al-qiṭār."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhhabu … an adhhaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhhabu* … *an adhhaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to go to the market\" — urīdu an adhhaba ilā as-sūq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to go to the market\" — *urīdu an adhhaba ilā as-sūq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We decided to travel by train\" — qarrarnā an nusāfira bi-l-qiṭār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We decided to travel by train\" — *qarrarnā an nusāfira bi-l-qiṭār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"They want to go\" — yurīdūna an yadhhabū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"They want to go\" — *yurīdūna an yadhhabū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anwī an azūra jaddatī, and hear the -a",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anwī an azūra jaddatī*, and hear the *-a*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After an, what happens to -u? (It becomes -a: an adhhaba.) And to -ūna? (The -na falls away: an yadhhabū.) Which particle takes a verb, and which a sentence? (An a verb, anna a sentence.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C286-yajibu-an",
+      "sequence": 16570,
+      "title": "يجب أن (yajibu an) — must, should",
+      "headword": "يجب أن",
+      "romanization": "yajibu an",
+      "gloss": "must, should — yajibu an and the softer yanbaghī an, each followed by the subjunctive, with kāna yajibu for 'had to'",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43f8af96bdf55961",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I want to go\". (Urīdu an adhhaba.) Then the Arabic for homework, a duty. (Wājib.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Wanting is one reason to act. Having to is another, and a piece of advice is a third."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: yajibu an, it is necessary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "يجب — yajibu — \"it is necessary\". It does not change for the person. The person is in the verb after an, in the subjunctive:"
+            },
+            {
+              "kind": "speech",
+              "text": "يجب أن أذهب الآن. — yajibu an adhhaba al-ān — I must go now."
+            },
+            {
+              "kind": "speech",
+              "text": "So yajibu an tadhhaba, you must go; yajibu an nadhhaba, we must go. Put kāna in front for \"had to\": kāna yajibu an adhhaba, I had to go."
+            },
+            {
+              "kind": "speech",
+              "text": "Yajibu comes from the root of wājib, \"a duty\". The root's w drops in the present, as it does in yaṣilu, he arrives, from waṣala."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: yanbaghī an, you ought to",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ينبغي — yanbaghī — \"it is right, it is fitting\". It is softer than yajibu: advice, not an order."
+            },
+            {
+              "kind": "speech",
+              "text": "ينبغي أن تزور الطبيب. — yanbaghī an tazūra aṭ-ṭabīb — You ought to visit the doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "Yanbaghī an tastarīḥa, you should rest. The verb after it behaves exactly as after yajibu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I must go now\" — yajibu an adhhaba al-ān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I must go now\" — *yajibu an adhhaba al-ān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We must go\" — yajibu an nadhhaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We must go\" — *yajibu an nadhhaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I had to go\" — kāna yajibu an adhhaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I had to go\" — *kāna yajibu an adhhaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You ought to visit the doctor\" — yanbaghī an tazūra aṭ-ṭabīb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You ought to visit the doctor\" — *yanbaghī an tazūra aṭ-ṭabīb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "advice with a reason — fī raʾyī yanbaghī an tastarīḥa, li-annaka marīḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: advice with a reason — *fī raʾyī yanbaghī an tastarīḥa, li-annaka marīḍ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does yajibu change for the person? (No: the verb after an does.) The softer one, for advice? (Yanbaghī.) \"I had to go\"? (Kāna yajibu an adhhaba.) Which noun shares the root of yajibu? (Wājib, a duty.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C286-bi-sabab",
+      "sequence": 16580,
+      "title": "بسبب (bi-sabab) — because of",
+      "headword": "بسبب",
+      "romanization": "bi-sabab",
+      "gloss": "because of — bi-sabab before a noun, li-anna before a clause, and as-sababu huwa anna to give the reason on its own",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26de90f3827dcc82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I must go now\". (Yajibu an adhhaba al-ān.) Then ask \"why?\". (Limādhā?)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The answer can be a whole sentence, or a single thing. Arabic uses a different word for each."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a thing, or a sentence",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بسبب — bi-sabab — \"because of\". It is bi-, \"by\", with sabab, \"a reason\", and a noun follows it:"
+            },
+            {
+              "kind": "speech",
+              "text": "تأخرت بسبب المطر. — taʾakhkhartu bi-sabab al-maṭar — I was late because of the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the reason is a whole sentence, with its own verb, it takes li-anna:"
+            },
+            {
+              "kind": "speech",
+              "text": "تأخرت لأن الطريق كان مزدحما. — taʾakhkhartu li-anna aṭ-ṭarīqa kāna muzdaḥiman — I was late because the road was busy."
+            },
+            {
+              "kind": "speech",
+              "text": "So bi-sabab al-maṭar, a thing; li-anna aṭ-ṭarīqa kāna muzdaḥiman, a sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the reason is that",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To give the reason as an answer of its own, say السبب هو أن — as-sababu huwa anna — \"the reason is that\". Huwa, \"he, it\", stands where English has \"is\":"
+            },
+            {
+              "kind": "speech",
+              "text": "السبب هو أن القطار تأخر. — as-sababu huwa anna al-qiṭāra taʾakhkhara — The reason is that the train was late."
+            },
+            {
+              "kind": "speech",
+              "text": "Natīja, \"a result\", is its partner: as-sabab looks back, an-natīja looks forward."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I was late because of the rain\" — taʾakhkhartu bi-sabab al-maṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I was late because of the rain\" — *taʾakhkhartu bi-sabab al-maṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"because the road was busy\" — li-anna aṭ-ṭarīqa kāna muzdaḥiman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"because the road was busy\" — *li-anna aṭ-ṭarīqa kāna muzdaḥiman*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The reason is that the train was late\" — as-sababu huwa anna al-qiṭāra taʾakhkhara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The reason is that the train was late\" — *as-sababu huwa anna al-qiṭāra taʾakhkhara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a question and its answer — limādhā taʾakhkharta? … bi-sabab al-qiṭār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a question and its answer — *limādhā taʾakhkharta?* … *bi-sabab al-qiṭār*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What follows bi-sabab? (A noun: bi-sabab al-maṭar.) What follows li-anna? (A sentence.) \"The reason is that\"? (As-sababu huwa anna.) Which word sits inside bi-sabab? (Sabab, a reason.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C286-sawfa",
+      "sequence": 16590,
+      "title": "سوف (sawfa) — will, for a plan",
+      "headword": "سوف",
+      "romanization": "sawfa",
+      "gloss": "will — sa- or sawfa in front of the present for a plan, and lan with the subjunctive for 'will not'",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:888fe68138b7292e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"because of the rain\". (Bi-sabab al-maṭar.) Then \"the reason is that\". (As-sababu huwa anna.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have heard sa-usāfiru al-usbūʿa al-qādim, \"I will travel next week\". Reasons are often reasons for a plan, and a plan needs a future."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: sa- and sawfa",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Arabic builds the future on the present. Put سـ — sa- — onto its front, with no space, or put سوف — sawfa — before it as a word of its own:"
+            },
+            {
+              "kind": "speech",
+              "text": "سأسافر غدا. — sa-usāfiru ghadan — I will travel tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "سوف نسافر في العطلة القادمة. — sawfa nusāfiru fī al-ʿuṭla al-qādima — We will travel in the next holiday."
+            },
+            {
+              "kind": "speech",
+              "text": "The two say the same \"will\". Sawfa is the fuller one, and it is often heard for something further off or said with weight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: lan, will not",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For \"will not\", the sa- goes and لن — lan — takes its place. After lan the verb is in the subjunctive, as after an:"
+            },
+            {
+              "kind": "speech",
+              "text": "لن أسافر في العطلة. — lan usāfira fī al-ʿuṭla — I won't travel in the holiday."
+            },
+            {
+              "kind": "speech",
+              "text": "Lan adhhaba, I won't go; lan nadhhaba, we won't go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I will travel tomorrow\" — sa-usāfiru ghadan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I will travel tomorrow\" — *sa-usāfiru ghadan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We will travel in the next holiday\" — sawfa nusāfiru fī al-ʿuṭla al-qādima",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We will travel in the next holiday\" — *sawfa nusāfiru fī al-ʿuṭla al-qādima*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I won't go\" — lan adhhaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I won't go\" — *lan adhhaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plan with its reason — sa-usāfiru li-anna ʿindī waqtan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plan with its reason — *sa-usāfiru li-anna ʿindī waqtan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the opposite — lan usāfira li-anna ʿindī imtiḥānan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the opposite — *lan usāfira li-anna ʿindī imtiḥānan*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The short \"will\"? (سـ, sa-, joined to the verb.) The long one? (Sawfa.) \"Will not\"? (Lan, with the subjunctive: lan adhhaba.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R286-advice-and-reasons",
+      "sequence": 16600,
+      "title": "Review — a plan, some advice, and why",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a plan, a piece of advice and the reasons for both — an with the subjunctive, yajibu an, yanbaghī an, bi-sabab, sa- and lan",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b8df76dd42f19d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I have a question\", then \"I think that it is easy\". (ʿIndī suʾāl, aʿtaqidu annahu sahl.) Then \"so\", the one-letter way. (Fa-.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four lessons, and one vowel at the end of a verb. After an, after yajibu an and yanbaghī an, and after lan, the present ends in -a: the shape for a thing wanted, needed or refused, and not yet a fact. Sa- and sawfa keep the plain present. Bi-sabab gives a reason that is a thing, li-anna one that is a sentence."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A need and its reason in one breath:"
+            },
+            {
+              "kind": "speech",
+              "text": "يجب أن أزور الطبيب غدا، لأن عندي سؤالا. — yajibu an azūra aṭ-ṭabība ghadan, li-anna ʿindī suʾālan — I must visit the doctor tomorrow, because I have a question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to travel\", then \"I won't travel\" — urīdu an usāfira, lan usāfira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to travel\", then \"I won't travel\" — *urīdu an usāfira*, *lan usāfira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You ought to rest\" — yanbaghī an tastarīḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You ought to rest\" — *yanbaghī an tastarīḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The lawyer must come now\" — yajibu an yajīʾa al-muḥāmī al-ān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The lawyer must come now\" — *yajibu an yajīʾa al-muḥāmī al-ān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The reason is that the calculator is not here\" — as-sababu huwa anna al-ḥāsibata laysat hunā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The reason is that the calculator is not here\" — *as-sababu huwa anna al-ḥāsibata laysat hunā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plan of your own with sa-, and its reason with li-anna or bi-sabab",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plan of your own with *sa-*, and its reason with *li-anna* or *bi-sabab*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which four words hand their verb the -a? (An, yajibu an, yanbaghī an, lan.) \"I will go\"? (Sa-adhhabu.) \"Because of the rain\"? (Bi-sabab al-maṭar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

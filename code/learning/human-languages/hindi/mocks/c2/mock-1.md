@@ -420,6 +420,13 @@ Natural overlap, ellipsis, irony, self-repair, regional features, and register
 shifts are expected, but acoustic obscurity must not replace comprehension.
 Learners may take notes and must not see transcripts.
 
+Recording plan: cast one documented regional Hindi voice in the rapid
+multiparty interaction and a different documented regional Hindi voice in the
+culturally dense media part. The examiner production record must identify each
+speaker, regional variety, consent, and part. This script alone does not
+establish a recorded or reviewed form; no scored answer may depend on accent
+alone.
+
 ### Rapid multiparty interaction — items 1–8
 
 Orienting preview: *A museum team and community representatives negotiate the

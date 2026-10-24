@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-548-VANTA548",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-548-VANTA548"
+  ],
+  "after": []
+}

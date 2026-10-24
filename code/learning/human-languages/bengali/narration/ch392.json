@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 392,
+  "title": "Traffic and Crossings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4205418405981e89",
+  "lessons": [
+    {
+      "id": "BN-C392-traphik",
+      "sequence": 24410,
+      "title": "ট্রাফিক (ṭrāphik) — traffic (on the roads)",
+      "headword": "ট্রাফিক",
+      "romanization": "ṭrāphik",
+      "gloss": "traffic (on the roads)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1062ad121543680a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to overtake, then the Bengali for to apply (the brakes)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ট্রাফিক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ট্রাফিক — ṭrāphik — \"traffic (on the roads)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ট্রাফিক পুলিশ হাত তুলে গাড়ি থামালেন। ṭrāphik pulish hāt tule gāṛi thāmālen. The traffic policeman raised his hand and stopped the cars."
+            },
+            {
+              "kind": "speech",
+              "text": "যানজট is a jam; ট্রাফিক (ṭrāphik) is the traffic itself, and ট্রাফিক (ṭrāphik) পুলিশ the officer at the crossing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ট্রাফিক (ṭrāphik) is borrowed from English traffic; Bengali has no f, so the English f is said with ফ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭrāphik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭrāphik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭrāphik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭrāphik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭrāphik pulish hāt tule gāṛi thāmālen. — The traffic policeman raised his hand and stopped the cars.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭrāphik pulish hāt tule gāṛi thāmālen.* — The traffic policeman raised his hand and stopped the cars.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to overtake, then the Bengali for to apply (the brakes), then say ṭrāphik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to overtake, then the Bengali for to apply (the brakes), then say *ṭrāphik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ট্রাফিক (ṭrāphik) mean? (\"Traffic (on the roads)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C392-pothchari",
+      "sequence": 24420,
+      "title": "পথচারী (pôthchārī) — a pedestrian",
+      "headword": "পথচারী",
+      "romanization": "pôthchārī",
+      "gloss": "a pedestrian",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94b4a54ce35a514d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to apply (the brakes), then the Bengali for traffic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পথচারী",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পথচারী — pôthchārī — \"a pedestrian\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পথচারীরা মোড়ে রাস্তা পার হল। pôthchārīrā moṛe rāstā pār hôlô. The pedestrians crossed the road at the corner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পথচারী (pôthchārī) is built from পথ, \"a way\", and -cārin, \"moving, going about\" (Monier-Williams for both): one who goes on foot along the way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôthchārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôthchārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôthchārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôthchārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôthchārīrā moṛe rāstā pār hôlô. — The pedestrians crossed the road at the corner.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôthchārīrā moṛe rāstā pār hôlô.* — The pedestrians crossed the road at the corner.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to apply (the brakes), then the Bengali for traffic, then say pôthchārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to apply (the brakes), then the Bengali for traffic, then say *pôthchārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পথচারী (pôthchārī) mean? (\"A pedestrian\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C392-phlaiobhar",
+      "sequence": 24430,
+      "title": "ফ্লাইওভার (phlāiobhār) — a flyover",
+      "headword": "ফ্লাইওভার",
+      "romanization": "phlāiobhār",
+      "gloss": "a flyover",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:faf6e7901f6546f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for traffic, then the Bengali for a pedestrian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফ্লাইওভার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফ্লাইওভার — phlāiobhār — \"a flyover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নতুন ফ্লাইওভারে যানজট নেই। nôtun phlāiobhāre jānjôṭ nei. There is no traffic jam on the new flyover."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফ্লাইওভার (phlāiobhār) is borrowed from English flyover, with ফ for f and ভ for v."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phlāiobhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phlāiobhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phlāiobhār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phlāiobhār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôtun phlāiobhāre jānjôṭ nei. — There is no traffic jam on the new flyover.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôtun phlāiobhāre jānjôṭ nei.* — There is no traffic jam on the new flyover.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for traffic, then the Bengali for a pedestrian, then say phlāiobhār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for traffic, then the Bengali for a pedestrian, then say *phlāiobhār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফ্লাইওভার (phlāiobhār) mean? (\"A flyover\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C392-sainbord",
+      "sequence": 24440,
+      "title": "সাইনবোর্ড (sāinborḍ) — a signboard",
+      "headword": "সাইনবোর্ড",
+      "romanization": "sāinborḍ",
+      "gloss": "a signboard",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a10fd3d6be3c363",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a pedestrian, then the Bengali for a flyover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সাইনবোর্ড",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাইনবোর্ড — sāinborḍ — \"a signboard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সাইনবোর্ডটা দেখে আমরা ডানদিকে গেলাম। sāinborḍṭā dekhe āmrā ḍāndike gelām. We saw the signboard and turned right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাইনবোর্ড (sāinborḍ) is borrowed from English signboard, the painted board over a shop or at a turning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāinborḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāinborḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāinborḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāinborḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāinborḍṭā dekhe āmrā ḍāndike gelām. — We saw the signboard and turned right.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāinborḍṭā dekhe āmrā ḍāndike gelām.* — We saw the signboard and turned right.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a pedestrian, then the Bengali for a flyover, then say sāinborḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a pedestrian, then the Bengali for a flyover, then say *sāinborḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সাইনবোর্ড (sāinborḍ) mean? (\"A signboard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C392-ghesha",
+      "sequence": 24450,
+      "title": "ঘেঁষা (ghẽshā) — to keep close to; to brush against",
+      "headword": "ঘেঁষা",
+      "romanization": "ghẽshā",
+      "gloss": "to keep close to; to brush against",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:deb5bf9d21250258",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a flyover, then the Bengali for a signboard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘেঁষা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘেঁষা — ghẽshā — \"to keep close to; to brush against\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সাইকেলটা ফুটপাত ঘেঁষে চলল। sāikelṭā phuṭpāt ghẽshe chôllô. The bicycle kept close to the pavement."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই গাড়ি দেয়াল ঘেঁষল, sei gāṛi deyāl ghẽshlô."
+            },
+            {
+              "kind": "speech",
+              "text": "Most often in the -এ form before a verb of motion: দেয়াল ঘেঁষে দাঁড়ানো, to stand close against the wall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘেঁষা (ghẽshā) is inherited: CDIAL lists Bengali ghẽs, \"a touch, a rub\", under Sanskrit gharṣa, \"friction\" (CDIAL 4448); to brush past is to touch in passing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghẽshā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghẽshā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghẽshā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghẽshā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāikelṭā phuṭpāt ghẽshe chôllô. — The bicycle kept close to the pavement.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāikelṭā phuṭpāt ghẽshe chôllô.* — The bicycle kept close to the pavement.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a flyover, then the Bengali for a signboard, then say ghẽshā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a flyover, then the Bengali for a signboard, then say *ghẽshā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘেঁষা (ghẽshā) mean? (\"To keep close to; to brush against\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

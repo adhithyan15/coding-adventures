@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:085e9801bd2f3425",
+  "lessonIds": [
+    "AR-C370-intaqada",
+    "AR-C370-aarada",
+    "AR-C370-barrara",
+    "AR-C370-balagha",
+    "AR-C370-ammama"
+  ],
+  "tex": "arabic/book/chapters/ch370-criticism-and-excuses.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Small Injuries",
+  "label": "ch:bn-small-injuries",
+  "canDo": "I can talk about wounds, sores, sprains and stumbling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C475-hochot-khaoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about wounds, sores, sprains and stumbling.",
+    "assesses": [
+      "BN-LEX-C475-KHOTO475-03",
+      "BN-LEX-C475-KHOTO475-04",
+      "BN-LEX-C475-KHOTO475-05"
+    ]
+  }
+}

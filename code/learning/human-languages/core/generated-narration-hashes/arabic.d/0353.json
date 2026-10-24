@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:6c57828b9c102240",
+  "lessonIds": [
+    "AR-C353-muzahara",
+    "AR-C353-tajammaa",
+    "AR-C353-hatafa",
+    "AR-C353-iqtahama",
+    "AR-C353-intashara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch353.txt",
+  "json": "arabic/narration/ch353.json",
+  "textHash": "fnv1a64:cf79f524bda7406f",
+  "jsonHash": "fnv1a64:95ca449ca6840b54",
+  "findings": []
+}

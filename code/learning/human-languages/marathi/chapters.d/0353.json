@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Confirming and Refuting",
+  "label": "ch:mr-confirming-and-refuting",
+  "canDo": "I can confirm a report or argue against a claim.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C353-pratikriya-dene",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can confirm a report or argue against a claim.",
+    "assesses": [
+      "MR-LEX-C353-PUSHTI353-03",
+      "MR-LEX-C353-PUSHTI353-04",
+      "MR-LEX-C353-PUSHTI353-05"
+    ]
+  }
+}

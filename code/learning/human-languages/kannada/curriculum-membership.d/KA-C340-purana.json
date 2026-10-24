@@ -1,0 +1,11 @@
+{
+  "id": "KA-C340-purana",
+  "pathSegment": "KA-PATH-340-DANTAKATHE340",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-340-DANTAKATHE340",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 557,
+  "sourceHash": "fnv1a64:c9f9f98e61170891",
+  "lessonIds": [
+    "HI-C557-andesa",
+    "HI-C557-itminan",
+    "HI-C557-garanti",
+    "HI-C557-durbhagya",
+    "HI-C557-khauf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch557.txt",
+  "json": "hindi/narration/ch557.json",
+  "textHash": "fnv1a64:90fb9f26be380613",
+  "jsonHash": "fnv1a64:c86ce3ac4b3e7e55",
+  "findings": []
+}

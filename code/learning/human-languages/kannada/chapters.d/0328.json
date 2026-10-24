@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "A Robbery at Night",
+  "label": "ch:ka-a-robbery-at-night",
+  "canDo": "I can say a robbery, to loot, to commit, to abscond and a track.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C328-jadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can say a robbery, to loot, to commit, to abscond and a track.",
+    "assesses": [
+      "KA-LEX-C328-DAROODE328-03",
+      "KA-LEX-C328-DAROODE328-04",
+      "KA-LEX-C328-DAROODE328-05"
+    ]
+  }
+}

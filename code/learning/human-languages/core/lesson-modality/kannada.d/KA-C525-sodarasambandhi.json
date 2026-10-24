@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C525-sodarasambandhi",
+    "language": "kannada",
+    "chapter": 525,
+    "sequence": 26820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a91b50a5f8228f7d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-R273-comparing-and-time",
+  "pathSegment": "BN-PATH-273-COMPARE-TIME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-273-COMPARE-TIME",
+      "order": 4
+    }
+  ]
+}

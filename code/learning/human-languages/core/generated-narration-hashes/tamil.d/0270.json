@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 270,
-  "sourceHash": "fnv1a64:7494d4851b8db6aa",
+  "sourceHash": "fnv1a64:79744be02326065c",
   "lessonIds": [
     "TA-C270-kaikkuttai",
     "TA-C270-totu2",
@@ -14,6 +14,6 @@
   "text": "tamil/narration/ch270.txt",
   "json": "tamil/narration/ch270.json",
   "textHash": "fnv1a64:895fb8b172979fbb",
-  "jsonHash": "fnv1a64:6bffb3f1cd4cc125",
+  "jsonHash": "fnv1a64:1e4f2056662dcb80",
   "findings": []
 }

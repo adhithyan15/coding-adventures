@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:2f57c99b9c689795",
+  "lessonIds": [
+    "AR-C398-talim",
+    "AR-C398-tarbiya",
+    "AR-C398-rawda",
+    "AR-C398-mahw-al-ummiyya",
+    "AR-C398-hudur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch398.txt",
+  "json": "arabic/narration/ch398.json",
+  "textHash": "fnv1a64:1039c73d286bd8ef",
+  "jsonHash": "fnv1a64:f75fbafe93375004",
+  "findings": []
+}

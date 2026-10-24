@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C535-panketu",
+    "language": "tamil",
+    "chapter": 535,
+    "sequence": 30580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4c00b34bd601bb0"
+  },
+  "findings": []
+}

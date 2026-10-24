@@ -1,0 +1,11 @@
+{
+  "id": "KA-C346-kampisu",
+  "pathSegment": "KA-PATH-346-SPHOTA346",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-346-SPHOTA346",
+      "order": 2
+    }
+  ]
+}

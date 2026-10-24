@@ -1,0 +1,11 @@
+{
+  "id": "TA-C492-tay",
+  "pathSegment": "TA-PATH-492-KUTUMPAM492",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-492-KUTUMPAM492",
+      "order": 1
+    }
+  ]
+}

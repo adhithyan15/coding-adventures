@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C511-ulbanisu",
+    "language": "kannada",
+    "chapter": 511,
+    "sequence": 26090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:247d4f881115cca2"
+  },
+  "findings": []
+}

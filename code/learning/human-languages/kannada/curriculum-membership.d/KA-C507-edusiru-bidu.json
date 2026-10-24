@@ -1,0 +1,11 @@
+{
+  "id": "KA-C507-edusiru-bidu",
+  "pathSegment": "KA-PATH-507-SADDU507",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-507-SADDU507",
+      "order": 2
+    }
+  ]
+}

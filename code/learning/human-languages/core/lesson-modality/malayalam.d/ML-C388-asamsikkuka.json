@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C388-asamsikkuka",
+    "language": "malayalam",
+    "chapter": 388,
+    "sequence": 19010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:107bebb5c108d25e"
+  },
+  "findings": []
+}

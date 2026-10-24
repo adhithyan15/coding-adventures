@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:5d139f1ee48fdd28",
+  "lessonIds": [
+    "MR-C381-joparyant",
+    "MR-C381-toparyant",
+    "MR-C381-basarte",
+    "MR-C381-jenekarun",
+    "MR-C381-janu",
+    "MR-R381-review-374-381"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch381.txt",
+  "json": "marathi/narration/ch381.json",
+  "textHash": "fnv1a64:df4a76101f215a3d",
+  "jsonHash": "fnv1a64:f6ba3cfafc36cdd7",
+  "findings": []
+}

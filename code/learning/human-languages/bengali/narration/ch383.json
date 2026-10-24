@@ -1,0 +1,907 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 383,
+  "title": "Worth the Effort",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:f8ca6795057d53fa",
+  "lessons": [
+    {
+      "id": "BN-C383-sarthok",
+      "sequence": 23710,
+      "title": "সার্থক (sārthôk) — worthwhile; fruitful",
+      "headword": "সার্থক",
+      "romanization": "sārthôk",
+      "gloss": "worthwhile; fruitful",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c05128513189f82c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to keep up, then the Bengali for to amend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সার্থক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সার্থক — sārthôk — \"worthwhile; fruitful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তুমি পাস করলে আমার সব পরিশ্রম সার্থক হবে। tumi pās kôrle āmār sôb pôrishrôm sārthôk hôbe. If you pass, all my hard work will have been worth it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সার্থক (sārthôk) is Sanskrit sārthaka, 'with meaning', significant (Monier-Williams). Bengali uses it for an effort that turned out to have a point."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārthôk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārthôk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārthôk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārthôk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumi pās kôrle āmār sôb pôrishrôm sārthôk hôbe. — If you pass, all my hard work will have been worth it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumi pās kôrle āmār sôb pôrishrôm sārthôk hôbe.* — If you pass, all my hard work will have been worth it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to keep up, then the Bengali for to amend, then say sārthôk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to keep up, then the Bengali for to amend, then say *sārthôk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সার্থক (sārthôk) mean? (\"Worthwhile; fruitful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C383-britha",
+      "sequence": 23720,
+      "title": "বৃথা (brithā) — in vain; wasted",
+      "headword": "বৃথা",
+      "romanization": "brithā",
+      "gloss": "in vain; wasted",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1adf81c9d8cd139c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to amend, then the Bengali for worthwhile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বৃথা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বৃথা — brithā — \"in vain; wasted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সবাই না এলে আমাদের পরিকল্পনা বৃথা হবে। sôbāi nā ele āmāder pôrikôlpônā brithā hôbe. If everyone doesn't come, our plan will be wasted."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বৃথা (brithā) is Sanskrit vṛthā, in vain (Monier-Williams): the opposite of সার্থক (sārthôk)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "brithā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *brithā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "brithā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *brithā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôbāi nā ele āmāder pôrikôlpônā brithā hôbe. — If everyone doesn't come, our plan will be wasted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôbāi nā ele āmāder pôrikôlpônā brithā hôbe.* — If everyone doesn't come, our plan will be wasted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to amend, then the Bengali for worthwhile, then say brithā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to amend, then the Bengali for worthwhile, then say *brithā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বৃথা (brithā) mean? (\"In vain; wasted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C383-sontushto",
+      "sequence": 23730,
+      "title": "সন্তুষ্ট (sôntushṭô) — satisfied; content",
+      "headword": "সন্তুষ্ট",
+      "romanization": "sôntushṭô",
+      "gloss": "satisfied; content",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ce8db4cb0970649",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for worthwhile, then the Bengali for in vain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সন্তুষ্ট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সন্তুষ্ট — sôntushṭô — \"satisfied; content\"."
+            },
+            {
+              "kind": "speech",
+              "text": "খদ্দের সন্তুষ্ট হলে আবার আসবে। khôdder sôntushṭô hôle ābār āsbe. If customers are satisfied, they'll come back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সন্তুষ্ট (sôntushṭô) is Sanskrit saṃtuṣṭa, quite satisfied (Monier-Williams). What satisfies you takes -এ: কাজে সন্তুষ্ট."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôntushṭô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôntushṭô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôntushṭô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôntushṭô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khôdder sôntushṭô hôle ābār āsbe. — If customers are satisfied, they'll come back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khôdder sôntushṭô hôle ābār āsbe.* — If customers are satisfied, they'll come back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for worthwhile, then the Bengali for in vain, then say sôntushṭô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for worthwhile, then the Bengali for in vain, then say *sôntushṭô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সন্তুষ্ট (sôntushṭô) mean? (\"Satisfied; content\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C383-akkhep",
+      "sequence": 23740,
+      "title": "আক্ষেপ (ākkhep) — a regret",
+      "headword": "আক্ষেপ",
+      "romanization": "ākkhep",
+      "gloss": "a regret",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d008947399afaa3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for in vain, then the Bengali for satisfied."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আক্ষেপ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আক্ষেপ — ākkhep — \"a regret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আগে চেষ্টা করলে আজ এই আক্ষেপ থাকত না। āge cheshṭā kôrle āj ei ākkhep thāktô nā. If I had tried earlier, I would not have this regret today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আক্ষেপ (ākkhep) is Sanskrit ākṣepa, among whose senses Monier-Williams gives reproach and harsh speech. The Bengali sense, regret for what might have been, is not one the dictionary gives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākkhep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākkhep*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākkhep, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākkhep*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āge cheshṭā kôrle āj ei ākkhep thāktô nā. — If I had tried earlier, I would not have this regret today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āge cheshṭā kôrle āj ei ākkhep thāktô nā.* — If I had tried earlier, I would not have this regret today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for in vain, then the Bengali for satisfied, then say ākkhep again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for in vain, then the Bengali for satisfied, then say *ākkhep* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আক্ষেপ (ākkhep) mean? (\"A regret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C383-bertho-hooya",
+      "sequence": 23750,
+      "title": "ব্যর্থ হওয়া (bærthô hôoyā) — to fail; to come to nothing",
+      "headword": "ব্যর্থ হওয়া",
+      "romanization": "bærthô hôoyā",
+      "gloss": "to fail; to come to nothing",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71bdacc29ff391e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for satisfied, then the Bengali for a regret."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ব্যর্থ হওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ব্যর্থ হওয়া — bærthô hôoyā — \"to fail; to come to nothing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পরিকল্পনা ব্যর্থ হলে আমরা আবার চেষ্টা করব। pôrikôlpônā bærthô hôle āmrā ābār cheshṭā kôrbô. If the plan fails, we'll try again."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই চেষ্টা ব্যর্থ হল, sei cheshṭā bærthô hôlô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ব্যর্থ হওয়া (bærthô hôoyā) is Sanskrit vyartha, 'without purpose', useless (Monier-Williams), with হওয়া: to come to nothing. The taught ব্যর্থতা, failure, is its noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bærthô hôoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bærthô hôoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bærthô hôoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bærthô hôoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrikôlpônā bærthô hôle āmrā ābār cheshṭā kôrbô. — If the plan fails, we'll try again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrikôlpônā bærthô hôle āmrā ābār cheshṭā kôrbô.* — If the plan fails, we'll try again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for satisfied, then the Bengali for a regret, then say bærthô hôoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for satisfied, then the Bengali for a regret, then say *bærthô hôoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ব্যর্থ হওয়া (bærthô hôoyā) mean? (\"To fail; to come to nothing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R383-review-377-383",
+      "sequence": 23760,
+      "title": "Looking back: from Getting There to Worth the Effort",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Getting There to Worth the Effort",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22a9c571de583a72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for improvement and progress."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "improvement, progress, speed, to surpass, to accomplish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: improvement, progress, speed, to surpass, to accomplish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preparations (for an event), without delay, a period of validity, to postpone, to chase up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: preparations (for an event), without delay, a period of validity, to postpone, to chase up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pledge, a resolve, resolute, to break a promise, to vow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pledge, a resolve, resolute, to break a promise, to vow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "favourable, adverse, suitable, qualified, to get used to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: favourable, adverse, suitable, qualified, to get used to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an arrangement, effective, out of order, skill, to practise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an arrangement, effective, out of order, skill, to practise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dedication, perseverance, to fulfil, to keep up, to amend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dedication, perseverance, to fulfil, to keep up, to amend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "worthwhile, in vain, satisfied, a regret, to come to nothing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: worthwhile, in vain, satisfied, a regret, to come to nothing]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Improvement? (উন্নতি, unnôti.) Progress? (অগ্রগতি, ôgrôgôti.) Speed? (গতি, gôti.) To surpass? (অতিক্রম করা, ôtikrôm kôrā.) To accomplish? (সাধন করা, sādhôn kôrā.) Preparations (for an event)? (আয়োজন, āyojôn.) Without delay? (অবিলম্বে, ôbilômbe.) A period of validity? (মেয়াদ, meyād.) To postpone? (স্থগিত করা, sthôgitô kôrā.) To chase up? (তাগাদা দেওয়া, tāgādā deoyā.) A pledge? (প্রতিশ্রুতি, prôtishruti.) A resolve? (সংকল্প, sôngkôlpô.) Resolute? (দৃঢ়, driṛhô.) To break a promise? (ভঙ্গ করা, bhônggô kôrā.) To vow? (প্রতিজ্ঞা করা, prôtigyā kôrā.) Favourable? (অনুকূল, ônukūl.) Adverse? (প্রতিকূল, prôtikūl.) Suitable? (উপযুক্ত, upôjuktô.) Qualified? (যোগ্য, jogyô.) To get used to? (অভ্যস্ত হওয়া, ôbhyôstô hôoyā.) An arrangement? (ব্যবস্থা, bæbôsthā.) Effective? (কার্যকর, kārjôkôr.) Out of order? (বিকল, bikôl.) Skill? (দক্ষতা, dôkkhôtā.) To practise? (অনুশীলন করা, ônushīlôn kôrā.) Dedication? (নিষ্ঠা, nishṭhā.) Perseverance? (অধ্যবসায়, ôdhyôbôsāy.) To fulfil? (পূরণ করা, pūrôn kôrā.) To keep up? (বজায় রাখা, bôjāy rākhā.) To amend? (সংশোধন করা, sôngshodhôn kôrā.) Worthwhile? (সার্থক, sārthôk.) In vain? (বৃথা, brithā.) Satisfied? (সন্তুষ্ট, sôntushṭô.) A regret? (আক্ষেপ, ākkhep.) To come to nothing? (ব্যর্থ হওয়া, bærthô hôoyā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R383-review-final-383",
+      "sequence": 23770,
+      "title": "Worth the Effort — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:271bb0d56e4584cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for worthwhile and in vain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "worthwhile, in vain, satisfied, a regret, to come to nothing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: worthwhile, in vain, satisfied, a regret, to come to nothing]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Worthwhile? (সার্থক, sārthôk.) In vain? (বৃথা, brithā.) Satisfied? (সন্তুষ্ট, sôntushṭô.) A regret? (আক্ষেপ, ākkhep.) To come to nothing? (ব্যর্থ হওয়া, bærthô hôoyā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

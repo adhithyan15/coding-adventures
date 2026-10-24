@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 308,
+  "title": "The Last Day of the Festival",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dc5ee67676b286f2",
+  "lessons": [
+    {
+      "id": "BN-C308-bisorjon",
+      "sequence": 19640,
+      "title": "বিসর্জন (bisôrjôn) — the immersion of an idol",
+      "headword": "বিসর্জন",
+      "romanization": "bisôrjôn",
+      "gloss": "the immersion of an idol",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1301504c4a30762f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an evening worship with lamps, then the Bengali for to swing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিসর্জন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিসর্জন — bisôrjôn — \"the immersion of an idol\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পুজোর শেষ দিনে প্রতিমার বিসর্জন হয়। pujor shesh dine prôtimār bisôrjôn hôy. On the last day of the puja comes the immersion of the image."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিসর্জন (bisôrjôn) is Sanskrit visarjana, 'sending forth, dismissal' (Monier-Williams), which already names the casting of a deity's image into holy water at the close of a festival."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bisôrjôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bisôrjôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bisôrjôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bisôrjôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pujor shesh dine prôtimār bisôrjôn hôy. — On the last day of the puja comes the immersion of the image.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pujor shesh dine prôtimār bisôrjôn hôy.* — On the last day of the puja comes the immersion of the image.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an evening worship with lamps, then the Bengali for to swing, then say bisôrjôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an evening worship with lamps, then the Bengali for to swing, then say *bisôrjôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিসর্জন (bisôrjôn) mean? (\"The immersion of an idol\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C308-bhasano",
+      "sequence": 19650,
+      "title": "ভাসানো (bhāsāno) — to set afloat; to immerse",
+      "headword": "ভাসানো",
+      "romanization": "bhāsāno",
+      "gloss": "to set afloat; to immerse",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bec32df2dab408f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to swing, then the Bengali for the immersion of an idol."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভাসানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাসানো — bhāsāno — \"to set afloat; to immerse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সন্ধ্যায় তারা প্রতিমা নদীতে ভাসাল। sôndhyāy tārā prôtimā nôdīte bhāsālô. In the evening they set the image afloat on the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই শিশু কাগজের নৌকা ভাসাল, sei shishu kāgôjer noukā bhāsālô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাসানো (bhāsāno) is ভাসা, to float — CDIAL 9654, Sanskrit bhráśyati, 'falls', which lists Bengali bhāsā, 'to float, drift along' — with the -ānō ending: to set something afloat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāsāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāsāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāsāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāsāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôndhyāy tārā prôtimā nôdīte bhāsālô. — In the evening they set the image afloat on the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôndhyāy tārā prôtimā nôdīte bhāsālô.* — In the evening they set the image afloat on the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to swing, then the Bengali for the immersion of an idol, then say bhāsāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to swing, then the Bengali for the immersion of an idol, then say *bhāsāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভাসানো (bhāsāno) mean? (\"To set afloat; to immerse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C308-biday",
+      "sequence": 19660,
+      "title": "বিদায় (bidāy) — a farewell; a parting",
+      "headword": "বিদায়",
+      "romanization": "bidāy",
+      "gloss": "a farewell; a parting",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83c2a6809d3e2611",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for the immersion of an idol, then the Bengali for to set afloat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিদায়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিদায় — bidāy — \"a farewell; a parting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বিদায়ের সময় দিদিমা কাঁদলেন। bidāyer sômôy didimā kā̃dlen. Grandmother cried when it was time to say goodbye."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিদায় (bidāy) is Sanskrit vidāya; Monier-Williams gives 'dismissal with good wishes' and suspects that this sense is not Sanskrit at all but Arabic wadāʿ, 'farewell'. বিদায় নেওয়া, to take your leave."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bidāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bidāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bidāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bidāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bidāyer sômôy didimā kā̃dlen. — Grandmother cried when it was time to say goodbye.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bidāyer sômôy didimā kā̃dlen.* — Grandmother cried when it was time to say goodbye.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for the immersion of an idol, then the Bengali for to set afloat, then say bidāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for the immersion of an idol, then the Bengali for to set afloat, then say *bidāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিদায় (bidāy) mean? (\"A farewell; a parting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C308-shobhajatra",
+      "sequence": 19670,
+      "title": "শোভাযাত্রা (shobhājātrā) — a festive procession",
+      "headword": "শোভাযাত্রা",
+      "romanization": "shobhājātrā",
+      "gloss": "a festive procession",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16a4b954078b982d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to set afloat, then the Bengali for a farewell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শোভাযাত্রা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শোভাযাত্রা — shobhājātrā — \"a festive procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বিসর্জনের শোভাযাত্রা ঢাক বাজিয়ে নদীর দিকে গেল। bisôrjôner shobhājātrā ḍhāk bājiye nôdīr dike gelô. The immersion procession went down to the river with the drums beating."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শোভাযাত্রা (shobhājātrā) joins Sanskrit śobhā, 'splendour, beauty' (Monier-Williams), to যাত্রা, a journey: a march in finery. A protest march is a মিছিল."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shobhājātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shobhājātrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shobhājātrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shobhājātrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bisôrjôner shobhājātrā ḍhāk bājiye nôdīr dike gelô. — The immersion procession went down to the river with the drums beating.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bisôrjôner shobhājātrā ḍhāk bājiye nôdīr dike gelô.* — The immersion procession went down to the river with the drums beating.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to set afloat, then the Bengali for a farewell, then say shobhājātrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to set afloat, then the Bengali for a farewell, then say *shobhājātrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শোভাযাত্রা (shobhājātrā) mean? (\"A festive procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C308-kolakuli-kora",
+      "sequence": 19680,
+      "title": "কোলাকুলি করা (kolākuli kôrā) — to embrace (in festive greeting)",
+      "headword": "কোলাকুলি করা",
+      "romanization": "kolākuli kôrā",
+      "gloss": "to embrace (in festive greeting)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0edd04d4db5a27a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a farewell, then the Bengali for a festive procession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কোলাকুলি করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কোলাকুলি করা — kolākuli kôrā — \"to embrace (in festive greeting)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বিসর্জনের পরে বন্ধুরা কোলাকুলি করল। bisôrjôner pôre bôndhurā kolākuli kôrlô. After the immersion the friends embraced one another."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি বন্ধুর সঙ্গে কোলাকুলি করলেন, tini bôndhur sôngge kolākuli kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কোলাকুলি করা (kolākuli kôrā) doubles কোল, the lap or the bosom — CDIAL 3607, Sanskrit krōḍa, 'breast', beside kōla, 'breast, lap' — into the word for the embrace of the festival's last evening, with করা."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kolākuli kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kolākuli kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kolākuli kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kolākuli kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bisôrjôner pôre bôndhurā kolākuli kôrlô. — After the immersion the friends embraced one another.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bisôrjôner pôre bôndhurā kolākuli kôrlô.* — After the immersion the friends embraced one another.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a farewell, then the Bengali for a festive procession, then say kolākuli kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a farewell, then the Bengali for a festive procession, then say *kolākuli kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কোলাকুলি করা (kolākuli kôrā) mean? (\"To embrace (in festive greeting)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C318-bam",
+  "pathSegment": "HI-PATH-318-DHAMAKA318",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-318-DHAMAKA318",
+      "order": 1
+    }
+  ]
+}

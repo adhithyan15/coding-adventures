@@ -1,0 +1,11 @@
+{
+  "id": "TE-C492-tadabadu",
+  "pathSegment": "TE-PATH-492-PORABADU492",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-492-PORABADU492",
+      "order": 1
+    }
+  ]
+}

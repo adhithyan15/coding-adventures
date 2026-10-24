@@ -1,0 +1,21 @@
+{
+  "chapter": 545,
+  "title": "Choices",
+  "label": "ch:bn-choices",
+  "canDo": "I can talk about priorities, thrift and what is within my power.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-R545-review-final-545",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can talk about priorities, thrift and what is within my power.",
+    "assesses": [
+      "BN-LEX-C545-SADHYO545-01",
+      "BN-LEX-C545-SADHYO545-02",
+      "BN-LEX-C545-SADHYO545-03",
+      "BN-LEX-C545-SADHYO545-04",
+      "BN-LEX-C545-SADHYO545-05"
+    ]
+  }
+}

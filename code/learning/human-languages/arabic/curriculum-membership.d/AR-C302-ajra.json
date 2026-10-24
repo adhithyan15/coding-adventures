@@ -1,0 +1,11 @@
+{
+  "id": "AR-C302-ajra",
+  "pathSegment": "AR-PATH-302-HIWAR302",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-302-HIWAR302",
+      "order": 2
+    }
+  ]
+}

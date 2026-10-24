@@ -1,0 +1,11 @@
+{
+  "id": "KA-C338-pasarisu",
+  "pathSegment": "KA-PATH-338-VADANTI338",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-338-VADANTI338",
+      "order": 1
+    }
+  ]
+}

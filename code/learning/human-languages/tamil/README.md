@@ -171,6 +171,39 @@ through.
   on it, and Malayalam kept the word and moved its sense to *from*. **None of the
   four builds "first" on its own word for one.** In the book.
 
+- **Chapters 284–293 — the B1 core** ([`lessons/`](./lessons/), `TA-C284-*`
+  to `TA-W293-six-lines`): two chapters for each of the five B1 spine nodes.
+  Narrating (the past by person, -கொண்டிருந்தேன் for the scene, வந்த போது,
+  முதலில் … அதன் பிறகு … கடைசியில், the -உ / -இ form, an eighty-word reading),
+  giving reasons (… என்று தோன்றுகிறது, அதனால் and எனவே, வேண்டும் / கூடாது /
+  வேண்டாம், -ததால் and ஏனென்றால்), travel (the way, a ticket, a missed bus, a
+  missing bag), experience (எனக்கு … வந்தது, ஆசை, -ஐவிட and
+  எல்லாவற்றையும்விட, மூன்று மாதமாக) and conditions (-ஆல் with ஒருவேளை and
+  என்றால், … -ஐப் பொறுத்தது, the unreal -இருந்தால் … -இருப்பேன்), closing on a
+  six-line writing task. Written standard Tamil throughout, with the spoken
+  form named beside it. The letter lesson `TA-S141-letter-ii` sits right
+  after its anchor word ஈரம் ("dampness") and teaches the independent vowel
+  ஈ by recognition and by copying the printed shape, with no stroke-order
+  claim.
+- **Chapters 294–558 — the B1 vocabulary** ([`lessons/`](./lessons/),
+  `TA-C294-*` to `TA-R558-review-final-558`): 1,325 headwords, 399 of them
+  verbs (each shown with its past, திருடினேன் "I stole"), one word per
+  lesson, with eight reviews in each of the five tranches:
+  - 294–346: narrating (crime and the police, accidents and rescues, news
+    and the media, ceremonies, old writings, kings and wars);
+  - 347–399: reasons and conditions (argument and evidence, research and
+    education, society, law and elections, promises, plans and conditions);
+  - 400–452: travel (transport, lodging, the city, the weather and nature);
+  - 453–505: experience (feelings and character, health and the body,
+    family);
+  - 506–558: work, technology and the home, free time, the arts and sport,
+    then insurance, risks, guarantees and plans.
+
+  The first words of the first eight vocabulary chapters practise the core's
+  last four grammar points, and two later first words bring back ஈ through
+  ஈரம். With the core, Tamil teaches 2,563 headwords at or below B1 and
+  attains B1 on the level gate.
+
 ---
 
 ## For contributors

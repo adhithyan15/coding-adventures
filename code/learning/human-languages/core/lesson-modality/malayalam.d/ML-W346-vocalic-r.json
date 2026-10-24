@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "ML-W346-vocalic-r",
+    "language": "malayalam",
+    "chapter": 346,
+    "sequence": 16470,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:df77b4a09d2f36bb",
+    "detachableSegments": [
+      "Script you'll notice: ഋ",
+      "Writing: ഋ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

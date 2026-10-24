@@ -57,7 +57,10 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // no later writing-stage id for another lesson to add, so this one-time final
   // row does not turn the language-owned pin into a recurring aggregate edit.
   // A rung may repeat; the ORDER assertion below still forbids one arriving
-  // before its prerequisite stages.
+  // before its prerequisite stages. `TE-W325-six-lines`, the B1 core's writing
+  // task, repeats that last rung: six connected lines about a trip, with a
+  // scene, events in order, a reason, a feeling and an unreal condition, later
+  // in sequence than the A2 message.
   expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
     ["TE-S150-letter-ma", "observe-trace"],
     ["TE-S151-letter-dha", "observe-trace"],
@@ -94,6 +97,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-R152-jhari-recall", "controlled-composition"],
     ["TE-R152-jhari-recall", "timed-assessment-production"],
     ["TE-W315-a2-connected-composition", "connected-composition"],
+    ["TE-W325-six-lines", "connected-composition"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({

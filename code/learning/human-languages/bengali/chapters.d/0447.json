@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Regret",
+  "label": "ch:bn-regret",
+  "canDo": "I can say what I regret and admit a mistake.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C447-svikar-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can say what I regret and admit a mistake.",
+    "assesses": [
+      "BN-LEX-C447-APHSOS447-03",
+      "BN-LEX-C447-APHSOS447-04",
+      "BN-LEX-C447-APHSOS447-05"
+    ]
+  }
+}

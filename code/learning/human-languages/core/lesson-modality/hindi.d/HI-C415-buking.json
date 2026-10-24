@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C415-buking",
+    "language": "hindi",
+    "chapter": 415,
+    "sequence": 22890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44957360fa85a250"
+  },
+  "findings": []
+}

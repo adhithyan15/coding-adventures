@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:ef9db7f0f72daa28",
+  "lessonIds": [
+    "TE-C492-porabadu",
+    "TE-C492-tadabadu",
+    "TE-C492-ancana-veyu",
+    "TE-C492-tappatadugu",
+    "TE-C492-gandaragolam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch492.txt",
+  "json": "telugu/narration/ch492.json",
+  "textHash": "fnv1a64:76f9f0bcedd66e68",
+  "jsonHash": "fnv1a64:ece6dccef63afd09",
+  "findings": []
+}

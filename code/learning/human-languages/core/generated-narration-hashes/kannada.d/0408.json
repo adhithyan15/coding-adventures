@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:0c0a8c1f6d57f044",
+  "lessonIds": [
+    "KA-C408-kendrikarisu",
+    "KA-C408-adhyayana",
+    "KA-C408-aicchika",
+    "KA-C408-pathyakrama",
+    "KA-C408-punaravartane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch408.txt",
+  "json": "kannada/narration/ch408.json",
+  "textHash": "fnv1a64:bf2616fb64cf9c66",
+  "jsonHash": "fnv1a64:05dd8b3382ce1753",
+  "findings": []
+}

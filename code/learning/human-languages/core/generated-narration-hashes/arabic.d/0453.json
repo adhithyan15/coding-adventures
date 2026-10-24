@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:11af23aae6ae63a3",
+  "lessonIds": [
+    "AR-C453-qist",
+    "AR-C453-naqdan",
+    "AR-C453-sarraf-ali",
+    "AR-C453-istaradda",
+    "AR-C453-addad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch453.txt",
+  "json": "arabic/narration/ch453.json",
+  "textHash": "fnv1a64:6509fcf00e90b6ae",
+  "jsonHash": "fnv1a64:567960bf0379f383",
+  "findings": []
+}

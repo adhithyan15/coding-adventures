@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C455-dhoirjo",
+    "language": "bengali",
+    "chapter": 455,
+    "sequence": 27870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:957f44b3273354ec"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C435-kulankal",
+  "pathSegment": "TA-PATH-435-KATALORAM435",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-435-KATALORAM435",
+      "order": 4
+    }
+  ]
+}

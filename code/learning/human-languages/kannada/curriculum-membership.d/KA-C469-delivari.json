@@ -1,0 +1,11 @@
+{
+  "id": "KA-C469-delivari",
+  "pathSegment": "KA-PATH-469-VARANTI469",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-469-VARANTI469",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:8f97467d746dbfe5",
+  "lessonIds": [
+    "TE-C481-vadagali",
+    "TE-C481-endamavi",
+    "TE-C481-galidumaram",
+    "TE-C481-endipovu",
+    "TE-C481-bitalu-varu"
+  ],
+  "tex": "telugu/book/chapters/ch481-heat-and-drought.tex"
+}

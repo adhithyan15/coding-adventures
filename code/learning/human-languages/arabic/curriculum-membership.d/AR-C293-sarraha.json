@@ -1,0 +1,11 @@
+{
+  "id": "AR-C293-sarraha",
+  "pathSegment": "AR-PATH-293-AKHBAR293",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-293-AKHBAR293",
+      "order": 4
+    }
+  ]
+}

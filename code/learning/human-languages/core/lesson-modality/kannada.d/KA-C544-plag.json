@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C544-plag",
+    "language": "kannada",
+    "chapter": 544,
+    "sequence": 27780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a12e55d9ea0236d6"
+  },
+  "findings": []
+}

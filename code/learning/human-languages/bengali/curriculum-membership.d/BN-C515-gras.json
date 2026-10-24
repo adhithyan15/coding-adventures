@@ -1,0 +1,11 @@
+{
+  "id": "BN-C515-gras",
+  "pathSegment": "BN-PATH-515-PORIBESHON515",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-515-PORIBESHON515",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Pride and Humiliation",
+  "label": "ch:bn-pride-and-humiliation",
+  "canDo": "I can talk about arrogance, boasting and being humiliated.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C452-opodostho-hooya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can talk about arrogance, boasting and being humiliated.",
+    "assesses": [
+      "BN-LEX-C452-DEMAK452-03",
+      "BN-LEX-C452-DEMAK452-04",
+      "BN-LEX-C452-DEMAK452-05"
+    ]
+  }
+}

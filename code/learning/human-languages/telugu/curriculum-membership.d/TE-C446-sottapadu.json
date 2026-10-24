@@ -1,0 +1,11 @@
+{
+  "id": "TE-C446-sottapadu",
+  "pathSegment": "TE-PATH-446-KUDUPU446",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-446-KUDUPU446",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 458,
+  "title": "Crying Aloud",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0b19a2995c90dc0b",
+  "lessons": [
+    {
+      "id": "TA-C458-kataru",
+      "sequence": 26350,
+      "title": "கதறு (kataṟu) — to wail; to cry out",
+      "headword": "கதறு",
+      "romanization": "kataṟu",
+      "gloss": "to wail; to cry out",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b95b16d46339f094",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for pitifulness, then the Tamil for concern."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கதறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கதறு — kataṟu — \"to wail; to cry out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தச் செய்தியைக் கேட்டு அவள் கதறி அழுதாள். antac ceytiyaik kēṭṭu avaḷ kataṟi aḻutāḷ. Hearing the news, she wailed and wept."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கதறினேன், kataṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Often கதறி அழு, to cry aloud."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கதறு (kataṟu) is native Dravidian (DEDR 1189); Malayalam has the same verb for roaring."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kataṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kataṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kataṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kataṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antac ceytiyaik kēṭṭu avaḷ kataṟi aḻutāḷ. — Hearing the news, she wailed and wept.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antac ceytiyaik kēṭṭu avaḷ kataṟi aḻutāḷ.* — Hearing the news, she wailed and wept.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for pitifulness, then the Tamil for concern, then say kataṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for pitifulness, then the Tamil for concern, then say *kataṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கதறு (kataṟu) mean? (\"To wail; to cry out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C458-vimmu",
+      "sequence": 26360,
+      "title": "விம்மு (vimmu) — to sob",
+      "headword": "விம்மு",
+      "romanization": "vimmu",
+      "gloss": "to sob",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:923ca9a966e97d0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for concern, then the Tamil for to wail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விம்மு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விம்மு — vimmu — \"to sob\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குழந்தை அம்மாவைத் தேடி விம்மியது. kuḻantai ammāvait tēṭi vimmiyatu. The child sobbed, looking for its mother."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): விம்மினேன், vimmiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Past with -இன்-: விம்மினேன். விம்மல், a sob."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விம்மு (vimmu) is native Dravidian (DEDR 5402). DEDR keeps a second விம்மு, \"to swell\", apart as its own entry (5397)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimmu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimmu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimmu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimmu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻantai ammāvait tēṭi vimmiyatu. — The child sobbed, looking for its mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻantai ammāvait tēṭi vimmiyatu.* — The child sobbed, looking for its mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for concern, then the Tamil for to wail, then say vimmu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for concern, then the Tamil for to wail, then say *vimmu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விம்மு (vimmu) mean? (\"To sob\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C458-vicumpu",
+      "sequence": 26370,
+      "title": "விசும்பு (vicumpu) — to whimper; to sob softly",
+      "headword": "விசும்பு",
+      "romanization": "vicumpu",
+      "gloss": "to whimper; to sob softly",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a430891c6c29bc32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to wail, then the Tamil for to sob."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விசும்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விசும்பு — vicumpu — \"to whimper; to sob softly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தோற்ற பிறகு அவன் தனியாக விசும்பினான். tōṟṟa piṟaku avaṉ taṉiyāka vicumpiṉāṉ. After losing, he whimpered on his own."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): விசும்பினேன், vicumpiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Often doubled: விசும்பி விசும்பி அழுதாள், she sobbed and sobbed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விசும்பு (vicumpu) is a Tamil verb whose origin is not settled; DEDR has no entry for this sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicumpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicumpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicumpu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicumpu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōṟṟa piṟaku avaṉ taṉiyāka vicumpiṉāṉ. — After losing, he whimpered on his own.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōṟṟa piṟaku avaṉ taṉiyāka vicumpiṉāṉ.* — After losing, he whimpered on his own.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to wail, then the Tamil for to sob, then say vicumpu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to wail, then the Tamil for to sob, then say *vicumpu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விசும்பு (vicumpu) mean? (\"To whimper; to sob softly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C458-pulampu",
+      "sequence": 26380,
+      "title": "புலம்பு (pulampu) — to lament; to moan",
+      "headword": "புலம்பு",
+      "romanization": "pulampu",
+      "gloss": "to lament; to moan",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09501eefc06b548c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to sob, then the Tamil for to whimper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புலம்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புலம்பு — pulampu — \"to lament; to moan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் இரவு முழுவதும் புலம்பினார். avar iravu muḻuvatum pulampiṉār. He moaned all night long."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): புலம்பினேன், pulampiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of a feverish person talking aloud without sense."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புலம்பு (pulampu) is native Dravidian (DEDR 4304); the entry runs from speaking foolishly to wailing in grief."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulampu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulampu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulampu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulampu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar iravu muḻuvatum pulampiṉār. — He moaned all night long.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar iravu muḻuvatum pulampiṉār.* — He moaned all night long.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to sob, then the Tamil for to whimper, then say pulampu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to sob, then the Tamil for to whimper, then say *pulampu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புலம்பு (pulampu) mean? (\"To lament; to moan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C458-alaru",
+      "sequence": 26390,
+      "title": "அலறு (alaṟu) — to scream; to shriek",
+      "headword": "அலறு",
+      "romanization": "alaṟu",
+      "gloss": "to scream; to shriek",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b1e1ed1ef3f23af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to whimper, then the Tamil for to lament."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அலறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அலறு — alaṟu — \"to scream; to shriek\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பாம்பைப் பார்த்ததும் அவள் அலறினாள். pāmpaip pārttatum avaḷ alaṟiṉāḷ. She screamed when she saw the snake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): அலறினேன், alaṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The verbal participle: அலறி ஓடினான், he ran off screaming."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அலறு (alaṟu) is native Dravidian (DEDR 245), in an entry of words for noisy talk and loud cries."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alaṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alaṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alaṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alaṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāmpaip pārttatum avaḷ alaṟiṉāḷ. — She screamed when she saw the snake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāmpaip pārttatum avaḷ alaṟiṉāḷ.* — She screamed when she saw the snake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to whimper, then the Tamil for to lament, then say alaṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to whimper, then the Tamil for to lament, then say *alaṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அலறு (alaṟu) mean? (\"To scream; to shriek\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

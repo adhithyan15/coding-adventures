@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:c03fcd912ad61d24",
+  "lessonIds": [
+    "MR-C526-segdi",
+    "MR-C526-ota",
+    "MR-C526-polpat",
+    "MR-C526-malne",
+    "MR-C526-kisne"
+  ],
+  "tex": "marathi/book/chapters/ch526-kitchen-tools.tex"
+}

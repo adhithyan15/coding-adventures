@@ -1,0 +1,11 @@
+{
+  "id": "ML-C568-parisilakan",
+  "pathSegment": "ML-PATH-568-KAYIKAM568",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-568-KAYIKAM568",
+      "order": 1
+    }
+  ]
+}

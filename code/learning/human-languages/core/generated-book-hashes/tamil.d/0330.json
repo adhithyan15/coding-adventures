@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:678b8accd02fe6e8",
+  "lessonIds": [
+    "TA-C330-peraracu",
+    "TA-C330-cakkaravartti",
+    "TA-C330-karuvulam",
+    "TA-C330-kappam",
+    "TA-C330-onku"
+  ],
+  "tex": "tamil/book/chapters/ch330-an-empire.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C547-butula",
+    "language": "arabic",
+    "chapter": 547,
+    "sequence": 30230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3a461819ac2e6bb"
+  },
+  "findings": []
+}

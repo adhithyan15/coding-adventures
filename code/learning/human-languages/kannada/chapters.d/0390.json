@@ -1,0 +1,21 @@
+{
+  "chapter": 390,
+  "title": "The Law",
+  "label": "ch:ka-the-law",
+  "canDo": "I can say a law, an act of law, to revise, official and interference.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-R390-review-384-390",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can say a law, an act of law, to revise, official and interference.",
+    "assesses": [
+      "KA-LEX-C390-KANUNU390-01",
+      "KA-LEX-C390-KANUNU390-02",
+      "KA-LEX-C390-KANUNU390-03",
+      "KA-LEX-C390-KANUNU390-04",
+      "KA-LEX-C390-KANUNU390-05"
+    ]
+  }
+}

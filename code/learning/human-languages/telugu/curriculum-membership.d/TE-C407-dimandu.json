@@ -1,0 +1,11 @@
+{
+  "id": "TE-C407-dimandu",
+  "pathSegment": "TE-PATH-407-NIRASANA407",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-407-NIRASANA407",
+      "order": 3
+    }
+  ]
+}

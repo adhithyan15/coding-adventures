@@ -1,0 +1,11 @@
+{
+  "id": "TA-C307-pattirikai",
+  "pathSegment": "TA-PATH-307-SEYTHI307",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-307-SEYTHI307",
+      "order": 2
+    }
+  ]
+}

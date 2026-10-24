@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:0f40d2ac04026f7b",
+  "lessonIds": [
+    "TA-C411-kolaru",
+    "TA-C411-ceyalila",
+    "TA-C411-nacunku",
+    "TA-C411-uracu",
+    "TA-C411-muttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch411.txt",
+  "json": "tamil/narration/ch411.json",
+  "textHash": "fnv1a64:dba4a457835adcde",
+  "jsonHash": "fnv1a64:79dfea5317500ef0",
+  "findings": []
+}

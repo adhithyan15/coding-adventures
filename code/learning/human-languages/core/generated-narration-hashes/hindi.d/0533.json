@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:b6d99d25d1e7e850",
+  "lessonIds": [
+    "HI-C533-kusti",
+    "HI-C533-pahalvan",
+    "HI-C533-akhara",
+    "HI-C533-larana",
+    "HI-C533-paitra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch533.txt",
+  "json": "hindi/narration/ch533.json",
+  "textHash": "fnv1a64:c54f75b6cb49b1c4",
+  "jsonHash": "fnv1a64:04fa6ac4974f7946",
+  "findings": []
+}

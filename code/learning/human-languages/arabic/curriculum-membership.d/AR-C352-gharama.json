@@ -1,0 +1,11 @@
+{
+  "id": "AR-C352-gharama",
+  "pathSegment": "AR-PATH-352-MUKHALAFA352",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-352-MUKHALAFA352",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C446-kacolai",
+    "language": "tamil",
+    "chapter": 446,
+    "sequence": 25490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7196a8a92d24cc71"
+  },
+  "findings": []
+}

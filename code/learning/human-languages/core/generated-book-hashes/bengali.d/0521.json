@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:c61db2ed668de2d9",
+  "lessonIds": [
+    "BN-C521-bet",
+    "BN-C521-uiket",
+    "BN-C521-ran",
+    "BN-C521-kech",
+    "BN-C521-petano"
+  ],
+  "tex": "bengali/book/chapters/ch521-bat-and-ball.tex"
+}

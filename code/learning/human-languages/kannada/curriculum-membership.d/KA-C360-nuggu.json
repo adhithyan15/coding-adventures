@@ -1,0 +1,11 @@
+{
+  "id": "KA-C360-nuggu",
+  "pathSegment": "KA-PATH-360-BETE360",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-360-BETE360",
+      "order": 3
+    }
+  ]
+}

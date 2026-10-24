@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "Is It Possible?",
+  "label": "ch:hi-is-it-possible",
+  "canDo": "I can say whether something is possible, and on what condition.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C373-upayogi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can say whether something is possible, and on what condition.",
+    "assesses": [
+      "HI-LEX-C373-MUMKIN373-03",
+      "HI-LEX-C373-MUMKIN373-04",
+      "HI-LEX-C373-MUMKIN373-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 553,
+  "title": "In the Right Order",
+  "label": "ch:hi-in-the-right-order",
+  "canDo": "I can talk about order, stages, dates and except.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C553-tithi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 553: I can talk about order, stages, dates and except.",
+    "assesses": [
+      "HI-LEX-C553-KRAM553-03",
+      "HI-LEX-C553-KRAM553-04",
+      "HI-LEX-C553-KRAM553-05"
+    ]
+  }
+}

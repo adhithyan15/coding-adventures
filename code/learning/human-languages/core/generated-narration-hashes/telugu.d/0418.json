@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:8903ea283d027f11",
+  "lessonIds": [
+    "TE-C418-sadhyam",
+    "TE-C418-asadhyam",
+    "TE-C418-sambhavyata",
+    "TE-C418-anivaryam",
+    "TE-C418-vilaite"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch418.txt",
+  "json": "telugu/narration/ch418.json",
+  "textHash": "fnv1a64:fb4a283aae302a9e",
+  "jsonHash": "fnv1a64:6c245a977ec3837c",
+  "findings": []
+}

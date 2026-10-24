@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:a3880b44bfc5f186",
+  "lessonIds": [
+    "TA-C321-catanku",
+    "TA-C321-marapu",
+    "TA-C321-peyarcuttu",
+    "TA-C321-valaikappu",
+    "TA-C321-putumanai-pukuvila"
+  ],
+  "tex": "tamil/book/chapters/ch321-customs-and-rituals.tex"
+}

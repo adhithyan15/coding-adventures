@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Free Time",
+  "label": "ch:te-free-time",
+  "canDo": "I can talk about picnics, pastimes, gardening, knitting and cards.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C536-pekata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can talk about picnics, pastimes, gardening, knitting and cards.",
+    "assesses": [
+      "TE-LEX-C536-VIRAMAM536-03",
+      "TE-LEX-C536-VIRAMAM536-04",
+      "TE-LEX-C536-VIRAMAM536-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C378-kalpulu",
+    "language": "telugu",
+    "chapter": 378,
+    "sequence": 18670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a04240ebd0d3c31"
+  },
+  "findings": []
+}

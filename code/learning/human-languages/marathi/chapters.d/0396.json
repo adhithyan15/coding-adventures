@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Trains and Rails",
+  "label": "ch:mr-trains-and-rails",
+  "canDo": "I can talk about trains, rails, railway lines and goods trains.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C396-khadkhadne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can talk about trains, rails, railway lines and goods trains.",
+    "assesses": [
+      "MR-LEX-C396-AAGGADI396-03",
+      "MR-LEX-C396-AAGGADI396-04",
+      "MR-LEX-C396-AAGGADI396-05"
+    ]
+  }
+}

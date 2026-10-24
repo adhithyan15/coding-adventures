@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:ab7d73a3a9089102",
+  "lessonIds": [
+    "TE-C530-viyyankudu",
+    "TE-C530-muttata",
+    "TE-C530-menalludu",
+    "TE-C530-cuttam",
+    "TE-C530-avva"
+  ],
+  "tex": "telugu/book/chapters/ch530-in-laws-and-kin.tex"
+}

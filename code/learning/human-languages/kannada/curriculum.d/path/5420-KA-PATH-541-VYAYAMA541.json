@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-541-VYAYAMA541",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-541-VYAYAMA541"
+  ],
+  "after": []
+}

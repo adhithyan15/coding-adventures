@@ -1,0 +1,11 @@
+{
+  "id": "KA-C472-emaru",
+  "pathSegment": "KA-PATH-472-HALU472",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-472-HALU472",
+      "order": 1
+    }
+  ]
+}

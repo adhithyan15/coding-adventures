@@ -1,0 +1,11 @@
+{
+  "id": "ML-C364-kuttitturakkuka",
+  "pathSegment": "ML-PATH-364-KALLAN364",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-364-KALLAN364",
+      "order": 4
+    }
+  ]
+}

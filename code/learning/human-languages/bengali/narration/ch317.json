@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 317,
+  "title": "Courage and Sacrifice",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1e1f06b00c71f470",
+  "lessons": [
+    {
+      "id": "BN-C317-bir",
+      "sequence": 20100,
+      "title": "বীর (bīr) — a hero; a warrior",
+      "headword": "বীর",
+      "romanization": "bīr",
+      "gloss": "a hero; a warrior",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bb490d1c0f6ead4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to hold out, then the Bengali for to fall back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বীর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বীর — bīr — \"a hero; a warrior\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সেই যুদ্ধের বীরদের গল্প সবাই জানে। sei juddher bīrder gôlpo sôbāi jāne. Everyone knows the stories of the heroes of that war."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বীর (bīr) is Sanskrit vīra, 'a man; a hero, a chief' (Monier-Williams); the ী is long in writing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sei juddher bīrder gôlpo sôbāi jāne. — Everyone knows the stories of the heroes of that war.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sei juddher bīrder gôlpo sôbāi jāne.* — Everyone knows the stories of the heroes of that war.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to hold out, then the Bengali for to fall back, then say bīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to hold out, then the Bengali for to fall back, then say *bīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বীর (bīr) mean? (\"A hero; a warrior\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C317-atmotyag",
+      "sequence": 20110,
+      "title": "আত্মত্যাগ (ātmôtyāg) — self-sacrifice",
+      "headword": "আত্মত্যাগ",
+      "romanization": "ātmôtyāg",
+      "gloss": "self-sacrifice",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34db8b581c04b72d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to fall back, then the Bengali for a warrior."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আত্মত্যাগ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আত্মত্যাগ — ātmôtyāg — \"self-sacrifice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দেশের জন্য সৈন্যদের আত্মত্যাগ আমরা মনে রাখব। desher jônyô soinyôder ātmôtyāg āmrā mône rākhbô. We will remember the soldiers' sacrifice for their country."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আত্মত্যাগ (ātmôtyāg) joins Sanskrit ātman, 'self', to tyāga, 'giving up, abandoning' (Monier-Williams): giving up oneself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmôtyāg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmôtyāg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmôtyāg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmôtyāg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "desher jônyô soinyôder ātmôtyāg āmrā mône rākhbô. — We will remember the soldiers' sacrifice for their country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *desher jônyô soinyôder ātmôtyāg āmrā mône rākhbô.* — We will remember the soldiers' sacrifice for their country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to fall back, then the Bengali for a warrior, then say ātmôtyāg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to fall back, then the Bengali for a warrior, then say *ātmôtyāg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আত্মত্যাগ (ātmôtyāg) mean? (\"Self-sacrifice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C317-shohid",
+      "sequence": 20120,
+      "title": "শহিদ (shôhid) — a martyr",
+      "headword": "শহিদ",
+      "romanization": "shôhid",
+      "gloss": "a martyr",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23fce970669d4f27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a warrior, then the Bengali for self-sacrifice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শহিদ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শহিদ — shôhid — \"a martyr\"."
+            },
+            {
+              "kind": "speech",
+              "text": "স্বাধীনতার যুদ্ধে অনেক মানুষ শহিদ হলেন। svādhīnôtār juddhe ônek mānush shôhid hôlen. Many people gave their lives in the war of independence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শহিদ (shôhid) is usually traced through Persian to Arabic shahīd, 'a witness', and so one who bears witness with his life. শহিদ হওয়া, to die for a cause."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôhid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôhid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôhid, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôhid*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svādhīnôtār juddhe ônek mānush shôhid hôlen. — Many people gave their lives in the war of independence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svādhīnôtār juddhe ônek mānush shôhid hôlen.* — Many people gave their lives in the war of independence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a warrior, then the Bengali for self-sacrifice, then say shôhid again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a warrior, then the Bengali for self-sacrifice, then say *shôhid* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শহিদ (shôhid) mean? (\"A martyr\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C317-atmosomorpon-kora",
+      "sequence": 20130,
+      "title": "আত্মসমর্পণ করা (ātmôsômôrpôn kôrā) — to surrender",
+      "headword": "আত্মসমর্পণ করা",
+      "romanization": "ātmôsômôrpôn kôrā",
+      "gloss": "to surrender",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a92409279b05db6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for self-sacrifice, then the Bengali for a martyr."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আত্মসমর্পণ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আত্মসমর্পণ করা — ātmôsômôrpôn kôrā — \"to surrender\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অবশেষে শত্রুরা আত্মসমর্পণ করল। ôbôsheshe shôtrurā ātmôsômôrpôn kôrlô. At last the enemy surrendered."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি আত্মসমর্পণ করলেন, tini ātmôsômôrpôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আত্মসমর্পণ করা (ātmôsômôrpôn kôrā) puts Sanskrit ātman, 'self', and samarpaṇa, 'handing completely over' (Monier-Williams), before করা: to hand yourself over."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmôsômôrpôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmôsômôrpôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmôsômôrpôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmôsômôrpôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbôsheshe shôtrurā ātmôsômôrpôn kôrlô. — At last the enemy surrendered.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbôsheshe shôtrurā ātmôsômôrpôn kôrlô.* — At last the enemy surrendered.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for self-sacrifice, then the Bengali for a martyr, then say ātmôsômôrpôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for self-sacrifice, then the Bengali for a martyr, then say *ātmôsômôrpôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আত্মসমর্পণ করা (ātmôsômôrpôn kôrā) mean? (\"To surrender\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C317-porajoy",
+      "sequence": 20140,
+      "title": "পরাজয় (pôrājôy) — defeat",
+      "headword": "পরাজয়",
+      "romanization": "pôrājôy",
+      "gloss": "defeat",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:788b48e2e02f09a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a martyr, then the Bengali for to surrender."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পরাজয়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরাজয় — pôrājôy — \"defeat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পরাজয়ের পরে রাজা দেশ ছেড়ে পালালেন। pôrājôyer pôre rājā desh chheṛe pālālen. After the defeat the king fled the country."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরাজয় (pôrājôy) is Sanskrit parājaya, 'loss, defeat' (Monier-Williams), with parā-, 'away', before jaya, victory — জয়."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrājôy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrājôy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrājôy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrājôy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrājôyer pôre rājā desh chheṛe pālālen. — After the defeat the king fled the country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrājôyer pôre rājā desh chheṛe pālālen.* — After the defeat the king fled the country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a martyr, then the Bengali for to surrender, then say pôrājôy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a martyr, then the Bengali for to surrender, then say *pôrājôy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পরাজয় (pôrājôy) mean? (\"Defeat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

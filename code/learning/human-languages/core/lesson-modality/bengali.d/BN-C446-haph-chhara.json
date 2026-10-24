@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C446-haph-chhara",
+    "language": "bengali",
+    "chapter": 446,
+    "sequence": 27440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06ab0d293c760c5e"
+  },
+  "findings": []
+}

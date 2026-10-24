@@ -1,0 +1,11 @@
+{
+  "id": "TE-C375-nivedincu",
+  "pathSegment": "TE-PATH-375-PATRIKEYUDU375",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-375-PATRIKEYUDU375",
+      "order": 3
+    }
+  ]
+}

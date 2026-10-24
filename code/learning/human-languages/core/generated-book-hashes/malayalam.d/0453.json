@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:dabcb9b76e2a5a85",
+  "lessonIds": [
+    "ML-C453-vottu-ceyyuka",
+    "ML-C453-pintunaykkuka",
+    "ML-C453-etirppu",
+    "ML-C453-codyam-ceyyuka",
+    "ML-C453-pratikarikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch453-for-and-against.tex"
+}

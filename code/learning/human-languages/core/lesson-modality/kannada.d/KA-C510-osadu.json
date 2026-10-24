@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C510-osadu",
+    "language": "kannada",
+    "chapter": 510,
+    "sequence": 26050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd333684cf4df73e"
+  },
+  "findings": []
+}

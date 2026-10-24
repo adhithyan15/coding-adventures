@@ -1,0 +1,11 @@
+{
+  "id": "BN-C520-trophi",
+  "pathSegment": "BN-PATH-520-PODOK520",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-520-PODOK520",
+      "order": 1
+    }
+  ]
+}

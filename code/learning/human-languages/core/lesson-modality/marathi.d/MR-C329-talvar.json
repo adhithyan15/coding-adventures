@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C329-talvar",
+    "language": "marathi",
+    "chapter": 329,
+    "sequence": 19100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:203ca2825845c7ae"
+  },
+  "findings": []
+}

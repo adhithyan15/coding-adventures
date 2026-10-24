@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 441,
+  "title": "Possible or Not",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:75aafd8972770e4b",
+  "lessons": [
+    {
+      "id": "ML-C441-sadhyamaya",
+      "sequence": 21840,
+      "title": "സാധ്യമായ (sādhyamāya) — possible",
+      "headword": "സാധ്യമായ",
+      "romanization": "sādhyamāya",
+      "gloss": "possible",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7cd537bfcb24f51e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for if not, then the Malayalam for or else."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സാധ്യമായ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സാധ്യമായ — sādhyamāya — \"possible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സാധ്യമായ എല്ലാ വഴികളും അവർ നോക്കി. sādhyamāya ellā vaḻikaḷuṁ avar nōkki. They tried every possible way."
+            },
+            {
+              "kind": "speech",
+              "text": "As a predicate: അത് സാധ്യമാണ്, that is possible."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സാധ്യമായ (sādhyamāya) is built from Sanskrit sādhya, \"to be mastered, to be accomplished\" (Monier-Williams), with the adjective ending -ആയ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhyamāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhyamāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhyamāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhyamāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhyamāya ellā vaḻikaḷuṁ avar nōkki. — They tried every possible way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhyamāya ellā vaḻikaḷuṁ avar nōkki.* — They tried every possible way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for if not, then the Malayalam for or else, then say sādhyamāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for if not, then the Malayalam for or else, then say *sādhyamāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സാധ്യമായ (sādhyamāya) mean? (\"Possible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C441-asadhyamaya",
+      "sequence": 21850,
+      "title": "അസാധ്യമായ (asādhyamāya) — impossible",
+      "headword": "അസാധ്യമായ",
+      "romanization": "asādhyamāya",
+      "gloss": "impossible",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c39fd85c5b3c3d5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for or else, then the Malayalam for possible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അസാധ്യമായ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അസാധ്യമായ — asādhyamāya — \"impossible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവന് അസാധ്യമായ ഒന്നുമില്ല. avanŭ asādhyamāya onnumilla. Nothing is impossible for him."
+            },
+            {
+              "kind": "speech",
+              "text": "As a predicate: അത് അസാധ്യമാണ്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അസാധ്യമായ (asādhyamāya) is built from Sanskrit asādhya, \"not to be accomplished\" (Monier-Williams), with the adjective ending -ആയ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asādhyamāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asādhyamāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asādhyamāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asādhyamāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanŭ asādhyamāya onnumilla. — Nothing is impossible for him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanŭ asādhyamāya onnumilla.* — Nothing is impossible for him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for or else, then the Malayalam for possible, then say asādhyamāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for or else, then the Malayalam for possible, then say *asādhyamāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അസാധ്യമായ (asādhyamāya) mean? (\"Impossible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C441-sadhyamakkuka",
+      "sequence": 21860,
+      "title": "സാധ്യമാക്കുക (sādhyamākkuka) — to make possible",
+      "headword": "സാധ്യമാക്കുക",
+      "romanization": "sādhyamākkuka",
+      "gloss": "to make possible",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8990b12708c3ba0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for possible, then the Malayalam for impossible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സാധ്യമാക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സാധ്യമാക്കുക — sādhyamākkuka — \"to make possible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട്ടുകാരുടെ സഹായം ആ പാലം സാധ്യമാക്കി. nāṭṭukāruṭe sahāyaṁ ā pālaṁ sādhyamākki. The local people's help made that bridge possible."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സാധ്യമാക്കി, sādhyamākki."
+            },
+            {
+              "kind": "speech",
+              "text": "ആക്കുക, to make, turns an adjective into a verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സാധ്യമാക്കുക (sādhyamākkuka) is built from Sanskrit sādhya, \"to be accomplished\" (Monier-Williams), with ആക്കുക, \"to make\", native Dravidian (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhyamākkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhyamākkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhyamākkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhyamākkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭukāruṭe sahāyaṁ ā pālaṁ sādhyamākki. — The local people's help made that bridge possible.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭukāruṭe sahāyaṁ ā pālaṁ sādhyamākki.* — The local people's help made that bridge possible.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for possible, then the Malayalam for impossible, then say sādhyamākkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for possible, then the Malayalam for impossible, then say *sādhyamākkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സാധ്യമാക്കുക (sādhyamākkuka) mean? (\"To make possible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C441-annaneyenkil",
+      "sequence": 21870,
+      "title": "അങ്ങനെയെങ്കിൽ (aṅṅaneyeṅkil) — in that case",
+      "headword": "അങ്ങനെയെങ്കിൽ",
+      "romanization": "aṅṅaneyeṅkil",
+      "gloss": "in that case",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c67cc2a99cd66b39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for impossible, then the Malayalam for to make possible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അങ്ങനെയെങ്കിൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അങ്ങനെയെങ്കിൽ — aṅṅaneyeṅkil — \"in that case\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ വരില്ലെന്ന് പറഞ്ഞു, അങ്ങനെയെങ്കിൽ നമ്മൾ നേരത്തെ പോകും. avan varillennŭ paṟaññu, aṅṅaneyeṅkil nammaḷ nēratte pōkuṁ. He said he won't come; in that case we will leave early."
+            },
+            {
+              "kind": "speech",
+              "text": "അങ്ങനെ, like that, with -എങ്കിൽ, if: if it is like that."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അങ്ങനെയെങ്കിൽ (aṅṅaneyeṅkil) is native Dravidian: അങ്ങനെ, \"in that way\", from the far demonstrative അ- (DEDR 1), with -എങ്കിൽ, \"if\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅṅaneyeṅkil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅṅaneyeṅkil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅṅaneyeṅkil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅṅaneyeṅkil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan varillennŭ paṟaññu, aṅṅaneyeṅkil nammaḷ nēratte pōkuṁ. — He said he won't come; in that case we will leave early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan varillennŭ paṟaññu, aṅṅaneyeṅkil nammaḷ nēratte pōkuṁ.* — He said he won't come; in that case we will leave early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for impossible, then the Malayalam for to make possible, then say aṅṅaneyeṅkil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for impossible, then the Malayalam for to make possible, then say *aṅṅaneyeṅkil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അങ്ങനെയെങ്കിൽ (aṅṅaneyeṅkil) mean? (\"In that case\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C441-mikkavarum",
+      "sequence": 21880,
+      "title": "മിക്കവാറും (mikkavāṟuṁ) — most probably; mostly",
+      "headword": "മിക്കവാറും",
+      "romanization": "mikkavāṟuṁ",
+      "gloss": "most probably; mostly",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0bf7a8cedd008b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to make possible, then the Malayalam for in that case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മിക്കവാറും",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മിക്കവാറും — mikkavāṟuṁ — \"most probably; mostly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മിക്കവാറും നാളെ മഴ പെയ്യും. mikkavāṟuṁ nāḷe maḻa peyyuṁ. It will most probably rain tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "With the future -ഉം it means most probably; with numbers, nearly all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മിക്കവാറും (mikkavāṟuṁ) is native Dravidian, built on മിക്ക, \"the greater part\", from മികുക, \"to exceed\" (DEDR 4838): for the greater part."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikkavāṟuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikkavāṟuṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikkavāṟuṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikkavāṟuṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikkavāṟuṁ nāḷe maḻa peyyuṁ. — It will most probably rain tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikkavāṟuṁ nāḷe maḻa peyyuṁ.* — It will most probably rain tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to make possible, then the Malayalam for in that case, then say mikkavāṟuṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to make possible, then the Malayalam for in that case, then say *mikkavāṟuṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മിക്കവാറും (mikkavāṟuṁ) mean? (\"Most probably; mostly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

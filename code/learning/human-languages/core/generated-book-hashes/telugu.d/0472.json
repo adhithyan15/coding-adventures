@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:0b7eb090df910dca",
+  "lessonIds": [
+    "TE-C472-vanyaprani",
+    "TE-C472-abhayaranyam",
+    "TE-C472-vetadu",
+    "TE-C472-antarincipovu",
+    "TE-C472-valasapovu"
+  ],
+  "tex": "telugu/book/chapters/ch472-wildlife.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C508-karulu",
+    "language": "kannada",
+    "chapter": 508,
+    "sequence": 25950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cf01147619ab661"
+  },
+  "findings": []
+}

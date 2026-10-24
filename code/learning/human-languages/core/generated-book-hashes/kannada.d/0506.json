@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:23d5c189346090a1",
+  "lessonIds": [
+    "KA-C506-hode-cover",
+    "KA-C506-kanavarisu",
+    "KA-C506-horalu",
+    "KA-C506-maimuri",
+    "KA-C506-reppe"
+  ],
+  "tex": "kannada/book/chapters/ch506-sleepy-nights.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-488-MAZAJ488",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-488-MAZAJ488"
+  ],
+  "after": []
+}

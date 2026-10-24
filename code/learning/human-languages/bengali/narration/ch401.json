@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 401,
+  "title": "Points of the Compass",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1b19755c66725b21",
+  "lessons": [
+    {
+      "id": "BN-C401-dokkhin",
+      "sequence": 24870,
+      "title": "দক্ষিণ (dôkkhin) — south",
+      "headword": "দক্ষিণ",
+      "romanization": "dôkkhin",
+      "gloss": "south",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa4aba8d9b206f18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an instruction, then the Bengali for to point (to)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দক্ষিণ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দক্ষিণ — dôkkhin — \"south\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সমুদ্র এই গ্রামের দক্ষিণে। sômudrô ei grāmer dôkkhine. The sea lies to the south of this village."
+            },
+            {
+              "kind": "speech",
+              "text": "ক্ষ is said kkh in the middle of a word. উত্তর, north, is also the word for an answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দক্ষিণ (dôkkhin) is Sanskrit dakṣiṇa, \"on the right hand\" and so \"southern\" (Monier-Williams): facing the sunrise, the south is on your right."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dôkkhin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dôkkhin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dôkkhin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dôkkhin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sômudrô ei grāmer dôkkhine. — The sea lies to the south of this village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sômudrô ei grāmer dôkkhine.* — The sea lies to the south of this village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an instruction, then the Bengali for to point (to), then say dôkkhin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an instruction, then the Bengali for to point (to), then say *dôkkhin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দক্ষিণ (dôkkhin) mean? (\"South\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C401-purbo",
+      "sequence": 24880,
+      "title": "পূর্ব (pūrbô) — east",
+      "headword": "পূর্ব",
+      "romanization": "pūrbô",
+      "gloss": "east",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc0b33cacd3b17b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to point (to), then the Bengali for south."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পূর্ব",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পূর্ব — pūrbô — \"east\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ভোরে পূর্ব আকাশ লাল হল। bhore pūrbô ākāsh lāl hôlô. At dawn the eastern sky turned red."
+            },
+            {
+              "kind": "speech",
+              "text": "Also former, earlier, in careful speech: পূর্বে, before."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পূর্ব (pūrbô) is Sanskrit pūrva, \"being before, in front\", and so \"eastern\" and \"earlier\" (Monier-Williams): the east was the side you faced."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrbô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrbô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrbô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrbô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhore pūrbô ākāsh lāl hôlô. — At dawn the eastern sky turned red.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhore pūrbô ākāsh lāl hôlô.* — At dawn the eastern sky turned red.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to point (to), then the Bengali for south, then say pūrbô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to point (to), then the Bengali for south, then say *pūrbô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পূর্ব (pūrbô) mean? (\"East\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C401-poshchim",
+      "sequence": 24890,
+      "title": "পশ্চিম (pôshchim) — west",
+      "headword": "পশ্চিম",
+      "romanization": "pôshchim",
+      "gloss": "west",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee6d065be13b888b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for south, then the Bengali for east."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পশ্চিম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পশ্চিম — pôshchim — \"west\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সন্ধ্যায় আমরা পশ্চিম দিকে হাঁটলাম। sôndhyāy āmrā pôshchim dike hā̃ṭlām. In the evening we walked westward."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পশ্চিম (pôshchim) is Sanskrit paścima, \"being behind, later\", and so \"western\" (Monier-Williams): with the sunrise in front, the west lies behind you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôshchim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôshchim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôshchim, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôshchim*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôndhyāy āmrā pôshchim dike hā̃ṭlām. — In the evening we walked westward.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôndhyāy āmrā pôshchim dike hā̃ṭlām.* — In the evening we walked westward.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for south, then the Bengali for east, then say pôshchim again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for south, then the Bengali for east, then say *pôshchim* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পশ্চিম (pôshchim) mean? (\"West\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C401-kompas",
+      "sequence": 24900,
+      "title": "কম্পাস (kômpās) — a compass",
+      "headword": "কম্পাস",
+      "romanization": "kômpās",
+      "gloss": "a compass",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a867a7adc098413f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for east, then the Bengali for west."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কম্পাস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কম্পাস — kômpās — \"a compass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বনে আমরা কম্পাস দেখে পথ খুঁজলাম। bône āmrā kômpās dekhe pôth khũjlām. In the forest we looked for the path by the compass."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কম্পাস (kômpās) is borrowed from English compass."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kômpās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kômpās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kômpās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kômpās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bône āmrā kômpās dekhe pôth khũjlām. — In the forest we looked for the path by the compass.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bône āmrā kômpās dekhe pôth khũjlām.* — In the forest we looked for the path by the compass.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for east, then the Bengali for west, then say kômpās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for east, then the Bengali for west, then say *kômpās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কম্পাস (kômpās) mean? (\"A compass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C401-digonto",
+      "sequence": 24910,
+      "title": "দিগন্ত (digôntô) — the horizon",
+      "headword": "দিগন্ত",
+      "romanization": "digôntô",
+      "gloss": "the horizon",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b72559d3a8968b73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for west, then the Bengali for a compass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দিগন্ত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দিগন্ত — digôntô — \"the horizon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সৈকত থেকে আমরা দিগন্তে একটা জাহাজ দেখলাম। soikôt theke āmrā digônte ekṭā jāhāj dekhlām. From the beach we saw a ship on the horizon."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দিগন্ত (digôntô) is Sanskrit dig-anta, \"the end of the horizon, a far distance\" (Monier-Williams), from diś, a quarter of the sky, and anta, an end."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digôntô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digôntô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digôntô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digôntô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soikôt theke āmrā digônte ekṭā jāhāj dekhlām. — From the beach we saw a ship on the horizon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soikôt theke āmrā digônte ekṭā jāhāj dekhlām.* — From the beach we saw a ship on the horizon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for west, then the Bengali for a compass, then say digôntô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for west, then the Bengali for a compass, then say *digôntô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দিগন্ত (digôntô) mean? (\"The horizon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

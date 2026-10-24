@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:1c4e2a65aa099860",
+  "lessonIds": [
+    "BN-C475-khoto",
+    "BN-C475-gha",
+    "BN-C475-mochkano",
+    "BN-C475-phola",
+    "BN-C475-hochot-khaoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch475.txt",
+  "json": "bengali/narration/ch475.json",
+  "textHash": "fnv1a64:996e40251de4c5da",
+  "jsonHash": "fnv1a64:606bfc9f350cd295",
+  "findings": []
+}

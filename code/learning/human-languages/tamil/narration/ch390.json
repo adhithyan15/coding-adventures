@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 390,
+  "title": "Change for the Better",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6dc4f84b608750f7",
+  "lessons": [
+    {
+      "id": "TA-C390-cirtiruttam",
+      "sequence": 22300,
+      "title": "சீர்திருத்தம் (cīrtiruttam) — a reform",
+      "headword": "சீர்திருத்தம்",
+      "romanization": "cīrtiruttam",
+      "gloss": "a reform",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb23ea1a1b217355",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a course of action, then the Tamil for to administer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சீர்திருத்தம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சீர்திருத்தம் — cīrtiruttam — \"a reform\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கல்வியில் சீர்திருத்தம் வந்தால் எல்லோருக்கும் நல்லது. kalviyil cīrtiruttam vantāl ellōrukkum nallatu. If education is reformed, it will be good for everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: சீர்திருத்தங்கள், cīrtiruttaṅkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "சீர், good order + திருத்தம், correction. Plural சீர்திருத்தங்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சீர்திருத்தம் (cīrtiruttam) is native: cīr, \"to be excellent, fitting\" (DEDR 2624), and tiruttam, \"correction\", from tiruttu, \"to correct, reform\" (DEDR 3251)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīrtiruttam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīrtiruttam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīrtiruttam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīrtiruttam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalviyil cīrtiruttam vantāl ellōrukkum nallatu. — If education is reformed, it will be good for everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalviyil cīrtiruttam vantāl ellōrukkum nallatu.* — If education is reformed, it will be good for everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a course of action, then the Tamil for to administer, then say cīrtiruttam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a course of action, then the Tamil for to administer, then say *cīrtiruttam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சீர்திருத்தம் (cīrtiruttam) mean? (\"A reform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C390-munnerram",
+      "sequence": 22310,
+      "title": "முன்னேற்றம் (muṉṉēṟṟam) — progress",
+      "headword": "முன்னேற்றம்",
+      "romanization": "muṉṉēṟṟam",
+      "gloss": "progress",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d3ff136895232d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to administer, then the Tamil for a reform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முன்னேற்றம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னேற்றம் — muṉṉēṟṟam — \"progress\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தினமும் பயிற்சி செய்தால் நல்ல முன்னேற்றம் கிடைக்கும். tiṉamum payiṟci ceytāl nalla muṉṉēṟṟam kiṭaikkum. If you practise every day, you will make good progress."
+            },
+            {
+              "kind": "speech",
+              "text": "முன்னேற்றம் (muṉṉēṟṟam) அடை, to make progress."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னேற்றம் (muṉṉēṟṟam) is native: muṉ, \"front, before\" (DEDR 5020), and ēṟṟam, \"mounting, rising\", from ēṟu, \"to rise\" (DEDR 916): a rising forward."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉēṟṟam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉēṟṟam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉēṟṟam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉēṟṟam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiṉamum payiṟci ceytāl nalla muṉṉēṟṟam kiṭaikkum. — If you practise every day, you will make good progress.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiṉamum payiṟci ceytāl nalla muṉṉēṟṟam kiṭaikkum.* — If you practise every day, you will make good progress.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to administer, then the Tamil for a reform, then say muṉṉēṟṟam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to administer, then the Tamil for a reform, then say *muṉṉēṟṟam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முன்னேற்றம் (muṉṉēṟṟam) mean? (\"Progress\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C390-mempatuttu",
+      "sequence": 22320,
+      "title": "மேம்படுத்து (mēmpaṭuttu) — to improve; to upgrade",
+      "headword": "மேம்படுத்து",
+      "romanization": "mēmpaṭuttu",
+      "gloss": "to improve; to upgrade",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b971a4721d7f7e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a reform, then the Tamil for progress."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மேம்படுத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேம்படுத்து — mēmpaṭuttu — \"to improve; to upgrade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சாலைகளை மேம்படுத்தினால் விபத்துகள் குறையும். cālaikaḷai mēmpaṭuttiṉāl vipattukaḷ kuṟaiyum. If the roads are improved, there will be fewer accidents."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): மேம்படுத்தினேன், mēmpaṭuttiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is improved takes -ஐ. The noun is மேம்பாடு, improvement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேம்படுத்து (mēmpaṭuttu) is native: mēm, a form of mēl, \"that which is above, superior\" (DEDR 5086), with paṭuttu, the causative of paṭu: to raise higher."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēmpaṭuttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēmpaṭuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēmpaṭuttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēmpaṭuttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālaikaḷai mēmpaṭuttiṉāl vipattukaḷ kuṟaiyum. — If the roads are improved, there will be fewer accidents.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālaikaḷai mēmpaṭuttiṉāl vipattukaḷ kuṟaiyum.* — If the roads are improved, there will be fewer accidents.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a reform, then the Tamil for progress, then say mēmpaṭuttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a reform, then the Tamil for progress, then say *mēmpaṭuttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மேம்படுத்து (mēmpaṭuttu) mean? (\"To improve; to upgrade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C390-ciramai",
+      "sequence": 22330,
+      "title": "சீரமை (cīramai) — to restructure; to put in order",
+      "headword": "சீரமை",
+      "romanization": "cīramai",
+      "gloss": "to restructure; to put in order",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f91890bb90f9cfba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for progress, then the Tamil for to improve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சீரமை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சீரமை — cīramai — \"to restructure; to put in order\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புதிய மேலாளர் அலுவலகத்தைச் சீரமைத்தார். putiya mēlāḷar aluvalakattaic cīramaittār. The new manager reorganised the office."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): சீரமைத்தேன், cīramaittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "சீர், good order + அமை, to arrange."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சீரமை (cīramai) is native: cīr, \"excellence, fitness\" (DEDR 2624), and amai, \"to be fitted, set in place\" (DEDR 162): to set in good order."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīramai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīramai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīramai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīramai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya mēlāḷar aluvalakattaic cīramaittār. — The new manager reorganised the office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya mēlāḷar aluvalakattaic cīramaittār.* — The new manager reorganised the office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for progress, then the Tamil for to improve, then say cīramai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for progress, then the Tamil for to improve, then say *cīramai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சீரமை (cīramai) mean? (\"To restructure; to put in order\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C390-valuppatuttu",
+      "sequence": 22340,
+      "title": "வலுப்படுத்து (valuppaṭuttu) — to strengthen",
+      "headword": "வலுப்படுத்து",
+      "romanization": "valuppaṭuttu",
+      "gloss": "to strengthen",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:946515e7a56fbf4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to improve, then the Tamil for to restructure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வலுப்படுத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வலுப்படுத்து — valuppaṭuttu — \"to strengthen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தினமும் உடற்பயிற்சி செய்தால் அது உடலை வலுப்படுத்தும். tiṉamum uṭaṟpayiṟci ceytāl atu uṭalai valuppaṭuttum. If you exercise every day, it will strengthen the body."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): வலுப்படுத்தினேன், valuppaṭuttiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is strengthened takes -ஐ. வலு, strength."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வலுப்படுத்து (valuppaṭuttu) is native: valu, \"strength, firmness\" (DEDR 5276), with paṭuttu, the causative of paṭu: to make strong."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valuppaṭuttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valuppaṭuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valuppaṭuttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valuppaṭuttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiṉamum uṭaṟpayiṟci ceytāl atu uṭalai valuppaṭuttum. — If you exercise every day, it will strengthen the body.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiṉamum uṭaṟpayiṟci ceytāl atu uṭalai valuppaṭuttum.* — If you exercise every day, it will strengthen the body.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to improve, then the Tamil for to restructure, then say valuppaṭuttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to improve, then the Tamil for to restructure, then say *valuppaṭuttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வலுப்படுத்து (valuppaṭuttu) mean? (\"To strengthen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

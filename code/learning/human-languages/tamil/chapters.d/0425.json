@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Sights Worth Seeing",
+  "label": "ch:ta-sights-worth-seeing",
+  "canDo": "I can talk about a lighthouse, a planetarium, sites, views and a canteen.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C425-cirrunticcalai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can talk about a lighthouse, a planetarium, sites, views and a canteen.",
+    "assesses": [
+      "TA-LEX-C425-KATCHI425-03",
+      "TA-LEX-C425-KATCHI425-04",
+      "TA-LEX-C425-KATCHI425-05"
+    ]
+  }
+}

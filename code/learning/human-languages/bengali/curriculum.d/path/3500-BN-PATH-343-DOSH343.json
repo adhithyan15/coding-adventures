@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-343-DOSH343",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-343-DOSH343"
+  ],
+  "after": []
+}

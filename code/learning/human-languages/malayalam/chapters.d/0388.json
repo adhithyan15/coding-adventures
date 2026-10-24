@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "Blessings and Gifts",
+  "label": "ch:ml-blessings-and-gifts",
+  "canDo": "I can say a gratuity, to bless, to wish someone well, to congratulate and to bestow.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-R388-review-381-388",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can say a gratuity, to bless, to wish someone well, to congratulate and to bestow.",
+    "assesses": [
+      "ML-LEX-C388-ASAMSA388-03",
+      "ML-LEX-C388-ASAMSA388-04",
+      "ML-LEX-C388-ASAMSA388-05"
+    ]
+  }
+}

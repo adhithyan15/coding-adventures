@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:a51256e7915ebe66",
+  "lessonIds": [
+    "TA-C325-olaiccuvati",
+    "TA-C325-kalvettu",
+    "TA-C325-pulavar",
+    "TA-C325-kaviyam",
+    "TA-C325-iyarru",
+    "TA-R325-review-318-325"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch325.txt",
+  "json": "tamil/narration/ch325.json",
+  "textHash": "fnv1a64:31d8e4a06dcbdf40",
+  "jsonHash": "fnv1a64:50c0c5dae4cdca31",
+  "findings": []
+}

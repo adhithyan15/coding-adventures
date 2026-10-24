@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Checking In",
+  "label": "ch:bn-checking-in",
+  "canDo": "I can check in, collect a key and ask for something to be arranged.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C403-bondobosto-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can check in, collect a key and ask for something to be arranged.",
+    "assesses": [
+      "BN-LEX-C403-GHOR403-03",
+      "BN-LEX-C403-GHOR403-04",
+      "BN-LEX-C403-GHOR403-05"
+    ]
+  }
+}

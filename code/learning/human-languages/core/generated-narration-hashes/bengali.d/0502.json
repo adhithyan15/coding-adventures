@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:baa4884d4e4e6bf2",
+  "lessonIds": [
+    "BN-C502-kompiutar",
+    "BN-C502-mobail",
+    "BN-C502-selphi",
+    "BN-C502-ghata",
+    "BN-C502-charj-deoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch502.txt",
+  "json": "bengali/narration/ch502.json",
+  "textHash": "fnv1a64:f8baf432bd70bdb7",
+  "jsonHash": "fnv1a64:12f1a65aa5d10813",
+  "findings": []
+}

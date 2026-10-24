@@ -1,0 +1,11 @@
+{
+  "id": "AR-C465-istahlaka",
+  "pathSegment": "AR-PATH-465-TAQA465",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-465-TAQA465",
+      "order": 4
+    }
+  ]
+}

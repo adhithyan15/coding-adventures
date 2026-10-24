@@ -1,0 +1,21 @@
+{
+  "chapter": 326,
+  "title": "A Child Goes Missing",
+  "label": "ch:ka-a-child-goes-missing",
+  "canDo": "I can say to go missing, to track down, a trace, to kidnap and a hostage.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-R326-review-319-326",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can say to go missing, to track down, a trace, to kidnap and a hostage.",
+    "assesses": [
+      "KA-LEX-C326-KANE326-01",
+      "KA-LEX-C326-KANE326-02",
+      "KA-LEX-C326-KANE326-03",
+      "KA-LEX-C326-KANE326-04",
+      "KA-LEX-C326-KANE326-05"
+    ]
+  }
+}

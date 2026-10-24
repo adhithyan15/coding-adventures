@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:a21516a7df43866c",
+  "lessonIds": [
+    "TA-C351-kurippitu",
+    "TA-C351-cuttikkattu",
+    "TA-C351-etutturai",
+    "TA-C351-atavatu",
+    "TA-C351-etuttukkattu"
+  ],
+  "tex": "tamil/book/chapters/ch351-making-a-point.tex"
+}

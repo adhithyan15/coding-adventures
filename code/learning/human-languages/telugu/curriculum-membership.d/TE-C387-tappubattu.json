@@ -1,0 +1,11 @@
+{
+  "id": "TE-C387-tappubattu",
+  "pathSegment": "TE-PATH-387-VIMARSA387",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-387-VIMARSA387",
+      "order": 4
+    }
+  ]
+}

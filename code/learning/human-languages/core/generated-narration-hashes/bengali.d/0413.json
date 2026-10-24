@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:d245493d8b17d67b",
+  "lessonIds": [
+    "BN-C413-nordoma",
+    "BN-C413-paip",
+    "BN-C413-dastbin",
+    "BN-C413-moyla",
+    "BN-C413-jonjal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch413.txt",
+  "json": "bengali/narration/ch413.json",
+  "textHash": "fnv1a64:8d9c57d48bb14009",
+  "jsonHash": "fnv1a64:552603016e3b12a6",
+  "findings": []
+}

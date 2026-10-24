@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Breaking news",
+  "label": "ch:ar-breaking-news",
+  "canDo": "I can say urgent, a blog, a comment, an editorial and to deny officially.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C355-nafa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can say urgent, a blog, a comment, an editorial and to deny officially.",
+    "assesses": [
+      "AR-LEX-C355-AJIL355-03",
+      "AR-LEX-C355-AJIL355-04",
+      "AR-LEX-C355-AJIL355-05"
+    ]
+  }
+}

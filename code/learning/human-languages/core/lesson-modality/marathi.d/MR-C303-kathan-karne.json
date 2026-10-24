@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C303-kathan-karne",
+    "language": "marathi",
+    "chapter": 303,
+    "sequence": 17800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:561d6b06185c866c"
+  },
+  "findings": []
+}

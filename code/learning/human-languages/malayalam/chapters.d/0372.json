@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Fraud and Tricks",
+  "label": "ch:ml-fraud-and-tricks",
+  "canDo": "I can say a fraud, a swindler, to deceive, to trick and to fool.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-R372-review-365-372",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can say a fraud, a swindler, to deceive, to trick and to fool.",
+    "assesses": [
+      "ML-LEX-C372-THATTIPPU372-03",
+      "ML-LEX-C372-THATTIPPU372-04",
+      "ML-LEX-C372-THATTIPPU372-05"
+    ]
+  }
+}

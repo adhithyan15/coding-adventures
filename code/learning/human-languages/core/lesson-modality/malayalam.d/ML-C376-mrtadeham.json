@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C376-mrtadeham",
+    "language": "malayalam",
+    "chapter": 376,
+    "sequence": 18400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9743bb2bddcff5f"
+  },
+  "findings": []
+}

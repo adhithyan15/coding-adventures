@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "At University",
+  "label": "ch:te-at-university",
+  "canDo": "I can talk about professors, lectures, graduates and scholarships.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C414-prasnincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can talk about professors, lectures, graduates and scholarships.",
+    "assesses": [
+      "TE-LEX-C414-UPANYASAM414-03",
+      "TE-LEX-C414-UPANYASAM414-04",
+      "TE-LEX-C414-UPANYASAM414-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C369-antu",
+    "language": "kannada",
+    "chapter": 369,
+    "sequence": 18570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51f6636e6afb850b"
+  },
+  "findings": []
+}

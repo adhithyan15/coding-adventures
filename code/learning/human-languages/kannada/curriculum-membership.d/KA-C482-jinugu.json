@@ -1,0 +1,11 @@
+{
+  "id": "KA-C482-jinugu",
+  "pathSegment": "KA-PATH-482-TORE482",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-482-TORE482",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C525-paribhavam",
+  "pathSegment": "ML-PATH-525-VILAPAM525",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-525-VILAPAM525",
+      "order": 2
+    }
+  ]
+}

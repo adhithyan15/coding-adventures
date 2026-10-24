@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:6ed5dc81bb2c6079",
+  "lessonIds": [
+    "ML-C545-meludyogasthan",
+    "ML-C545-cumatala",
+    "ML-C545-sthalammarram",
+    "ML-C545-asutranam",
+    "ML-C545-sahakarikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch545.txt",
+  "json": "malayalam/narration/ch545.json",
+  "textHash": "fnv1a64:bacb8911aabd63ac",
+  "jsonHash": "fnv1a64:d293769593fcc774",
+  "findings": []
+}

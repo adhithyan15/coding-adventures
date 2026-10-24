@@ -1,0 +1,11 @@
+{
+  "id": "TE-C414-pattabhadrudu",
+  "pathSegment": "TE-PATH-414-UPANYASAM414",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-414-UPANYASAM414",
+      "order": 2
+    }
+  ]
+}

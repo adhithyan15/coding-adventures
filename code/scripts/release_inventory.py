@@ -67,7 +67,10 @@ A subset is a named slice of a language (LANG84 "Status stages"):
 CSV cell can never point outside the grammar directory. `spec` names a file
 `code/specs/<spec>-*.md`. A corpus case is `<name>.<ext>` plus `<name>.expect`
 and its oracle record `<name>.cite`; a negative case is `<name>.<ext>` plus
-`<name>.reject`.
+`<name>.reject`. A positive case may carry per-profile overrides:
+`<name>.expect@<profile>` (different output under that profile) or
+`<name>.reject@<profile>` (outside the subset under that profile, LANG84 4c),
+and the profile must be defined in a `profiles.rs`.
 
 THE MATRIX CHECK (`--matrix`)
 =============================
@@ -78,7 +81,8 @@ a release that claims B(S) is backed by backend runs. For every such release R
 and every case C of S's corpus, one of these must hold:
 
     1. `release_classes.csv` marks C as `rejected` under R (the case does not
-       apply: R's grammar does not parse it);
+       apply: R's grammar does not parse it, or a `.reject@<profile>`
+       override puts it outside R's profile);
     2. a `lang_matrix` row runs C on R itself;
     3. `release_classes.csv` puts (C, R) in an IIR-identity class whose
        representative -- its first release in inventory order -- has a
@@ -89,12 +93,9 @@ sweep (LANG84 phase 4c); `class` is the hex digest of the IIR that R produces
 for C, or `rejected`. A `lang_matrix` row (`Prog { .. }` in
 `code/packages/rust/lang-aot/tests/lang_matrix.rs`) counts when it names
 `release: Some("<id>")` and `case: Some("<subset>/<name>")`. Rows naming an
-unknown release, subset or case fail the check, so stale rows cannot linger.
-
-Until phase 4c gives `Prog` its `release`/`case` fields, no row can back a
-claim. While NONE of a language's rows names a release, its B claims are
-reported as pending (a note, not an error); as soon as one row does, every
-claim of that language is checked strictly.
+unknown release, subset or case fail the check, so stale rows cannot linger,
+and so does a row of an inventoried language that names no release (since
+LANG84 phase 4c; phase 2b only counted such rows in a note).
 
 USAGE
 =====
@@ -364,38 +365,47 @@ def corpus_cases(
 
     A case is `<name>.<ext>` + `<name>.expect` + `<name>.cite`; a negative
     probe is `<name>.<ext>` + `<name>.reject`. Overrides `<name>.expect@<p>`
-    (another profile's output) and `<name>.reject@<release>` (a release that
-    must refuse an otherwise accepted case) need the plain `.expect`. Only
-    positive cases need backend coverage.
+    and `<name>.reject@<p>` need the plain `.expect`. `<p>` is a profile
+    that some `profiles.rs` defines (Perl's `reject@perl_nv`) or a row of
+    this language's `releases.csv` (Python's `int_underscores.reject@3.0a1`).
+    Only positive cases need backend coverage.
     """
     corpus = directory / "corpus" / subset
     if not corpus.is_dir():
         return None
+    # A corpus file is a tiny program or record; a large one is a mistake or
+    # an attempt to make the oracle tests slow.
+    max_bytes = 64 * 1024
     if not is_plain(corpus, directory.parent):
         report.error(f"corpus/{subset}: must not be or sit under a symlink")
         return None
     files = []
     for path in corpus.iterdir():
+        shown = printable(repr(path.name))
         if path.is_symlink():
-            report.error(f"corpus/{subset}: {printable(repr(path.name))} is a symlink")
+            report.error(f"corpus/{subset}: {shown} is a symlink")
         elif path.is_file():
             files.append(path.name)
+            if path.stat().st_size > max_bytes:
+                report.error(f"corpus/{subset}: {shown} exceeds {max_bytes} bytes")
+                continue
+            # CRLF line ends are allowed (a case may test them); a bare CR is
+            # not, because it can hide text in terminal and diff views.
+            data = path.read_bytes()
+            if data.count(b"\r") != data.count(b"\r\n"):
+                report.error(f"corpus/{subset}: {shown} has a CR not followed by LF")
     stems: dict[str, set[str]] = {}
     for name in files:
         stem, dot, suffix = name.partition(".")
         stems.setdefault(stem, set()).add(suffix if dot else "")
     cases: set[str] = set()
     for stem, suffixes in sorted(stems.items()):
-        where = f"corpus/{subset}/{stem}"
+        where = f"corpus/{subset}/{printable(stem)}"
         if not CASE_RE.match(stem):
             report.error(f"{where}: case name must match [A-Za-z0-9_-]+")
             continue
-        sources = {
-            s
-            for s in suffixes
-            if s not in {"expect", "cite", "reject"}
-            and not s.startswith(("expect@", "reject@"))
-        }
+        overrides = {s for s in suffixes if s.startswith(("expect@", "reject@"))}
+        sources = suffixes - overrides - {"expect", "cite", "reject"}
         positive, negative = "expect" in suffixes, "reject" in suffixes
         if positive == negative:
             report.error(f"{where}: needs exactly one of .expect or .reject")
@@ -405,15 +415,19 @@ def corpus_cases(
             )
         if positive and "cite" not in suffixes:
             report.error(f"{where}: .expect has no .cite oracle record")
-        if any(s.startswith("expect@") for s in suffixes) and not positive:
+        if overrides and not positive:
             report.error(f"{where}: a profile override needs the plain .expect")
-        if any(s.startswith("reject@") for s in suffixes) and not positive:
-            report.error(f"{where}: a release refusal override needs the plain .expect")
-        for suffix in sorted(s for s in suffixes if s.startswith("reject@")):
-            named = suffix.removeprefix("reject@")
-            if releases is not None and named not in releases:
+        targets = [o.partition("@")[2] for o in overrides]
+        for target in sorted({t for t in targets if targets.count(t) > 1}):
+            report.error(f"{where}: more than one override for {printable(repr(target))}")
+        for override in sorted(overrides):
+            target = override.partition("@")[2]
+            is_profile = bool(PROFILE_RE.match(target)) and known_profile(target)
+            is_release = releases is not None and target in releases
+            if not (is_profile or is_release):
                 report.error(
-                    f"{where}: .{printable(repr(suffix))} names no releases.csv row"
+                    f"{where}: override .{printable(repr(override))} names no "
+                    "profile defined in a profiles.rs and no releases.csv row"
                 )
         if positive:
             cases.add(stem)
@@ -425,13 +439,30 @@ def corpus_cases(
 # ---------------------------------------------------------------------------
 
 
+# A profile is defined by a `name: "<id>"` field of a `ReleaseProfile` literal.
+PROFILE_NAME_RE = re.compile(r'\bname\s*:\s*"([A-Za-z_][A-Za-z0-9_]*)"')
+
+
+def profile_names(rust_packages: Path | None = None) -> set[str]:
+    """Every profile some IIR compiler crate's `profiles.rs` defines.
+
+    Only the string values of `name:` fields count. Matching the bare word
+    anywhere in the file (as phase 2b did) let `pub`, `Double` or a word in a
+    comment pass as a profile, so a misspelled `.expect@<p>` override was
+    accepted here and then silently ignored by the frontend's tests.
+    """
+    root = rust_packages or REPO / "code" / "packages" / "rust"
+    names: set[str] = set()
+    for path in sorted(root.glob("*/src/profiles.rs")):
+        if path.is_symlink():
+            continue
+        names.update(PROFILE_NAME_RE.findall(path.read_text(encoding="utf-8")))
+    return names
+
+
 def known_profile(name: str) -> bool:
-    """A profile is named in some IIR compiler crate's `profiles.rs`."""
-    pattern = re.compile(rf"\b{re.escape(name)}\b")
-    for path in (REPO / "code" / "packages" / "rust").glob("*/src/profiles.rs"):
-        if pattern.search(path.read_text(encoding="utf-8")):
-            return True
-    return False
+    """`name` is a profile some IIR compiler crate's `profiles.rs` defines."""
+    return name in profile_names()
 
 
 def check_rows(report: Report, rows: list[dict[str, str]], subsets: set[str]) -> None:
@@ -731,11 +762,16 @@ def check_matrix(
 
     # Matrix rows that name a release/case must name real ones.
     ran: set[tuple[str, str, str]] = set()
-    undeclared = 0
     for row in mine:
         where = f"lang_matrix.rs line {row['line']}"
         if "release" not in row:
-            undeclared += 1
+            # LANG84 "CI bounding": `release` is required (`Some`) for every
+            # language with an inventory. 2b only noted such rows, until 4c
+            # gave the 11 Perl rows the field; from 4c on it is an error.
+            report.error(
+                f"{where}: a Language::{row['lang']} row names no release "
+                "(LANG84 requires one for a language with releases.csv)"
+            )
             continue
         release, case = row["release"], row.get("case")
         if release not in order:
@@ -750,17 +786,6 @@ def check_matrix(
             )
             continue
         ran.add((release, subset, name))
-    if undeclared:
-        report.notes.append(
-            f"matrix: {undeclared} lang_matrix row(s) name no release "
-            "(LANG84 requires one; Prog gains the field in phase 4c)"
-        )
-    # Until a language's rows name releases (Prog gains `release`/`case` in
-    # phase 4c), none of its B claims can be backed by a row, so checking
-    # them would only report that the field does not exist yet. They are
-    # counted as pending instead; the first row that names a release makes
-    # every claim of that language strict.
-    pending = bool(mine) and undeclared == len(mine)
 
     classes = read_classes(report, directory, order, cases)
     representative: dict[tuple[str, str, str], str] = {}
@@ -769,16 +794,13 @@ def check_matrix(
     ):
         representative.setdefault((subset, name, digest), release)
 
-    claims = direct = by_class = skipped = unchecked = 0
+    claims = direct = by_class = skipped = 0
     for row in rows:
         if row.get("__malformed__"):
             continue
         release = row["release"]
         for subset in sorted(split_list(row["backend_status"])):
             claims += 1
-            if pending:
-                unchecked += 1
-                continue
             for name in sorted(cases.get(subset, set())):
                 digest = classes.get((subset, name, release))
                 if digest == "rejected":
@@ -800,11 +822,6 @@ def check_matrix(
         f"matrix: {claims} backend claim(s); case coverage {direct} direct, "
         f"{by_class} by IIR class, {skipped} not applicable"
     )
-    if unchecked:
-        report.notes.append(
-            f"matrix: {unchecked} backend claim(s) pending: no lang_matrix row "
-            "of this language names a release yet (phase 4c)"
-        )
 
 
 def read_classes(

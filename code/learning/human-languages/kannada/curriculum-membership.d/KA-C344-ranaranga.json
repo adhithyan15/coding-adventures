@@ -1,0 +1,11 @@
+{
+  "id": "KA-C344-ranaranga",
+  "pathSegment": "KA-PATH-344-AYUDHA344",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-344-AYUDHA344",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R552-review-546-552",
+    "language": "hindi",
+    "chapter": 552,
+    "sequence": 30400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b97df578425dd712"
+  },
+  "findings": []
+}

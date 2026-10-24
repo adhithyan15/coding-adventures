@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:4e5ea041596aa0d3",
+  "lessonIds": [
+    "TE-C539-pallavi",
+    "TE-C539-caranam",
+    "TE-C539-padyam",
+    "TE-C539-geyam",
+    "TE-C539-janapadam"
+  ],
+  "tex": "telugu/book/chapters/ch539-songs-and-verse.tex"
+}

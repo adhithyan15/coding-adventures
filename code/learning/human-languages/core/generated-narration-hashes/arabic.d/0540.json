@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:88d1f8bd649bbaa1",
+  "lessonIds": [
+    "AR-C540-qiraa",
+    "AR-C540-ishtaraka",
+    "AR-C540-iltaqa",
+    "AR-C540-shaghaf",
+    "AR-C540-wala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch540.txt",
+  "json": "arabic/narration/ch540.json",
+  "textHash": "fnv1a64:ebe199b96bf4b2fe",
+  "jsonHash": "fnv1a64:2d28fc8097a6890a",
+  "findings": []
+}

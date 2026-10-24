@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Drifting Apart",
+  "label": "ch:mr-drifting-apart",
+  "canDo": "I can talk about a separation, bickering and falling out.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C502-abola-dharne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can talk about a separation, bickering and falling out.",
+    "assesses": [
+      "MR-LEX-C502-DURAVA502-03",
+      "MR-LEX-C502-DURAVA502-04",
+      "MR-LEX-C502-DURAVA502-05"
+    ]
+  }
+}

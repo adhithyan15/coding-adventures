@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Asking The Way",
+  "label": "ch:ar-asking-the-way",
+  "canDo": "I can ask how to get somewhere and follow directions given as orders.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-R287-asking-the-way",
+    "kind": "production",
+    "summary": "Complete AR-R287-asking-the-way: ask the way with kayfa aṣilu ilā and give the answer as orders.",
+    "assesses": [
+      "AR-LEX-C287-TARIQ287-01",
+      "AR-GRAMMAR-C287-IMPERATIVE-01",
+      "AR-GRAMMAR-C287-DIRECTIONS-01"
+    ]
+  }
+}

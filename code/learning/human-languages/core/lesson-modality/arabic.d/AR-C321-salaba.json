@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C321-salaba",
+    "language": "arabic",
+    "chapter": 321,
+    "sequence": 18460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68ef0e8454ef437c"
+  },
+  "findings": []
+}

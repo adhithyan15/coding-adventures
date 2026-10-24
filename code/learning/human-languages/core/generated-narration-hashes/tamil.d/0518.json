@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:22524f4d8993611b",
+  "lessonIds": [
+    "TA-C518-niral",
+    "TA-C518-kuriyitu",
+    "TA-C518-kappuppirati",
+    "TA-C518-ropo",
+    "TA-C518-ceyarkai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch518.txt",
+  "json": "tamil/narration/ch518.json",
+  "textHash": "fnv1a64:3175c9ae1f10d873",
+  "jsonHash": "fnv1a64:8f06dddf386a2f51",
+  "findings": []
+}

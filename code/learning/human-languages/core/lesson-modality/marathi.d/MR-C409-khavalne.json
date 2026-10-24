@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C409-khavalne",
+    "language": "marathi",
+    "chapter": 409,
+    "sequence": 23690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a54523b6b6fd9d70"
+  },
+  "findings": []
+}

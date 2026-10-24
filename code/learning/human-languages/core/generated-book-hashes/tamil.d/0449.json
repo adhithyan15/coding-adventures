@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:879b3e7486ffb8b8",
+  "lessonIds": [
+    "TA-C449-elam",
+    "TA-C449-kuttakai",
+    "TA-C449-parivarttanai",
+    "TA-C449-mutalitu",
+    "TA-C449-ataku-vai"
+  ],
+  "tex": "tamil/book/chapters/ch449-auctions-and-leases.tex"
+}

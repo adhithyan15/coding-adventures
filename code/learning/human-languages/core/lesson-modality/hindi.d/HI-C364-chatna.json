@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C364-chatna",
+    "language": "hindi",
+    "chapter": 364,
+    "sequence": 20110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cfa7038ef2d0c5f"
+  },
+  "findings": []
+}

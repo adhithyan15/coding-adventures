@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C504-jenaretor",
+    "language": "bengali",
+    "chapter": 504,
+    "sequence": 30630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5fb92a7ecf58c36"
+  },
+  "findings": []
+}

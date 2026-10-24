@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Remembering a Life",
+  "label": "ch:mr-remembering-a-life",
+  "canDo": "I can talk about a death, a tribute and the gathering that follows.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C324-racne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can talk about a death, a tribute and the gathering that follows.",
+    "assesses": [
+      "MR-LEX-C324-SHRADDHA324-03",
+      "MR-LEX-C324-SHRADDHA324-04",
+      "MR-LEX-C324-SHRADDHA324-05"
+    ]
+  }
+}

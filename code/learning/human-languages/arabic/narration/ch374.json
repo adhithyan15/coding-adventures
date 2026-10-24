@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 374,
+  "title": "Linking reasons",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c4db070c7f7947df",
+  "lessons": [
+    {
+      "id": "AR-C374-bi-t-tali",
+      "sequence": 21220,
+      "title": "بالتالي (bi-t-tālī) — consequently",
+      "headword": "بالتالي",
+      "romanization": "bi-t-tālī",
+      "gloss": "consequently",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ce98aa61b8aa9cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to back down, then the Arabic for to resolve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بالتالي",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بالتالي — bi-t-tālī — \"consequently\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان الطريق مغلقا، بالتالي تأخر الجميع. kāna aṭ-ṭarīq mughlaqan, bi-t-tālī taʾakhkhara al-jamīʿ. The road was closed; consequently everyone was late."
+            },
+            {
+              "kind": "speech",
+              "text": "Usually with و: وبالتالي, and as a result."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بالتالي (bi-t-tālī) joins bi-, \"by\", with at-tālī, \"the one that follows\", built on the native Arabic root t-l-w, \"to follow\" (Lane). Literally, by what follows."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bi-t-tālī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bi-t-tālī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bi-t-tālī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bi-t-tālī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna aṭ-ṭarīq mughlaqan, bi-t-tālī taʾakhkhara al-jamīʿ. — The road was closed; consequently everyone was late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna aṭ-ṭarīq mughlaqan, bi-t-tālī taʾakhkhara al-jamīʿ.* — The road was closed; consequently everyone was late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to back down, then the Arabic for to resolve, then say bi-t-tālī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to back down, then the Arabic for to resolve, then say *bi-t-tālī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بالتالي (bi-t-tālī) mean? (\"Consequently\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C374-li-hadha-as-sabab",
+      "sequence": 21230,
+      "title": "لهذا السبب (li-hādhā as-sabab) — for this reason",
+      "headword": "لهذا السبب",
+      "romanization": "li-hādhā as-sabab",
+      "gloss": "for this reason",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:416ea4bd6a5209ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to resolve, then the Arabic for consequently."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لهذا السبب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لهذا السبب — li-hādhā as-sabab — \"for this reason\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان الجو ممطرا، لهذا السبب بقينا في المنزل. kāna al-jaww mumṭiran, li-hādhā as-sabab baqīnā fī al-manzil. The weather was rainy; for this reason we stayed at home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لهذا السبب (li-hādhā as-sabab) is a phrase: li-, \"for\", hādhā, \"this\", and as-sabab, \"the reason\", built on the native Arabic root s-b-b, \"a rope; a means to an end\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "li-hādhā as-sabab",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *li-hādhā as-sabab*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "li-hādhā as-sabab, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *li-hādhā as-sabab*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna al-jaww mumṭiran, li-hādhā as-sabab baqīnā fī al-manzil. — The weather was rainy; for this reason we stayed at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna al-jaww mumṭiran, li-hādhā as-sabab baqīnā fī al-manzil.* — The weather was rainy; for this reason we stayed at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to resolve, then the Arabic for consequently, then say li-hādhā as-sabab again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to resolve, then the Arabic for consequently, then say *li-hādhā as-sabab* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لهذا السبب (li-hādhā as-sabab) mean? (\"For this reason\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C374-bi-ma-anna",
+      "sequence": 21240,
+      "title": "بما أن (bi-mā anna) — seeing that; since",
+      "headword": "بما أن",
+      "romanization": "bi-mā anna",
+      "gloss": "seeing that; since",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f61aed7782f1426",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for consequently, then the Arabic for for this reason."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بما أن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بما أن — bi-mā anna — \"seeing that; since\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بما أن اليوم عطلة، سننام متأخرين. bi-mā anna al-yawm ʿuṭla, sa-nanāmu mutaʾakhkhirīn. Seeing that today is a holiday, we will sleep late."
+            },
+            {
+              "kind": "speech",
+              "text": "It gives a reason both speakers already accept."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بما أن (bi-mā anna) is built from three native Arabic function words: bi-, \"by\", mā, \"what\", and anna, \"that\". The deeper origin of such particles is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bi-mā anna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bi-mā anna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bi-mā anna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bi-mā anna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bi-mā anna al-yawm ʿuṭla, sa-nanāmu mutaʾakhkhirīn. — Seeing that today is a holiday, we will sleep late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bi-mā anna al-yawm ʿuṭla, sa-nanāmu mutaʾakhkhirīn.* — Seeing that today is a holiday, we will sleep late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for consequently, then the Arabic for for this reason, then say bi-mā anna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for consequently, then the Arabic for for this reason, then say *bi-mā anna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بما أن (bi-mā anna) mean? (\"Seeing that; since\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C374-haythu-inna",
+      "sequence": 21250,
+      "title": "حيث إن (ḥaythu inna) — given that",
+      "headword": "حيث إن",
+      "romanization": "ḥaythu inna",
+      "gloss": "given that",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ca0f7d14207b060",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for for this reason, then the Arabic for seeing that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حيث إن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حيث إن — ḥaythu inna — \"given that\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حيث إن الطريق طويل، سنخرج مبكرا. ḥaythu inna aṭ-ṭarīq ṭawīl, sa-nakhruju mubakkiran. Given that the road is long, we will leave early."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; in speech بما أن (bi-mā anna) or لأن."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حيث إن (ḥaythu inna) joins two native Arabic particles: ḥaythu, \"where\", and inna, \"indeed, truly\". The deeper origin of such particles is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaythu inna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaythu inna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaythu inna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaythu inna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaythu inna aṭ-ṭarīq ṭawīl, sa-nakhruju mubakkiran. — Given that the road is long, we will leave early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaythu inna aṭ-ṭarīq ṭawīl, sa-nakhruju mubakkiran.* — Given that the road is long, we will leave early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for for this reason, then the Arabic for seeing that, then say ḥaythu inna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for for this reason, then the Arabic for seeing that, then say *ḥaythu inna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حيث إن (ḥaythu inna) mean? (\"Given that\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C374-li-kay",
+      "sequence": 21260,
+      "title": "لكي (li-kay) — in order to",
+      "headword": "لكي",
+      "romanization": "li-kay",
+      "gloss": "in order to",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50d379f478a2291a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for seeing that, then the Arabic for given that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لكي",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لكي — li-kay — \"in order to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يدرس أخي كل ليلة لكي ينجح. yadrusu akhī kulla layla li-kay yanjaḥa. My brother studies every night in order to pass."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb after it takes the subjunctive: لكي ينجح, li-kay yanjaḥa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لكي (li-kay) joins the native Arabic particles li-, \"for\", and kay, \"so that\", which learners met on its own earlier. The deeper origin of such particles is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "li-kay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *li-kay*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "li-kay, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *li-kay*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadrusu akhī kulla layla li-kay yanjaḥa. — My brother studies every night in order to pass.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadrusu akhī kulla layla li-kay yanjaḥa.* — My brother studies every night in order to pass.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for seeing that, then the Arabic for given that, then say li-kay again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for seeing that, then the Arabic for given that, then say *li-kay* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لكي (li-kay) mean? (\"In order to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

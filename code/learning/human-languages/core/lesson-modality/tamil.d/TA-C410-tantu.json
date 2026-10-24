@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C410-tantu",
+    "language": "tamil",
+    "chapter": 410,
+    "sequence": 23650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f6f2153e67800d8"
+  },
+  "findings": []
+}

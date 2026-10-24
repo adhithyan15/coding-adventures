@@ -1,0 +1,11 @@
+{
+  "id": "TA-C515-minnul",
+  "pathSegment": "TA-PATH-515-KANINI515",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-515-KANINI515",
+      "order": 4
+    }
+  ]
+}

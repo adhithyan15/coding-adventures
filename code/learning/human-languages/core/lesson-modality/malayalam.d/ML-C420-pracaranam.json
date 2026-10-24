@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C420-pracaranam",
+    "language": "malayalam",
+    "chapter": 420,
+    "sequence": 20760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba96a5e03c8567c7"
+  },
+  "findings": []
+}

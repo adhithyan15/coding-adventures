@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C319-akramisu",
+    "language": "kannada",
+    "chapter": 319,
+    "sequence": 16020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33170aa09827d048"
+  },
+  "findings": []
+}

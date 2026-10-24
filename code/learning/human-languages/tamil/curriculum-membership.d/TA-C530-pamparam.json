@@ -1,0 +1,11 @@
+{
+  "id": "TA-C530-pamparam",
+  "pathSegment": "TA-PATH-530-KUZHANTHAI530",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-530-KUZHANTHAI530",
+      "order": 1
+    }
+  ]
+}

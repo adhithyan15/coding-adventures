@@ -1,0 +1,11 @@
+{
+  "id": "KA-C409-mandisu",
+  "pathSegment": "KA-PATH-409-PRABANDHA409",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-409-PRABANDHA409",
+      "order": 3
+    }
+  ]
+}

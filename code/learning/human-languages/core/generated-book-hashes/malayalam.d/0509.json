@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:4a0c4de8734f2aa0",
+  "lessonIds": [
+    "ML-C509-tapanila",
+    "ML-C509-ardrata",
+    "ML-C509-usnam",
+    "ML-C509-kulir",
+    "ML-C509-cutakuka"
+  ],
+  "tex": "malayalam/book/chapters/ch509-heat-and-cold.tex"
+}

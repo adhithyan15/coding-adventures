@@ -1,0 +1,11 @@
+{
+  "id": "ML-C540-mukhakkuru",
+  "pathSegment": "ML-PATH-540-KLINIKKU540",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-540-KLINIKKU540",
+      "order": 2
+    }
+  ]
+}

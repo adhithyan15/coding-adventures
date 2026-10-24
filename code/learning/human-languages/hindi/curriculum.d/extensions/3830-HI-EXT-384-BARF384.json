@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-384-BARF384",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what heat or cold will do to things.",
+  "prerequisites": []
+}

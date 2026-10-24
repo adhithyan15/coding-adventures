@@ -1,0 +1,11 @@
+{
+  "id": "MR-C327-vasavne",
+  "pathSegment": "MR-PATH-327-PRAJA327",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-327-PRAJA327",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C354-mabhyapettu",
+    "language": "telugu",
+    "chapter": 354,
+    "sequence": 17440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f41f236c74c6ac27"
+  },
+  "findings": []
+}

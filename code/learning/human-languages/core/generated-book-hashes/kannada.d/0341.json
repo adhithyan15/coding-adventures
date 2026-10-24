@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:fe900fedc9d86adf",
+  "lessonIds": [
+    "KA-C341-vamsa",
+    "KA-C341-purvaja",
+    "KA-C341-talemaru",
+    "KA-C341-manetana",
+    "KA-C341-arasa"
+  ],
+  "tex": "kannada/book/chapters/ch341-our-family-line.tex"
+}

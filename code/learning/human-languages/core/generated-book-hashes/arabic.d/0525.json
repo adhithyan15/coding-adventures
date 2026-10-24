@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:7795cb6bc05c0827",
+  "lessonIds": [
+    "AR-C525-antaja",
+    "AR-C525-sammama",
+    "AR-C525-musammim",
+    "AR-C525-barmaja",
+    "AR-C525-mubarmij"
+  ],
+  "tex": "arabic/book/chapters/ch525-design-and-code.tex"
+}

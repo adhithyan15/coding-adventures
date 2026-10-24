@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C408-punaravartane",
+    "language": "kannada",
+    "chapter": 408,
+    "sequence": 20680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60f1c6ab4306d917"
+  },
+  "findings": []
+}

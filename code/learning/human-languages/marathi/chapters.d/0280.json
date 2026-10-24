@@ -1,0 +1,20 @@
+{
+  "chapter": 280,
+  "title": "What I Think, and So",
+  "label": "ch:mr-what-i-think-and-so",
+  "canDo": "I can give an opinion with malā vāṭtaṁ kī and mājhyā mate, and a result with mhaṇūn and tyāmuḷe.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-R280-opinion-and-result",
+    "kind": "production",
+    "summary": "Complete MR-R280-opinion-and-result: say what you think and what follows from a reason.",
+    "assesses": [
+      "MR-GRAMMAR-C280-VATTE-KI-01",
+      "MR-GRAMMAR-C280-MAJHYA-MATE-01",
+      "MR-GRAMMAR-C280-MHANUN-01",
+      "MR-GRAMMAR-C280-TYAMULE-01"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "A Place to Stay",
+  "label": "ch:mr-a-place-to-stay",
+  "canDo": "I can talk about lodging, rest houses, guest houses, a night halt and an eating house.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C413-khanaval",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can talk about lodging, rest houses, guest houses, a night halt and an eating house.",
+    "assesses": [
+      "MR-LEX-C413-NIVAS413-03",
+      "MR-LEX-C413-NIVAS413-04",
+      "MR-LEX-C413-NIVAS413-05"
+    ]
+  }
+}

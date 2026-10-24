@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C313-min-jadid",
+    "language": "arabic",
+    "chapter": 313,
+    "sequence": 18050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a79606b2ee26a28b"
+  },
+  "findings": []
+}

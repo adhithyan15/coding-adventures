@@ -1,0 +1,11 @@
+{
+  "id": "TE-C537-cedugudu",
+  "pathSegment": "TE-PATH-537-ATALU537",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-537-ATALU537",
+      "order": 3
+    }
+  ]
+}

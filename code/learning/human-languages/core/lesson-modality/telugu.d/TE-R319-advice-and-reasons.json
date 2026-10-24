@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R319-advice-and-reasons",
+    "language": "telugu",
+    "chapter": 319,
+    "sequence": 15380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:467ed1c984862ff5"
+  },
+  "findings": []
+}

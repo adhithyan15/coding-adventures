@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 488,
+  "title": "Growing Up and Growing Old",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a56434063ebb29bc",
+  "lessons": [
+    {
+      "id": "BN-C488-shoishob",
+      "sequence": 29560,
+      "title": "শৈশব (shoishôb) — childhood",
+      "headword": "শৈশব",
+      "romanization": "shoishôb",
+      "gloss": "childhood",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71eef6f28e7cc396",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to guard protectively, then the Bengali for to stroke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শৈশব",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শৈশব — shoishôb — \"childhood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দাদুর শৈশব গ্রামে কাটল। dādur shoishôb grāme kāṭlô. Grandfather spent his childhood in the village."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শৈশব (shoishôb) is a tatsama, Sanskrit śaiśava, \"childhood\" (Monier-Williams), from śiśu, the শিশু (taught) of Bengali."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shoishôb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shoishôb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shoishôb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shoishôb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādur shoishôb grāme kāṭlô. — Grandfather spent his childhood in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādur shoishôb grāme kāṭlô.* — Grandfather spent his childhood in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to guard protectively, then the Bengali for to stroke, then say shoishôb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to guard protectively, then the Bengali for to stroke, then say *shoishôb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শৈশব (shoishôb) mean? (\"Childhood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C488-koishor",
+      "sequence": 29570,
+      "title": "কৈশোর (koishor) — adolescence; the early teens",
+      "headword": "কৈশোর",
+      "romanization": "koishor",
+      "gloss": "adolescence; the early teens",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6cafdc042705357",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to stroke, then the Bengali for childhood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কৈশোর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কৈশোর — koishor — \"adolescence; the early teens\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কৈশোরে অরুণ ফুটবল খেলত। koishore ôrun phuṭbôl kheltô. As a teenager Arun used to play football."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কৈশোর (koishor) is a tatsama, Sanskrit kaiśora, \"youth, boyhood from ten to fifteen\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koishor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koishor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koishor, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koishor*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koishore ôrun phuṭbôl kheltô. — As a teenager Arun used to play football.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koishore ôrun phuṭbôl kheltô.* — As a teenager Arun used to play football.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to stroke, then the Bengali for childhood, then say koishor again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to stroke, then the Bengali for childhood, then say *koishor* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কৈশোর (koishor) mean? (\"Adolescence; the early teens\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C488-joubon",
+      "sequence": 29580,
+      "title": "যৌবন (joubôn) — youth; young adulthood",
+      "headword": "যৌবন",
+      "romanization": "joubôn",
+      "gloss": "youth; young adulthood",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41be5db3549136ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for childhood, then the Bengali for adolescence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: যৌবন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যৌবন — joubôn — \"youth; young adulthood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "যৌবনে দাদু সেনাবাহিনীতে ছিলেন। joubône dādu senābāhinīte chhilen. In his youth my grandfather was in the army."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যৌবন (joubôn) is a tatsama, Sanskrit yauvana, \"youth, youthfulness\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joubôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *joubôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joubôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *joubôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joubône dādu senābāhinīte chhilen. — In his youth my grandfather was in the army.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *joubône dādu senābāhinīte chhilen.* — In his youth my grandfather was in the army.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for childhood, then the Bengali for adolescence, then say joubôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for childhood, then the Bengali for adolescence, then say *joubôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does যৌবন (joubôn) mean? (\"Youth; young adulthood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C488-bardhokyo",
+      "sequence": 29590,
+      "title": "বার্ধক্য (bārdhôkyô) — old age",
+      "headword": "বার্ধক্য",
+      "romanization": "bārdhôkyô",
+      "gloss": "old age",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7429bcd14052bd0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for adolescence, then the Bengali for youth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বার্ধক্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বার্ধক্য — bārdhôkyô — \"old age\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বার্ধক্যে দাদু একা থাকেন। bārdhôkye dādu ekā thāken. In his old age my grandfather lives alone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বার্ধক্য (bārdhôkyô) is a tatsama, Sanskrit vārddhakya, \"old age\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārdhôkyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārdhôkyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārdhôkyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārdhôkyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārdhôkye dādu ekā thāken. — In his old age my grandfather lives alone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārdhôkye dādu ekā thāken.* — In his old age my grandfather lives alone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for adolescence, then the Bengali for youth, then say bārdhôkyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for adolescence, then the Bengali for youth, then say *bārdhôkyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বার্ধক্য (bārdhôkyô) mean? (\"Old age\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C488-bere-otha",
+      "sequence": 29600,
+      "title": "বেড়ে ওঠা (beṛe oṭhā) — to grow up",
+      "headword": "বেড়ে ওঠা",
+      "romanization": "beṛe oṭhā",
+      "gloss": "to grow up",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a93d699c9f2bd6f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for youth, then the Bengali for old age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বেড়ে ওঠা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বেড়ে ওঠা — beṛe oṭhā — \"to grow up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অরুণ গ্রামে দাদুর কাছে বেড়ে উঠল। ôrun grāme dādur kāchhe beṛe uṭhlô. Arun grew up with his grandfather in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি শহরে বেড়ে উঠলেন, tini shôhôre beṛe uṭhlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বেড়ে ওঠা (beṛe oṭhā) is beṛe, the -এ form of bāṛā, \"to grow\", which CDIAL lists for Bengali under Sanskrit vardhate, \"grows\" (CDIAL 11376), with oṭhā, \"to rise\" (CDIAL 1793)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṛe oṭhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṛe oṭhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṛe oṭhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṛe oṭhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôrun grāme dādur kāchhe beṛe uṭhlô. — Arun grew up with his grandfather in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôrun grāme dādur kāchhe beṛe uṭhlô.* — Arun grew up with his grandfather in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for youth, then the Bengali for old age, then say beṛe oṭhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for youth, then the Bengali for old age, then say *beṛe oṭhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বেড়ে ওঠা (beṛe oṭhā) mean? (\"To grow up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

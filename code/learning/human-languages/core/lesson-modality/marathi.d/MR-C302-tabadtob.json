@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C302-tabadtob",
+    "language": "marathi",
+    "chapter": 302,
+    "sequence": 17750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de0495dfc2a1f03d"
+  },
+  "findings": []
+}

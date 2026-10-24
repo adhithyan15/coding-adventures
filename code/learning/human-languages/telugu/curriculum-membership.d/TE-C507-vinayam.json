@@ -1,0 +1,11 @@
+{
+  "id": "TE-C507-vinayam",
+  "pathSegment": "TE-PATH-507-SVABHAVAM507",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-507-SVABHAVAM507",
+      "order": 3
+    }
+  ]
+}

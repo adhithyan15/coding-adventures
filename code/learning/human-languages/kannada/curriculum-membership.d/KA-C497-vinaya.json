@@ -1,0 +1,11 @@
+{
+  "id": "KA-C497-vinaya",
+  "pathSegment": "KA-PATH-497-ABHIMANA497",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-497-ABHIMANA497",
+      "order": 3
+    }
+  ]
+}

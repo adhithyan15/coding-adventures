@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C494-digbhrame",
+    "language": "kannada",
+    "chapter": 494,
+    "sequence": 25240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24fd9719df5f1b83"
+  },
+  "findings": []
+}

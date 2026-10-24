@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C504-motor",
+    "language": "bengali",
+    "chapter": 504,
+    "sequence": 30650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:314eeb233341c0b8"
+  },
+  "findings": []
+}

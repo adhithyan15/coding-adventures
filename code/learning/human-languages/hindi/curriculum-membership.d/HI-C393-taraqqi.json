@@ -1,0 +1,11 @@
+{
+  "id": "HI-C393-taraqqi",
+  "pathSegment": "HI-PATH-393-SAFALTA393",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-393-SAFALTA393",
+      "order": 3
+    }
+  ]
+}

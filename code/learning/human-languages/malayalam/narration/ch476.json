@@ -1,0 +1,866 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 476,
+  "title": "Crossing the Water",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:561ab67b473e2cf5",
+  "lessons": [
+    {
+      "id": "ML-C476-katattuvallam",
+      "sequence": 23760,
+      "title": "കടത്തുവള്ളം (kaṭattuvaḷḷaṁ) — a ferry boat",
+      "headword": "കടത്തുവള്ളം",
+      "romanization": "kaṭattuvaḷḷaṁ",
+      "gloss": "a ferry boat",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3734416b131fe17e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a country boat, then the Malayalam for an oar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കടത്തുവള്ളം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കടത്തുവള്ളം — kaṭattuvaḷḷaṁ — \"a ferry boat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഗ്രാമത്തിലുള്ളവർ കടത്തുവള്ളത്തിൽ പുഴ കടക്കുന്നു. grāmattiluḷḷavar kaṭattuvaḷḷattil puḻa kaṭakkunnu. The villagers cross the river in a ferry boat."
+            },
+            {
+              "kind": "speech",
+              "text": "കടത്ത് is a crossing, from കടക്കുക, to cross; the ferryman is the കടത്തുകാരൻ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കടത്തുവള്ളം (kaṭattuvaḷḷaṁ) is a native Dravidian compound of കടത്ത്, a carrying across (DEDR 1109), and വള്ളം, a boat (DEDR 5315)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭattuvaḷḷaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭattuvaḷḷaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭattuvaḷḷaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭattuvaḷḷaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāmattiluḷḷavar kaṭattuvaḷḷattil puḻa kaṭakkunnu. — The villagers cross the river in a ferry boat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāmattiluḷḷavar kaṭattuvaḷḷattil puḻa kaṭakkunnu.* — The villagers cross the river in a ferry boat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a country boat, then the Malayalam for an oar, then say kaṭattuvaḷḷaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a country boat, then the Malayalam for an oar, then say *kaṭattuvaḷḷaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കടത്തുവള്ളം (kaṭattuvaḷḷaṁ) mean? (\"A ferry boat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C476-olukku",
+      "sequence": 23770,
+      "title": "ഒഴുക്ക് (oḻukkŭ) — a current; a flow",
+      "headword": "ഒഴുക്ക്",
+      "romanization": "oḻukkŭ",
+      "gloss": "a current; a flow",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:145713df9a677dbe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an oar, then the Malayalam for a ferry boat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഒഴുക്ക്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒഴുക്ക് — oḻukkŭ — \"a current; a flow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴക്കാലത്ത് പുഴയിൽ നല്ല ഒഴുക്കുണ്ട്. maḻakkālattŭ puḻayil nalla oḻukkuṇṭŭ. In the rainy season the river has a strong current."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of ഒഴുകുക, to flow. Against the current is ഒഴുക്കിനെതിരെ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒഴുക്ക് (oḻukkŭ) is native Dravidian, the noun of ഒഴുകുക, to flow; DEDR lists it as a current or stream (DEDR 1010)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḻukkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḻukkŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḻukkŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḻukkŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻakkālattŭ puḻayil nalla oḻukkuṇṭŭ. — In the rainy season the river has a strong current.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻakkālattŭ puḻayil nalla oḻukkuṇṭŭ.* — In the rainy season the river has a strong current.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an oar, then the Malayalam for a ferry boat, then say oḻukkŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an oar, then the Malayalam for a ferry boat, then say *oḻukkŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഒഴുക്ക് (oḻukkŭ) mean? (\"A current; a flow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C476-culi",
+      "sequence": 23780,
+      "title": "ചുഴി (cuḻi) — a whirlpool; an eddy",
+      "headword": "ചുഴി",
+      "romanization": "cuḻi",
+      "gloss": "a whirlpool; an eddy",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10a4e73cc8d84972",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a ferry boat, then the Malayalam for a current."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചുഴി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചുഴി — cuḻi — \"a whirlpool; an eddy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുഴയുടെ നടുവിൽ അപകടകരമായ ഒരു ചുഴി ഉണ്ട്. puḻayuṭe naṭuvil apakaṭakaramāya oru cuḻi uṇṭŭ. There is a dangerous whirlpool in the middle of the river."
+            },
+            {
+              "kind": "speech",
+              "text": "It comes from the same root as ചുഴലുക, to whirl round."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചുഴി (cuḻi) is native Dravidian, from the root of ചുഴലുക, to whirl or revolve (DEDR 2698)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puḻayuṭe naṭuvil apakaṭakaramāya oru cuḻi uṇṭŭ. — There is a dangerous whirlpool in the middle of the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puḻayuṭe naṭuvil apakaṭakaramāya oru cuḻi uṇṭŭ.* — There is a dangerous whirlpool in the middle of the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a ferry boat, then the Malayalam for a current, then say cuḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a ferry boat, then the Malayalam for a current, then say *cuḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചുഴി (cuḻi) mean? (\"A whirlpool; an eddy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C476-ulayuka",
+      "sequence": 23790,
+      "title": "ഉലയുക (ulayuka) — to toss about; to sway",
+      "headword": "ഉലയുക",
+      "romanization": "ulayuka",
+      "gloss": "to toss about; to sway",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e5d92a42a19fcf5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a current, then the Malayalam for a whirlpool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉലയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉലയുക — ulayuka — \"to toss about; to sway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ശക്തമായ കാറ്റിൽ ചെറിയ വള്ളം ഉലഞ്ഞു. śaktamāya kāṟṟil ceṟiya vaḷḷaṁ ulaññu. In the strong wind the little boat tossed about."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഉലഞ്ഞു, ulaññu."
+            },
+            {
+              "kind": "speech",
+              "text": "The past is ഉലഞ്ഞു: verbs in -അയുക make the past in -അഞ്ഞു."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉലയുക (ulayuka) is native Dravidian, \"to be agitated, to shake\" (DEDR 1003)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ulayuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ulayuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ulayuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ulayuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaktamāya kāṟṟil ceṟiya vaḷḷaṁ ulaññu. — In the strong wind the little boat tossed about.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaktamāya kāṟṟil ceṟiya vaḷḷaṁ ulaññu.* — In the strong wind the little boat tossed about.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a current, then the Malayalam for a whirlpool, then say ulayuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a current, then the Malayalam for a whirlpool, then say *ulayuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉലയുക (ulayuka) mean? (\"To toss about; to sway\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C476-karaykkatukkuka",
+      "sequence": 23800,
+      "title": "കരയ്ക്കടുക്കുക (karaykkaṭukkuka) — to come ashore",
+      "headword": "കരയ്ക്കടുക്കുക",
+      "romanization": "karaykkaṭukkuka",
+      "gloss": "to come ashore",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fd3bb8a0cebe9ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a whirlpool, then the Malayalam for to toss about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കരയ്ക്കടുക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കരയ്ക്കടുക്കുക — karaykkaṭukkuka — \"to come ashore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒരു മണിക്കൂറിന് ശേഷം വള്ളം കരയ്ക്കടുത്തു. oru maṇikkūṟinŭ śēṣaṁ vaḷḷaṁ karaykkaṭuttu. After an hour the boat came ashore."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കരയ്ക്കടുത്തു, karaykkaṭuttu."
+            },
+            {
+              "kind": "speech",
+              "text": "കരയ്ക്ക്, to the shore, plus the verb behind അടുത്ത്, near: to come near the land. കര is land as opposed to water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കരയ്ക്കടുക്കുക (karaykkaṭukkuka) is a native Dravidian compound of കര, the shore (DEDR 1293), and അടുക്കുക, to come near (DEDR 79)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karaykkaṭukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karaykkaṭukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karaykkaṭukkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karaykkaṭukkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru maṇikkūṟinŭ śēṣaṁ vaḷḷaṁ karaykkaṭuttu. — After an hour the boat came ashore.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru maṇikkūṟinŭ śēṣaṁ vaḷḷaṁ karaykkaṭuttu.* — After an hour the boat came ashore.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a whirlpool, then the Malayalam for to toss about, then say karaykkaṭukkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a whirlpool, then the Malayalam for to toss about, then say *karaykkaṭukkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കരയ്ക്കടുക്കുക (karaykkaṭukkuka) mean? (\"To come ashore\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R476-review-469-476",
+      "sequence": 23810,
+      "title": "Words from chapters 469–476 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 469-476",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4217ebc169213d1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for a footpath and the roadside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a footpath, the roadside, a signpost, to make way, to cross over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a footpath, the roadside, a signpost, to make way, to cross over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "petrol, fuel, a tyre, a brake, to get a puncture",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: petrol, fuel, a tyre, a brake, to get a puncture]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an engine, a wheel, a fault, a horn, to get dented",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an engine, a wheel, a fault, a horn, to get dented]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "transport, a traffic jam, speed, to creep along, to jolt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: transport, a traffic jam, speed, to creep along, to jolt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bus stop, to wave down, to drop off, to shove, to rush up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bus stop, to wave down, to drop off, to shove, to rush up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to miss, a railway track, to jump off, to hang on, to speed along",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to miss, a railway track, to jump off, to hang on, to speed along]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ship, a sailor, a jetty, a country boat, an oar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ship, a sailor, a jetty, a country boat, an oar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ferry boat, a current, a whirlpool, to toss about, to come ashore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ferry boat, a current, a whirlpool, to toss about, to come ashore]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A footpath? (നടപ്പാത, naṭappāta.) The roadside? (വഴിയോരം, vaḻiyōraṁ.) A signpost? (ചൂണ്ടുപലക, cūṇṭupalaka.) To make way? (വഴിമാറുക, vaḻimāṟuka.) To cross over? (മുറിച്ചുകടക്കുക, muṟiccukaṭakkuka.) Petrol? (പെട്രോൾ, peṭrōḷ.) Fuel? (ഇന്ധനം, indhanaṁ.) A tyre? (ടയർ, ṭayar.) A brake? (ബ്രേക്ക്, brēkkŭ.) To get a puncture? (പഞ്ചറാകുക, pañcaṟākuka.) An engine? (എഞ്ചിൻ, eñcin.) A wheel? (ചക്രം, cakraṁ.) A fault? (തകരാറ്, takarāṟŭ.) A horn? (ഹോൺ, hōṇ.) To get dented? (ചളുങ്ങുക, caḷuṅṅuka.) Transport? (ഗതാഗതം, gatāgataṁ.) A traffic jam? (ഗതാഗതക്കുരുക്ക്, gatāgatakkurukkŭ.) Speed? (വേഗത, vēgata.) To creep along? (നിരങ്ങുക, niraṅṅuka.) To jolt? (കുലുങ്ങുക, kuluṅṅuka.) A bus stop? (സ്റ്റോപ്പ്, sṟṟōppŭ.) To wave down? (കൈകാണിക്കുക, kaikāṇikkuka.) To drop off? (ഇറക്കിവിടുക, iṟakkiviṭuka.) To shove? (ഉന്തുക, untuka.) To rush up? (ഓടിയെത്തുക, ōṭiyettuka.) To miss? (നഷ്ടമാകുക, naṣṭamākuka.) A railway track? (റെയിൽപ്പാളം, ṟeyilppāḷaṁ.) To jump off? (ചാടിയിറങ്ങുക, cāṭiyiṟaṅṅuka.) To hang on? (തൂങ്ങിനിൽക്കുക, tūṅṅinilkkuka.) To speed along? (പായുക, pāyuka.) A ship? (കപ്പൽ, kappal.) A sailor? (നാവികൻ, nāvikan.) A jetty? (ജെട്ടി, jeṭṭi.) A country boat? (വള്ളം, vaḷḷaṁ.) An oar? (തുഴ, tuḻa.) A ferry boat? (കടത്തുവള്ളം, kaṭattuvaḷḷaṁ.) A current? (ഒഴുക്ക്, oḻukkŭ.) A whirlpool? (ചുഴി, cuḻi.) To toss about? (ഉലയുക, ulayuka.) To come ashore? (കരയ്ക്കടുക്കുക, karaykkaṭukkuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C516-alerji",
+  "pathSegment": "TE-PATH-516-INDRIYAM516",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-516-INDRIYAM516",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C489-kulirgali",
+    "language": "kannada",
+    "chapter": 489,
+    "sequence": 24880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a07b33eb600b3963"
+  },
+  "findings": []
+}

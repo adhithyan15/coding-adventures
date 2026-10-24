@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:4589df619659bea1",
+  "lessonIds": [
+    "TE-C448-disa",
+    "TE-C448-sucika",
+    "TE-C448-dari-tappu",
+    "TE-C448-malupu-tirugu",
+    "TE-C448-addadari"
+  ],
+  "tex": "telugu/book/chapters/ch448-finding-the-way.tex"
+}

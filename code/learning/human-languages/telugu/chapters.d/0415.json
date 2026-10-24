@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "Learning and Teaching",
+  "label": "ch:te-learning-and-teaching",
+  "canDo": "I can talk about education, knowledge, study and teaching.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C415-bodhincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can talk about education, knowledge, study and teaching.",
+    "assesses": [
+      "TE-LEX-C415-VIDYA415-03",
+      "TE-LEX-C415-VIDYA415-04",
+      "TE-LEX-C415-VIDYA415-05"
+    ]
+  }
+}

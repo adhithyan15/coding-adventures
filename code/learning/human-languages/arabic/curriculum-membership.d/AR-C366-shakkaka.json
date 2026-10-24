@@ -1,0 +1,11 @@
+{
+  "id": "AR-C366-shakkaka",
+  "pathSegment": "AR-PATH-366-IDDIA366",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-366-IDDIA366",
+      "order": 2
+    }
+  ]
+}

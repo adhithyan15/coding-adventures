@@ -1,0 +1,11 @@
+{
+  "id": "HI-C474-bevkuf",
+  "pathSegment": "HI-PATH-474-AQL474",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-474-AQL474",
+      "order": 1
+    }
+  ]
+}

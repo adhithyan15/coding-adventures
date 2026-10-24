@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:39d60f7a68e5d915",
+  "lessonIds": [
+    "MR-C432-bhok",
+    "MR-C432-chidra",
+    "MR-C432-dag",
+    "MR-C432-viskatne",
+    "MR-C432-pajharne"
+  ],
+  "tex": "marathi/book/chapters/ch432-holes-and-stains.tex"
+}

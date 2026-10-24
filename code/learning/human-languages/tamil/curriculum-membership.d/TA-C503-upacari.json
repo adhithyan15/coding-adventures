@@ -1,0 +1,11 @@
+{
+  "id": "TA-C503-upacari",
+  "pathSegment": "TA-PATH-503-NATPU503",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-503-NATPU503",
+      "order": 3
+    }
+  ]
+}

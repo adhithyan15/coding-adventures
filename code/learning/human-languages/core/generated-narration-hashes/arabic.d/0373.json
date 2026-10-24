@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:4539421c03394655",
+  "lessonIds": [
+    "AR-C373-inhaza",
+    "AR-C373-tamassaka",
+    "AR-C373-tanazala",
+    "AR-C373-tarajaa",
+    "AR-C373-hasama",
+    "AR-R373-review-366-373"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch373.txt",
+  "json": "arabic/narration/ch373.json",
+  "textHash": "fnv1a64:51f2bcf97ea77ba2",
+  "jsonHash": "fnv1a64:3a6575662dadc6d6",
+  "findings": []
+}

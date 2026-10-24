@@ -1,0 +1,11 @@
+{
+  "id": "AR-C505-wirk",
+  "pathSegment": "AR-PATH-505-ADHM505",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-505-ADHM505",
+      "order": 3
+    }
+  ]
+}

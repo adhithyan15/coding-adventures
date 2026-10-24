@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "The Morning News",
+  "label": "ch:hi-the-morning-news",
+  "canDo": "I can say what the news reported.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C312-chapna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can say what the news reported.",
+    "assesses": [
+      "HI-LEX-C312-SAMACHAR312-03",
+      "HI-LEX-C312-SAMACHAR312-04",
+      "HI-LEX-C312-SAMACHAR312-05"
+    ]
+  }
+}

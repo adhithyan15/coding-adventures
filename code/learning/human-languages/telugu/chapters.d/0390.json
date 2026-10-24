@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Facts and Theories",
+  "label": "ch:te-facts-and-theories",
+  "canDo": "I can talk about facts, theories, principles and processes.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C390-nirvacincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can talk about facts, theories, principles and processes.",
+    "assesses": [
+      "TE-LEX-C390-SIDDHANTAM390-03",
+      "TE-LEX-C390-SIDDHANTAM390-04",
+      "TE-LEX-C390-SIDDHANTAM390-05"
+    ]
+  }
+}

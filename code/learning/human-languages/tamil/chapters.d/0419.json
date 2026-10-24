@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "A Comfortable Room",
+  "label": "ch:ta-a-comfortable-room",
+  "canDo": "I can talk about an air conditioner, hot water and hospitality, and covering up and resting.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C419-viruntompal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can talk about an air conditioner, hot water and hospitality, and covering up and resting.",
+    "assesses": [
+      "TA-LEX-C419-ARAI419-03",
+      "TA-LEX-C419-ARAI419-04",
+      "TA-LEX-C419-ARAI419-05"
+    ]
+  }
+}

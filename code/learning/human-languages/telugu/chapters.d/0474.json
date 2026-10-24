@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Mountains and Plateaus",
+  "label": "ch:te-mountains-and-plateaus",
+  "canDo": "I can say a peak, a plateau, a continent, a volcano and peaceful.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C474-prasantamaina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can say a peak, a plateau, a continent, a volcano and peaceful.",
+    "assesses": [
+      "TE-LEX-C474-SIKHARAM474-03",
+      "TE-LEX-C474-SIKHARAM474-04",
+      "TE-LEX-C474-SIKHARAM474-05"
+    ]
+  }
+}

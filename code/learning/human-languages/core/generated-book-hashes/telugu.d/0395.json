@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:50df2fd5b4325476",
+  "lessonIds": [
+    "TE-C395-kanuka",
+    "TE-C395-anduceta",
+    "TE-C395-drstya",
+    "TE-C395-anaga",
+    "TE-C395-pratipadika"
+  ],
+  "tex": "telugu/book/chapters/ch395-giving-reasons.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:d2eb7274d6cb2af2",
+  "lessonIds": [
+    "HI-C309-rahat",
+    "HI-C309-sivir",
+    "HI-C309-dera",
+    "HI-C309-pirit",
+    "HI-C309-saran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch309.txt",
+  "json": "hindi/narration/ch309.json",
+  "textHash": "fnv1a64:1040bd564a17e52b",
+  "jsonHash": "fnv1a64:e54a85553d471b63",
+  "findings": []
+}

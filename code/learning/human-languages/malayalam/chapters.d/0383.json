@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "A Secret Found Out",
+  "label": "ch:ml-a-secret-found-out",
+  "canDo": "I can say a secret, to appear, to vanish, to find out and to retrieve.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C383-kantetukkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can say a secret, to appear, to vanish, to find out and to retrieve.",
+    "assesses": [
+      "ML-LEX-C383-RAHASYAM383-03",
+      "ML-LEX-C383-RAHASYAM383-04",
+      "ML-LEX-C383-RAHASYAM383-05"
+    ]
+  }
+}

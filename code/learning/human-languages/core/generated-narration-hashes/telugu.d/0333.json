@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:a3ca7a5ea68cbca9",
+  "lessonIds": [
+    "TE-C333-thana",
+    "TE-C333-kesu",
+    "TE-C333-daryaptu",
+    "TE-C333-jada",
+    "TE-C333-velimudra",
+    "TE-R333-review-326-333"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch333.txt",
+  "json": "telugu/narration/ch333.json",
+  "textHash": "fnv1a64:a840b9883f1c27bc",
+  "jsonHash": "fnv1a64:c7f3b2660b73fdcd",
+  "findings": []
+}

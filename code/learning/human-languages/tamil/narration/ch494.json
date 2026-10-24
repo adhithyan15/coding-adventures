@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 494,
+  "title": "Kin and Lineage",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5d6b0bc2d2eb17e2",
+  "lessons": [
+    {
+      "id": "TA-C494-pankali",
+      "sequence": 28200,
+      "title": "பங்காளி (paṅkāḷi) — a paternal kinsman; a partner",
+      "headword": "பங்காளி",
+      "romanization": "paṅkāḷi",
+      "gloss": "a paternal kinsman; a partner",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de201585bf79a0fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a co-parent-in-law, then the Tamil for a mother’s younger sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பங்காளி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பங்காளி — paṅkāḷi — \"a paternal kinsman; a partner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "திருவிழாவுக்கு எல்லாப் பங்காளிகளும் வந்தார்கள். tiruviḻāvukku ellāp paṅkāḷikaḷum vantārkaḷ. All our kinsmen came to the festival."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: பங்காளிகள், paṅkāḷikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "பங்கு \"a share\" + -ஆளி \"one who\": those who share an inheritance. Also a business partner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பங்காளி (paṅkāḷi) is a native compound of பங்கு paṅku, \"a share\" (DEDR 3808), and -ஆளி, \"one who has\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṅkāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṅkāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṅkāḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṅkāḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiruviḻāvukku ellāp paṅkāḷikaḷum vantārkaḷ. — All our kinsmen came to the festival.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiruviḻāvukku ellāp paṅkāḷikaḷum vantārkaḷ.* — All our kinsmen came to the festival.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a co-parent-in-law, then the Tamil for a mother’s younger sister, then say paṅkāḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a co-parent-in-law, then the Tamil for a mother’s younger sister, then say *paṅkāḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பங்காளி (paṅkāḷi) mean? (\"A paternal kinsman; a partner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C494-paramparai",
+      "sequence": 28210,
+      "title": "பரம்பரை (paramparai) — lineage; heredity",
+      "headword": "பரம்பரை",
+      "romanization": "paramparai",
+      "gloss": "lineage; heredity",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6644cb8ecebf1526",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a mother’s younger sister, then the Tamil for a paternal kinsman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பரம்பரை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரம்பரை — paramparai — \"lineage; heredity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சர்க்கரை நோய் எங்கள் குடும்பத்தில் பரம்பரையாக வருகிறது. carkkarai nōy eṅkaḷ kuṭumpattil paramparaiyāka varukiṟatu. Diabetes runs in our family."
+            },
+            {
+              "kind": "speech",
+              "text": "பரம்பரையாக, from generation to generation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரம்பரை (paramparai) is borrowed from Sanskrit paramparā, \"an uninterrupted series, succession\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paramparai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paramparai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paramparai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paramparai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carkkarai nōy eṅkaḷ kuṭumpattil paramparaiyāka varukiṟatu. — Diabetes runs in our family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carkkarai nōy eṅkaḷ kuṭumpattil paramparaiyāka varukiṟatu.* — Diabetes runs in our family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a mother’s younger sister, then the Tamil for a paternal kinsman, then say paramparai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a mother’s younger sister, then the Tamil for a paternal kinsman, then say *paramparai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பரம்பரை (paramparai) mean? (\"Lineage; heredity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C494-talaimurai",
+      "sequence": 28220,
+      "title": "தலைமுறை (talaimuṟai) — a generation",
+      "headword": "தலைமுறை",
+      "romanization": "talaimuṟai",
+      "gloss": "a generation",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4df4e68225f068a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a paternal kinsman, then the Tamil for lineage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தலைமுறை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தலைமுறை — talaimuṟai — \"a generation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எங்கள் வீட்டில் மூன்று தலைமுறைகள் ஒன்றாக வாழ்கின்றன. eṅkaḷ vīṭṭil mūṉṟu talaimuṟaikaḷ oṉṟāka vāḻkiṉṟaṉa. Three generations live together in our house."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: தலைமுறைகள், talaimuṟaikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "தலை \"head\" + முறை \"turn, order\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தலைமுறை (talaimuṟai) is a native compound of தலை talai, \"head\" (DEDR 3103), and முறை muṟai, \"order, turn\" (DEDR 5015)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talaimuṟai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talaimuṟai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talaimuṟai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talaimuṟai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṅkaḷ vīṭṭil mūṉṟu talaimuṟaikaḷ oṉṟāka vāḻkiṉṟaṉa. — Three generations live together in our house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṅkaḷ vīṭṭil mūṉṟu talaimuṟaikaḷ oṉṟāka vāḻkiṉṟaṉa.* — Three generations live together in our house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a paternal kinsman, then the Tamil for lineage, then say talaimuṟai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a paternal kinsman, then the Tamil for lineage, then say *talaimuṟai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தலைமுறை (talaimuṟai) mean? (\"A generation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C494-cantati",
+      "sequence": 28230,
+      "title": "சந்ததி (cantati) — offspring; descendants",
+      "headword": "சந்ததி",
+      "romanization": "cantati",
+      "gloss": "offspring; descendants",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec12cb1361edd41c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for lineage, then the Tamil for a generation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சந்ததி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சந்ததி — cantati — \"offspring; descendants\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நம் சந்ததிக்காக இயற்கையைக் காக்க வேண்டும். nam cantatikkāka iyaṟkaiyaik kākka vēṇṭum. We must protect nature for our descendants."
+            },
+            {
+              "kind": "speech",
+              "text": "A collective noun for all who come after."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சந்ததி (cantati) is borrowed from Sanskrit saṃtati, \"continuity, a line of descent\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nam cantatikkāka iyaṟkaiyaik kākka vēṇṭum. — We must protect nature for our descendants.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nam cantatikkāka iyaṟkaiyaik kākka vēṇṭum.* — We must protect nature for our descendants.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for lineage, then the Tamil for a generation, then say cantati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for lineage, then the Tamil for a generation, then say *cantati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சந்ததி (cantati) mean? (\"Offspring; descendants\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C494-varicu",
+      "sequence": 28240,
+      "title": "வாரிசு (vāricu) — an heir",
+      "headword": "வாரிசு",
+      "romanization": "vāricu",
+      "gloss": "an heir",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21826616c3a4446c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a generation, then the Tamil for offspring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வாரிசு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாரிசு — vāricu — \"an heir\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவருடைய மகன்தான் அந்தக் கடைக்கு வாரிசு. avaruṭaiya makaṉtāṉ antak kaṭaikku vāricu. His son is the heir to that shop."
+            },
+            {
+              "kind": "speech",
+              "text": "The thing inherited takes -க்கு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாரிசு (vāricu) is usually traced to Arabic wāriṯ, \"an heir\", reaching Tamil through Hindustani; our sources do not document the path."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāricu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāricu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāricu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāricu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaruṭaiya makaṉtāṉ antak kaṭaikku vāricu. — His son is the heir to that shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaruṭaiya makaṉtāṉ antak kaṭaikku vāricu.* — His son is the heir to that shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a generation, then the Tamil for offspring, then say vāricu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a generation, then the Tamil for offspring, then say *vāricu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வாரிசு (vāricu) mean? (\"An heir\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

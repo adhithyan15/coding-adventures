@@ -1,0 +1,21 @@
+{
+  "chapter": 340,
+  "title": "Legends and Demons",
+  "label": "ch:ka-legends-and-demons",
+  "canDo": "I can say a legend, a myth, a giant, a demon and a curse.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-R340-review-334-340",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can say a legend, a myth, a giant, a demon and a curse.",
+    "assesses": [
+      "KA-LEX-C340-DANTAKATHE340-01",
+      "KA-LEX-C340-DANTAKATHE340-02",
+      "KA-LEX-C340-DANTAKATHE340-03",
+      "KA-LEX-C340-DANTAKATHE340-04",
+      "KA-LEX-C340-DANTAKATHE340-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:89494773a9cc8829",
+  "lessonIds": [
+    "KA-C413-latari",
+    "KA-C413-juju",
+    "KA-C413-pana",
+    "KA-C413-andajisu",
+    "KA-C413-sarasari"
+  ],
+  "tex": "kannada/book/chapters/ch413-taking-a-chance.tex"
+}

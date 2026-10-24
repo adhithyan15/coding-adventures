@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C381-viveka",
+    "language": "kannada",
+    "chapter": 381,
+    "sequence": 19270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5aecc534ecd53277"
+  },
+  "findings": []
+}

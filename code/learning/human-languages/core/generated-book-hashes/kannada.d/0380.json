@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:e3b68577f24fbfcf",
+  "lessonIds": [
+    "KA-C380-manavolisu",
+    "KA-C380-prerepisu",
+    "KA-C380-manadattu-madu",
+    "KA-C380-amisa",
+    "KA-C380-akarsisu"
+  ],
+  "tex": "kannada/book/chapters/ch380-winning-people-over.tex"
+}

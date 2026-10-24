@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:cfbd3f24cc8b034f",
+  "lessonIds": [
+    "TA-C514-tolircankam",
+    "TA-C514-velainiruttam",
+    "TA-C514-panimanai",
+    "TA-C514-kitanku",
+    "TA-C514-perunar"
+  ],
+  "tex": "tamil/book/chapters/ch514-unions-and-warehouses.tex"
+}

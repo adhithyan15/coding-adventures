@@ -1,0 +1,11 @@
+{
+  "id": "TE-C441-pasportu",
+  "pathSegment": "TE-PATH-441-PASPORTU441",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-441-PASPORTU441",
+      "order": 0
+    }
+  ]
+}

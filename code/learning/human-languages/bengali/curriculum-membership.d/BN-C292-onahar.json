@@ -1,0 +1,11 @@
+{
+  "id": "BN-C292-onahar",
+  "pathSegment": "BN-PATH-292-KHORA292",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-292-KHORA292",
+      "order": 2
+    }
+  ]
+}

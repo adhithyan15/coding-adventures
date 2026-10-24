@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C362-kedavu",
+    "language": "kannada",
+    "chapter": 362,
+    "sequence": 18240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db5b1f4f4659888e"
+  },
+  "findings": []
+}

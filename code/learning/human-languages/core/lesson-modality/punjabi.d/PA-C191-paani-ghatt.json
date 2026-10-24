@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C191-paani-ghatt",
+    "language": "punjabi",
+    "chapter": 191,
+    "sequence": 10360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5937ed495d37d939"
+  },
+  "findings": []
+}

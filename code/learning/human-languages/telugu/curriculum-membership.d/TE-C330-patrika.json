@@ -1,0 +1,11 @@
+{
+  "id": "TE-C330-patrika",
+  "pathSegment": "TE-PATH-330-PATRIKA330",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-330-PATRIKA330",
+      "order": 1
+    }
+  ]
+}

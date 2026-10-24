@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C550-cayan",
+    "language": "hindi",
+    "chapter": 550,
+    "sequence": 30290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9dcdc0db7b2e1f3"
+  },
+  "findings": []
+}

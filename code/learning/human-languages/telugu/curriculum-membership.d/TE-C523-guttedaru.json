@@ -1,0 +1,11 @@
+{
+  "id": "TE-C523-guttedaru",
+  "pathSegment": "TE-PATH-523-PANIVARU523",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-523-PANIVARU523",
+      "order": 4
+    }
+  ]
+}

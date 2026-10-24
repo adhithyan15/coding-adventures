@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C353-pratikriya-dene",
+    "language": "marathi",
+    "chapter": 353,
+    "sequence": 20600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e27ea2a642483bac"
+  },
+  "findings": []
+}

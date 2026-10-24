@@ -1,0 +1,11 @@
+{
+  "id": "AR-C435-ujra",
+  "pathSegment": "AR-PATH-435-MASAR435",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-435-MASAR435",
+      "order": 1
+    }
+  ]
+}

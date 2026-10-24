@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:5b4f0beef96c6d3a",
+  "lessonIds": [
+    "KA-C338-vadanti",
+    "KA-C338-pasarisu",
+    "KA-C338-uhapoha",
+    "KA-C338-satya",
+    "KA-C338-alisu-listen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch338.txt",
+  "json": "kannada/narration/ch338.json",
+  "textHash": "fnv1a64:4e8dc6f4c64824dd",
+  "jsonHash": "fnv1a64:29a168b83948e986",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:c48830f1e7166166",
+  "lessonIds": [
+    "TE-C365-vegu",
+    "TE-C365-droham",
+    "TE-C365-pratijna",
+    "TE-C365-adesincu",
+    "TE-C365-bahiskarincu",
+    "TE-R365-review-358-365"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch365.txt",
+  "json": "telugu/narration/ch365.json",
+  "textHash": "fnv1a64:785d0d9503e8bb70",
+  "jsonHash": "fnv1a64:2beaf8611f97baa0",
+  "findings": []
+}

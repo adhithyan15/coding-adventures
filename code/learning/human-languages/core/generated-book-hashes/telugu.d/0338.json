@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:a7f8dd4cf3207b7f",
+  "lessonIds": [
+    "TE-C338-kramanga",
+    "TE-C338-ranuranu",
+    "TE-C338-munupu",
+    "TE-C338-gatam",
+    "TE-C338-appatlo"
+  ],
+  "tex": "telugu/book/chapters/ch338-little-by-little.tex"
+}

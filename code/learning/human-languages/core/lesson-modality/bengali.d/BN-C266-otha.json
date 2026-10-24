@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C266-otha",
+    "language": "bengali",
+    "chapter": 266,
+    "sequence": 16630,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1311fdf8b9a13a16"
+  },
+  "findings": []
+}

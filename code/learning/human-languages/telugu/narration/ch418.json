@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 418,
+  "title": "Possible or Not",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8903ea283d027f11",
+  "lessons": [
+    {
+      "id": "TE-C418-sadhyam",
+      "sequence": 20840,
+      "title": "సాధ్యం (sādhyaṁ) — possible; feasible",
+      "headword": "సాధ్యం",
+      "romanization": "sādhyaṁ",
+      "gloss": "possible; feasible",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b14312ef61ec5903",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for except for, then the Telugu for to apply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సాధ్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సాధ్యం — sādhyaṁ — \"possible; feasible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఒక్క రోజులో ఆ పని సాధ్యం కాదు. okka rōjulō ā pani sādhyaṁ kādu. That job is not possible in a single day."
+            },
+            {
+              "kind": "speech",
+              "text": "సాధ్యం (sādhyaṁ) కాదు, it is not possible; సాధ్యమైనంత, as much as possible."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సాధ్యం (sādhyaṁ) is borrowed from Sanskrit sādhya, \"to be mastered, won or managed\" (Monier-Williams), from sādh, \"to accomplish\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okka rōjulō ā pani sādhyaṁ kādu. — That job is not possible in a single day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okka rōjulō ā pani sādhyaṁ kādu.* — That job is not possible in a single day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for except for, then the Telugu for to apply, then say sādhyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for except for, then the Telugu for to apply, then say *sādhyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సాధ్యం (sādhyaṁ) mean? (\"Possible; feasible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C418-asadhyam",
+      "sequence": 20850,
+      "title": "అసాధ్యం (asādhyaṁ) — impossible",
+      "headword": "అసాధ్యం",
+      "romanization": "asādhyaṁ",
+      "gloss": "impossible",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f476dac87c557e9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to apply, then the Telugu for possible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అసాధ్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అసాధ్యం — asādhyaṁ — \"impossible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కష్టపడితే ఏదీ అసాధ్యం కాదు. kaṣṭapaḍitē ēdī asādhyaṁ kādu. If you work hard, nothing is impossible."
+            },
+            {
+              "kind": "speech",
+              "text": "అ-, not, + సాధ్యం (sādhyaṁ), possible."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అసాధ్యం (asādhyaṁ) is borrowed from Sanskrit asādhya, \"not to be effected or accomplished\" (Monier-Williams): a-, \"not\", with sādhya."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asādhyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asādhyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asādhyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asādhyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṣṭapaḍitē ēdī asādhyaṁ kādu. — If you work hard, nothing is impossible.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṣṭapaḍitē ēdī asādhyaṁ kādu.* — If you work hard, nothing is impossible.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to apply, then the Telugu for possible, then say asādhyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to apply, then the Telugu for possible, then say *asādhyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అసాధ్యం (asādhyaṁ) mean? (\"Impossible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C418-sambhavyata",
+      "sequence": 20860,
+      "title": "సంభావ్యత (sambhāvyata) — probability; likelihood",
+      "headword": "సంభావ్యత",
+      "romanization": "sambhāvyata",
+      "gloss": "probability; likelihood",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a44e2a0e1904416b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for possible, then the Telugu for impossible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంభావ్యత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంభావ్యత — sambhāvyata — \"probability; likelihood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రేపు వర్షం పడే సంభావ్యత ఎక్కువ. rēpu varṣaṁ paḍē sambhāvyata ekkuva. The likelihood of rain tomorrow is high."
+            },
+            {
+              "kind": "speech",
+              "text": "A careful, technical word; in talk, అవకాశం, which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంభావ్యత (sambhāvyata) is built on Sanskrit sambhāvya, \"to be supposed or expected; possible, probable\" (Monier-Williams), with the abstract ending -త."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāvyata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāvyata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāvyata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāvyata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rēpu varṣaṁ paḍē sambhāvyata ekkuva. — The likelihood of rain tomorrow is high.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rēpu varṣaṁ paḍē sambhāvyata ekkuva.* — The likelihood of rain tomorrow is high.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for possible, then the Telugu for impossible, then say sambhāvyata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for possible, then the Telugu for impossible, then say *sambhāvyata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంభావ్యత (sambhāvyata) mean? (\"Probability; likelihood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C418-anivaryam",
+      "sequence": 20870,
+      "title": "అనివార్యం (anivāryaṁ) — unavoidable",
+      "headword": "అనివార్యం",
+      "romanization": "anivāryaṁ",
+      "gloss": "unavoidable",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38f3b0edd826eddc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for impossible, then the Telugu for probability."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అనివార్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అనివార్యం — anivāryaṁ — \"unavoidable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ మార్పు అనివార్యం. ā mārpu anivāryaṁ. That change is unavoidable."
+            },
+            {
+              "kind": "speech",
+              "text": "అనివార్యంగా, unavoidably."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అనివార్యం (anivāryaṁ) is borrowed from Sanskrit anivārya, \"not to be warded off, unavoidable, irresistible\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anivāryaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anivāryaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anivāryaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anivāryaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā mārpu anivāryaṁ. — That change is unavoidable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā mārpu anivāryaṁ.* — That change is unavoidable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for impossible, then the Telugu for probability, then say anivāryaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for impossible, then the Telugu for probability, then say *anivāryaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అనివార్యం (anivāryaṁ) mean? (\"Unavoidable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C418-vilaite",
+      "sequence": 20880,
+      "title": "వీలైతే (vīlaitē) — if possible",
+      "headword": "వీలైతే",
+      "romanization": "vīlaitē",
+      "gloss": "if possible",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c85cdf8cfcedc366",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for probability, then the Telugu for unavoidable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వీలైతే",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వీలైతే — vīlaitē — \"if possible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వీలైతే నేను రేపు మీ ఇంటికి వస్తాను. vīlaitē nēnu rēpu mī iṇṭiki vastānu. If possible, I will come to your house tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "వీలు, a chance, + అయితే, if it is. వీలు కాదు, it is not convenient."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వీలైతే (vīlaitē) is built from vīlu, \"convenience, a chance\", whose origin is uncertain, and aitē, \"if it is\", a form of avu, \"to be\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlaitē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlaitē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlaitē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlaitē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlaitē nēnu rēpu mī iṇṭiki vastānu. — If possible, I will come to your house tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlaitē nēnu rēpu mī iṇṭiki vastānu.* — If possible, I will come to your house tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for probability, then the Telugu for unavoidable, then say vīlaitē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for probability, then the Telugu for unavoidable, then say *vīlaitē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వీలైతే (vīlaitē) mean? (\"If possible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

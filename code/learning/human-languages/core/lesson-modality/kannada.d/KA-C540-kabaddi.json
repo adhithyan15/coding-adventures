@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C540-kabaddi",
+    "language": "kannada",
+    "chapter": 540,
+    "sequence": 27570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48d2aba9725f04a6"
+  },
+  "findings": []
+}

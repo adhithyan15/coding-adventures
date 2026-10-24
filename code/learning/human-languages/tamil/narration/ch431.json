@@ -1,0 +1,874 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 431,
+  "title": "Drying Up",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c6c15fd050f0bdd3",
+  "lessons": [
+    {
+      "id": "TA-C431-varru",
+      "sequence": 24680,
+      "title": "வற்று (vaṟṟu) — to dry up; to ebb",
+      "headword": "வற்று",
+      "romanization": "vaṟṟu",
+      "gloss": "to dry up; to ebb",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46e977ab73447e70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to glitter, then the Tamil for to sound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வற்று",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வற்று — vaṟṟu — \"to dry up; to ebb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கோடையில் ஏரி வற்றியது. kōṭaiyil ēri vaṟṟiyatu. In summer the lake dried up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): வற்றியது, vaṟṟiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a river or a well; வறட்சி, a drought, is a close cousin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வற்று (vaṟṟu) is native Dravidian (DEDR 5320), \"to grow dry, to evaporate, to ebb\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṟṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṟṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṟṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṟṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōṭaiyil ēri vaṟṟiyatu. — In summer the lake dried up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōṭaiyil ēri vaṟṟiyatu.* — In summer the lake dried up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to glitter, then the Tamil for to sound, then say vaṟṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to glitter, then the Tamil for to sound, then say *vaṟṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வற்று (vaṟṟu) mean? (\"To dry up; to ebb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C431-ular",
+      "sequence": 24690,
+      "title": "உலர் (ular) — to become dry; to dry",
+      "headword": "உலர்",
+      "romanization": "ular",
+      "gloss": "to become dry; to dry",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58cfeface03b7c65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to sound, then the Tamil for to dry up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உலர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உலர் — ular — \"to become dry; to dry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெயிலில் துணிகள் சீக்கிரம் உலர்ந்தன. veyilil tuṇikaḷ cīkkiram ularntaṉa. The clothes dried quickly in the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): உலர்ந்தது, ularntatu."
+            },
+            {
+              "kind": "speech",
+              "text": "To dry something is உலர்த்து."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உலர் (ular) is native Dravidian (DEDR 674), \"to become dry, to wither\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ular",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ular*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ular, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ular*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veyilil tuṇikaḷ cīkkiram ularntaṉa. — The clothes dried quickly in the sun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veyilil tuṇikaḷ cīkkiram ularntaṉa.* — The clothes dried quickly in the sun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to sound, then the Tamil for to dry up, then say ular again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to sound, then the Tamil for to dry up, then say *ular* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உலர் (ular) mean? (\"To become dry; to dry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C431-aviyaku",
+      "sequence": 24700,
+      "title": "ஆவியாகு (āviyāku) — to evaporate",
+      "headword": "ஆவியாகு",
+      "romanization": "āviyāku",
+      "gloss": "to evaporate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:505a1ddb17d7008e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to dry up, then the Tamil for to become dry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆவியாகு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆவியாகு — āviyāku — \"to evaporate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெயிலில் தண்ணீர் ஆவியானது. veyilil taṇṇīr āviyāṉatu. The water evaporated in the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ஆவியானது, āviyāṉatu."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆவி, steam, + ஆகு, to become."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆவியாகு (āviyāku) is built from ஆவி, \"breath, steam\" (DEDR 393), and ஆகு, \"to become\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āviyāku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āviyāku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āviyāku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āviyāku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veyilil taṇṇīr āviyāṉatu. — The water evaporated in the sun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veyilil taṇṇīr āviyāṉatu.* — The water evaporated in the sun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to dry up, then the Tamil for to become dry, then say āviyāku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to dry up, then the Tamil for to become dry, then say *āviyāku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆவியாகு (āviyāku) mean? (\"To evaporate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C431-karuku",
+      "sequence": 24710,
+      "title": "கருகு (karuku) — to get scorched; to be charred",
+      "headword": "கருகு",
+      "romanization": "karuku",
+      "gloss": "to get scorched; to be charred",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04486dfd32972e5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to become dry, then the Tamil for to evaporate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கருகு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கருகு — karuku — \"to get scorched; to be charred\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கடும் வெயிலில் செடிகள் கருகின. kaṭum veyilil ceṭikaḷ karukiṉa. The plants were scorched in the fierce sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): கருகியது, karukiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of food: சாதம் கருகியது, the rice got burnt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கருகு (karuku) is native Dravidian (DEDR 1278), \"to be scorched, blackened by fire or sun\", the family of கரு, \"black\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karuku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karuku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karuku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭum veyilil ceṭikaḷ karukiṉa. — The plants were scorched in the fierce sun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭum veyilil ceṭikaḷ karukiṉa.* — The plants were scorched in the fierce sun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to become dry, then the Tamil for to evaporate, then say karuku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to become dry, then the Tamil for to evaporate, then say *karuku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கருகு (karuku) mean? (\"To get scorched; to be charred\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C431-nirmattam",
+      "sequence": 24720,
+      "title": "நீர்மட்டம் (nīrmaṭṭam) — the water level",
+      "headword": "நீர்மட்டம்",
+      "romanization": "nīrmaṭṭam",
+      "gloss": "the water level",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2072c383829f2b77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to evaporate, then the Tamil for to get scorched."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நீர்மட்டம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நீர்மட்டம் — nīrmaṭṭam — \"the water level\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அணையின் நீர்மட்டம் குறைந்தது. aṇaiyiṉ nīrmaṭṭam kuṟaintatu. The water level in the dam fell."
+            },
+            {
+              "kind": "speech",
+              "text": "நீர், water, + மட்டம், a level."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நீர்மட்டம் (nīrmaṭṭam) is built from நீர், \"water\" (DEDR 3690), and மட்டம், \"a level, a measure\" (DEDR 4660)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīrmaṭṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīrmaṭṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīrmaṭṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīrmaṭṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇaiyiṉ nīrmaṭṭam kuṟaintatu. — The water level in the dam fell.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇaiyiṉ nīrmaṭṭam kuṟaintatu.* — The water level in the dam fell.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to evaporate, then the Tamil for to get scorched, then say nīrmaṭṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to evaporate, then the Tamil for to get scorched, then say *nīrmaṭṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நீர்மட்டம் (nīrmaṭṭam) mean? (\"The water level\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R431-review-424-431",
+      "sequence": 24730,
+      "title": "Looking back: from Statues and Monuments to Drying Up",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Statues and Monuments to Drying Up",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ac8c11ff0c2b418",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for a town square and a statue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a town square, a statue, a monument, a mansion, an embassy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a town square, a statue, a monument, a mansion, an embassy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lighthouse, a planetarium, a site, a view, a canteen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lighthouse, a planetarium, a site, a view, a canteen]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bustle, noise, to gather, to fill up, to gasp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bustle, noise, to gather, to fill up, to gasp]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "climate, warmth, temperature, to scorch, to be sultry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: climate, warmth, temperature, to scorch, to be sultry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a spray of rain, to drizzle, to pour down, to stagnate, to drain away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a spray of rain, to drizzle, to pour down, to stagnate, to drain away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a forecast, a cyclone, hailstones, a downpour, cloud cover",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a forecast, a cyclone, hailstones, a downpour, cloud cover]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sunrise, brightness, the horizon, to glitter, to sound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sunrise, brightness, the horizon, to glitter, to sound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dry up, to become dry, to evaporate, to get scorched, the water level",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to dry up, to become dry, to evaporate, to get scorched, the water level]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A town square? (சதுக்கம், catukkam.) A statue? (சிலை, cilai.) A monument? (நினைவுச்சின்னம், niṉaivucciṉṉam.) A mansion? (மாளிகை, māḷikai.) An embassy? (தூதரகம், tūtarakam.) A lighthouse? (கலங்கரை விளக்கம், kalaṅkarai viḷakkam.) A planetarium? (கோளரங்கம், kōḷaraṅkam.) A site? (தலம், talam.) A view? (காட்சி, kāṭci.) A canteen? (சிற்றுண்டிச்சாலை, ciṟṟuṇṭiccālai.) Bustle? (சந்தடி, cantaṭi.) Noise? (இரைச்சல், iraiccal.) To gather? (திரள், tiraḷ.) To fill up? (நிரம்பு, nirampu.) To gasp? (திணறு, tiṇaṟu.) Climate? (காலநிலை, kālanilai.) Warmth? (வெப்பம், veppam.) Temperature? (வெப்பநிலை, veppanilai.) To scorch? (கொளுத்து, koḷuttu.) To be sultry? (புழுங்கு, puḻuṅku.) A spray of rain? (சாரல், cāral.) To drizzle? (தூறு, tūṟu.) To pour down? (பொழி, poḻi.) To stagnate? (தேங்கு, tēṅku.) To drain away? (வடி, vaṭi.) A forecast? (முன்னறிவிப்பு, muṉṉaṟivippu.) A cyclone? (சூறாவளி, cūṟāvaḷi.) Hailstones? (ஆலங்கட்டி, ālaṅkaṭṭi.) A downpour? (அடைமழை, aṭaimaḻai.) Cloud cover? (மேகமூட்டம், mēkamūṭṭam.) Sunrise? (உதயம், utayam.) Brightness? (வெளிச்சம், veḷiccam.) The horizon? (அடிவானம், aṭivāṉam.) To glitter? (மின்னு, miṉṉu.) To sound? (ஒலி, oli.) To dry up? (வற்று, vaṟṟu.) To become dry? (உலர், ular.) To evaporate? (ஆவியாகு, āviyāku.) To get scorched? (கருகு, karuku.) The water level? (நீர்மட்டம், nīrmaṭṭam.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

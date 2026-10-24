@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C353-pratyaksamavu",
+    "language": "telugu",
+    "chapter": 353,
+    "sequence": 17410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a69c9bc6a7cc4836"
+  },
+  "findings": []
+}

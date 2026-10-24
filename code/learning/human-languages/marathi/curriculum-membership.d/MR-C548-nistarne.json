@@ -1,0 +1,11 @@
+{
+  "id": "MR-C548-nistarne",
+  "pathSegment": "MR-PATH-548-ADTHALA548",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-548-ADTHALA548",
+      "order": 3
+    }
+  ]
+}

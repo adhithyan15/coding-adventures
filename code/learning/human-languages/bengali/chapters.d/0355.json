@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Collecting Data",
+  "label": "ch:bn-collecting-data",
+  "canDo": "I can say how data were gathered and studied.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C355-bishleshon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can say how data were gathered and studied.",
+    "assesses": [
+      "BN-LEX-C355-NOMUNA355-03",
+      "BN-LEX-C355-NOMUNA355-04",
+      "BN-LEX-C355-NOMUNA355-05"
+    ]
+  }
+}

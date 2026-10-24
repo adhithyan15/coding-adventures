@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C457-kramikarikkuka",
+    "language": "malayalam",
+    "chapter": 457,
+    "sequence": 22670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:496da737ebd266f5"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-400-THIKANA400",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "BN-EXT-400-THIKANA400"
+  ],
+  "after": []
+}

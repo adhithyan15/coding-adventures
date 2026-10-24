@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-22 — TE04 fenced fixture selection
+
+- Route the exact GFM fenced-block fixture to the TypeScript parser and its
+  dependent closure without forcing a full build, across all platform plans.
+- Preserve source unions, language filters, and deleted/renamed paths; reject
+  missing or wrong-language readers before creating or replacing plan output.
+- Add native selector, toolchain, dependency-order, and atomic-plan regressions.
+
 ## 2026-10-21 — BF03 Go native fixture selection
 
 - Seed go/compiler-ir from the exact compiler-ir-v1/cases.json external path
@@ -12,6 +20,17 @@
 All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
+
+### Fixed
+
+- The `global:luarocks-tree` lock now covers `luarocks install`, not only
+  `make` and `remove`. LuaRocks takes an exclusive lock on the shared rocks
+  tree for all three, so an unserialized install fails outright
+  ("requires exclusive write access to ~/.luarocks"). `lua/tcp_client`'s
+  `luarocks install luasocket --local` did exactly that beside another
+  package's `luarocks make` and failed a full-build shard. 17 Lua packages
+  run `luarocks install`. The match is now a command-word regex, like the
+  opam and gem locks, and applies to any package's BUILD, not only Lua's.
 
 ### Added
 
@@ -59,6 +78,17 @@ All notable changes to the Go build tool will be documented in this file.
   `TestPruneLeafCargoTarget` covers each case.
 
 ### Fixed
+
+- On Linux every `swift build`, `swift test` and `swift run` a BUILD command
+  runs now gets `--build-system native`, SwiftPM's legacy planner. Swift 6.4,
+  which the ubuntu-24.04 image ships, plans with its new swift-build backend,
+  and that planner segfaults in libdispatch (`_dispatch_event_loop_drain`)
+  before compiling anything. It failed `swift/ITF` (#17824 shard 5) and
+  `swift/zip` (#17914 shard 3, after its tests had passed) on PRs that touch
+  no Swift. The rewrite is applied at run time
+  (`swiftNativeBuildSystemCommands`), so BUILD files and their hashes are
+  unchanged. A command that already names `--build-system`, and macOS and
+  Windows, keep the toolchain default.
 
 - `-validate-build-files` on a CI shard (`-plan-file … -shard-index N`) now
   resolves names and paths against every package on the platform, not just

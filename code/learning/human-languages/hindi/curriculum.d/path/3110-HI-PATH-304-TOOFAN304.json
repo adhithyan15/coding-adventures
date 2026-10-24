@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-304-TOOFAN304",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "HI-EXT-304-TOOFAN304"
+  ],
+  "after": []
+}

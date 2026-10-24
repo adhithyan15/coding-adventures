@@ -1,0 +1,11 @@
+{
+  "id": "AR-C535-hajara",
+  "pathSegment": "AR-PATH-535-RIFAQ535",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-535-RIFAQ535",
+      "order": 4
+    }
+  ]
+}

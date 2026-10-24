@@ -1,0 +1,11 @@
+{
+  "id": "KA-C535-vine",
+  "pathSegment": "KA-PATH-535-VADYA535",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-535-VADYA535",
+      "order": 1
+    }
+  ]
+}

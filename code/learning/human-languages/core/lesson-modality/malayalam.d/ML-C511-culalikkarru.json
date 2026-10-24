@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C511-culalikkarru",
+    "language": "malayalam",
+    "chapter": 511,
+    "sequence": 25590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e1cf2053165cd8a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:dc1a280532b42f69",
+  "lessonIds": [
+    "BN-C332-sutorang",
+    "BN-C332-tachhara",
+    "BN-C332-othoch",
+    "BN-C332-oboshyo",
+    "BN-C332-khata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch332.txt",
+  "json": "bengali/narration/ch332.json",
+  "textHash": "fnv1a64:ffa34a8c2f4f54ee",
+  "jsonHash": "fnv1a64:ce4a62c1d2b80672",
+  "findings": []
+}

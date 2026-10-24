@@ -1,0 +1,19 @@
+{
+  "chapter": 571,
+  "title": "Repairs Around the House",
+  "label": "ch:ml-repairs-around-the-house",
+  "canDo": "I can say repairs, a dustbin, a living room, to hang up and to water plants.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C571-nanaykkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 571: I can say repairs, a dustbin, a living room, to hang up and to water plants.",
+    "assesses": [
+      "ML-LEX-C571-ATTAKURRAM571-03",
+      "ML-LEX-C571-ATTAKURRAM571-04",
+      "ML-LEX-C571-ATTAKURRAM571-05"
+    ]
+  }
+}

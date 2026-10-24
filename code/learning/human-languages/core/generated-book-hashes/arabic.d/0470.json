@@ -1,0 +1,14 @@
+{
+  "language": "arabic",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:d8b1cb4a85500d2f",
+  "lessonIds": [
+    "AR-C470-yanbu",
+    "AR-C470-manba",
+    "AR-C470-masabb",
+    "AR-C470-diffa",
+    "AR-C470-adhb",
+    "AR-R470-review-463-470"
+  ],
+  "tex": "arabic/book/chapters/ch470-springs-and-rivers.tex"
+}

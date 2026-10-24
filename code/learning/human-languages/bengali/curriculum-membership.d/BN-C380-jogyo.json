@@ -1,0 +1,11 @@
+{
+  "id": "BN-C380-jogyo",
+  "pathSegment": "BN-PATH-380-OPOJUKTO380",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-380-OPOJUKTO380",
+      "order": 3
+    }
+  ]
+}

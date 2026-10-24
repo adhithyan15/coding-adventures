@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C512-paninikkam",
+    "language": "tamil",
+    "chapter": 512,
+    "sequence": 29400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fd2bb74888e84e2"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C306-anekda",
+  "pathSegment": "MR-PATH-306-KRAMASH306",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-306-KRAMASH306",
+      "order": 1
+    }
+  ]
+}

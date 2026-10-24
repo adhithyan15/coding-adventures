@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:960afab0cb4e3785",
+  "lessonIds": [
+    "TE-C472-vanyaprani",
+    "TE-C472-abhayaranyam",
+    "TE-C472-vetadu",
+    "TE-C472-antarincipovu",
+    "TE-C472-valasapovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch472.txt",
+  "json": "telugu/narration/ch472.json",
+  "textHash": "fnv1a64:86076872ed654e0a",
+  "jsonHash": "fnv1a64:29a3e2dec15e4acd",
+  "findings": []
+}

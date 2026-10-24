@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Success and Failure",
+  "label": "ch:te-success-and-failure",
+  "canDo": "I can say that someone achieved, excelled, failed, resigned or quit.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C527-maneyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can say that someone achieved, excelled, failed, resigned or quit.",
+    "assesses": [
+      "TE-LEX-C527-VIJAYAM527-03",
+      "TE-LEX-C527-VIJAYAM527-04",
+      "TE-LEX-C527-VIJAYAM527-05"
+    ]
+  }
+}

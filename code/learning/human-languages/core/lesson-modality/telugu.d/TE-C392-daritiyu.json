@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C392-daritiyu",
+    "language": "telugu",
+    "chapter": 392,
+    "sequence": 19530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd0292f17c889c1a"
+  },
+  "findings": []
+}

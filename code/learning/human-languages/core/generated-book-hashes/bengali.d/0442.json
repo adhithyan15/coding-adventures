@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:8aa7a20fd626b668",
+  "lessonIds": [
+    "BN-C442-udbeg",
+    "BN-C442-durbhabona",
+    "BN-C442-osthir",
+    "BN-C442-nishchinto",
+    "BN-C442-chhotphot-kora"
+  ],
+  "tex": "bengali/book/chapters/ch442-worry-and-unease.tex"
+}

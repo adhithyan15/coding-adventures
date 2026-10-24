@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:d3c9a9b4c111ad35",
+  "lessonIds": [
+    "BN-C528-songgoti",
+    "BN-C528-phikir",
+    "BN-C528-samorthyo",
+    "BN-C528-kulono",
+    "BN-C528-jotano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch528.txt",
+  "json": "bengali/narration/ch528.json",
+  "textHash": "fnv1a64:0b121cc072fb9654",
+  "jsonHash": "fnv1a64:e816e8299c2af746",
+  "findings": []
+}

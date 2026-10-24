@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 258,
-  "sourceHash": "fnv1a64:71cbf820a45706d4",
+  "sourceHash": "fnv1a64:57535c29a791fd5f",
   "lessonIds": [
     "TA-C258-uruku",
     "TA-C258-pari",
@@ -14,6 +14,6 @@
   "text": "tamil/narration/ch258.txt",
   "json": "tamil/narration/ch258.json",
   "textHash": "fnv1a64:76740efe4622a9db",
-  "jsonHash": "fnv1a64:c6a50479dced4333",
+  "jsonHash": "fnv1a64:7ac1129061aaa4e0",
   "findings": []
 }

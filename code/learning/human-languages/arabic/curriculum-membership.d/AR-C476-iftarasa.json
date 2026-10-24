@@ -1,0 +1,11 @@
+{
+  "id": "AR-C476-iftarasa",
+  "pathSegment": "AR-PATH-476-AQRAB476",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-476-AQRAB476",
+      "order": 4
+    }
+  ]
+}

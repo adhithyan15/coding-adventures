@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Obeying and forgiving",
+  "label": "ch:ar-obeying-and-forgiving",
+  "canDo": "I can say that someone obeyed, disobeyed, scolded or pardoned someone, and talk about respect.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C534-afa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can say that someone obeyed, disobeyed, scolded or pardoned someone, and talk about respect.",
+    "assesses": [
+      "AR-LEX-C534-NASIHA534-03",
+      "AR-LEX-C534-NASIHA534-04",
+      "AR-LEX-C534-NASIHA534-05"
+    ]
+  }
+}

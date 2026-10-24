@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C331-kotai",
+    "language": "tamil",
+    "chapter": 331,
+    "sequence": 19020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0194bf5b7d0203a"
+  },
+  "findings": []
+}

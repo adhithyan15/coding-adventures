@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C433-band-padne",
+    "language": "marathi",
+    "chapter": 433,
+    "sequence": 24930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57d4ca6049eb8db7"
+  },
+  "findings": []
+}

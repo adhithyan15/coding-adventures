@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:eb96987538f351eb",
+  "lessonIds": [
+    "BN-C501-bisheshogyo",
+    "BN-C501-upodeshta",
+    "BN-C501-onubadok",
+    "BN-C501-sthopoti",
+    "BN-C501-nirnoy-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch501.txt",
+  "json": "bengali/narration/ch501.json",
+  "textHash": "fnv1a64:2c66356fb0fc2a1c",
+  "jsonHash": "fnv1a64:8a5e98c2ca305df7",
+  "findings": []
+}

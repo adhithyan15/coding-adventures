@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Elections",
+  "label": "ch:ka-elections",
+  "canDo": "I can say an election, a vote, a majority, to campaign and to address a crowd.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C392-sambodhisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can say an election, a vote, a majority, to campaign and to address a crowd.",
+    "assesses": [
+      "KA-LEX-C392-CHUNAVANE392-03",
+      "KA-LEX-C392-CHUNAVANE392-04",
+      "KA-LEX-C392-CHUNAVANE392-05"
+    ]
+  }
+}

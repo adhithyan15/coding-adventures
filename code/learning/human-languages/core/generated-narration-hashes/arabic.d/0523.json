@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:a9251171fd1206a0",
+  "lessonIds": [
+    "AR-C523-khattata",
+    "AR-C523-atamma",
+    "AR-C523-tafarragha",
+    "AR-C523-taqyim",
+    "AR-C523-intaj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch523.txt",
+  "json": "arabic/narration/ch523.json",
+  "textHash": "fnv1a64:f99c442e8b272068",
+  "jsonHash": "fnv1a64:c5a953f40e39d746",
+  "findings": []
+}

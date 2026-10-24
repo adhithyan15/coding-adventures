@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Explaining and Justifying",
+  "label": "ch:te-explaining-and-justifying",
+  "canDo": "I can explain, clarify and justify a view.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C394-khaccitamaina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can explain, clarify and justify a view.",
+    "assesses": [
+      "TE-LEX-C394-VIVARANA394-03",
+      "TE-LEX-C394-VIVARANA394-04",
+      "TE-LEX-C394-VIVARANA394-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Floodwater",
+  "label": "ch:te-floodwater",
+  "canDo": "I can say to inundate, to overflow, to snap, to get bogged down and to get stuck.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C480-irukkupovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can say to inundate, to overflow, to snap, to get bogged down and to get stuck.",
+    "assesses": [
+      "TE-LEX-C480-MUNCETTU480-03",
+      "TE-LEX-C480-MUNCETTU480-04",
+      "TE-LEX-C480-MUNCETTU480-05"
+    ]
+  }
+}

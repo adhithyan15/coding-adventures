@@ -1,0 +1,11 @@
+{
+  "id": "MR-C344-visangti",
+  "pathSegment": "MR-PATH-344-MATBHED344",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-344-MATBHED344",
+      "order": 3
+    }
+  ]
+}

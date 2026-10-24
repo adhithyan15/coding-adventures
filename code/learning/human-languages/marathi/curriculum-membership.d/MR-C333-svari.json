@@ -1,0 +1,11 @@
+{
+  "id": "MR-C333-svari",
+  "pathSegment": "MR-PATH-333-MOHIM333",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-333-MOHIM333",
+      "order": 1
+    }
+  ]
+}

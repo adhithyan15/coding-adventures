@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 427,
+  "title": "Planning a trip",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ed17f6ba2c49c397",
+  "lessons": [
+    {
+      "id": "AR-C427-masafa",
+      "sequence": 24000,
+      "title": "مسافة (masāfa) — a distance",
+      "headword": "مسافة",
+      "romanization": "masāfa",
+      "gloss": "a distance",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bd3331cf5213e17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to empty out, then the Arabic for to confiscate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مسافة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسافة — masāfa — \"a distance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "المسافة من القرية إلى المدينة قصيرة. al-masāfa min al-qarya ilā al-madīna qaṣīra. The distance from the village to the city is short."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسافة (masāfa) is built on the native Arabic root s-w-f, \"to smell\" (Lane). Lane records the old account: a desert guide smelled the ground to know the way, so the stretch he sniffed out was a masāfa."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masāfa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masāfa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masāfa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masāfa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-masāfa min al-qarya ilā al-madīna qaṣīra. — The distance from the village to the city is short.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-masāfa min al-qarya ilā al-madīna qaṣīra.* — The distance from the village to the city is short.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to empty out, then the Arabic for to confiscate, then say masāfa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to empty out, then the Arabic for to confiscate, then say *masāfa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مسافة (masāfa) mean? (\"A distance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C427-taakkada",
+      "sequence": 24010,
+      "title": "تأكد (taʾakkada) — to make sure",
+      "headword": "تأكد",
+      "romanization": "taʾakkada",
+      "gloss": "to make sure",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3da011830bcbf253",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to confiscate, then the Arabic for a distance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تأكد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تأكد — taʾakkada — \"to make sure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تأكد أبي من الحجز. taʾakkada abī min al-ḥajz. My father made sure of the booking."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتأكد, yataʾakkad."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes min: taʾakkada min, \"to make sure of\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تأكد (taʾakkada) is built on the native Arabic root ʾ-k-d, \"to make firm\" (Lane). It is Form V, \"to become firm in one's mind\"; mutaʾakkid, \"sure\", is its participle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʾakkada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʾakkada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʾakkada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʾakkada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʾakkada abī min al-ḥajz. — My father made sure of the booking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʾakkada abī min al-ḥajz.* — My father made sure of the booking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to confiscate, then the Arabic for a distance, then say taʾakkada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to confiscate, then the Arabic for a distance, then say *taʾakkada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تأكد (taʾakkada) mean? (\"To make sure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C427-addala",
+      "sequence": 24020,
+      "title": "عدل (ʿaddala) — to adjust; to modify",
+      "headword": "عدل",
+      "romanization": "ʿaddala",
+      "gloss": "to adjust; to modify",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24fc784beab1eda6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a distance, then the Arabic for to make sure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عدل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عدل — ʿaddala — \"to adjust; to modify\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عدلنا خطة الرحلة بسبب المطر. ʿaddalnā khuṭṭat ar-riḥla bi-sabab al-maṭar. We adjusted the trip plan because of the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يعدل, yuʿaddil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عدل (ʿaddala) is built on the native Arabic root ʿ-d-l, \"to be even, balanced\" (Lane). It is Form II, \"to make even, to set straight\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿaddala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿaddala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿaddala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿaddala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿaddalnā khuṭṭat ar-riḥla bi-sabab al-maṭar. — We adjusted the trip plan because of the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿaddalnā khuṭṭat ar-riḥla bi-sabab al-maṭar.* — We adjusted the trip plan because of the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a distance, then the Arabic for to make sure, then say ʿaddala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a distance, then the Arabic for to make sure, then say *ʿaddala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عدل (ʿaddala) mean? (\"To adjust; to modify\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C427-istajara",
+      "sequence": 24030,
+      "title": "استأجر (istaʾjara) — to hire; to rent (from someone)",
+      "headword": "استأجر",
+      "romanization": "istaʾjara",
+      "gloss": "to hire; to rent (from someone)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4562af214648ea9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to make sure, then the Arabic for to adjust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استأجر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استأجر — istaʾjara — \"to hire; to rent (from someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استأجرنا سيارة صغيرة في المطار. istaʾjarnā sayyāra ṣaghīra fī al-maṭār. We hired a small car at the airport."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستأجر, yastaʾjir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استأجر (istaʾjara) is built on the native Arabic root ʾ-j-r, \"a wage, a reward\" (Lane). It is Form X, \"to take something for a payment\"; ījār, \"rent\", shares the root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaʾjara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaʾjara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaʾjara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaʾjara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaʾjarnā sayyāra ṣaghīra fī al-maṭār. — We hired a small car at the airport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaʾjarnā sayyāra ṣaghīra fī al-maṭār.* — We hired a small car at the airport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to make sure, then the Arabic for to adjust, then say istaʾjara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to make sure, then the Arabic for to adjust, then say *istaʾjara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استأجر (istaʾjara) mean? (\"To hire; to rent (from someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C427-haqibat-zahr",
+      "sequence": 24040,
+      "title": "حقيبة ظهر (ḥaqībat ẓahr) — a backpack",
+      "headword": "حقيبة ظهر",
+      "romanization": "ḥaqībat ẓahr",
+      "gloss": "a backpack",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ce2c5717be1aeb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to adjust, then the Arabic for to hire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حقيبة ظهر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حقيبة ظهر — ḥaqībat ẓahr — \"a backpack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حمل أخي حقيبة ظهر كبيرة. ḥamala akhī ḥaqībat ẓahr kabīra. My brother carried a big backpack."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حقيبة ظهر (ḥaqībat ẓahr) is built from two native Arabic words: ḥaqība, \"a bag\", on the root ḥ-q-b (Lane), and ẓahr, \"the back\", on the root ẓ-h-r (Lane): a bag for the back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaqībat ẓahr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaqībat ẓahr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaqībat ẓahr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaqībat ẓahr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥamala akhī ḥaqībat ẓahr kabīra. — My brother carried a big backpack.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥamala akhī ḥaqībat ẓahr kabīra.* — My brother carried a big backpack.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to adjust, then the Arabic for to hire, then say ḥaqībat ẓahr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to adjust, then the Arabic for to hire, then say *ḥaqībat ẓahr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حقيبة ظهر (ḥaqībat ẓahr) mean? (\"A backpack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C291-sutka",
+  "pathSegment": "MR-PATH-291-SUTKA291",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-291-SUTKA291",
+      "order": 1
+    }
+  ]
+}

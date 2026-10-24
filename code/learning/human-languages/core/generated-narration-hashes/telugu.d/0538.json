@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:843ec11044173c75",
+  "lessonIds": [
+    "TE-C538-svaram",
+    "TE-C538-gatram",
+    "TE-C538-vayincu",
+    "TE-C538-mrdangam",
+    "TE-C538-sannayi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch538.txt",
+  "json": "telugu/narration/ch538.json",
+  "textHash": "fnv1a64:6f3ccf768ac5bd56",
+  "jsonHash": "fnv1a64:a173aa218bd1c7a7",
+  "findings": []
+}

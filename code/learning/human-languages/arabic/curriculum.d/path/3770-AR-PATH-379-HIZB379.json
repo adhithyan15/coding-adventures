@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-379-HIZB379",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "AR-EXT-379-HIZB379"
+  ],
+  "after": []
+}

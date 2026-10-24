@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:68e3bdddf57c85d4",
+  "lessonIds": [
+    "AR-C457-takhfid",
+    "AR-C457-qasima",
+    "AR-C457-khaffada",
+    "AR-C457-rakhusa",
+    "AR-C457-anfaqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch457.txt",
+  "json": "arabic/narration/ch457.json",
+  "textHash": "fnv1a64:dc0e26c6ba50a7d0",
+  "jsonHash": "fnv1a64:6363f776d79b6781",
+  "findings": []
+}

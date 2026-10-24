@@ -1,0 +1,10 @@
+{
+  "id": "KA-EXT-313-ASK-THE-WAY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask how to get somewhere with … hēge hōgabēku? and how far it is, and give the way with nēravāgi, eḍakke, balakke and pakkadalli.",
+  "prerequisites": [
+    "KA-EXT-312-MUST-BECAUSE"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Reporters",
+  "label": "ch:hi-reporters",
+  "canDo": "I can say who reported a story and from where.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C313-vivaran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can say who reported a story and from where.",
+    "assesses": [
+      "HI-LEX-C313-PATRAKAR313-03",
+      "HI-LEX-C313-PATRAKAR313-04",
+      "HI-LEX-C313-PATRAKAR313-05"
+    ]
+  }
+}

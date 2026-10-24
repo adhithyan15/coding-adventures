@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C415-erpatu-cey",
+    "language": "tamil",
+    "chapter": 415,
+    "sequence": 23900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08315f9cc5abcc71"
+  },
+  "findings": []
+}

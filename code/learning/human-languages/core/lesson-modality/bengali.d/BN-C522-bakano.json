@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C522-bakano",
+    "language": "bengali",
+    "chapter": 522,
+    "sequence": 31560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26bc4d40b8e07c55"
+  },
+  "findings": []
+}

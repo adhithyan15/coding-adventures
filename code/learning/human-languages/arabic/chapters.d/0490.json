@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Surprise and admiration",
+  "label": "ch:ar-surprise-and-admiration",
+  "canDo": "I can talk about astonishment and admiration, and say that someone was amazed or surprised.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C490-ijab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about astonishment and admiration, and say that someone was amazed or surprised.",
+    "assesses": [
+      "AR-LEX-C490-DAHSHA490-03",
+      "AR-LEX-C490-DAHSHA490-04",
+      "AR-LEX-C490-DAHSHA490-05"
+    ]
+  }
+}

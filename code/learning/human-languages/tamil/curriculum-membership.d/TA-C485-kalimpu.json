@@ -1,0 +1,11 @@
+{
+  "id": "TA-C485-kalimpu",
+  "pathSegment": "TA-PATH-485-MARUNTU485",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-485-MARUNTU485",
+      "order": 4
+    }
+  ]
+}

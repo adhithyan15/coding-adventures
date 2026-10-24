@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "An interview",
+  "label": "ch:ar-an-interview",
+  "canDo": "I can say a dialogue, to interview, to conduct, to host and a spokesperson.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C302-mutahaddith",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can say a dialogue, to interview, to conduct, to host and a spokesperson.",
+    "assesses": [
+      "AR-LEX-C302-HIWAR302-03",
+      "AR-LEX-C302-HIWAR302-04",
+      "AR-LEX-C302-HIWAR302-05"
+    ]
+  }
+}

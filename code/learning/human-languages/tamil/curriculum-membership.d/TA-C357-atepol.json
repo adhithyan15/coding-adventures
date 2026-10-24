@@ -1,0 +1,11 @@
+{
+  "id": "TA-C357-atepol",
+  "pathSegment": "TA-PATH-357-ENINUM357",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-357-ENINUM357",
+      "order": 3
+    }
+  ]
+}

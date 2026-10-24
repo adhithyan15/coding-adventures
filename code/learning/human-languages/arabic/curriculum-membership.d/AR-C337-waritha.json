@@ -1,0 +1,11 @@
+{
+  "id": "AR-C337-waritha",
+  "pathSegment": "AR-PATH-337-IRTH337",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-337-IRTH337",
+      "order": 2
+    }
+  ]
+}

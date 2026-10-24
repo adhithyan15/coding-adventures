@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C391-kosha",
+    "language": "bengali",
+    "chapter": 391,
+    "sequence": 24390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1209db4d5c9665a"
+  },
+  "findings": []
+}

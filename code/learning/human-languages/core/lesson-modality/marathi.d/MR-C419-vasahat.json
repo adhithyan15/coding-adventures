@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C419-vasahat",
+    "language": "marathi",
+    "chapter": 419,
+    "sequence": 24180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1796a67d5d6cf233"
+  },
+  "findings": []
+}

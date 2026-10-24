@@ -1,0 +1,23 @@
+{
+  "language": "punjabi",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:d0e7d61e7c78dfe0",
+  "lessonIds": [
+    "PA-C187-past-return",
+    "PA-C187-si",
+    "PA-C187-si-review",
+    "PA-C187-san",
+    "PA-C187-si-san-contrast",
+    "PA-C187-san-description",
+    "PA-C187-san-habitual",
+    "PA-C187-san-review",
+    "PA-C187-payoff"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
+  "text": "punjabi/narration/ch187.txt",
+  "json": "punjabi/narration/ch187.json",
+  "textHash": "fnv1a64:c01b9ac988361f39",
+  "jsonHash": "fnv1a64:ff3d93689cb40f64",
+  "findings": []
+}

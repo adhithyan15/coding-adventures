@@ -1,0 +1,11 @@
+{
+  "id": "TA-C374-vakkali",
+  "pathSegment": "TA-PATH-374-TERTAL374",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-374-TERTAL374",
+      "order": 2
+    }
+  ]
+}

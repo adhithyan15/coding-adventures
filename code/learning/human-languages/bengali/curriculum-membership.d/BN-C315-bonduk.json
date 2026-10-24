@@ -1,0 +1,11 @@
+{
+  "id": "BN-C315-bonduk",
+  "pathSegment": "BN-PATH-315-OSTRO315",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-315-OSTRO315",
+      "order": 3
+    }
+  ]
+}

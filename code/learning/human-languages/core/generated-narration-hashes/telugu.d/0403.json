@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:379e7d3b219ad1e6",
+  "lessonIds": [
+    "TE-C403-paripalana",
+    "TE-C403-pratinidhi",
+    "TE-C403-samanvayam",
+    "TE-C403-pathakam",
+    "TE-C403-sanksemam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch403.txt",
+  "json": "telugu/narration/ch403.json",
+  "textHash": "fnv1a64:2244e630304f3540",
+  "jsonHash": "fnv1a64:bdbcac384686dd7c",
+  "findings": []
+}

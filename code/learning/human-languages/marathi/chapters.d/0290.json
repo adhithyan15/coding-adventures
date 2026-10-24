@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "At the Police Station",
+  "label": "ch:mr-at-the-police-station",
+  "canDo": "I can say what the police did: an arrest, questions, a prison.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C290-kaidi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can say what the police did: an arrest, questions, a prison.",
+    "assesses": [
+      "MR-LEX-C290-POLICE290-03",
+      "MR-LEX-C290-POLICE290-04",
+      "MR-LEX-C290-POLICE290-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:a2883415c2a9ddca",
+  "lessonIds": [
+    "AR-C333-ghariqa",
+    "AR-C333-bahhar",
+    "AR-C333-ustul",
+    "AR-C333-qursan",
+    "AR-C333-asara"
+  ],
+  "tex": "arabic/book/chapters/ch333-sailors-and-pirates.tex"
+}

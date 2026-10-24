@@ -1,0 +1,11 @@
+{
+  "id": "TA-W293-six-lines",
+  "pathSegment": "TA-PATH-293-WOULD-DEPENDS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-293-WOULD-DEPENDS",
+      "order": 2
+    }
+  ]
+}

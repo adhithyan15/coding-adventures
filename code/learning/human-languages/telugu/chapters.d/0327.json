@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Once Upon a Time",
+  "label": "ch:te-once-upon-a-time",
+  "canDo": "I can say at one time, a king, a queen, a kingdom and to reign over.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C327-elu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can say at one time, a king, a queen, a kingdom and to reign over.",
+    "assesses": [
+      "TE-LEX-C327-RAJYAM327-03",
+      "TE-LEX-C327-RAJYAM327-04",
+      "TE-LEX-C327-RAJYAM327-05"
+    ]
+  }
+}

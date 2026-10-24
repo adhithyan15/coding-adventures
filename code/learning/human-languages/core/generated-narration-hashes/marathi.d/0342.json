@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:b73df061bb20a5bd",
+  "lessonIds": [
+    "MR-C342-hetu",
+    "MR-C342-uddes",
+    "MR-C342-parinam",
+    "MR-C342-spastikaran",
+    "MR-C342-nirman-hone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch342.txt",
+  "json": "marathi/narration/ch342.json",
+  "textHash": "fnv1a64:6c5e06bf335bd6de",
+  "jsonHash": "fnv1a64:c6a5d2454324761a",
+  "findings": []
+}

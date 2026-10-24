@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R541-review-534-541",
+    "language": "telugu",
+    "chapter": 541,
+    "sequence": 27450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4e59983c6a44423"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 399,
+  "title": "Whatever Happens",
+  "label": "ch:ta-whatever-happens",
+  "canDo": "I can say that something will happen anyway, through someone, or include something.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-R399-review-final-399",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can say that something will happen anyway, through someone, or include something.",
+    "assesses": [
+      "TA-LEX-C399-EPPATIYUM399-01",
+      "TA-LEX-C399-EPPATIYUM399-02",
+      "TA-LEX-C399-EPPATIYUM399-03",
+      "TA-LEX-C399-EPPATIYUM399-04",
+      "TA-LEX-C399-EPPATIYUM399-05"
+    ]
+  }
+}

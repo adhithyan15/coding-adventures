@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C534-juya",
+    "language": "bengali",
+    "chapter": 534,
+    "sequence": 32160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db903985692ccf0d"
+  },
+  "findings": []
+}

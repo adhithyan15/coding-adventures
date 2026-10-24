@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 425,
+  "title": "Sights Worth Seeing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:302fd41df8562793",
+  "lessons": [
+    {
+      "id": "TA-C425-kalankarai-vilakkam",
+      "sequence": 24380,
+      "title": "கலங்கரை விளக்கம் (kalaṅkarai viḷakkam) — a lighthouse",
+      "headword": "கலங்கரை விளக்கம்",
+      "romanization": "kalaṅkarai viḷakkam",
+      "gloss": "a lighthouse",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed03e175dd9d0410",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a mansion, then the Tamil for an embassy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கலங்கரை விளக்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கலங்கரை விளக்கம் — kalaṅkarai viḷakkam — \"a lighthouse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கலங்கரை விளக்கம் இரவில் கப்பல்களுக்கு வழி காட்டுகிறது. kalaṅkarai viḷakkam iravil kappalkaḷukku vaḻi kāṭṭukiṟatu. The lighthouse shows ships the way at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Two words: கலங்கரை, calling ships, + விளக்கம், a light."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கலங்கரை விளக்கம் (kalaṅkarai viḷakkam) is usually traced to கலம், \"a vessel, a ship\" (DEDR 1305), + கரை, \"to call\" (DEDR 1291), + விளக்கம், \"a light\": the light that calls ships in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalaṅkarai viḷakkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalaṅkarai viḷakkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalaṅkarai viḷakkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalaṅkarai viḷakkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalaṅkarai viḷakkam iravil kappalkaḷukku vaḻi kāṭṭukiṟatu. — The lighthouse shows ships the way at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalaṅkarai viḷakkam iravil kappalkaḷukku vaḻi kāṭṭukiṟatu.* — The lighthouse shows ships the way at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a mansion, then the Tamil for an embassy, then say kalaṅkarai viḷakkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a mansion, then the Tamil for an embassy, then say *kalaṅkarai viḷakkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கலங்கரை விளக்கம் (kalaṅkarai viḷakkam) mean? (\"A lighthouse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C425-kolarankam",
+      "sequence": 24390,
+      "title": "கோளரங்கம் (kōḷaraṅkam) — a planetarium",
+      "headword": "கோளரங்கம்",
+      "romanization": "kōḷaraṅkam",
+      "gloss": "a planetarium",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3ab8c74e9ed156e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an embassy, then the Tamil for a lighthouse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கோளரங்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோளரங்கம் — kōḷaraṅkam — \"a planetarium\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கோளரங்கத்தில் நட்சத்திரங்களைப் பற்றிக் கற்றுக்கொண்டோம். kōḷaraṅkattil naṭcattiraṅkaḷaip paṟṟik kaṟṟukkoṇṭōm. At the planetarium we learnt about the stars."
+            },
+            {
+              "kind": "speech",
+              "text": "கோள், a planet, + a word for a hall or a stage."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோளரங்கம் (kōḷaraṅkam) is a modern coinage built from கோள், \"a planet\", and அரங்கம், \"a hall, a stage\", borrowed from Sanskrit raṅga, \"an arena, a stage\" (CDIAL 10561)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōḷaraṅkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōḷaraṅkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōḷaraṅkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōḷaraṅkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōḷaraṅkattil naṭcattiraṅkaḷaip paṟṟik kaṟṟukkoṇṭōm. — At the planetarium we learnt about the stars.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōḷaraṅkattil naṭcattiraṅkaḷaip paṟṟik kaṟṟukkoṇṭōm.* — At the planetarium we learnt about the stars.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an embassy, then the Tamil for a lighthouse, then say kōḷaraṅkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an embassy, then the Tamil for a lighthouse, then say *kōḷaraṅkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கோளரங்கம் (kōḷaraṅkam) mean? (\"A planetarium\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C425-talam",
+      "sequence": 24400,
+      "title": "தலம் (talam) — a site; a place",
+      "headword": "தலம்",
+      "romanization": "talam",
+      "gloss": "a site; a place",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89b664437576a34f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a lighthouse, then the Tamil for a planetarium."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தலம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தலம் — talam — \"a site; a place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இது ஒரு முக்கியமான சுற்றுலாத் தலம். itu oru mukkiyamāṉa cuṟṟulāt talam. This is an important tourist site."
+            },
+            {
+              "kind": "speech",
+              "text": "சுற்றுலாத் தலம் (talam) is a tourist spot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தலம் (talam) is borrowed from Sanskrit sthala, \"dry land, ground, a place\" (CDIAL 13744)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itu oru mukkiyamāṉa cuṟṟulāt talam. — This is an important tourist site.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itu oru mukkiyamāṉa cuṟṟulāt talam.* — This is an important tourist site.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a lighthouse, then the Tamil for a planetarium, then say talam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a lighthouse, then the Tamil for a planetarium, then say *talam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தலம் (talam) mean? (\"A site; a place\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C425-katci",
+      "sequence": 24410,
+      "title": "காட்சி (kāṭci) — a view; a scene; a sight",
+      "headword": "காட்சி",
+      "romanization": "kāṭci",
+      "gloss": "a view; a scene; a sight",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c98e4ba338956d0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a planetarium, then the Tamil for a site."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: காட்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காட்சி — kāṭci — \"a view; a scene; a sight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மலையிலிருந்து பார்த்த காட்சி மிக அழகாக இருந்தது. malaiyiliruntu pārtta kāṭci mika aḻakāka iruntatu. The view from the hill was very beautiful."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on காண், to see; a scene in a film is also a காட்சி (kāṭci)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காட்சி (kāṭci) is native Dravidian (DEDR 1443), the noun of காண், \"to see\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malaiyiliruntu pārtta kāṭci mika aḻakāka iruntatu. — The view from the hill was very beautiful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malaiyiliruntu pārtta kāṭci mika aḻakāka iruntatu.* — The view from the hill was very beautiful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a planetarium, then the Tamil for a site, then say kāṭci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a planetarium, then the Tamil for a site, then say *kāṭci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does காட்சி (kāṭci) mean? (\"A view; a scene; a sight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C425-cirrunticcalai",
+      "sequence": 24420,
+      "title": "சிற்றுண்டிச்சாலை (ciṟṟuṇṭiccālai) — a canteen; a snack bar",
+      "headword": "சிற்றுண்டிச்சாலை",
+      "romanization": "ciṟṟuṇṭiccālai",
+      "gloss": "a canteen; a snack bar",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2be9a695ff0903f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a site, then the Tamil for a view."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிற்றுண்டிச்சாலை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிற்றுண்டிச்சாலை — ciṟṟuṇṭiccālai — \"a canteen; a snack bar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நிலையத்தின் சிற்றுண்டிச்சாலையில் வடை வாங்கினோம். nilaiyattiṉ ciṟṟuṇṭiccālaiyil vaṭai vāṅkiṉōm. We bought vadai at the station canteen."
+            },
+            {
+              "kind": "speech",
+              "text": "சிறு, small, + உண்டி, food, + சாலை, a hall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிற்றுண்டிச்சாலை (ciṟṟuṇṭiccālai) is built from சிறு, \"small\" (DEDR 1594), உண்டி, \"food\" (DEDR 600), and சாலை, \"a hall\", borrowed from Sanskrit śālā (CDIAL 12414)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṟṟuṇṭiccālai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṟṟuṇṭiccālai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṟṟuṇṭiccālai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṟṟuṇṭiccālai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilaiyattiṉ ciṟṟuṇṭiccālaiyil vaṭai vāṅkiṉōm. — We bought vadai at the station canteen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilaiyattiṉ ciṟṟuṇṭiccālaiyil vaṭai vāṅkiṉōm.* — We bought vadai at the station canteen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a site, then the Tamil for a view, then say ciṟṟuṇṭiccālai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a site, then the Tamil for a view, then say *ciṟṟuṇṭiccālai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிற்றுண்டிச்சாலை (ciṟṟuṇṭiccālai) mean? (\"A canteen; a snack bar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

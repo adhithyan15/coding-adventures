@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:bed8f29a4bc07667",
+  "lessonIds": [
+    "TA-C337-cati",
+    "TA-C337-culcci",
+    "TA-C337-kattikkotu",
+    "TA-C337-vanci",
+    "TA-C337-maruvetam"
+  ],
+  "tex": "tamil/book/chapters/ch337-plots-and-betrayal.tex"
+}

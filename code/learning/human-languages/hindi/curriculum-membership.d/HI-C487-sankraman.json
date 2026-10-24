@@ -1,0 +1,11 @@
+{
+  "id": "HI-C487-sankraman",
+  "pathSegment": "HI-PATH-487-SANKRAMAN487",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-487-SANKRAMAN487",
+      "order": 1
+    }
+  ]
+}

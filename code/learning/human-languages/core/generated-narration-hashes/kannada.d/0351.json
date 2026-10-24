@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:c332edf2b4fffcab",
+  "lessonIds": [
+    "KA-C351-karyacarane",
+    "KA-C351-svayamsevaka",
+    "KA-C351-appalisu",
+    "KA-C351-avarisu",
+    "KA-C351-koccihogu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch351.txt",
+  "json": "kannada/narration/ch351.json",
+  "textHash": "fnv1a64:c2c49ec2a7867229",
+  "jsonHash": "fnv1a64:774bdc692598f815",
+  "findings": []
+}

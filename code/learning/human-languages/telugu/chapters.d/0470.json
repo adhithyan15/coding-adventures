@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Dirty Air and Water",
+  "label": "ch:te-dirty-air-and-water",
+  "canDo": "I can say pollution, waste, a gas, to pollute and pure.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C470-svacchamaina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can say pollution, waste, a gas, to pollute and pure.",
+    "assesses": [
+      "TE-LEX-C470-KALUSHYAM470-03",
+      "TE-LEX-C470-KALUSHYAM470-04",
+      "TE-LEX-C470-KALUSHYAM470-05"
+    ]
+  }
+}

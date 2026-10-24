@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:8900744ca35033ff",
+  "lessonIds": [
+    "TA-C284-vanten",
+    "TA-C284-patittukkontirunten",
+    "TA-C284-vanta-potu",
+    "TA-R284-the-past-three-ways"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "tamil/narration/ch284.txt",
+  "json": "tamil/narration/ch284.json",
+  "textHash": "fnv1a64:884e317209e69231",
+  "jsonHash": "fnv1a64:6ec3d051ab4e8908",
+  "findings": []
+}

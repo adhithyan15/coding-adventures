@@ -1,0 +1,11 @@
+{
+  "id": "TA-C345-arankeru",
+  "pathSegment": "TA-PATH-345-KATHAICOLLI345",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-345-KATHAICOLLI345",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C363-horahommu",
+  "pathSegment": "KA-PATH-363-SANJE363",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-363-SANJE363",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C541-dahikkuka",
+    "language": "malayalam",
+    "chapter": 541,
+    "sequence": 27270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:994da96ffdc6ccb1"
+  },
+  "findings": []
+}

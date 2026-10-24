@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C543-hasil-kora",
+    "language": "bengali",
+    "chapter": 543,
+    "sequence": 32640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f02b2a19f8b753a"
+  },
+  "findings": []
+}

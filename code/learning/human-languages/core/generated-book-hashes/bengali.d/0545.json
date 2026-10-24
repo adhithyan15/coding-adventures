@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:049eab6b4c504952",
+  "lessonIds": [
+    "BN-C545-onyotom",
+    "BN-C545-ogradhikar",
+    "BN-C545-sadhyo",
+    "BN-C545-mitobyoyi",
+    "BN-C545-thaorano",
+    "BN-R545-review-539-545",
+    "BN-R545-review-final-545"
+  ],
+  "tex": "bengali/book/chapters/ch545-choices.tex"
+}

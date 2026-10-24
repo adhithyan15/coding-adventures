@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "What matters",
+  "label": "ch:ar-what-matters",
+  "canDo": "I can talk about importance and value, and say what someone focused on, neglected or cared about.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C368-ihtamma",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can talk about importance and value, and say what someone focused on, neglected or cared about.",
+    "assesses": [
+      "AR-LEX-C368-AHAMMIYYA368-03",
+      "AR-LEX-C368-AHAMMIYYA368-04",
+      "AR-LEX-C368-AHAMMIYYA368-05"
+    ]
+  }
+}

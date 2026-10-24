@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Campus Life",
+  "label": "ch:ml-campus-life",
+  "canDo": "I can say a curriculum, attendance, a hostel, a scholarship and to pass an exam.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C434-pasakuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can say a curriculum, attendance, a hostel, a scholarship and to pass an exam.",
+    "assesses": [
+      "ML-LEX-C434-HOSTAL434-03",
+      "ML-LEX-C434-HOSTAL434-04",
+      "ML-LEX-C434-HOSTAL434-05"
+    ]
+  }
+}

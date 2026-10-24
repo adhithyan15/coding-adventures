@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:f79e13e165a6881e",
+  "lessonIds": [
+    "TE-C494-digulu",
+    "TE-C494-cintincu",
+    "TE-C494-kalavarapadu",
+    "TE-C494-kangarupadu",
+    "TE-C494-atruta"
+  ],
+  "tex": "telugu/book/chapters/ch494-worry-and-unease.tex"
+}

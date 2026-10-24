@@ -1,0 +1,11 @@
+{
+  "id": "TE-C357-batuku",
+  "pathSegment": "TE-PATH-357-VAMSAM357",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-357-VAMSAM357",
+      "order": 4
+    }
+  ]
+}

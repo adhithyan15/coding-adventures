@@ -1,0 +1,11 @@
+{
+  "id": "TE-C328-ettakelaku",
+  "pathSegment": "TE-PATH-328-KRAMAM328",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-328-KRAMAM328",
+      "order": 2
+    }
+  ]
+}

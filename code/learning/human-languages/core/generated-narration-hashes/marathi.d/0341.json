@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:0f4818c7630fd5be",
+  "lessonIds": [
+    "MR-C341-kadambari",
+    "MR-C341-caritra",
+    "MR-C341-adbhut",
+    "MR-C341-avismaraniy",
+    "MR-C341-ciradne",
+    "MR-R341-review-335-341",
+    "MR-R341-review-final-341"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch341.txt",
+  "json": "marathi/narration/ch341.json",
+  "textHash": "fnv1a64:2eeac1a01e3a3a94",
+  "jsonHash": "fnv1a64:983fe591f2b26f90",
+  "findings": []
+}

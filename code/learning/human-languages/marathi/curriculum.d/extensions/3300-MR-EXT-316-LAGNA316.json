@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-316-LAGNA316",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a wedding: the engagement, the henna, the procession.",
+  "prerequisites": []
+}

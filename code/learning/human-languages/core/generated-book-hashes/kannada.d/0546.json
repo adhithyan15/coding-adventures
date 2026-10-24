@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:df6b80f776555dff",
+  "lessonIds": [
+    "KA-C546-kaitota",
+    "KA-C546-nerehore",
+    "KA-C546-sunna",
+    "KA-C546-tarasi",
+    "KA-C546-udu",
+    "KA-R546-review-540-546",
+    "KA-R546-review-final-546"
+  ],
+  "tex": "kannada/book/chapters/ch546-home-comforts.tex"
+}

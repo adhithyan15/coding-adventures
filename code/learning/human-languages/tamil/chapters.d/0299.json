@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Fire in the Night",
+  "label": "ch:ta-fire-in-the-night",
+  "canDo": "I can describe a fire and what it did.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C299-muccuttinaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can describe a fire and what it did.",
+    "assesses": [
+      "TA-LEX-C299-THEE299-03",
+      "TA-LEX-C299-THEE299-04",
+      "TA-LEX-C299-THEE299-05"
+    ]
+  }
+}

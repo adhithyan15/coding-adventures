@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Diseases",
+  "label": "ch:te-diseases",
+  "canDo": "I can name some serious and contagious diseases.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C513-ubbasam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can name some serious and contagious diseases.",
+    "assesses": [
+      "TE-LEX-C513-VYADHI513-03",
+      "TE-LEX-C513-VYADHI513-04",
+      "TE-LEX-C513-VYADHI513-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C505-malakkuli",
+    "language": "malayalam",
+    "chapter": 505,
+    "sequence": 25290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e55bda23994a7cb"
+  },
+  "findings": []
+}

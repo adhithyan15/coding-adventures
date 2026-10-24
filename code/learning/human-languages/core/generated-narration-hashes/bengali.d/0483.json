@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:bd6cc68a5be0cb2d",
+  "lessonIds": [
+    "BN-C483-jamai",
+    "BN-C483-bouma",
+    "BN-C483-nonod",
+    "BN-C483-deor",
+    "BN-C483-bhashur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch483.txt",
+  "json": "bengali/narration/ch483.json",
+  "textHash": "fnv1a64:187a12eac00a8962",
+  "jsonHash": "fnv1a64:bc394adc50da91db",
+  "findings": []
+}

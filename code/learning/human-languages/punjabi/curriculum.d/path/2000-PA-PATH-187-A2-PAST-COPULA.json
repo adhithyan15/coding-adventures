@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-187-A2-PAST-COPULA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-187-A2-PAST-COPULA"
+  ],
+  "after": []
+}

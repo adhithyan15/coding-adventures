@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:8ccd7a447c6a3518",
+  "lessonIds": [
+    "BN-C367-onuman-kora",
+    "BN-C367-andaj-kora",
+    "BN-C367-abhas",
+    "BN-C367-protyasha",
+    "BN-C367-bhobishyot"
+  ],
+  "tex": "bengali/book/chapters/ch367-making-a-guess.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "On the Other Hand",
+  "label": "ch:te-on-the-other-hand",
+  "canDo": "I can contrast two sides of an argument.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C396-adevidhanga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can contrast two sides of an argument.",
+    "assesses": [
+      "TE-LEX-C396-VIRUDDHAM396-03",
+      "TE-LEX-C396-VIRUDDHAM396-04",
+      "TE-LEX-C396-VIRUDDHAM396-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "On the Battlefield",
+  "label": "ch:te-on-the-battlefield",
+  "canDo": "I can say a battlefield, a troop, to besiege, to conquer and a defeat.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C361-parajayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can say a battlefield, a troop, to besiege, to conquer and a defeat.",
+    "assesses": [
+      "TE-LEX-C361-YUDDHABHUMI361-03",
+      "TE-LEX-C361-YUDDHABHUMI361-04",
+      "TE-LEX-C361-YUDDHABHUMI361-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Wearing Down and Bouncing Back",
+  "label": "ch:te-wearing-down-and-bouncing-back",
+  "canDo": "I can say that someone got better, grew strong or was worn out.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C520-punjuko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can say that someone got better, grew strong or was worn out.",
+    "assesses": [
+      "TE-LEX-C520-KOLUKO520-03",
+      "TE-LEX-C520-KOLUKO520-04",
+      "TE-LEX-C520-KOLUKO520-05"
+    ]
+  }
+}

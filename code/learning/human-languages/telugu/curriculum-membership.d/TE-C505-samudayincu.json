@@ -1,0 +1,11 @@
+{
+  "id": "TE-C505-samudayincu",
+  "pathSegment": "TE-PATH-505-KARUNA505",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-505-KARUNA505",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:d8cacacdbb52c970",
+  "lessonIds": [
+    "TA-C530-kannamucci",
+    "TA-C530-pamparam",
+    "TA-C530-koli",
+    "TA-C530-keram",
+    "TA-C530-karrati"
+  ],
+  "tex": "tamil/book/chapters/ch530-children-s-games.tex"
+}

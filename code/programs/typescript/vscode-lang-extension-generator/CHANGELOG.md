@@ -3,6 +3,14 @@
 All notable changes to `vscode-lang-extension-generator` are documented
 in this file.
 
+## Unreleased
+
+- Rewrite `BUILD_windows` for `cmd.exe`. The build tool runs every line
+  through `cmd /C`, but the file was written as a PowerShell script, so its
+  first line (`$ErrorActionPreference = 'Stop'`) failed and the package could
+  never build on Windows. It now installs its `file:` deps with
+  `npm install --prefix`, the same pattern as `language-ladder`.
+
 ## 0.2.0 - Spec-driven flow
 
 - Added `--language-spec <path>` flag that consumes the JSON document

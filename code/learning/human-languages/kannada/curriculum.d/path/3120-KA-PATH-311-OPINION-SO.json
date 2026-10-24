@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-311-OPINION-SO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-311-OPINION-SO"
+  ],
+  "after": []
+}

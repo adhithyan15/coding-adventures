@@ -1,0 +1,11 @@
+{
+  "id": "ML-C562-ragam",
+  "pathSegment": "ML-PATH-562-RAGAM562",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-562-RAGAM562",
+      "order": 1
+    }
+  ]
+}

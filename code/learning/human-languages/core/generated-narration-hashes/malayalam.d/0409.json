@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:b031670cd9062e9e",
+  "lessonIds": [
+    "ML-C409-nisedhikkuka",
+    "ML-C409-avakasappetuka",
+    "ML-C409-aropikkuka",
+    "ML-C409-nispaksamaya",
+    "ML-C409-visadikaranam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch409.txt",
+  "json": "malayalam/narration/ch409.json",
+  "textHash": "fnv1a64:d5818bd32f441c4b",
+  "jsonHash": "fnv1a64:60cbab9baa210435",
+  "findings": []
+}

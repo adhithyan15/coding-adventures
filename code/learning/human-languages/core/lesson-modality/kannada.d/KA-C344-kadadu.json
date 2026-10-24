@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C344-kadadu",
+    "language": "kannada",
+    "chapter": 344,
+    "sequence": 17320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4d1b5f7ddb45972"
+  },
+  "findings": []
+}

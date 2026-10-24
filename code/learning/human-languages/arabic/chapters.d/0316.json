@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "When buildings fall",
+  "label": "ch:ar-when-buildings-fall",
+  "canDo": "I can say to collapse, to overflow, to break out, rubble and ruins.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R316-review-309-316",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can say to collapse, to overflow, to break out, rubble and ruins.",
+    "assesses": [
+      "AR-LEX-C316-KARITHA316-03",
+      "AR-LEX-C316-KARITHA316-04",
+      "AR-LEX-C316-KARITHA316-05"
+    ]
+  }
+}

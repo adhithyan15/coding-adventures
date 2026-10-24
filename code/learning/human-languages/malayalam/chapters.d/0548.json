@@ -1,0 +1,19 @@
+{
+  "chapter": 548,
+  "title": "Mechanics, Merchants and Cooks",
+  "label": "ch:ml-mechanics-merchants-and-cooks",
+  "canDo": "I can say a mechanic, a merchant, a fisherman, a professional cook and a photographer.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-R548-review-541-548",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 548: I can say a mechanic, a merchant, a fisherman, a professional cook and a photographer.",
+    "assesses": [
+      "ML-LEX-C548-PANIKKAR548-03",
+      "ML-LEX-C548-PANIKKAR548-04",
+      "ML-LEX-C548-PANIKKAR548-05"
+    ]
+  }
+}

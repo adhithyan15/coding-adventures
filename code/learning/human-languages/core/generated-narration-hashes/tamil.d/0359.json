@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:afea6902a43dcadf",
+  "lessonIds": [
+    "TA-C359-tiri",
+    "TA-C359-mikaippatuttu",
+    "TA-C359-muranpatu",
+    "TA-C359-aiyam",
+    "TA-C359-nirakari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch359.txt",
+  "json": "tamil/narration/ch359.json",
+  "textHash": "fnv1a64:59a1b1336ed995bc",
+  "jsonHash": "fnv1a64:e5ecb74da35b21b5",
+  "findings": []
+}

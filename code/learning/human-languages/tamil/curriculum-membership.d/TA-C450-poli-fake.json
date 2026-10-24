@@ -1,0 +1,11 @@
+{
+  "id": "TA-C450-poli-fake",
+  "pathSegment": "TA-PATH-450-ASAL450",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-450-ASAL450",
+      "order": 1
+    }
+  ]
+}

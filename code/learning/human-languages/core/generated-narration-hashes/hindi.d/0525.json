@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:597bce61ce0bda3c",
+  "lessonIds": [
+    "HI-C525-phatakna",
+    "HI-C525-ankur",
+    "HI-C525-khad",
+    "HI-C525-ropna",
+    "HI-C525-ukhaarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch525.txt",
+  "json": "hindi/narration/ch525.json",
+  "textHash": "fnv1a64:5642fc94fcc21a0b",
+  "jsonHash": "fnv1a64:d1bf613bc3397914",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Rights and Duties",
+  "label": "ch:te-rights-and-duties",
+  "canDo": "I can talk about duty, freedom, equality and justice.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C399-gauravincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can talk about duty, freedom, equality and justice.",
+    "assesses": [
+      "TE-LEX-C399-KARTAVYAM399-03",
+      "TE-LEX-C399-KARTAVYAM399-04",
+      "TE-LEX-C399-KARTAVYAM399-05"
+    ]
+  }
+}

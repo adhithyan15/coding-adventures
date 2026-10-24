@@ -1,0 +1,11 @@
+{
+  "id": "BN-C505-ujjvol",
+  "pathSegment": "BN-PATH-505-ALO505",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-505-ALO505",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:e738c4ec038d821c",
+  "lessonIds": [
+    "ML-C445-anivaryamaya",
+    "ML-C445-nirnnayakamaya",
+    "ML-C445-atisthanaparamaya",
+    "ML-C445-gurutaramaya",
+    "ML-C445-sankirnnamaya"
+  ],
+  "tex": "malayalam/book/chapters/ch445-how-serious.tex"
+}

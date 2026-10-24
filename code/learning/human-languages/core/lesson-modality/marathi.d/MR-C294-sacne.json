@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C294-sacne",
+    "language": "marathi",
+    "chapter": 294,
+    "sequence": 17310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c4370c1cc2d1f8f"
+  },
+  "findings": []
+}

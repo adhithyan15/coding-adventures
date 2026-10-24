@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:a41f3be8af79839a",
+  "lessonIds": [
+    "KA-C524-cikkappa",
+    "KA-C524-doddappa",
+    "KA-C524-cikkamma",
+    "KA-C524-doddamma",
+    "KA-C524-sodaraliya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch524.txt",
+  "json": "kannada/narration/ch524.json",
+  "textHash": "fnv1a64:855b524f572d9565",
+  "jsonHash": "fnv1a64:f301fdf2d9a7361b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C377-aksepisu",
+  "pathSegment": "KA-PATH-377-TARKA377",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-377-TARKA377",
+      "order": 3
+    }
+  ]
+}

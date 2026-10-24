@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C349-ukalne",
+    "language": "marathi",
+    "chapter": 349,
+    "sequence": 20390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1dad54c2b7a9e038"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-508-CARRAL508",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-508-CARRAL508"
+  ],
+  "after": []
+}

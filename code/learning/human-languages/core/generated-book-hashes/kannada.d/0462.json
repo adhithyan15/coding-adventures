@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:705c049879b555e6",
+  "lessonIds": [
+    "KA-C462-balkani",
+    "KA-C462-lipht",
+    "KA-C462-solleparade",
+    "KA-C462-hitar",
+    "KA-C462-kiruguttu"
+  ],
+  "tex": "kannada/book/chapters/ch462-in-the-hotel-room.tex"
+}

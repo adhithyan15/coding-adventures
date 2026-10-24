@@ -1,0 +1,11 @@
+{
+  "id": "TA-C398-nilaittanmai",
+  "pathSegment": "TA-PATH-398-POKKU398",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-398-POKKU398",
+      "order": 3
+    }
+  ]
+}

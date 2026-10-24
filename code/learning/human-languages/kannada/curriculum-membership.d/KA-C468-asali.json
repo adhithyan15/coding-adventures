@@ -1,0 +1,11 @@
+{
+  "id": "KA-C468-asali",
+  "pathSegment": "KA-PATH-468-GATRA468",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-468-GATRA468",
+      "order": 1
+    }
+  ]
+}

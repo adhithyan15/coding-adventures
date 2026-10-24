@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:be29da8be7a28f38",
+  "lessonIds": [
+    "BN-C541-protikkha",
+    "BN-C541-dirgho",
+    "BN-C541-songrokkhit",
+    "BN-C541-token",
+    "BN-C541-porjay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch541.txt",
+  "json": "bengali/narration/ch541.json",
+  "textHash": "fnv1a64:8c6c3b0373e17b85",
+  "jsonHash": "fnv1a64:33b2cb9f575ac191",
+  "findings": []
+}

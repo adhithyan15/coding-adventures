@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Winning a Seat",
+  "label": "ch:ml-winning-a-seat",
+  "canDo": "I can say a campaign, a manifesto, a majority, a minority and to win.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-R420-review-413-420",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can say a campaign, a manifesto, a majority, a minority and to win.",
+    "assesses": [
+      "ML-LEX-C420-VIJAYAM420-03",
+      "ML-LEX-C420-VIJAYAM420-04",
+      "ML-LEX-C420-VIJAYAM420-05"
+    ]
+  }
+}

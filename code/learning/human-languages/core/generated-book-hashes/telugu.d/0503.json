@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:957dc95b70dc0279",
+  "lessonIds": [
+    "TE-C503-anuragam",
+    "TE-C503-mamakaram",
+    "TE-C503-apyayata",
+    "TE-C503-lalincu",
+    "TE-C503-abhimanam"
+  ],
+  "tex": "telugu/book/chapters/ch503-love-and-fondness.tex"
+}

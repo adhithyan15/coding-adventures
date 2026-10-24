@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-306-THALAIPPU306",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-306-THALAIPPU306"
+  ],
+  "after": []
+}

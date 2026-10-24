@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C490-utaru",
+    "language": "tamil",
+    "chapter": 490,
+    "sequence": 28020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6712b368104643b"
+  },
+  "findings": []
+}

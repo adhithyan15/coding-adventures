@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Sound and Print",
+  "label": "ch:ta-sound-and-print",
+  "canDo": "I can talk about speakers, microphones and printers.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C519-minnanu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about speakers, microphones and printers.",
+    "assesses": [
+      "TA-LEX-C519-OLI519-03",
+      "TA-LEX-C519-OLI519-04",
+      "TA-LEX-C519-OLI519-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-402-PURANAM402",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-402-PURANAM402"
+  ],
+  "after": []
+}

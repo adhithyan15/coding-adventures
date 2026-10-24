@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C484-tapamana",
+    "language": "kannada",
+    "chapter": 484,
+    "sequence": 24620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91a3e6fee10b441e"
+  },
+  "findings": []
+}

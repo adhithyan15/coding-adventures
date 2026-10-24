@@ -1,0 +1,11 @@
+{
+  "id": "TA-C290-poka-acai",
+  "pathSegment": "TA-PATH-290-FEELINGS-HOPES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-290-FEELINGS-HOPES",
+      "order": 3
+    }
+  ]
+}

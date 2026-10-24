@@ -1,0 +1,11 @@
+{
+  "id": "KA-C501-anakisu",
+  "pathSegment": "KA-PATH-501-SAUMYA501",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-501-SAUMYA501",
+      "order": 4
+    }
+  ]
+}

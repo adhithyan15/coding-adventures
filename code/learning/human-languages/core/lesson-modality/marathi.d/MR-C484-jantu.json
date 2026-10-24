@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C484-jantu",
+    "language": "marathi",
+    "chapter": 484,
+    "sequence": 27760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d0289a296d2ec9c"
+  },
+  "findings": []
+}

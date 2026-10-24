@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C506-suryodayam",
+    "language": "malayalam",
+    "chapter": 506,
+    "sequence": 25300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aff8c4faa5366463"
+  },
+  "findings": []
+}

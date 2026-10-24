@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Getting It Done",
+  "label": "ch:mr-getting-it-done",
+  "canDo": "I can talk about tasks, shifts and finishing work.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C514-dhadpadne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about tasks, shifts and finishing work.",
+    "assesses": [
+      "MR-LEX-C514-KAMKAJ514-03",
+      "MR-LEX-C514-KAMKAJ514-04",
+      "MR-LEX-C514-KAMKAJ514-05"
+    ]
+  }
+}

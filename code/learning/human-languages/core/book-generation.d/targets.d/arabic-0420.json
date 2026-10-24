@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 420,
+  "output": "arabic/book/chapters/ch420-responding.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

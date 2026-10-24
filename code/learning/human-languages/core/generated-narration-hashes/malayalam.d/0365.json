@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:79b4cdd5531eaa90",
+  "lessonIds": [
+    "ML-C365-parati",
+    "ML-C365-kurravali",
+    "ML-C365-anvesanam",
+    "ML-C365-arasrru-ceyyuka",
+    "ML-C365-piticcetukkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch365.txt",
+  "json": "malayalam/narration/ch365.json",
+  "textHash": "fnv1a64:66bcf9a3a0c7c501",
+  "jsonHash": "fnv1a64:80b0685d5188a241",
+  "findings": []
+}

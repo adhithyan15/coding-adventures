@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-375-SHIBIRA375",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-375-SHIBIRA375"
+  ],
+  "after": []
+}

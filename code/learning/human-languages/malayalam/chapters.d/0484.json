@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Water and a View",
+  "label": "ch:ml-water-and-a-view",
+  "canDo": "I can say drinking water, to boil and cool, to purify, a window and a view.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-R484-review-477-484",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can say drinking water, to boil and cool, to purify, a window and a view.",
+    "assesses": [
+      "ML-LEX-C484-VELLAM484-03",
+      "ML-LEX-C484-VELLAM484-04",
+      "ML-LEX-C484-VELLAM484-05"
+    ]
+  }
+}

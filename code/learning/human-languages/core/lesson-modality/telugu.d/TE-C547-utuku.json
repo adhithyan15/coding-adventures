@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C547-utuku",
+    "language": "telugu",
+    "chapter": 547,
+    "sequence": 27720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6a9e755fbc31b25"
+  },
+  "findings": []
+}

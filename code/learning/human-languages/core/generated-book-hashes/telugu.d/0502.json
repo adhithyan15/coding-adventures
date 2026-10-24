@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:a066c03e07d40048",
+  "lessonIds": [
+    "TE-C502-nitturcu",
+    "TE-C502-nirasapadu",
+    "TE-C502-nirutsaham",
+    "TE-C502-tahatahaladu",
+    "TE-C502-krsincu"
+  ],
+  "tex": "telugu/book/chapters/ch502-sighs-and-letdowns.tex"
+}

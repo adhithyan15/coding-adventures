@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C499-amdani",
+    "language": "bengali",
+    "chapter": 499,
+    "sequence": 30390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ffa8a83695a150c"
+  },
+  "findings": []
+}

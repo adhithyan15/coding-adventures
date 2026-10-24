@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:e824646c2698355a",
+  "lessonIds": [
+    "HI-C435-rezgari",
+    "HI-C435-saiz",
+    "HI-C435-posak",
+    "HI-C435-rumal",
+    "HI-C435-simatna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch435.txt",
+  "json": "hindi/narration/ch435.json",
+  "textHash": "fnv1a64:c9f47d5569637787",
+  "jsonHash": "fnv1a64:f9eac3a9cd7b62f2",
+  "findings": []
+}

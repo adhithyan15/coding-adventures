@@ -1,0 +1,11 @@
+{
+  "id": "KA-C450-riperi",
+  "pathSegment": "KA-PATH-450-GARAGE450",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-450-GARAGE450",
+      "order": 4
+    }
+  ]
+}

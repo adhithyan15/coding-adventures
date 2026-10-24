@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:9d4bc9b091cfe9f7",
+  "lessonIds": [
+    "HI-C470-sahas",
+    "HI-C470-vir",
+    "HI-C470-diler",
+    "HI-C470-nirbhik",
+    "HI-C470-jokhim"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch470.txt",
+  "json": "hindi/narration/ch470.json",
+  "textHash": "fnv1a64:afee1d9e880eb8b4",
+  "jsonHash": "fnv1a64:a69cf52cf4e5ed82",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R509-review-502-509",
+    "language": "telugu",
+    "chapter": 509,
+    "sequence": 25810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cc38dba3a833e8b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C407-taadhdhara",
+    "language": "arabic",
+    "chapter": 407,
+    "sequence": 22910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3f2967a9077d631"
+  },
+  "findings": []
+}

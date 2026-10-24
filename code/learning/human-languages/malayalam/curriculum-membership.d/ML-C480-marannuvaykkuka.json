@@ -1,0 +1,11 @@
+{
+  "id": "ML-C480-marannuvaykkuka",
+  "pathSegment": "ML-PATH-480-ORMMA480",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-480-ORMMA480",
+      "order": 1
+    }
+  ]
+}

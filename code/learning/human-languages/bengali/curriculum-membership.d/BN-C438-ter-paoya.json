@@ -1,0 +1,11 @@
+{
+  "id": "BN-C438-ter-paoya",
+  "pathSegment": "BN-PATH-438-MON438",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-438-MON438",
+      "order": 4
+    }
+  ]
+}

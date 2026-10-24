@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:813fe983f8aac3d0",
+  "lessonIds": [
+    "TA-C393-arikkai",
+    "TA-C393-kanakketuppu",
+    "TA-C393-kantari",
+    "TA-C393-cumar",
+    "TA-C393-perumpalum"
+  ],
+  "tex": "tamil/book/chapters/ch393-facts-and-figures.tex"
+}

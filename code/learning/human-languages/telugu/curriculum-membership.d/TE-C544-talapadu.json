@@ -1,0 +1,11 @@
+{
+  "id": "TE-C544-talapadu",
+  "pathSegment": "TE-PATH-544-KRIDA544",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-544-KRIDA544",
+      "order": 2
+    }
+  ]
+}

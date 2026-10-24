@@ -1,0 +1,861 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 425,
+  "title": "Accepting and Rejecting",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:45a5c8be1fbe3f5b",
+  "lessons": [
+    {
+      "id": "KA-C425-svikarisu",
+      "sequence": 21510,
+      "title": "ಸ್ವೀಕರಿಸು (svīkarisu) — to accept; to receive",
+      "headword": "ಸ್ವೀಕರಿಸು",
+      "romanization": "svīkarisu",
+      "gloss": "to accept; to receive",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b24435e77f7dce4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for specific, then the Kannada for an audit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ವೀಕರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವೀಕರಿಸು — svīkarisu — \"to accept; to receive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳು ಹೊಸ ಕೆಲಸದ ಆಹ್ವಾನವನ್ನು ಸ್ವೀಕರಿಸಿದಳು. avaḷu hosa kelasada āhvānavannu svīkarisidaḷu. She accepted the offer of a new job."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಸ್ವೀಕರಿಸಿದೆ, svīkariside."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal. ಸ್ವೀಕಾರ, acceptance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವೀಕರಿಸು (svīkarisu) is built on Sanskrit svīkāra, \"making one's own\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svīkarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svīkarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svīkarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svīkarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷu hosa kelasada āhvānavannu svīkarisidaḷu. — She accepted the offer of a new job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷu hosa kelasada āhvānavannu svīkarisidaḷu.* — She accepted the offer of a new job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for specific, then the Kannada for an audit, then say svīkarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for specific, then the Kannada for an audit, then say *svīkarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ವೀಕರಿಸು (svīkarisu) mean? (\"To accept; to receive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C425-tiraskarisu",
+      "sequence": 21520,
+      "title": "ತಿರಸ್ಕರಿಸು (tiraskarisu) — to reject",
+      "headword": "ತಿರಸ್ಕರಿಸು",
+      "romanization": "tiraskarisu",
+      "gloss": "to reject",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6fd075066eedb41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an audit, then the Kannada for to accept."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಿರಸ್ಕರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಿರಸ್ಕರಿಸು — tiraskarisu — \"to reject\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂಸ್ಥೆ ನನ್ನ ಅರ್ಜಿಯನ್ನು ತಿರಸ್ಕರಿಸಿತು. saṃsthe nanna arjiyannu tiraskarisitu. The organisation rejected my application."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತಿರಸ್ಕರಿಸಿದೆ, tiraskariside."
+            },
+            {
+              "kind": "speech",
+              "text": "ತಿರಸ್ಕಾರ, contempt or rejection."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಿರಸ್ಕರಿಸು (tiraskarisu) is built on Sanskrit tiraskāra, \"placing aside; contempt\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraskarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraskarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraskarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraskarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃsthe nanna arjiyannu tiraskarisitu. — The organisation rejected my application.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃsthe nanna arjiyannu tiraskarisitu.* — The organisation rejected my application.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an audit, then the Kannada for to accept, then say tiraskarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an audit, then the Kannada for to accept, then say *tiraskarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಿರಸ್ಕರಿಸು (tiraskarisu) mean? (\"To reject\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C425-pramanikarisu",
+      "sequence": 21530,
+      "title": "ಪ್ರಮಾಣೀಕರಿಸು (pramāṇīkarisu) — to certify",
+      "headword": "ಪ್ರಮಾಣೀಕರಿಸು",
+      "romanization": "pramāṇīkarisu",
+      "gloss": "to certify",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:504056b415f4f6be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to accept, then the Kannada for to reject."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಮಾಣೀಕರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಮಾಣೀಕರಿಸು — pramāṇīkarisu — \"to certify\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವೈದ್ಯರು ನನ್ನ ಆರೋಗ್ಯವನ್ನು ಪ್ರಮಾಣೀಕರಿಸಿದರು. vaidyaru nanna ārōgyavannu pramāṇīkarisidaru. The doctor certified my health."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪ್ರಮಾಣೀಕರಿಸಿದೆ, pramāṇīkariside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಮಾಣಪತ್ರ, a certificate, is the paper you get."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಮಾಣೀಕರಿಸು (pramāṇīkarisu) is built on Sanskrit pramāṇa, \"a standard, a proof\" (CDIAL 8723), with -īkarisu, \"to make into\": to make proof of."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramāṇīkarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramāṇīkarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramāṇīkarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramāṇīkarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaidyaru nanna ārōgyavannu pramāṇīkarisidaru. — The doctor certified my health.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaidyaru nanna ārōgyavannu pramāṇīkarisidaru.* — The doctor certified my health.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to accept, then the Kannada for to reject, then say pramāṇīkarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to accept, then the Kannada for to reject, then say *pramāṇīkarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಮಾಣೀಕರಿಸು (pramāṇīkarisu) mean? (\"To certify\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C425-urjita",
+      "sequence": 21540,
+      "title": "ಊರ್ಜಿತ (ūrjita) — valid; in force",
+      "headword": "ಊರ್ಜಿತ",
+      "romanization": "ūrjita",
+      "gloss": "valid; in force",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cebe6dfb920d998f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to reject, then the Kannada for to certify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಊರ್ಜಿತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಊರ್ಜಿತ — ūrjita — \"valid; in force\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಪಾಸ್ ಇನ್ನೂ ಒಂದು ತಿಂಗಳು ಊರ್ಜಿತ. ī pās innū ondu tiṅgaḷu ūrjita. This pass is valid for one more month."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊರ್ಜಿತವಾಗು, to stay in force."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಊರ್ಜಿತ (ūrjita) is borrowed from Sanskrit ūrjita, \"endowed with strength, powerful\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrjita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrjita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrjita, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrjita*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī pās innū ondu tiṅgaḷu ūrjita. — This pass is valid for one more month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī pās innū ondu tiṅgaḷu ūrjita.* — This pass is valid for one more month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to reject, then the Kannada for to certify, then say ūrjita again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to reject, then the Kannada for to certify, then say *ūrjita* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಊರ್ಜಿತ (ūrjita) mean? (\"Valid; in force\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C425-manyate",
+      "sequence": 21550,
+      "title": "ಮಾನ್ಯತೆ (mānyate) — recognition; validity",
+      "headword": "ಮಾನ್ಯತೆ",
+      "romanization": "mānyate",
+      "gloss": "recognition; validity",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5564b4cd22f521a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to certify, then the Kannada for valid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಾನ್ಯತೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾನ್ಯತೆ — mānyate — \"recognition; validity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಕಾಲೇಜಿಗೆ ಸರ್ಕಾರದ ಮಾನ್ಯತೆ ಇದೆ. ī kālējige sarkārada mānyate ide. This college is recognised by the government."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಾನ್ಯ, recognised, honoured."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾನ್ಯತೆ (mānyate) is built on Sanskrit mānya, \"to be respected or honoured\" (Monier-Williams), with -tā, \"-ness\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānyate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānyate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānyate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānyate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī kālējige sarkārada mānyate ide. — This college is recognised by the government.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī kālējige sarkārada mānyate ide.* — This college is recognised by the government.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to certify, then the Kannada for valid, then say mānyate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to certify, then the Kannada for valid, then say *mānyate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಾನ್ಯತೆ (mānyate) mean? (\"Recognition; validity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R425-review-419-425",
+      "sequence": 21560,
+      "title": "Looking back: from Success and Failure to Accepting and Rejecting",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Success and Failure to Accepting and Rejecting",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ebf7fa84471caa1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for to fall through and to bear fruit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fall through, to bear fruit, to come true, a crisis, unavoidable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fall through, to bear fruit, to come true, a crisis, unavoidable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to waver, to wake up to, compulsion, uncertain, a calamity",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to waver, to wake up to, compulsion, uncertain, a calamity]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a demand, to supply, a shortage, export, inflation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a demand, to supply, a shortage, export, inflation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to refer to, a criterion, a course of action, a method, a process",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to refer to, a criterion, a course of action, a method, a process]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stage, a task, a strategy, a trick, to divide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stage, a task, a strategy, a trick, to divide]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to observe, to critique, a circular, specific, an audit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to observe, to critique, a circular, specific, an audit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to accept, to reject, to certify, valid, recognition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to accept, to reject, to certify, valid, recognition]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To fall through? (ವಿಫಲವಾಗು, viphalavāgu.) To bear fruit? (ಫಲಿಸು, phalisu.) To come true? (ಕೈಗೂಡು, kaigūḍu.) A crisis? (ಬಿಕ್ಕಟ್ಟು, bikkaṭṭu.) Unavoidable? (ಅನಿವಾರ್ಯ, anivārya.) To waver? (ಅಳುಕು, aḷuku.) To wake up to? (ಎಚ್ಚೆತ್ತುಕೊ, eccettuko.) Compulsion? (ಬಲವಂತ, balavanta.) Uncertain? (ಅನಿಶ್ಚಿತ, aniścita.) A calamity? (ಆಪತ್ತು, āpattu.) A demand? (ಬೇಡಿಕೆ, bēḍike.) To supply? (ಪೂರೈಸು, pūraisu.) A shortage? (ಕೊರತೆ, korate.) Export? (ರಫ್ತು, raphtu.) Inflation? (ಹಣದುಬ್ಬರ, haṇadubbara.) To refer to? (ಪರಾಮರ್ಶಿಸು, parāmarśisu.) A criterion? (ಮಾನದಂಡ, mānadaṇḍa.) A course of action? (ಕ್ರಮ, krama.) A method? (ವಿಧಾನ, vidhāna.) A process? (ಪ್ರಕ್ರಿಯೆ, prakriye.) A stage? (ಹಂತ, hanta.) A task? (ಕಾರ್ಯ, kārya.) A strategy? (ತಂತ್ರ, tantra.) A trick? (ಉಪಾಯ, upāya.) To divide? (ವಿಭಜಿಸು, vibhajisu.) To observe? (ಅವಲೋಕಿಸು, avalōkisu.) To critique? (ವಿಮರ್ಶಿಸು, vimarśisu.) A circular? (ಸುತ್ತೋಲೆ, suttōle.) Specific? (ನಿರ್ದಿಷ್ಟ, nirdiṣṭa.) An audit? (ಪರಿಶೋಧನೆ, pariśōdhane.) To accept? (ಸ್ವೀಕರಿಸು, svīkarisu.) To reject? (ತಿರಸ್ಕರಿಸು, tiraskarisu.) To certify? (ಪ್ರಮಾಣೀಕರಿಸು, pramāṇīkarisu.) Valid? (ಊರ್ಜಿತ, ūrjita.) Recognition? (ಮಾನ್ಯತೆ, mānyate.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

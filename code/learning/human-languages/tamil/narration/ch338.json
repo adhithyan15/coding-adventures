@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 338,
+  "title": "Freedom",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0f9ea85cf44a2add",
+  "lessons": [
+    {
+      "id": "TA-C338-atimai",
+      "sequence": 19350,
+      "title": "அடிமை (aṭimai) — a slave; slavery",
+      "headword": "அடிமை",
+      "romanization": "aṭimai",
+      "gloss": "a slave; slavery",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bf840b9f5d6e13e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to deceive, then the Tamil for a disguise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அடிமை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடிமை — aṭimai — \"a slave; slavery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பழங்காலத்தில் பல பேர் அடிமைகளாக வாழ்ந்தார்கள். paḻaṅkālattil pala pēr aṭimaikaḷāka vāḻntārkaḷ. In ancient times many people lived as slaves."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of a habit: பழக்கத்துக்கு அடிமை (aṭimai), a slave to a habit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடிமை (aṭimai) is native Dravidian: DEDR 72 gives it under அடி, \"foot\", one who is at the feet of another."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭimai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭimai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭimai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭimai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻaṅkālattil pala pēr aṭimaikaḷāka vāḻntārkaḷ. — In ancient times many people lived as slaves.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻaṅkālattil pala pēr aṭimaikaḷāka vāḻntārkaḷ.* — In ancient times many people lived as slaves.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to deceive, then the Tamil for a disguise, then say aṭimai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to deceive, then the Tamil for a disguise, then say *aṭimai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அடிமை (aṭimai) mean? (\"A slave; slavery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C338-vitutalai",
+      "sequence": 19360,
+      "title": "விடுதலை (viṭutalai) — liberation; freedom; release",
+      "headword": "விடுதலை",
+      "romanization": "viṭutalai",
+      "gloss": "liberation; freedom; release",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33c7519e691fe7f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a disguise, then the Tamil for a slave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விடுதலை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விடுதலை — viṭutalai — \"liberation; freedom; release\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நீண்ட போராட்டத்துக்குப் பிறகு நாட்டுக்கு விடுதலை கிடைத்தது. nīṇṭa pōrāṭṭattukkup piṟaku nāṭṭukku viṭutalai kiṭaittatu. After a long struggle the country gained its freedom."
+            },
+            {
+              "kind": "speech",
+              "text": "Also release from prison: கைதிக்கு விடுதலை (viṭutalai)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விடுதலை (viṭutalai) is native Dravidian: a noun from விடு, \"to leave, let go\" (DEDR 5393)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṭutalai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṭutalai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṭutalai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṭutalai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīṇṭa pōrāṭṭattukkup piṟaku nāṭṭukku viṭutalai kiṭaittatu. — After a long struggle the country gained its freedom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīṇṭa pōrāṭṭattukkup piṟaku nāṭṭukku viṭutalai kiṭaittatu.* — After a long struggle the country gained its freedom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a disguise, then the Tamil for a slave, then say viṭutalai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a disguise, then the Tamil for a slave, then say *viṭutalai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விடுதலை (viṭutalai) mean? (\"Liberation; freedom; release\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C338-puratci",
+      "sequence": 19370,
+      "title": "புரட்சி (puraṭci) — a revolution",
+      "headword": "புரட்சி",
+      "romanization": "puraṭci",
+      "gloss": "a revolution",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4551c9844b4aadb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a slave, then the Tamil for liberation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புரட்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புரட்சி — puraṭci — \"a revolution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தப் புரட்சி நாட்டின் வரலாற்றை மாற்றியது. antap puraṭci nāṭṭiṉ varalāṟṟai māṟṟiyatu. That revolution changed the country's history."
+            },
+            {
+              "kind": "speech",
+              "text": "The adjective is புரட்சிகரமான, revolutionary."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புரட்சி (puraṭci) is native Dravidian: DEDR 4285 gives it under புரள், \"to be upset, roll over\", as \"upsetting, disorder\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puraṭci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puraṭci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puraṭci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puraṭci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antap puraṭci nāṭṭiṉ varalāṟṟai māṟṟiyatu. — That revolution changed the country's history.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antap puraṭci nāṭṭiṉ varalāṟṟai māṟṟiyatu.* — That revolution changed the country's history.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a slave, then the Tamil for liberation, then say puraṭci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a slave, then the Tamil for liberation, then say *puraṭci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புரட்சி (puraṭci) mean? (\"A revolution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C338-kalakam",
+      "sequence": 19380,
+      "title": "கலகம் (kalakam) — a revolt; a quarrel",
+      "headword": "கலகம்",
+      "romanization": "kalakam",
+      "gloss": "a revolt; a quarrel",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4dde851589bd7ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for liberation, then the Tamil for a revolution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கலகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கலகம் — kalakam — \"a revolt; a quarrel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வரியை எதிர்த்து மக்கள் கலகம் செய்தார்கள். variyai etirttu makkaḷ kalakam ceytārkaḷ. The people revolted against the tax."
+            },
+            {
+              "kind": "speech",
+              "text": "கலகம் (kalakam) செய், to revolt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கலகம் (kalakam) is borrowed from Sanskrit kalaha, \"quarrel, fight\" (CDIAL 2922)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalakam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalakam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "variyai etirttu makkaḷ kalakam ceytārkaḷ. — The people revolted against the tax.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *variyai etirttu makkaḷ kalakam ceytārkaḷ.* — The people revolted against the tax.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for liberation, then the Tamil for a revolution, then say kalakam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for liberation, then the Tamil for a revolution, then say *kalakam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கலகம் (kalakam) mean? (\"A revolt; a quarrel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C338-ciraiyilatai",
+      "sequence": 19390,
+      "title": "சிறையிலடை (ciṟaiyilaṭai) — to jail; to imprison",
+      "headword": "சிறையிலடை",
+      "romanization": "ciṟaiyilaṭai",
+      "gloss": "to jail; to imprison",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b4b9ae20f1374c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a revolution, then the Tamil for a revolt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிறையிலடை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிறையிலடை — ciṟaiyilaṭai — \"to jail; to imprison\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அரசு அந்தத் தலைவர்களைச் சிறையிலடைத்தது. aracu antat talaivarkaḷaic ciṟaiyilaṭaittatu. The government jailed those leaders."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): சிறையிலடைத்தேன், ciṟaiyilaṭaittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "சிறையில், in prison + அடை, to shut in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிறையிலடை (ciṟaiyilaṭai) is a Tamil compound built from சிறையில், \"in prison\", from சிறை, \"confinement\" (DEDR 1980), and அடை, \"to shut, lock\" (DEDR 83)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṟaiyilaṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṟaiyilaṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṟaiyilaṭai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṟaiyilaṭai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aracu antat talaivarkaḷaic ciṟaiyilaṭaittatu. — The government jailed those leaders.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aracu antat talaivarkaḷaic ciṟaiyilaṭaittatu.* — The government jailed those leaders.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a revolution, then the Tamil for a revolt, then say ciṟaiyilaṭai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a revolution, then the Tamil for a revolt, then say *ciṟaiyilaṭai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிறையிலடை (ciṟaiyilaṭai) mean? (\"To jail; to imprison\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

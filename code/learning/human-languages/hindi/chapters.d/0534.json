@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "The Big Match",
+  "label": "ch:hi-the-big-match",
+  "canDo": "I can talk about a match and who won it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C534-puraskar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can talk about a match and who won it.",
+    "assesses": [
+      "HI-LEX-C534-MAICH534-03",
+      "HI-LEX-C534-MAICH534-04",
+      "HI-LEX-C534-MAICH534-05"
+    ]
+  }
+}

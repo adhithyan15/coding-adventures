@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:b3748e97c788f20a",
+  "lessonIds": [
+    "MR-C385-cighalne",
+    "MR-C385-uphalne",
+    "MR-C385-nivalne",
+    "MR-C385-talne-averted",
+    "MR-C385-samore-jane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch385.txt",
+  "json": "marathi/narration/ch385.json",
+  "textHash": "fnv1a64:85265abd5629fef5",
+  "jsonHash": "fnv1a64:8217cbe1d3d16176",
+  "findings": []
+}

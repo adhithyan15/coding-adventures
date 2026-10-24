@@ -1,0 +1,11 @@
+{
+  "id": "MR-C365-retne",
+  "pathSegment": "MR-PATH-365-VATAGHATI365",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-365-VATAGHATI365",
+      "order": 2
+    }
+  ]
+}

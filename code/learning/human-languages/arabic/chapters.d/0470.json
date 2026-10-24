@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Springs and rivers",
+  "label": "ch:ar-springs-and-rivers",
+  "canDo": "I can say a spring, a river source, a river mouth, a riverbank and sweet water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-R470-review-463-470",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can say a spring, a river source, a river mouth, a riverbank and sweet water.",
+    "assesses": [
+      "AR-LEX-C470-YANBU470-03",
+      "AR-LEX-C470-YANBU470-04",
+      "AR-LEX-C470-YANBU470-05"
+    ]
+  }
+}

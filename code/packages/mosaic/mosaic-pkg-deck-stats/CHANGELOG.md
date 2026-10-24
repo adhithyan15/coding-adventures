@@ -4,6 +4,15 @@
 
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
 
+### Fixed — the `(Qt, "width")` pin outlived #17915
+
+#17915 taught the Qt emitter to emit text widths (`100%` becomes
+`Layout.fillWidth: true`, px values `width:`/`Layout.preferredWidth:`), so
+this package no longer drops `width` on Qt and the inverse ratchet
+(`no_pinned_style_drop_has_silently_been_fixed`) failed on every build of
+this package. Removed the pin and its comment. engram-app still drops a Qt
+`width` and keeps its pin.
+
 ### Fixed — 16 stale style-drop pins removed (X-7)
 
 The emitters now lower these, so the gate's inverse ratchet

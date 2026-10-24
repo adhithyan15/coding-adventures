@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 489,
+  "title": "Cheated at the Market",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b5bafd478cdf542f",
+  "lessons": [
+    {
+      "id": "TE-C489-jebudonga",
+      "sequence": 24610,
+      "title": "జేబుదొంగ (jēbudoṅga) — a pickpocket",
+      "headword": "జేబుదొంగ",
+      "romanization": "jēbudoṅga",
+      "gloss": "a pickpocket",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:018eabadb457ef6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a shortage, then the Telugu for an auction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: జేబుదొంగ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జేబుదొంగ — jēbudoṅga — \"a pickpocket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రద్దీ బస్సులో జేబుదొంగ నా పర్సు కొట్టేశాడు. raddī bassulō jēbudoṅga nā parsu koṭṭēśāḍu. In the crowded bus a pickpocket took my purse."
+            },
+            {
+              "kind": "speech",
+              "text": "జేబు, a pocket, + దొంగ, a thief."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జేబుదొంగ (jēbudoṅga) is a Telugu compound: జేబు, \"a pocket\", a loan from Arabic jayb through Persian and Hindustani, and దొంగ, \"a thief\", native Dravidian (DEDR 2982)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jēbudoṅga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jēbudoṅga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jēbudoṅga, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jēbudoṅga*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raddī bassulō jēbudoṅga nā parsu koṭṭēśāḍu. — In the crowded bus a pickpocket took my purse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raddī bassulō jēbudoṅga nā parsu koṭṭēśāḍu.* — In the crowded bus a pickpocket took my purse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a shortage, then the Telugu for an auction, then say jēbudoṅga again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a shortage, then the Telugu for an auction, then say *jēbudoṅga* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does జేబుదొంగ (jēbudoṅga) mean? (\"A pickpocket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C489-kalti",
+      "sequence": 24620,
+      "title": "కల్తీ (kaltī) — adulteration",
+      "headword": "కల్తీ",
+      "romanization": "kaltī",
+      "gloss": "adulteration",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:030bcef60ba4a4ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an auction, then the Telugu for a pickpocket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కల్తీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కల్తీ — kaltī — \"adulteration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పాలలో కల్తీ ఉందని తేలింది. ā pālalō kaltī undani tēlindi. It turned out that the milk was adulterated."
+            },
+            {
+              "kind": "speech",
+              "text": "కల్తీ (kaltī) చేయు, to adulterate; కల్తీ (kaltī) నూనె, adulterated oil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కల్తీ (kaltī) is a Telugu word for adulteration whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaltī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaltī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaltī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaltī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pālalō kaltī undani tēlindi. — It turned out that the milk was adulterated.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pālalō kaltī undani tēlindi.* — It turned out that the milk was adulterated.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an auction, then the Telugu for a pickpocket, then say kaltī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an auction, then the Telugu for a pickpocket, then say *kaltī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కల్తీ (kaltī) mean? (\"Adulteration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C489-mosapovu",
+      "sequence": 24630,
+      "title": "మోసపోవు (mōsapōvu) — to be cheated",
+      "headword": "మోసపోవు",
+      "romanization": "mōsapōvu",
+      "gloss": "to be cheated",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd4e94f657b02286",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a pickpocket, then the Telugu for adulteration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మోసపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మోసపోవు — mōsapōvu — \"to be cheated\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నకిలీ బంగారం కొని అతను మోసపోయాడు. nakilī baṅgāraṁ koni atanu mōsapōyāḍu. He was cheated when he bought fake gold."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మోసపోయాను, mōsapōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "మోసం, a fraud, + పోవు: to fall into a fraud. మోసం చేయు is to cheat someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మోసపోవు (mōsapōvu) is a Telugu compound: మోసం, \"deceit\", usually traced to Sanskrit mōṣa, \"theft\" (CDIAL 10358), and the native పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōsapōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōsapōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōsapōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōsapōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakilī baṅgāraṁ koni atanu mōsapōyāḍu. — He was cheated when he bought fake gold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakilī baṅgāraṁ koni atanu mōsapōyāḍu.* — He was cheated when he bought fake gold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a pickpocket, then the Telugu for adulteration, then say mōsapōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a pickpocket, then the Telugu for adulteration, then say *mōsapōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మోసపోవు (mōsapōvu) mean? (\"To be cheated\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C489-kullu",
+      "sequence": 24640,
+      "title": "కుళ్ళు (kuḷḷu) — to rot",
+      "headword": "కుళ్ళు",
+      "romanization": "kuḷḷu",
+      "gloss": "to rot",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b91d3573748cf9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for adulteration, then the Telugu for to be cheated."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కుళ్ళు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుళ్ళు — kuḷḷu — \"to rot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వేడికి పండ్లు రెండు రోజుల్లో కుళ్ళాయి. vēḍiki paṇḍlu reṇḍu rōjullō kuḷḷāyi. In the heat the fruit rotted in two days."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): కుళ్ళింది, kuḷḷindi."
+            },
+            {
+              "kind": "speech",
+              "text": "కుళ్ళిన, rotten: కుళ్ళిన టమాటాలు, rotten tomatoes. Its subject is a thing, so the past shown is the third person: కుళ్ళింది, it rotted."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుళ్ళు (kuḷḷu) is a native-looking Telugu verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēḍiki paṇḍlu reṇḍu rōjullō kuḷḷāyi. — In the heat the fruit rotted in two days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēḍiki paṇḍlu reṇḍu rōjullō kuḷḷāyi.* — In the heat the fruit rotted in two days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for adulteration, then the Telugu for to be cheated, then say kuḷḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for adulteration, then the Telugu for to be cheated, then say *kuḷḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కుళ్ళు (kuḷḷu) mean? (\"To rot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C489-migulu",
+      "sequence": 24650,
+      "title": "మిగులు (migulu) — to be left over",
+      "headword": "మిగులు",
+      "romanization": "migulu",
+      "gloss": "to be left over",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca7aa0f37efb73c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be cheated, then the Telugu for to rot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మిగులు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మిగులు — migulu — \"to be left over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పెళ్ళి తరువాత చాలా భోజనం మిగిలింది. peḷḷi taruvāta cālā bhōjanaṁ migilindi. After the wedding a lot of food was left over."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మిగిలాను, migilānu."
+            },
+            {
+              "kind": "speech",
+              "text": "What is left takes no ending; the one who keeps it takes -కి: నాకు వంద రూపాయలు మిగిలాయి."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మిగులు (migulu) is native Dravidian: DEDR 4838 lists Telugu migulu, \"to remain, to be left over, to be saved\", with Tamil miku, \"to exceed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "migulu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *migulu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "migulu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *migulu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peḷḷi taruvāta cālā bhōjanaṁ migilindi. — After the wedding a lot of food was left over.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peḷḷi taruvāta cālā bhōjanaṁ migilindi.* — After the wedding a lot of food was left over.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be cheated, then the Telugu for to rot, then say migulu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be cheated, then the Telugu for to rot, then say *migulu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మిగులు (migulu) mean? (\"To be left over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

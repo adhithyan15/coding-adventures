@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-445-ANKUR445",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "MR-EXT-445-ANKUR445"
+  ],
+  "after": []
+}

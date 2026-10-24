@@ -1,0 +1,11 @@
+{
+  "id": "KA-C421-raphtu",
+  "pathSegment": "KA-PATH-421-BEDIKE421",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-421-BEDIKE421",
+      "order": 3
+    }
+  ]
+}

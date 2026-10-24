@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C358-jivincu",
+    "language": "telugu",
+    "chapter": 358,
+    "sequence": 17640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:040a48ce6889c405"
+  },
+  "findings": []
+}

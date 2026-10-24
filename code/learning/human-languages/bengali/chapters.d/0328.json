@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Inside a Book",
+  "label": "ch:bn-inside-a-book",
+  "canDo": "I can talk about pages, translations, manuscripts and summaries.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C328-rochona-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can talk about pages, translations, manuscripts and summaries.",
+    "assesses": [
+      "BN-LEX-C328-PRISHTHA328-03",
+      "BN-LEX-C328-PRISHTHA328-04",
+      "BN-LEX-C328-PRISHTHA328-05"
+    ]
+  }
+}

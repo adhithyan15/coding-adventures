@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C376-spandana",
+    "language": "telugu",
+    "chapter": 376,
+    "sequence": 18560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32eb4f6f1e72fa09"
+  },
+  "findings": []
+}

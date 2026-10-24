@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:c671627d879e0d67",
+  "lessonIds": [
+    "ML-C438-grahikkuka",
+    "ML-C438-hrdisthamakkuka",
+    "ML-C438-parisilippikkuka",
+    "ML-C438-vyakhyanikkuka",
+    "ML-C438-nirvacikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch438.txt",
+  "json": "malayalam/narration/ch438.json",
+  "textHash": "fnv1a64:22559ace746be9a5",
+  "jsonHash": "fnv1a64:aa68e7dbc6ff854b",
+  "findings": []
+}

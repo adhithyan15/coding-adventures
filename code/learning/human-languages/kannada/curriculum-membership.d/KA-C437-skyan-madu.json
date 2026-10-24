@@ -1,0 +1,11 @@
+{
+  "id": "KA-C437-skyan-madu",
+  "pathSegment": "KA-PATH-437-VIMANA437",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-437-VIMANA437",
+      "order": 3
+    }
+  ]
+}

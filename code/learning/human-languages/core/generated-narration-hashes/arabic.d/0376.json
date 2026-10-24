@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:4354131f37cf009c",
+  "lessonIds": [
+    "AR-C376-falsafa",
+    "AR-C376-lughawiyyat",
+    "AR-C376-faylasuf",
+    "AR-C376-khabir",
+    "AR-C376-akadimi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch376.txt",
+  "json": "arabic/narration/ch376.json",
+  "textHash": "fnv1a64:a868e45bb41969d8",
+  "jsonHash": "fnv1a64:e042d5bffdcb38ac",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "One Nation",
+  "label": "ch:ta-one-nation",
+  "canDo": "I can talk about a nation, its symbols and its representatives.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C381-piratiniti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can talk about a nation, its symbols and its representatives.",
+    "assesses": [
+      "TA-LEX-C381-TECAM381-03",
+      "TA-LEX-C381-TECAM381-04",
+      "TA-LEX-C381-TECAM381-05"
+    ]
+  }
+}

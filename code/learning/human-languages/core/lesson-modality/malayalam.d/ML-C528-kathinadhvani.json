@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C528-kathinadhvani",
+    "language": "malayalam",
+    "chapter": 528,
+    "sequence": 26570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9c25d79a3e56245"
+  },
+  "findings": []
+}

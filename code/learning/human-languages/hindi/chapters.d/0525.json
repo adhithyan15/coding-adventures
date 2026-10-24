@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Seeds and Soil",
+  "label": "ch:hi-seeds-and-soil",
+  "canDo": "I can talk about sowing, planting and growing things.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C525-ukhaarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can talk about sowing, planting and growing things.",
+    "assesses": [
+      "HI-LEX-C525-PAUDHA525-03",
+      "HI-LEX-C525-PAUDHA525-04",
+      "HI-LEX-C525-PAUDHA525-05"
+    ]
+  }
+}

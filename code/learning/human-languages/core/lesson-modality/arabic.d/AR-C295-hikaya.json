@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C295-hikaya",
+    "language": "arabic",
+    "chapter": 295,
+    "sequence": 17100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51e9bb3d8bf3aa32"
+  },
+  "findings": []
+}

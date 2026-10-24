@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:de35136df25c09d6",
+  "lessonIds": [
+    "AR-C536-sayd",
+    "AR-C536-sinnara",
+    "AR-C536-istada",
+    "AR-C536-istajamma",
+    "AR-C536-istamtaa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch536.txt",
+  "json": "arabic/narration/ch536.json",
+  "textHash": "fnv1a64:049e301a4986877b",
+  "jsonHash": "fnv1a64:c4bd85d3f35272c3",
+  "findings": []
+}

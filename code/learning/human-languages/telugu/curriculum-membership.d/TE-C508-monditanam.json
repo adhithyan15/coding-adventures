@@ -1,0 +1,11 @@
+{
+  "id": "TE-C508-monditanam",
+  "pathSegment": "TE-PATH-508-DHAIRYAM508",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-508-DHAIRYAM508",
+      "order": 1
+    }
+  ]
+}

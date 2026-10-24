@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:b8a997b51ba19139",
+  "lessonIds": [
+    "ML-C391-savasamskaram",
+    "ML-C391-smasanam",
+    "ML-C391-savappetti",
+    "ML-C391-dahippikkuka",
+    "ML-C391-kuliccituka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch391.txt",
+  "json": "malayalam/narration/ch391.json",
+  "textHash": "fnv1a64:39703c0347ab7003",
+  "jsonHash": "fnv1a64:d29911f25f6a6ea4",
+  "findings": []
+}

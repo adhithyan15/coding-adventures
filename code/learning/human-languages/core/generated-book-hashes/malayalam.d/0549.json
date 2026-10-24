@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:24ef85299d6050af",
+  "lessonIds": [
+    "ML-C549-naipunyam",
+    "ML-C549-pratiphalam",
+    "ML-C549-kariyar",
+    "ML-C549-sampalavarddhana",
+    "ML-C549-vahikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch549-skill-and-progress.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C506-sikka",
+    "language": "marathi",
+    "chapter": 506,
+    "sequence": 29120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:120b03072df945f4"
+  },
+  "findings": []
+}

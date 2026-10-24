@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:f5d95d36d909fc05",
+  "lessonIds": [
+    "AR-C299-fi-hadhihi-al-athna",
+    "AR-C299-fima-bad",
+    "AR-C299-fi-al-yawm-at-tali",
+    "AR-C299-dhakara-mention",
+    "AR-C299-naqala"
+  ],
+  "tex": "arabic/book/chapters/ch299-meanwhile.tex"
+}

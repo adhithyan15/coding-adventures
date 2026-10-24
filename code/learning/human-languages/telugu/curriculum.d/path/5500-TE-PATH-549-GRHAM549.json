@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-549-GRHAM549",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-549-GRHAM549"
+  ],
+  "after": []
+}

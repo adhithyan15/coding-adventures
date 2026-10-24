@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C469-bekari",
+    "language": "kannada",
+    "chapter": 469,
+    "sequence": 23880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ddb8f13f04f53cb"
+  },
+  "findings": []
+}

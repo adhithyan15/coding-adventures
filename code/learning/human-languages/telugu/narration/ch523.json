@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 523,
+  "title": "People at Work",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3c424243b0c569a6",
+  "lessons": [
+    {
+      "id": "TE-C523-karmikudu",
+      "sequence": 26480,
+      "title": "కార్మికుడు (kārmikuḍu) — a worker; a labourer",
+      "headword": "కార్మికుడు",
+      "romanization": "kārmikuḍu",
+      "gloss": "a worker; a labourer",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bac5fde24c830a0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a promotion, then the Telugu for an ambition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కార్మికుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కార్మికుడు — kārmikuḍu — \"a worker; a labourer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కార్మికులు ఎండలో రోడ్డు వేశారు. kārmikulu eṇḍalō rōḍḍu vēśāru. The workers laid the road in the hot sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: కార్మికులు, kārmikulu."
+            },
+            {
+              "kind": "speech",
+              "text": "A factory or industrial worker."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కార్మికుడు (kārmikuḍu) is built on Sanskrit karman, \"act, work\" (CDIAL 2892), with the Telugu masculine ending -డు: one who works."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārmikuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārmikuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārmikuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārmikuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārmikulu eṇḍalō rōḍḍu vēśāru. — The workers laid the road in the hot sun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārmikulu eṇḍalō rōḍḍu vēśāru.* — The workers laid the road in the hot sun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a promotion, then the Telugu for an ambition, then say kārmikuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a promotion, then the Telugu for an ambition, then say *kārmikuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కార్మికుడు (kārmikuḍu) mean? (\"A worker; a labourer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C523-nipunudu",
+      "sequence": 26490,
+      "title": "నిపుణుడు (nipuṇuḍu) — an expert; a specialist",
+      "headword": "నిపుణుడు",
+      "romanization": "nipuṇuḍu",
+      "gloss": "an expert; a specialist",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:033b5119af465739",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an ambition, then the Telugu for a worker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిపుణుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిపుణుడు — nipuṇuḍu — \"an expert; a specialist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గుండె జబ్బుల నిపుణుడు నన్ను పరీక్షించాడు. guṇḍe jabbula nipuṇuḍu nannu parīkṣiñcāḍu. A heart specialist examined me."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine నిపుణురాలు; నైపుణ్యం, skill, is the noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిపుణుడు (nipuṇuḍu) is borrowed from Sanskrit nipuṇa, \"clever, adroit, skilful\" (Monier-Williams), with the Telugu masculine ending -డు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nipuṇuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nipuṇuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nipuṇuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nipuṇuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guṇḍe jabbula nipuṇuḍu nannu parīkṣiñcāḍu. — A heart specialist examined me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guṇḍe jabbula nipuṇuḍu nannu parīkṣiñcāḍu.* — A heart specialist examined me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an ambition, then the Telugu for a worker, then say nipuṇuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an ambition, then the Telugu for a worker, then say *nipuṇuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిపుణుడు (nipuṇuḍu) mean? (\"An expert; a specialist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C523-salahadaru",
+      "sequence": 26500,
+      "title": "సలహాదారు (salahādāru) — an adviser; a consultant",
+      "headword": "సలహాదారు",
+      "romanization": "salahādāru",
+      "gloss": "an adviser; a consultant",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:569a05722cdbb19f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a worker, then the Telugu for an expert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సలహాదారు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సలహాదారు — salahādāru — \"an adviser; a consultant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ కంపెనీకి ఆయన సలహాదారు. ā kampenīki āyana salahādāru. He is an adviser to that company."
+            },
+            {
+              "kind": "speech",
+              "text": "సలహా, advice, + -దారు, holder."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సలహాదారు (salahādāru) is built from సలహా, \"advice\", which is usually traced through Hindustani to Arabic, and the Persian ending -dār, \"one who holds\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "salahādāru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *salahādāru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "salahādāru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *salahādāru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kampenīki āyana salahādāru. — He is an adviser to that company.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kampenīki āyana salahādāru.* — He is an adviser to that company.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a worker, then the Telugu for an expert, then say salahādāru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a worker, then the Telugu for an expert, then say *salahādāru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సలహాదారు (salahādāru) mean? (\"An adviser; a consultant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C523-sahayakudu",
+      "sequence": 26510,
+      "title": "సహాయకుడు (sahāyakuḍu) — an assistant; a helper",
+      "headword": "సహాయకుడు",
+      "romanization": "sahāyakuḍu",
+      "gloss": "an assistant; a helper",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0852f777fe10bfe5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an expert, then the Telugu for an adviser."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సహాయకుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సహాయకుడు — sahāyakuḍu — \"an assistant; a helper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "డాక్టరుకు ఒక సహాయకుడు ఉన్నాడు. ḍākṭaruku oka sahāyakuḍu unnāḍu. The doctor has an assistant."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine సహాయకురాలు; built on సహాయం, help."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సహాయకుడు (sahāyakuḍu) is built on Sanskrit sahāya, \"companion, helper\" (CDIAL 13309), with the Telugu masculine ending -డు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahāyakuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahāyakuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahāyakuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahāyakuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākṭaruku oka sahāyakuḍu unnāḍu. — The doctor has an assistant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākṭaruku oka sahāyakuḍu unnāḍu.* — The doctor has an assistant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an expert, then the Telugu for an adviser, then say sahāyakuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an expert, then the Telugu for an adviser, then say *sahāyakuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సహాయకుడు (sahāyakuḍu) mean? (\"An assistant; a helper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C523-guttedaru",
+      "sequence": 26520,
+      "title": "గుత్తేదారు (guttēdāru) — a contractor",
+      "headword": "గుత్తేదారు",
+      "romanization": "guttēdāru",
+      "gloss": "a contractor",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c1bd296c906fbea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an adviser, then the Telugu for an assistant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గుత్తేదారు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గుత్తేదారు — guttēdāru — \"a contractor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గుత్తేదారు కొత్త ఇంటి పని మొదలుపెట్టాడు. guttēdāru kotta iṇṭi pani modalupeṭṭāḍu. The contractor began work on the new house."
+            },
+            {
+              "kind": "speech",
+              "text": "The one who takes on a job for a fixed price: గుత్త, a contract."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గుత్తేదారు (guttēdāru) is built from గుత్త, \"a contract, a lease\", and the ending -దారు, from Persian -dār, \"one who holds\"; the origin of గుత్త is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guttēdāru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guttēdāru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guttēdāru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guttēdāru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guttēdāru kotta iṇṭi pani modalupeṭṭāḍu. — The contractor began work on the new house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guttēdāru kotta iṇṭi pani modalupeṭṭāḍu.* — The contractor began work on the new house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an adviser, then the Telugu for an assistant, then say guttēdāru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an adviser, then the Telugu for an assistant, then say *guttēdāru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గుత్తేదారు (guttēdāru) mean? (\"A contractor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

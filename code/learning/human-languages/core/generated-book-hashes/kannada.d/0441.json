@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:d099c32792f4dfe3",
+  "lessonIds": [
+    "KA-C441-sarati",
+    "KA-C441-manna-madu",
+    "KA-C441-desiya",
+    "KA-C441-nagadu",
+    "KA-C441-kard"
+  ],
+  "tex": "kannada/book/chapters/ch441-paying-charges.tex"
+}

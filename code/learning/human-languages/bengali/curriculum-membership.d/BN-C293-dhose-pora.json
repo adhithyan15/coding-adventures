@@ -1,0 +1,11 @@
+{
+  "id": "BN-C293-dhose-pora",
+  "pathSegment": "BN-PATH-293-BHUMIKOMPO293",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-293-BHUMIKOMPO293",
+      "order": 2
+    }
+  ]
+}

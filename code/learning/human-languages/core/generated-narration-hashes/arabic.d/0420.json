@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:722c7f73386deceb",
+  "lessonIds": [
+    "AR-C420-istajaba",
+    "AR-C420-tajahala",
+    "AR-C420-rashshaha",
+    "AR-C420-tasawa",
+    "AR-C420-mushtarak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch420.txt",
+  "json": "arabic/narration/ch420.json",
+  "textHash": "fnv1a64:faa6defe068567c6",
+  "jsonHash": "fnv1a64:d1a010271e2f79f6",
+  "findings": []
+}

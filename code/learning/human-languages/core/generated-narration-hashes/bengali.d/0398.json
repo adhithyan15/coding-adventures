@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:009d614d19827e8c",
+  "lessonIds": [
+    "BN-C398-srot",
+    "BN-C398-soikot",
+    "BN-C398-jeti",
+    "BN-C398-dub-deoya",
+    "BN-C398-chhitano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch398.txt",
+  "json": "bengali/narration/ch398.json",
+  "textHash": "fnv1a64:df176052ea8bb4fb",
+  "jsonHash": "fnv1a64:079ed1044996a623",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Uncles and Aunts",
+  "label": "ch:ka-uncles-and-aunts",
+  "canDo": "I can say father's younger brother, father's elder brother, mother's younger sister, mother's elder sister and a nephew.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C524-sodaraliya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can say father's younger brother, father's elder brother, mother's younger sister, mother's elder sister and a nephew.",
+    "assesses": [
+      "KA-LEX-C524-BANDHU524-03",
+      "KA-LEX-C524-BANDHU524-04",
+      "KA-LEX-C524-BANDHU524-05"
+    ]
+  }
+}

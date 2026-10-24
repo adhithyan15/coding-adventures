@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:8106867afe71b66b",
+  "lessonIds": [
+    "TA-C447-munpanam",
+    "TA-C447-tavanai",
+    "TA-C447-pakki",
+    "TA-C447-miti",
+    "TA-C447-tokai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch447.txt",
+  "json": "tamil/narration/ch447.json",
+  "textHash": "fnv1a64:46b916482ca01633",
+  "jsonHash": "fnv1a64:cd8c76459da18393",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C548-saraa",
+    "language": "arabic",
+    "chapter": 548,
+    "sequence": 30290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60eb56e4831e4b44"
+  },
+  "findings": []
+}

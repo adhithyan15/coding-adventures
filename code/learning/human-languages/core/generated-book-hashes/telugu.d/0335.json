@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:da6887ddec51ba27",
+  "lessonIds": [
+    "TE-C335-kiritam",
+    "TE-C335-simhasanam",
+    "TE-C335-pattabhisekam",
+    "TE-C335-pattam-kattu",
+    "TE-C335-palana"
+  ],
+  "tex": "telugu/book/chapters/ch335-a-crown-for-the-king.tex"
+}

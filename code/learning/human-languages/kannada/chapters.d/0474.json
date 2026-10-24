@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Waste and Recycling",
+  "label": "ch:ka-waste-and-recycling",
+  "canDo": "I can say waste matter, recycling, to sort, to forsake and solar power.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C474-saurasakti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can say waste matter, recycling, to sort, to forsake and solar power.",
+    "assesses": [
+      "KA-LEX-C474-TYAJYA474-03",
+      "KA-LEX-C474-TYAJYA474-04",
+      "KA-LEX-C474-TYAJYA474-05"
+    ]
+  }
+}

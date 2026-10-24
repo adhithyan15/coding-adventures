@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C373-vislesan",
+    "language": "marathi",
+    "chapter": 373,
+    "sequence": 21610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cc22b7ebcc7e052"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 385,
+  "title": "Handling a Situation",
+  "label": "ch:ta-handling-a-situation",
+  "canDo": "I can describe a situation and how someone handled it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-R385-review-379-385",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can describe a situation and how someone handled it.",
+    "assesses": [
+      "TA-LEX-C385-CULNILAI385-01",
+      "TA-LEX-C385-CULNILAI385-02",
+      "TA-LEX-C385-CULNILAI385-03",
+      "TA-LEX-C385-CULNILAI385-04",
+      "TA-LEX-C385-CULNILAI385-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:a5a83947bce0bd4b",
+  "lessonIds": [
+    "AR-C300-jarima",
+    "AR-C300-mujrim",
+    "AR-C300-liss",
+    "AR-C300-saraqa",
+    "AR-C300-itaqala",
+    "AR-R300-review-293-300"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch300.txt",
+  "json": "arabic/narration/ch300.json",
+  "textHash": "fnv1a64:65e939c42c79ebbc",
+  "jsonHash": "fnv1a64:b00653fca24f1a8b",
+  "findings": []
+}

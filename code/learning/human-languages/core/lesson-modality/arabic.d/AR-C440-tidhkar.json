@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C440-tidhkar",
+    "language": "arabic",
+    "chapter": 440,
+    "sequence": 24680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f75a0bc7102fc3f"
+  },
+  "findings": []
+}

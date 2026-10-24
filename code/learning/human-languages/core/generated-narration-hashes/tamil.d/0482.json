@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:5b20a36f7d0b326d",
+  "lessonIds": [
+    "TA-C482-culukku",
+    "TA-C482-picaku",
+    "TA-C482-atipatu",
+    "TA-C482-muri",
+    "TA-C482-kaci"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch482.txt",
+  "json": "tamil/narration/ch482.json",
+  "textHash": "fnv1a64:edf6a47448f29338",
+  "jsonHash": "fnv1a64:ace60152024567d8",
+  "findings": []
+}

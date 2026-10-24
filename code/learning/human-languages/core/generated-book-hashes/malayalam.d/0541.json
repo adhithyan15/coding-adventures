@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:0a4901d8f9c6ba05",
+  "lessonIds": [
+    "ML-C541-samikkuka",
+    "ML-C541-vasalakuka",
+    "ML-C541-pakaruka",
+    "ML-C541-upavasikkuka",
+    "ML-C541-dahikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch541-getting-worse-getting-better.tex"
+}

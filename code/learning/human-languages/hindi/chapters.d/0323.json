@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Victory and Defeat",
+  "label": "ch:hi-victory-and-defeat",
+  "canDo": "I can say who won a battle and how it ended.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C323-sandhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can say who won a battle and how it ended.",
+    "assesses": [
+      "HI-LEX-C323-VIJAY323-03",
+      "HI-LEX-C323-VIJAY323-04",
+      "HI-LEX-C323-VIJAY323-05"
+    ]
+  }
+}

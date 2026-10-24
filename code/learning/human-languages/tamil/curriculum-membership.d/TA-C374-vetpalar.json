@@ -1,0 +1,11 @@
+{
+  "id": "TA-C374-vetpalar",
+  "pathSegment": "TA-PATH-374-TERTAL374",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-374-TERTAL374",
+      "order": 1
+    }
+  ]
+}

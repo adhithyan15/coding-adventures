@@ -1,0 +1,11 @@
+{
+  "id": "KA-C494-kangedu",
+  "pathSegment": "KA-PATH-494-BERAGU494",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-494-BERAGU494",
+      "order": 3
+    }
+  ]
+}

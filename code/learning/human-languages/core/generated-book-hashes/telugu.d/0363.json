@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:5d783215370f907a",
+  "lessonIds": [
+    "TE-C363-tirugubatu",
+    "TE-C363-tiragabadu",
+    "TE-C363-anaciveyu",
+    "TE-C363-usigolpu",
+    "TE-C363-svatantryam"
+  ],
+  "tex": "telugu/book/chapters/ch363-rebellion.tex"
+}

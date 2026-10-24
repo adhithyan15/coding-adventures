@@ -1,0 +1,11 @@
+{
+  "id": "TA-C322-mukurttam",
+  "pathSegment": "TA-PATH-322-MANAM322",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-322-MANAM322",
+      "order": 2
+    }
+  ]
+}

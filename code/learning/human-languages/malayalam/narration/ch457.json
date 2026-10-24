@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 457,
+  "title": "Getting Things Done",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ae9f0353b0ba35ce",
+  "lessons": [
+    {
+      "id": "ML-C457-abhyartthikkuka",
+      "sequence": 22660,
+      "title": "അഭ്യർത്ഥിക്കുക (abhyartthikkuka) — to appeal; to request formally",
+      "headword": "അഭ്യർത്ഥിക്കുക",
+      "romanization": "abhyartthikkuka",
+      "gloss": "to appeal; to request formally",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9c2dfce15e45dde",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to sort, then the Malayalam for to divide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അഭ്യർത്ഥിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അഭ്യർത്ഥിക്കുക — abhyartthikkuka — \"to appeal; to request formally\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വെള്ളം പാഴാക്കരുതെന്ന് പഞ്ചായത്ത് ജനങ്ങളോട് അഭ്യർത്ഥിച്ചു. veḷḷaṁ pāḻākkarutennŭ pañcāyattŭ janaṅṅaḷōṭŭ abhyartthiccu. The panchayat appealed to the people not to waste water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അഭ്യർത്ഥിച്ചു, abhyartthiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The person appealed to takes -ഓട്. The noun is അഭ്യർത്ഥന, an appeal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അഭ്യർത്ഥിക്കുക (abhyartthikkuka) is built from Sanskrit abhyarthana, \"asking, requesting\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhyartthikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhyartthikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhyartthikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhyartthikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷaṁ pāḻākkarutennŭ pañcāyattŭ janaṅṅaḷōṭŭ abhyartthiccu. — The panchayat appealed to the people not to waste water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷaṁ pāḻākkarutennŭ pañcāyattŭ janaṅṅaḷōṭŭ abhyartthiccu.* — The panchayat appealed to the people not to waste water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to sort, then the Malayalam for to divide, then say abhyartthikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to sort, then the Malayalam for to divide, then say *abhyartthikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അഭ്യർത്ഥിക്കുക (abhyartthikkuka) mean? (\"To appeal; to request formally\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C457-kramikarikkuka",
+      "sequence": 22670,
+      "title": "ക്രമീകരിക്കുക (kramīkarikkuka) — to set in order; to arrange",
+      "headword": "ക്രമീകരിക്കുക",
+      "romanization": "kramīkarikkuka",
+      "gloss": "to set in order; to arrange",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:496da737ebd266f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to divide, then the Malayalam for to appeal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ക്രമീകരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്രമീകരിക്കുക — kramīkarikkuka — \"to set in order; to arrange\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൾ മുറിയിലെ കസേരകൾ ക്രമീകരിച്ചു. avaḷ muṟiyile kasērakaḷ kramīkariccu. She arranged the chairs in the room."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ക്രമീകരിച്ചു, kramīkariccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ക്രമീകരണം, an arrangement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്രമീകരിക്കുക (kramīkarikkuka) is built from Sanskrit krama, \"a step, a series, an order\" (CDIAL 3577), with -ീകരിക്കുക, \"to make into\": to put in order."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramīkarikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramīkarikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramīkarikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramīkarikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ muṟiyile kasērakaḷ kramīkariccu. — She arranged the chairs in the room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ muṟiyile kasērakaḷ kramīkariccu.* — She arranged the chairs in the room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to divide, then the Malayalam for to appeal, then say kramīkarikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to divide, then the Malayalam for to appeal, then say *kramīkarikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്രമീകരിക്കുക (kramīkarikkuka) mean? (\"To set in order; to arrange\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C457-nirvahikkuka",
+      "sequence": 22680,
+      "title": "നിർവഹിക്കുക (nirvahikkuka) — to carry out; to perform",
+      "headword": "നിർവഹിക്കുക",
+      "romanization": "nirvahikkuka",
+      "gloss": "to carry out; to perform",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3197b2fcf34cf1bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to appeal, then the Malayalam for to set in order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിർവഹിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിർവഹിക്കുക — nirvahikkuka — \"to carry out; to perform\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ തന്റെ ജോലി നന്നായി നിർവഹിച്ചു. avan tanṟe jōli nannāyi nirvahiccu. He carried out his work well."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നിർവഹിച്ചു, nirvahiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of a duty, a task or a ceremony."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിർവഹിക്കുക (nirvahikkuka) is built from Sanskrit nirvahaṇa, \"the end, completion\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക: to carry a thing to its end."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirvahikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirvahikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirvahikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirvahikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan tanṟe jōli nannāyi nirvahiccu. — He carried out his work well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan tanṟe jōli nannāyi nirvahiccu.* — He carried out his work well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to appeal, then the Malayalam for to set in order, then say nirvahikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to appeal, then the Malayalam for to set in order, then say *nirvahikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിർവഹിക്കുക (nirvahikkuka) mean? (\"To carry out; to perform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C457-sthapikkuka",
+      "sequence": 22690,
+      "title": "സ്ഥാപിക്കുക (sthāpikkuka) — to establish; to found",
+      "headword": "സ്ഥാപിക്കുക",
+      "romanization": "sthāpikkuka",
+      "gloss": "to establish; to found",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ba0d6de33c95a93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to set in order, then the Malayalam for to carry out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സ്ഥാപിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്ഥാപിക്കുക — sthāpikkuka — \"to establish; to found\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവന്റെ മുത്തച്ഛൻ ആ കട സ്ഥാപിച്ചു. avanṟe muttacchan ā kaṭa sthāpiccu. His grandfather founded that shop."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സ്ഥാപിച്ചു, sthāpiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to set up a thing in a place: പ്രതിമ സ്ഥാപിച്ചു, they set up a statue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്ഥാപിക്കുക (sthāpikkuka) is built from Sanskrit sthāpana, \"causing to stand\" (CDIAL 13755), with the Malayalam verb ending -ിക്കുക: to make a thing stand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthāpikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthāpikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthāpikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthāpikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanṟe muttacchan ā kaṭa sthāpiccu. — His grandfather founded that shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanṟe muttacchan ā kaṭa sthāpiccu.* — His grandfather founded that shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to set in order, then the Malayalam for to carry out, then say sthāpikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to set in order, then the Malayalam for to carry out, then say *sthāpikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സ്ഥാപിക്കുക (sthāpikkuka) mean? (\"To establish; to found\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C457-nilanirttuka",
+      "sequence": 22700,
+      "title": "നിലനിർത്തുക (nilanirttuka) — to maintain; to retain",
+      "headword": "നിലനിർത്തുക",
+      "romanization": "nilanirttuka",
+      "gloss": "to maintain; to retain",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5fd12252911ac612",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to carry out, then the Malayalam for to establish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിലനിർത്തുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിലനിർത്തുക — nilanirttuka — \"to maintain; to retain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൾ ഒന്നാം സ്ഥാനം നിലനിർത്തി. avaḷ onnāṁ sthānaṁ nilanirtti. She retained first place."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നിലനിർത്തി, nilanirtti."
+            },
+            {
+              "kind": "speech",
+              "text": "The intransitive is നിലനിൽക്കുക, to last."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിലനിർത്തുക (nilanirttuka) is a native Malayalam compound: നില, \"a standing, a position\", and നിർത്തുക, \"to make stand, to stop\", which DEDR writes niṟuttuka; both belong to the root nil, \"to stand\" (DEDR 3675): to keep a thing standing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilanirttuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilanirttuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilanirttuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilanirttuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ onnāṁ sthānaṁ nilanirtti. — She retained first place.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ onnāṁ sthānaṁ nilanirtti.* — She retained first place.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to carry out, then the Malayalam for to establish, then say nilanirttuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to carry out, then the Malayalam for to establish, then say *nilanirttuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിലനിർത്തുക (nilanirttuka) mean? (\"To maintain; to retain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

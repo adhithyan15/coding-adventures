@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:a52809d7d0ba90da",
+  "lessonIds": [
+    "MR-C296-dhadakne",
+    "MR-C296-adalne",
+    "MR-C296-besuddha",
+    "MR-C296-savarne",
+    "MR-C296-hukne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch296.txt",
+  "json": "marathi/narration/ch296.json",
+  "textHash": "fnv1a64:8a1406a878840ac7",
+  "jsonHash": "fnv1a64:b4ad89c0112c6afb",
+  "findings": []
+}

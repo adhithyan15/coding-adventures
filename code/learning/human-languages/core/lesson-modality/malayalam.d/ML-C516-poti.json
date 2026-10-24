@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C516-poti",
+    "language": "malayalam",
+    "chapter": 516,
+    "sequence": 25820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7ff1f09cac9b5d1"
+  },
+  "findings": []
+}

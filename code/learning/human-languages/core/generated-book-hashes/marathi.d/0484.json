@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:b25ae196711fa247",
+  "lessonIds": [
+    "MR-C484-rog",
+    "MR-C484-samsarga",
+    "MR-C484-jantu",
+    "MR-C484-visanu",
+    "MR-C484-sath"
+  ],
+  "tex": "marathi/book/chapters/ch484-germs-and-infections.tex"
+}

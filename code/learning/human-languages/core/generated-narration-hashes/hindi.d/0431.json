@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:f7a0dec01b93b89d",
+  "lessonIds": [
+    "HI-C431-bhav",
+    "HI-C431-mol",
+    "HI-C431-sauda",
+    "HI-C431-sel",
+    "HI-C431-kifayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch431.txt",
+  "json": "hindi/narration/ch431.json",
+  "textHash": "fnv1a64:e327bf8b1688d2de",
+  "jsonHash": "fnv1a64:81e2c1e7187dd08c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Middles and Edges",
+  "label": "ch:bn-middles-and-edges",
+  "canDo": "I can say where something stands in the middle or at the edge, and that we went the long way round.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C402-ghurpak-khaoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can say where something stands in the middle or at the edge, and that we went the long way round.",
+    "assesses": [
+      "BN-LEX-C402-MAJHKHAN402-03",
+      "BN-LEX-C402-MAJHKHAN402-04",
+      "BN-LEX-C402-MAJHKHAN402-05"
+    ]
+  }
+}

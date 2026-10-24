@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:7dbd6f9e4d32a04c",
+  "lessonIds": [
+    "KA-C373-udaya",
+    "KA-C373-patana",
+    "KA-C373-gatakala",
+    "KA-C373-vrttanta",
+    "KA-C373-vijaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch373.txt",
+  "json": "kannada/narration/ch373.json",
+  "textHash": "fnv1a64:eac7b122fe857b8c",
+  "jsonHash": "fnv1a64:30224e5999a42ee3",
+  "findings": []
+}

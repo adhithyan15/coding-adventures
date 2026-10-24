@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 401,
+  "title": "Invasion and Revolt",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:08ccfeaed60416b6",
+  "lessons": [
+    {
+      "id": "ML-C401-atima",
+      "sequence": 19660,
+      "title": "അടിമ (aṭima) — a slave",
+      "headword": "അടിമ",
+      "romanization": "aṭima",
+      "gloss": "a slave",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e36ce1deeba1fccf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to beat in battle, then the Malayalam for to surrender."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അടിമ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അടിമ — aṭima — \"a slave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പണ്ട് ആളുകളെ അടിമകളായി വിറ്റിരുന്നു. paṇṭŭ āḷukaḷe aṭimakaḷāyi viṟṟirunnu. Long ago people were sold as slaves."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: അടിമകൾ, aṭimakaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural അടിമകൾ; slavery is അടിമത്തം."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അടിമ (aṭima) is native Dravidian: DEDR 72 lists Malayalam aṭima, \"slavery, slave\", under അടി, \"the sole of the foot, the bottom\": one who is kept at the feet of a master."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭima",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭima*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭima, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭima*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇṭŭ āḷukaḷe aṭimakaḷāyi viṟṟirunnu. — Long ago people were sold as slaves.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇṭŭ āḷukaḷe aṭimakaḷāyi viṟṟirunnu.* — Long ago people were sold as slaves.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to beat in battle, then the Malayalam for to surrender, then say aṭima again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to beat in battle, then the Malayalam for to surrender, then say *aṭima* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അടിമ (aṭima) mean? (\"A slave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C401-viplavam",
+      "sequence": 19670,
+      "title": "വിപ്ലവം (viplavaṁ) — a revolution",
+      "headword": "വിപ്ലവം",
+      "romanization": "viplavaṁ",
+      "gloss": "a revolution",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2207d8b1c372fc36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to surrender, then the Malayalam for a slave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിപ്ലവം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിപ്ലവം — viplavaṁ — \"a revolution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ വിപ്ലവം രാജ്യത്തെ മാറ്റി. ā viplavaṁ rājyatte māṟṟi. That revolution changed the country."
+            },
+            {
+              "kind": "speech",
+              "text": "Also any great upheaval in a field, as in farming or technology."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിപ്ലവം (viplavaṁ) is borrowed from Sanskrit viplava, \"confusion, trouble, calamity\" (Monier-Williams); modern Malayalam uses it for a revolution."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viplavaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viplavaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viplavaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viplavaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā viplavaṁ rājyatte māṟṟi. — That revolution changed the country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā viplavaṁ rājyatte māṟṟi.* — That revolution changed the country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to surrender, then the Malayalam for a slave, then say viplavaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to surrender, then the Malayalam for a slave, then say *viplavaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിപ്ലവം (viplavaṁ) mean? (\"A revolution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C401-adhinivesam",
+      "sequence": 19680,
+      "title": "അധിനിവേശം (adhinivēśaṁ) — an invasion; occupation",
+      "headword": "അധിനിവേശം",
+      "romanization": "adhinivēśaṁ",
+      "gloss": "an invasion; occupation",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af3e9b3fb4d531a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a slave, then the Malayalam for a revolution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അധിനിവേശം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അധിനിവേശം — adhinivēśaṁ — \"an invasion; occupation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വിദേശ അധിനിവേശം നൂറ് വർഷം നീണ്ടു. vidēśa adhinivēśaṁ nūṟŭ varṣaṁ nīṇṭu. The foreign occupation lasted a hundred years."
+            },
+            {
+              "kind": "speech",
+              "text": "A learned word of history books and the news."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അധിനിവേശം (adhinivēśaṁ) is a learned word usually traced to Sanskrit adhi, \"over, upon\", and niveśa, \"settling, a camp\": to settle on top of someone else's land."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhinivēśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhinivēśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhinivēśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhinivēśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidēśa adhinivēśaṁ nūṟŭ varṣaṁ nīṇṭu. — The foreign occupation lasted a hundred years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidēśa adhinivēśaṁ nūṟŭ varṣaṁ nīṇṭu.* — The foreign occupation lasted a hundred years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a slave, then the Malayalam for a revolution, then say adhinivēśaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a slave, then the Malayalam for a revolution, then say *adhinivēśaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അധിനിവേശം (adhinivēśaṁ) mean? (\"An invasion; occupation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C401-poratuka",
+      "sequence": 19690,
+      "title": "പോരാടുക (pōrāṭuka) — to fight; to struggle",
+      "headword": "പോരാടുക",
+      "romanization": "pōrāṭuka",
+      "gloss": "to fight; to struggle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd1c528dcde55da1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a revolution, then the Malayalam for an invasion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പോരാടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പോരാടുക — pōrāṭuka — \"to fight; to struggle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട്ടുകാർ ശത്രുക്കളോട് പോരാടി. nāṭṭukār śatrukkaḷōṭŭ pōrāṭi. The local people fought the enemies."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പോരാടി, pōrāṭi."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a struggle for a cause: അവകാശത്തിനുവേണ്ടി പോരാടുക (pōrāṭuka)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പോരാടുക (pōrāṭuka) is native Dravidian: DEDR 4540 lists Malayalam pōr, \"battle, war\", and pōr-āṭuka, \"to fight, to contend\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrāṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrāṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrāṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrāṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭukār śatrukkaḷōṭŭ pōrāṭi. — The local people fought the enemies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭukār śatrukkaḷōṭŭ pōrāṭi.* — The local people fought the enemies.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a revolution, then the Malayalam for an invasion, then say pōrāṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a revolution, then the Malayalam for an invasion, then say *pōrāṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പോരാടുക (pōrāṭuka) mean? (\"To fight; to struggle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C401-ceruttunilkkuka",
+      "sequence": 19700,
+      "title": "ചെറുത്തുനിൽക്കുക (ceṟuttunilkkuka) — to resist; to hold out",
+      "headword": "ചെറുത്തുനിൽക്കുക",
+      "romanization": "ceṟuttunilkkuka",
+      "gloss": "to resist; to hold out",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc063a9e282b272d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an invasion, then the Malayalam for to fight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചെറുത്തുനിൽക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചെറുത്തുനിൽക്കുക — ceṟuttunilkkuka — \"to resist; to hold out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ചെറിയ ഗ്രാമം ശത്രുസൈന്യത്തെ ചെറുത്തുനിന്നു. ceṟiya grāmaṁ śatrusainyatte ceṟuttuninnu. The small village held out against the enemy army."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചെറുത്തുനിന്നു, ceṟuttuninnu."
+            },
+            {
+              "kind": "speech",
+              "text": "ചെറുത്ത്, opposing, + നിൽക്കുക, to stand: to stand and oppose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചെറുത്തുനിൽക്കുക (ceṟuttunilkkuka) is a native Dravidian compound of ചെറുക്കുക, \"to dam up, to oppose, to prevent\" (DEDR 1980), and നിൽക്കുക (nilkkuka), \"to stand\" (DEDR 3675)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceṟuttunilkkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceṟuttunilkkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceṟuttunilkkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceṟuttunilkkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceṟiya grāmaṁ śatrusainyatte ceṟuttuninnu. — The small village held out against the enemy army.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceṟiya grāmaṁ śatrusainyatte ceṟuttuninnu.* — The small village held out against the enemy army.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an invasion, then the Malayalam for to fight, then say ceṟuttunilkkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an invasion, then the Malayalam for to fight, then say *ceṟuttunilkkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചെറുത്തുനിൽക്കുക (ceṟuttunilkkuka) mean? (\"To resist; to hold out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:51f70ac18c22201e",
+  "lessonIds": [
+    "BN-C448-biroho",
+    "BN-C448-akangkha",
+    "BN-C448-udas",
+    "BN-C448-bekul",
+    "BN-C448-hahakar-kora"
+  ],
+  "tex": "bengali/book/chapters/ch448-longing.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C428-sillak",
+    "language": "marathi",
+    "chapter": 428,
+    "sequence": 24650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79a7b4d4f204ed13"
+  },
+  "findings": []
+}

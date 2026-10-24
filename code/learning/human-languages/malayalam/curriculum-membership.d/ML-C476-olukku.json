@@ -1,0 +1,11 @@
+{
+  "id": "ML-C476-olukku",
+  "pathSegment": "ML-PATH-476-KATATTU476",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-476-KATATTU476",
+      "order": 1
+    }
+  ]
+}

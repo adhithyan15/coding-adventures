@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C515-kaleyam",
+    "language": "telugu",
+    "chapter": 515,
+    "sequence": 26090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db0db230298d4f10"
+  },
+  "findings": []
+}

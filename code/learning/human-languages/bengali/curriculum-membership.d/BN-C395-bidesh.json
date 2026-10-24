@@ -1,0 +1,11 @@
+{
+  "id": "BN-C395-bidesh",
+  "pathSegment": "BN-PATH-395-BIMAN395",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-395-BIMAN395",
+      "order": 3
+    }
+  ]
+}

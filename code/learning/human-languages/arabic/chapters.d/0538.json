@@ -1,0 +1,19 @@
+{
+  "chapter": 538,
+  "title": "Needle and thread",
+  "label": "ch:ar-needle-and-thread",
+  "canDo": "I can talk about embroidery and knitting, and say that someone embroidered, knitted or sewed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C538-khata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can talk about embroidery and knitting, and say that someone embroidered, knitted or sewed.",
+    "assesses": [
+      "AR-LEX-C538-IBRA538-03",
+      "AR-LEX-C538-IBRA538-04",
+      "AR-LEX-C538-IBRA538-05"
+    ]
+  }
+}

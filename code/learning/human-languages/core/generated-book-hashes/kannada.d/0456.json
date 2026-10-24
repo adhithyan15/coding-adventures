@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:9300ee08abb0ded6",
+  "lessonIds": [
+    "KA-C456-purabhavana",
+    "KA-C456-gopura",
+    "KA-C456-karanji",
+    "KA-C456-heggurutu",
+    "KA-C456-viksisu"
+  ],
+  "tex": "kannada/book/chapters/ch456-sights-in-the-old-town.tex"
+}

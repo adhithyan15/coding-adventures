@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Avoiding trouble",
+  "label": "ch:ar-avoiding-trouble",
+  "canDo": "I can say that something proved impossible, entailed or arose, and that someone avoided or averted it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C407-taraa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can say that something proved impossible, entailed or arose, and that someone avoided or averted it.",
+    "assesses": [
+      "AR-LEX-C407-TAJANNUB407-03",
+      "AR-LEX-C407-TAJANNUB407-04",
+      "AR-LEX-C407-TAJANNUB407-05"
+    ]
+  }
+}

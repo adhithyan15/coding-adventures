@@ -1,0 +1,11 @@
+{
+  "id": "AR-C336-mahr",
+  "pathSegment": "AR-PATH-336-HADIYYA336",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-336-HADIYYA336",
+      "order": 3
+    }
+  ]
+}

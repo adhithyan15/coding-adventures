@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:3fc26096a601e184",
+  "lessonIds": [
+    "MR-C430-mobadla",
+    "MR-C430-dengi",
+    "MR-C430-vargani",
+    "MR-C430-hissa",
+    "MR-C430-urne"
+  ],
+  "tex": "marathi/book/chapters/ch430-payments-and-donations.tex"
+}

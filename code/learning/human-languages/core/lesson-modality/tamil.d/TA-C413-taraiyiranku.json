@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C413-taraiyiranku",
+    "language": "tamil",
+    "chapter": 413,
+    "sequence": 23770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6fc8ed3f29f5a55"
+  },
+  "findings": []
+}

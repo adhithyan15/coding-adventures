@@ -1,0 +1,11 @@
+{
+  "id": "MR-C408-valhavne",
+  "pathSegment": "MR-PATH-408-NAVADI408",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-408-NAVADI408",
+      "order": 2
+    }
+  ]
+}

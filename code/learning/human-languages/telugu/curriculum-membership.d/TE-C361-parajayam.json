@@ -1,0 +1,11 @@
+{
+  "id": "TE-C361-parajayam",
+  "pathSegment": "TE-PATH-361-YUDDHABHUMI361",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-361-YUDDHABHUMI361",
+      "order": 4
+    }
+  ]
+}

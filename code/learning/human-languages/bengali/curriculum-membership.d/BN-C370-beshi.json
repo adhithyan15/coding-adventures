@@ -1,0 +1,11 @@
+{
+  "id": "BN-C370-beshi",
+  "pathSegment": "BN-PATH-370-KHUB370",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-370-KHUB370",
+      "order": 2
+    }
+  ]
+}

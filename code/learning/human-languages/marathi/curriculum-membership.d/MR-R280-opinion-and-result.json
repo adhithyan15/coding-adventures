@@ -1,0 +1,11 @@
+{
+  "id": "MR-R280-opinion-and-result",
+  "pathSegment": "MR-PATH-280-OPINION-SO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-280-OPINION-SO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:af2b98dd3b0082f9",
+  "lessonIds": [
+    "MR-C430-mobadla",
+    "MR-C430-dengi",
+    "MR-C430-vargani",
+    "MR-C430-hissa",
+    "MR-C430-urne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch430.txt",
+  "json": "marathi/narration/ch430.json",
+  "textHash": "fnv1a64:b90ff2f97aaaac91",
+  "jsonHash": "fnv1a64:586a7ef8da0f07c2",
+  "findings": []
+}

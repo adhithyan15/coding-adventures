@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:33e3a6fd664260cd",
+  "lessonIds": [
+    "HI-C362-niskars",
+    "HI-C362-ausat",
+    "HI-C362-ubhaarna",
+    "HI-C362-vislesan",
+    "HI-C362-pariksan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch362.txt",
+  "json": "hindi/narration/ch362.json",
+  "textHash": "fnv1a64:e8e239d1a615dc7e",
+  "jsonHash": "fnv1a64:91005fa4174e733a",
+  "findings": []
+}

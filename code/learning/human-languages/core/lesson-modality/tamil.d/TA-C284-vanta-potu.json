@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C284-vanta-potu",
+    "language": "tamil",
+    "chapter": 284,
+    "sequence": 16120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:187ef5a28f9926e9"
+  },
+  "findings": []
+}

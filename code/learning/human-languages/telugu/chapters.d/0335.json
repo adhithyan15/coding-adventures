@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "A Crown for the King",
+  "label": "ch:te-a-crown-for-the-king",
+  "canDo": "I can say a crown, a throne, a coronation, to enthrone and a reign.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C335-palana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can say a crown, a throne, a coronation, to enthrone and a reign.",
+    "assesses": [
+      "TE-LEX-C335-KIRITAM335-03",
+      "TE-LEX-C335-KIRITAM335-04",
+      "TE-LEX-C335-KIRITAM335-05"
+    ]
+  }
+}

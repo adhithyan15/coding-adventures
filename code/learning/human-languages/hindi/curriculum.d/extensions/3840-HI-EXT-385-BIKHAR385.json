@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-385-BIKHAR385",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can warn what will go wrong if something is done or left undone.",
+  "prerequisites": []
+}

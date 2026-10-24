@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:9c81075cc3eb9f24",
+  "lessonIds": [
+    "TE-C503-anuragam",
+    "TE-C503-mamakaram",
+    "TE-C503-apyayata",
+    "TE-C503-lalincu",
+    "TE-C503-abhimanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch503.txt",
+  "json": "telugu/narration/ch503.json",
+  "textHash": "fnv1a64:eb5c5c91328213d3",
+  "jsonHash": "fnv1a64:d9012cfbc4d123a9",
+  "findings": []
+}

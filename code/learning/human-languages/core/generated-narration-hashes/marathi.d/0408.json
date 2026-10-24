@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:87d94c941fe5f37e",
+  "lessonIds": [
+    "MR-C408-navadi",
+    "MR-C408-valhe",
+    "MR-C408-valhavne",
+    "MR-C408-helkavne",
+    "MR-C408-nangar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch408.txt",
+  "json": "marathi/narration/ch408.json",
+  "textHash": "fnv1a64:7c75754047cc083a",
+  "jsonHash": "fnv1a64:daa56a4529ffb67e",
+  "findings": []
+}

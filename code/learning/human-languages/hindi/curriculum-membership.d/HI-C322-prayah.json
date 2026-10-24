@@ -1,0 +1,11 @@
+{
+  "id": "HI-C322-prayah",
+  "pathSegment": "HI-PATH-322-HATHIYAR322",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-322-HATHIYAR322",
+      "order": 4
+    }
+  ]
+}

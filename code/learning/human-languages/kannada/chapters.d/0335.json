@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Making a Newspaper",
+  "label": "ch:ka-making-a-newspaper",
+  "canDo": "I can say an editor, an article, the front page, a leaflet and a publisher.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C335-prakasaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can say an editor, an article, the front page, a leaflet and a publisher.",
+    "assesses": [
+      "KA-LEX-C335-PATRIKE335-03",
+      "KA-LEX-C335-PATRIKE335-04",
+      "KA-LEX-C335-PATRIKE335-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C386-bohon-kora",
+  "pathSegment": "BN-PATH-386-KULI386",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-386-KULI386",
+      "order": 4
+    }
+  ]
+}

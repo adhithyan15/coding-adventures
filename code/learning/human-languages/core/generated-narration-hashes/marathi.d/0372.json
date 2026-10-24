@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:bb0ac9d39968ae5d",
+  "lessonIds": [
+    "MR-C372-samsodhan",
+    "MR-C372-prayog",
+    "MR-C372-vidvan",
+    "MR-C372-prabandh",
+    "MR-C372-siddhant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch372.txt",
+  "json": "marathi/narration/ch372.json",
+  "textHash": "fnv1a64:6df5ce2cc914d611",
+  "jsonHash": "fnv1a64:65b44cf82628af87",
+  "findings": []
+}

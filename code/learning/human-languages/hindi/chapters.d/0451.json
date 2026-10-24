@@ -1,0 +1,21 @@
+{
+  "chapter": 451,
+  "title": "Outings and Views",
+  "label": "ch:hi-outings-and-views",
+  "canDo": "I can talk about an outing, tourists, a view and a monument, and gaze at the hills.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-R451-review-final-451",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can talk about an outing, tourists, a view and a monument, and gaze at the hills.",
+    "assesses": [
+      "HI-LEX-C451-SAIR451-01",
+      "HI-LEX-C451-SAIR451-02",
+      "HI-LEX-C451-SAIR451-03",
+      "HI-LEX-C451-SAIR451-04",
+      "HI-LEX-C451-SAIR451-05"
+    ]
+  }
+}

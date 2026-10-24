@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:84e1e1367f2044a2",
+  "lessonIds": [
+    "BN-C405-bathrum",
+    "BN-C405-toylet",
+    "BN-C405-gijar",
+    "BN-C405-esi",
+    "BN-C405-porishkar-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch405.txt",
+  "json": "bengali/narration/ch405.json",
+  "textHash": "fnv1a64:32de1ff4be3ec417",
+  "jsonHash": "fnv1a64:ab5d2d3d85a35d50",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:e62f60afee2fc03e",
+  "lessonIds": [
+    "TA-C387-oppantam",
+    "TA-C387-utanpatikkai",
+    "TA-C387-vakkuruti",
+    "TA-C387-urutimoli",
+    "TA-C387-niraiverru"
+  ],
+  "tex": "tamil/book/chapters/ch387-promises-and-agreements.tex"
+}

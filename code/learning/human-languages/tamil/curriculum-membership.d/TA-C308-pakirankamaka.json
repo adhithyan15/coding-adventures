@@ -1,0 +1,11 @@
+{
+  "id": "TA-C308-pakirankamaka",
+  "pathSegment": "TA-PATH-308-PARAPARAPPU308",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-308-PARAPARAPPU308",
+      "order": 4
+    }
+  ]
+}

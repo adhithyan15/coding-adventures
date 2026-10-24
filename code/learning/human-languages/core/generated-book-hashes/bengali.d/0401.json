@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:6f3f458de8040910",
+  "lessonIds": [
+    "BN-C401-dokkhin",
+    "BN-C401-purbo",
+    "BN-C401-poshchim",
+    "BN-C401-kompas",
+    "BN-C401-digonto"
+  ],
+  "tex": "bengali/book/chapters/ch401-points-of-the-compass.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C460-jivhala",
+    "language": "marathi",
+    "chapter": 460,
+    "sequence": 26520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ebbb58f9d70eb1e"
+  },
+  "findings": []
+}

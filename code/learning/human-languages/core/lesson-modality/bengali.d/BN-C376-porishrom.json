@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C376-porishrom",
+    "language": "bengali",
+    "chapter": 376,
+    "sequence": 23370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb44e7f74ee9a441"
+  },
+  "findings": []
+}

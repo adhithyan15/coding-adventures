@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:e58a65843b891a58",
+  "lessonIds": [
+    "MR-C489-las",
+    "MR-C489-sastrakriya",
+    "MR-C489-bhul",
+    "MR-C489-taka",
+    "MR-C489-tocne",
+    "MR-R489-review-482-489"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch489.txt",
+  "json": "marathi/narration/ch489.json",
+  "textHash": "fnv1a64:3d55ffd0de78bbed",
+  "jsonHash": "fnv1a64:0fc9d5b5d9a08bdb",
+  "findings": []
+}

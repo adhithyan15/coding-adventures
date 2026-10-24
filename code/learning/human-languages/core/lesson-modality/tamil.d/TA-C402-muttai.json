@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C402-muttai",
+    "language": "tamil",
+    "chapter": 402,
+    "sequence": 23220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9090dd92d35d3df7"
+  },
+  "findings": []
+}

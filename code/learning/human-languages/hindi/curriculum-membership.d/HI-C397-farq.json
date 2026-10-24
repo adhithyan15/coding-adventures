@@ -1,0 +1,11 @@
+{
+  "id": "HI-C397-farq",
+  "pathSegment": "HI-PATH-397-VISHAY397",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-397-VISHAY397",
+      "order": 3
+    }
+  ]
+}

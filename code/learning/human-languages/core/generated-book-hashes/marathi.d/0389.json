@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:cefe551e3d9614a6",
+  "lessonIds": [
+    "MR-C389-amsatah",
+    "MR-C389-purnapane",
+    "MR-C389-keval",
+    "MR-C389-nivval",
+    "MR-C389-sahsa"
+  ],
+  "tex": "marathi/book/chapters/ch389-how-much-and-how-often.tex"
+}

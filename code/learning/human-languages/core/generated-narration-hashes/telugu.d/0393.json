@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:8f85874e7db086e3",
+  "lessonIds": [
+    "TE-C393-prayojanam",
+    "TE-C393-labhapadu",
+    "TE-C393-nastapovu",
+    "TE-C393-hanikaramaina",
+    "TE-C393-upayogapadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch393.txt",
+  "json": "telugu/narration/ch393.json",
+  "textHash": "fnv1a64:7d51880eb482dae4",
+  "jsonHash": "fnv1a64:d4f31907ef49e9be",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:935014e961a9b89a",
+  "lessonIds": [
+    "AR-C397-bakaluriyus",
+    "AR-C397-majistir",
+    "AR-C397-duktura",
+    "AR-C397-muqarrar",
+    "AR-C397-tadrib",
+    "AR-R397-review-390-397"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch397.txt",
+  "json": "arabic/narration/ch397.json",
+  "textHash": "fnv1a64:5735c1d378eec2e1",
+  "jsonHash": "fnv1a64:3ead1c03d915524c",
+  "findings": []
+}

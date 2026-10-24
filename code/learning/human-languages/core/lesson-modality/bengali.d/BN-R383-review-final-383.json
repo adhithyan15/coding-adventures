@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R383-review-final-383",
+    "language": "bengali",
+    "chapter": 383,
+    "sequence": 23770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:271bb0d56e4584cf"
+  },
+  "findings": []
+}

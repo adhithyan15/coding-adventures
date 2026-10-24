@@ -1,0 +1,11 @@
+{
+  "id": "TE-C365-vegu",
+  "pathSegment": "TE-PATH-365-DROHAM365",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-365-DROHAM365",
+      "order": 0
+    }
+  ]
+}

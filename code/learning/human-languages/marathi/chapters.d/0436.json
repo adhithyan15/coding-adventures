@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Heat and Humidity",
+  "label": "ch:mr-heat-and-humidity",
+  "canDo": "I can talk about the weather, great heat, sultry days and the blazing sun.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C436-talapne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can talk about the weather, great heat, sultry days and the blazing sun.",
+    "assesses": [
+      "MR-LEX-C436-UKADA436-03",
+      "MR-LEX-C436-UKADA436-04",
+      "MR-LEX-C436-UKADA436-05"
+    ]
+  }
+}

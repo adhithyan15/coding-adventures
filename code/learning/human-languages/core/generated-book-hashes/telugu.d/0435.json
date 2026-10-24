@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:aa54c73a6a3be5b3",
+  "lessonIds": [
+    "TE-C435-medhavi",
+    "TE-C435-panditudu",
+    "TE-C435-tatvasastram",
+    "TE-C435-samskarta",
+    "TE-C435-prerepincu"
+  ],
+  "tex": "telugu/book/chapters/ch435-thinkers-and-reformers.tex"
+}

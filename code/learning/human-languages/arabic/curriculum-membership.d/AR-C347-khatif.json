@@ -1,0 +1,11 @@
+{
+  "id": "AR-C347-khatif",
+  "pathSegment": "AR-PATH-347-KHATF347",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-347-KHATF347",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C455-bahumanikkuka",
+    "language": "malayalam",
+    "chapter": 455,
+    "sequence": 22570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3d601c567943bc4"
+  },
+  "findings": []
+}

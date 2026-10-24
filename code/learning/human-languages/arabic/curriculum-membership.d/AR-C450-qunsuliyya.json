@@ -1,0 +1,11 @@
+{
+  "id": "AR-C450-qunsuliyya",
+  "pathSegment": "AR-PATH-450-BALADIYYA450",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-450-BALADIYYA450",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C426-asrayincu",
+  "pathSegment": "TE-PATH-426-ARAMBHAM426",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-426-ARAMBHAM426",
+      "order": 2
+    }
+  ]
+}

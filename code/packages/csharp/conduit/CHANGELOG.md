@@ -1,5 +1,30 @@
 # Changelog — CodingAdventures.Conduit
 
+## [Unreleased]
+
+### Fixed
+
+- **Double free of every handler `GCHandle`.** `Application.Dispose()` freed
+  the registered handles itself after `conduit_app_free` (or a consumed
+  `Bind`) had already freed each one through Rust's `CtxFree`. `GCHandle` is
+  a struct, so our copies still reported `IsAllocated`, and .NET's `Free()`
+  does not detect a second free. Each slot went back to the handle table
+  twice, so later registrations could share a slot and a trampoline would
+  dispatch to another delegate. That caused the intermittent wrong statuses
+  the test suite blamed on a "cold-start race", and the "Test host process
+  crashed" abort seen on CI (PR #18005, shard 15). `Dispose` now leaves the
+  handles to Rust. New test `Dispose_ReleasesEachHandlerHandleExactlyOnce`.
+- **Double free of the after-hook's `current` response.** `AfterFn` freed
+  `current` and then, if the hook threw (or the delegate cast failed), freed
+  it again in its `catch`, which is a native double free that aborts the
+  process. `current` is now cleared once freed.
+- **A halt response that cannot be marshalled no longer kills the process.**
+  `h.Response.ToNative()` in the trampolines' `HaltException` handlers could
+  throw (for example on an out-of-range status) out of an
+  `[UnmanagedCallersOnly]` method, which terminates the process. It now
+  falls back to a safe 500 (`HaltToNative`).
+- Removed the now-unused `_handles` list.
+
 ## [0.1.0] — 2026-06-14
 
 Initial release: C# P/Invoke binding for the conduit-capi C ABI (WEB15).

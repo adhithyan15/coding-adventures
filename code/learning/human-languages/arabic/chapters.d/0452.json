@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "At the bank",
+  "label": "ch:ar-at-the-bank",
+  "canDo": "I can say a branch office, a balance, a money transfer, to change money and to deposit.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C452-awdaa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can say a branch office, a balance, a money transfer, to change money and to deposit.",
+    "assesses": [
+      "AR-LEX-C452-FAR452-03",
+      "AR-LEX-C452-FAR452-04",
+      "AR-LEX-C452-FAR452-05"
+    ]
+  }
+}

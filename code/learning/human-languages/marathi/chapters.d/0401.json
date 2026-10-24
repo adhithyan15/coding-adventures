@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Fuel and Tyres",
+  "label": "ch:mr-fuel-and-tyres",
+  "canDo": "I can talk about fuel, petrol, tyres and a puncture.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C401-sampne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can talk about fuel, petrol, tyres and a puncture.",
+    "assesses": [
+      "MR-LEX-C401-INDHAN401-03",
+      "MR-LEX-C401-INDHAN401-04",
+      "MR-LEX-C401-INDHAN401-05"
+    ]
+  }
+}

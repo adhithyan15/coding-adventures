@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-450-GARAGE450",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "KA-EXT-450-GARAGE450"
+  ],
+  "after": []
+}

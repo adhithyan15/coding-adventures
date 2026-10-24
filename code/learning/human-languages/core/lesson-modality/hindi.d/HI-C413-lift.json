@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C413-lift",
+    "language": "hindi",
+    "chapter": 413,
+    "sequence": 22780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1c8e3fe708f920b"
+  },
+  "findings": []
+}

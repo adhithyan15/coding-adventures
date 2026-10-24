@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:b58280c375d61e78",
+  "lessonIds": [
+    "BN-C405-bathrum",
+    "BN-C405-toylet",
+    "BN-C405-gijar",
+    "BN-C405-esi",
+    "BN-C405-porishkar-kora"
+  ],
+  "tex": "bengali/book/chapters/ch405-rooms-and-facilities.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C521-parisrama",
+    "language": "kannada",
+    "chapter": 521,
+    "sequence": 26620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6c9b38681703eb0"
+  },
+  "findings": []
+}

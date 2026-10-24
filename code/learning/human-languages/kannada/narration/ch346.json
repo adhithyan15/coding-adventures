@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 346,
+  "title": "An Explosion and a Shock",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a5ed5204d55b5a95",
+  "lessons": [
+    {
+      "id": "KA-C346-sphota",
+      "sequence": 17380,
+      "title": "ಸ್ಫೋಟ (sphōṭa) — an explosion; a blast",
+      "headword": "ಸ್ಫೋಟ",
+      "romanization": "sphōṭa",
+      "gloss": "an explosion; a blast",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ce2eea2af60a075",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a spy, then the Kannada for to sneak in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ಫೋಟ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ಫೋಟ — sphōṭa — \"an explosion; a blast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಾರ್ಖಾನೆಯಲ್ಲಿ ದೊಡ್ಡ ಸ್ಫೋಟ ಆಯಿತು. kārkhāneyalli doḍḍa sphōṭa āyitu. There was a big explosion at the factory."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸ್ಫೋಟಗಳು, sphōṭagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ಫೋಟಿಸು is to explode or to blow up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ಫೋಟ (sphōṭa) is borrowed from Sanskrit sphoṭa, \"bursting, opening, expansion\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sphōṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sphōṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sphōṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sphōṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārkhāneyalli doḍḍa sphōṭa āyitu. — There was a big explosion at the factory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārkhāneyalli doḍḍa sphōṭa āyitu.* — There was a big explosion at the factory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a spy, then the Kannada for to sneak in, then say sphōṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a spy, then the Kannada for to sneak in, then say *sphōṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ಫೋಟ (sphōṭa) mean? (\"An explosion; a blast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C346-tattarisu",
+      "sequence": 17390,
+      "title": "ತತ್ತರಿಸು (tattarisu) — to reel; to be shaken",
+      "headword": "ತತ್ತರಿಸು",
+      "romanization": "tattarisu",
+      "gloss": "to reel; to be shaken",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b8b46a5eab0cd95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to sneak in, then the Kannada for an explosion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತತ್ತರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತತ್ತರಿಸು — tattarisu — \"to reel; to be shaken\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಸುದ್ದಿಯಿಂದ ಇಡೀ ಊರು ತತ್ತರಿಸಿತು. ā suddiyinda iḍī ūru tattarisitu. The whole town reeled at that news."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ತತ್ತರಿಸಿತು, tattarisitu."
+            },
+            {
+              "kind": "speech",
+              "text": "A place or a person shaken by a blow or a loss."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತತ್ತರಿಸು (tattarisu) is native Dravidian: DEDR 3061 lists Kannada tattaṟa, tattaṟi, \"perplexity, confusion\", beside Tamil tattaram, \"tremulousness, quivering, flurry\", here with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tattarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tattarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tattarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tattarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā suddiyinda iḍī ūru tattarisitu. — The whole town reeled at that news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā suddiyinda iḍī ūru tattarisitu.* — The whole town reeled at that news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to sneak in, then the Kannada for an explosion, then say tattarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to sneak in, then the Kannada for an explosion, then say *tattarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತತ್ತರಿಸು (tattarisu) mean? (\"To reel; to be shaken\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C346-kampisu",
+      "sequence": 17400,
+      "title": "ಕಂಪಿಸು (kampisu) — to tremble; to shake",
+      "headword": "ಕಂಪಿಸು",
+      "romanization": "kampisu",
+      "gloss": "to tremble; to shake",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff9a83beaa10d092",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an explosion, then the Kannada for to reel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಂಪಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂಪಿಸು — kampisu — \"to tremble; to shake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ಫೋಟದಿಂದ ಹತ್ತಿರದ ಮನೆಗಳು ಕಂಪಿಸಿದವು. sphōṭadinda hattirada manegaḷu kampisidavu. The houses nearby shook from the blast."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಕಂಪಿಸಿತು, kampisitu."
+            },
+            {
+              "kind": "speech",
+              "text": "The ground, a building or a voice trembles: ಭೂಮಿ ಕಂಪಿಸಿತು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂಪಿಸು (kampisu) is built on Sanskrit kampa, \"trembling, a tremor\" (CDIAL 2765), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sphōṭadinda hattirada manegaḷu kampisidavu. — The houses nearby shook from the blast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sphōṭadinda hattirada manegaḷu kampisidavu.* — The houses nearby shook from the blast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an explosion, then the Kannada for to reel, then say kampisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an explosion, then the Kannada for to reel, then say *kampisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಂಪಿಸು (kampisu) mean? (\"To tremble; to shake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C346-pralaya",
+      "sequence": 17410,
+      "title": "ಪ್ರಳಯ (praḷaya) — a deluge; a catastrophe",
+      "headword": "ಪ್ರಳಯ",
+      "romanization": "praḷaya",
+      "gloss": "a deluge; a catastrophe",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be512ead87ca2c62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to reel, then the Kannada for to tremble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಳಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಳಯ — praḷaya — \"a deluge; a catastrophe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ರಾತ್ರಿ ಪ್ರಳಯ ಬಂದ ಹಾಗೆ ಅನಿಸಿತು. ā rātri praḷaya banda hāge anisitu. That night it felt as if the end of the world had come."
+            },
+            {
+              "kind": "speech",
+              "text": "In the old stories, the flood that ends the world; in talk, any huge disaster."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಳಯ (praḷaya) is borrowed from Sanskrit pralaya, \"dissolution, destruction of the world\" (CDIAL 8755)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praḷaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praḷaya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praḷaya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praḷaya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rātri praḷaya banda hāge anisitu. — That night it felt as if the end of the world had come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rātri praḷaya banda hāge anisitu.* — That night it felt as if the end of the world had come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to reel, then the Kannada for to tremble, then say praḷaya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to reel, then the Kannada for to tremble, then say *praḷaya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಳಯ (praḷaya) mean? (\"A deluge; a catastrophe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C346-gayalu",
+      "sequence": 17420,
+      "title": "ಗಾಯಾಳು (gāyāḷu) — an injured person; a casualty",
+      "headword": "ಗಾಯಾಳು",
+      "romanization": "gāyāḷu",
+      "gloss": "an injured person; a casualty",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54e2f45fea9c50b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to tremble, then the Kannada for a deluge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗಾಯಾಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಾಯಾಳು — gāyāḷu — \"an injured person; a casualty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ಫೋಟದ ನಂತರ ಗಾಯಾಳುಗಳನ್ನು ಆಸ್ಪತ್ರೆಗೆ ಕರೆದುಕೊಂಡು ಹೋದರು. sphōṭada nantara gāyāḷugaḷannu āspatrege karedukoṇḍu hōdaru. After the explosion the injured were taken to hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಗಾಯಾಳುಗಳು, gāyāḷugaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗಾಯ, a wound, and ಆಳು, a person: one who is hurt. A news word after accidents and blasts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಾಯಾಳು (gāyāḷu) is a Kannada compound of ಗಾಯ, \"a wound\", which goes back to Sanskrit ghāta, \"a blow, a bruise\" (CDIAL 4460), and the native Dravidian āḷ, \"a person\" (DEDR 399): a wounded person."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāyāḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāyāḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāyāḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāyāḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sphōṭada nantara gāyāḷugaḷannu āspatrege karedukoṇḍu hōdaru. — After the explosion the injured were taken to hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sphōṭada nantara gāyāḷugaḷannu āspatrege karedukoṇḍu hōdaru.* — After the explosion the injured were taken to hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to tremble, then the Kannada for a deluge, then say gāyāḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to tremble, then the Kannada for a deluge, then say *gāyāḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗಾಯಾಳು (gāyāḷu) mean? (\"An injured person; a casualty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C404-aram",
+    "language": "bengali",
+    "chapter": 404,
+    "sequence": 25020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64f432a8b846e375"
+  },
+  "findings": []
+}

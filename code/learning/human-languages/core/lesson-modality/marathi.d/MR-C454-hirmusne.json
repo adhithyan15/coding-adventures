@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C454-hirmusne",
+    "language": "marathi",
+    "chapter": 454,
+    "sequence": 26240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f9720154e9c3bde"
+  },
+  "findings": []
+}

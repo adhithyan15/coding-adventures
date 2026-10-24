@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Mercy and Loyalty",
+  "label": "ch:hi-mercy-and-loyalty",
+  "canDo": "I can talk about mercy, loyalty and wrongdoing.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C372-thamna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can talk about mercy, loyalty and wrongdoing.",
+    "assesses": [
+      "HI-LEX-C372-DAYA372-03",
+      "HI-LEX-C372-DAYA372-04",
+      "HI-LEX-C372-DAYA372-05"
+    ]
+  }
+}

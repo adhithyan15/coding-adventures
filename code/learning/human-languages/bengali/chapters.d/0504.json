@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Machines",
+  "label": "ch:bn-machines",
+  "canDo": "I can talk about machines, motors and rust.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C504-motor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about machines, motors and rust.",
+    "assesses": [
+      "BN-LEX-C504-JONTRO504-03",
+      "BN-LEX-C504-JONTRO504-04",
+      "BN-LEX-C504-JONTRO504-05"
+    ]
+  }
+}

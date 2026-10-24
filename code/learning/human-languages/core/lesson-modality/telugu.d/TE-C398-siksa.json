@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C398-siksa",
+    "language": "telugu",
+    "chapter": 398,
+    "sequence": 19850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9f61314261a1fc3"
+  },
+  "findings": []
+}

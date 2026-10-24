@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:e8d99071614eb82a",
+  "lessonIds": [
+    "AR-C522-bashara",
+    "AR-C522-kadaha",
+    "AR-C522-istiqala",
+    "AR-C522-mutaqaid",
+    "AR-C522-atil"
+  ],
+  "tex": "arabic/book/chapters/ch522-starting-and-stopping-work.tex"
+}

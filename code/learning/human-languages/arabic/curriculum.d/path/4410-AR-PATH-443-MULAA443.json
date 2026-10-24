@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-443-MULAA443",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-443-MULAA443"
+  ],
+  "after": []
+}

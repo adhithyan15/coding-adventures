@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C541-daksata",
+    "language": "marathi",
+    "chapter": 541,
+    "sequence": 30910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:befe7e7391712bd3"
+  },
+  "findings": []
+}

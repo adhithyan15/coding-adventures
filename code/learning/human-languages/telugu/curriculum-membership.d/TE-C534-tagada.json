@@ -1,0 +1,11 @@
+{
+  "id": "TE-C534-tagada",
+  "pathSegment": "TE-PATH-534-GODAVA534",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-534-GODAVA534",
+      "order": 1
+    }
+  ]
+}

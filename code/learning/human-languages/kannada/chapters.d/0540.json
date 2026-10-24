@@ -1,0 +1,19 @@
+{
+  "chapter": 540,
+  "title": "Kicks and Punches",
+  "label": "ch:ka-kicks-and-punches",
+  "canDo": "I can say kabaddi, wrestling, a goal in sport, to kick and to punch.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C540-guddu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can say kabaddi, wrestling, a goal in sport, to kick and to punch.",
+    "assesses": [
+      "KA-LEX-C540-KUSTI540-03",
+      "KA-LEX-C540-KUSTI540-04",
+      "KA-LEX-C540-KUSTI540-05"
+    ]
+  }
+}

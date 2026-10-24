@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 540,
+  "title": "Paying the Price",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:188e3dc490087251",
+  "lessons": [
+    {
+      "id": "BN-C540-mashul",
+      "sequence": 32460,
+      "title": "মাশুল (māshul) — a fee; the price paid (for something)",
+      "headword": "মাশুল",
+      "romanization": "māshul",
+      "gloss": "a fee; the price paid (for something)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9a77fd40cad77b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to give up hope, then the Bengali for to get tangled up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মাশুল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মাশুল — māshul — \"a fee; the price paid (for something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পার্সেলটা ভারী হলে বেশি মাশুল লাগবে। Pārselṭā bhārī hôle beshi māshul lāgbe. If the parcel is heavy, the fee will be higher."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মাশুল (māshul) is usually traced to Arabic maḥṣūl, \"revenue, produce\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māshul",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māshul*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māshul, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māshul*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Pārselṭā bhārī hôle beshi māshul lāgbe. — If the parcel is heavy, the fee will be higher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Pārselṭā bhārī hôle beshi māshul lāgbe.* — If the parcel is heavy, the fee will be higher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to give up hope, then the Bengali for to get tangled up, then say māshul again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to give up hope, then the Bengali for to get tangled up, then say *māshul* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মাশুল (māshul) mean? (\"A fee; the price paid (for something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C540-khesarot",
+      "sequence": 32470,
+      "title": "খেসারত (khesārôt) — the price of a mistake; a penalty",
+      "headword": "খেসারত",
+      "romanization": "khesārôt",
+      "gloss": "the price of a mistake; a penalty",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8914f00d70dbdb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to get tangled up, then the Bengali for a fee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খেসারত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খেসারত — khesārôt — \"the price of a mistake; a penalty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দেরিতে রওনা দেওয়ার খেসারত দিলাম: ট্রেনটা ছেড়ে গেল। Derite rôonā deoyār khesārôt dilām: ṭrenṭā chheṛe gelô. I paid the price for setting off late: the train left."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খেসারত (khesārôt) is usually traced to Arabic khasāra, \"loss\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khesārôt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khesārôt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khesārôt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khesārôt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Derite rôonā deoyār khesārôt dilām: ṭrenṭā chheṛe gelô. — I paid the price for setting off late: the train left.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Derite rôonā deoyār khesārôt dilām: ṭrenṭā chheṛe gelô.* — I paid the price for setting off late: the train left.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to get tangled up, then the Bengali for a fee, then say khesārôt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to get tangled up, then the Bengali for a fee, then say *khesārôt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খেসারত (khesārôt) mean? (\"The price of a mistake; a penalty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C540-ashvas",
+      "sequence": 32480,
+      "title": "আশ্বাস (āshvās) — reassurance; an assurance",
+      "headword": "আশ্বাস",
+      "romanization": "āshvās",
+      "gloss": "reassurance; an assurance",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:352d1d3df8eef678",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a fee, then the Bengali for the price of a mistake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আশ্বাস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আশ্বাস — āshvās — \"reassurance; an assurance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ডাক্তার আমাদের আশ্বাস দিলেন। Ḍāktār āmāder āshvās dilen. The doctor reassured us."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আশ্বাস (āshvās) is Sanskrit āśvāsa, \"breathing again freely\" (Monier-Williams): what lets you breathe easy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āshvās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āshvās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āshvās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āshvās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ḍāktār āmāder āshvās dilen. — The doctor reassured us.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ḍāktār āmāder āshvās dilen.* — The doctor reassured us.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a fee, then the Bengali for the price of a mistake, then say āshvās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a fee, then the Bengali for the price of a mistake, then say *āshvās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আশ্বাস (āshvās) mean? (\"Reassurance; an assurance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C540-bormo",
+      "sequence": 32490,
+      "title": "বর্ম (bôrmô) — armour",
+      "headword": "বর্ম",
+      "romanization": "bôrmô",
+      "gloss": "armour",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d476781f8190a56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for the price of a mistake, then the Bengali for reassurance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বর্ম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বর্ম — bôrmô — \"armour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গল্পের রাজা একটা ভারী বর্ম পরলেন। Gôlper rājā ekṭā bhārī bôrmô pôrlen. The king in the story put on heavy armour."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বর্ম (bôrmô) is a tatsama, Sanskrit varman, \"armour, a coat of mail\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôrmô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôrmô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôrmô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôrmô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Gôlper rājā ekṭā bhārī bôrmô pôrlen. — The king in the story put on heavy armour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Gôlper rājā ekṭā bhārī bôrmô pôrlen.* — The king in the story put on heavy armour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for the price of a mistake, then the Bengali for reassurance, then say bôrmô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for the price of a mistake, then the Bengali for reassurance, then say *bôrmô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বর্ম (bôrmô) mean? (\"Armour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C540-chukano",
+      "sequence": 32500,
+      "title": "চুকানো (chukāno) — to settle; to finish off (a matter)",
+      "headword": "চুকানো",
+      "romanization": "chukāno",
+      "gloss": "to settle; to finish off (a matter)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e15c0de636376cf5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for reassurance, then the Bengali for armour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চুকানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চুকানো — chukāno — \"to settle; to finish off (a matter)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমরা ঝামেলাটা আজই চুকালাম। Āmrā jhāmelāṭā āji chukālām. We settled the trouble that very day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি দোকানের ধার চুকালেন, tini dokāner dhār chukālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চুকানো (chukāno) comes from a reconstructed cukk, \"stop\"; CDIAL lists Bengali cukāna, \"to get rid of, to finish, to settle\" (CDIAL 4848)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chukāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chukāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chukāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chukāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmrā jhāmelāṭā āji chukālām. — We settled the trouble that very day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmrā jhāmelāṭā āji chukālām.* — We settled the trouble that very day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for reassurance, then the Bengali for armour, then say chukāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for reassurance, then the Bengali for armour, then say *chukāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চুকানো (chukāno) mean? (\"To settle; to finish off (a matter)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

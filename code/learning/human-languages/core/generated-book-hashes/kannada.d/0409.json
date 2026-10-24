@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:80be69926c9fc1c8",
+  "lessonIds": [
+    "KA-C409-prabandha",
+    "KA-C409-sanksepisu",
+    "KA-C409-grantha",
+    "KA-C409-mandisu",
+    "KA-C409-tippani"
+  ],
+  "tex": "kannada/book/chapters/ch409-writing-an-essay.tex"
+}

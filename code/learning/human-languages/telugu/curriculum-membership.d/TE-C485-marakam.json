@@ -1,0 +1,11 @@
+{
+  "id": "TE-C485-marakam",
+  "pathSegment": "TE-PATH-485-NAGADU485",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-485-NAGADU485",
+      "order": 3
+    }
+  ]
+}

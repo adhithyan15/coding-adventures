@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C328-ilavaracan",
+    "language": "tamil",
+    "chapter": 328,
+    "sequence": 18860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50f587be4fdb725c"
+  },
+  "findings": []
+}

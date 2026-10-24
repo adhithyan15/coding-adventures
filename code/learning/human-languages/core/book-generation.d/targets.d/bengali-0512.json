@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 512,
+  "output": "bengali/book/chapters/ch512-kitchen-tools.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

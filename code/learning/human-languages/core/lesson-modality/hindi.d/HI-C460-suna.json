@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C460-suna",
+    "language": "hindi",
+    "chapter": 460,
+    "sequence": 25440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2770c823ddc93142"
+  },
+  "findings": []
+}

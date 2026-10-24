@@ -1,0 +1,11 @@
+{
+  "id": "KA-C412-nivarisu",
+  "pathSegment": "KA-PATH-412-APAYA412",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-412-APAYA412",
+      "order": 4
+    }
+  ]
+}

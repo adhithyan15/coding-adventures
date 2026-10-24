@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Passing and Failing",
+  "label": "ch:mr-passing-and-failing",
+  "canDo": "I can talk about revising, passing and failing exams.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C371-pramanpatra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can talk about revising, passing and failing exams.",
+    "assesses": [
+      "MR-LEX-C371-PARIKSHA371-03",
+      "MR-LEX-C371-PARIKSHA371-04",
+      "MR-LEX-C371-PARIKSHA371-05"
+    ]
+  }
+}

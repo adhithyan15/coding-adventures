@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-532-SANDAI532",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-532-SANDAI532"
+  ],
+  "after": []
+}

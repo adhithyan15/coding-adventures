@@ -1,0 +1,11 @@
+{
+  "id": "BN-C380-upojukto",
+  "pathSegment": "BN-PATH-380-OPOJUKTO380",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-380-OPOJUKTO380",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-434-GAIRSOY434",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "MR-EXT-434-GAIRSOY434"
+  ],
+  "after": []
+}

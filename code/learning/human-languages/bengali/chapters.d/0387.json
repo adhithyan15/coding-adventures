@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Ways and Destinations",
+  "label": "ch:bn-ways-and-destinations",
+  "canDo": "I can talk about the way, where a trip ends and the journey back.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C387-phirti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can talk about the way, where a trip ends and the journey back.",
+    "assesses": [
+      "BN-LEX-C387-POTH387-03",
+      "BN-LEX-C387-POTH387-04",
+      "BN-LEX-C387-POTH387-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C496-bichauna",
+  "pathSegment": "HI-PATH-496-NEEND496",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-496-NEEND496",
+      "order": 4
+    }
+  ]
+}

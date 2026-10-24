@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Blame and Correction",
+  "label": "ch:te-blame-and-correction",
+  "canDo": "I can blame, insult, overlook and put things right.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C428-savarincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can blame, insult, overlook and put things right.",
+    "assesses": [
+      "TE-LEX-C428-LOPAM428-03",
+      "TE-LEX-C428-LOPAM428-04",
+      "TE-LEX-C428-LOPAM428-05"
+    ]
+  }
+}

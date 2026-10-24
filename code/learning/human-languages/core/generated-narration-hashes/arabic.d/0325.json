@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:a0a070fe6ee47cea",
+  "lessonIds": [
+    "AR-C325-shahida",
+    "AR-C325-aqsama",
+    "AR-C325-halafa",
+    "AR-C325-itarafa",
+    "AR-C325-ankara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch325.txt",
+  "json": "arabic/narration/ch325.json",
+  "textHash": "fnv1a64:d560b4eca2d62baf",
+  "jsonHash": "fnv1a64:7b818dab82a90c6b",
+  "findings": []
+}

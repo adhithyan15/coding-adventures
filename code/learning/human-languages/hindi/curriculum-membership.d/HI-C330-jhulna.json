@@ -1,0 +1,11 @@
+{
+  "id": "HI-C330-jhulna",
+  "pathSegment": "HI-PATH-330-MELA330",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-330-MELA330",
+      "order": 2
+    }
+  ]
+}

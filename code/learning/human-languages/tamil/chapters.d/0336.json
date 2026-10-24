@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Victory and Defeat",
+  "label": "ch:ta-victory-and-defeat",
+  "canDo": "I can say how a war was won and lost.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C336-akkirami",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can say how a war was won and lost.",
+    "assesses": [
+      "TA-LEX-C336-VETRI336-03",
+      "TA-LEX-C336-VETRI336-04",
+      "TA-LEX-C336-VETRI336-05"
+    ]
+  }
+}

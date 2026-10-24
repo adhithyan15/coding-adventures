@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:e5d84e141052a00e",
+  "lessonIds": [
+    "ML-C376-ira",
+    "ML-C376-jivan",
+    "ML-C376-mrtadeham",
+    "ML-C376-parikkelkkuka",
+    "ML-C376-munnimarikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch376.txt",
+  "json": "malayalam/narration/ch376.json",
+  "textHash": "fnv1a64:5b8d1cd4cb79e650",
+  "jsonHash": "fnv1a64:124ad51c3905cd0c",
+  "findings": []
+}

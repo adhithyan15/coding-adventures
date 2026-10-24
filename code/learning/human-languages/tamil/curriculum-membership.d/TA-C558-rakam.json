@@ -1,0 +1,11 @@
+{
+  "id": "TA-C558-rakam",
+  "pathSegment": "TA-PATH-558-MELAM558",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-558-MELAM558",
+      "order": 2
+    }
+  ]
+}

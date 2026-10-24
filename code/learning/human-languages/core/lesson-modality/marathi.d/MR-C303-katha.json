@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C303-katha",
+    "language": "marathi",
+    "chapter": 303,
+    "sequence": 17770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f05786e090826e14"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:843b3cbb42d570b6",
+  "lessonIds": [
+    "KA-C357-vancisu",
+    "KA-C357-gaupya",
+    "KA-C357-muccidu",
+    "KA-C357-bahirangapadisu",
+    "KA-C357-sancu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch357.txt",
+  "json": "kannada/narration/ch357.json",
+  "textHash": "fnv1a64:bb46d207aed27667",
+  "jsonHash": "fnv1a64:37bbc88dd13ecbfa",
+  "findings": []
+}

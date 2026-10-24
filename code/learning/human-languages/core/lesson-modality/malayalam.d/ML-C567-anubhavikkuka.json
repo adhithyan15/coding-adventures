@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C567-anubhavikkuka",
+    "language": "malayalam",
+    "chapter": 567,
+    "sequence": 28560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b8d1b6f455a6b5f"
+  },
+  "findings": []
+}

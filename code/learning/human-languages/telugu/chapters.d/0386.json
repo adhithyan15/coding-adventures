@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Disagreeing",
+  "label": "ch:te-disagreeing",
+  "canDo": "I can disagree, object and turn things down.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C386-tiraskarincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can disagree, object and turn things down.",
+    "assesses": [
+      "TE-LEX-C386-ABHYANTARAM386-03",
+      "TE-LEX-C386-ABHYANTARAM386-04",
+      "TE-LEX-C386-ABHYANTARAM386-05"
+    ]
+  }
+}

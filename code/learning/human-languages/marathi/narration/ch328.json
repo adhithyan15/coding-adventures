@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 328,
+  "title": "War Comes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1ca3bae81e850a2f",
+  "lessons": [
+    {
+      "id": "MR-C328-satru",
+      "sequence": 19050,
+      "title": "शत्रू (śatrū) — an enemy",
+      "headword": "शत्रू",
+      "romanization": "śatrū",
+      "gloss": "an enemy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23d90ea039d16e03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a chieftain, then the Marathi for to found a settlement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शत्रू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शत्रू — śatrū — \"an enemy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शत्रू रात्रीच्या अंधारात गावात शिरला. śatrū rātrīcyā andhārāt gāvāt śirlā. The enemy crept into the village in the dark of night."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural शत्रू (śatrū)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शत्रू (śatrū) is a tatsama, taken from Sanskrit śatru, 'an enemy, a rival' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śatrū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śatrū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śatrū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śatrū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śatrū rātrīcyā andhārāt gāvāt śirlā. — The enemy crept into the village in the dark of night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śatrū rātrīcyā andhārāt gāvāt śirlā.* — The enemy crept into the village in the dark of night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a chieftain, then the Marathi for to found a settlement, then say śatrū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a chieftain, then the Marathi for to found a settlement, then say *śatrū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शत्रू (śatrū) mean? (\"An enemy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C328-halla",
+      "sequence": 19060,
+      "title": "हल्ला (hallā) — an attack",
+      "headword": "हल्ला",
+      "romanization": "hallā",
+      "gloss": "an attack",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f1ff2a8139cfeb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to found a settlement, then the Marathi for an enemy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हल्ला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हल्ला — hallā — \"an attack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पहाटे सैन्यावर अचानक हल्ला झाला. pahāṭe sainyāvar acānak hallā jhālā. At dawn the army was suddenly attacked."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "X-वर हल्ला (hallā) करणे, to attack X."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हल्ला (hallā) is inherited: CDIAL lists Marathi hallā, 'an attack', under halla, 'movement' (CDIAL 14017)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hallā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hallā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hallā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hallā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahāṭe sainyāvar acānak hallā jhālā. — At dawn the army was suddenly attacked.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahāṭe sainyāvar acānak hallā jhālā.* — At dawn the army was suddenly attacked.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to found a settlement, then the Marathi for an enemy, then say hallā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to found a settlement, then the Marathi for an enemy, then say *hallā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हल्ला (hallā) mean? (\"An attack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C328-akraman",
+      "sequence": 19070,
+      "title": "आक्रमण (ākramaṇ) — an invasion",
+      "headword": "आक्रमण",
+      "romanization": "ākramaṇ",
+      "gloss": "an invasion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5430a9cd98c7bcd5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an enemy, then the Marathi for an attack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आक्रमण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आक्रमण — ākramaṇ — \"an invasion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शत्रूच्या आक्रमणानंतर राज्य कमकुवत झालं. śatrūcyā ākramaṇānantar rājya kamkuvat jhālaṁ. After the enemy's invasion the kingdom grew weak."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "X-वर आक्रमण (ākramaṇ) करणे, to invade X."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आक्रमण (ākramaṇ) is a tatsama, taken from Sanskrit ākramaṇa, 'a stepping upon, an attack' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākramaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākramaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākramaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākramaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śatrūcyā ākramaṇānantar rājya kamkuvat jhālaṁ. — After the enemy's invasion the kingdom grew weak.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śatrūcyā ākramaṇānantar rājya kamkuvat jhālaṁ.* — After the enemy's invasion the kingdom grew weak.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an enemy, then the Marathi for an attack, then say ākramaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an enemy, then the Marathi for an attack, then say *ākramaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आक्रमण (ākramaṇ) mean? (\"An invasion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C328-ladhne",
+      "sequence": 19080,
+      "title": "लढणे (laḍhṇe) — to fight",
+      "headword": "लढणे",
+      "romanization": "laḍhṇe",
+      "gloss": "to fight",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da02384be3ea5a85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an attack, then the Marathi for an invasion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लढणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लढणे — laḍhṇe — \"to fight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सैनिक शेवटपर्यंत धैर्याने लढले. sainik śevaṭparyant dhairyāne laḍhle. The soldiers fought bravely to the end."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो लढला, to laḍhlā."
+            },
+            {
+              "kind": "speech",
+              "text": "The opponent takes -शी or -विरुद्ध: शत्रूशी लढणे (laḍhṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लढणे (laḍhṇe) is inherited: CDIAL lists Marathi laḍhṇe, 'fight', under laḍ, 'fight' (CDIAL 10920)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laḍhṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laḍhṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laḍhṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laḍhṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sainik śevaṭparyant dhairyāne laḍhle. — The soldiers fought bravely to the end.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sainik śevaṭparyant dhairyāne laḍhle.* — The soldiers fought bravely to the end.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an attack, then the Marathi for an invasion, then say laḍhṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an attack, then the Marathi for an invasion, then say *laḍhṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लढणे (laḍhṇe) mean? (\"To fight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C328-ranangan",
+      "sequence": 19090,
+      "title": "रणांगण (raṇāṅgaṇ) — a battlefield",
+      "headword": "रणांगण",
+      "romanization": "raṇāṅgaṇ",
+      "gloss": "a battlefield",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cffa82097d3020a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an invasion, then the Marathi for to fight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रणांगण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रणांगण — raṇāṅgaṇ — \"a battlefield\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रणांगणावर दोन्ही सैन्यं समोरासमोर आली. raṇāṅgaṇāvar donhī sainyaṁ samorāsamor ālī. On the battlefield the two armies came face to face."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "रण, battle, + अंगण, a yard."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रणांगण (raṇāṅgaṇ) is built from Sanskrit raṇa, 'battle', and aṅgaṇa, 'a courtyard' (Monier-Williams): the yard of battle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇāṅgaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇāṅgaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇāṅgaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇāṅgaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇāṅgaṇāvar donhī sainyaṁ samorāsamor ālī. — On the battlefield the two armies came face to face.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇāṅgaṇāvar donhī sainyaṁ samorāsamor ālī.* — On the battlefield the two armies came face to face.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an invasion, then the Marathi for to fight, then say raṇāṅgaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an invasion, then the Marathi for to fight, then say *raṇāṅgaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रणांगण (raṇāṅgaṇ) mean? (\"A battlefield\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:f4e985c1917093c7",
+  "lessonIds": [
+    "TA-C539-pullankulal",
+    "TA-C539-vinai",
+    "TA-C539-vaci",
+    "TA-C539-mittu",
+    "TA-C539-icaiyamai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch539.txt",
+  "json": "tamil/narration/ch539.json",
+  "textHash": "fnv1a64:aeeadc1ffa298f1f",
+  "jsonHash": "fnv1a64:04e2ad3c8553a374",
+  "findings": []
+}

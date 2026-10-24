@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C478-mara",
+    "language": "arabic",
+    "chapter": 478,
+    "sequence": 26620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d4759b7bae3e954"
+  },
+  "findings": []
+}

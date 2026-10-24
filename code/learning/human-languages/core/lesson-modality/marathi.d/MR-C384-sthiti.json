@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C384-sthiti",
+    "language": "marathi",
+    "chapter": 384,
+    "sequence": 22160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:831205424cad6376"
+  },
+  "findings": []
+}

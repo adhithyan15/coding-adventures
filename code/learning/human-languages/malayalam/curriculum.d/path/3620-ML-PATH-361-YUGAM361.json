@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-361-YUGAM361",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-361-YUGAM361"
+  ],
+  "after": []
+}

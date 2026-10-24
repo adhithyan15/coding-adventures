@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Dizzy and Stumbling",
+  "label": "ch:mr-dizzy-and-stumbling",
+  "canDo": "I can talk about dizziness, stumbling, shivering and limping.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C493-langadne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can talk about dizziness, stumbling, shivering and limping.",
+    "assesses": [
+      "MR-LEX-C493-TOL493-03",
+      "MR-LEX-C493-TOL493-04",
+      "MR-LEX-C493-TOL493-05"
+    ]
+  }
+}

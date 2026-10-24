@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:a5e213e223cf4bd1",
+  "lessonIds": [
+    "TE-C426-sankocincu",
+    "TE-C426-siddhapadu",
+    "TE-C426-asrayincu",
+    "TE-C426-uddesapurvakanga",
+    "TE-C426-arambham"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch426.txt",
+  "json": "telugu/narration/ch426.json",
+  "textHash": "fnv1a64:2e77ac7d085c953e",
+  "jsonHash": "fnv1a64:792a9232bfd05208",
+  "findings": []
+}

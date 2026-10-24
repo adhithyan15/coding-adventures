@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER case-insensitive attribute key vertical slice",
+  "fixtures": [
+    {
+      "name": "mixed-case-attribute-keys",
+      "source": "erDiagram\nACCOUNT {\n  string id pk\n  string owner_id fK, Uk \"Owner reference\"\n}"
+    }
+  ]
+}

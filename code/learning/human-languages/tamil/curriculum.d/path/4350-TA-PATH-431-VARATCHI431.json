@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-431-VARATCHI431",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-431-VARATCHI431"
+  ],
+  "after": []
+}

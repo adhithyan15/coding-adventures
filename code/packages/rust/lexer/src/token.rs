@@ -72,6 +72,27 @@ pub const TOKEN_PRECEDED_BY_NEWLINE: u32 = 1;
 /// keyword-vs-identifier decision to the language-specific parser.
 pub const TOKEN_CONTEXT_KEYWORD: u32 = 2;
 
+/// Set when anything was consumed between the previous emitted token and this
+/// one without becoming a token: whitespace, a comment, a line break, a
+/// built-in `NEWLINE` token or a token suppressed by a callback (F11).
+///
+/// Its absence means the two tokens touch. That is how a `.grammar` tells
+/// Ruby's `f -1` (a command call with the argument `-1`: a space before the
+/// `-`, none after it) from `f - 1` and `f-1` (subtraction):
+///
+/// ```text
+/// source   flags on `-`   flags on `1`
+/// f -1     SPACE          (none)
+/// f - 1    SPACE          SPACE
+/// f-1      (none)         (none)
+/// ```
+///
+/// A line break always counts as trivia, so a token with
+/// [`TOKEN_PRECEDED_BY_NEWLINE`] produced by the `GrammarLexer` also has this
+/// flag. The parser reads both through the `@space_before` /
+/// `@no_newline_before` family of `.grammar` predicates.
+pub const TOKEN_PRECEDED_BY_SPACE: u32 = 4;
+
 // ===========================================================================
 // TokenType — the classification of each token
 // ===========================================================================
@@ -298,9 +319,11 @@ pub struct Token {
     ///
     /// Flags encode information that is neither type nor value but affects
     /// how downstream consumers interpret the token. See the
-    /// [`TOKEN_PRECEDED_BY_NEWLINE`] and [`TOKEN_CONTEXT_KEYWORD`] constants.
+    /// [`TOKEN_PRECEDED_BY_NEWLINE`], [`TOKEN_CONTEXT_KEYWORD`] and
+    /// [`TOKEN_PRECEDED_BY_SPACE`] constants.
     ///
-    /// When `None`, all flags are off (the common case). Use bitwise AND
+    /// When `None`, all flags are off (tokens that touch the previous token,
+    /// and synthetic tokens such as EOF). Use bitwise AND
     /// to test a specific flag:
     ///
     /// ```text

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C321-putumanai-pukuvila",
+    "language": "tamil",
+    "chapter": 321,
+    "sequence": 18520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:deba642334f43625"
+  },
+  "findings": []
+}

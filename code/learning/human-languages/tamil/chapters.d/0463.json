@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Grief and Suffering",
+  "label": "ch:ta-grief-and-suffering",
+  "canDo": "I can talk about grief, anguish, hardship and condolence.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C463-irankal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can talk about grief, anguish, hardship and condolence.",
+    "assesses": [
+      "TA-LEX-C463-TUKKAM463-03",
+      "TA-LEX-C463-TUKKAM463-04",
+      "TA-LEX-C463-TUKKAM463-05"
+    ]
+  }
+}

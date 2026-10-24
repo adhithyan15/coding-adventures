@@ -1,0 +1,11 @@
+{
+  "id": "HI-R285-comparing-and-time",
+  "pathSegment": "HI-PATH-285-COMPARETIME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-285-COMPARETIME",
+      "order": 3
+    }
+  ]
+}

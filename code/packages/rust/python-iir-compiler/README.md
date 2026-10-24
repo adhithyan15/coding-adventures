@@ -57,11 +57,14 @@ names, another callee, two arguments, and a literal outside `i64`.
 
 Releases: 3.0a1, 3.11.17, 3.12.3, 3.13.16 and 3.16.0a1. All use the `py3`
 profile in `src/profiles.rs`, which cites the CPython sources it rests on.
-They emit byte-identical IIR for every corpus case they all accept. Tests:
+They emit byte-identical IIR for every corpus case they all accept. The
+readers of the inventory and corpus that the release tests share live in
+`tests/common/mod.rs`. Tests:
 
 | Test | Proves |
 |------|--------|
 | `tests/release_subsets.rs` | LANG84 stage I: every case of `code/grammars/python/corpus/py-int-print` on every claiming release (vm-core output and trap kind), C7 op checks, IIR identity, and the host CPython 3.11/3.12/3.13 oracle |
+| `tests/release_sweep.rs` | LANG84 "CI bounding": every positive case under every claiming release, grouped into IIR-identity classes (two today: 3.0a1, which refuses `int_underscores`, and 3.12.3 with 3.13.16, 3.11.17 and 3.16.0a1), checked against `code/grammars/python/release_classes.csv`. After a deliberate change, `PYTHON_RELEASE_SWEEP_WRITE=1 cargo test -p python-iir-compiler --test release_sweep` rewrites the file (and fails, so review the diff and re-run). `lang-aot`'s matrix runs the corpus on each class representative |
 | `tests/release_lowering.rs` | which op each construct becomes, the `-1` fold, `main: i64`, located refusals, forged trees |
 | `tests/cst_contract.rs` | LANG84 C8: every dispatched rule and token exists in each release |
 | `tests/hostile_release.rs` | LANG84 C5 hostile probes, in a child process |

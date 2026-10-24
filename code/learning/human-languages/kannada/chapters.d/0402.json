@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Bribes and Secrets",
+  "label": "ch:ka-bribes-and-secrets",
+  "canDo": "I can say corruption, a bribe, transparent, to conceal and to recommend.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C402-sipharasu-madu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can say corruption, a bribe, transparent, to conceal and to recommend.",
+    "assesses": [
+      "KA-LEX-C402-LANCHA402-03",
+      "KA-LEX-C402-LANCHA402-04",
+      "KA-LEX-C402-LANCHA402-05"
+    ]
+  }
+}

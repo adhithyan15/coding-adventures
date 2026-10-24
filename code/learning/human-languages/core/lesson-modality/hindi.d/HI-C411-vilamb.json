@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C411-vilamb",
+    "language": "hindi",
+    "chapter": 411,
+    "sequence": 22670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a84a22059ebd6dd"
+  },
+  "findings": []
+}

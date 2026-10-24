@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 346,
+  "title": "Checking Claims",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b4c10b048d8c1cb1",
+  "lessons": [
+    {
+      "id": "MR-C346-balagne",
+      "sequence": 20200,
+      "title": "बाळगणे (bāḷagṇe) — to entertain (a hope); to keep",
+      "headword": "बाळगणे",
+      "romanization": "bāḷagṇe",
+      "gloss": "to entertain (a hope); to keep",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e320c26b2bfb7d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a summary, then the Marathi for in short."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाळगणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाळगणे — bāḷagṇe — \"to entertain (a hope); to keep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याने निकालाबद्दल मोठी आशा बाळगली होती. tyāne nikālābaddal moṭhī āśā bāḷaglī hotī. He had cherished high hopes about the result."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने आशा बाळगली, tyāne āśā bāḷaglī."
+            },
+            {
+              "kind": "speech",
+              "text": "आशा बाळगणे (bāḷagṇe), to cherish a hope; राग बाळगणे (bāḷagṇe), to bear a grudge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाळगणे (bāḷagṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāḷagṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāḷagṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāḷagṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāḷagṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāne nikālābaddal moṭhī āśā bāḷaglī hotī. — He had cherished high hopes about the result.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāne nikālābaddal moṭhī āśā bāḷaglī hotī.* — He had cherished high hopes about the result.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a summary, then the Marathi for in short, then say bāḷagṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a summary, then the Marathi for in short, then say *bāḷagṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाळगणे (bāḷagṇe) mean? (\"To entertain (a hope); to keep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C346-visad-karne",
+      "sequence": 20210,
+      "title": "विशद करणे (viśad karṇe) — to elucidate",
+      "headword": "विशद करणे",
+      "romanization": "viśad karṇe",
+      "gloss": "to elucidate",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5faa9ae8beac8ae6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for in short, then the Marathi for to entertain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विशद करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विशद करणे — viśad karṇe — \"to elucidate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिक्षकांनी उदाहरण देऊन नियम विशद केला. śikṣakānnī udāhraṇ deūn niyam viśad kelā. The teacher explained the rule in detail with an example."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने विशद केलं, tyāne viśad kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; in speech समजावून सांगणे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विशद करणे (viśad karṇe) joins the tatsama विशद, Sanskrit viśada, \"clear, bright\" (Monier-Williams), to करणे, \"to make\": to make clear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśad karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśad karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśad karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśad karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikṣakānnī udāhraṇ deūn niyam viśad kelā. — The teacher explained the rule in detail with an example.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikṣakānnī udāhraṇ deūn niyam viśad kelā.* — The teacher explained the rule in detail with an example.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for in short, then the Marathi for to entertain, then say viśad karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for in short, then the Marathi for to entertain, then say *viśad karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विशद करणे (viśad karṇe) mean? (\"To elucidate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C346-khatri",
+      "sequence": 20220,
+      "title": "खात्री (khātrī) — certainty; assurance",
+      "headword": "खात्री",
+      "romanization": "khātrī",
+      "gloss": "certainty; assurance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a020ef938983463",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to entertain, then the Marathi for to elucidate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खात्री",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खात्री — khātrī — \"certainty; assurance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तो येईल याची मला खात्री आहे. to yeīl yācī malā khātrī āhe. I am sure that he will come."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "X ची खात्री (khātrī) असणे, to be sure of X; खात्री (khātrī) करणे, to make sure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खात्री (khātrī) is a loan, usually traced to Persian khāṭir, \"mind\", itself from Arabic: a mind set at rest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khātrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khātrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khātrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khātrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to yeīl yācī malā khātrī āhe. — I am sure that he will come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *to yeīl yācī malā khātrī āhe.* — I am sure that he will come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to entertain, then the Marathi for to elucidate, then say khātrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to entertain, then the Marathi for to elucidate, then say *khātrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खात्री (khātrī) mean? (\"Certainty; assurance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C346-padtalne",
+      "sequence": 20230,
+      "title": "पडताळणे (paḍtāḷṇe) — to verify; to cross-check",
+      "headword": "पडताळणे",
+      "romanization": "paḍtāḷṇe",
+      "gloss": "to verify; to cross-check",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6a2ea42949dd26e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to elucidate, then the Marathi for certainty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पडताळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पडताळणे — paḍtāḷṇe — \"to verify; to cross-check\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पत्रकाराने बातमी छापण्याआधी पडताळली. patrakārāne bātmī chāpaṇyāādhī paḍtāḷlī. The journalist checked the story before printing it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने पडताळलं, tyāne paḍtāḷlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Transitive: the past agrees with the thing checked, बातमी पडताळली; पडताळा, a cross-check."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पडताळणे (paḍtāḷṇe) is a Marathi verb whose origin is not settled; the noun पडताळा, a cross-check, goes with it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḍtāḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḍtāḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḍtāḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḍtāḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrakārāne bātmī chāpaṇyāādhī paḍtāḷlī. — The journalist checked the story before printing it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrakārāne bātmī chāpaṇyāādhī paḍtāḷlī.* — The journalist checked the story before printing it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to elucidate, then the Marathi for certainty, then say paḍtāḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to elucidate, then the Marathi for certainty, then say *paḍtāḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पडताळणे (paḍtāḷṇe) mean? (\"To verify; to cross-check\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C346-phetalne",
+      "sequence": 20240,
+      "title": "फेटाळणे (pheṭāḷṇe) — to reject (a claim)",
+      "headword": "फेटाळणे",
+      "romanization": "pheṭāḷṇe",
+      "gloss": "to reject (a claim)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6575208afb6552a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for certainty, then the Marathi for to verify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फेटाळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फेटाळणे — pheṭāḷṇe — \"to reject (a claim)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कंपनीने कामगारांची मागणी फेटाळली. kampnīne kāmgārāñcī māgṇī pheṭāḷlī. The company rejected the workers' demand."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने मागणी फेटाळली, tyāne māgṇī pheṭāḷlī."
+            },
+            {
+              "kind": "speech",
+              "text": "Of claims, demands and charges; of a person or an offer, नाकारणे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फेटाळणे (pheṭāḷṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pheṭāḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pheṭāḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pheṭāḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pheṭāḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampnīne kāmgārāñcī māgṇī pheṭāḷlī. — The company rejected the workers' demand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampnīne kāmgārāñcī māgṇī pheṭāḷlī.* — The company rejected the workers' demand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for certainty, then the Marathi for to verify, then say pheṭāḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for certainty, then the Marathi for to verify, then say *pheṭāḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फेटाळणे (pheṭāḷṇe) mean? (\"To reject (a claim)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

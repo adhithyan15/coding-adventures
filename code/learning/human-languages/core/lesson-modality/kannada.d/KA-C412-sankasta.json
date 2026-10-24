@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C412-sankasta",
+    "language": "kannada",
+    "chapter": 412,
+    "sequence": 20880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:654e1240d79715f4"
+  },
+  "findings": []
+}

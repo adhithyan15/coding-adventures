@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 392,
+  "title": "Elections",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ec250fad421b3b4c",
+  "lessons": [
+    {
+      "id": "KA-C392-cunavane",
+      "sequence": 19820,
+      "title": "ಚುನಾವಣೆ (cunāvaṇe) — an election",
+      "headword": "ಚುನಾವಣೆ",
+      "romanization": "cunāvaṇe",
+      "gloss": "an election",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21051e09f4a1b667",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for empowerment, then the Kannada for commitment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚುನಾವಣೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚುನಾವಣೆ — cunāvaṇe — \"an election\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮುಂದಿನ ತಿಂಗಳು ನಮ್ಮ ಊರಿನಲ್ಲಿ ಚುನಾವಣೆ ಇದೆ. mundina tiṅgaḷu namma ūrinalli cunāvaṇe ide. There is an election in our town next month."
+            },
+            {
+              "kind": "speech",
+              "text": "ಚುನಾವಣೆಗೆ ನಿಲ್ಲು, to stand for election."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚುನಾವಣೆ (cunāvaṇe) is a loan from Hindustani cunāv, \"a choosing, an election\", from cunnā, \"to pick\", with a Kannada noun ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cunāvaṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cunāvaṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cunāvaṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cunāvaṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mundina tiṅgaḷu namma ūrinalli cunāvaṇe ide. — There is an election in our town next month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mundina tiṅgaḷu namma ūrinalli cunāvaṇe ide.* — There is an election in our town next month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for empowerment, then the Kannada for commitment, then say cunāvaṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for empowerment, then the Kannada for commitment, then say *cunāvaṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚುನಾವಣೆ (cunāvaṇe) mean? (\"An election\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C392-mata",
+      "sequence": 19830,
+      "title": "ಮತ (mata) — a vote",
+      "headword": "ಮತ",
+      "romanization": "mata",
+      "gloss": "a vote",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2636fd2b86526a9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for commitment, then the Kannada for an election."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮತ — mata — \"a vote\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹದಿನೆಂಟು ವರ್ಷ ತುಂಬಿದವರಿಗೆ ಮತ ಹಾಕುವ ಹಕ್ಕು ಇದೆ. hadineṇṭu varṣa tumbidavarige mata hākuva hakku ide. Those who have turned eighteen have the right to vote."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮತ (mata) ಹಾಕು, to cast a vote. It also means an opinion or a creed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮತ (mata) is borrowed from Sanskrit mata, \"thought, opinion\" (Monier-Williams), from man, \"to think\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hadineṇṭu varṣa tumbidavarige mata hākuva hakku ide. — Those who have turned eighteen have the right to vote.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hadineṇṭu varṣa tumbidavarige mata hākuva hakku ide.* — Those who have turned eighteen have the right to vote.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for commitment, then the Kannada for an election, then say mata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for commitment, then the Kannada for an election, then say *mata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮತ (mata) mean? (\"A vote\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C392-bahumata",
+      "sequence": 19840,
+      "title": "ಬಹುಮತ (bahumata) — a majority",
+      "headword": "ಬಹುಮತ",
+      "romanization": "bahumata",
+      "gloss": "a majority",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2173cde8dfcd540",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an election, then the Kannada for a vote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಹುಮತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಹುಮತ — bahumata — \"a majority\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಚುನಾವಣೆಯಲ್ಲಿ ಅವರಿಗೆ ಬಹುಮತ ಸಿಕ್ಕಿತು. cunāvaṇeyalli avarige bahumata sikkitu. They won a majority in the election."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಹು (many) + ಮತ (mata) (votes)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಹುಮತ (bahumata) is built from Sanskrit bahu, \"many\", and mata, \"opinion\" (Monier-Williams); the sense \"majority\" is modern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahumata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahumata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahumata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahumata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cunāvaṇeyalli avarige bahumata sikkitu. — They won a majority in the election.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cunāvaṇeyalli avarige bahumata sikkitu.* — They won a majority in the election.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an election, then the Kannada for a vote, then say bahumata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an election, then the Kannada for a vote, then say *bahumata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಹುಮತ (bahumata) mean? (\"A majority\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C392-pracara-madu",
+      "sequence": 19850,
+      "title": "ಪ್ರಚಾರ ಮಾಡು (pracāra māḍu) — to campaign; to publicise",
+      "headword": "ಪ್ರಚಾರ ಮಾಡು",
+      "romanization": "pracāra māḍu",
+      "gloss": "to campaign; to publicise",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c69050f53d737fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a vote, then the Kannada for a majority."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಚಾರ ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಚಾರ ಮಾಡು — pracāra māḍu — \"to campaign; to publicise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳು ಮನೆ ಮನೆಗೆ ಹೋಗಿ ಪ್ರಚಾರ ಮಾಡಿದಳು. avaḷu mane manege hōgi pracāra māḍidaḷu. She campaigned from door to door."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪ್ರಚಾರ ಮಾಡಿದೆ, pracāra māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಚಾರ alone is publicity or a campaign."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಚಾರ ಮಾಡು (pracāra māḍu) is built from Sanskrit pracāra, \"coming forth, showing oneself\" (Monier-Williams), with māḍu, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracāra māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracāra māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracāra māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracāra māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷu mane manege hōgi pracāra māḍidaḷu. — She campaigned from door to door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷu mane manege hōgi pracāra māḍidaḷu.* — She campaigned from door to door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a vote, then the Kannada for a majority, then say pracāra māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a vote, then the Kannada for a majority, then say *pracāra māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಚಾರ ಮಾಡು (pracāra māḍu) mean? (\"To campaign; to publicise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C392-sambodhisu",
+      "sequence": 19860,
+      "title": "ಸಂಬೋಧಿಸು (sambōdhisu) — to address a crowd",
+      "headword": "ಸಂಬೋಧಿಸು",
+      "romanization": "sambōdhisu",
+      "gloss": "to address a crowd",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8afbfe7a96cf5ff9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a majority, then the Kannada for to campaign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂಬೋಧಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಬೋಧಿಸು — sambōdhisu — \"to address a crowd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಚುನಾವಣೆಗೆ ಮೊದಲು ಅವಳು ಊರಿನ ಜನರನ್ನು ಸಂಬೋಧಿಸಿದಳು. cunāvaṇege modalu avaḷu ūrina janarannu sambōdhisidaḷu. Before the election she addressed the townspeople."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಸಂಬೋಧಿಸಿದೆ, sambōdhiside."
+            },
+            {
+              "kind": "speech",
+              "text": "The audience takes -ಅನ್ನು. ಸಂಬೋಧನೆ, an address."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಬೋಧಿಸು (sambōdhisu) is built on Sanskrit saṃbodhana, \"calling to, addressing\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambōdhisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambōdhisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambōdhisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambōdhisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cunāvaṇege modalu avaḷu ūrina janarannu sambōdhisidaḷu. — Before the election she addressed the townspeople.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cunāvaṇege modalu avaḷu ūrina janarannu sambōdhisidaḷu.* — Before the election she addressed the townspeople.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a majority, then the Kannada for to campaign, then say sambōdhisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a majority, then the Kannada for to campaign, then say *sambōdhisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂಬೋಧಿಸು (sambōdhisu) mean? (\"To address a crowd\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

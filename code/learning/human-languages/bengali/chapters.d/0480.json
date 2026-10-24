@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Staying Healthy",
+  "label": "ch:bn-staying-healthy",
+  "canDo": "I can talk about nutrition, meditation and bad habits.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C480-jhorano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can talk about nutrition, meditation and bad habits.",
+    "assesses": [
+      "BN-LEX-C480-PUSHTI480-03",
+      "BN-LEX-C480-PUSHTI480-04",
+      "BN-LEX-C480-PUSHTI480-05"
+    ]
+  }
+}

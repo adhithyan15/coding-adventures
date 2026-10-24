@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C400-chihno",
+    "language": "bengali",
+    "chapter": 400,
+    "sequence": 24830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27e47e927ee72072"
+  },
+  "findings": []
+}

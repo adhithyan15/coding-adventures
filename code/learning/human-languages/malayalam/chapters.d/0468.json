@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "On the Highway",
+  "label": "ch:ml-on-the-highway",
+  "canDo": "I can say a national highway, a toll, a tunnel, a flyover and to pull over.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-R468-review-461-468",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can say a national highway, a toll, a tunnel, a flyover and to pull over.",
+    "assesses": [
+      "ML-LEX-C468-PATA468-03",
+      "ML-LEX-C468-PATA468-04",
+      "ML-LEX-C468-PATA468-05"
+    ]
+  }
+}

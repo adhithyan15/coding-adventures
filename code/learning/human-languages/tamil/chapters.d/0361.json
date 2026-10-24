@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Weighing It Up",
+  "label": "ch:ta-weighing-it-up",
+  "canDo": "I can say that I weigh a request and decide.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C361-campantam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can say that I weigh a request and decide.",
+    "assesses": [
+      "TA-LEX-C361-TIRMANI361-03",
+      "TA-LEX-C361-TIRMANI361-04",
+      "TA-LEX-C361-TIRMANI361-05"
+    ]
+  }
+}

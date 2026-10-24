@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Old Writings and Ruins",
+  "label": "ch:ml-old-writings-and-ruins",
+  "canDo": "I can say a historian, ancient, a palm-leaf manuscript, a script and to destroy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-R404-review-final-404",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can say a historian, ancient, a palm-leaf manuscript, a script and to destroy.",
+    "assesses": [
+      "ML-LEX-C404-CHARITHRAM404-03",
+      "ML-LEX-C404-CHARITHRAM404-04",
+      "ML-LEX-C404-CHARITHRAM404-05"
+    ]
+  }
+}

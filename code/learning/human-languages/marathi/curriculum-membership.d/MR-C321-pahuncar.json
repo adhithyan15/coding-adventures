@@ -1,0 +1,11 @@
+{
+  "id": "MR-C321-pahuncar",
+  "pathSegment": "MR-PATH-321-PANGAT321",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-321-PANGAT321",
+      "order": 1
+    }
+  ]
+}

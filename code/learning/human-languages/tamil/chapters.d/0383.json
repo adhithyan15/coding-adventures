@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "What Might Happen",
+  "label": "ch:ta-what-might-happen",
+  "canDo": "I can say how likely something is.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C383-illaiyel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can say how likely something is.",
+    "assesses": [
+      "TA-LEX-C383-CATTIYAM383-03",
+      "TA-LEX-C383-CATTIYAM383-04",
+      "TA-LEX-C383-CATTIYAM383-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-R289-feelings-and-hopes",
+  "pathSegment": "AR-PATH-289-FEELINGS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-289-FEELINGS",
+      "order": 3
+    }
+  ]
+}

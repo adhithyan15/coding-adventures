@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Small Repairs",
+  "label": "ch:ta-small-repairs",
+  "canDo": "I can talk about fixing small things at home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C523-vatikattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about fixing small things at home.",
+    "assesses": [
+      "TA-LEX-C523-PAZHUDHU523-03",
+      "TA-LEX-C523-PAZHUDHU523-04",
+      "TA-LEX-C523-PAZHUDHU523-05"
+    ]
+  }
+}

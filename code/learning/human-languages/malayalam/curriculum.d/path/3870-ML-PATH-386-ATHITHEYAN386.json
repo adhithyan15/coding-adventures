@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-386-ATHITHEYAN386",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-386-ATHITHEYAN386"
+  ],
+  "after": []
+}

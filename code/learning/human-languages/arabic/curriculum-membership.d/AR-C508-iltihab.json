@@ -1,0 +1,11 @@
+{
+  "id": "AR-C508-iltihab",
+  "pathSegment": "AR-PATH-508-JILD508",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-508-JILD508",
+      "order": 3
+    }
+  ]
+}

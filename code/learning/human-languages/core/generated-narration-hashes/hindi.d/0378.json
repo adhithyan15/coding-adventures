@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:766fe3320ae9ad13",
+  "lessonIds": [
+    "HI-C378-avasyak",
+    "HI-C378-anivarya",
+    "HI-C378-keval",
+    "HI-C378-sivay",
+    "HI-C378-manakarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch378.txt",
+  "json": "hindi/narration/ch378.json",
+  "textHash": "fnv1a64:2996b8e4587dd383",
+  "jsonHash": "fnv1a64:b5f33fad212fd212",
+  "findings": []
+}

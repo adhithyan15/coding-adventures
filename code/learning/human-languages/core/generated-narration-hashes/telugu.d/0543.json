@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:c3d201ccce56ce41",
+  "lessonIds": [
+    "TE-C543-kaceri",
+    "TE-C543-cappatlu",
+    "TE-C543-abhinandincu",
+    "TE-C543-asvadincu",
+    "TE-C543-kolatam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch543.txt",
+  "json": "telugu/narration/ch543.json",
+  "textHash": "fnv1a64:91d7fedf0388802f",
+  "jsonHash": "fnv1a64:77db74c9a12cf227",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C336-yodha",
+    "language": "kannada",
+    "chapter": 336,
+    "sequence": 16890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bafb5219e8eda588"
+  },
+  "findings": []
+}

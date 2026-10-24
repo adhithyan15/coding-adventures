@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Bends and Slopes",
+  "label": "ch:ta-bends-and-slopes",
+  "canDo": "I can talk about bends, slopes and climbs, and things overturning and spinning.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C408-culal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can talk about bends, slopes and climbs, and things overturning and spinning.",
+    "assesses": [
+      "TA-LEX-C408-VALAIVU408-03",
+      "TA-LEX-C408-VALAIVU408-04",
+      "TA-LEX-C408-VALAIVU408-05"
+    ]
+  }
+}

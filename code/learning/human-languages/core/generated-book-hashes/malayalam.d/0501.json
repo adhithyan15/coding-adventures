@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:e0b409880fbf7448",
+  "lessonIds": [
+    "ML-C501-mrgasala",
+    "ML-C501-udyanam",
+    "ML-C501-timimgalam",
+    "ML-C501-pravesanaphisu",
+    "ML-C501-olukiyettuka"
+  ],
+  "tex": "malayalam/book/chapters/ch501-zoo-and-shore.tex"
+}

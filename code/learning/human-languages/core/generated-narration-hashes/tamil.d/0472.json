@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:524ecf874961a3c7",
+  "lessonIds": [
+    "TA-C472-catu",
+    "TA-C472-vekuli",
+    "TA-C472-emali",
+    "TA-C472-kancan",
+    "TA-C472-utari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch472.txt",
+  "json": "tamil/narration/ch472.json",
+  "textHash": "fnv1a64:a1445fb8fa64a4d0",
+  "jsonHash": "fnv1a64:195495022bebd613",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:e47ee8c2cec5b63d",
+  "lessonIds": [
+    "BN-C407-baja",
+    "BN-C407-beyara",
+    "BN-C407-menu",
+    "BN-C407-bokshish",
+    "BN-C407-londri",
+    "BN-R407-review-400-407"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch407.txt",
+  "json": "bengali/narration/ch407.json",
+  "textHash": "fnv1a64:4342e086614861b5",
+  "jsonHash": "fnv1a64:501cf14ee7784e68",
+  "findings": []
+}

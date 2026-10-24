@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:c142ea1d2a0a0641",
+  "lessonIds": [
+    "AR-C392-muhadir",
+    "AR-C392-ustadh",
+    "AR-C392-ashrafa",
+    "AR-C392-mushrif",
+    "AR-C392-dhakara"
+  ],
+  "tex": "arabic/book/chapters/ch392-lecturers-and-supervisors.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C351-bandhincu",
+    "language": "telugu",
+    "chapter": 351,
+    "sequence": 17300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b6e82e8d0b8e671"
+  },
+  "findings": []
+}

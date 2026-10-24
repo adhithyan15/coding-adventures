@@ -1,0 +1,11 @@
+{
+  "id": "HI-C392-tariqa",
+  "pathSegment": "HI-PATH-392-TAIYARI392",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-392-TAIYARI392",
+      "order": 2
+    }
+  ]
+}

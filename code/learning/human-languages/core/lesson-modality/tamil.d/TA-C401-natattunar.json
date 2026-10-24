@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C401-natattunar",
+    "language": "tamil",
+    "chapter": 401,
+    "sequence": 23150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba8ba9ea4427b95d"
+  },
+  "findings": []
+}

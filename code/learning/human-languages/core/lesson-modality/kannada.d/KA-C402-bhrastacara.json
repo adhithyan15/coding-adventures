@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C402-bhrastacara",
+    "language": "kannada",
+    "chapter": 402,
+    "sequence": 20330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00fbc298a41bbe7b"
+  },
+  "findings": []
+}

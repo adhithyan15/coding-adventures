@@ -1,0 +1,11 @@
+{
+  "id": "TA-C336-caranatai",
+  "pathSegment": "TA-PATH-336-VETRI336",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-336-VETRI336",
+      "order": 2
+    }
+  ]
+}

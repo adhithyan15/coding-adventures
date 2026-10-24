@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Effort and Strategy",
+  "label": "ch:te-effort-and-strategy",
+  "canDo": "I can talk about effort, challenges, strategy and loss.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C433-kolpovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can talk about effort, challenges, strategy and loss.",
+    "assesses": [
+      "TE-LEX-C433-VYUHAM433-03",
+      "TE-LEX-C433-VYUHAM433-04",
+      "TE-LEX-C433-VYUHAM433-05"
+    ]
+  }
+}

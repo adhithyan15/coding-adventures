@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:1a8cc1e4f735d14b",
+  "lessonIds": [
+    "BN-C422-daripalla",
+    "BN-C422-khati",
+    "BN-C422-phordo",
+    "BN-C422-grahok",
+    "BN-C422-porokh-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch422.txt",
+  "json": "bengali/narration/ch422.json",
+  "textHash": "fnv1a64:49c05e136bf4fc53",
+  "jsonHash": "fnv1a64:76ceb07647e73323",
+  "findings": []
+}

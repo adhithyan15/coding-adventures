@@ -1,0 +1,11 @@
+{
+  "id": "MR-C467-tadphadne",
+  "pathSegment": "MR-PATH-467-YATANA467",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-467-YATANA467",
+      "order": 1
+    }
+  ]
+}

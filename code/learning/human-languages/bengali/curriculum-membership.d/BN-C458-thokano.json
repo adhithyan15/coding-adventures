@@ -1,0 +1,11 @@
+{
+  "id": "BN-C458-thokano",
+  "pathSegment": "BN-PATH-458-SOT458",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-458-SOT458",
+      "order": 4
+    }
+  ]
+}

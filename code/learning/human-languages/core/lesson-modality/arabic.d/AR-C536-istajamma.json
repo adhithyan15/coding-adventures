@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C536-istajamma",
+    "language": "arabic",
+    "chapter": 536,
+    "sequence": 29690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3eb1cbc7c172fb94"
+  },
+  "findings": []
+}

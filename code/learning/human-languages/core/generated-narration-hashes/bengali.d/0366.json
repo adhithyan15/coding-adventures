@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:4b85a6546c7c0855",
+  "lessonIds": [
+    "BN-C366-sombhabona",
+    "BN-C366-sombhoboto",
+    "BN-C366-onibarjo",
+    "BN-C366-birol",
+    "BN-C366-dhore-neoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch366.txt",
+  "json": "bengali/narration/ch366.json",
+  "textHash": "fnv1a64:b9728cfad1ebf04a",
+  "jsonHash": "fnv1a64:fce240e9f8c0b1b4",
+  "findings": []
+}

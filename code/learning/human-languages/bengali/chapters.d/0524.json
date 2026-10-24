@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Paint and Carving",
+  "label": "ch:bn-paint-and-carving",
+  "canDo": "I can talk about brushes, watercolour, patterns and carving.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C524-rangano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about brushes, watercolour, patterns and carving.",
+    "assesses": [
+      "BN-LEX-C524-TULI524-03",
+      "BN-LEX-C524-TULI524-04",
+      "BN-LEX-C524-TULI524-05"
+    ]
+  }
+}

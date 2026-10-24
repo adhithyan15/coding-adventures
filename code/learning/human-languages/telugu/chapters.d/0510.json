@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Habits of Mind",
+  "label": "ch:te-habits-of-mind",
+  "canDo": "I can talk about selfishness, carelessness, discipline, confidence and curiosity.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C510-kutuhalam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about selfishness, carelessness, discipline, confidence and curiosity.",
+    "assesses": [
+      "TE-LEX-C510-GUNAM510-03",
+      "TE-LEX-C510-GUNAM510-04",
+      "TE-LEX-C510-GUNAM510-05"
+    ]
+  }
+}

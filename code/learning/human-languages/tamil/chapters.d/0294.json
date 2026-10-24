@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "A Witness and a Theft",
+  "label": "ch:ta-a-witness-and-a-theft",
+  "canDo": "I can talk about a theft and the people who saw it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C294-nikal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can talk about a theft and the people who saw it.",
+    "assesses": [
+      "TA-LEX-C294-NIKAZHVU294-03",
+      "TA-LEX-C294-NIKAZHVU294-04",
+      "TA-LEX-C294-NIKAZHVU294-05"
+    ]
+  }
+}

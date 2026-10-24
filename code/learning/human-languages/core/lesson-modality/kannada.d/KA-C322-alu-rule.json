@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C322-alu-rule",
+    "language": "kannada",
+    "chapter": 322,
+    "sequence": 16170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3404d3d4825b0c73"
+  },
+  "findings": []
+}

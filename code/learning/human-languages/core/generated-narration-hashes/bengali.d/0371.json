@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:b9f91ff1bcfb5795",
+  "lessonIds": [
+    "BN-C371-jotheshto",
+    "BN-C371-otirikto",
+    "BN-C371-olpo",
+    "BN-C371-jogano",
+    "BN-C371-sima"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch371.txt",
+  "json": "bengali/narration/ch371.json",
+  "textHash": "fnv1a64:c2b72a901ccf3fdc",
+  "jsonHash": "fnv1a64:3918c3db46bed2d0",
+  "findings": []
+}

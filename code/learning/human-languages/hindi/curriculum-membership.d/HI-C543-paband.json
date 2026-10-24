@@ -1,0 +1,11 @@
+{
+  "id": "HI-C543-paband",
+  "pathSegment": "HI-PATH-543-VACHAN543",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-543-VACHAN543",
+      "order": 4
+    }
+  ]
+}

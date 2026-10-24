@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Climbing the Ladder",
+  "label": "ch:ta-climbing-the-ladder",
+  "canDo": "I can talk about promotions and ambitions.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C509-nipunar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about promotions and ambitions.",
+    "assesses": [
+      "TA-LEX-C509-MUNNERRAM509-03",
+      "TA-LEX-C509-MUNNERRAM509-04",
+      "TA-LEX-C509-MUNNERRAM509-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C473-timingalam",
+  "pathSegment": "TE-PATH-473-DVIPAM473",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-473-DVIPAM473",
+      "order": 1
+    }
+  ]
+}

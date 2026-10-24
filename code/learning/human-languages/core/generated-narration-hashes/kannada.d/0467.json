@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:89afb12ce9fab02f",
+  "lessonIds": [
+    "KA-C467-marukatte",
+    "KA-C467-pete",
+    "KA-C467-malige",
+    "KA-C467-marata",
+    "KA-C467-konduko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch467.txt",
+  "json": "kannada/narration/ch467.json",
+  "textHash": "fnv1a64:52e162fb16c7f68d",
+  "jsonHash": "fnv1a64:84f402227b24fe03",
+  "findings": []
+}

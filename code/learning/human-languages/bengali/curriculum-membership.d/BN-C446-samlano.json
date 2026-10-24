@@ -1,0 +1,11 @@
+{
+  "id": "BN-C446-samlano",
+  "pathSegment": "BN-PATH-446-SANTVONA446",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-446-SANTVONA446",
+      "order": 4
+    }
+  ]
+}

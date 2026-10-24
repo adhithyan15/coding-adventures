@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C536-khap-khaoya",
+    "language": "bengali",
+    "chapter": 536,
+    "sequence": 32290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c17ffe73c707430"
+  },
+  "findings": []
+}

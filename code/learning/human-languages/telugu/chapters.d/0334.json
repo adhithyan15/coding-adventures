@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "A Baby Is Born",
+  "label": "ch:te-a-baby-is-born",
+  "canDo": "I can say a birth, a newborn baby, a naming ceremony, to take birth and to bless.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C334-divincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can say a birth, a newborn baby, a naming ceremony, to take birth and to bless.",
+    "assesses": [
+      "TE-LEX-C334-JANANAM334-03",
+      "TE-LEX-C334-JANANAM334-04",
+      "TE-LEX-C334-JANANAM334-05"
+    ]
+  }
+}

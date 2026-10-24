@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 470,
+  "title": "Hair and Scalp",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:41cb094453093513",
+  "lessons": [
+    {
+      "id": "BN-C470-tak",
+      "sequence": 28640,
+      "title": "টাক (ṭāk) — a bald patch; baldness",
+      "headword": "টাক",
+      "romanization": "ṭāk",
+      "gloss": "a bald patch; baldness",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d90da05674e5ed2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a stain, then the Bengali for body hair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: টাক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "টাক — ṭāk — \"a bald patch; baldness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "চল্লিশ বছরে বাবার মাথায় টাক পড়ল। chôllish bôchhôre bābār māthāy ṭāk pôṛlô. At forty, my father started going bald."
+            },
+            {
+              "kind": "speech",
+              "text": "টাক (ṭāk) পড়া, to go bald."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "টাক (ṭāk) is listed by CDIAL for Bengali, as a bald patch, under a reconstructed ṭakka, \"bald\" (CDIAL 5422); it is not the টাকা (taught) of money, which is another entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭāk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭāk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chôllish bôchhôre bābār māthāy ṭāk pôṛlô. — At forty, my father started going bald.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chôllish bôchhôre bābār māthāy ṭāk pôṛlô.* — At forty, my father started going bald.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a stain, then the Bengali for body hair, then say ṭāk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a stain, then the Bengali for body hair, then say *ṭāk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does টাক (ṭāk) mean? (\"A bald patch; baldness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C470-khushki",
+      "sequence": 28650,
+      "title": "খুশকি (khushki) — dandruff",
+      "headword": "খুশকি",
+      "romanization": "khushki",
+      "gloss": "dandruff",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5620a0bcbd58b520",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for body hair, then the Bengali for baldness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খুশকি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খুশকি — khushki — \"dandruff\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শীতে অরুণের মাথায় খুশকি হয়। shīte ôruner māthāy khushki hôy. In winter Arun gets dandruff."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খুশকি (khushki) is usually traced to Persian khushkī, \"dryness\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khushki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khushki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khushki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khushki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shīte ôruner māthāy khushki hôy. — In winter Arun gets dandruff.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shīte ôruner māthāy khushki hôy.* — In winter Arun gets dandruff.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for body hair, then the Bengali for baldness, then say khushki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for body hair, then the Bengali for baldness, then say *khushki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খুশকি (khushki) mean? (\"Dandruff\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C470-ukun",
+      "sequence": 28660,
+      "title": "উকুন (ukun) — a louse; lice",
+      "headword": "উকুন",
+      "romanization": "ukun",
+      "gloss": "a louse; lice",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b90de396ef90804",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for baldness, then the Bengali for dandruff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উকুন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উকুন — ukun — \"a louse; lice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "স্কুল থেকে ফিরে মেয়েটার মাথায় উকুন হল। skul theke phire meyeṭār māthāy ukun hôlô. After coming home from school, the girl had lice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উকুন (ukun) comes from Sanskrit utkuṇa, \"a louse\" (CDIAL 1728), which CDIAL lists in this Bengali form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukun, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukun*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skul theke phire meyeṭār māthāy ukun hôlô. — After coming home from school, the girl had lice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *skul theke phire meyeṭār māthāy ukun hôlô.* — After coming home from school, the girl had lice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for baldness, then the Bengali for dandruff, then say ukun again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for baldness, then the Bengali for dandruff, then say *ukun* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উকুন (ukun) mean? (\"A louse; lice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C470-jhora",
+      "sequence": 28670,
+      "title": "ঝরা (jhôrā) — to fall out (of hair); to fall away; to drip",
+      "headword": "ঝরা",
+      "romanization": "jhôrā",
+      "gloss": "to fall out (of hair); to fall away; to drip",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39f9e34da03ff955",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for dandruff, then the Bengali for a louse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঝরা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঝরা — jhôrā — \"to fall out (of hair); to fall away; to drip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "চিন্তায় অরুণের চুল ঝরছে। chintāy ôruner chul jhôrchhe. Arun's hair is falling out from worry."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই গাছের পাতা ঝরল, sei gāchher pātā jhôrlô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঝরা (jhôrā) is listed by CDIAL for Bengali, as oozing, dripping and leaves falling, under a reconstructed form (CDIAL 5346); ঝরনা (taught), a waterfall, is probably its relative."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chintāy ôruner chul jhôrchhe. — Arun's hair is falling out from worry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chintāy ôruner chul jhôrchhe.* — Arun's hair is falling out from worry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for dandruff, then the Bengali for a louse, then say jhôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for dandruff, then the Bengali for a louse, then say *jhôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঝরা (jhôrā) mean? (\"To fall out (of hair); to fall away; to drip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C470-khopa",
+      "sequence": 28680,
+      "title": "খোঁপা (khõpā) — a bun; a knot of hair",
+      "headword": "খোঁপা",
+      "romanization": "khõpā",
+      "gloss": "a bun; a knot of hair",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:099d5dfa6311f8ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a louse, then the Bengali for to fall out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খোঁপা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খোঁপা — khõpā — \"a bun; a knot of hair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরা চুলে একটা খোঁপা বাঁধল। mīrā chule ekṭā khõpā bā̃dhlô. Mira put her hair up in a bun."
+            },
+            {
+              "kind": "speech",
+              "text": "খোঁপা (khõpā) বাঁধা, to put one's hair up in a bun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খোঁপা (khõpā) is listed by CDIAL for Bengali, as a knot of hair, under a reconstructed khōppa, \"a bunch of hair\" (CDIAL 3939), which CDIAL takes to be a borrowing from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khõpā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khõpā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khõpā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khõpā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā chule ekṭā khõpā bā̃dhlô. — Mira put her hair up in a bun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā chule ekṭā khõpā bā̃dhlô.* — Mira put her hair up in a bun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a louse, then the Bengali for to fall out, then say khõpā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a louse, then the Bengali for to fall out, then say *khõpā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খোঁপা (khõpā) mean? (\"A bun; a knot of hair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

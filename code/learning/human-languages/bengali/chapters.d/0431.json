@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Bays, Creeks and Deltas",
+  "label": "ch:bn-bays-creeks-and-deltas",
+  "canDo": "I can talk about where rivers meet the sea: bays, creeks, deltas and silt.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C431-bhorat-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can talk about where rivers meet the sea: bays, creeks, deltas and silt.",
+    "assesses": [
+      "BN-LEX-C431-UPOSAGOR431-03",
+      "BN-LEX-C431-UPOSAGOR431-04",
+      "BN-LEX-C431-UPOSAGOR431-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-R276-what-happened",
+  "pathSegment": "HI-PATH-276-PAST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-276-PAST",
+      "order": 2
+    }
+  ]
+}

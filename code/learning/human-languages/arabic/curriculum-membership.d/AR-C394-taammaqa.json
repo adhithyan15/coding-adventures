@@ -1,0 +1,11 @@
+{
+  "id": "AR-C394-taammaqa",
+  "pathSegment": "AR-PATH-394-ITQAN394",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-394-ITQAN394",
+      "order": 2
+    }
+  ]
+}

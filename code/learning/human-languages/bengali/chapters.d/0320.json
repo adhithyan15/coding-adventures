@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Monuments and Memory",
+  "label": "ch:bn-monuments-and-memory",
+  "canDo": "I can talk about monuments, tombs and days worth remembering.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C320-sthapotyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can talk about monuments, tombs and days worth remembering.",
+    "assesses": [
+      "BN-LEX-C320-SMRITI320-03",
+      "BN-LEX-C320-SMRITI320-04",
+      "BN-LEX-C320-SMRITI320-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:ed7b3d066f589991",
+  "lessonIds": [
+    "TA-C487-koluppu",
+    "TA-C487-puratam",
+    "TA-C487-vaittamin",
+    "TA-C487-ceri",
+    "TA-C487-eppam-vitu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch487.txt",
+  "json": "tamil/narration/ch487.json",
+  "textHash": "fnv1a64:d84a0fb67583766f",
+  "jsonHash": "fnv1a64:717c34b2220655a2",
+  "findings": []
+}

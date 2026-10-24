@@ -1,0 +1,11 @@
+{
+  "id": "AR-C310-nada",
+  "pathSegment": "AR-PATH-310-NAJDA310",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-310-NAJDA310",
+      "order": 3
+    }
+  ]
+}

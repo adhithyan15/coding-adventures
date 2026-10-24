@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Temptation and Bother",
+  "label": "ch:ta-temptation-and-bother",
+  "canDo": "I can talk about temptation, despair, pleading and being fed up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C464-alu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can talk about temptation, despair, pleading and being fed up.",
+    "assesses": [
+      "TA-LEX-C464-CAPALAM464-03",
+      "TA-LEX-C464-CAPALAM464-04",
+      "TA-LEX-C464-CAPALAM464-05"
+    ]
+  }
+}

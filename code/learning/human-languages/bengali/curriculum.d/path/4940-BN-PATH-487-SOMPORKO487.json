@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-487-SOMPORKO487",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-487-SOMPORKO487"
+  ],
+  "after": []
+}

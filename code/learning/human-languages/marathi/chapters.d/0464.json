@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Courage and Grit",
+  "label": "ch:mr-courage-and-grit",
+  "canDo": "I can talk about nerve, grit, zest and holding out.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C464-tag-dharne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can talk about nerve, grit, zest and holding out.",
+    "assesses": [
+      "MR-LEX-C464-HIMMAT464-03",
+      "MR-LEX-C464-HIMMAT464-04",
+      "MR-LEX-C464-HIMMAT464-05"
+    ]
+  }
+}

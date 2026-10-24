@@ -1,0 +1,19 @@
+{
+  "chapter": 568,
+  "title": "Athletes and Referees",
+  "label": "ch:ml-athletes-and-referees",
+  "canDo": "I can say an athlete, a coach, a goal, a referee and to compete.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C568-matsarikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 568: I can say an athlete, a coach, a goal, a referee and to compete.",
+    "assesses": [
+      "ML-LEX-C568-KAYIKAM568-03",
+      "ML-LEX-C568-KAYIKAM568-04",
+      "ML-LEX-C568-KAYIKAM568-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:4e88f470fe017f57",
+  "lessonIds": [
+    "TE-C500-anandincu",
+    "TE-C500-murisipovu",
+    "TE-C500-pongipovu",
+    "TE-C500-pulakincu",
+    "TE-C500-ullasam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch500.txt",
+  "json": "telugu/narration/ch500.json",
+  "textHash": "fnv1a64:d01f2efdfffa3e5f",
+  "jsonHash": "fnv1a64:01a1c80c262091bf",
+  "findings": []
+}

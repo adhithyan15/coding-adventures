@@ -1,0 +1,11 @@
+{
+  "id": "AR-C404-damina",
+  "pathSegment": "AR-PATH-404-SHART404",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-404-SHART404",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C286-an-adhhaba",
+  "pathSegment": "AR-PATH-286-REASONS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-286-REASONS",
+      "order": 0
+    }
+  ]
+}

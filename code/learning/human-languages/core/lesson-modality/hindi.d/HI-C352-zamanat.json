@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C352-zamanat",
+    "language": "hindi",
+    "chapter": 352,
+    "sequence": 19500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23441e082356b1e0"
+  },
+  "findings": []
+}

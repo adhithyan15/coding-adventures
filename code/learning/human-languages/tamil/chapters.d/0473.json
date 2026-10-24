@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Charm and Confidence",
+  "label": "ch:ta-charm-and-confidence",
+  "canDo": "I can talk about charm, dignity, generosity and self-confidence.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C473-meccu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can talk about charm, dignity, generosity and self-confidence.",
+    "assesses": [
+      "TA-LEX-C473-AZHAKU473-03",
+      "TA-LEX-C473-AZHAKU473-04",
+      "TA-LEX-C473-AZHAKU473-05"
+    ]
+  }
+}

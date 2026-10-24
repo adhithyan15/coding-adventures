@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:852fa73cf9c8c3e7",
+  "lessonIds": [
+    "BN-C324-dhadha",
+    "BN-C324-koushol",
+    "BN-C324-phad",
+    "BN-C324-bholano",
+    "BN-C324-par-paoya"
+  ],
+  "tex": "bengali/book/chapters/ch324-riddles-and-traps.tex"
+}

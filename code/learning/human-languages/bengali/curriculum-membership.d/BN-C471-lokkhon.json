@@ -1,0 +1,11 @@
+{
+  "id": "BN-C471-lokkhon",
+  "pathSegment": "BN-PATH-471-OSUKH471",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-471-OSUKH471",
+      "order": 1
+    }
+  ]
+}

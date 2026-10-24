@@ -1,0 +1,11 @@
+{
+  "id": "HI-C406-pancar",
+  "pathSegment": "HI-PATH-406-TAIKSI406",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-406-TAIKSI406",
+      "order": 2
+    }
+  ]
+}

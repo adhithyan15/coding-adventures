@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C278-jayco",
+    "language": "marathi",
+    "chapter": 278,
+    "sequence": 16090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0eecda01fbda6733"
+  },
+  "findings": []
+}

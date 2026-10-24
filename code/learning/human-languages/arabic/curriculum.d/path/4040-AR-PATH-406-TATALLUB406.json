@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-406-TATALLUB406",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "AR-EXT-406-TATALLUB406"
+  ],
+  "after": []
+}

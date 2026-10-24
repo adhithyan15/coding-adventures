@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C379-itikkuka",
+    "language": "malayalam",
+    "chapter": 379,
+    "sequence": 18540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:268a36ff4f7ca81c"
+  },
+  "findings": []
+}

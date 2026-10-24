@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Feeling Unwell",
+  "label": "ch:mr-feeling-unwell",
+  "canDo": "I can say how my health is and name a symptom.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C480-malmalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can say how my health is and name a symptom.",
+    "assesses": [
+      "MR-LEX-C480-TABYET480-03",
+      "MR-LEX-C480-TABYET480-04",
+      "MR-LEX-C480-TABYET480-05"
+    ]
+  }
+}

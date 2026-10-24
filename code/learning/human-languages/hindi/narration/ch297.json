@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 297,
+  "title": "A Slip and a Fall",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:41723c37e028769a",
+  "lessons": [
+    {
+      "id": "HI-C297-phisalna",
+      "sequence": 16460,
+      "title": "फिसलना (phisalnā) — to slip",
+      "headword": "फिसलना",
+      "romanization": "phisalnā",
+      "gloss": "to slip",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aeda35f2aaab34a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a wheel, then the Hindi for to overturn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फिसलना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फिसलना — phisalnā — \"to slip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बारिश के बाद मीरा सीढ़ी पर फिसल गई। bāriś ke bād Mīrā sīṛhī par phisal gaī. After the rain Mira slipped on the stairs."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): वह फिसल गई, vah phisal gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फिसलना (phisalnā) is inherited from phiss, a form CDIAL reconstructs for slipping (CDIAL 9080). A slippery floor is one you फिसलते हैं on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phisalnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phisalnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phisalnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phisalnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāriś ke bād Mīrā sīṛhī par phisal gaī. — After the rain Mira slipped on the stairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāriś ke bād Mīrā sīṛhī par phisal gaī.* — After the rain Mira slipped on the stairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a wheel, then the Hindi for to overturn, then say phisalnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a wheel, then the Hindi for to overturn, then say *phisalnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फिसलना (phisalnā) mean? (\"To slip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C297-thokar",
+      "sequence": 16470,
+      "title": "ठोकर (ṭhokar) — a stumble; a knock",
+      "headword": "ठोकर",
+      "romanization": "ṭhokar",
+      "gloss": "a stumble; a knock",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38d9e142382912f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to overturn, then the Hindi for to slip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ठोकर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठोकर — ṭhokar — \"a stumble; a knock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुण को पत्थर से ठोकर लगी। Aruṇ ko patthar se ṭhokar lagī. Arun tripped over a stone."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठोकर (ṭhokar) is inherited from ṭhōkk, a knock, a form CDIAL reconstructs (CDIAL 5513). The person who trips takes को: अरुण को ठोकर लगी, a knock struck Arun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhokar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhokar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhokar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhokar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ ko patthar se ṭhokar lagī. — Arun tripped over a stone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ ko patthar se ṭhokar lagī.* — Arun tripped over a stone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to overturn, then the Hindi for to slip, then say ṭhokar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to overturn, then the Hindi for to slip, then say *ṭhokar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ठोकर (ṭhokar) mean? (\"A stumble; a knock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C297-larkharana",
+      "sequence": 16480,
+      "title": "लड़खड़ाना (laṛkhaṛānā) — to stagger",
+      "headword": "लड़खड़ाना",
+      "romanization": "laṛkhaṛānā",
+      "gloss": "to stagger",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2663f848ab8f5ccc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to slip, then the Hindi for a stumble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लड़खड़ाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लड़खड़ाना — laṛkhaṛānā — \"to stagger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ठोकर के बाद वह लड़खड़ाया और गिर गया। ṭhokar ke bād vah laṛkhaṛāyā aur gir gayā. After the stumble he staggered and fell."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह लड़खड़ाया, vah laṛkhaṛāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लड़खड़ाना (laṛkhaṛānā) is set by CDIAL under Sanskrit laṭati, \"shakes\" (CDIAL 10916), where Hindi appears as larkharānā, to stumble. The repeated -khaṛ- sound gives the unsteady steps."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laṛkhaṛānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laṛkhaṛānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laṛkhaṛānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laṛkhaṛānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhokar ke bād vah laṛkhaṛāyā aur gir gayā. — After the stumble he staggered and fell.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhokar ke bād vah laṛkhaṛāyā aur gir gayā.* — After the stumble he staggered and fell.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to slip, then the Hindi for a stumble, then say laṛkhaṛānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to slip, then the Hindi for a stumble, then say *laṛkhaṛānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लड़खड़ाना (laṛkhaṛānā) mean? (\"To stagger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C297-chilna",
+      "sequence": 16490,
+      "title": "छिलना (chilnā) — to be grazed; to be scraped",
+      "headword": "छिलना",
+      "romanization": "chilnā",
+      "gloss": "to be grazed; to be scraped",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ccfca4db6af80a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a stumble, then the Hindi for to stagger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छिलना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छिलना — chilnā — \"to be grazed; to be scraped\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गिरने से उसका घुटना छिल गया। girne se uskā ghuṭnā chil gayā. He grazed his knee when he fell."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह घुटना छिल गया, vah ghuṭnā chil gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छिलना (chilnā) is the intransitive of chīlnā, to peel, which CDIAL 5051 lists for Hindi under chilla: when you fall, the skin छिल जाती है, peels off by itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chilnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chilnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chilnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chilnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "girne se uskā ghuṭnā chil gayā. — He grazed his knee when he fell.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *girne se uskā ghuṭnā chil gayā.* — He grazed his knee when he fell.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a stumble, then the Hindi for to stagger, then say chilnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a stumble, then the Hindi for to stagger, then say *chilnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छिलना (chilnā) mean? (\"To be grazed; to be scraped\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C297-lahuluhan",
+      "sequence": 16500,
+      "title": "लहूलुहान (lahūluhān) — covered in blood",
+      "headword": "लहूलुहान",
+      "romanization": "lahūluhān",
+      "gloss": "covered in blood",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4180440e6e94ffb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to stagger, then the Hindi for to be grazed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लहूलुहान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लहूलुहान — lahūluhān — \"covered in blood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गिरने के बाद उसका हाथ लहूलुहान था। girne ke bād uskā hāth lahūluhān thā. After the fall his hand was covered in blood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लहूलुहान (lahūluhān) is lahū, blood, which CDIAL 11165 lists for Hindi under Sanskrit lohita, \"red\", followed by an expressive echo, -luhān, that makes the picture stronger. It describes a person or a body part: हाथ लहूलुहान था."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lahūluhān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lahūluhān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lahūluhān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lahūluhān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "girne ke bād uskā hāth lahūluhān thā. — After the fall his hand was covered in blood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *girne ke bād uskā hāth lahūluhān thā.* — After the fall his hand was covered in blood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to stagger, then the Hindi for to be grazed, then say lahūluhān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to stagger, then the Hindi for to be grazed, then say *lahūluhān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लहूलुहान (lahūluhān) mean? (\"Covered in blood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

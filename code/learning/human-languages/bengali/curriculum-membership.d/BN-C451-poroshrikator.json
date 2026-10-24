@@ -1,0 +1,11 @@
+{
+  "id": "BN-C451-poroshrikator",
+  "pathSegment": "BN-PATH-451-GHRINA451",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-451-GHRINA451",
+      "order": 2
+    }
+  ]
+}

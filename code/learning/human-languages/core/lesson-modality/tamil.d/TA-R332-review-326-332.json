@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R332-review-326-332",
+    "language": "tamil",
+    "chapter": 332,
+    "sequence": 19090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2a90052f499fbd3"
+  },
+  "findings": []
+}

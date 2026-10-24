@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-316-COMPARE-DURATION",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-316-COMPARE-DURATION"
+  ],
+  "after": []
+}

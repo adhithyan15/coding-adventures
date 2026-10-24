@@ -1,0 +1,11 @@
+{
+  "id": "BN-C456-ropto-kora",
+  "pathSegment": "BN-PATH-456-CHORITRO456",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-456-CHORITRO456",
+      "order": 4
+    }
+  ]
+}

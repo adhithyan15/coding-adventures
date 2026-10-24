@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-515-PORIBESHON515",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-515-PORIBESHON515"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C467-irakkuka",
+    "language": "malayalam",
+    "chapter": 467,
+    "sequence": 23330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4169d59ce6450c12"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:fbe906c12f14c33d",
+  "lessonIds": [
+    "TA-C323-iruticcatanku",
+    "TA-C323-urvalam",
+    "TA-C323-malarvalaiyam",
+    "TA-C323-putai",
+    "TA-C323-kallarai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch323.txt",
+  "json": "tamil/narration/ch323.json",
+  "textHash": "fnv1a64:08379af50777aef6",
+  "jsonHash": "fnv1a64:63035ac4f5611e32",
+  "findings": []
+}

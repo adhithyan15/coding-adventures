@@ -1,0 +1,11 @@
+{
+  "id": "TE-C430-parimiti",
+  "pathSegment": "TE-PATH-430-SAMATULYAM430",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-430-SAMATULYAM430",
+      "order": 4
+    }
+  ]
+}

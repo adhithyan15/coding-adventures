@@ -1,0 +1,11 @@
+{
+  "id": "KA-R315-feelings-and-hopes",
+  "pathSegment": "KA-PATH-315-FEELINGS-HOPES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-315-FEELINGS-HOPES",
+      "order": 4
+    }
+  ]
+}

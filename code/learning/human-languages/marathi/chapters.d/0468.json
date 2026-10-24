@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Gentle Natures",
+  "label": "ch:mr-gentle-natures",
+  "canDo": "I can describe a gentle, sensitive or helpful person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C468-paropkari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can describe a gentle, sensitive or helpful person.",
+    "assesses": [
+      "MR-LEX-C468-SAUMYA468-03",
+      "MR-LEX-C468-SAUMYA468-04",
+      "MR-LEX-C468-SAUMYA468-05"
+    ]
+  }
+}

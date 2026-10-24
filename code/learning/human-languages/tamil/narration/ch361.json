@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 361,
+  "title": "Weighing It Up",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3c72166eba4f583c",
+  "lessons": [
+    {
+      "id": "TA-C361-tirmani",
+      "sequence": 20810,
+      "title": "தீர்மானி (tīrmāṉi) — to determine; to resolve",
+      "headword": "தீர்மானி",
+      "romanization": "tīrmāṉi",
+      "gloss": "to determine; to resolve",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6f638b00895475a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for blame, then the Tamil for an excuse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தீர்மானி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தீர்மானி — tīrmāṉi — \"to determine; to resolve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அடுத்த ஆண்டு வெளிநாட்டில் படிக்கத் தீர்மானித்தேன். aṭutta āṇṭu veḷināṭṭil paṭikkat tīrmāṉittēṉ. I decided to study abroad next year."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தீர்மானித்தேன், tīrmāṉittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "With an infinitive: படிக்கத் தீர்மானி (tīrmāṉi), to decide to study. The noun தீர்மானம் is a resolution."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தீர்மானி (tīrmāṉi) is native Dravidian: DEDR 3278 lists Tamil tīrmāṉam and tīrmāṉi in the family of tīr, \"to end, be completed, be settled\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīrmāṉi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīrmāṉi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīrmāṉi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīrmāṉi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭutta āṇṭu veḷināṭṭil paṭikkat tīrmāṉittēṉ. — I decided to study abroad next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭutta āṇṭu veḷināṭṭil paṭikkat tīrmāṉittēṉ.* — I decided to study abroad next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for blame, then the Tamil for an excuse, then say tīrmāṉi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for blame, then the Tamil for an excuse, then say *tīrmāṉi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தீர்மானி (tīrmāṉi) mean? (\"To determine; to resolve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C361-paricili",
+      "sequence": 20820,
+      "title": "பரிசீலி (paricīli) — to look into; to consider",
+      "headword": "பரிசீலி",
+      "romanization": "paricīli",
+      "gloss": "to look into; to consider",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19241d22a9bc7f16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an excuse, then the Tamil for to determine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பரிசீலி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரிசீலி — paricīli — \"to look into; to consider\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அதிகாரிகள் எங்கள் புகாரைப் பரிசீலித்தார்கள். atikārikaḷ eṅkaḷ pukāraip paricīlittārkaḷ. The officials looked into our complaint."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பரிசீலித்தேன், paricīlittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal, for requests and applications: விண்ணப்பத்தைப் பரிசீலி (paricīli)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரிசீலி (paricīli) is a verb built on Sanskrit pariśīlana, \"contact; application to, study\" (Monier-Williams), with the loan-verb ending -இ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricīli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricīli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricīli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricīli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atikārikaḷ eṅkaḷ pukāraip paricīlittārkaḷ. — The officials looked into our complaint.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atikārikaḷ eṅkaḷ pukāraip paricīlittārkaḷ.* — The officials looked into our complaint.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an excuse, then the Tamil for to determine, then say paricīli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an excuse, then the Tamil for to determine, then say *paricīli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பரிசீலி (paricīli) mean? (\"To look into; to consider\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C361-alavukol",
+      "sequence": 20830,
+      "title": "அளவுகோல் (aḷavukōl) — a yardstick; a criterion",
+      "headword": "அளவுகோல்",
+      "romanization": "aḷavukōl",
+      "gloss": "a yardstick; a criterion",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:966f38d21441290e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to determine, then the Tamil for to look into."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அளவுகோல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அளவுகோல் — aḷavukōl — \"a yardstick; a criterion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெற்றிக்குப் பணம் மட்டுமே அளவுகோல் அல்ல. veṟṟikkup paṇam maṭṭumē aḷavukōl alla. Money alone is not the measure of success."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally a measuring rod: அளவு, measure, + a word for a stick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அளவுகோல் (aḷavukōl) is native: aḷavu, \"measure, extent\" (DEDR 295), and kōl, \"stick, staff\" (DEDR 2237): a measuring rod, and so a criterion."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḷavukōl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḷavukōl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḷavukōl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḷavukōl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veṟṟikkup paṇam maṭṭumē aḷavukōl alla. — Money alone is not the measure of success.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veṟṟikkup paṇam maṭṭumē aḷavukōl alla.* — Money alone is not the measure of success.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to determine, then the Tamil for to look into, then say aḷavukōl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to determine, then the Tamil for to look into, then say *aḷavukōl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அளவுகோல் (aḷavukōl) mean? (\"A yardstick; a criterion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C361-poruttam",
+      "sequence": 20840,
+      "title": "பொருத்தம் (poruttam) — a good match; suitability",
+      "headword": "பொருத்தம்",
+      "romanization": "poruttam",
+      "gloss": "a good match; suitability",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18266eb48863a554",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to look into, then the Tamil for a yardstick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பொருத்தம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொருத்தம் — poruttam — \"a good match; suitability\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தச் சட்டைக்கும் அந்தக் கால்சட்டைக்கும் நல்ல பொருத்தம். intac caṭṭaikkum antak kālcaṭṭaikkum nalla poruttam. This shirt and those trousers are a good match."
+            },
+            {
+              "kind": "speech",
+              "text": "பொருத்தமான, suitable: பொருத்தமான பதில், a fitting answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொருத்தம் (poruttam) is native Dravidian: DEDR 4541 lists Tamil poru, \"to join, unite\", poruttu, \"to fit together\", and poruttam, \"fitness, suitability\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poruttam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poruttam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poruttam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poruttam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intac caṭṭaikkum antak kālcaṭṭaikkum nalla poruttam. — This shirt and those trousers are a good match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intac caṭṭaikkum antak kālcaṭṭaikkum nalla poruttam.* — This shirt and those trousers are a good match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to look into, then the Tamil for a yardstick, then say poruttam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to look into, then the Tamil for a yardstick, then say *poruttam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பொருத்தம் (poruttam) mean? (\"A good match; suitability\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C361-campantam",
+      "sequence": 20850,
+      "title": "சம்பந்தம் (campantam) — a connection; relevance",
+      "headword": "சம்பந்தம்",
+      "romanization": "campantam",
+      "gloss": "a connection; relevance",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab616fa7bc9cce76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a yardstick, then the Tamil for a good match."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சம்பந்தம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சம்பந்தம் — campantam — \"a connection; relevance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எனக்கும் அந்தச் சம்பவத்துக்கும் எந்தச் சம்பந்தமும் இல்லை. eṉakkum antac campavattukkum entac campantamum illai. I have nothing to do with that incident."
+            },
+            {
+              "kind": "speech",
+              "text": "X-க்கும் Y-க்கும் சம்பந்தம் (campantam), a connection between X and Y."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சம்பந்தம் (campantam) is borrowed from Sanskrit sambandha, \"binding together, close connection\" (Monier-Williams). Tamil writes the b and dh of the loan with ப and த."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "campantam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *campantam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "campantam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *campantam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉakkum antac campavattukkum entac campantamum illai. — I have nothing to do with that incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉakkum antac campavattukkum entac campantamum illai.* — I have nothing to do with that incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a yardstick, then the Tamil for a good match, then say campantam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a yardstick, then the Tamil for a good match, then say *campantam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சம்பந்தம் (campantam) mean? (\"A connection; relevance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 525,
+  "title": "Making a Living",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:05c3141b90b35e0a",
+  "lessons": [
+    {
+      "id": "TE-C525-upadhi",
+      "sequence": 26580,
+      "title": "ఉపాధి (upādhi) — a livelihood; employment",
+      "headword": "ఉపాధి",
+      "romanization": "upādhi",
+      "gloss": "a livelihood; employment",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae806ceb6ea379f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a skilled person, then the Telugu for initiative."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉపాధి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉపాధి — upādhi — \"a livelihood; employment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పల్లెల్లో యువకులకు ఉపాధి దొరకడం కష్టం. pallellō yuvakulaku upādhi dorakaḍaṁ kaṣṭaṁ. In the villages it is hard for young people to find work."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉపాధి (upādhi) అవకాశాలు, job opportunities."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉపాధి (upādhi) is borrowed from Sanskrit upādhi (CDIAL 2299), \"a point of view, an aim\"; in Telugu it means a means of living."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upādhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upādhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upādhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upādhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pallellō yuvakulaku upādhi dorakaḍaṁ kaṣṭaṁ. — In the villages it is hard for young people to find work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pallellō yuvakulaku upādhi dorakaḍaṁ kaṣṭaṁ.* — In the villages it is hard for young people to find work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a skilled person, then the Telugu for initiative, then say upādhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a skilled person, then the Telugu for initiative, then say *upādhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉపాధి (upādhi) mean? (\"A livelihood; employment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C525-sampadana",
+      "sequence": 26590,
+      "title": "సంపాదన (sampādana) — earnings",
+      "headword": "సంపాదన",
+      "romanization": "sampādana",
+      "gloss": "earnings",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:702d0a538279d144",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for initiative, then the Telugu for a livelihood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంపాదన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంపాదన — sampādana — \"earnings\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతని సంపాదనతో కుటుంబం గడుస్తుంది. atani sampādanatō kuṭumbaṁ gaḍustundi. The family lives on his earnings."
+            },
+            {
+              "kind": "speech",
+              "text": "The money a person earns; its verb is సంపాదించు, to earn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంపాదన (sampādana) is borrowed from Sanskrit sampādana, \"procuring; accomplishing\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atani sampādanatō kuṭumbaṁ gaḍustundi. — The family lives on his earnings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atani sampādanatō kuṭumbaṁ gaḍustundi.* — The family lives on his earnings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for initiative, then the Telugu for a livelihood, then say sampādana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for initiative, then the Telugu for a livelihood, then say *sampādana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంపాదన (sampādana) mean? (\"Earnings\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C525-adayam",
+      "sequence": 26600,
+      "title": "ఆదాయం (ādāyaṁ) — income",
+      "headword": "ఆదాయం",
+      "romanization": "ādāyaṁ",
+      "gloss": "income",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3bd3a884f875150",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a livelihood, then the Telugu for earnings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆదాయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆదాయం — ādāyaṁ — \"income\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పంట బాగా పండితే రైతుల ఆదాయం పెరుగుతుంది. paṇṭa bāgā paṇḍitē raitula ādāyaṁ perugutundi. If the harvest is good, the farmers' income rises."
+            },
+            {
+              "kind": "speech",
+              "text": "The opposite of ఖర్చు, expense."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆదాయం (ādāyaṁ) is usually traced to Sanskrit ādāya, \"taking, seizing\" (Monier-Williams); compare Sanskrit āya, \"arrival; income\" (CDIAL 1283)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādāyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādāyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādāyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādāyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇṭa bāgā paṇḍitē raitula ādāyaṁ perugutundi. — If the harvest is good, the farmers' income rises.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇṭa bāgā paṇḍitē raitula ādāyaṁ perugutundi.* — If the harvest is good, the farmers' income rises.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a livelihood, then the Telugu for earnings, then say ādāyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a livelihood, then the Telugu for earnings, then say *ādāyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆదాయం (ādāyaṁ) mean? (\"Income\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C525-vetanam",
+      "sequence": 26610,
+      "title": "వేతనం (vētanaṁ) — a wage; pay",
+      "headword": "వేతనం",
+      "romanization": "vētanaṁ",
+      "gloss": "a wage; pay",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a0dcbe0c6076e1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for earnings, then the Telugu for income."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వేతనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేతనం — vētanaṁ — \"a wage; pay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కార్మికులు ఎక్కువ వేతనం కోరారు. kārmikulu ekkuva vētanaṁ kōrāru. The workers asked for higher wages."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; జీతం is the everyday word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేతనం (vētanaṁ) is borrowed from Sanskrit vetana, \"wages, hire, salary, livelihood\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vētanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vētanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vētanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vētanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārmikulu ekkuva vētanaṁ kōrāru. — The workers asked for higher wages.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārmikulu ekkuva vētanaṁ kōrāru.* — The workers asked for higher wages.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for earnings, then the Telugu for income, then say vētanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for earnings, then the Telugu for income, then say *vētanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వేతనం (vētanaṁ) mean? (\"A wage; pay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C525-sramincu",
+      "sequence": 26620,
+      "title": "శ్రమించు (śramiñcu) — to toil; to labour",
+      "headword": "శ్రమించు",
+      "romanization": "śramiñcu",
+      "gloss": "to toil; to labour",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:618c850ceba9fd6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for income, then the Telugu for a wage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శ్రమించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శ్రమించు — śramiñcu — \"to toil; to labour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పుస్తకం కోసం రచయిత రెండేళ్ళు శ్రమించారు. ā pustakaṁ kōsaṁ racayita reṇḍēḷḷu śramiñcāru. The writer toiled for two years on that book."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): శ్రమించాను, śramiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is శ్రమ, toil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శ్రమించు (śramiñcu) is built on Sanskrit śrama, \"labour; fatigue\" (CDIAL 12682), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śramiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śramiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śramiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śramiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pustakaṁ kōsaṁ racayita reṇḍēḷḷu śramiñcāru. — The writer toiled for two years on that book.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pustakaṁ kōsaṁ racayita reṇḍēḷḷu śramiñcāru.* — The writer toiled for two years on that book.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for income, then the Telugu for a wage, then say śramiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for income, then the Telugu for a wage, then say *śramiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శ్రమించు (śramiñcu) mean? (\"To toil; to labour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R525-review-518-525",
+      "sequence": 26630,
+      "title": "Words from chapters 518–525 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 518-525",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2250e166c36778aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for to get hurt and a bump."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get hurt, a bump, to stagger, to limp, bleeding",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get hurt, a bump, to stagger, to limp, bleeding]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "treatment, surgery, an anaesthetic, a bandage, to visit the sick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: treatment, surgery, an anaesthetic, a bandage, to visit the sick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to steady, to grow strong, to be worn out, to blow one's nose, to pick up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to steady, to grow strong, to be worn out, to blow one's nose, to pick up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "frailty, to grow weak, to grow thin, to put on weight, nutrition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: frailty, to grow weak, to grow thin, to put on weight, nutrition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a profession, status, a position, a promotion, an ambition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a profession, status, a position, a promotion, an ambition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a worker, an expert, an adviser, an assistant, a contractor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a worker, an expert, an adviser, an assistant, a contractor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talent, proficiency, workmanship, a skilled person, initiative",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: talent, proficiency, workmanship, a skilled person, initiative]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a livelihood, earnings, income, a wage, to toil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a livelihood, earnings, income, a wage, to toil]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To get hurt? (గాయపడు, gāyapaḍu.) A bump? (బొప్పి, boppi.) To stagger? (తూలు, tūlu.) To limp? (కుంటు, kuṇṭu.) Bleeding? (రక్తస్రావం, raktasrāvaṁ.) Treatment? (చికిత్స, cikitsa.) Surgery? (శస్త్రచికిత్స, śastracikitsa.) An anaesthetic? (మత్తుమందు, mattumandu.) A bandage? (పట్టీ, paṭṭī.) To visit the sick? (పరామర్శించు, parāmarśiñcu.) To steady? (కుదుటపడు, kuduṭapaḍu.) To grow strong? (బలపడు, balapaḍu.) To be worn out? (నలిగిపోవు, naligipōvu.) To blow one's nose? (చీదు, cīdu.) To pick up? (పుంజుకో, puñjukō.) Frailty? (బలహీనత, balahīnata.) To grow weak? (నీరసించు, nīrasiñcu.) To grow thin? (చిక్కిపోవు, cikkipōvu.) To put on weight? (లావెక్కు, lāvekku.) Nutrition? (పోషకాహారం, pōṣakāhāraṁ.) A profession? (వృత్తి, vṛtti.) Status? (హోదా, hōdā.) A position? (పదవి, padavi.) A promotion? (పదోన్నతి, padōnnati.) An ambition? (ఆశయం, āśayaṁ.) A worker? (కార్మికుడు, kārmikuḍu.) An expert? (నిపుణుడు, nipuṇuḍu.) An adviser? (సలహాదారు, salahādāru.) An assistant? (సహాయకుడు, sahāyakuḍu.) A contractor? (గుత్తేదారు, guttēdāru.) Talent? (ప్రతిభ, pratibha.) Proficiency? (ప్రావీణ్యం, prāvīṇyaṁ.) Workmanship? (పనితనం, panitanaṁ.) A skilled person? (నేర్పరి, nērpari.) Initiative? (చొరవ, corava.) A livelihood? (ఉపాధి, upādhi.) Earnings? (సంపాదన, sampādana.) Income? (ఆదాయం, ādāyaṁ.) A wage? (వేతనం, vētanaṁ.) To toil? (శ్రమించు, śramiñcu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

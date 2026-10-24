@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:c5335359499d158e",
+  "lessonIds": [
+    "MR-C373-sarveksan",
+    "MR-C373-namuna",
+    "MR-C373-akdevari",
+    "MR-C373-vislesan",
+    "MR-C373-paddhat",
+    "MR-R373-review-366-373"
+  ],
+  "tex": "marathi/book/chapters/ch373-data-and-methods.tex"
+}

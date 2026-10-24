@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Compassion and Panic",
+  "label": "ch:ml-compassion-and-panic",
+  "canDo": "I can say compassion, sympathy, to throb, unease and to sob.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C520-vitumpuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can say compassion, sympathy, to throb, unease and to sob.",
+    "assesses": [
+      "ML-LEX-C520-ANUKAMPA520-03",
+      "ML-LEX-C520-ANUKAMPA520-04",
+      "ML-LEX-C520-ANUKAMPA520-05"
+    ]
+  }
+}

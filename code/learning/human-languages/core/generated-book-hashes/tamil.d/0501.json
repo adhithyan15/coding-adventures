@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:cf3e6b5541d645eb",
+  "lessonIds": [
+    "TA-C501-caccaravu",
+    "TA-C501-takararu",
+    "TA-C501-manastapam",
+    "TA-C501-pinanku",
+    "TA-C501-vivakarattu"
+  ],
+  "tex": "tamil/book/chapters/ch501-family-quarrels.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "The Reporter on the Spot",
+  "label": "ch:ka-the-reporter-on-the-spot",
+  "canDo": "I can say a reporter, to occur, a broadcast, to broadcast and a headline.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C320-sirsike",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can say a reporter, to occur, a broadcast, to broadcast and a headline.",
+    "assesses": [
+      "KA-LEX-C320-VARADI320-03",
+      "KA-LEX-C320-VARADI320-04",
+      "KA-LEX-C320-VARADI320-05"
+    ]
+  }
+}

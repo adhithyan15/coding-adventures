@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:45945e4dff4758b3",
+  "lessonIds": [
+    "BN-C364-kothin",
+    "BN-C364-songkot",
+    "BN-C364-daridryo",
+    "BN-C364-biporjosto-hooya",
+    "BN-C364-chorom"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch364.txt",
+  "json": "bengali/narration/ch364.json",
+  "textHash": "fnv1a64:7f07f0e37a104b25",
+  "jsonHash": "fnv1a64:fa552d2143679b5f",
+  "findings": []
+}

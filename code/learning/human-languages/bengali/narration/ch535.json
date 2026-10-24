@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 535,
+  "title": "Staying Safe",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2faa425ee5e572dd",
+  "lessons": [
+    {
+      "id": "BN-C535-sitbelt",
+      "sequence": 32200,
+      "title": "সিটবেল্ট (siṭbelṭ) — a seat belt",
+      "headword": "সিটবেল্ট",
+      "romanization": "siṭbelṭ",
+      "gloss": "a seat belt",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c626edd55b953096",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for auspicious, then the Bengali for to come true."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সিটবেল্ট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সিটবেল্ট — siṭbelṭ — \"a seat belt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গাড়িতে উঠে আমি সিটবেল্ট বাঁধলাম। Gāṛite uṭhe āmi siṭbelṭ bā̃dhlām. I got into the car and fastened my seat belt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সিটবেল্ট (siṭbelṭ) is borrowed from English seat belt, written as one word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṭbelṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṭbelṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṭbelṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṭbelṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Gāṛite uṭhe āmi siṭbelṭ bā̃dhlām. — I got into the car and fastened my seat belt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Gāṛite uṭhe āmi siṭbelṭ bā̃dhlām.* — I got into the car and fastened my seat belt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for auspicious, then the Bengali for to come true, then say siṭbelṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for auspicious, then the Bengali for to come true, then say *siṭbelṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সিটবেল্ট (siṭbelṭ) mean? (\"A seat belt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C535-bima",
+      "sequence": 32210,
+      "title": "বিমা (bimā) — insurance",
+      "headword": "বিমা",
+      "romanization": "bimā",
+      "gloss": "insurance",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e51cccaefb43f345",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to come true, then the Bengali for a seat belt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিমা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিমা — bimā — \"insurance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গাড়ির বিমা থাকলে দুর্ঘটনার পরে কোম্পানি খরচ দেবে। Gāṛir bimā thākle durghôṭônār pôre kompāni khôrôch debe. If the car is insured, the company will pay the costs after an accident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিমা (bimā) is usually traced to Persian bīma, built on bīm, \"fear\": cover against what you fear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bimā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bimā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bimā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bimā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Gāṛir bimā thākle durghôṭônār pôre kompāni khôrôch debe. — If the car is insured, the company will pay the costs after an accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Gāṛir bimā thākle durghôṭônār pôre kompāni khôrôch debe.* — If the car is insured, the company will pay the costs after an accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to come true, then the Bengali for a seat belt, then say bimā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to come true, then the Bengali for a seat belt, then say *bimā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিমা (bimā) mean? (\"Insurance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C535-geranti",
+      "sequence": 32220,
+      "title": "গ্যারান্টি (gærānṭi) — a guarantee",
+      "headword": "গ্যারান্টি",
+      "romanization": "gærānṭi",
+      "gloss": "a guarantee",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c37606846b3b7bd2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a seat belt, then the Bengali for insurance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গ্যারান্টি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গ্যারান্টি — gærānṭi — \"a guarantee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই ঘড়ির দুই বছরের গ্যারান্টি আছে। Ei ghôṛir dui bôchhôrer gærānṭi āchhe. This watch has a two-year guarantee."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গ্যারান্টি (gærānṭi) is borrowed from English guarantee."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gærānṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gærānṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gærānṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gærānṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ei ghôṛir dui bôchhôrer gærānṭi āchhe. — This watch has a two-year guarantee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ei ghôṛir dui bôchhôrer gærānṭi āchhe.* — This watch has a two-year guarantee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a seat belt, then the Bengali for insurance, then say gærānṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a seat belt, then the Bengali for insurance, then say *gærānṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গ্যারান্টি (gærānṭi) mean? (\"A guarantee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C535-surokkhit",
+      "sequence": 32230,
+      "title": "সুরক্ষিত (surôkkhit) — well protected; safe",
+      "headword": "সুরক্ষিত",
+      "romanization": "surôkkhit",
+      "gloss": "well protected; safe",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c81266edaec2fdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for insurance, then the Bengali for a guarantee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সুরক্ষিত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সুরক্ষিত — surôkkhit — \"well protected; safe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের টাকা ব্যাংকে সুরক্ষিত। Āmāder ṭākā bængke surôkkhit. Our money is safe in the bank."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সুরক্ষিত (surôkkhit) is a tatsama, Sanskrit surakṣita, \"well protected, carefully guarded\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "surôkkhit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *surôkkhit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "surôkkhit, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *surôkkhit*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmāder ṭākā bængke surôkkhit. — Our money is safe in the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmāder ṭākā bængke surôkkhit.* — Our money is safe in the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for insurance, then the Bengali for a guarantee, then say surôkkhit again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for insurance, then the Bengali for a guarantee, then say *surôkkhit* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সুরক্ষিত (surôkkhit) mean? (\"Well protected; safe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C535-ogninirbapok",
+      "sequence": 32240,
+      "title": "অগ্নিনির্বাপক (ôgninirbāpôk) — a fire extinguisher",
+      "headword": "অগ্নিনির্বাপক",
+      "romanization": "ôgninirbāpôk",
+      "gloss": "a fire extinguisher",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c07e937789f38b58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a guarantee, then the Bengali for well protected."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অগ্নিনির্বাপক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অগ্নিনির্বাপক — ôgninirbāpôk — \"a fire extinguisher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আগুন লাগলে আমরা অগ্নিনির্বাপক দিয়ে আগুন নেভাব। Āgun lāgle āmrā ôgninirbāpôk diye āgun nebhābô. If a fire breaks out, we'll put it out with the extinguisher."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অগ্নিনির্বাপক (ôgninirbāpôk) joins Sanskrit agni, \"fire\", and nirvāpaka, \"putting out\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôgninirbāpôk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôgninirbāpôk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôgninirbāpôk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôgninirbāpôk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āgun lāgle āmrā ôgninirbāpôk diye āgun nebhābô. — If a fire breaks out, we'll put it out with the extinguisher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āgun lāgle āmrā ôgninirbāpôk diye āgun nebhābô.* — If a fire breaks out, we'll put it out with the extinguisher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a guarantee, then the Bengali for well protected, then say ôgninirbāpôk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a guarantee, then the Bengali for well protected, then say *ôgninirbāpôk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অগ্নিনির্বাপক (ôgninirbāpôk) mean? (\"A fire extinguisher\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

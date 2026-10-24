@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:9592cfb0a03435df",
+  "lessonIds": [
+    "BN-C365-motbhed",
+    "BN-C365-somjhota",
+    "BN-C365-nishpotti",
+    "BN-C365-manano",
+    "BN-C365-sorbosommoto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch365.txt",
+  "json": "bengali/narration/ch365.json",
+  "textHash": "fnv1a64:698d8ccec61fa4a4",
+  "jsonHash": "fnv1a64:a33ffb1884f0e508",
+  "findings": []
+}

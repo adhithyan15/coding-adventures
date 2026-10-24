@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:8228eb37bc2117ae",
+  "lessonIds": [
+    "AR-C349-li-l-marra-al-ula",
+    "AR-C349-an-tariq-al-khata",
+    "AR-C349-awwal-ams",
+    "AR-C349-yawman-ma",
+    "AR-C349-aqiba"
+  ],
+  "tex": "arabic/book/chapters/ch349-for-the-first-time.tex"
+}

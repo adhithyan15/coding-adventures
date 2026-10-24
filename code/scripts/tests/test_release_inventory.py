@@ -38,8 +38,9 @@ def subset_row(name: str, spec: str = "LANG84") -> str:
     return f"{name},the {name} subset,corpus/{name},{spec}"
 
 
-# `iir_status`/`backend_status` claims need a known profile; the repository
-# has no `profiles.rs` yet, so the matrix tests stub the lookup.
+# `iir_status`/`backend_status` claims need a known profile. The fixtures'
+# profile names (`p`, `p18`) are in no real `profiles.rs`, so these tests stub
+# the lookup.
 ANY_PROFILE = mock.patch.object(release_inventory, "known_profile", lambda _name: True)
 
 
@@ -481,6 +482,10 @@ class SubsetsTest(Fixture):
         self.case("lang", "s", "relorphan", "rb", "reject", "reject@1.0")
         self.case("lang", "s", "relbogus", "rb", "expect", "cite", "reject@9.9")
         self.case("lang", "s", "bad name", "rb", "expect", "cite")
+        self.case("lang", "s", "zero", "rb", "expect", "cite", "reject@p18")
+        self.case("lang", "s", "orphan2", "rb", "reject", "reject@p18")
+        self.case("lang", "s", "badprofile", "rb", "expect", "cite", "reject@9x")
+        self.case("lang", "s", "twice", "rb", "expect", "cite", "expect@p", "reject@p")
         lines = [HEADER, row("1.0", "1990-01-01", "", "partial,P,s,s,-,p")]
         errors = self.errors("lang", lines)
         for fragment in (
@@ -490,14 +495,82 @@ class SubsetsTest(Fixture):
             "corpus/s/both: needs exactly one of .expect or .reject",
             "corpus/s/neither: needs exactly one of .expect or .reject",
             "corpus/s/orphan: a profile override needs the plain .expect",
-            "corpus/s/relorphan: a release refusal override needs the plain .expect",
-            "corpus/s/relbogus: .'reject@9.9' names no releases.csv row",
+            "corpus/s/relorphan: a profile override needs the plain .expect",
+            "corpus/s/relbogus: override .'reject@9.9' names no profile defined in a profiles.rs and no releases.csv row",
             "corpus/s/bad name: case name must match",
+            "corpus/s/orphan2: a profile override needs the plain .expect",
+            "corpus/s/badprofile: override .'reject@9x' names no profile",
+            "corpus/s/twice: more than one override for 'p'",
         ):
             self.assertTrue(any(fragment in e for e in errors), (fragment, errors))
         self.assertFalse(any("corpus/s/good" in e for e in errors), errors)
         # `<name>.reject@<release>` is an override, not a second source file.
         self.assertFalse(any("corpus/s/relrefuse" in e for e in errors), errors)
+        # `.reject@<profile>` (LANG84 4c) is an override, not a second source.
+        self.assertFalse(any("corpus/s/zero" in e for e in errors), errors)
+
+    def test_profile_names_are_name_fields_not_any_word(self) -> None:
+        crate = self.root / "rust" / "x-iir-compiler" / "src"
+        crate.mkdir(parents=True)
+        (crate / "profiles.rs").write_text(
+            "//! perl_old is only mentioned here\n"
+            "pub const A: ReleaseProfile = ReleaseProfile {\n"
+            '    name: "perl_nv",\n    arithmetic: Arithmetic::Double,\n};\n'
+            'pub const B: ReleaseProfile = ReleaseProfile { name : "rb33", x: 1 };\n',
+            encoding="utf-8",
+        )
+        names = release_inventory.profile_names(self.root / "rust")
+        self.assertEqual(names, {"perl_nv", "rb33"})
+        for word in ("pub", "Double", "perl_old", "arithmetic", "name"):
+            self.assertNotIn(word, names)
+
+    def test_real_profiles_are_found(self) -> None:
+        names = release_inventory.profile_names()
+        self.assertTrue({"perl_nv", "perl_iv"} <= names, names)
+        self.assertFalse(release_inventory.known_profile("pub"))
+        self.assertFalse(release_inventory.known_profile("Double"))
+
+    def test_corpus_files_are_small_and_have_no_bare_cr(self) -> None:
+        self.declare("lang", [SUBSETS_HEADER, subset_row("s")])
+        self.case("lang", "s", "crlf", "rb", "expect", "cite")
+        corpus = self.root / "lang" / "corpus" / "s"
+        (corpus / "crlf.rb").write_bytes(b"puts 1\r\nputs 2\r\n")
+        self.case("lang", "s", "bare", "rb", "expect", "cite")
+        (corpus / "bare.rb").write_bytes(b"puts 1\rputs 2\n")
+        self.case("lang", "s", "big", "rb", "expect", "cite")
+        (corpus / "big.rb").write_bytes(b"#" * (64 * 1024 + 1))
+        report = release_inventory.Report(self.root / "lang" / "releases.csv")
+        release_inventory.corpus_cases(report, self.root / "lang", "s")
+        self.assertTrue(
+            any("'bare.rb' has a CR not followed by LF" in e for e in report.errors),
+            report.errors,
+        )
+        self.assertTrue(
+            any("'big.rb' exceeds 65536 bytes" in e for e in report.errors),
+            report.errors,
+        )
+        self.assertFalse(any("crlf" in e for e in report.errors), report.errors)
+
+    def test_overrides_name_a_profile_some_profiles_rs_defines(self) -> None:
+        self.declare("lang", [SUBSETS_HEADER, subset_row("s")])
+        self.case("lang", "s", "zero", "rb", "expect", "cite", "expect@nosuch")
+        report = release_inventory.Report(self.root / "lang" / "releases.csv")
+        with mock.patch.object(
+            release_inventory, "known_profile", lambda name: name == "real"
+        ):
+            self.assertEqual(
+                release_inventory.corpus_cases(report, self.root / "lang", "s"),
+                {"zero"},
+            )
+            self.assertTrue(
+                any(".'expect@nosuch' names no profile" in e for e in report.errors),
+                report.errors,
+            )
+            self.case("lang", "s", "zero", "reject@real")
+            (self.root / "lang" / "corpus" / "s" / "zero.expect@nosuch").unlink()
+            report.errors.clear()
+            release_inventory.corpus_cases(report, self.root / "lang", "s")
+            self.assertEqual(report.errors, [])
 
 
 MATRIX = """
@@ -700,37 +773,20 @@ class MatrixTest(Fixture):
         ):
             self.assertTrue(any(fragment in e for e in errors), (fragment, errors))
 
-    def test_rows_without_release_are_noted_not_counted(self) -> None:
+    def test_rows_without_release_fail(self) -> None:
+        # Phase 2b counted these in a note; since 4c gave Perl's rows the
+        # field, a row of an inventoried language without one is an error.
         path = self.inventory({"1.0": "partial,P,s,-,-,-"})
         report = release_inventory.check_inventory(
             path, release_inventory.matrix_rows(MATRIX)
         )
+        line = MATRIX.count("\n", 0, MATRIX.index('src: "print(2);"')) + 1
         self.assertIn(
-            "matrix: 1 lang_matrix row(s) name no release (LANG84 requires one; "
-            "Prog gains the field in phase 4c)",
-            report.notes,
+            f"lang_matrix.rs line {line}: a Language::Perl row names no release "
+            "(LANG84 requires one for a language with releases.csv)",
+            report.errors,
         )
-
-    def test_claims_are_pending_until_a_row_names_a_release(self) -> None:
-        # Before phase 4c no Perl row can name a release, so a B claim is a
-        # note, not an error ...
-        path = self.inventory({"1.0": "partial,P,s,s,s,p"})
-        report = release_inventory.check_inventory(
-            path, release_inventory.matrix_rows("Prog { lang: Language::Perl }\n")
-        )
-        self.assertEqual(report.errors, [])
-        self.assertIn(
-            "matrix: 1 backend claim(s) pending: no lang_matrix row of this "
-            "language names a release yet (phase 4c)",
-            report.notes,
-        )
-        # ... and one row that names a release makes every claim strict.
-        source = "Prog { lang: Language::Perl }\n" + self.prog("1.0", "s/add")
-        errors = self.matrix_errors(path, source)
-        self.assertTrue(
-            any("claims B(s) but case s/mul has no lang_matrix row" in e for e in errors),
-            errors,
-        )
+        self.assertFalse(any("name no release" in n for n in report.notes))
 
     @ANY_PROFILE
     def test_cli_matrix_flag_reads_the_source(self) -> None:

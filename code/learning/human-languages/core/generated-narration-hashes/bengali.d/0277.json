@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:9f5c6de0c23b349f",
+  "lessonIds": [
+    "BN-C277-sakkhi",
+    "BN-C277-keu",
+    "BN-C277-sobai",
+    "BN-C277-bhir",
+    "BN-C277-hajir-hooya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch277.txt",
+  "json": "bengali/narration/ch277.json",
+  "textHash": "fnv1a64:20d52b262b634f91",
+  "jsonHash": "fnv1a64:79b53fd155ac0be4",
+  "findings": []
+}

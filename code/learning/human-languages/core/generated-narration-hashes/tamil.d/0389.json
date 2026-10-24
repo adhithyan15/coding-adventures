@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:e44bb43ec7b1fe69",
+  "lessonIds": [
+    "TA-C389-ceyalpatuttu",
+    "TA-C389-nataimurai",
+    "TA-C389-valimurai",
+    "TA-C389-natavatikkai",
+    "TA-C389-nirvaki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch389.txt",
+  "json": "tamil/narration/ch389.json",
+  "textHash": "fnv1a64:dc28a219a73ab60b",
+  "jsonHash": "fnv1a64:74df7338385b8514",
+  "findings": []
+}

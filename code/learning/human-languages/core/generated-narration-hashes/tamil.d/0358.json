@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:e12f4169539c3e3d",
+  "lessonIds": [
+    "TA-C358-kotpatu",
+    "TA-C358-tattuvam",
+    "TA-C358-cittantam",
+    "TA-C358-kolkai",
+    "TA-C358-niruvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch358.txt",
+  "json": "tamil/narration/ch358.json",
+  "textHash": "fnv1a64:b5f69c9a333e955c",
+  "jsonHash": "fnv1a64:d4f7a8ed1dc3ff97",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C392-anusarne",
+    "language": "marathi",
+    "chapter": 392,
+    "sequence": 22590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0603a494a2a17085"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C298-hariq",
+    "language": "arabic",
+    "chapter": 298,
+    "sequence": 17250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2297f37c449f23f"
+  },
+  "findings": []
+}

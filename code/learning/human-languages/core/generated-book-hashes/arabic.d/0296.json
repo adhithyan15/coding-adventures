@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:81b9052a6c8abf96",
+  "lessonIds": [
+    "AR-C296-sahafa",
+    "AR-C296-muharrir",
+    "AR-C296-maqal",
+    "AR-C296-harrara",
+    "AR-C296-nashra"
+  ],
+  "tex": "arabic/book/chapters/ch296-the-press.tex"
+}

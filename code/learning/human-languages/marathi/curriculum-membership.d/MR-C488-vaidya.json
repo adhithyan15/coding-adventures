@@ -1,0 +1,11 @@
+{
+  "id": "MR-C488-vaidya",
+  "pathSegment": "MR-PATH-488-RUGNA488",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-488-RUGNA488",
+      "order": 2
+    }
+  ]
+}

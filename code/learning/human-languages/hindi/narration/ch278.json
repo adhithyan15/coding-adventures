@@ -1,0 +1,406 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 278,
+  "title": "What Was Going On",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:6f1c1344f6c452a9",
+  "lessons": [
+    {
+      "id": "HI-C278-padhrahatha",
+      "sequence": 15350,
+      "title": "मैं पढ़ रहा था (maiṁ paṛh rahā thā) — what was going on",
+      "headword": "मैं पढ़ रहा था",
+      "romanization": "maiṁ paṛh rahā thā",
+      "gloss": "I was reading — the past of an action going on, and a scene with an event inside it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce35c101d52931a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I am doing\" and \"he was\". (maiṁ kar rahā hūṁ, vah thā.) Then \"she came\". (vah āī.) The first two make this lesson; the third will interrupt it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: was …-ing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मैं किताब पढ़ रहा था। maiṁ kitāb paṛh rahā thā. — \"I was reading a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You know कर रहा हूँ, \"I am doing\". Put था where हूँ stood and the same action moves into the past. Both रहा and था follow the one doing it:"
+            },
+            {
+              "kind": "speech",
+              "text": "मैं पढ़ रहा था (maiṁ paṛh rahā thā) — I was reading; a woman says मैं पढ़ रही थी (maiṁ paṛh rahī thī)."
+            },
+            {
+              "kind": "speech",
+              "text": "वह सो रहा था (vah so rahā thā) — he was sleeping; वह सो रही थी (vah so rahī thī) — she was sleeping."
+            },
+            {
+              "kind": "speech",
+              "text": "बारिश हो रही थी (bāriś ho rahī thī) — it was raining."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no ने here, even with a thing: मैं खाना खा रहा था, never मैंने. ने belongs to the plain past alone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a scene and an event",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जब मैं खाना खा रहा था, तब मीरा आई। jab maiṁ khānā khā rahā thā, tab Mīrā āī. — \"When I was eating, Mira came.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A story needs two kinds of past. खा रहा था is the scene: it was going on, and the sentence does not say when it began or ended. आई is the event: it happened, once, inside the scene. जब … तब …, the frame you know for \"when … then …\", holds the two together."
+            },
+            {
+              "kind": "speech",
+              "text": "जब बारिश हो रही थी, तब बिजली गई। (jab bāriś ho rahī thī, tab bijlī gaī.) — While it was raining, the power went."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What were you doing yesterday evening?\" — tum kal śām ko kyā kar rahe the?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What were you doing yesterday evening?\" — *tum kal śām ko kyā kar rahe the?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We were drinking tea when the power went\" — jab ham cāy pī rahe the, tab bijlī gaī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We were drinking tea when the power went\" — *jab ham cāy pī rahe the, tab bijlī gaī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C278-padhrahatha-r1",
+              "prompt": "Say that you were reading a book when Arun came.",
+              "assesses": [
+                "HI-GRAMMAR-C278-ONGOING-PAST-01",
+                "HI-GRAMMAR-C278-SCENE-EVENT-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "jab maiṁ kitāb paṛh rahā thā, tab aruṇ āyā",
+                "जब मैं किताब पढ़ रहा था, तब अरुण आया।",
+                "जब मैं किताब पढ़ रही थी, तब अरुण आया।",
+                "jab maiṁ kitāb paṛh rahī thī, tab aruṇ āyā"
+              ],
+              "feedback": {
+                "correct": "paṛh rahā thā is the scene; āyā is the event inside it.",
+                "incorrect": "The scene takes rahā thā (or rahī thī); the event is the plain past: Aruṇ āyā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I was reading\"? (मैं पढ़ रहा था (maiṁ paṛh rahā thā), or पढ़ रही थी.) \"It was raining\"? (बारिश हो रही थी.) In जब मैं खाना खा रहा था, तब मीरा आई, which is the scene and which is the event? (खा रहा था is the scene; आई is the event.) Why no ने in मैं खाना खा रहा था? (ने belongs to the plain past alone.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C278-pichla",
+      "sequence": 15360,
+      "title": "पिछला (pichlā) — last, previous",
+      "headword": "पिछला",
+      "romanization": "pichlā",
+      "gloss": "last, previous",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:401ab1b4f351021f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I was reading a book\". (maiṁ kitāb paṛh rahā thā.) Then the words for a week and a year. (haftā, sāl.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पिछला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पिछला — pichlā — \"last, previous\": the one before this one."
+            },
+            {
+              "kind": "speech",
+              "text": "पिछले हफ़्ते मैं गाँव गया। pichle hafte maiṁ gā̃v gayā. — \"Last week I went to the village.\""
+            },
+            {
+              "kind": "speech",
+              "text": "पिछला is an adjective, and it agrees: पिछला हफ़्ता (pichlā haftā), \"last week\", but पिछली बार (pichlī bār), \"last time\", because बार is feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Said as a time, \"last week\" or \"last year\" takes the form you met in बच्चे को: पिछले हफ़्ते, पिछले साल."
+            },
+            {
+              "kind": "speech",
+              "text": "पिछले साल हम बहुत व्यस्त थे। pichle sāl ham bahut vyast the. — \"Last year we were very busy.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पिछला (pichlā) has no row of its own in CDIAL. It is usually connected with पीछे (pīche), \"behind\", which CDIAL traces to paśca, \"hinder part\" (CDIAL 7990). The last week, on that picture, is the one behind you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pichlā, then pichle hafte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pichlā*, then *pichle hafte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Last week I went to the village\" — pichle hafte maiṁ gā̃v gayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Last week I went to the village\" — *pichle hafte maiṁ gā̃v gayā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Last time it was raining\" — pichlī bār bāriś ho rahī thī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Last time it was raining\" — *pichlī bār bāriś ho rahī thī*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पिछला (pichlā) mean? (\"Last, previous\".) \"Last year\"? (पिछले साल.) \"Last time\"? (पिछली बार: बार is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R278-the-scene-and-the-event",
+      "sequence": 15370,
+      "title": "Review — the scene and the event",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "the scene and the event, last week and last year",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9ab7a05e2cf52f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was reading a book\". (maiṁ kitāb paṛh rahā thā.) Then \"last week\" and \"last time\". (pichle hafte, pichlī bār.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Last week I went to the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Last week I went to the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What were you doing yesterday evening? I was cooking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What were you doing yesterday evening? I was cooking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "When we were drinking tea, Arun came.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: When we were drinking tea, Arun came.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It was raining, and suddenly the power went.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It was raining, and suddenly the power went.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Last year Mira read many books.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Last year Mira read many books.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which past is the scene? (रहा था: बारिश हो रही थी.) Which is the event? (The plain past: मीरा आई.) \"Last year she read many books\"? (पिछले साल उसने बहुत किताबें पढ़ीं: ने, and पढ़ीं for the books.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

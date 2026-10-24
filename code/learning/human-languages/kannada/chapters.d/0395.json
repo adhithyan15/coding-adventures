@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Running Public Offices",
+  "label": "ch:ka-running-public-offices",
+  "canDo": "I can say administration, a ministry, a village council, to implement and a committee.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C395-samiti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can say administration, a ministry, a village council, to implement and a committee.",
+    "assesses": [
+      "KA-LEX-C395-ADALITA395-03",
+      "KA-LEX-C395-ADALITA395-04",
+      "KA-LEX-C395-ADALITA395-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-403-GHOR403",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can check in, collect a key and ask for something to be arranged.",
+  "prerequisites": []
+}

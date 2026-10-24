@@ -1,0 +1,11 @@
+{
+  "id": "TE-C408-sabhyudu",
+  "pathSegment": "TE-PATH-408-SAMAJAM408",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-408-SAMAJAM408",
+      "order": 3
+    }
+  ]
+}

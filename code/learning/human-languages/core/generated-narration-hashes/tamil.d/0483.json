@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:b065c62549d375c2",
+  "lessonIds": [
+    "TA-C483-pun",
+    "TA-C483-koppulam",
+    "TA-C483-paru",
+    "TA-C483-cori",
+    "TA-C483-maccam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch483.txt",
+  "json": "tamil/narration/ch483.json",
+  "textHash": "fnv1a64:e5f4a984bf43def7",
+  "jsonHash": "fnv1a64:45db4839028b9dbd",
+  "findings": []
+}

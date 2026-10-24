@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "The climate",
+  "label": "ch:ar-the-climate",
+  "canDo": "I can say climate, global warming, the atmosphere, an emission and carbon.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C463-karbun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can say climate, global warming, the atmosphere, an emission and carbon.",
+    "assesses": [
+      "AR-LEX-C463-MUNAKH463-03",
+      "AR-LEX-C463-MUNAKH463-04",
+      "AR-LEX-C463-MUNAKH463-05"
+    ]
+  }
+}

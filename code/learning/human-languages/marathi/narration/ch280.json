@@ -1,0 +1,417 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 280,
+  "title": "What I Think, and So",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:2a223466698b4a40",
+  "lessons": [
+    {
+      "id": "MR-C280-mala-vatte",
+      "sequence": 16170,
+      "title": "मला वाटतं की … (malā vāṭtaṁ kī …) — what I think",
+      "headword": "मला वाटतं की …",
+      "romanization": "malā vāṭtaṁ kī …",
+      "gloss": "I think that … — an opinion, on the verb of feeling",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:247254120348c276",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I feel fine\", with the verb that puts you in the dative. (malā baraṁ vāṭtaṁ.) Then \"Meera says that Marathi is easy\". (mīrā mhaṇte kī marāṭhī sopaṁ āhe.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With की you said malā vāṭtaṁ kī cahā āhe, \"I think there is tea\". Put a judgment after की instead of a fact, and you have an opinion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मला वाटतं की …",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मला वाटतं की उद्या पाऊस पडेल. malā vāṭtaṁ kī udyā pāūs paḍel. — \"I think it will rain tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word: \"to me it seems that tomorrow rain will fall\". The thinker stands in the dative, as with आवडणे; की opens the opinion, and the opinion is a whole sentence. To ask: तुम्हाला काय वाटतं? (tumhālā kāy vāṭtaṁ?), \"What do you think?\" In the past: मला वाटलं की … (malā vāṭlaṁ kī …), \"I thought that …\". \"I don't think so\": मला असं वाटत नाही (malā asaṁ vāṭat nāhī), with असं (asaṁ, \"so, like this\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: माझ्या मते, 'in my opinion'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माझ्या मते हा चित्रपट चांगला आहे. mājhyā mate hā citrapaṭ cāṅglā āhe. — \"In my opinion this film is good.\""
+            },
+            {
+              "kind": "speech",
+              "text": "मते is मत, \"an opinion\", the word inside मत देणे, \"to vote\", with an ending; माझ्या is माझा bent to fit it. It sits at the front of the sentence, and it sounds firmer than मला वाटतं."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think it will rain tomorrow\" — malā vāṭtaṁ kī udyā pāūs paḍel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think it will rain tomorrow\" — *malā vāṭtaṁ kī udyā pāūs paḍel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What do you think?\" — tumhālā kāy vāṭtaṁ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What do you think?\" — *tumhālā kāy vāṭtaṁ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In my opinion this film is good\" — mājhyā mate hā citrapaṭ cāṅglā āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In my opinion this film is good\" — *mājhyā mate hā citrapaṭ cāṅglā āhe*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C280-mala-vatte-r1",
+              "prompt": "Say that you think it will rain tomorrow, then ask what your listener thinks.",
+              "assesses": [
+                "MR-GRAMMAR-C280-VATTE-KI-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "malā vāṭtaṁ kī udyā pāūs paḍel; tumhālā kāy vāṭtaṁ?",
+                "मला वाटतं की उद्या पाऊस पडेल. तुम्हाला काय वाटतं?"
+              ],
+              "feedback": {
+                "correct": "malā for you, tumhālā for them, kī before the opinion.",
+                "incorrect": "The thinker goes in the dative: malā, tumhālā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think that\"? (मला वाटतं की.) \"I thought that\"? (मला वाटलं की.) \"In my opinion\"? (माझ्या मते.) \"What do you think?\" (तुम्हाला काय वाटतं?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C280-mhanun",
+      "sequence": 16180,
+      "title": "म्हणून (mhaṇūn) — so, and because of that",
+      "headword": "म्हणून",
+      "romanization": "mhaṇūn",
+      "gloss": "so, that is why — the result after its reason, and त्यामुळे",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a16a8180b7b9334f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"because\", the word that answers का. (kāraṇ.) Then \"it was raining\". (pāūs paḍat hotā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: म्हणून, 'so'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाऊस पडत होता, म्हणून मी घरी राहिलो. pāūs paḍat hotā, mhaṇūn mī gharī rāhilo. — \"It was raining, so I stayed at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "कारण gives the reason after the event; म्हणून (mhaṇūn) gives the result after the reason. Same two facts, opposite order: मी घरी राहिलो, कारण पाऊस पडत होता (mī gharī rāhilo, kāraṇ pāūs paḍat hotā)."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हणून (mhaṇūn) is built like करून: the -ऊन form of म्हणणे, \"to say\". Its past has two shapes: तो म्हणाला (to mhaṇālā), \"he said\", following the speaker, and त्याने म्हटलं (tyāne mhaṭlaṁ), with -ने."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: त्यामुळे, 'because of that'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काल खूप पाऊस होता, त्यामुळे आम्ही बाहेर गेलो नाही. kāl khūp pāūs hotā, tyāmuḷe āmhī bāher gelo nāhī. — \"Yesterday there was a lot of rain, so we didn't go out.\""
+            },
+            {
+              "kind": "speech",
+              "text": "त्यामुळे (tyāmuḷe) is त्या, \"that\", and -मुळे, \"because of\". It leans on the cause: \"because of that\". Where म्हणून (mhaṇūn) often marks a choice someone made, त्यामुळे marks what came of something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It was raining, so I stayed at home\" — pāūs paḍat hotā, mhaṇūn mī gharī rāhilo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It was raining, so I stayed at home\" — *pāūs paḍat hotā, mhaṇūn mī gharī rāhilo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I stayed at home, because it was raining\" — mī gharī rāhilo, kāraṇ pāūs paḍat hotā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I stayed at home, because it was raining\" — *mī gharī rāhilo, kāraṇ pāūs paḍat hotā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Yesterday there was a lot of rain, so we didn't go out\" — kāl khūp pāūs hotā, tyāmuḷe āmhī bāher gelo nāhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Yesterday there was a lot of rain, so we didn't go out\" — *kāl khūp pāūs hotā, tyāmuḷe āmhī bāher gelo nāhī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C280-mhanun-r1",
+              "prompt": "Say that it was raining, so you stayed at home; then say it the other way round with kāraṇ.",
+              "assesses": [
+                "MR-GRAMMAR-C280-MHANUN-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "pāūs paḍat hotā, mhaṇūn mī gharī rāhilo; mī gharī rāhilo, kāraṇ pāūs paḍat hotā",
+                "पाऊस पडत होता, म्हणून मी घरी राहिलो. मी घरी राहिलो, कारण पाऊस पडत होता."
+              ],
+              "feedback": {
+                "correct": "Reason, then mhaṇūn; event, then kāraṇ.",
+                "incorrect": "mhaṇūn comes after the reason, kāraṇ before it."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word comes after the reason? (म्हणून (mhaṇūn).) Which comes before it? (कारण.) \"Because of that\"? (त्यामुळे.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R280-opinion-and-result",
+      "sequence": 16190,
+      "title": "Review — opinion and result",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what I think, and what came of it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62f9420ba5568017",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"after school I had tea; after that I went home and slept\". (śāḷenantar mī cahā ghetlā. tyānantar mī gharī jāūn jhoplo.) Then name the season Arun likes, with ऋतू."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I think Meera will come tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I think Meera will come tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In my opinion this play is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In my opinion this play is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It was raining, so I didn't go to school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It was raining, so I didn't go to school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yesterday there was a lot of rain, so the river was full.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Yesterday there was a lot of rain, so the river was full.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which season you like, and why, with ऋतू and कारण",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which season you like, and why, with **ऋतू** and **कारण**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think that\"? (मला वाटतं की.) \"So\"? (म्हणून (mhaṇūn).) \"Because of that\"? (त्यामुळे.) Which letter starts ऋतू? (ऋ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

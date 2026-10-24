@@ -1,0 +1,11 @@
+{
+  "id": "TA-C471-panpu",
+  "pathSegment": "TA-PATH-471-KUNAM471",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-471-KUNAM471",
+      "order": 0
+    }
+  ]
+}

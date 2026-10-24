@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C302-mintelu",
+    "language": "tamil",
+    "chapter": 302,
+    "sequence": 17540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9f799d457a58caa"
+  },
+  "findings": []
+}

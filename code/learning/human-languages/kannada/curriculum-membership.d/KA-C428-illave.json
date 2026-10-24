@@ -1,0 +1,11 @@
+{
+  "id": "KA-C428-illave",
+  "pathSegment": "KA-PATH-428-ONDOMME428",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-428-ONDOMME428",
+      "order": 1
+    }
+  ]
+}

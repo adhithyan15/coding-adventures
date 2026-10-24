@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:111ad13e4adb5a7d",
+  "lessonIds": [
+    "BN-C509-galicha",
+    "BN-C509-katha",
+    "BN-C509-paposh",
+    "BN-C509-godi",
+    "BN-C509-bichhano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch509.txt",
+  "json": "bengali/narration/ch509.json",
+  "textHash": "fnv1a64:6e3f8b3f97d0a8af",
+  "jsonHash": "fnv1a64:2d52727eb8ea2423",
+  "findings": []
+}

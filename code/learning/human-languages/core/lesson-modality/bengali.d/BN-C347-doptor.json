@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C347-doptor",
+    "language": "bengali",
+    "chapter": 347,
+    "sequence": 21870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b1db45c4d9e5300"
+  },
+  "findings": []
+}

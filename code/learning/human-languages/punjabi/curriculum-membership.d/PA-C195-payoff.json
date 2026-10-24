@@ -1,0 +1,11 @@
+{
+  "id": "PA-C195-payoff",
+  "pathSegment": "PA-PATH-195-A2-VALA-FORMS",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-195-A2-VALA-FORMS",
+      "order": 6
+    }
+  ]
+}

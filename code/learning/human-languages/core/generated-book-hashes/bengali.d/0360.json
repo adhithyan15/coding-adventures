@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:7eee2cef1d600d7a",
+  "lessonIds": [
+    "BN-C360-boktrita",
+    "BN-C360-bokta",
+    "BN-C360-sobhapoti",
+    "BN-C360-uposthito",
+    "BN-C360-sombodhon-kora"
+  ],
+  "tex": "bengali/book/chapters/ch360-speeches-and-talks.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:1459522e37b3cae0",
+  "lessonIds": [
+    "TA-C302-peralivu",
+    "TA-C302-uyirilappu",
+    "TA-C302-nivaranam",
+    "TA-C302-mintelu",
+    "TA-C302-curaiyatu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch302.txt",
+  "json": "tamil/narration/ch302.json",
+  "textHash": "fnv1a64:e9111ecf5a7c8d1f",
+  "jsonHash": "fnv1a64:6dca844c1301a442",
+  "findings": []
+}

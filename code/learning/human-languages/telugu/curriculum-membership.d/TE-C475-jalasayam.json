@@ -1,0 +1,11 @@
+{
+  "id": "TE-C475-jalasayam",
+  "pathSegment": "TE-PATH-475-ANAKATTA475",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-475-ANAKATTA475",
+      "order": 2
+    }
+  ]
+}

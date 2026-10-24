@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C306-zaghrada",
+    "language": "arabic",
+    "chapter": 306,
+    "sequence": 17700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdb1514d335fe819"
+  },
+  "findings": []
+}

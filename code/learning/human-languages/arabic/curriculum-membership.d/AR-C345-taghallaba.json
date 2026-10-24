@@ -1,0 +1,11 @@
+{
+  "id": "AR-C345-taghallaba",
+  "pathSegment": "AR-PATH-345-MUWAJAHA345",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-345-MUWAJAHA345",
+      "order": 2
+    }
+  ]
+}

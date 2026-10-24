@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C331-tatbandi",
+    "language": "marathi",
+    "chapter": 331,
+    "sequence": 19230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:068259052ab40eca"
+  },
+  "findings": []
+}

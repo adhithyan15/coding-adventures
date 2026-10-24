@@ -1,0 +1,11 @@
+{
+  "id": "AR-C445-tamahhala",
+  "pathSegment": "AR-PATH-445-TRAM445",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-445-TRAM445",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C543-obhishto",
+    "language": "bengali",
+    "chapter": 543,
+    "sequence": 32650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5335d02b7ae0dcd"
+  },
+  "findings": []
+}

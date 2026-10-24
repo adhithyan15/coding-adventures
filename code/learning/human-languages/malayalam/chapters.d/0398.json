@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "The Throne and the Crown",
+  "label": "ch:ml-the-throne-and-the-crown",
+  "canDo": "I can say a throne, a crown, a coronation, a sovereign and to reign.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C398-valuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can say a throne, a crown, a coronation, a sovereign and to reign.",
+    "assesses": [
+      "ML-LEX-C398-SIMHASANAM398-03",
+      "ML-LEX-C398-SIMHASANAM398-04",
+      "ML-LEX-C398-SIMHASANAM398-05"
+    ]
+  }
+}

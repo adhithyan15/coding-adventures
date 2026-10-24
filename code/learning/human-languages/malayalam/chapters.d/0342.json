@@ -1,0 +1,25 @@
+{
+  "chapter": 342,
+  "title": "Must, Ought To, and Because",
+  "label": "ch:ml-must-ought-to-and-because",
+  "canDo": "I can say what I must, ought to and need not do, and give a reason for an action or a plan with -atukoṇṭŭ or kāraṇaṁ.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-R342-advice-and-reasons",
+    "kind": "production",
+    "summary": "Complete ML-R342-advice-and-reasons: must, ought to and need not, reasons with -atukoṇṭŭ and kāraṇaṁ, a plan with its reason, and the new letter ഔ.",
+    "assesses": [
+      "ML-LEX-C342-AUDYOGIKAMAYA-01",
+      "ML-SCRIPT-C342-AU-01",
+      "ML-GRAMMAR-C342-ANAM-01",
+      "ML-GRAMMAR-C342-ENDATANU-01",
+      "ML-GRAMMAR-C342-ATUKONDU-CLAUSE-01",
+      "ML-GRAMMAR-C342-PLAN-REASON-01",
+      "ML-GRAMMAR-C341-SO-RESULT-01",
+      "ML-GRAMMAR-C341-THINK-THAT-01",
+      "ML-SCRIPT-C341-AI-01"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Disgust and Envy",
+  "label": "ch:bn-disgust-and-envy",
+  "canDo": "I can say that I hate something or find it disgusting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C451-nak-sitkano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can say that I hate something or find it disgusting.",
+    "assesses": [
+      "BN-LEX-C451-GHRINA451-03",
+      "BN-LEX-C451-GHRINA451-04",
+      "BN-LEX-C451-GHRINA451-05"
+    ]
+  }
+}

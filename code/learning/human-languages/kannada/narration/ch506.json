@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 506,
+  "title": "Sleepy Nights",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e45f325ad0e4d5b0",
+  "lessons": [
+    {
+      "id": "KA-C506-hode-cover",
+      "sequence": 25820,
+      "title": "ಹೊದೆ (hode) — to cover oneself; to wrap",
+      "headword": "ಹೊದೆ",
+      "romanization": "hode",
+      "gloss": "to cover oneself; to wrap",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22d9233da3297f58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to strive, then the Kannada for to beg."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೊದೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊದೆ — hode — \"to cover oneself; to wrap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಚಳಿಗೆ ಅಜ್ಜ ಕಂಬಳಿ ಹೊದ್ದು ಮಲಗಿದರು. caḷige ajja kambaḷi hoddu malagidaru. In the cold, grandfather slept wrapped in a blanket."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಹೊದ್ದೆ, hodde."
+            },
+            {
+              "kind": "speech",
+              "text": "The participle is ಹೊದ್ದು: ಕಂಬಳಿ ಹೊದ್ದು, wrapped in a blanket. ಹೊದ್ದುಕೊ, to wrap yourself up. Keep it apart from ಹೋದೆ, I went, with a long ō."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊದೆ (hode) is native Dravidian: DEDR 4509 lists Kannada pode, \"to put over, put on, wrap round\", and podisu, \"to cover\". Old p- became h-."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hode",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hode*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hode, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hode*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caḷige ajja kambaḷi hoddu malagidaru. — In the cold, grandfather slept wrapped in a blanket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caḷige ajja kambaḷi hoddu malagidaru.* — In the cold, grandfather slept wrapped in a blanket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to strive, then the Kannada for to beg, then say hode again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to strive, then the Kannada for to beg, then say *hode* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೊದೆ (hode) mean? (\"To cover oneself; to wrap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C506-kanavarisu",
+      "sequence": 25830,
+      "title": "ಕನವರಿಸು (kanavarisu) — to talk in sleep",
+      "headword": "ಕನವರಿಸು",
+      "romanization": "kanavarisu",
+      "gloss": "to talk in sleep",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cd6f575f808f192",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to beg, then the Kannada for to cover oneself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕನವರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕನವರಿಸು — kanavarisu — \"to talk in sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿನ್ನೆ ರಾತ್ರಿ ತಮ್ಮ ನಿದ್ದೆಯಲ್ಲಿ ಕನವರಿಸಿದನು. ninne rātri tamma niddeyalli kanavarisidanu. Last night my younger brother talked in his sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಕನವರಿಸಿದೆ, kanavariside."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ಕನಸು, a dream: talking from inside a dream."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕನವರಿಸು (kanavarisu) is native Dravidian: DEDR 1407 lists Kannada kana, kanasu, \"a dream\", and kanavarisu, a verb of dreaming."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanavarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanavarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanavarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanavarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ninne rātri tamma niddeyalli kanavarisidanu. — Last night my younger brother talked in his sleep.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ninne rātri tamma niddeyalli kanavarisidanu.* — Last night my younger brother talked in his sleep.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to beg, then the Kannada for to cover oneself, then say kanavarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to beg, then the Kannada for to cover oneself, then say *kanavarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕನವರಿಸು (kanavarisu) mean? (\"To talk in sleep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C506-horalu",
+      "sequence": 25840,
+      "title": "ಹೊರಳು (horaḷu) — to roll over; to toss",
+      "headword": "ಹೊರಳು",
+      "romanization": "horaḷu",
+      "gloss": "to roll over; to toss",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0f60dc02472b52f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to cover oneself, then the Kannada for to talk in sleep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೊರಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊರಳು — horaḷu — \"to roll over; to toss\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಗು ನಿದ್ದೆಯಲ್ಲಿ ಹೊರಳಿತು. magu niddeyalli horaḷitu. The baby rolled over in its sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಹೊರಳಿದೆ, horaḷide."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊರಳಾಡು, to toss and turn all night."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊರಳು (horaḷu) is native Dravidian: DEDR 4285 lists Kannada poraḷ, \"to roll, wallow\". Old p- became h-."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "horaḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *horaḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "horaḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *horaḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "magu niddeyalli horaḷitu. — The baby rolled over in its sleep.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *magu niddeyalli horaḷitu.* — The baby rolled over in its sleep.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to cover oneself, then the Kannada for to talk in sleep, then say horaḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to cover oneself, then the Kannada for to talk in sleep, then say *horaḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೊರಳು (horaḷu) mean? (\"To roll over; to toss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C506-maimuri",
+      "sequence": 25850,
+      "title": "ಮೈಮುರಿ (maimuri) — to stretch",
+      "headword": "ಮೈಮುರಿ",
+      "romanization": "maimuri",
+      "gloss": "to stretch",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02f5e0512f1332a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to talk in sleep, then the Kannada for to roll over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೈಮುರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೈಮುರಿ — maimuri — \"to stretch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೆಳಗ್ಗೆ ಎದ್ದ ಬೆಕ್ಕು ಮೈಮುರಿಯಿತು. beḷagge edda bekku maimuriyitu. The cat got up in the morning and stretched."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮೈಮುರಿದೆ, maimuride."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೈ, the body + ಮುರಿ, to bend: the long stretch after sleep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೈಮುರಿ (maimuri) is a native Dravidian compound: mai, \"the body\" (DEDR 5073), and muri, \"to bend; to stretch oneself with windings of the limbs\" (DEDR 4977)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maimuri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maimuri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maimuri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maimuri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beḷagge edda bekku maimuriyitu. — The cat got up in the morning and stretched.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beḷagge edda bekku maimuriyitu.* — The cat got up in the morning and stretched.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to talk in sleep, then the Kannada for to roll over, then say maimuri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to talk in sleep, then the Kannada for to roll over, then say *maimuri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೈಮುರಿ (maimuri) mean? (\"To stretch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C506-reppe",
+      "sequence": 25860,
+      "title": "ರೆಪ್ಪೆ (reppe) — an eyelid; an eyelash",
+      "headword": "ರೆಪ್ಪೆ",
+      "romanization": "reppe",
+      "gloss": "an eyelid; an eyelash",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c8c423bd8fee2f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to roll over, then the Kannada for to stretch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ರೆಪ್ಪೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರೆಪ್ಪೆ — reppe — \"an eyelid; an eyelash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಗುವಿನ ರೆಪ್ಪೆಗಳು ನಿಧಾನವಾಗಿ ಮುಚ್ಚಿದವು. maguvina reppegaḷu nidhānavāgi muccidavu. The baby's eyelids slowly closed."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ರೆಪ್ಪೆಗಳು, reppegaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಣ್ಣುರೆಪ್ಪೆ is the full form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರೆಪ್ಪೆ (reppe) is native Dravidian: DEDR 5169 lists Kannada ṟeppe, \"eyelid\", beside Tamil imai forms and Telugu ṟeppa."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reppe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reppe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reppe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reppe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maguvina reppegaḷu nidhānavāgi muccidavu. — The baby's eyelids slowly closed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maguvina reppegaḷu nidhānavāgi muccidavu.* — The baby's eyelids slowly closed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to roll over, then the Kannada for to stretch, then say reppe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to roll over, then the Kannada for to stretch, then say *reppe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ರೆಪ್ಪೆ (reppe) mean? (\"An eyelid; an eyelash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

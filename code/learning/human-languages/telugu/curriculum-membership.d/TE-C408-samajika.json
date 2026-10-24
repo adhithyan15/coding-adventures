@@ -1,0 +1,11 @@
+{
+  "id": "TE-C408-samajika",
+  "pathSegment": "TE-PATH-408-SAMAJAM408",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-408-SAMAJAM408",
+      "order": 1
+    }
+  ]
+}

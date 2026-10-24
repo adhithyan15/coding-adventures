@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:802dbc914ab85337",
+  "lessonIds": [
+    "TE-C321-situ",
+    "TE-C321-tikkettu-ivvandi",
+    "TE-C321-ausadham",
+    "TE-S177-letter-au",
+    "TE-C321-poyindi",
+    "TE-R321-at-the-station"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "telugu/narration/ch321.txt",
+  "json": "telugu/narration/ch321.json",
+  "textHash": "fnv1a64:0b57d55c40783d68",
+  "jsonHash": "fnv1a64:cd5424a179025ed9",
+  "findings": []
+}

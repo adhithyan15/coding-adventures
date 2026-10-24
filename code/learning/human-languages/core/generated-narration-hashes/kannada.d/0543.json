@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:0ec031aefd1a560d",
+  "lessonIds": [
+    "KA-C543-varanda",
+    "KA-C543-landra",
+    "KA-C543-mette",
+    "KA-C543-pithopakarana",
+    "KA-C543-oragu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch543.txt",
+  "json": "kannada/narration/ch543.json",
+  "textHash": "fnv1a64:a5da866cfe6019af",
+  "jsonHash": "fnv1a64:8d5c1809e11efd93",
+  "findings": []
+}

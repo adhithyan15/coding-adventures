@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C542-jhugarne",
+    "language": "marathi",
+    "chapter": 542,
+    "sequence": 30980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7253587b0af32db1"
+  },
+  "findings": []
+}

@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 304,
+  "title": "Festival Time",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8d4b43f5204cbc8a",
+  "lessons": [
+    {
+      "id": "BN-C304-utsob",
+      "sequence": 19430,
+      "title": "উৎসব (utsôb) — a festival",
+      "headword": "উৎসব",
+      "romanization": "utsôb",
+      "gloss": "a festival",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0378e6159b521cfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for over time, then the Bengali for to commemorate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উৎসব",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উৎসব — utsôb — \"a festival\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই গ্রামে বসন্তে একটা বড় উৎসব হয়। ei grāme bôsônte ekṭā bôṛo utsôb hôy. There is a big festival in this village in spring."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উৎসব (utsôb) is Sanskrit utsava, first 'an undertaking, a beginning' and then 'a festival' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsôb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsôb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsôb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsôb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei grāme bôsônte ekṭā bôṛo utsôb hôy. — There is a big festival in this village in spring.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei grāme bôsônte ekṭā bôṛo utsôb hôy.* — There is a big festival in this village in spring.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for over time, then the Bengali for to commemorate, then say utsôb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for over time, then the Bengali for to commemorate, then say *utsôb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উৎসব (utsôb) mean? (\"A festival\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C304-pujo",
+      "sequence": 19440,
+      "title": "পুজো (pujo) — a puja; a worship festival",
+      "headword": "পুজো",
+      "romanization": "pujo",
+      "gloss": "a puja; a worship festival",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61d4faea2c3d82af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to commemorate, then the Bengali for a festival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পুজো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পুজো — pujo — \"a puja; a worship festival\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পুজোর সময় সবাই নতুন জামা পরে। pujor sômôy sôbāi nôtun jāmā pôre. At puja time everyone wears new clothes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পুজো (pujo) is the spoken form of Sanskrit pūjā, 'honour, worship' (Monier-Williams), which the written word পূজা keeps. In Bengal পুজো alone means the great autumn festival."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pujo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pujo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pujo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pujo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pujor sômôy sôbāi nôtun jāmā pôre. — At puja time everyone wears new clothes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pujor sômôy sôbāi nôtun jāmā pôre.* — At puja time everyone wears new clothes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to commemorate, then the Bengali for a festival, then say pujo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to commemorate, then the Bengali for a festival, then say *pujo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পুজো (pujo) mean? (\"A puja; a worship festival\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C304-protima",
+      "sequence": 19450,
+      "title": "প্রতিমা (prôtimā) — an image of a deity; an idol",
+      "headword": "প্রতিমা",
+      "romanization": "prôtimā",
+      "gloss": "an image of a deity; an idol",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da41b3902ae29a74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a festival, then the Bengali for a puja."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রতিমা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিমা — prôtimā — \"an image of a deity; an idol\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কুমোররা মাটি দিয়ে প্রতিমা বানায়। kumorrā māṭi diye prôtimā bānāy. Potters make the images out of clay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিমা (prôtimā) is Sanskrit pratimā, 'an image, a likeness; a statue' (Monier-Williams), from prati-√mā, 'to copy'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtimā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtimā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtimā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtimā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumorrā māṭi diye prôtimā bānāy. — Potters make the images out of clay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumorrā māṭi diye prôtimā bānāy.* — Potters make the images out of clay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a festival, then the Bengali for a puja, then say prôtimā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a festival, then the Bengali for a puja, then say *prôtimā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রতিমা (prôtimā) mean? (\"An image of a deity; an idol\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C304-pendel",
+      "sequence": 19460,
+      "title": "প্যান্ডেল (pænḍel) — a pandal; a festival marquee",
+      "headword": "প্যান্ডেল",
+      "romanization": "pænḍel",
+      "gloss": "a pandal; a festival marquee",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0318d9e0bbc5005",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a puja, then the Bengali for an idol."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্যান্ডেল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্যান্ডেল — pænḍel — \"a pandal; a festival marquee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পাড়ার প্যান্ডেলে রাতে অনেক ভিড় হয়। pāṛār pænḍele rāte ônek bhiṛ hôy. At night there's a big crowd at the neighbourhood pandal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্যান্ডেল (pænḍel) is Indian English pandal, a marquee of bamboo and cloth, a word usually traced to Tamil pantal, 'a shed'. Its initial প্যা is read pæ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pænḍel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pænḍel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pænḍel, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pænḍel*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṛār pænḍele rāte ônek bhiṛ hôy. — At night there's a big crowd at the neighbourhood pandal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṛār pænḍele rāte ônek bhiṛ hôy.* — At night there's a big crowd at the neighbourhood pandal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a puja, then the Bengali for an idol, then say pænḍel again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a puja, then the Bengali for an idol, then say *pænḍel* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্যান্ডেল (pænḍel) mean? (\"A pandal; a festival marquee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C304-udjapon-kora",
+      "sequence": 19470,
+      "title": "উদযাপন করা (udjāpôn kôrā) — to celebrate",
+      "headword": "উদযাপন করা",
+      "romanization": "udjāpôn kôrā",
+      "gloss": "to celebrate",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff3d80d5f05ec6e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an idol, then the Bengali for a pandal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উদযাপন করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উদযাপন করা — udjāpôn kôrā — \"to celebrate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গ্রামের মানুষ নাচ আর গান দিয়ে উৎসব উদযাপন করল। grāmer mānush nāch ār gān diye utsôb udjāpôn kôrlô. The villagers celebrated the festival with dancing and songs."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি জন্মদিন উদযাপন করলেন, tini jônmôdin udjāpôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উদযাপন করা (udjāpôn kôrā) puts Sanskrit udyāpana, 'bringing to a conclusion' (Monier-Williams), the closing rite of a vow, before করা; Bengali uses it for celebrating."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udjāpôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udjāpôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udjāpôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udjāpôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāmer mānush nāch ār gān diye utsôb udjāpôn kôrlô. — The villagers celebrated the festival with dancing and songs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāmer mānush nāch ār gān diye utsôb udjāpôn kôrlô.* — The villagers celebrated the festival with dancing and songs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an idol, then the Bengali for a pandal, then say udjāpôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an idol, then the Bengali for a pandal, then say *udjāpôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উদযাপন করা (udjāpôn kôrā) mean? (\"To celebrate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

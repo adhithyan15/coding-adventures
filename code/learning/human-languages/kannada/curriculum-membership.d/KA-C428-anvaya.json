@@ -1,0 +1,11 @@
+{
+  "id": "KA-C428-anvaya",
+  "pathSegment": "KA-PATH-428-ONDOMME428",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-428-ONDOMME428",
+      "order": 3
+    }
+  ]
+}

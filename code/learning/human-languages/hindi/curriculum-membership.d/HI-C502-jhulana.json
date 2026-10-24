@@ -1,0 +1,11 @@
+{
+  "id": "HI-C502-jhulana",
+  "pathSegment": "HI-PATH-502-POTA502",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-502-POTA502",
+      "order": 3
+    }
+  ]
+}

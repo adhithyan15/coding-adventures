@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Paying Charges",
+  "label": "ch:ka-paying-charges",
+  "canDo": "I can say a turn in line, to waive, domestic, cash and a card.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C441-kard",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can say a turn in line, to waive, domestic, cash and a card.",
+    "assesses": [
+      "KA-LEX-C441-SHULKA441-03",
+      "KA-LEX-C441-SHULKA441-04",
+      "KA-LEX-C441-SHULKA441-05"
+    ]
+  }
+}

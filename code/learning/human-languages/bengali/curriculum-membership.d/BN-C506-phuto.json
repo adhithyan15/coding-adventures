@@ -1,0 +1,11 @@
+{
+  "id": "BN-C506-phuto",
+  "pathSegment": "BN-PATH-506-TANK506",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-506-TANK506",
+      "order": 1
+    }
+  ]
+}

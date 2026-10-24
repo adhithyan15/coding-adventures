@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Rewards and Waste",
+  "label": "ch:te-rewards-and-waste",
+  "canDo": "I can talk about rewards, waste and what is enough.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C423-viniyogincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can talk about rewards, waste and what is enough.",
+    "assesses": [
+      "TE-LEX-C423-PRATIPHALAM423-03",
+      "TE-LEX-C423-PRATIPHALAM423-04",
+      "TE-LEX-C423-PRATIPHALAM423-05"
+    ]
+  }
+}

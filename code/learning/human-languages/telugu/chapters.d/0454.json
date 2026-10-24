@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Flying Abroad",
+  "label": "ch:te-flying-abroad",
+  "canDo": "I can say a pilot, international, one's homeland, transport and to see someone off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C454-saganampu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can say a pilot, international, one's homeland, transport and to see someone off.",
+    "assesses": [
+      "TE-LEX-C454-PAILATU454-03",
+      "TE-LEX-C454-PAILATU454-04",
+      "TE-LEX-C454-PAILATU454-05"
+    ]
+  }
+}

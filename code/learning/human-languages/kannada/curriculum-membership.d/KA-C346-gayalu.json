@@ -1,0 +1,11 @@
+{
+  "id": "KA-C346-gayalu",
+  "pathSegment": "KA-PATH-346-SPHOTA346",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-346-SPHOTA346",
+      "order": 4
+    }
+  ]
+}

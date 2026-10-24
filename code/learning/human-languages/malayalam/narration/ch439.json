@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 439,
+  "title": "Quoting and Summing Up",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6b2da0ea4e0e63bf",
+  "lessons": [
+    {
+      "id": "ML-C439-uddharikkuka",
+      "sequence": 21740,
+      "title": "ഉദ്ധരിക്കുക (uddharikkuka) — to quote; to cite",
+      "headword": "ഉദ്ധരിക്കുക",
+      "romanization": "uddharikkuka",
+      "gloss": "to quote; to cite",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0ef4c12b73e64ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to interpret, then the Malayalam for to define."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉദ്ധരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉദ്ധരിക്കുക — uddharikkuka — \"to quote; to cite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രഭാഷകൻ ഒരു കവിയുടെ വരികൾ ഉദ്ധരിച്ചു. prabhāṣakan oru kaviyuṭe varikaḷ uddhariccu. The speaker quoted a poet's lines."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഉദ്ധരിച്ചു, uddhariccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ഉദ്ധരണി, a quotation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉദ്ധരിക്കുക (uddharikkuka) is built from Sanskrit uddharaṇa, \"taking up, drawing out\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക: to quote is to draw words out of a book."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddharikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddharikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddharikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddharikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prabhāṣakan oru kaviyuṭe varikaḷ uddhariccu. — The speaker quoted a poet's lines.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prabhāṣakan oru kaviyuṭe varikaḷ uddhariccu.* — The speaker quoted a poet's lines.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to interpret, then the Malayalam for to define, then say uddharikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to interpret, then the Malayalam for to define, then say *uddharikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉദ്ധരിക്കുക (uddharikkuka) mean? (\"To quote; to cite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C439-samgrahikkuka",
+      "sequence": 21750,
+      "title": "സംഗ്രഹിക്കുക (saṁgrahikkuka) — to summarise",
+      "headword": "സംഗ്രഹിക്കുക",
+      "romanization": "saṁgrahikkuka",
+      "gloss": "to summarise",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e8c07532ce4beeb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to define, then the Malayalam for to quote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സംഗ്രഹിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംഗ്രഹിക്കുക — saṁgrahikkuka — \"to summarise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൾ ആ ലേഖനം അഞ്ച് വാചകങ്ങളിൽ സംഗ്രഹിച്ചു. avaḷ ā lēkhanaṁ añcŭ vācakaṅṅaḷil saṁgrahiccu. She summarised that article in five sentences."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സംഗ്രഹിച്ചു, saṁgrahiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is സംഗ്രഹം, a summary."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംഗ്രഹിക്കുക (saṁgrahikkuka) is built from Sanskrit saṁgraha, \"a collection, a holding together\" (CDIAL 12852), with the Malayalam verb ending -ിക്കുക: to gather a text into a little."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁgrahikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁgrahikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁgrahikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁgrahikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ ā lēkhanaṁ añcŭ vācakaṅṅaḷil saṁgrahiccu. — She summarised that article in five sentences.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ ā lēkhanaṁ añcŭ vācakaṅṅaḷil saṁgrahiccu.* — She summarised that article in five sentences.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to define, then the Malayalam for to quote, then say saṁgrahikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to define, then the Malayalam for to quote, then say *saṁgrahikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സംഗ്രഹിക്കുക (saṁgrahikkuka) mean? (\"To summarise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C439-upasamharikkuka",
+      "sequence": 21760,
+      "title": "ഉപസംഹരിക്കുക (upasaṁharikkuka) — to conclude; to wind up",
+      "headword": "ഉപസംഹരിക്കുക",
+      "romanization": "upasaṁharikkuka",
+      "gloss": "to conclude; to wind up",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a80d4091b2542da2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to quote, then the Malayalam for to summarise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉപസംഹരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉപസംഹരിക്കുക — upasaṁharikkuka — \"to conclude; to wind up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒരു ചെറിയ കഥയോടെ അദ്ദേഹം പ്രസംഗം ഉപസംഹരിച്ചു. oru ceṟiya kathayōṭe addēhaṁ prasaṁgaṁ upasaṁhariccu. He concluded the speech with a short story."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഉപസംഹരിച്ചു, upasaṁhariccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ഉപസംഹാരം, the conclusion of a speech or essay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉപസംഹരിക്കുക (upasaṁharikkuka) is built from Sanskrit upasaṁhāra, \"the act of withdrawing, drawing together\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upasaṁharikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upasaṁharikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upasaṁharikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upasaṁharikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru ceṟiya kathayōṭe addēhaṁ prasaṁgaṁ upasaṁhariccu. — He concluded the speech with a short story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru ceṟiya kathayōṭe addēhaṁ prasaṁgaṁ upasaṁhariccu.* — He concluded the speech with a short story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to quote, then the Malayalam for to summarise, then say upasaṁharikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to quote, then the Malayalam for to summarise, then say *upasaṁharikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉപസംഹരിക്കുക (upasaṁharikkuka) mean? (\"To conclude; to wind up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C439-avalambam",
+      "sequence": 21770,
+      "title": "അവലംബം (avalambaṁ) — a reference; a support",
+      "headword": "അവലംബം",
+      "romanization": "avalambaṁ",
+      "gloss": "a reference; a support",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b093403bbecbe2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to summarise, then the Malayalam for to conclude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അവലംബം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അവലംബം — avalambaṁ — \"a reference; a support\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ലേഖനത്തിന്റെ അവസാനം അവലംബം കൊടുത്തിട്ടുണ്ട്. lēkhanattinṟe avasānaṁ avalambaṁ koṭuttiṭṭuṇṭŭ. The references are given at the end of the article."
+            },
+            {
+              "kind": "speech",
+              "text": "It is first a support, something to lean on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അവലംബം (avalambaṁ) is borrowed from Sanskrit avalamba, \"hanging down; a stay, a support\" (CDIAL 826). A reference is what a writer leans on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avalambaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avalambaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avalambaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avalambaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lēkhanattinṟe avasānaṁ avalambaṁ koṭuttiṭṭuṇṭŭ. — The references are given at the end of the article.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lēkhanattinṟe avasānaṁ avalambaṁ koṭuttiṭṭuṇṭŭ.* — The references are given at the end of the article.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to summarise, then the Malayalam for to conclude, then say avalambaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to summarise, then the Malayalam for to conclude, then say *avalambaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അവലംബം (avalambaṁ) mean? (\"A reference; a support\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C439-granthakaran",
+      "sequence": 21780,
+      "title": "ഗ്രന്ഥകാരൻ (granthakāran) — an author",
+      "headword": "ഗ്രന്ഥകാരൻ",
+      "romanization": "granthakāran",
+      "gloss": "an author",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f710e6c1a96e2e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to conclude, then the Malayalam for a reference."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഗ്രന്ഥകാരൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഗ്രന്ഥകാരൻ — granthakāran — \"an author\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഗ്രന്ഥകാരൻ പുസ്തകത്തിൽ ഒപ്പിട്ടു തന്നു. granthakāran pustakattil oppiṭṭu tannu. The author signed the book for me."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman author is ഗ്രന്ഥകാരി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഗ്രന്ഥകാരൻ (granthakāran) is built from Sanskrit grantha, \"a knot; a book\" (CDIAL 4350), and kāra, \"making, doing\" (CDIAL 3053), with the Malayalam masculine ending -ൻ: the maker of a book."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "granthakāran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *granthakāran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "granthakāran, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *granthakāran*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "granthakāran pustakattil oppiṭṭu tannu. — The author signed the book for me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *granthakāran pustakattil oppiṭṭu tannu.* — The author signed the book for me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to conclude, then the Malayalam for a reference, then say granthakāran again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to conclude, then the Malayalam for a reference, then say *granthakāran* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഗ്രന്ഥകാരൻ (granthakāran) mean? (\"An author\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

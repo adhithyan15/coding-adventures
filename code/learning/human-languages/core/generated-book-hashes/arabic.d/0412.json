@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:3dfeaeb13ab9b63c",
+  "lessonIds": [
+    "AR-C412-izdada",
+    "AR-C412-taqallasa",
+    "AR-C412-tadaafa",
+    "AR-C412-qallala",
+    "AR-C412-nisba"
+  ],
+  "tex": "arabic/book/chapters/ch412-going-up-and-down.tex"
+}

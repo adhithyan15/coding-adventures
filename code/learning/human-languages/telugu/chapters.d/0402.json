@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Governing",
+  "label": "ch:te-governing",
+  "canDo": "I can talk about ministers, power and passing laws.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C402-amodincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can talk about ministers, power and passing laws.",
+    "assesses": [
+      "TE-LEX-C402-MANTRI402-03",
+      "TE-LEX-C402-MANTRI402-04",
+      "TE-LEX-C402-MANTRI402-05"
+    ]
+  }
+}

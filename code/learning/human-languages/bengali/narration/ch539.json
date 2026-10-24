@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 539,
+  "title": "Facing Obstacles",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:386f7e19eb4d41d2",
+  "lessons": [
+    {
+      "id": "BN-C539-bighno",
+      "sequence": 32410,
+      "title": "বিঘ্ন (bighnô) — an obstacle; a hindrance",
+      "headword": "বিঘ্ন",
+      "romanization": "bighnô",
+      "gloss": "an obstacle; a hindrance",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c48675e4c010e5f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for imminent, then the Bengali for for emergencies."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিঘ্ন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিঘ্ন — bighnô — \"an obstacle; a hindrance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বৃষ্টি হলে আমাদের যাত্রায় বিঘ্ন ঘটবে। Brishṭi hôle āmāder jātrāy bighnô ghôṭbe. If it rains, our journey will be held up."
+            },
+            {
+              "kind": "speech",
+              "text": "With ঘটা: বিঘ্ন (bighnô) ঘটা, to be disrupted; বিঘ্ন (bighnô) ঘটানো, to disrupt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিঘ্ন (bighnô) is a tatsama, Sanskrit vighna, \"a breaker\", and so \"an obstacle\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bighnô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bighnô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bighnô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bighnô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Brishṭi hôle āmāder jātrāy bighnô ghôṭbe. — If it rains, our journey will be held up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Brishṭi hôle āmāder jātrāy bighnô ghôṭbe.* — If it rains, our journey will be held up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for imminent, then the Bengali for for emergencies, then say bighnô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for imminent, then the Bengali for for emergencies, then say *bighnô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিঘ্ন (bighnô) mean? (\"An obstacle; a hindrance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C539-nachhorbanda",
+      "sequence": 32420,
+      "title": "নাছোড়বান্দা (nāchhoṛbāndā) — persistent; never giving up",
+      "headword": "নাছোড়বান্দা",
+      "romanization": "nāchhoṛbāndā",
+      "gloss": "persistent; never giving up",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b100713f1438f6c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for for emergencies, then the Bengali for a hindrance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নাছোড়বান্দা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নাছোড়বান্দা — nāchhoṛbāndā — \"persistent; never giving up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ছেলেটা নাছোড়বান্দা, শেষে মা রাজি হলেন। Chheleṭā nāchhoṛbāndā, sheshe mā rāji hôlen. The boy wouldn't give up, and in the end his mother agreed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নাছোড়বান্দা (nāchhoṛbāndā) is an expressive compound: না, \"not\", ছোড়, \"letting go\" (from the family of ছাড়া, CDIAL 4998), and বান্দা, usually traced to Persian banda, \"a servant\": one who will not let go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāchhoṛbāndā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāchhoṛbāndā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāchhoṛbāndā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāchhoṛbāndā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chheleṭā nāchhoṛbāndā, sheshe mā rāji hôlen. — The boy wouldn't give up, and in the end his mother agreed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chheleṭā nāchhoṛbāndā, sheshe mā rāji hôlen.* — The boy wouldn't give up, and in the end his mother agreed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for for emergencies, then the Bengali for a hindrance, then say nāchhoṛbāndā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for for emergencies, then the Bengali for a hindrance, then say *nāchhoṛbāndā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নাছোড়বান্দা (nāchhoṛbāndā) mean? (\"Persistent; never giving up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C539-moriya",
+      "sequence": 32430,
+      "title": "মরিয়া (môriyā) — desperate; ready to risk anything",
+      "headword": "মরিয়া",
+      "romanization": "môriyā",
+      "gloss": "desperate; ready to risk anything",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be33299e5c455536",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a hindrance, then the Bengali for persistent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মরিয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মরিয়া — môriyā — \"desperate; ready to risk anything\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বন্যার জল বাড়ছিল, তাই লোকজন মরিয়া হল। Bônyār jôl bāṛchhilô, tāi lokjôn môriyā hôlô. The flood water was rising, so people grew desperate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মরিয়া (môriyā) is probably built on মরা, \"to die\" (CDIAL 9871): ready to face death itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môriyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môriyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môriyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môriyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bônyār jôl bāṛchhilô, tāi lokjôn môriyā hôlô. — The flood water was rising, so people grew desperate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Bônyār jôl bāṛchhilô, tāi lokjôn môriyā hôlô.* — The flood water was rising, so people grew desperate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a hindrance, then the Bengali for persistent, then say môriyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a hindrance, then the Bengali for persistent, then say *môriyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মরিয়া (môriyā) mean? (\"Desperate; ready to risk anything\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C539-hal-chhara",
+      "sequence": 32440,
+      "title": "হাল ছাড়া (hāl chhāṛā) — to give up hope; to stop trying",
+      "headword": "হাল ছাড়া",
+      "romanization": "hāl chhāṛā",
+      "gloss": "to give up hope; to stop trying",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54b76e941b97f568",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for persistent, then the Bengali for desperate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হাল ছাড়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাল ছাড়া — hāl chhāṛā — \"to give up hope; to stop trying\"."
+            },
+            {
+              "kind": "speech",
+              "text": "হাল না ছাড়লে তোমার দল জিতবে। Hāl nā chhāṛle tomār dôl jitbe. If your team doesn't give up, it will win."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি হাল ছাড়লেন না, tini hāl chhāṛlen nā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাল ছাড়া (hāl chhāṛā) joins হাল, \"the helm, the rudder\", to ছাড়া, \"to let go\": to let go of the helm. Where হাল in this sense comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāl chhāṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāl chhāṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāl chhāṛā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāl chhāṛā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hāl nā chhāṛle tomār dôl jitbe. — If your team doesn't give up, it will win.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hāl nā chhāṛle tomār dôl jitbe.* — If your team doesn't give up, it will win.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for persistent, then the Bengali for desperate, then say hāl chhāṛā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for persistent, then the Bengali for desperate, then say *hāl chhāṛā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হাল ছাড়া (hāl chhāṛā) mean? (\"To give up hope; to stop trying\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C539-jorano",
+      "sequence": 32450,
+      "title": "জড়ানো (jôṛāno) — to get tangled up; to wrap round",
+      "headword": "জড়ানো",
+      "romanization": "jôṛāno",
+      "gloss": "to get tangled up; to wrap round",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e38f49ec4fd0f2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for desperate, then the Bengali for to give up hope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জড়ানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জড়ানো — jôṛāno — \"to get tangled up; to wrap round\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ঘুড়ির সুতো গাছের ডালে জড়াল। Ghuṛir suto gāchher ḍāle jôṛālô. The kite string got tangled in the branches of the tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই দড়ি চাকায় জড়াল, sei dôṛi chākāy jôṛālô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জড়ানো (jôṛāno) comes from a reconstructed jaḍati, \"joins, sets\", which Turner took from Dravidian; CDIAL lists Bengali jaṛāna, \"to wrap round, to entangle\" (CDIAL 5091)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jôṛāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jôṛāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jôṛāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jôṛāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ghuṛir suto gāchher ḍāle jôṛālô. — The kite string got tangled in the branches of the tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ghuṛir suto gāchher ḍāle jôṛālô.* — The kite string got tangled in the branches of the tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for desperate, then the Bengali for to give up hope, then say jôṛāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for desperate, then the Bengali for to give up hope, then say *jôṛāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জড়ানো (jôṛāno) mean? (\"To get tangled up; to wrap round\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

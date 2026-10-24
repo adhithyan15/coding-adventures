@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "The Army Marches",
+  "label": "ch:te-the-army-marches",
+  "canDo": "I can say an army, a soldier, a commander, a march and to march against.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C339-dandettu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can say an army, a soldier, a commander, a march and to march against.",
+    "assesses": [
+      "TE-LEX-C339-SAINYAM339-03",
+      "TE-LEX-C339-SAINYAM339-04",
+      "TE-LEX-C339-SAINYAM339-05"
+    ]
+  }
+}

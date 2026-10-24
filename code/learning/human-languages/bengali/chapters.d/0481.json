@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Mother and Elder Siblings",
+  "label": "ch:bn-mother-and-elder-siblings",
+  "canDo": "I can talk about my mother, my elder brother and my elder sister.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C481-thakuma",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can talk about my mother, my elder brother and my elder sister.",
+    "assesses": [
+      "BN-LEX-C481-MA481-03",
+      "BN-LEX-C481-MA481-04",
+      "BN-LEX-C481-MA481-05"
+    ]
+  }
+}

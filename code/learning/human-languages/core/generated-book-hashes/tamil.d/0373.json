@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:72a0a9c2ea0b0a5f",
+  "lessonIds": [
+    "TA-C373-araciyal",
+    "TA-C373-amaiccar",
+    "TA-C373-piratamar",
+    "TA-C373-alunar",
+    "TA-C373-natalumanram"
+  ],
+  "tex": "tamil/book/chapters/ch373-government.tex"
+}

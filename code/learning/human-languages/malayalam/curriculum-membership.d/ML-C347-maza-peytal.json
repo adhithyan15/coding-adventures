@@ -1,0 +1,11 @@
+{
+  "id": "ML-C347-maza-peytal",
+  "pathSegment": "ML-PATH-347-IF-REAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-347-IF-REAL",
+      "order": 1
+    }
+  ]
+}

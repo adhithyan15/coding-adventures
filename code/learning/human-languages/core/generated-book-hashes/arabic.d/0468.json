@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:89a92c28b8e2f03d",
+  "lessonIds": [
+    "AR-C468-nabat",
+    "AR-C468-shujayra",
+    "AR-C468-dhabala",
+    "AR-C468-azhara",
+    "AR-C468-athmara"
+  ],
+  "tex": "arabic/book/chapters/ch468-plants.tex"
+}

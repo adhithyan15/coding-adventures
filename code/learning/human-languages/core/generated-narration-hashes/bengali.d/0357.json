@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:2b11db5215198257",
+  "lessonIds": [
+    "BN-C357-probondho",
+    "BN-C357-bishoy",
+    "BN-C357-montobyo",
+    "BN-C357-uposonghar",
+    "BN-C357-dharona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch357.txt",
+  "json": "bengali/narration/ch357.json",
+  "textHash": "fnv1a64:60f0a31648725537",
+  "jsonHash": "fnv1a64:6184d13533270cd0",
+  "findings": []
+}

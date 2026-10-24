@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C377-sadhon-kora",
+    "language": "bengali",
+    "chapter": 377,
+    "sequence": 23450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2e97b1b80da8779"
+  },
+  "findings": []
+}

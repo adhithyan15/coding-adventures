@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-289-TICKETS-TROUBLE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-289-TICKETS-TROUBLE"
+  ],
+  "after": []
+}

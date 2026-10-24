@@ -1,0 +1,11 @@
+{
+  "id": "TA-C423-vattaram",
+  "pathSegment": "TA-PATH-423-NAKAR423",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-423-NAKAR423",
+      "order": 3
+    }
+  ]
+}

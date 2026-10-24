@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C533-svasammuttu",
+    "language": "malayalam",
+    "chapter": 533,
+    "sequence": 26860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a8eae0ec2671e77"
+  },
+  "findings": []
+}

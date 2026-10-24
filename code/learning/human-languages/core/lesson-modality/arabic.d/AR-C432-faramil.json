@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C432-faramil",
+    "language": "arabic",
+    "chapter": 432,
+    "sequence": 24290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bd3a0271d5620a9"
+  },
+  "findings": []
+}

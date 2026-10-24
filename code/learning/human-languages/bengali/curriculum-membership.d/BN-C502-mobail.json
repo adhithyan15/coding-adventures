@@ -1,0 +1,11 @@
+{
+  "id": "BN-C502-mobail",
+  "pathSegment": "BN-PATH-502-KOMPIUTAR502",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-502-KOMPIUTAR502",
+      "order": 1
+    }
+  ]
+}

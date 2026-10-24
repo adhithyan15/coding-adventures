@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C375-patrikeyudu",
+    "language": "telugu",
+    "chapter": 375,
+    "sequence": 18510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8417c61a4bffd88"
+  },
+  "findings": []
+}

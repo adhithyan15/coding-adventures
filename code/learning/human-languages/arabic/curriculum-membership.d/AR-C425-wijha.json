@@ -1,0 +1,11 @@
+{
+  "id": "AR-C425-wijha",
+  "pathSegment": "AR-PATH-425-RAKIB425",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-425-RAKIB425",
+      "order": 2
+    }
+  ]
+}

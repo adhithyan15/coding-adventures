@@ -1,0 +1,11 @@
+{
+  "id": "BN-C339-rokkha-kora",
+  "pathSegment": "BN-PATH-339-ODHIKAR339",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-339-ODHIKAR339",
+      "order": 3
+    }
+  ]
+}

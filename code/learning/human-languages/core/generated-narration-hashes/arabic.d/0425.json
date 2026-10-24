@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:6e49c64d43bca291",
+  "lessonIds": [
+    "AR-C425-mudif",
+    "AR-C425-rakib",
+    "AR-C425-wijha",
+    "AR-C425-shadda",
+    "AR-C425-wusul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch425.txt",
+  "json": "arabic/narration/ch425.json",
+  "textHash": "fnv1a64:50f06350ded6bfe2",
+  "jsonHash": "fnv1a64:3826724e819881d2",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "At the Sickbed",
+  "label": "ch:bn-at-the-sickbed",
+  "canDo": "I can talk about caring for someone who is ill.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C478-shushrusha-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can talk about caring for someone who is ill.",
+    "assesses": [
+      "BN-LEX-C478-JOTNO478-03",
+      "BN-LEX-C478-JOTNO478-04",
+      "BN-LEX-C478-JOTNO478-05"
+    ]
+  }
+}

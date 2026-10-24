@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C385-nivalne",
+    "language": "marathi",
+    "chapter": 385,
+    "sequence": 22220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8a52ba800e5e90c"
+  },
+  "findings": []
+}

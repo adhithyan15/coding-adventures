@@ -1,0 +1,11 @@
+{
+  "id": "BN-C415-lenden",
+  "pathSegment": "BN-PATH-415-SUD415",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-415-SUD415",
+      "order": 2
+    }
+  ]
+}

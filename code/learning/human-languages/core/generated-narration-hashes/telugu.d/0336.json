@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:d775f1ba5ed27687",
+  "lessonIds": [
+    "TE-C336-pukaru",
+    "TE-C336-vadanti",
+    "TE-C336-atisayokti",
+    "TE-C336-kalakalam",
+    "TE-C336-velladincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch336.txt",
+  "json": "telugu/narration/ch336.json",
+  "textHash": "fnv1a64:77b688bfa862aae7",
+  "jsonHash": "fnv1a64:a6ee2a51668900fb",
+  "findings": []
+}

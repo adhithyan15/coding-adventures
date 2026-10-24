@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:38e0d4ddd5b4a92a",
+  "lessonIds": [
+    "MR-C487-catka-basne",
+    "MR-C487-galu",
+    "MR-C487-pural",
+    "MR-C487-bhajne",
+    "MR-C487-khajavne"
+  ],
+  "tex": "marathi/book/chapters/ch487-burns-and-rashes.tex"
+}

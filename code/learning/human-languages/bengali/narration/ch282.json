@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 282,
+  "title": "A Theft in the Night",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5f37877ebe17d159",
+  "lessons": [
+    {
+      "id": "BN-C282-churi-kora",
+      "sequence": 18300,
+      "title": "চুরি করা (churi kôrā) — to steal",
+      "headword": "চুরি করা",
+      "romanization": "churi kôrā",
+      "gloss": "to steal",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:377fcefb3766b3ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to rush, then the Bengali for at last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চুরি করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চুরি করা — churi kôrā — \"to steal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দরজায় তালা দিতে হবে, নাহলে চোর ঢুকে সব চুরি করবে। dôrjāy tālā dite hôbe, nāhôle chor ḍhuke sôb churi kôrbe. We have to lock the door, otherwise a thief will get in and steal everything."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই চোর টাকা চুরি করল, sei chor ṭākā churi kôrlô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চুরি করা (churi kôrā) puts চুরি, 'a theft' — Sanskrit caurikā (CDIAL 4937, which lists Bengali curi), the same family as চোর, a thief — before করা: to do a theft."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "churi kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *churi kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "churi kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *churi kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dôrjāy tālā dite hôbe, nāhôle chor ḍhuke sôb churi kôrbe. — We have to lock the door, otherwise a thief will get in and steal everything.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dôrjāy tālā dite hôbe, nāhôle chor ḍhuke sôb churi kôrbe.* — We have to lock the door, otherwise a thief will get in and steal everything.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to rush, then the Bengali for at last, then say churi kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to rush, then the Bengali for at last, then say *churi kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চুরি করা (churi kôrā) mean? (\"To steal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C282-goyna",
+      "sequence": 18310,
+      "title": "গয়না (gôynā) — jewellery; an ornament",
+      "headword": "গয়না",
+      "romanization": "gôynā",
+      "gloss": "jewellery; an ornament",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:639ac1ac18d7d2e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for at last, then the Bengali for to steal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গয়না",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গয়না — gôynā — \"jewellery; an ornament\"."
+            },
+            {
+              "kind": "speech",
+              "text": "চোর আলমারি খুলে দিদিমার গয়না নিয়ে পালাল। chor ālmāri khule didimār gôynā niye pālālô. The thief opened the cupboard and ran off with my grandmother's jewellery."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গয়না (gôynā) is filed in CDIAL 4364 under Sanskrit grahaṇa, 'seizing, holding; putting on clothes', where Bengali gaynā appears; how it came to mean an ornament is not set out there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôynā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôynā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôynā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôynā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chor ālmāri khule didimār gôynā niye pālālô. — The thief opened the cupboard and ran off with my grandmother's jewellery.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chor ālmāri khule didimār gôynā niye pālālô.* — The thief opened the cupboard and ran off with my grandmother's jewellery.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for at last, then the Bengali for to steal, then say gôynā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for at last, then the Bengali for to steal, then say *gôynā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গয়না (gôynā) mean? (\"Jewellery; an ornament\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C282-pakrano",
+      "sequence": 18320,
+      "title": "পাকড়ানো (pākṛāno) — to grab; to nab",
+      "headword": "পাকড়ানো",
+      "romanization": "pākṛāno",
+      "gloss": "to grab; to nab",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:651fc09686338524",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to steal, then the Bengali for jewellery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পাকড়ানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাকড়ানো — pākṛāno — \"to grab; to nab\"."
+            },
+            {
+              "kind": "speech",
+              "text": "প্রতিবেশীরা চোরকে রাস্তায় পাকড়াল। prôtibeshīrā chorke rāstāy pākṛālô. The neighbours grabbed the thief in the street."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই লোক চোরকে পাকড়াল, sei lok chorke pākṛālô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাকড়ানো (pākṛāno) is filed in CDIAL 7619 under a Middle Indo-Aryan pakkaḍ-, 'seize', which lists Bengali pākaṛā, 'to seize'. It is everyday, rather rough talk for catching hold of someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pākṛāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pākṛāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pākṛāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pākṛāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtibeshīrā chorke rāstāy pākṛālô. — The neighbours grabbed the thief in the street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtibeshīrā chorke rāstāy pākṛālô.* — The neighbours grabbed the thief in the street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to steal, then the Bengali for jewellery, then say pākṛāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to steal, then the Bengali for jewellery, then say *pākṛāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পাকড়ানো (pākṛāno) mean? (\"To grab; to nab\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C282-thela",
+      "sequence": 18330,
+      "title": "ঠেলা (ṭhelā) — to push; to shove",
+      "headword": "ঠেলা",
+      "romanization": "ṭhelā",
+      "gloss": "to push; to shove",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a47a63d68dce4b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for jewellery, then the Bengali for to grab."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঠেলা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠেলা — ṭhelā — \"to push; to shove\"."
+            },
+            {
+              "kind": "speech",
+              "text": "চোর আমাকে ঠেলে দরজা দিয়ে পালাল। chor āmāke ṭhele dôrjā diye pālālô. The thief shoved me aside and escaped through the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই চোর আমাকে ঠেলল, sei chor āmāke ṭhellô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠেলা (ṭhelā) is filed in CDIAL 5512 under a Middle Indo-Aryan ṭhēḍḍ-, 'push', which lists Bengali ṭhelā, 'to push'. A ঠেলাগাড়ি is a handcart, a cart you push."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhelā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhelā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhelā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhelā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chor āmāke ṭhele dôrjā diye pālālô. — The thief shoved me aside and escaped through the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chor āmāke ṭhele dôrjā diye pālālô.* — The thief shoved me aside and escaped through the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for jewellery, then the Bengali for to grab, then say ṭhelā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for jewellery, then the Bengali for to grab, then say *ṭhelā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঠেলা (ṭhelā) mean? (\"To push; to shove\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C282-poketmar",
+      "sequence": 18340,
+      "title": "পকেটমার (pôkeṭmār) — a pickpocket",
+      "headword": "পকেটমার",
+      "romanization": "pôkeṭmār",
+      "gloss": "a pickpocket",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f336ac0d303a565",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to grab, then the Bengali for to push."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পকেটমার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পকেটমার — pôkeṭmār — \"a pickpocket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাসের ভিড়ে কোনো পকেটমার আমার মানিব্যাগ নিল। bāser bhiṛe kono pôkeṭmār āmār mānibyāg nilô. In the crowded bus some pickpocket took my wallet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পকেটমার (pôkeṭmār) joins পকেট, a pocket, from English, to মার, the stem of মারা, which in slang also means to pinch: one who hits pockets."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôkeṭmār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôkeṭmār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôkeṭmār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôkeṭmār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāser bhiṛe kono pôkeṭmār āmār mānibyāg nilô. — In the crowded bus some pickpocket took my wallet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāser bhiṛe kono pôkeṭmār āmār mānibyāg nilô.* — In the crowded bus some pickpocket took my wallet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to grab, then the Bengali for to push, then say pôkeṭmār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to grab, then the Bengali for to push, then say *pôkeṭmār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পকেটমার (pôkeṭmār) mean? (\"A pickpocket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C446-kanakku",
+  "pathSegment": "TA-PATH-446-VANKI446",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-446-VANKI446",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:d46943bb55c31899",
+  "lessonIds": [
+    "BN-C350-adorsho",
+    "BN-C350-mulyobodh",
+    "BN-C350-sohishnuta",
+    "BN-C350-sotyobadi",
+    "BN-C350-nejyo"
+  ],
+  "tex": "bengali/book/chapters/ch350-what-we-value.tex"
+}

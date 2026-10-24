@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 360,
+  "title": "By Chance or on Purpose",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4a1638552b12ddb5",
+  "lessons": [
+    {
+      "id": "ML-C360-yadrcchikamayi",
+      "sequence": 17560,
+      "title": "യാദൃച്ഛികമായി (yādṛcchikamāyi) — by chance",
+      "headword": "യാദൃച്ഛികമായി",
+      "romanization": "yādṛcchikamāyi",
+      "gloss": "by chance",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e5f82f148d3d3ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for now and then, then the Malayalam for right after."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: യാദൃച്ഛികമായി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യാദൃച്ഛികമായി — yādṛcchikamāyi — \"by chance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ചന്തയിൽ വെച്ച് ഞാൻ യാദൃച്ഛികമായി എന്റെ പഴയ അധ്യാപകനെ കണ്ടു. cantayil veccŭ ñān yādṛcchikamāyi enṟe paḻaya adhyāpakane kaṇṭu. At the market I met my old teacher by chance."
+            },
+            {
+              "kind": "speech",
+              "text": "The -ആയി ending makes an adverb from the adjective യാദൃച്ഛികം, chance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യാദൃച്ഛികമായി (yādṛcchikamāyi) is built from Sanskrit yādṛcchika, \"spontaneous, accidental, unexpected\" (Monier-Williams), with the Malayalam adverb ending -ആയി."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yādṛcchikamāyi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yādṛcchikamāyi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yādṛcchikamāyi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yādṛcchikamāyi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantayil veccŭ ñān yādṛcchikamāyi enṟe paḻaya adhyāpakane kaṇṭu. — At the market I met my old teacher by chance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantayil veccŭ ñān yādṛcchikamāyi enṟe paḻaya adhyāpakane kaṇṭu.* — At the market I met my old teacher by chance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for now and then, then the Malayalam for right after, then say yādṛcchikamāyi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for now and then, then the Malayalam for right after, then say *yādṛcchikamāyi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does യാദൃച്ഛികമായി (yādṛcchikamāyi) mean? (\"By chance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C360-manappurvam",
+      "sequence": 17570,
+      "title": "മനപ്പൂർവം (manappūrvaṁ) — on purpose; deliberately",
+      "headword": "മനപ്പൂർവം",
+      "romanization": "manappūrvaṁ",
+      "gloss": "on purpose; deliberately",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:738510e781ac1a63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for right after, then the Malayalam for by chance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മനപ്പൂർവം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മനപ്പൂർവം — manappūrvaṁ — \"on purpose; deliberately\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ മനപ്പൂർവം ഗ്ലാസ് പൊട്ടിച്ചില്ല. avan manappūrvaṁ glāsŭ poṭṭiccilla. He did not break the glass on purpose."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally with the mind first: done with intent. The careful written spelling is മനഃപൂർവം."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മനപ്പൂർവം (manappūrvaṁ) is usually traced to Sanskrit manas, \"mind\", and pūrva, \"preceded by\": an act that the mind went before."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manappūrvaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manappūrvaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manappūrvaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manappūrvaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan manappūrvaṁ glāsŭ poṭṭiccilla. — He did not break the glass on purpose.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan manappūrvaṁ glāsŭ poṭṭiccilla.* — He did not break the glass on purpose.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for right after, then the Malayalam for by chance, then say manappūrvaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for right after, then the Malayalam for by chance, then say *manappūrvaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മനപ്പൂർവം (manappūrvaṁ) mean? (\"On purpose; deliberately\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C360-abaddham",
+      "sequence": 17580,
+      "title": "അബദ്ധം (abaddhaṁ) — a blunder; a silly mistake",
+      "headword": "അബദ്ധം",
+      "romanization": "abaddhaṁ",
+      "gloss": "a blunder; a silly mistake",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccd62d251c3138e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for by chance, then the Malayalam for on purpose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അബദ്ധം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അബദ്ധം — abaddhaṁ — \"a blunder; a silly mistake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ ഒരു വലിയ അബദ്ധം ചെയ്തു. ñān oru valiya abaddhaṁ ceytu. I made a big blunder."
+            },
+            {
+              "kind": "speech",
+              "text": "By mistake is അബദ്ധത്തിൽ: without meaning to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അബദ്ധം (abaddhaṁ) is borrowed from Sanskrit abaddha, \"unbound; unmeaning, nonsensical\" (Monier-Williams). A blunder is something that makes no sense once it is done."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abaddhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abaddhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abaddhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abaddhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān oru valiya abaddhaṁ ceytu. — I made a big blunder.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān oru valiya abaddhaṁ ceytu.* — I made a big blunder.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for by chance, then the Malayalam for on purpose, then say abaddhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for by chance, then the Malayalam for on purpose, then say *abaddhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അബദ്ധം (abaddhaṁ) mean? (\"A blunder; a silly mistake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C360-bhagyam",
+      "sequence": 17590,
+      "title": "ഭാഗ്യം (bhāgyaṁ) — luck; good fortune",
+      "headword": "ഭാഗ്യം",
+      "romanization": "bhāgyaṁ",
+      "gloss": "luck; good fortune",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1a20b2e05712a6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for on purpose, then the Malayalam for a blunder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഭാഗ്യം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭാഗ്യം — bhāgyaṁ — \"luck; good fortune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഭാഗ്യത്തിന് ഞങ്ങൾക്ക് ബസ് കിട്ടി. bhāgyattinŭ ñaṅṅaḷkkŭ basŭ kiṭṭi. Luckily we caught the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "ഭാഗ്യത്തിന് means luckily; ഭാഗ്യവശാൽ, fortunately, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭാഗ്യം (bhāgyaṁ) is borrowed from Sanskrit bhāgya, \"fortune, one's lot\" (CDIAL 9434), from bhaga, \"a share\": luck is the share that falls to you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgyattinŭ ñaṅṅaḷkkŭ basŭ kiṭṭi. — Luckily we caught the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgyattinŭ ñaṅṅaḷkkŭ basŭ kiṭṭi.* — Luckily we caught the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for on purpose, then the Malayalam for a blunder, then say bhāgyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for on purpose, then the Malayalam for a blunder, then say *bhāgyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഭാഗ്യം (bhāgyaṁ) mean? (\"Luck; good fortune\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C360-vidhivasal",
+      "sequence": 17600,
+      "title": "വിധിവശാൽ (vidhivaśāl) — as fate willed",
+      "headword": "വിധിവശാൽ",
+      "romanization": "vidhivaśāl",
+      "gloss": "as fate willed",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39055f66a926bb2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a blunder, then the Malayalam for luck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിധിവശാൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിധിവശാൽ — vidhivaśāl — \"as fate willed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വിധിവശാൽ അന്ന് അവൻ ആ ബസിൽ കയറിയില്ല. vidhivaśāl annŭ avan ā basil kayaṟiyilla. As fate would have it, he did not get on that bus that day."
+            },
+            {
+              "kind": "speech",
+              "text": "Built like ഭാഗ്യവശാൽ, fortunately: by the power of fate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിധിവശാൽ (vidhivaśāl) is borrowed whole from Sanskrit vidhivaśāt, \"through the power of fate or destiny\" (Monier-Williams), from vidhi, \"rule, fate\" (CDIAL 11755), and vaśa, \"power\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidhivaśāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidhivaśāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidhivaśāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidhivaśāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidhivaśāl annŭ avan ā basil kayaṟiyilla. — As fate would have it, he did not get on that bus that day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidhivaśāl annŭ avan ā basil kayaṟiyilla.* — As fate would have it, he did not get on that bus that day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a blunder, then the Malayalam for luck, then say vidhivaśāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a blunder, then the Malayalam for luck, then say *vidhivaśāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിധിവശാൽ (vidhivaśāl) mean? (\"As fate willed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

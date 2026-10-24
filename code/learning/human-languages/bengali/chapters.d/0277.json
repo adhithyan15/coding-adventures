@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Who Saw It",
+  "label": "ch:bn-who-saw-it",
+  "canDo": "I can say who saw something and who was there.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C277-hajir-hooya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say who saw something and who was there.",
+    "assesses": [
+      "BN-LEX-C277-SAKSHI277-03",
+      "BN-LEX-C277-SAKSHI277-04",
+      "BN-LEX-C277-SAKSHI277-05"
+    ]
+  }
+}

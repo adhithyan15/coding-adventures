@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Exile and Punishment",
+  "label": "ch:ka-exile-and-punishment",
+  "canDo": "I can say exile in the forest, to impose, banishment, former and theft.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C372-kallatana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can say exile in the forest, to impose, banishment, former and theft.",
+    "assesses": [
+      "KA-LEX-C372-VANAVASA372-03",
+      "KA-LEX-C372-VANAVASA372-04",
+      "KA-LEX-C372-VANAVASA372-05"
+    ]
+  }
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 444,
+  "title": "Rules of the Road",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:63a0dab81c4adf3f",
+  "lessons": [
+    {
+      "id": "KA-C444-anusarisu",
+      "sequence": 22560,
+      "title": "ಅನುಸರಿಸು (anusarisu) — to comply with; to go by",
+      "headword": "ಅನುಸರಿಸು",
+      "romanization": "anusarisu",
+      "gloss": "to comply with; to go by",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5060fe8c5f84de59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for congestion, then the Kannada for to control."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅನುಸರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನುಸರಿಸು — anusarisu — \"to comply with; to go by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎಲ್ಲಾ ಚಾಲಕರು ಸಿಗ್ನಲ್ ಅನುಸರಿಸಬೇಕು. ellā cālakaru signal anusarisabēku. All drivers must go by the signals."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಅನುಸರಿಸಿದೆ, anusariside."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿಯಮ ಅನುಸರಿಸು (anusarisu), to follow a rule; ಹಿಂಬಾಲಿಸು is to follow behind someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನುಸರಿಸು (anusarisu) is built from Sanskrit anusaraṇa, \"going after\", the noun of anusarati, \"runs after, follows\" (CDIAL 338), with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anusarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anusarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anusarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anusarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellā cālakaru signal anusarisabēku. — All drivers must go by the signals.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellā cālakaru signal anusarisabēku.* — All drivers must go by the signals.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for congestion, then the Kannada for to control, then say anusarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for congestion, then the Kannada for to control, then say *anusarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅನುಸರಿಸು (anusarisu) mean? (\"To comply with; to go by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C444-ullanghisu",
+      "sequence": 22570,
+      "title": "ಉಲ್ಲಂಘಿಸು (ullaṅghisu) — to violate; to break a rule",
+      "headword": "ಉಲ್ಲಂಘಿಸು",
+      "romanization": "ullaṅghisu",
+      "gloss": "to violate; to break a rule",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76c2d3a9f302c6f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to control, then the Kannada for to comply with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉಲ್ಲಂಘಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಲ್ಲಂಘಿಸು — ullaṅghisu — \"to violate; to break a rule\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನು ಕೆಂಪು ಸಿಗ್ನಲ್ ಉಲ್ಲಂಘಿಸಿದನು. avanu kempu signal ullaṅghisidanu. He jumped the red light."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಉಲ್ಲಂಘಿಸಿದೆ, ullaṅghiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿಯಮ ಉಲ್ಲಂಘನೆ, a breach of the rules."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಲ್ಲಂಘಿಸು (ullaṅghisu) is built from Sanskrit ullaṅghana, \"leaping over, transgressing\", from ud- \"up, over\" and laṅgh, \"to leap over\" (CDIAL 10905), with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ullaṅghisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ullaṅghisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ullaṅghisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ullaṅghisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanu kempu signal ullaṅghisidanu. — He jumped the red light.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanu kempu signal ullaṅghisidanu.* — He jumped the red light.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to control, then the Kannada for to comply with, then say ullaṅghisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to control, then the Kannada for to comply with, then say *ullaṅghisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉಲ್ಲಂಘಿಸು (ullaṅghisu) mean? (\"To violate; to break a rule\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C444-palisu",
+      "sequence": 22580,
+      "title": "ಪಾಲಿಸು (pālisu) — to obey; to keep (a rule)",
+      "headword": "ಪಾಲಿಸು",
+      "romanization": "pālisu",
+      "gloss": "to obey; to keep (a rule)",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c740dedaabfc0757",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to comply with, then the Kannada for to violate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಾಲಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಾಲಿಸು — pālisu — \"to obey; to keep (a rule)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾವು ಸಂಚಾರ ನಿಯಮಗಳನ್ನು ಪಾಲಿಸಿದೆವು. nāvu sañcāra niyamagaḷannu pālisidevu. We kept to the traffic rules."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪಾಲಿಸಿದೆ, pāliside."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to look after or rear; ನಿಯಮ ಪಾಲಿಸು (pālisu) is the usual pair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಾಲಿಸು (pālisu) is built from Sanskrit pālayati, \"guards, protects\" (CDIAL 8129), with the Kannada verb ending -isu: to keep a rule is to guard it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pālisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pālisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pālisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pālisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvu sañcāra niyamagaḷannu pālisidevu. — We kept to the traffic rules.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvu sañcāra niyamagaḷannu pālisidevu.* — We kept to the traffic rules.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to comply with, then the Kannada for to violate, then say pālisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to comply with, then the Kannada for to violate, then say *pālisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಾಲಿಸು (pālisu) mean? (\"To obey; to keep (a rule)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C444-nisedhisu",
+      "sequence": 22590,
+      "title": "ನಿಷೇಧಿಸು (niṣēdhisu) — to ban; to prohibit",
+      "headword": "ನಿಷೇಧಿಸು",
+      "romanization": "niṣēdhisu",
+      "gloss": "to ban; to prohibit",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b3165e6c8c13590",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to violate, then the Kannada for to obey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿಷೇಧಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಷೇಧಿಸು — niṣēdhisu — \"to ban; to prohibit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಉದ್ಯಾನದಲ್ಲಿ ಪ್ಲಾಸ್ಟಿಕ್ ಚೀಲಗಳನ್ನು ನಿಷೇಧಿಸಿದ್ದಾರೆ. udyānadalli plāsṭik cīlagaḷannu niṣēdhisiddāre. Plastic bags have been banned in the park."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ನಿಷೇಧಿಸಿದೆ, niṣēdhiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿಷೇಧ is a ban: ಪ್ರವೇಶ ನಿಷೇಧ, no entry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಷೇಧಿಸು (niṣēdhisu) is built from Sanskrit niṣēdha, \"keeping off, prohibition\" (Monier-Williams), with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣēdhisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣēdhisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣēdhisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣēdhisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyānadalli plāsṭik cīlagaḷannu niṣēdhisiddāre. — Plastic bags have been banned in the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyānadalli plāsṭik cīlagaḷannu niṣēdhisiddāre.* — Plastic bags have been banned in the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to violate, then the Kannada for to obey, then say niṣēdhisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to violate, then the Kannada for to obey, then say *niṣēdhisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿಷೇಧಿಸು (niṣēdhisu) mean? (\"To ban; to prohibit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C444-ekamukha",
+      "sequence": 22600,
+      "title": "ಏಕಮುಖ (ēkamukha) — one-way",
+      "headword": "ಏಕಮುಖ",
+      "romanization": "ēkamukha",
+      "gloss": "one-way",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:362a74dd02fc04c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to obey, then the Kannada for to ban."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಏಕಮುಖ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏಕಮುಖ — ēkamukha — \"one-way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇದು ಏಕಮುಖ ರಸ್ತೆ, ಆ ಕಡೆಯಿಂದ ಬರಬಾರದು. idu ēkamukha raste, ā kaḍeyinda barabāradu. This is a one-way road; nobody may come from that side."
+            },
+            {
+              "kind": "speech",
+              "text": "ಏಕ, one, plus ಮುಖ, face: facing one way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏಕಮುಖ (ēkamukha) is built from two Sanskrit words: ēka, \"one\" (CDIAL 2462), and mukha, \"mouth, face, entrance\" (CDIAL 10158)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēkamukha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēkamukha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēkamukha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēkamukha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "idu ēkamukha raste, ā kaḍeyinda barabāradu. — This is a one-way road; nobody may come from that side.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *idu ēkamukha raste, ā kaḍeyinda barabāradu.* — This is a one-way road; nobody may come from that side.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to obey, then the Kannada for to ban, then say ēkamukha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to obey, then the Kannada for to ban, then say *ēkamukha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಏಕಮುಖ (ēkamukha) mean? (\"One-way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

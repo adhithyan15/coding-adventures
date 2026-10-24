@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "A State of Emergency",
+  "label": "ch:ta-a-state-of-emergency",
+  "canDo": "I can say what happens to a town in an emergency.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C300-itintuvilu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can say what happens to a town in an emergency.",
+    "assesses": [
+      "TA-LEX-C300-AVASARAM300-03",
+      "TA-LEX-C300-AVASARAM300-04",
+      "TA-LEX-C300-AVASARAM300-05"
+    ]
+  }
+}

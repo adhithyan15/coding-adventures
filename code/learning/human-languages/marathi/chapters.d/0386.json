@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Stopping Trouble",
+  "label": "ch:mr-stopping-trouble",
+  "canDo": "I can talk about preventing, blocking and noticing trouble.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C386-palvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can talk about preventing, blocking and noticing trouble.",
+    "assesses": [
+      "MR-LEX-C386-PRATIBANDH386-03",
+      "MR-LEX-C386-PRATIBANDH386-04",
+      "MR-LEX-C386-PRATIBANDH386-05"
+    ]
+  }
+}

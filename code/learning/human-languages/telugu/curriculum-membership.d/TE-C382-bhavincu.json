@@ -1,0 +1,11 @@
+{
+  "id": "TE-C382-bhavincu",
+  "pathSegment": "TE-PATH-382-ALOCANA382",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-382-ALOCANA382",
+      "order": 3
+    }
+  ]
+}

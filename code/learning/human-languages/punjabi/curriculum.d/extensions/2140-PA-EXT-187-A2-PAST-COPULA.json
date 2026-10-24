@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-187-A2-PAST-COPULA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use common singular and plural past-copula forms in descriptions and familiar routines.",
+  "prerequisites": [
+    "PA-EXT-186-A2-THIRD-PERSON-FUTURE"
+  ]
+}

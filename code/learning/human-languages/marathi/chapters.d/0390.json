@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "On the Whole",
+  "label": "ch:mr-on-the-whole",
+  "canDo": "I can sum up with in all, on the whole and apart from.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C390-vyatirikta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can sum up with in all, on the whole and apart from.",
+    "assesses": [
+      "MR-LEX-C390-EKUN390-03",
+      "MR-LEX-C390-EKUN390-04",
+      "MR-LEX-C390-EKUN390-05"
+    ]
+  }
+}

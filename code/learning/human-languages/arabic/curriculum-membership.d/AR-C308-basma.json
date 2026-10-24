@@ -1,0 +1,11 @@
+{
+  "id": "AR-C308-basma",
+  "pathSegment": "AR-PATH-308-TAHQIQ308",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-308-TAHQIQ308",
+      "order": 4
+    }
+  ]
+}

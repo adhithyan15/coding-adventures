@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 458,
+  "title": "Settling In",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:27d0d9d6dfaa9b51",
+  "lessons": [
+    {
+      "id": "TE-C458-sarduko",
+      "sequence": 23020,
+      "title": "సర్దుకో (sardukō) — to settle in; to make do",
+      "headword": "సర్దుకో",
+      "romanization": "sardukō",
+      "gloss": "to settle in; to make do",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8e119e04ff13401",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an elevator, then the Telugu for to stay overnight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సర్దుకో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సర్దుకో — sardukō — \"to settle in; to make do\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొత్త గదిలో రెండు రోజుల్లో సర్దుకున్నాను. kotta gadilō reṇḍu rōjullō sardukunnānu. I settled into the new room in two days."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సర్దుకున్నాను, sardukunnānu."
+            },
+            {
+              "kind": "speech",
+              "text": "సర్దు, to arrange, + -కో: to arrange things for oneself, to make do with what there is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సర్దుకో (sardukō) is built on సర్దు, \"to arrange, to tidy\", whose origin is not settled, with the ending -కో, \"for oneself\", from కొను, \"to take\" (DEDR 2151)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sardukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sardukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sardukō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sardukō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotta gadilō reṇḍu rōjullō sardukunnānu. — I settled into the new room in two days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotta gadilō reṇḍu rōjullō sardukunnānu.* — I settled into the new room in two days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an elevator, then the Telugu for to stay overnight, then say sardukō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an elevator, then the Telugu for to stay overnight, then say *sardukō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సర్దుకో (sardukō) mean? (\"To settle in; to make do\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C458-alavatupadu",
+      "sequence": 23030,
+      "title": "అలవాటుపడు (alavāṭupaḍu) — to get used to",
+      "headword": "అలవాటుపడు",
+      "romanization": "alavāṭupaḍu",
+      "gloss": "to get used to",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcb3dd02b0887e49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to stay overnight, then the Telugu for to settle in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అలవాటుపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అలవాటుపడు — alavāṭupaḍu — \"to get used to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చల్లని వాతావరణానికి నెమ్మదిగా అలవాటుపడ్డాను. callani vātāvaraṇāniki nemmadigā alavāṭupaḍḍānu. I slowly got used to the cold weather."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): అలవాటుపడ్డాను, alavāṭupaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "What you get used to takes -కి: వాతావరణానికి. అలవాటు, a habit, + పడు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అలవాటుపడు (alavāṭupaḍu) is native Dravidian: అలవాటు, \"a habit, a practice\" (DEDR 249), with పడు, \"to undergo\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alavāṭupaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alavāṭupaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alavāṭupaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alavāṭupaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "callani vātāvaraṇāniki nemmadigā alavāṭupaḍḍānu. — I slowly got used to the cold weather.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *callani vātāvaraṇāniki nemmadigā alavāṭupaḍḍānu.* — I slowly got used to the cold weather.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to stay overnight, then the Telugu for to settle in, then say alavāṭupaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to stay overnight, then the Telugu for to settle in, then say *alavāṭupaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అలవాటుపడు (alavāṭupaḍu) mean? (\"To get used to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C458-domatera",
+      "sequence": 23040,
+      "title": "దోమతెర (dōmatera) — a mosquito net",
+      "headword": "దోమతెర",
+      "romanization": "dōmatera",
+      "gloss": "a mosquito net",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b50397186b2d846",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to settle in, then the Telugu for to get used to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దోమతెర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దోమతెర — dōmatera — \"a mosquito net\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దోమతెర లేకుండా రాత్రి నిద్ర పట్టలేదు. dōmatera lēkuṇḍā rātri nidra paṭṭalēdu. Without a mosquito net I could not sleep at night."
+            },
+            {
+              "kind": "speech",
+              "text": "దోమ, a mosquito, + తెర, a screen, a curtain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దోమతెర (dōmatera) is native Dravidian: దోమ, \"a mosquito\" (DEDR 2991), and తెర, \"a screen, a curtain\" (DEDR 3244)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōmatera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōmatera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōmatera, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōmatera*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōmatera lēkuṇḍā rātri nidra paṭṭalēdu. — Without a mosquito net I could not sleep at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōmatera lēkuṇḍā rātri nidra paṭṭalēdu.* — Without a mosquito net I could not sleep at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to settle in, then the Telugu for to get used to, then say dōmatera again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to settle in, then the Telugu for to get used to, then say *dōmatera* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దోమతెర (dōmatera) mean? (\"A mosquito net\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C458-marugudoddi",
+      "sequence": 23050,
+      "title": "మరుగుదొడ్డి (marugudoḍḍi) — a toilet",
+      "headword": "మరుగుదొడ్డి",
+      "romanization": "marugudoḍḍi",
+      "gloss": "a toilet",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fac1d4cc6858fcfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to get used to, then the Telugu for a mosquito net."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మరుగుదొడ్డి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మరుగుదొడ్డి — marugudoḍḍi — \"a toilet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బస్టాండులో శుభ్రమైన మరుగుదొడ్లు ఉన్నాయి. basṭāṇḍulō śubhramaina marugudoḍlu unnāyi. There are clean toilets at the bus stand."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural మరుగుదొడ్లు. A polite, public word; at home people also say బాత్రూం."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మరుగుదొడ్డి (marugudoḍḍi) is native Dravidian: మరుగు, \"concealment, cover, a screen\", which DEDR 4760 lists as Telugu maṟũgu, and దొడ్డి, \"a backyard, an enclosure\" (DEDR 3485): a screened-off place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marugudoḍḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marugudoḍḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marugudoḍḍi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marugudoḍḍi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basṭāṇḍulō śubhramaina marugudoḍlu unnāyi. — There are clean toilets at the bus stand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *basṭāṇḍulō śubhramaina marugudoḍlu unnāyi.* — There are clean toilets at the bus stand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to get used to, then the Telugu for a mosquito net, then say marugudoḍḍi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to get used to, then the Telugu for a mosquito net, then say *marugudoḍḍi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మరుగుదొడ్డి (marugudoḍḍi) mean? (\"A toilet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C458-taguniru",
+      "sequence": 23060,
+      "title": "తాగునీరు (tāgunīru) — drinking water",
+      "headword": "తాగునీరు",
+      "romanization": "tāgunīru",
+      "gloss": "drinking water",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2b4eba3e1cca25f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a mosquito net, then the Telugu for a toilet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తాగునీరు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తాగునీరు — tāgunīru — \"drinking water\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గ్రామంలో తాగునీరు దొరకడం కష్టంగా ఉంది. grāmaṁlō tāgunīru dorakaḍaṁ kaṣṭaṅgā undi. It is hard to get drinking water in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "తాగు, to drink, + నీరు, water: water for drinking. నీళ్ళు is the everyday plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తాగునీరు (tāgunīru) is native Dravidian: తాగు, \"to drink\" (DEDR 3174), and నీరు, \"water\" (DEDR 3690)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāgunīru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāgunīru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāgunīru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāgunīru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāmaṁlō tāgunīru dorakaḍaṁ kaṣṭaṅgā undi. — It is hard to get drinking water in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāmaṁlō tāgunīru dorakaḍaṁ kaṣṭaṅgā undi.* — It is hard to get drinking water in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a mosquito net, then the Telugu for a toilet, then say tāgunīru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a mosquito net, then the Telugu for a toilet, then say *tāgunīru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తాగునీరు (tāgunīru) mean? (\"Drinking water\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

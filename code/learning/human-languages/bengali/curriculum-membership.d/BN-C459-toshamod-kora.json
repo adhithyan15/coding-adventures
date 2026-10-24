@@ -1,0 +1,11 @@
+{
+  "id": "BN-C459-toshamod-kora",
+  "pathSegment": "BN-PATH-459-BINOYI459",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-459-BINOYI459",
+      "order": 4
+    }
+  ]
+}

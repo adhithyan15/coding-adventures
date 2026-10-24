@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Love and Fondness",
+  "label": "ch:te-love-and-fondness",
+  "canDo": "I can name kinds of love and affection.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C503-abhimanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can name kinds of love and affection.",
+    "assesses": [
+      "TE-LEX-C503-PREMA503-03",
+      "TE-LEX-C503-PREMA503-04",
+      "TE-LEX-C503-PREMA503-05"
+    ]
+  }
+}

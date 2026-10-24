@@ -4,7 +4,15 @@
 # Evidence: https://github.com/Perl/perl5/blob/v5.45.3/pod/perlop.pod
 # and https://github.com/Perl/perl5/blob/v5.45.3/pod/perlfunc.pod
 
-INT       = /0|[1-9][0-9]*/
+# INT bound (LANG84 4c, read 2026-10-20 from tag object 8bf2c01609b0de5e5f4188c5862618e4b548a54b,
+# commit d97e2dc0ca5fcae83ac557cf21372672cd497510): toke.c ee46e4cbea4d96bbc49e9e692275be579682499a
+# line 13330, scan_num's decimal path, stops at C_ARRAY_END(PL_tokenbuf) - 6
+# and croaks "Number too long"; parser.h 8333adb7a93b05a0be1a2ff70fab7f3a83b1de21
+# line 116 sizes tokenbuf[PERL_IDENTIFIER_LENGTH] = 256 * MAX_UNICODE_UTF8_BYTES,
+# and utf8.h 70f7c3055c7b90283e585684b0ff073f6b59753f line 584
+# makes MAX_UNICODE_UTF8_BYTES UNISKIP_BY_MSB_(20) = 4 on ASCII platforms.
+# So 1018 decimal digits lex and the 1019th croaks (5.38's tokenbuf was 256).
+INT       = /0|[1-9][0-9]{0,1017}/
 NAME      = /[a-zA-Z_][a-zA-Z0-9_]*/
 PLUS      = "+"
 DECREMENT = "--"

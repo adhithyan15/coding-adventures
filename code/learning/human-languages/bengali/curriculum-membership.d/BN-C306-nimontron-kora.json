@@ -1,0 +1,11 @@
+{
+  "id": "BN-C306-nimontron-kora",
+  "pathSegment": "BN-PATH-306-OTITHI306",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-306-OTITHI306",
+      "order": 1
+    }
+  ]
+}

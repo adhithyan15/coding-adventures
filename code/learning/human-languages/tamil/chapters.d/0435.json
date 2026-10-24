@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Bays and Capes",
+  "label": "ch:ta-bays-and-capes",
+  "canDo": "I can talk about the coast, bays, capes, salt pans and pebbles.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C435-kulankal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can talk about the coast, bays, capes, salt pans and pebbles.",
+    "assesses": [
+      "TA-LEX-C435-KATALORAM435-03",
+      "TA-LEX-C435-KATALORAM435-04",
+      "TA-LEX-C435-KATALORAM435-05"
+    ]
+  }
+}

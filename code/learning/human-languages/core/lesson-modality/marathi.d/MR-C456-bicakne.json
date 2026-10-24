@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C456-bicakne",
+    "language": "marathi",
+    "chapter": 456,
+    "sequence": 26320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79e71e848e9c9dc8"
+  },
+  "findings": []
+}

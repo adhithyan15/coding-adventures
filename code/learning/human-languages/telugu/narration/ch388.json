@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 388,
+  "title": "Doubt and Certainty",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1a26c1f6ac8c1899",
+  "lessons": [
+    {
+      "id": "TE-C388-sandeham",
+      "sequence": 19300,
+      "title": "సందేహం (sandēhaṁ) — a misgiving; a doubt",
+      "headword": "సందేహం",
+      "romanization": "sandēhaṁ",
+      "gloss": "a misgiving; a doubt",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63d294e693302c8d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to comment, then the Telugu for to find fault with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సందేహం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సందేహం — sandēhaṁ — \"a misgiving; a doubt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నాకు ఒక చిన్న సందేహం ఉంది. nāku oka cinna sandēhaṁ undi. I have a small doubt."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: సందేహాలు, sandēhālu."
+            },
+            {
+              "kind": "speech",
+              "text": "In class it is the polite word for a question you are unsure about. అనుమానం, which you know, leans to suspicion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సందేహం (sandēhaṁ) is borrowed from Sanskrit saṁdeha, \"doubt, uncertainty\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandēhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandēhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandēhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandēhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāku oka cinna sandēhaṁ undi. — I have a small doubt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāku oka cinna sandēhaṁ undi.* — I have a small doubt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to comment, then the Telugu for to find fault with, then say sandēhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to comment, then the Telugu for to find fault with, then say *sandēhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సందేహం (sandēhaṁ) mean? (\"A misgiving; a doubt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C388-sandehincu",
+      "sequence": 19310,
+      "title": "సందేహించు (sandēhiñcu) — to have misgivings",
+      "headword": "సందేహించు",
+      "romanization": "sandēhiñcu",
+      "gloss": "to have misgivings",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:654b756e5e37b9c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to find fault with, then the Telugu for a misgiving."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సందేహించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సందేహించు — sandēhiñcu — \"to have misgivings\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను నిజం చెప్పాడా అని నేను సందేహించాను. atanu nijaṁ ceppāḍā ani nēnu sandēhiñcānu. I doubted whether he had told the truth."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సందేహించాను, sandēhiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "What you doubt is often a question with అని: చెప్పాడా అని సందేహించు (sandēhiñcu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సందేహించు (sandēhiñcu) is built on Sanskrit saṁdeha, \"doubt\" (Monier-Williams), with the Telugu verb ending -ఇంచు; the noun is సందేహం (sandēhaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandēhiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandēhiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandēhiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandēhiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu nijaṁ ceppāḍā ani nēnu sandēhiñcānu. — I doubted whether he had told the truth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu nijaṁ ceppāḍā ani nēnu sandēhiñcānu.* — I doubted whether he had told the truth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to find fault with, then the Telugu for a misgiving, then say sandēhiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to find fault with, then the Telugu for a misgiving, then say *sandēhiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సందేహించు (sandēhiñcu) mean? (\"To have misgivings\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C388-visvasincu",
+      "sequence": 19320,
+      "title": "విశ్వసించు (viśvasiñcu) — to believe in; to have faith in",
+      "headword": "విశ్వసించు",
+      "romanization": "viśvasiñcu",
+      "gloss": "to believe in; to have faith in",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:884c9a7bd07a9d18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a misgiving, then the Telugu for to have misgivings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విశ్వసించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విశ్వసించు — viśvasiñcu — \"to believe in; to have faith in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నేను నా స్నేహితులను పూర్తిగా విశ్వసిస్తాను. nēnu nā snēhitulanu pūrtigā viśvasistānu. I trust my friends completely."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): విశ్వసించాను, viśvasiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal beside నమ్ము. The noun is విశ్వాసం, trust."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విశ్వసించు (viśvasiñcu) is built on Sanskrit viśvāsa, \"trust, confidence\" (CDIAL 11966), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśvasiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśvasiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśvasiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśvasiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēnu nā snēhitulanu pūrtigā viśvasistānu. — I trust my friends completely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēnu nā snēhitulanu pūrtigā viśvasistānu.* — I trust my friends completely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a misgiving, then the Telugu for to have misgivings, then say viśvasiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a misgiving, then the Telugu for to have misgivings, then say *viśvasiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విశ్వసించు (viśvasiñcu) mean? (\"To believe in; to have faith in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C388-niscayam",
+      "sequence": 19330,
+      "title": "నిశ్చయం (niścayaṁ) — certainty; a firm resolve",
+      "headword": "నిశ్చయం",
+      "romanization": "niścayaṁ",
+      "gloss": "certainty; a firm resolve",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2af709bdd0914a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to have misgivings, then the Telugu for to believe in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిశ్చయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిశ్చయం — niścayaṁ — \"certainty; a firm resolve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను వస్తాడని నాకు నిశ్చయం లేదు. atanu vastāḍani nāku niścayaṁ lēdu. I am not certain that he will come."
+            },
+            {
+              "kind": "speech",
+              "text": "A family word too: పెళ్ళి నిశ్చయం (niścayaṁ), the fixing of a wedding."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిశ్చయం (niścayaṁ) is borrowed from Sanskrit niścaya, \"inquiry, conviction\" (CDIAL 7439), which Monier-Williams also glosses \"certainty; a fixed resolve\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niścayaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niścayaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niścayaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niścayaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu vastāḍani nāku niścayaṁ lēdu. — I am not certain that he will come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu vastāḍani nāku niścayaṁ lēdu.* — I am not certain that he will come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to have misgivings, then the Telugu for to believe in, then say niścayaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to have misgivings, then the Telugu for to believe in, then say *niścayaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిశ్చయం (niścayaṁ) mean? (\"Certainty; a firm resolve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C388-anisciti",
+      "sequence": 19340,
+      "title": "అనిశ్చితి (aniściti) — uncertainty",
+      "headword": "అనిశ్చితి",
+      "romanization": "aniściti",
+      "gloss": "uncertainty",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8da32b8cde7b1636",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to believe in, then the Telugu for certainty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అనిశ్చితి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అనిశ్చితి — aniściti — \"uncertainty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉద్యోగాల విషయంలో చాలా అనిశ్చితి ఉంది. udyōgāla viṣayaṁlō cālā aniściti undi. There is a lot of uncertainty about jobs."
+            },
+            {
+              "kind": "speech",
+              "text": "అ- means not: అనిశ్చితి (aniściti) is the lack of నిశ్చయం (niścayaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అనిశ్చితి (aniściti) is built from Sanskrit a-, \"not\", and niściti, \"ascertainment, settling\" (Monier-Williams), a word of the same family as నిశ్చయం (niścayaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aniściti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aniściti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aniściti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aniściti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyōgāla viṣayaṁlō cālā aniściti undi. — There is a lot of uncertainty about jobs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyōgāla viṣayaṁlō cālā aniściti undi.* — There is a lot of uncertainty about jobs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to believe in, then the Telugu for certainty, then say aniściti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to believe in, then the Telugu for certainty, then say *aniściti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అనిశ్చితి (aniściti) mean? (\"Uncertainty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

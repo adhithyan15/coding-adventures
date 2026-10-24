@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C398-caval",
+    "language": "tamil",
+    "chapter": 398,
+    "sequence": 22720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c422d7d00dc51b3f"
+  },
+  "findings": []
+}

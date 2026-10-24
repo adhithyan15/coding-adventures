@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "A Funeral",
+  "label": "ch:ml-a-funeral",
+  "canDo": "I can say a funeral, a cremation ground, a coffin, to cremate and to bury.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C391-kuliccituka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can say a funeral, a cremation ground, a coffin, to cremate and to bury.",
+    "assesses": [
+      "ML-LEX-C391-SAVAM391-03",
+      "ML-LEX-C391-SAVAM391-04",
+      "ML-LEX-C391-SAVAM391-05"
+    ]
+  }
+}

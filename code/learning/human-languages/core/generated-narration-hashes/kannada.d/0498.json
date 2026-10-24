@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:cb25edbde1857089",
+  "lessonIds": [
+    "KA-C498-nambu",
+    "KA-C498-mannisu",
+    "KA-C498-samsaya",
+    "KA-C498-karune",
+    "KA-C498-sahanubhuti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch498.txt",
+  "json": "kannada/narration/ch498.json",
+  "textHash": "fnv1a64:6a468d427135f4ad",
+  "jsonHash": "fnv1a64:8abfe597424842fe",
+  "findings": []
+}

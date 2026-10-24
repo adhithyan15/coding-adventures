@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Empires",
+  "label": "ch:te-empires",
+  "canDo": "I can say an empire, an emperor, a prince, a princess and to found.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C359-sthapincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can say an empire, an emperor, a prince, a princess and to found.",
+    "assesses": [
+      "TE-LEX-C359-SAMRAJYAM359-03",
+      "TE-LEX-C359-SAMRAJYAM359-04",
+      "TE-LEX-C359-SAMRAJYAM359-05"
+    ]
+  }
+}

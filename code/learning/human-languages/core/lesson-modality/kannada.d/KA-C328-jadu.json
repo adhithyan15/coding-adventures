@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C328-jadu",
+    "language": "kannada",
+    "chapter": 328,
+    "sequence": 16500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cb2e5d03289de55"
+  },
+  "findings": []
+}

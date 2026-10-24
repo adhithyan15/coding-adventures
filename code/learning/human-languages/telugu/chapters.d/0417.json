@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Rules and Requirements",
+  "label": "ch:te-rules-and-requirements",
+  "canDo": "I can talk about clauses, qualifications and what a rule allows.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C417-vartincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can talk about clauses, qualifications and what a rule allows.",
+    "assesses": [
+      "TE-LEX-C417-NIBANDHANA417-03",
+      "TE-LEX-C417-NIBANDHANA417-04",
+      "TE-LEX-C417-NIBANDHANA417-05"
+    ]
+  }
+}

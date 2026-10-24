@@ -1,0 +1,11 @@
+{
+  "id": "BN-C476-katrano",
+  "pathSegment": "BN-PATH-476-DOM476",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-476-DOM476",
+      "order": 4
+    }
+  ]
+}

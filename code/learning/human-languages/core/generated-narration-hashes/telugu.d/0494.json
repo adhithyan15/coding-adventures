@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:63cab959e7ac4903",
+  "lessonIds": [
+    "TE-C494-digulu",
+    "TE-C494-cintincu",
+    "TE-C494-kalavarapadu",
+    "TE-C494-kangarupadu",
+    "TE-C494-atruta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch494.txt",
+  "json": "telugu/narration/ch494.json",
+  "textHash": "fnv1a64:22821c49c26b51e4",
+  "jsonHash": "fnv1a64:05d2b63b99d59556",
+  "findings": []
+}

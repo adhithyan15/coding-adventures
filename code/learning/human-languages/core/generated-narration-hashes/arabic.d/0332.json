@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:c4e007c0f3be18d0",
+  "lessonIds": [
+    "AR-C332-hajara-emigrate",
+    "AR-C332-istaqarra",
+    "AR-C332-rahala",
+    "AR-C332-nazaha",
+    "AR-C332-waddaa",
+    "AR-R332-review-325-332"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch332.txt",
+  "json": "arabic/narration/ch332.json",
+  "textHash": "fnv1a64:a886a69691f0266b",
+  "jsonHash": "fnv1a64:d001117ac55000df",
+  "findings": []
+}

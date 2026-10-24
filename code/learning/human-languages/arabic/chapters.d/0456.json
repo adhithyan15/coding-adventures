@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Finding the right size",
+  "label": "ch:ar-finding-the-right-size",
+  "canDo": "I can say volume, a variety, a sample, to fit and to be too tight.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C456-daqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can say volume, a variety, a sample, to fit and to be too tight.",
+    "assesses": [
+      "AR-LEX-C456-HAJM456-03",
+      "AR-LEX-C456-HAJM456-04",
+      "AR-LEX-C456-HAJM456-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:ccdc24e8e35b91cb",
+  "lessonIds": [
+    "KA-C318-avalambisu",
+    "KA-C318-mele-avalambiside",
+    "KA-C318-iddiddare",
+    "KA-W318-six-lines",
+    "KA-R318-depends-and-would"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "kannada/narration/ch318.txt",
+  "json": "kannada/narration/ch318.json",
+  "textHash": "fnv1a64:391a5179c949e326",
+  "jsonHash": "fnv1a64:003ab89b79bd4bb6",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C410-data",
+    "language": "telugu",
+    "chapter": 410,
+    "sequence": 20470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af9e1731b6f7ce76"
+  },
+  "findings": []
+}

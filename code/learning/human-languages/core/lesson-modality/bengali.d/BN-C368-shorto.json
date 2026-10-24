@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C368-shorto",
+    "language": "bengali",
+    "chapter": 368,
+    "sequence": 22940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d912f31b446f8d78"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:5e0dc2947e9d5dc4",
+  "lessonIds": [
+    "BN-C347-doptor",
+    "BN-C347-pourosobha",
+    "BN-C347-ponchayet",
+    "BN-C347-niyog-kora",
+    "BN-C347-jari-kora"
+  ],
+  "tex": "bengali/book/chapters/ch347-public-offices.tex"
+}

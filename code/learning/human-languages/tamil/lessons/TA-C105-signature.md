@@ -11,7 +11,7 @@ romanization: "kaiyeḻuttu"
 concept_tag: TA-WORK-SIGNATURE
 prerequisites: [TA-C104-address, TA-C104-birthday]
 sounds: []
-roots: [dravidian-talai-kai, dravidian-ezhutu-write]
+roots: [dravidian-kai-hand, dravidian-ezhutu-write]
 etymology_hook: "கையெழுத்து — native: kai 'hand' (DEDR 2023) + eḻuttu 'writing' (DEDR 853)"
 duration:
   max_seconds: 200

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C462-rafaa",
+  "pathSegment": "AR-PATH-462-ISTIDAD462",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-462-ISTIDAD462",
+      "order": 4
+    }
+  ]
+}

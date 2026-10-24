@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C296-savarne",
+    "language": "marathi",
+    "chapter": 296,
+    "sequence": 17440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e458be34dc057a10"
+  },
+  "findings": []
+}

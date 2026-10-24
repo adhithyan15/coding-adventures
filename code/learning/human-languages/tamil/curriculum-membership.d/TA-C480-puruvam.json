@@ -1,0 +1,11 @@
+{
+  "id": "TA-C480-puruvam",
+  "pathSegment": "TA-PATH-480-MUKAM480",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-480-MUKAM480",
+      "order": 2
+    }
+  ]
+}

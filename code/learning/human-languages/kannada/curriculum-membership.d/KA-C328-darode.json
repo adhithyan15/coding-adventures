@@ -1,0 +1,11 @@
+{
+  "id": "KA-C328-darode",
+  "pathSegment": "KA-PATH-328-DAROODE328",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-328-DAROODE328",
+      "order": 0
+    }
+  ]
+}

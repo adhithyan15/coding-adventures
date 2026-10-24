@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-536-VIRAMAM536",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-536-VIRAMAM536"
+  ],
+  "after": []
+}

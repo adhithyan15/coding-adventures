@@ -1,0 +1,11 @@
+{
+  "id": "TE-C347-svagatincu",
+  "pathSegment": "TE-PATH-347-VINDU347",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-347-VINDU347",
+      "order": 3
+    }
+  ]
+}

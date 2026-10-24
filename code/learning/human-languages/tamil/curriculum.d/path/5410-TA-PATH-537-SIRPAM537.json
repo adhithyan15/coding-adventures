@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-537-SIRPAM537",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-537-SIRPAM537"
+  ],
+  "after": []
+}

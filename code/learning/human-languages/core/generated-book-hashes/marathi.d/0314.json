@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:9dbec3f124c22ef8",
+  "lessonIds": [
+    "MR-C314-vacak",
+    "MR-C314-preksak",
+    "MR-C314-srota",
+    "MR-C314-sirsak",
+    "MR-C314-mukhprstha"
+  ],
+  "tex": "marathi/book/chapters/ch314-readers-and-viewers.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:f804c721a8884fd7",
+  "lessonIds": [
+    "KA-C369-antu",
+    "KA-C369-kannare",
+    "KA-C369-aniriksita",
+    "KA-C369-jailu",
+    "KA-C369-kanisiko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch369.txt",
+  "json": "kannada/narration/ch369.json",
+  "textHash": "fnv1a64:97cbbfa20efa06b3",
+  "jsonHash": "fnv1a64:bb19c16650463aaf",
+  "findings": []
+}

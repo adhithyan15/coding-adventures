@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:b6f0a57465515d33",
+  "lessonIds": [
+    "BN-C450-tuchchho",
+    "BN-C450-upohas",
+    "BN-C450-opoman-kora",
+    "BN-C450-khota-deoya",
+    "BN-C450-heyo-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch450.txt",
+  "json": "bengali/narration/ch450.json",
+  "textHash": "fnv1a64:fb5f06dacd9445ea",
+  "jsonHash": "fnv1a64:9822f295d30280c0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C323-kalam",
+  "pathSegment": "TE-PATH-323-COMPARE-DURATION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-323-COMPARE-DURATION",
+      "order": 1
+    }
+  ]
+}

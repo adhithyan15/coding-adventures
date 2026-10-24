@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Music Lessons",
+  "label": "ch:ta-music-lessons",
+  "canDo": "I can talk about playing an instrument.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C539-icaiyamai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can talk about playing an instrument.",
+    "assesses": [
+      "TA-LEX-C539-ISAI539-03",
+      "TA-LEX-C539-ISAI539-04",
+      "TA-LEX-C539-ISAI539-05"
+    ]
+  }
+}

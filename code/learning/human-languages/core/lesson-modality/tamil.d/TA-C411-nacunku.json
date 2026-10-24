@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C411-nacunku",
+    "language": "tamil",
+    "chapter": 411,
+    "sequence": 23680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b80458dde7393976"
+  },
+  "findings": []
+}

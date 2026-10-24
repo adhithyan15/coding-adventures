@@ -1,0 +1,11 @@
+{
+  "id": "ML-C421-mukhyamantri",
+  "pathSegment": "ML-PATH-421-BHARANAM421",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-421-BHARANAM421",
+      "order": 3
+    }
+  ]
+}

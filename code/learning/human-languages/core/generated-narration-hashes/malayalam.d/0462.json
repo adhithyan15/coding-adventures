@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:2411d2379608a208",
+  "lessonIds": [
+    "ML-C462-risarvesan",
+    "ML-C462-berttu",
+    "ML-C462-kamparttmenru",
+    "ML-C462-bukku-ceyyuka",
+    "ML-C462-tikkarretukkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch462.txt",
+  "json": "malayalam/narration/ch462.json",
+  "textHash": "fnv1a64:fc4c039284edfaaa",
+  "jsonHash": "fnv1a64:2aa530b7a04304f1",
+  "findings": []
+}

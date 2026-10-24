@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "The Frame of the Body",
+  "label": "ch:ka-the-frame-of-the-body",
+  "canDo": "I can say a nerve, a rib, the spine, an arm and to limp.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C509-kuntu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can say a nerve, a rib, the spine, an arm and to limp.",
+    "assesses": [
+      "KA-LEX-C509-ELUBU509-03",
+      "KA-LEX-C509-ELUBU509-04",
+      "KA-LEX-C509-ELUBU509-05"
+    ]
+  }
+}

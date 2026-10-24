@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:104511976bc572b8",
+  "lessonIds": [
+    "TA-C383-cattiyam",
+    "TA-C383-nikaltakavu",
+    "TA-C383-anekamaka",
+    "TA-C383-cantarppam",
+    "TA-C383-illaiyel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch383.txt",
+  "json": "tamil/narration/ch383.json",
+  "textHash": "fnv1a64:8d5d4cf157f28ff7",
+  "jsonHash": "fnv1a64:93f3832b4d3100ab",
+  "findings": []
+}

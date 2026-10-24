@@ -1,0 +1,11 @@
+{
+  "id": "AR-C512-naqaha",
+  "pathSegment": "AR-PATH-512-SHIFA512",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-512-SHIFA512",
+      "order": 1
+    }
+  ]
+}

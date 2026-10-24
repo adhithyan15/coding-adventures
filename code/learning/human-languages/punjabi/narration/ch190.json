@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 190,
+  "title": "I Did the Work",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:00d5685560447a5c",
+  "lessons": [
+    {
+      "id": "PA-C190-karna-return",
+      "sequence": 10260,
+      "title": "Return to do and a completed action",
+      "headword": "ਕਰਨਾ · ਮੈਂ ਅਮਨ ਨੂੰ ਮਿਲਿਆ",
+      "romanization": "karnaa; main Aman nuun miliaa",
+      "gloss": "retrieve to do and a familiar completed-action frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:326059c9ae6feb85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "karnaa; YOU SAY: ਕਰਨਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *karnaa*; YOU SAY: **ਕਰਨਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Retrieve the familiar completed-action frame before changing the verb: ਮੈਂ ਅਮਨ ਨੂੰ ਮਿਲਿਆ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "karnaa; YOU SAY: ਕਰਨਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *karnaa*; YOU SAY: **ਕਰਨਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "main Aman nuun miliaa; YOU SAY: ਮੈਂ ਅਮਨ ਨੂੰ ਮਿਲਿਆ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *main Aman nuun miliaa*; YOU SAY: **ਮੈਂ ਅਮਨ ਨੂੰ ਮਿਲਿਆ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the infinitive, then the familiar completed-action frame. This opener owns no new form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C190-kita",
+      "sequence": 10270,
+      "title": "The completed form of ਕਰਨਾ",
+      "headword": "ਕੀਤਾ",
+      "romanization": "kiitaa",
+      "gloss": "did or made, masculine singular completed form",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5f17a4fb4b21891",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਕਰਨਾ, then the final word in ਮੈਂ ਅਮਨ ਨੂੰ ਮਿਲਿਆ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੀਤਾ — kiitaa — did or made, masculine singular completed form."
+            },
+            {
+              "kind": "speech",
+              "text": "Treat the whole written form as today's measured target. The next lesson retrieves it before a complete sentence frame is built; the later frame will make its agreement controller explicit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kiitaa; YOU SAY: ਕੀਤਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kiitaa*; YOU SAY: **ਕੀਤਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੀਤਾ (kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੀਤਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕੀਤਾ (kiitaa) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕੀਤਾ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the completed form without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C190-kita-review",
+      "sequence": 10280,
+      "title": "Retrieve the completed form",
+      "headword": "ਕੀਤਾ",
+      "romanization": "kiitaa",
+      "gloss": "retrieve the masculine singular completed form",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:312e2fc711d72849",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hear “did or made” and prepare the single completed form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ਕੀਤਾ (kiitaa) distinct from the infinitive ਕਰਨਾ. Familiar ਮਿਲਿਆ is a completed-action comparison, not an agreement template. In the coming transitive frame, ਕੀਤਾ (kiitaa) will agree with the unmarked masculine-singular object ਕੰਮ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kiitaa; YOU SAY: ਕੀਤਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kiitaa*; YOU SAY: **ਕੀਤਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੀਤਾ (kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੀਤਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the model and write ਕੀਤਾ (kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the model and write **ਕੀਤਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read the form once more and state its bounded job."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C190-kamm-kita",
+      "sequence": 10290,
+      "title": "Build one completed-action frame",
+      "headword": "ਮੈਂ ਕੰਮ ਕੀਤਾ",
+      "romanization": "main kamm kiitaa",
+      "gloss": "I did the work; ਕੀਤਾ agrees with masculine-singular ਕੰਮ",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02d985d52c7a5b71",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਮੈਂ, ਕੰਮ, and ਕੀਤਾ (kiitaa)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: complete statement",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਕੰਮ ਕੀਤਾ — main kamm kiitaa — I did the work."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the familiar speaker, familiar work noun, and completed form as one bounded frame. In this transitive perfective frame, ਕੀਤਾ (kiitaa) agrees with the unmarked masculine-singular object ਕੰਮ, not the speaker."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "main kamm kiitaa; YOU SAY: ਮੈਂ ਕੰਮ ਕੀਤਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *main kamm kiitaa*; YOU SAY: **ਮੈਂ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਮੈਂ ਕੰਮ ਕੀਤਾ (main kamm kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਮੈਂ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕੰਮ ਕੀਤਾ (kiitaa) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕੰਮ ਕੀਤਾ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the complete “I did the work” frame."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C190-frame-review",
+      "sequence": 10300,
+      "title": "Retrieve the completed work frame",
+      "headword": "ਮੈਂ ਕੰਮ ਕੀਤਾ",
+      "romanization": "main kamm kiitaa",
+      "gloss": "retrieve the completed work frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a76ceebfd44cccf5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hear “I did the work” and prepare the whole statement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the target beside its familiar subject and noun. The frame remains ਮੈਂ ਕੰਮ ਕੀਤਾ (main kamm kiitaa), with ਕੀਤਾ as the bounded completed form of familiar ਕਰਨਾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "main kamm kiitaa; YOU SAY: ਮੈਂ ਕੰਮ ਕੀਤਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *main kamm kiitaa*; YOU SAY: **ਮੈਂ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਮੈਂ ਕੰਮ ਕੀਤਾ (main kamm kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਮੈਂ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਮੈਂ ਕੰਮ ਕੀਤਾ (main kamm kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਮੈਂ ਕੰਮ ਕੀਤਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the statement once more without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C190-infinitive-perfective-contrast",
+      "sequence": 10310,
+      "title": "Contrast action name and completed frame",
+      "headword": "ਕਰਨਾ · ਮੈਂ ਕੰਮ ਕੀਤਾ",
+      "romanization": "karnaa; main kamm kiitaa",
+      "gloss": "contrast the action name with one completed-action frame",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:ee605d5390776e8c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Prepare the action name, then the completed work statement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: infinitive versus completed action",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਰਨਾ names the action “to do.”"
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਕੰਮ ਕੀਤਾ (main kamm kiitaa) gives one completed masculine-singular frame."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਕਰਨਾ for the action name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਕਰਨਾ** for the action name]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਮੈਂ ਕੰਮ ਕੀਤਾ (main kamm kiitaa) for the completed action",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਮੈਂ ਕੰਮ ਕੀਤਾ** for the completed action]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ਕਰਨਾ, ਕੀਤਾ (kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ਕਰਨਾ · ਕੀਤਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the models and produce action name, then completed frame."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C190-payoff",
+      "sequence": 10320,
+      "title": "A bounded completed-action payoff",
+      "headword": "ਕਰਨਾ · ਮੈਂ ਕੰਮ ਕੀਤਾ",
+      "romanization": "karnaa; main kamm kiitaa",
+      "gloss": "retrieve action name and completed-action frame across four skills",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f07c0dfd288bb85a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the infinitive and target, then prepare the complete frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "karnaa; main kamm kiitaa; YOU SAY: ਕਰਨਾ; ਮੈਂ ਕੰਮ ਕੀਤਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *karnaa; main kamm kiitaa*; YOU SAY: **ਕਰਨਾ; ਮੈਂ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕਰਨਾ, ਮੈਂ ਕੰਮ ਕੀਤਾ (main kamm kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕਰਨਾ · ਮੈਂ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਕਰਨਾ, ਕੀਤਾ (kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਕਰਨਾ · ਕੀਤਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the action name and completed frame once more."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the thirteenth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C372-prayog",
+  "pathSegment": "MR-PATH-372-SANSHODHAN372",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-372-SANSHODHAN372",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Rain",
+  "label": "ch:ar-rain",
+  "canDo": "I can say a shower of rain, drizzle, a downpour, to pour down and to clear up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C481-safa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can say a shower of rain, drizzle, a downpour, to pour down and to clear up.",
+    "assesses": [
+      "AR-LEX-C481-MATAR481-03",
+      "AR-LEX-C481-MATAR481-04",
+      "AR-LEX-C481-MATAR481-05"
+    ]
+  }
+}

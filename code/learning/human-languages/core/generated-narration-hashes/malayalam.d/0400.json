@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:c0c6d06c34000576",
+  "lessonIds": [
+    "ML-C400-satru",
+    "ML-C400-yoddhavu",
+    "ML-C400-caran",
+    "ML-C400-tolppikkuka",
+    "ML-C400-kilatannuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch400.txt",
+  "json": "malayalam/narration/ch400.json",
+  "textHash": "fnv1a64:f0d3e70e10316b0f",
+  "jsonHash": "fnv1a64:44c024e3611f4f8b",
+  "findings": []
+}

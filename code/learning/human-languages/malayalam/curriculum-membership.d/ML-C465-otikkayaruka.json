@@ -1,0 +1,11 @@
+{
+  "id": "ML-C465-otikkayaruka",
+  "pathSegment": "ML-PATH-465-VARAVU465",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-465-VARAVU465",
+      "order": 4
+    }
+  ]
+}

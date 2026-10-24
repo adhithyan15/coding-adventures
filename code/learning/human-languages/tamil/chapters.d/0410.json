@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Walking Through Town",
+  "label": "ch:ta-walking-through-town",
+  "canDo": "I can talk about pedestrians, passers-by and signboards, and strolling and jumping over.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C410-tantu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can talk about pedestrians, passers-by and signboards, and strolling and jumping over.",
+    "assesses": [
+      "TA-LEX-C410-THERU410-03",
+      "TA-LEX-C410-THERU410-04",
+      "TA-LEX-C410-THERU410-05"
+    ]
+  }
+}

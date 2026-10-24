@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:0f527ae9650f69e6",
+  "lessonIds": [
+    "AR-C544-ud",
+    "AR-C544-kaman",
+    "AR-C544-tabl",
+    "AR-C544-nay",
+    "AR-C544-firqa"
+  ],
+  "tex": "arabic/book/chapters/ch544-instruments.tex"
+}

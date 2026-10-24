@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C560-vinodayatra",
+    "language": "malayalam",
+    "chapter": 560,
+    "sequence": 28200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40cd4311582a4221"
+  },
+  "findings": []
+}

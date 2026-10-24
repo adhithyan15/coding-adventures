@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-450-PARKINGU450",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-450-PARKINGU450"
+  ],
+  "after": []
+}

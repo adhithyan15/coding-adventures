@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "In-laws and break-ups",
+  "label": "ch:ar-in-laws-and-break-ups",
+  "canDo": "I can name a son-in-law, a daughter-in-law, an in-law and a brother-in-law, and talk about a divorce.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C529-talaq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can name a son-in-law, a daughter-in-law, an in-law and a brother-in-law, and talk about a divorce.",
+    "assesses": [
+      "AR-LEX-C529-AHL529-03",
+      "AR-LEX-C529-AHL529-04",
+      "AR-LEX-C529-AHL529-05"
+    ]
+  }
+}

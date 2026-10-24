@@ -1,0 +1,11 @@
+{
+  "id": "HI-C330-ikattha",
+  "pathSegment": "HI-PATH-330-MELA330",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-330-MELA330",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 549,
+  "title": "Two Ways to Go",
+  "label": "ch:hi-two-ways-to-go",
+  "canDo": "I can weigh two options and hesitate between them.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C549-hicakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 549: I can weigh two options and hesitate between them.",
+    "assesses": [
+      "HI-LEX-C549-VIKALP549-03",
+      "HI-LEX-C549-VIKALP549-04",
+      "HI-LEX-C549-VIKALP549-05"
+    ]
+  }
+}

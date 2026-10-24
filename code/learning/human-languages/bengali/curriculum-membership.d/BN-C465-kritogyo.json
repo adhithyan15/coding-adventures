@@ -1,0 +1,11 @@
+{
+  "id": "BN-C465-kritogyo",
+  "pathSegment": "BN-PATH-465-BIBEK465",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-465-BIBEK465",
+      "order": 3
+    }
+  ]
+}

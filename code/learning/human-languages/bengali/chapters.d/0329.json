@@ -1,0 +1,21 @@
+{
+  "chapter": 329,
+  "title": "The Last Page",
+  "label": "ch:bn-the-last-page",
+  "canDo": "I can say how a story starts and ends, and what stays with me.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-R329-review-final-329",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can say how a story starts and ends, and what stays with me.",
+    "assesses": [
+      "BN-LEX-C329-SHESHPATA329-01",
+      "BN-LEX-C329-SHESHPATA329-02",
+      "BN-LEX-C329-SHESHPATA329-03",
+      "BN-LEX-C329-SHESHPATA329-04",
+      "BN-LEX-C329-SHESHPATA329-05"
+    ]
+  }
+}

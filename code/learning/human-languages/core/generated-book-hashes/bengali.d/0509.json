@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:3591a8a010f882ff",
+  "lessonIds": [
+    "BN-C509-galicha",
+    "BN-C509-katha",
+    "BN-C509-paposh",
+    "BN-C509-godi",
+    "BN-C509-bichhano"
+  ],
+  "tex": "bengali/book/chapters/ch509-rugs-and-quilts.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C535-khiyana",
+  "pathSegment": "AR-PATH-535-RIFAQ535",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-535-RIFAQ535",
+      "order": 2
+    }
+  ]
+}

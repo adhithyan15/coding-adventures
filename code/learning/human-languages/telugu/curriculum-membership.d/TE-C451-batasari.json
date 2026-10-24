@@ -1,0 +1,11 @@
+{
+  "id": "TE-C451-batasari",
+  "pathSegment": "TE-PATH-451-RIKSHA451",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-451-RIKSHA451",
+      "order": 4
+    }
+  ]
+}

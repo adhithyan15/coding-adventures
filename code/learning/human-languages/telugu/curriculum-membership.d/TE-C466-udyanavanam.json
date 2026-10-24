@@ -1,0 +1,11 @@
+{
+  "id": "TE-C466-udyanavanam",
+  "pathSegment": "TE-PATH-466-CAURASTA466",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-466-CAURASTA466",
+      "order": 1
+    }
+  ]
+}

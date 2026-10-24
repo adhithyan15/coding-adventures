@@ -1,0 +1,854 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 415,
+  "title": "Interest and Investment",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:346697ffc27c6166",
+  "lessons": [
+    {
+      "id": "BN-C415-sud",
+      "sequence": 25580,
+      "title": "সুদ (sud) — interest (on money)",
+      "headword": "সুদ",
+      "romanization": "sud",
+      "gloss": "interest (on money)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab34c04d7615b102",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a cheque, then the Bengali for cash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সুদ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সুদ — sud — \"interest (on money)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ব্যাংক সঞ্চয়ের ওপর সুদ দেয়। bængk sôñchôyer opôr sud dey. The bank pays interest on savings."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সুদ (sud) is usually traced to Persian sūd, \"profit, gain, interest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sud*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sud, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sud*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bængk sôñchôyer opôr sud dey. — The bank pays interest on savings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bængk sôñchôyer opôr sud dey.* — The bank pays interest on savings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a cheque, then the Bengali for cash, then say sud again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a cheque, then the Bengali for cash, then say *sud* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সুদ (sud) mean? (\"Interest (on money)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C415-pasboi",
+      "sequence": 25590,
+      "title": "পাসবই (pāsbôi) — a passbook (for a bank account)",
+      "headword": "পাসবই",
+      "romanization": "pāsbôi",
+      "gloss": "a passbook (for a bank account)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a17a4b4bca9a9b97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for cash, then the Bengali for interest (on money)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পাসবই",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাসবই — pāsbôi — \"a passbook (for a bank account)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাবা পাসবই খুলে সুদের টাকা দেখলেন। bābā pāsbôi khule suder ṭākā dekhlen. Father opened the passbook and looked at the interest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাসবই (pāsbôi) joins English pass, from passbook, to the Bengali বই, \"a book\": half borrowed and half translated."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāsbôi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāsbôi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāsbôi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāsbôi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bābā pāsbôi khule suder ṭākā dekhlen. — Father opened the passbook and looked at the interest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bābā pāsbôi khule suder ṭākā dekhlen.* — Father opened the passbook and looked at the interest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for cash, then the Bengali for interest (on money), then say pāsbôi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for cash, then the Bengali for interest (on money), then say *pāsbôi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পাসবই (pāsbôi) mean? (\"A passbook (for a bank account)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C415-lenden",
+      "sequence": 25600,
+      "title": "লেনদেন (lenden) — transactions; dealings (in money)",
+      "headword": "লেনদেন",
+      "romanization": "lenden",
+      "gloss": "transactions; dealings (in money)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31d43718a3eb07b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for interest (on money), then the Bengali for a passbook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: লেনদেন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লেনদেন — lenden — \"transactions; dealings (in money)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আজ ব্যাংকে অনেক লেনদেন হল। āj bængke ônek lenden hôlô. There were a lot of transactions at the bank today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লেনদেন (lenden) pairs লেন, \"taking\", built on নেওয়া, to take, with দেন, \"giving\", built on দেওয়া, to give: taking and giving, the whole business of money."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lenden",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lenden*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lenden, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lenden*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj bængke ônek lenden hôlô. — There were a lot of transactions at the bank today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj bængke ônek lenden hôlô.* — There were a lot of transactions at the bank today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for interest (on money), then the Bengali for a passbook, then say lenden again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for interest (on money), then the Bengali for a passbook, then say *lenden* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does লেনদেন (lenden) mean? (\"Transactions; dealings (in money)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C415-biniyog-kora",
+      "sequence": 25610,
+      "title": "বিনিয়োগ করা (biniyog kôrā) — to invest",
+      "headword": "বিনিয়োগ করা",
+      "romanization": "biniyog kôrā",
+      "gloss": "to invest",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc50f68fb4fb9031",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a passbook, then the Bengali for transactions."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিনিয়োগ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিনিয়োগ করা — biniyog kôrā — \"to invest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অরুণ তার সঞ্চয় একটা ব্যবসায় বিনিয়োগ করল। ôrun tār sôñchôy ekṭā bæbsāy biniyog kôrlô. Arun invested his savings in a business."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি জমিতে টাকা বিনিয়োগ করলেন, tini jômite ṭākā biniyog kôrlen."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun alone is বিনিয়োগ, an investment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিনিয়োগ করা (biniyog kôrā) joins Sanskrit viniyoga, \"apportioning, putting to use\" (Monier-Williams), to করা, to do; the money sense is the modern one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biniyog kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biniyog kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biniyog kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biniyog kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôrun tār sôñchôy ekṭā bæbsāy biniyog kôrlô. — Arun invested his savings in a business.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôrun tār sôñchôy ekṭā bæbsāy biniyog kôrlô.* — Arun invested his savings in a business.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a passbook, then the Bengali for transactions, then say biniyog kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a passbook, then the Bengali for transactions, then say *biniyog kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিনিয়োগ করা (biniyog kôrā) mean? (\"To invest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C415-khoyano",
+      "sequence": 25620,
+      "title": "খোয়ানো (khoyāno) — to lose (money or property); to forfeit",
+      "headword": "খোয়ানো",
+      "romanization": "khoyāno",
+      "gloss": "to lose (money or property); to forfeit",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4984cbdf07003d78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for transactions, then the Bengali for to invest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খোয়ানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খোয়ানো — khoyāno — \"to lose (money or property); to forfeit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ব্যবসায় অরুণ তার সব সঞ্চয় খোয়াল। bæbsāy ôrun tār sôb sôñchôy khoyālô. Arun lost all his savings in the business."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি সব টাকা খোয়ালেন, tini sôb ṭākā khoyālen."
+            },
+            {
+              "kind": "speech",
+              "text": "হারানো is to lose anything, a key or the way; খোয়ানো (khoyāno) is to lose what you had of value, often by your own doing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খোয়ানো (khoyāno) is inherited: CDIAL lists Bengali khoyā, \"thrown away, lost\", under Sanskrit kṣapita, \"cast away, destroyed\" (CDIAL 3653)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoyāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoyāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoyāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoyāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bæbsāy ôrun tār sôb sôñchôy khoyālô. — Arun lost all his savings in the business.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bæbsāy ôrun tār sôb sôñchôy khoyālô.* — Arun lost all his savings in the business.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for transactions, then the Bengali for to invest, then say khoyāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for transactions, then the Bengali for to invest, then say *khoyāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খোয়ানো (khoyāno) mean? (\"To lose (money or property); to forfeit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R415-review-408-415",
+      "sequence": 25630,
+      "title": "Looking back: from Rented Rooms to Interest and Investment",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Rented Rooms to Interest and Investment",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8fb4f434f36d738d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for a rented home and a tenant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rented home, a tenant, an advance (payment), a security deposit, to reside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rented home, a tenant, an advance (payment), a security deposit, to reside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an area, a slum, a housing colony, a resident, to hang out (chatting)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an area, a slum, a housing colony, a resident, to hang out (chatting)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an open ground, a park, a courtyard, a square (open place), to pace up and down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an open ground, a park, a courtyard, a square (open place), to pace up and down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a post office, an office, a letter (sent by post), a postman, to send",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a post office, an office, a letter (sent by post), a postman, to send]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a boundary wall, a gate, a brick building, a lamp post, to climb over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a boundary wall, a gate, a brick building, a lamp post, to climb over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a drain, a pipe, a dustbin, dirt, junk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a drain, a pipe, a dustbin, dirt, junk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bank (for money), a counter, a cashier, a cheque, cash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bank (for money), a counter, a cashier, a cheque, cash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "interest (on money), a passbook, transactions, to invest, to lose (money or property)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: interest (on money), a passbook, transactions, to invest, to lose (money or property)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A rented home? (বাসা, bāsā.) A tenant? (ভাড়াটে, bhāṛāṭe.) An advance (payment)? (অগ্রিম, ôgrim.) A security deposit? (জামানত, jāmānôt.) To reside? (বসবাস করা, bôsbās kôrā.) An area? (এলাকা, elākā.) A slum? (বস্তি, bôsti.) A housing colony? (কলোনি, kôloni.) A resident? (বাসিন্দা, bāsindā.) To hang out (chatting)? (আড্ডা দেওয়া, āḍḍā deoyā.) An open ground? (মাঠ, māṭh.) A park? (পার্ক, pārk.) A courtyard? (উঠোন, uṭhon.) A square (open place)? (চত্বর, chôtvôr.) To pace up and down? (পায়চারি করা, pāychāri kôrā.) A post office? (ডাকঘর, ḍākghôr.) An office? (অফিস, ôphis.) A letter (sent by post)? (চিঠি, chiṭhi.) A postman? (পিয়ন, piyôn.) To send? (পাঠানো, pāṭhāno.) A boundary wall? (পাঁচিল, pā̃chil.) A gate? (গেট, geṭ.) A brick building? (দালান, dālān.) A lamp post? (ল্যাম্পপোস্ট, læmpposṭ.) To climb over? (টপকানো, ṭôpkāno.) A drain? (নর্দমা, nôrdômā.) A pipe? (পাইপ, pāip.) A dustbin? (ডাস্টবিন, ḍāsṭbin.) Dirt? (ময়লা, môylā.) Junk? (জঞ্জাল, jônjāl.) A bank (for money)? (ব্যাংক, bængk.) A counter? (কাউন্টার, kāunṭār.) A cashier? (ক্যাশিয়ার, kæshiyār.) A cheque? (চেক, chek.) Cash? (নগদ, nôgôd.) Interest (on money)? (সুদ, sud.) A passbook? (পাসবই, pāsbôi.) Transactions? (লেনদেন, lenden.) To invest? (বিনিয়োগ করা, biniyog kôrā.) To lose (money or property)? (খোয়ানো, khoyāno.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

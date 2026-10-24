@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:90c589098528a5e3",
+  "lessonIds": [
+    "KA-C337-nidhana",
+    "KA-C337-antyakriye",
+    "KA-C337-smasana",
+    "KA-C337-sraddhanjali",
+    "KA-C337-santaisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch337.txt",
+  "json": "kannada/narration/ch337.json",
+  "textHash": "fnv1a64:080023b65aab27ee",
+  "jsonHash": "fnv1a64:fb8e5e97315590b3",
+  "findings": []
+}

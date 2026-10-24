@@ -1,0 +1,11 @@
+{
+  "id": "AR-C383-tadakhkhum",
+  "pathSegment": "AR-PATH-383-IQTISAD383",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-383-IQTISAD383",
+      "order": 3
+    }
+  ]
+}

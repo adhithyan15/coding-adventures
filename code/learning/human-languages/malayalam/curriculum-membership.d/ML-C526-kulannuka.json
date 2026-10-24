@@ -1,0 +1,11 @@
+{
+  "id": "ML-C526-kulannuka",
+  "pathSegment": "ML-PATH-526-RASAM526",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-526-RASAM526",
+      "order": 0
+    }
+  ]
+}

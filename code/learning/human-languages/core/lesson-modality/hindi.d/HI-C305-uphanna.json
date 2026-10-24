@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C305-uphanna",
+    "language": "hindi",
+    "chapter": 305,
+    "sequence": 16870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aed37c4a1c4318af"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:5da5e521d866d23d",
+  "lessonIds": [
+    "TE-C463-rayabara-karyalayam",
+    "TE-C463-rayabari",
+    "TE-C463-ketayincu",
+    "TE-C463-podigincu",
+    "TE-C463-punaruddharincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch463.txt",
+  "json": "telugu/narration/ch463.json",
+  "textHash": "fnv1a64:22767dcab45de849",
+  "jsonHash": "fnv1a64:8c6768c0de870d4f",
+  "findings": []
+}

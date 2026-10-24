@@ -1,0 +1,11 @@
+{
+  "id": "AR-C315-intasara",
+  "pathSegment": "AR-PATH-315-NASR315",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-315-NASR315",
+      "order": 2
+    }
+  ]
+}

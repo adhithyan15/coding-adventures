@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C347-svagatincu",
+    "language": "telugu",
+    "chapter": 347,
+    "sequence": 17100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce20407a8a860d55"
+  },
+  "findings": []
+}

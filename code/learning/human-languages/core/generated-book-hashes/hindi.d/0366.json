@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:2b265b3a717bd3c8",
+  "lessonIds": [
+    "HI-C366-vajib",
+    "HI-C366-jayaz",
+    "HI-C366-bhram",
+    "HI-C366-bahkana",
+    "HI-C366-majbur",
+    "HI-R366-review-359-366"
+  ],
+  "tex": "hindi/book/chapters/ch366-reasonable-or-not.tex"
+}

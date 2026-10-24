@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C403-rupisu",
+    "language": "kannada",
+    "chapter": 403,
+    "sequence": 20420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b548b368a5d6eb5c"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:a525842ad9972698",
+  "lessonIds": [
+    "BN-C409-elaka",
+    "BN-C409-bosti",
+    "BN-C409-koloni",
+    "BN-C409-basinda",
+    "BN-C409-adda-deoya"
+  ],
+  "tex": "bengali/book/chapters/ch409-areas-and-localities.tex"
+}

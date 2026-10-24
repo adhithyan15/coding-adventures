@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Gifts and blessings",
+  "label": "ch:ar-gifts-and-blessings",
+  "canDo": "I can say to gift, to welcome, to congratulate, a dowry and the eve.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C336-ashiyya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can say to gift, to welcome, to congratulate, a dowry and the eve.",
+    "assesses": [
+      "AR-LEX-C336-HADIYYA336-03",
+      "AR-LEX-C336-HADIYYA336-04",
+      "AR-LEX-C336-HADIYYA336-05"
+    ]
+  }
+}

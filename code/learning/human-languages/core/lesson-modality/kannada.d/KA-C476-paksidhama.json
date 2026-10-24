@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C476-paksidhama",
+    "language": "kannada",
+    "chapter": 476,
+    "sequence": 24230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d76b5ad2006b9e3"
+  },
+  "findings": []
+}

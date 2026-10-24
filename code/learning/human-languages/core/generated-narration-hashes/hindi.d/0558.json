@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 558,
+  "sourceHash": "fnv1a64:677ade0149476a70",
+  "lessonIds": [
+    "HI-C558-khvahis",
+    "HI-C558-divana",
+    "HI-C558-ruci",
+    "HI-C558-akanksa",
+    "HI-C558-junun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch558.txt",
+  "json": "hindi/narration/ch558.json",
+  "textHash": "fnv1a64:828ade7e985b98bc",
+  "jsonHash": "fnv1a64:9d8e49e032b803cd",
+  "findings": []
+}

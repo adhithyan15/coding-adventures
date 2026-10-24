@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:898a2ff72be90e41",
+  "lessonIds": [
+    "KA-C368-kramena",
+    "KA-C368-taruvaya",
+    "KA-C368-sarani",
+    "KA-C368-ghatta",
+    "KA-C368-jarugu",
+    "KA-R368-review-362-368"
+  ],
+  "tex": "kannada/book/chapters/ch368-step-by-step.tex"
+}

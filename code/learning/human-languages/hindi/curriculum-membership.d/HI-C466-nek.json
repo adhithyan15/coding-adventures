@@ -1,0 +1,11 @@
+{
+  "id": "HI-C466-nek",
+  "pathSegment": "HI-PATH-466-DAYA466",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-466-DAYA466",
+      "order": 2
+    }
+  ]
+}

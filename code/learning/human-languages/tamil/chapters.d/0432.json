@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Canals and Wells",
+  "label": "ch:ta-canals-and-wells",
+  "canDo": "I can talk about bodies of water, canals, dams and wells, and water sloshing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C432-talumpu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can talk about bodies of water, canals, dams and wells, and water sloshing.",
+    "assesses": [
+      "TA-LEX-C432-NEER432-03",
+      "TA-LEX-C432-NEER432-04",
+      "TA-LEX-C432-NEER432-05"
+    ]
+  }
+}

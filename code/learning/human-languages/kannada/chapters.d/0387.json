@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Priorities and Values",
+  "label": "ch:ka-priorities-and-values",
+  "canDo": "I can say a challenge, to set aside, balance, a priority and a value.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C387-maulya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can say a challenge, to set aside, balance, a priority and a value.",
+    "assesses": [
+      "KA-LEX-C387-SAVALU387-03",
+      "KA-LEX-C387-SAVALU387-04",
+      "KA-LEX-C387-SAVALU387-05"
+    ]
+  }
+}

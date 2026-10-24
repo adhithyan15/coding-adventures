@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C351-appalisu",
+    "language": "kannada",
+    "chapter": 351,
+    "sequence": 17660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ddbc649b335a58d2"
+  },
+  "findings": []
+}

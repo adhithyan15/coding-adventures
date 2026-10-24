@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C552-zayyana",
+    "language": "arabic",
+    "chapter": 552,
+    "sequence": 30500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0410c24e7124a0d"
+  },
+  "findings": []
+}

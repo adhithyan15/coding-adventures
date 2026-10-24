@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 459,
+  "title": "Mountains and Camps",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:967f2179a11ac55f",
+  "lessons": [
+    {
+      "id": "KA-C459-parvata",
+      "sequence": 23330,
+      "title": "ಪರ್ವತ (parvata) — a mountain",
+      "headword": "ಪರ್ವತ",
+      "romanization": "parvata",
+      "gloss": "a mountain",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f452ce210b69290",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to get back, then the Kannada for to stay overnight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪರ್ವತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರ್ವತ — parvata — \"a mountain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಪರ್ವತದ ಮೇಲೆ ಯಾವಾಗಲೂ ಹಿಮ ಇರುತ್ತದೆ. ā parvatada mēle yāvāgalū hima iruttade. There is always snow on that mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೆಟ್ಟ is a hill; ಪರ್ವತ (parvata) is a high mountain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರ್ವತ (parvata) is borrowed from Sanskrit parvata, \"a rock, a mountain\" (CDIAL 7945)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parvata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parvata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parvata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parvata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā parvatada mēle yāvāgalū hima iruttade. — There is always snow on that mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā parvatada mēle yāvāgalū hima iruttade.* — There is always snow on that mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to get back, then the Kannada for to stay overnight, then say parvata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to get back, then the Kannada for to stay overnight, then say *parvata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪರ್ವತ (parvata) mean? (\"A mountain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C459-sikhara",
+      "sequence": 23340,
+      "title": "ಶಿಖರ (śikhara) — a peak; a summit",
+      "headword": "ಶಿಖರ",
+      "romanization": "śikhara",
+      "gloss": "a peak; a summit",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2328ce2990d3e8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to stay overnight, then the Kannada for a mountain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಶಿಖರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶಿಖರ — śikhara — \"a peak; a summit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾವು ಬೆಳಗ್ಗೆ ಶಿಖರ ತಲುಪಿದೆವು. nāvu beḷagge śikhara talupidevu. We reached the summit in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "The top of a mountain, and the top of a temple tower."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶಿಖರ (śikhara) is borrowed from Sanskrit śikhara, \"a point, a peak\" (CDIAL 12435)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikhara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikhara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikhara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikhara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvu beḷagge śikhara talupidevu. — We reached the summit in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvu beḷagge śikhara talupidevu.* — We reached the summit in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to stay overnight, then the Kannada for a mountain, then say śikhara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to stay overnight, then the Kannada for a mountain, then say *śikhara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಶಿಖರ (śikhara) mean? (\"A peak; a summit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C459-muggarisu",
+      "sequence": 23350,
+      "title": "ಮುಗ್ಗರಿಸು (muggarisu) — to stumble; to lurch",
+      "headword": "ಮುಗ್ಗರಿಸು",
+      "romanization": "muggarisu",
+      "gloss": "to stumble; to lurch",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:705474f27a8ba364",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a mountain, then the Kannada for a peak."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮುಗ್ಗರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಗ್ಗರಿಸು — muggarisu — \"to stumble; to lurch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಲ್ಲಿನ ದಾರಿಯಲ್ಲಿ ಅಜ್ಜ ಮುಗ್ಗರಿಸಿದರು. kallina dāriyalli ajja muggarisidaru. Grandfather stumbled on the stony path."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮುಗ್ಗರಿಸಿದೆ, muggariside."
+            },
+            {
+              "kind": "speech",
+              "text": "A heavier stumble than ಎಡವು, to trip."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಗ್ಗರಿಸು (muggarisu) is a Kannada verb whose origin is not settled; DEDR shows no clear source for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muggarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muggarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muggarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muggarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kallina dāriyalli ajja muggarisidaru. — Grandfather stumbled on the stony path.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kallina dāriyalli ajja muggarisidaru.* — Grandfather stumbled on the stony path.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a mountain, then the Kannada for a peak, then say muggarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a mountain, then the Kannada for a peak, then say *muggarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮುಗ್ಗರಿಸು (muggarisu) mean? (\"To stumble; to lurch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C459-dere",
+      "sequence": 23360,
+      "title": "ಡೇರೆ (ḍēre) — a tent",
+      "headword": "ಡೇರೆ",
+      "romanization": "ḍēre",
+      "gloss": "a tent",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57f539e6b19bf45c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a peak, then the Kannada for to stumble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಡೇರೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಡೇರೆ — ḍēre — \"a tent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಾತ್ರಿ ನಾವು ಶಿಖರದ ಕೆಳಗೆ ಡೇರೆ ಹಾಕಿದೆವು. rātri nāvu śikharada keḷage ḍēre hākidevu. At night we pitched a tent below the summit."
+            },
+            {
+              "kind": "speech",
+              "text": "ಡೇರೆ (ḍēre) ಹಾಕು, to pitch a tent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಡೇರೆ (ḍēre) is usually traced to Persian dēra, \"a tent, a camp\", which reached Kannada through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātri nāvu śikharada keḷage ḍēre hākidevu. — At night we pitched a tent below the summit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātri nāvu śikharada keḷage ḍēre hākidevu.* — At night we pitched a tent below the summit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a peak, then the Kannada for to stumble, then say ḍēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a peak, then the Kannada for to stumble, then say *ḍēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಡೇರೆ (ḍēre) mean? (\"A tent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C459-bidara",
+      "sequence": 23370,
+      "title": "ಬಿಡಾರ (biḍāra) — an encampment; a camp",
+      "headword": "ಬಿಡಾರ",
+      "romanization": "biḍāra",
+      "gloss": "an encampment; a camp",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e33d02160d1d488",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to stumble, then the Kannada for a tent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಿಡಾರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿಡಾರ — biḍāra — \"an encampment; a camp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೂಲಿಗಳ ಬಿಡಾರ ನದಿಯ ದಡದಲ್ಲಿ ಇತ್ತು. kūligaḷa biḍāra nadiya daḍadalli ittu. The labourers’ camp was on the riverbank."
+            },
+            {
+              "kind": "speech",
+              "text": "A place of tents or huts put up for a while."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿಡಾರ (biḍāra) is native Dravidian: DEDR 5393 lists Kannada biḍāra, \"a halting place\", in the family of ಬಿಡು, \"to let go; to stop, to halt\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biḍāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biḍāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biḍāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biḍāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūligaḷa biḍāra nadiya daḍadalli ittu. — The labourers’ camp was on the riverbank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūligaḷa biḍāra nadiya daḍadalli ittu.* — The labourers’ camp was on the riverbank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to stumble, then the Kannada for a tent, then say biḍāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to stumble, then the Kannada for a tent, then say *biḍāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಿಡಾರ (biḍāra) mean? (\"An encampment; a camp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

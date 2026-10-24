@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 545,
+  "title": "Laundry Day",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7cab42546a476758",
+  "lessons": [
+    {
+      "id": "KA-C545-jamakhana",
+      "sequence": 27820,
+      "title": "ಜಮಖಾನ (jamakhāna) — a rug; a woven floor carpet",
+      "headword": "ಜಮಖಾನ",
+      "romanization": "jamakhāna",
+      "gloss": "a rug; a woven floor carpet",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ecd5940a5c4a75e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a tube, then the Kannada for a wire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಜಮಖಾನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜಮಖಾನ — jamakhāna — \"a rug; a woven floor carpet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಬ್ಬಕ್ಕೆ ನೆಲದ ಮೇಲೆ ಜಮಖಾನ ಹಾಸಿದರು. habbakke nelada mēle jamakhāna hāsidaru. They spread a rug on the floor for the festival."
+            },
+            {
+              "kind": "speech",
+              "text": "Thick and woven, spread for guests to sit on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜಮಖಾನ (jamakhāna) is usually traced to a Persian word that reached Kannada through Hindustani; the exact source is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamakhāna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamakhāna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamakhāna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamakhāna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "habbakke nelada mēle jamakhāna hāsidaru. — They spread a rug on the floor for the festival.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *habbakke nelada mēle jamakhāna hāsidaru.* — They spread a rug on the floor for the festival.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a tube, then the Kannada for a wire, then say jamakhāna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a tube, then the Kannada for a wire, then say *jamakhāna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಜಮಖಾನ (jamakhāna) mean? (\"A rug; a woven floor carpet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C545-raggu",
+      "sequence": 27830,
+      "title": "ರಗ್ಗು (raggu) — a quilt; a thick blanket",
+      "headword": "ರಗ್ಗು",
+      "romanization": "raggu",
+      "gloss": "a quilt; a thick blanket",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ebb340c3c296ce7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a wire, then the Kannada for a rug."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ರಗ್ಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಗ್ಗು — raggu — \"a quilt; a thick blanket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಚಳಿಯಲ್ಲಿ ಮಕ್ಕಳು ರಗ್ಗು ಹೊದ್ದು ಮಲಗಿದರು. caḷiyalli makkaḷu raggu hoddu malagidaru. In the cold the children slept under a quilt."
+            },
+            {
+              "kind": "speech",
+              "text": "Heavier than ಕಂಬಳಿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಗ್ಗು (raggu) is a loan from English rug, in the older sense of a thick travelling blanket."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raggu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raggu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raggu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raggu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caḷiyalli makkaḷu raggu hoddu malagidaru. — In the cold the children slept under a quilt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caḷiyalli makkaḷu raggu hoddu malagidaru.* — In the cold the children slept under a quilt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a wire, then the Kannada for a rug, then say raggu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a wire, then the Kannada for a rug, then say *raggu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ರಗ್ಗು (raggu) mean? (\"A quilt; a thick blanket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C545-jhadisu",
+      "sequence": 27840,
+      "title": "ಝಾಡಿಸು (jhāḍisu) — to shake out; to dust off",
+      "headword": "ಝಾಡಿಸು",
+      "romanization": "jhāḍisu",
+      "gloss": "to shake out; to dust off",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98035ff717b08edf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a rug, then the Kannada for a quilt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಝಾಡಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಝಾಡಿಸು — jhāḍisu — \"to shake out; to dust off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಜ್ಜಿ ಜಮಖಾನವನ್ನು ಹೊರಗೆ ಝಾಡಿಸಿದರು. ajji jamakhānavannu horage jhāḍisidaru. Grandmother shook out the rug outside."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಝಾಡಿಸಿದೆ, jhāḍiside."
+            },
+            {
+              "kind": "speech",
+              "text": "To shake or beat the dust out of something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಝಾಡಿಸು (jhāḍisu) is usually traced to Hindustani jhāṛnā, \"to dust, to shake off\", with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāḍisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāḍisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāḍisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāḍisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajji jamakhānavannu horage jhāḍisidaru. — Grandmother shook out the rug outside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajji jamakhānavannu horage jhāḍisidaru.* — Grandmother shook out the rug outside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a rug, then the Kannada for a quilt, then say jhāḍisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a rug, then the Kannada for a quilt, then say *jhāḍisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಝಾಡಿಸು (jhāḍisu) mean? (\"To shake out; to dust off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C545-oge",
+      "sequence": 27850,
+      "title": "ಒಗೆ (oge) — to wash clothes",
+      "headword": "ಒಗೆ",
+      "romanization": "oge",
+      "gloss": "to wash clothes",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c13803a8cb50ae6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a quilt, then the Kannada for to shake out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒಗೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಗೆ — oge — \"to wash clothes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಭಾನುವಾರ ಅಮ್ಮ ಎಲ್ಲಾ ಬಟ್ಟೆ ಒಗೆಯುತ್ತಾರೆ. bhānuvāra amma ellā baṭṭe ogeyuttāre. On Sunday mother washes all the clothes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಒಗೆದೆ, ogede."
+            },
+            {
+              "kind": "speech",
+              "text": "For clothes; dishes and hands take ತೊಳೆ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಗೆ (oge) is native Dravidian: DEDR 933 lists Kannada oge, \"to wash\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oge, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oge*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhānuvāra amma ellā baṭṭe ogeyuttāre. — On Sunday mother washes all the clothes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhānuvāra amma ellā baṭṭe ogeyuttāre.* — On Sunday mother washes all the clothes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a quilt, then the Kannada for to shake out, then say oge again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a quilt, then the Kannada for to shake out, then say *oge* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒಗೆ (oge) mean? (\"To wash clothes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C545-ganji",
+      "sequence": 27860,
+      "title": "ಗಂಜಿ (gañji) — starch; rice gruel",
+      "headword": "ಗಂಜಿ",
+      "romanization": "gañji",
+      "gloss": "starch; rice gruel",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcb7489c4a0c7d03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to shake out, then the Kannada for to wash clothes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗಂಜಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಂಜಿ — gañji — \"starch; rice gruel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಮ್ಮ ಹತ್ತಿ ಸೀರೆಗೆ ಗಂಜಿ ಹಾಕಿದರು. amma hatti sīrege gañji hākidaru. Mother starched the cotton sari."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the water rice is cooked in, a light food for the sick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಂಜಿ (gañji) is native Dravidian: DEDR 1107 lists Kannada gañji, \"rice-gruel, starch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gañji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gañji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gañji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gañji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amma hatti sīrege gañji hākidaru. — Mother starched the cotton sari.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amma hatti sīrege gañji hākidaru.* — Mother starched the cotton sari.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to shake out, then the Kannada for to wash clothes, then say gañji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to shake out, then the Kannada for to wash clothes, then say *gañji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗಂಜಿ (gañji) mean? (\"Starch; rice gruel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

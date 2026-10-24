@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 419,
+  "title": "Election Day",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5db91a35912b08a6",
+  "lessons": [
+    {
+      "id": "ML-C419-tirannetuppu",
+      "sequence": 20710,
+      "title": "തിരഞ്ഞെടുപ്പ് (tiraññeṭuppŭ) — an election",
+      "headword": "തിരഞ്ഞെടുപ്പ്",
+      "romanization": "tiraññeṭuppŭ",
+      "gloss": "an election",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:947690d19265d649",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to prohibit, then the Malayalam for to allow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തിരഞ്ഞെടുപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തിരഞ്ഞെടുപ്പ് — tiraññeṭuppŭ — \"an election\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അടുത്ത മാസം ഞങ്ങളുടെ നാട്ടിൽ തിരഞ്ഞെടുപ്പ് ആണ്. aṭutta māsaṁ ñaṅṅaḷuṭe nāṭṭil tiraññeṭuppŭ āṇŭ. Next month there is an election in our area."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb തിരഞ്ഞെടുക്കുക, to choose, is the same word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തിരഞ്ഞെടുപ്പ് (tiraññeṭuppŭ) is a native Malayalam compound: തിരയുക, \"to seek\" (DEDR 3242), and എടുക്കുക, \"to take up, to choose\" (DEDR 851), with the noun ending -പ്പ്. An election is a seeking out and taking up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraññeṭuppŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraññeṭuppŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraññeṭuppŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraññeṭuppŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭutta māsaṁ ñaṅṅaḷuṭe nāṭṭil tiraññeṭuppŭ āṇŭ. — Next month there is an election in our area.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭutta māsaṁ ñaṅṅaḷuṭe nāṭṭil tiraññeṭuppŭ āṇŭ.* — Next month there is an election in our area.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to prohibit, then the Malayalam for to allow, then say tiraññeṭuppŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to prohibit, then the Malayalam for to allow, then say *tiraññeṭuppŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തിരഞ്ഞെടുപ്പ് (tiraññeṭuppŭ) mean? (\"An election\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C419-vottu",
+      "sequence": 20720,
+      "title": "വോട്ട് (vōṭṭŭ) — a vote",
+      "headword": "വോട്ട്",
+      "romanization": "vōṭṭŭ",
+      "gloss": "a vote",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0ba4cc33c783ae0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to allow, then the Malayalam for an election."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വോട്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വോട്ട് — vōṭṭŭ — \"a vote\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എന്റെ വോട്ട് വളരെ പ്രധാനമാണ്. enṟe vōṭṭŭ vaḷare pradhānamāṇŭ. My vote is very important."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: വോട്ടുകൾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വോട്ട് (vōṭṭŭ) was borrowed from English vote."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vōṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vōṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vōṭṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vōṭṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enṟe vōṭṭŭ vaḷare pradhānamāṇŭ. — My vote is very important.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enṟe vōṭṭŭ vaḷare pradhānamāṇŭ.* — My vote is very important.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to allow, then the Malayalam for an election, then say vōṭṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to allow, then the Malayalam for an election, then say *vōṭṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വോട്ട് (vōṭṭŭ) mean? (\"A vote\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C419-vottar",
+      "sequence": 20730,
+      "title": "വോട്ടർ (vōṭṭar) — a voter",
+      "headword": "വോട്ടർ",
+      "romanization": "vōṭṭar",
+      "gloss": "a voter",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd038497c60dc76b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an election, then the Malayalam for a vote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വോട്ടർ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വോട്ടർ — vōṭṭar — \"a voter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ഗ്രാമത്തിൽ ആയിരം വോട്ടർമാർ ഉണ്ട്. ā grāmattil āyiraṁ vōṭṭarmār uṇṭŭ. There are a thousand voters in that village."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: വോട്ടർമാർ, vōṭṭarmār."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural with -മാർ, the plural for people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വോട്ടർ (vōṭṭar) was borrowed from English voter. The plural takes the Malayalam -മാർ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vōṭṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vōṭṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vōṭṭar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vōṭṭar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā grāmattil āyiraṁ vōṭṭarmār uṇṭŭ. — There are a thousand voters in that village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā grāmattil āyiraṁ vōṭṭarmār uṇṭŭ.* — There are a thousand voters in that village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an election, then the Malayalam for a vote, then say vōṭṭar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an election, then the Malayalam for a vote, then say *vōṭṭar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വോട്ടർ (vōṭṭar) mean? (\"A voter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C419-sthanartthi",
+      "sequence": 20740,
+      "title": "സ്ഥാനാർത്ഥി (sthānārtthi) — a candidate",
+      "headword": "സ്ഥാനാർത്ഥി",
+      "romanization": "sthānārtthi",
+      "gloss": "a candidate",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93a820f6fa64e82c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a vote, then the Malayalam for a voter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സ്ഥാനാർത്ഥി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്ഥാനാർത്ഥി — sthānārtthi — \"a candidate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത്തവണ മൂന്ന് സ്ഥാനാർത്ഥികൾ മത്സരിക്കുന്നു. ittavaṇa mūnnŭ sthānārtthikaḷ matsarikkunnu. This time three candidates are standing."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: സ്ഥാനാർത്ഥികൾ, sthānārtthikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: സ്ഥാനാർത്ഥികൾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്ഥാനാർത്ഥി (sthānārtthi) is built from Sanskrit sthāna, \"a place, a position\" (CDIAL 13753), and arthin, \"one who wants, a petitioner\" (CDIAL 640): one who seeks a post."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthānārtthi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthānārtthi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthānārtthi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthānārtthi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ittavaṇa mūnnŭ sthānārtthikaḷ matsarikkunnu. — This time three candidates are standing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ittavaṇa mūnnŭ sthānārtthikaḷ matsarikkunnu.* — This time three candidates are standing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a vote, then the Malayalam for a voter, then say sthānārtthi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a vote, then the Malayalam for a voter, then say *sthānārtthi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സ്ഥാനാർത്ഥി (sthānārtthi) mean? (\"A candidate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C419-balarru",
+      "sequence": 20750,
+      "title": "ബാലറ്റ് (bālaṟṟŭ) — a ballot",
+      "headword": "ബാലറ്റ്",
+      "romanization": "bālaṟṟŭ",
+      "gloss": "a ballot",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c3d871b0d1608dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a voter, then the Malayalam for a candidate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ബാലറ്റ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബാലറ്റ് — bālaṟṟŭ — \"a ballot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ബാലറ്റ് പെട്ടികൾ വൈകുന്നേരം ഓഫീസിൽ എത്തി. bālaṟṟŭ peṭṭikaḷ vaikunnēraṁ ōphīsil etti. The ballot boxes reached the office in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "A ballot box is ബാലറ്റ് (bālaṟṟŭ) പെട്ടി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബാലറ്റ് (bālaṟṟŭ) was borrowed from English ballot."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaṟṟŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaṟṟŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaṟṟŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaṟṟŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaṟṟŭ peṭṭikaḷ vaikunnēraṁ ōphīsil etti. — The ballot boxes reached the office in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaṟṟŭ peṭṭikaḷ vaikunnēraṁ ōphīsil etti.* — The ballot boxes reached the office in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a voter, then the Malayalam for a candidate, then say bālaṟṟŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a voter, then the Malayalam for a candidate, then say *bālaṟṟŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ബാലറ്റ് (bālaṟṟŭ) mean? (\"A ballot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

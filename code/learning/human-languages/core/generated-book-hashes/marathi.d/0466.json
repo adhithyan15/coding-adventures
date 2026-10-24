@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:46322c0a72d37a5b",
+  "lessonIds": [
+    "MR-C466-samadhan",
+    "MR-C466-svasthya",
+    "MR-C466-nivant",
+    "MR-C466-visavne",
+    "MR-C466-khulne"
+  ],
+  "tex": "marathi/book/chapters/ch466-peace-of-mind.tex"
+}

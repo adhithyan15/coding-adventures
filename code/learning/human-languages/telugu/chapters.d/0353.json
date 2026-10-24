@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Vanished",
+  "label": "ch:te-vanished",
+  "canDo": "I can say a disappearance, to vanish, to fade from view, to appear suddenly and to detect.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C353-kanipettu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say a disappearance, to vanish, to fade from view, to appear suddenly and to detect.",
+    "assesses": [
+      "TE-LEX-C353-ADRSYAM353-03",
+      "TE-LEX-C353-ADRSYAM353-04",
+      "TE-LEX-C353-ADRSYAM353-05"
+    ]
+  }
+}

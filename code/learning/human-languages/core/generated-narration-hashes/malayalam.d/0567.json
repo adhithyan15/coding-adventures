@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 567,
+  "sourceHash": "fnv1a64:8ca9289ad15d0973",
+  "lessonIds": [
+    "ML-C567-anubhavikkuka",
+    "ML-C567-nerituka",
+    "ML-C567-piticcunilkkuka",
+    "ML-C567-marikatakkuka",
+    "ML-C567-poruttappetuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch567.txt",
+  "json": "malayalam/narration/ch567.json",
+  "textHash": "fnv1a64:5e31e37a77a49561",
+  "jsonHash": "fnv1a64:58cb3e46f47936e0",
+  "findings": []
+}

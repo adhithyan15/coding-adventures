@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-503-TABA503",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a person as tolerant, irritable, cheerful, organized or careless.",
+  "prerequisites": []
+}

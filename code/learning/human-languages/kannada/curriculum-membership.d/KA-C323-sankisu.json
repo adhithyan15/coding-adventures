@@ -1,0 +1,11 @@
+{
+  "id": "KA-C323-sankisu",
+  "pathSegment": "KA-PATH-323-APARADHA323",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-323-APARADHA323",
+      "order": 4
+    }
+  ]
+}

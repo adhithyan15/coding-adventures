@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-377-VANMURAI377",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-377-VANMURAI377"
+  ],
+  "after": []
+}

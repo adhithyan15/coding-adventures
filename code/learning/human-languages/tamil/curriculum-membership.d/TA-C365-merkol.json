@@ -1,0 +1,11 @@
+{
+  "id": "TA-C365-merkol",
+  "pathSegment": "TA-PATH-365-KATTURAI365",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-365-KATTURAI365",
+      "order": 4
+    }
+  ]
+}

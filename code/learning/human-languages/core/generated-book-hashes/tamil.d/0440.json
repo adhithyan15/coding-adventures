@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:465983f920e32203",
+  "lessonIds": [
+    "TA-C440-macu",
+    "TA-C440-currucculal",
+    "TA-C440-tuci",
+    "TA-C440-kalivu",
+    "TA-C440-nekili"
+  ],
+  "tex": "tamil/book/chapters/ch440-dust-and-pollution.tex"
+}

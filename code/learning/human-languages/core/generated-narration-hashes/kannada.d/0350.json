@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:28497a19ccbd5864",
+  "lessonIds": [
+    "KA-C350-sanmanisu",
+    "KA-C350-kondadu",
+    "KA-C350-birudu",
+    "KA-C350-kirti",
+    "KA-C350-udghatisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch350.txt",
+  "json": "kannada/narration/ch350.json",
+  "textHash": "fnv1a64:05b8ae36c9934084",
+  "jsonHash": "fnv1a64:07d31d22c2aaa037",
+  "findings": []
+}

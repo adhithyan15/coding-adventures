@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 411,
+  "title": "Rules and wrongs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8cdef06acbd09deb",
+  "lessons": [
+    {
+      "id": "AR-C411-ajaza",
+      "sequence": 23110,
+      "title": "أجاز (ajāza) — to authorize",
+      "headword": "أجاز",
+      "romanization": "ajāza",
+      "gloss": "to authorize",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:136e6fb11ed80f83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to comply, then the Arabic for to exempt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أجاز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أجاز — ajāza — \"to authorize\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أجاز الأستاذ استعمال القاموس. ajāza al-ustādh istiʿmāl al-qāmūs. The professor authorized the use of the dictionary."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يجيز, yujīz."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أجاز (ajāza) is built on the native Arabic root j-w-z, \"to pass, to go beyond\" (Lane). It is Form IV, to let a thing pass: to allow, to authorize."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajāza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajāza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajāza, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajāza*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajāza al-ustādh istiʿmāl al-qāmūs. — The professor authorized the use of the dictionary.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajāza al-ustādh istiʿmāl al-qāmūs.* — The professor authorized the use of the dictionary.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to comply, then the Arabic for to exempt, then say ajāza again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to comply, then the Arabic for to exempt, then say *ajāza* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أجاز (ajāza) mean? (\"To authorize\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C411-khadaa",
+      "sequence": 23120,
+      "title": "خضع (khaḍaʿa) — to be subject to",
+      "headword": "خضع",
+      "romanization": "khaḍaʿa",
+      "gloss": "to be subject to",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ac85b09be68e8e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to exempt, then the Arabic for to authorize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خضع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خضع — khaḍaʿa — \"to be subject to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يخضع الجميع للقانون. yakhḍaʿu al-jamīʿ li-l-qānūn. Everyone is subject to the law."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يخضع, yakhḍaʿ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes لـ: خضع (khaḍaʿa) لـ …. خضع (khaḍaʿa) لعملية, underwent an operation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خضع (khaḍaʿa) is built on the native Arabic root kh-ḍ-ʿ, \"to be lowly, submissive\" (Lane). Khaḍaʿa is a Form I verb: to submit, to be subject to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaḍaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaḍaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaḍaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaḍaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yakhḍaʿu al-jamīʿ li-l-qānūn. — Everyone is subject to the law.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yakhḍaʿu al-jamīʿ li-l-qānūn.* — Everyone is subject to the law.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to exempt, then the Arabic for to authorize, then say khaḍaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to exempt, then the Arabic for to authorize, then say *khaḍaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خضع (khaḍaʿa) mean? (\"To be subject to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C411-zalama",
+      "sequence": 23130,
+      "title": "ظلم (ẓalama) — to wrong",
+      "headword": "ظلم",
+      "romanization": "ẓalama",
+      "gloss": "to wrong",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b80e474a5a4b6c98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to authorize, then the Arabic for to be subject to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ظلم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ظلم — ẓalama — \"to wrong\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ظلم المدير العامل الجديد. ẓalama al-mudīr al-ʿāmil al-jadīd. The manager wronged the new worker."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يظلم, yaẓlim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ظلم (ẓalama) is built on the native Arabic root ẓ-l-m, \"to put a thing in the wrong place\" (Lane). Ẓalama is a Form I verb: to do someone wrong. ظالم, unjust, is its active participle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ẓalama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ẓalama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ẓalama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ẓalama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ẓalama al-mudīr al-ʿāmil al-jadīd. — The manager wronged the new worker.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ẓalama al-mudīr al-ʿāmil al-jadīd.* — The manager wronged the new worker.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to authorize, then the Arabic for to be subject to, then say ẓalama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to authorize, then the Arabic for to be subject to, then say *ẓalama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ظلم (ẓalama) mean? (\"To wrong\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C411-kafaha",
+      "sequence": 23140,
+      "title": "كافح (kāfaḥa) — to struggle against",
+      "headword": "كافح",
+      "romanization": "kāfaḥa",
+      "gloss": "to struggle against",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6789f3bd042ea528",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be subject to, then the Arabic for to wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كافح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كافح — kāfaḥa — \"to struggle against\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تكافح الدولة الفقر. tukāfiḥu ad-dawla al-faqr. The state is fighting poverty."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يكافح, yukāfiḥ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is fought is the direct object: كافح (kāfaḥa) الفساد, fought corruption."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كافح (kāfaḥa) is built on the native Arabic root k-f-ḥ, \"to meet face to face\" (Lane). It is Form III, to face an enemy head on: to struggle against."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāfaḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāfaḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāfaḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāfaḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tukāfiḥu ad-dawla al-faqr. — The state is fighting poverty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tukāfiḥu ad-dawla al-faqr.* — The state is fighting poverty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be subject to, then the Arabic for to wrong, then say kāfaḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be subject to, then the Arabic for to wrong, then say *kāfaḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does كافح (kāfaḥa) mean? (\"To struggle against\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C411-aqarra",
+      "sequence": 23150,
+      "title": "أقر (aqarra) — to approve formally",
+      "headword": "أقر",
+      "romanization": "aqarra",
+      "gloss": "to approve formally",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c0a01203eb5e0c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to wrong, then the Arabic for to struggle against."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أقر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أقر — aqarra — \"to approve formally\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أقر المجلس الخطة الجديدة. aqarra al-majlis al-khiṭṭa al-jadīda. The council formally approved the new plan."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يقر, yuqirr."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to admit: أقر (aqarra) بالخطأ, admitted the mistake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أقر (aqarra) is built on the native Arabic root q-r-r, \"to settle, to be still\" (Lane). It is Form IV, to make a thing settled: to approve it formally, or to admit it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aqarra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aqarra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aqarra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aqarra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aqarra al-majlis al-khiṭṭa al-jadīda. — The council formally approved the new plan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aqarra al-majlis al-khiṭṭa al-jadīda.* — The council formally approved the new plan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to wrong, then the Arabic for to struggle against, then say aqarra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to wrong, then the Arabic for to struggle against, then say *aqarra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أقر (aqarra) mean? (\"To approve formally\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

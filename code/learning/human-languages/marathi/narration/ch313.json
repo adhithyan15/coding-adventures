@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 313,
+  "title": "Rumour and Sensation",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:15398bb0a10d5dd4",
+  "lessons": [
+    {
+      "id": "MR-C313-aphva",
+      "sequence": 18280,
+      "title": "अफवा (aphvā) — a rumour",
+      "headword": "अफवा",
+      "romanization": "aphvā",
+      "gloss": "a rumour",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88da19844bf7d674",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a newsreader, then the Marathi for to broadcast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अफवा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अफवा — aphvā — \"a rumour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गावात भूकंपाची खोटी अफवा पसरली. gāvāt bhūkampācī khoṭī aphvā pasarlī. A false rumour of an earthquake spread through the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "अफवा (aphvā) पसरणे, a rumour spreads; plural अफवा (aphvā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अफवा (aphvā) is a loan from Persian afvāh, usually traced to Arabic afwāh, 'mouths': talk that goes from mouth to mouth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aphvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aphvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aphvā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aphvā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāvāt bhūkampācī khoṭī aphvā pasarlī. — A false rumour of an earthquake spread through the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāvāt bhūkampācī khoṭī aphvā pasarlī.* — A false rumour of an earthquake spread through the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a newsreader, then the Marathi for to broadcast, then say aphvā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a newsreader, then the Marathi for to broadcast, then say *aphvā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अफवा (aphvā) mean? (\"A rumour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C313-khalbal",
+      "sequence": 18290,
+      "title": "खळबळ (khaḷbaḷ) — a sensation; a stir",
+      "headword": "खळबळ",
+      "romanization": "khaḷbaḷ",
+      "gloss": "a sensation; a stir",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fcffe329594b295",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to broadcast, then the Marathi for a rumour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खळबळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खळबळ — khaḷbaḷ — \"a sensation; a stir\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्या बातमीने शहरात खळबळ उडाली. tyā bātmīne śahrāt khaḷbaḷ uḍālī. That news caused a sensation in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "खळबळ (khaḷbaḷ) उडणे, a stir breaks out; खळबळजनक, sensational."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खळबळ (khaḷbaḷ) is inherited: CDIAL lists Marathi khaḷbaḷṇe, 'to agitate', under Sanskrit khalati, 'shakes' (CDIAL 3837); the noun names the stir."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaḷbaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaḷbaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaḷbaḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaḷbaḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyā bātmīne śahrāt khaḷbaḷ uḍālī. — That news caused a sensation in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyā bātmīne śahrāt khaḷbaḷ uḍālī.* — That news caused a sensation in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to broadcast, then the Marathi for a rumour, then say khaḷbaḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to broadcast, then the Marathi for a rumour, then say *khaḷbaḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खळबळ (khaḷbaḷ) mean? (\"A sensation; a stir\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C313-ghosna",
+      "sequence": 18300,
+      "title": "घोषणा (ghoṣṇā) — an announcement; a slogan",
+      "headword": "घोषणा",
+      "romanization": "ghoṣṇā",
+      "gloss": "an announcement; a slogan",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc0943f88e1ca072",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a rumour, then the Marathi for a sensation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घोषणा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घोषणा — ghoṣṇā — \"an announcement; a slogan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "स्टेशनवर गाडी उशिरा येण्याची घोषणा झाली. sṭeśanvar gāḍī uśirā yeṇyācī ghoṣṇā jhālī. At the station it was announced that the train would be late."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "घोषणा (ghoṣṇā) करणे, to announce."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घोषणा (ghoṣṇā) is a tatsama, taken from Sanskrit ghoṣaṇā, 'a proclaiming aloud' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghoṣṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghoṣṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghoṣṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghoṣṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sṭeśanvar gāḍī uśirā yeṇyācī ghoṣṇā jhālī. — At the station it was announced that the train would be late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sṭeśanvar gāḍī uśirā yeṇyācī ghoṣṇā jhālī.* — At the station it was announced that the train would be late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a rumour, then the Marathi for a sensation, then say ghoṣṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a rumour, then the Marathi for a sensation, then say *ghoṣṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घोषणा (ghoṣṇā) mean? (\"An announcement; a slogan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C313-thalak",
+      "sequence": 18310,
+      "title": "ठळक (ṭhaḷak) — prominent; bold",
+      "headword": "ठळक",
+      "romanization": "ṭhaḷak",
+      "gloss": "prominent; bold",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c87d553a26b42726",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a sensation, then the Marathi for an announcement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ठळक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठळक — ṭhaḷak — \"prominent; bold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "निवेदकाने आजच्या ठळक बातम्या वाचल्या. nivedakāne ājacyā ṭhaḷak bātamyā vācalyā. The newsreader read out today's main headlines."
+            },
+            {
+              "kind": "speech",
+              "text": "It keeps one form: ठळक (ṭhaḷak) अक्षरं, bold letters; ठळक (ṭhaḷak) बातम्या, the headlines."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठळक (ṭhaḷak) is a Marathi word for what stands out clearly; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhaḷak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhaḷak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhaḷak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhaḷak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivedakāne ājacyā ṭhaḷak bātamyā vācalyā. — The newsreader read out today's main headlines.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivedakāne ājacyā ṭhaḷak bātamyā vācalyā.* — The newsreader read out today's main headlines.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a sensation, then the Marathi for an announcement, then say ṭhaḷak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a sensation, then the Marathi for an announcement, then say *ṭhaḷak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ठळक (ṭhaḷak) mean? (\"Prominent; bold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C313-pukarne",
+      "sequence": 18320,
+      "title": "पुकारणे (pukārṇe) — to proclaim; to call a strike",
+      "headword": "पुकारणे",
+      "romanization": "pukārṇe",
+      "gloss": "to proclaim; to call a strike",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd85bf4408a2f613",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an announcement, then the Marathi for prominent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुकारणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुकारणे — pukārṇe — \"to proclaim; to call a strike\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कामगारांनी उद्यापासून संप पुकारला. kāmgārānnī udyāpāsūn samp pukārlā. The workers called a strike from tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने पुकारलं, tyāne pukārlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "संप पुकारणे (pukārṇe), to call a strike; it also means to call out to someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुकारणे (pukārṇe) is inherited: CDIAL lists Marathi pukārṇe, 'to shout', under pukkār, 'shout', a word made from the sound (CDIAL 8246)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pukārṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pukārṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pukārṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pukārṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmgārānnī udyāpāsūn samp pukārlā. — The workers called a strike from tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmgārānnī udyāpāsūn samp pukārlā.* — The workers called a strike from tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an announcement, then the Marathi for prominent, then say pukārṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an announcement, then the Marathi for prominent, then say *pukārṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुकारणे (pukārṇe) mean? (\"To proclaim; to call a strike\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

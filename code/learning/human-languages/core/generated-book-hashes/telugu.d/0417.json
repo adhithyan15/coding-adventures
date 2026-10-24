@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:f78d29c0b4318e29",
+  "lessonIds": [
+    "TE-C417-nibandhana",
+    "TE-C417-arhata",
+    "TE-C417-anumatincu",
+    "TE-C417-minaha",
+    "TE-C417-vartincu"
+  ],
+  "tex": "telugu/book/chapters/ch417-rules-and-requirements.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C444-teri",
+  "pathSegment": "TA-PATH-444-KARAI444",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-444-KARAI444",
+      "order": 2
+    }
+  ]
+}

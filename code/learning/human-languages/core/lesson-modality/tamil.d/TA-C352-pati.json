@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C352-pati",
+    "language": "tamil",
+    "chapter": 352,
+    "sequence": 20390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17d597885f805c61"
+  },
+  "findings": []
+}

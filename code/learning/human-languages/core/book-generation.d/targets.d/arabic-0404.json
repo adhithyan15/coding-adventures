@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 404,
+  "output": "arabic/book/chapters/ch404-conditions.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

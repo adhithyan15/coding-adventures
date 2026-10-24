@@ -1,0 +1,11 @@
+{
+  "id": "MR-C543-sammati",
+  "pathSegment": "MR-PATH-543-HOKAR543",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-543-HOKAR543",
+      "order": 1
+    }
+  ]
+}

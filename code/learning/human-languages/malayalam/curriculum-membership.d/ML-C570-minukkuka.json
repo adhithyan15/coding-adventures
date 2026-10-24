@@ -1,0 +1,11 @@
+{
+  "id": "ML-C570-minukkuka",
+  "pathSegment": "ML-PATH-570-VITTUPAKARANAM570",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-570-VITTUPAKARANAM570",
+      "order": 4
+    }
+  ]
+}

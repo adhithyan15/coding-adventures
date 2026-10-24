@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-521-MUKAFAA521",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-521-MUKAFAA521"
+  ],
+  "after": []
+}

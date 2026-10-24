@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:e19c97e01c761004",
+  "lessonIds": [
+    "MR-C462-heva",
+    "MR-C462-dves",
+    "MR-C462-kilas",
+    "MR-C462-moh",
+    "MR-C462-lobh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch462.txt",
+  "json": "marathi/narration/ch462.json",
+  "textHash": "fnv1a64:285784d4c8b2d4bc",
+  "jsonHash": "fnv1a64:dfd5725f2fa52224",
+  "findings": []
+}

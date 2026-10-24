@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C411-hindne",
+    "language": "marathi",
+    "chapter": 411,
+    "sequence": 23790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8163410486459a1"
+  },
+  "findings": []
+}

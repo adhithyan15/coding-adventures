@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:8e19370a59956471",
+  "lessonIds": [
+    "BN-C411-dakghor",
+    "BN-C411-ophis",
+    "BN-C411-chithi",
+    "BN-C411-piyon",
+    "BN-C411-pathano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch411.txt",
+  "json": "bengali/narration/ch411.json",
+  "textHash": "fnv1a64:770170c7e9364cdb",
+  "jsonHash": "fnv1a64:16372868e09b369b",
+  "findings": []
+}

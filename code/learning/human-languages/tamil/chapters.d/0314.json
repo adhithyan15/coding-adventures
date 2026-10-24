@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "A Moment to Remember",
+  "label": "ch:ta-a-moment-to-remember",
+  "canDo": "I can talk about moments I remember.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C314-itaiyatuttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can talk about moments I remember.",
+    "assesses": [
+      "TA-LEX-C314-NINAIVU314-03",
+      "TA-LEX-C314-NINAIVU314-04",
+      "TA-LEX-C314-NINAIVU314-05"
+    ]
+  }
+}

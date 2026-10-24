@@ -1,0 +1,11 @@
+{
+  "id": "TE-C468-murikivada",
+  "pathSegment": "TE-PATH-468-MURUGU468",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-468-MURUGU468",
+      "order": 3
+    }
+  ]
+}

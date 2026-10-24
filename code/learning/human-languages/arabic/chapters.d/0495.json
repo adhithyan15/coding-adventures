@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Annoyed and fed up",
+  "label": "ch:ar-annoyed-and-fed-up",
+  "canDo": "I can talk about annoyance, say that someone is annoyed or displeased, and say that someone put up with something or was fed up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-R495-review-488-495",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can talk about annoyance, say that someone is annoyed or displeased, and say that someone put up with something or was fed up.",
+    "assesses": [
+      "AR-LEX-C495-INZIAJ495-03",
+      "AR-LEX-C495-INZIAJ495-04",
+      "AR-LEX-C495-INZIAJ495-05"
+    ]
+  }
+}

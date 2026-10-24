@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Envy and jealousy",
+  "label": "ch:ar-envy-and-jealousy",
+  "canDo": "I can talk about jealousy and envy, and describe a jealous or envious person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C492-ghara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can talk about jealousy and envy, and describe a jealous or envious person.",
+    "assesses": [
+      "AR-LEX-C492-GHIRA492-03",
+      "AR-LEX-C492-GHIRA492-04",
+      "AR-LEX-C492-GHIRA492-05"
+    ]
+  }
+}

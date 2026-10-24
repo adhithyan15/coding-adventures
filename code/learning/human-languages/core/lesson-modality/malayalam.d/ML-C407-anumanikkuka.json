@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C407-anumanikkuka",
+    "language": "malayalam",
+    "chapter": 407,
+    "sequence": 20120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07db0847296da7ea"
+  },
+  "findings": []
+}

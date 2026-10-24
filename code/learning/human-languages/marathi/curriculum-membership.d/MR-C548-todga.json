@@ -1,0 +1,11 @@
+{
+  "id": "MR-C548-todga",
+  "pathSegment": "MR-PATH-548-ADTHALA548",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-548-ADTHALA548",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:add7d7c5f0db8407",
+  "lessonIds": [
+    "KA-C449-cakra",
+    "KA-C449-tayar",
+    "KA-C449-stepni",
+    "KA-C449-pankcar-agu",
+    "KA-C449-brek"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch449.txt",
+  "json": "kannada/narration/ch449.json",
+  "textHash": "fnv1a64:68860443fff5c097",
+  "jsonHash": "fnv1a64:38fc403a2445e668",
+  "findings": []
+}

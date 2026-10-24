@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C553-dattetukkuka",
+    "language": "malayalam",
+    "chapter": 553,
+    "sequence": 27850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f509563ff58a6eef"
+  },
+  "findings": []
+}

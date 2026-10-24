@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Affection",
+  "label": "ch:mr-affection",
+  "canDo": "I can talk about affection, warmth and closeness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C460-ladka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can talk about affection, warmth and closeness.",
+    "assesses": [
+      "MR-LEX-C460-MAYA460-03",
+      "MR-LEX-C460-MAYA460-04",
+      "MR-LEX-C460-MAYA460-05"
+    ]
+  }
+}

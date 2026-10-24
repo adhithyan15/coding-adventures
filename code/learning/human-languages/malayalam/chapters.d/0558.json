@@ -1,0 +1,19 @@
+{
+  "chapter": 558,
+  "title": "Youth and Old Age",
+  "label": "ch:ml-youth-and-old-age",
+  "canDo": "I can say pleasantries, early childhood, to prattle, grown-up and a twin.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C558-irattakkutti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 558: I can say pleasantries, early childhood, to prattle, grown-up and a twin.",
+    "assesses": [
+      "ML-LEX-C558-VARDHAKYAM558-03",
+      "ML-LEX-C558-VARDHAKYAM558-04",
+      "ML-LEX-C558-VARDHAKYAM558-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:a3a81aabfafce9bf",
+  "lessonIds": [
+    "BN-C434-prokriti",
+    "BN-C434-poribesh",
+    "BN-C434-dushon",
+    "BN-C434-noshto-kora",
+    "BN-C434-songrokkhon-kora"
+  ],
+  "tex": "bengali/book/chapters/ch434-nature-and-the-environment.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-471-VANDI471",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an engine, a wheel, a fault, a horn and to get dented.",
+  "prerequisites": []
+}

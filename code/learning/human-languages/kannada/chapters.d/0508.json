@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Inside the Body",
+  "label": "ch:ka-inside-the-body",
+  "canDo": "I can say the brain, a lung, a kidney, the intestine and a muscle.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C508-snayu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can say the brain, a lung, a kidney, the intestine and a muscle.",
+    "assesses": [
+      "KA-LEX-C508-DEHA508-03",
+      "KA-LEX-C508-DEHA508-04",
+      "KA-LEX-C508-DEHA508-05"
+    ]
+  }
+}

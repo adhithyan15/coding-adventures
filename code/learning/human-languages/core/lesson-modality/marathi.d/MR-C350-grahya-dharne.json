@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C350-grahya-dharne",
+    "language": "marathi",
+    "chapter": 350,
+    "sequence": 20430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6388ca6e2e72e192"
+  },
+  "findings": []
+}

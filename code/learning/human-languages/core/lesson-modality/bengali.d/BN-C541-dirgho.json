@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C541-dirgho",
+    "language": "bengali",
+    "chapter": 541,
+    "sequence": 32520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57867386b341b11d"
+  },
+  "findings": []
+}

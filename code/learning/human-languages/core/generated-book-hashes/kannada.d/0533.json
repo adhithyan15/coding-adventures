@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:72d0d89b404c739a",
+  "lessonIds": [
+    "KA-C533-kasuti",
+    "KA-C533-karakusala",
+    "KA-C533-hene",
+    "KA-C533-ponisu",
+    "KA-C533-singarisu"
+  ],
+  "tex": "kannada/book/chapters/ch533-handwork.tex"
+}

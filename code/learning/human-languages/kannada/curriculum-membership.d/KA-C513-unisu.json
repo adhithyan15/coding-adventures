@@ -1,0 +1,11 @@
+{
+  "id": "KA-C513-unisu",
+  "pathSegment": "KA-PATH-513-CHETARIKE513",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-513-CHETARIKE513",
+      "order": 1
+    }
+  ]
+}

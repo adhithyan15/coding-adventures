@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C348-sahasa",
+    "language": "kannada",
+    "chapter": 348,
+    "sequence": 17510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ce56ca0e6d20171"
+  },
+  "findings": []
+}

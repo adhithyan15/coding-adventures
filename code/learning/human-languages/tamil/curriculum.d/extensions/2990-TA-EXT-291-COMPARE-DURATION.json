@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-291-COMPARE-DURATION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can compare two things with -aiviṭa, say what I like most with ellāvaṟṟaiyumviṭa, and say how long with mūṉṟu mātamāka, -iliruntu … varai and evvaḷavu nēram.",
+  "prerequisites": [
+    "TA-EXT-290-FEELINGS-HOPES"
+  ]
+}

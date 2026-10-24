@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-448-DISA448",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a direction, a signpost, to lose my way, to take a turn and a shortcut.",
+  "prerequisites": []
+}

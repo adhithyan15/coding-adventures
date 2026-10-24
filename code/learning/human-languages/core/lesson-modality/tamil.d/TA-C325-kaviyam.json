@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C325-kaviyam",
+    "language": "tamil",
+    "chapter": 325,
+    "sequence": 18710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fd23918477fb9e6"
+  },
+  "findings": []
+}

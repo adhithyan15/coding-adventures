@@ -1,0 +1,11 @@
+{
+  "id": "ML-C472-vegata",
+  "pathSegment": "ML-PATH-472-GATAGATAM472",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-472-GATAGATAM472",
+      "order": 2
+    }
+  ]
+}

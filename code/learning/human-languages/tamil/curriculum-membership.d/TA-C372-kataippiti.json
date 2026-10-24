@@ -1,0 +1,11 @@
+{
+  "id": "TA-C372-kataippiti",
+  "pathSegment": "TA-PATH-372-CATTAM372",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-372-CATTAM372",
+      "order": 2
+    }
+  ]
+}

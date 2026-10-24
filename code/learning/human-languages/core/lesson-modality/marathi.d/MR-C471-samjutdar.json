@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C471-samjutdar",
+    "language": "marathi",
+    "chapter": 471,
+    "sequence": 27100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0076b3fb6dcd6727"
+  },
+  "findings": []
+}

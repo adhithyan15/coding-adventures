@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 425,
+  "title": "Making a Decision",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7748357b9a471065",
+  "lessons": [
+    {
+      "id": "TE-C425-nirnayam",
+      "sequence": 21200,
+      "title": "నిర్ణయం (nirṇayaṁ) — a decision",
+      "headword": "నిర్ణయం",
+      "romanization": "nirṇayaṁ",
+      "gloss": "a decision",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8173450bcdcc4580",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to stand up to, then the Telugu for to withdraw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిర్ణయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిర్ణయం — nirṇayaṁ — \"a decision\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె మంచి నిర్ణయం తీసుకుంది. āme mañci nirṇayaṁ tīsukundi. She made a good decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: నిర్ణయాలు, nirṇayālu."
+            },
+            {
+              "kind": "speech",
+              "text": "నిర్ణయం (nirṇayaṁ) తీసుకో, to take a decision; నిర్ణయించు, to decide, which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిర్ణయం (nirṇayaṁ) is borrowed from Sanskrit nirṇaya, \"complete ascertainment, decision, settlement\" (Monier-Williams); నిర్ణయించు is its verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirṇayaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirṇayaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirṇayaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirṇayaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme mañci nirṇayaṁ tīsukundi. — She made a good decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme mañci nirṇayaṁ tīsukundi.* — She made a good decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to stand up to, then the Telugu for to withdraw, then say nirṇayaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to stand up to, then the Telugu for to withdraw, then say *nirṇayaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిర్ణయం (nirṇayaṁ) mean? (\"A decision\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C425-tirmanam",
+      "sequence": 21210,
+      "title": "తీర్మానం (tīrmānaṁ) — a resolution (of a meeting)",
+      "headword": "తీర్మానం",
+      "romanization": "tīrmānaṁ",
+      "gloss": "a resolution (of a meeting)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c008ccce4e110864",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to withdraw, then the Telugu for a decision."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తీర్మానం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తీర్మానం — tīrmānaṁ — \"a resolution (of a meeting)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సమావేశంలో ఒక తీర్మానం ఆమోదించారు. samāvēśaṁlō oka tīrmānaṁ āmōdiñcāru. The meeting passed a resolution."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: తీర్మానాలు, tīrmānālu."
+            },
+            {
+              "kind": "speech",
+              "text": "తీర్మానం (tīrmānaṁ) చేయు, to resolve formally."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తీర్మానం (tīrmānaṁ) is native Dravidian: DEDR 3278 lists Kannada tīrmāna, \"conclusion, settlement, decision\", beside Telugu tīru, \"to be finished, to be settled\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīrmānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīrmānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīrmānaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīrmānaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samāvēśaṁlō oka tīrmānaṁ āmōdiñcāru. — The meeting passed a resolution.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samāvēśaṁlō oka tīrmānaṁ āmōdiñcāru.* — The meeting passed a resolution.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to withdraw, then the Telugu for a decision, then say tīrmānaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to withdraw, then the Telugu for a decision, then say *tīrmānaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తీర్మానం (tīrmānaṁ) mean? (\"A resolution (of a meeting)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C425-telcu",
+      "sequence": 21220,
+      "title": "తేల్చు (tēlcu) — to sort out; to settle",
+      "headword": "తేల్చు",
+      "romanization": "tēlcu",
+      "gloss": "to sort out; to settle",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82df0ce3ba6974b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a decision, then the Telugu for a resolution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తేల్చు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తేల్చు — tēlcu — \"to sort out; to settle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ గొడవను పెద్దలు తేల్చారు. ā goḍavanu peddalu tēlcāru. The elders settled that quarrel."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తేల్చాను, tēlcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "తేల్చి చెప్పు, to say plainly, once and for all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తేల్చు (tēlcu) is native Dravidian: DEDR 3464 lists Telugu tēlucu, \"to cause to float\", beside tēlu, \"to float\"; in everyday Telugu it means to settle a matter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēlcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēlcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēlcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēlcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā goḍavanu peddalu tēlcāru. — The elders settled that quarrel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā goḍavanu peddalu tēlcāru.* — The elders settled that quarrel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a decision, then the Telugu for a resolution, then say tēlcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a decision, then the Telugu for a resolution, then say *tēlcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తేల్చు (tēlcu) mean? (\"To sort out; to settle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C425-khararu-ceyu",
+      "sequence": 21230,
+      "title": "ఖరారు చేయు (kharāru cēyu) — to finalise; to fix (a date)",
+      "headword": "ఖరారు చేయు",
+      "romanization": "kharāru cēyu",
+      "gloss": "to finalise; to fix (a date)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd933c1bd301105f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a resolution, then the Telugu for to sort out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఖరారు చేయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఖరారు చేయు — kharāru cēyu — \"to finalise; to fix (a date)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పెళ్ళి తేదీని ఖరారు చేశారు. peḷḷi tēdīni kharāru cēśāru. They fixed the date of the wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఖరారు చేశాను, kharāru cēśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "ఖరారు alone: confirmation, a settled fact."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఖరారు చేయు (kharāru cēyu) is a loan from Arabic qarār, \"settlement, a fixed state\", with the native verb చేయు, \"to do\" (DEDR 1957)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharāru cēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharāru cēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharāru cēyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharāru cēyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peḷḷi tēdīni kharāru cēśāru. — They fixed the date of the wedding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peḷḷi tēdīni kharāru cēśāru.* — They fixed the date of the wedding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a resolution, then the Telugu for to sort out, then say kharāru cēyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a resolution, then the Telugu for to sort out, then say *kharāru cēyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఖరారు చేయు (kharāru cēyu) mean? (\"To finalise; to fix (a date)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C425-punaralocincu",
+      "sequence": 21240,
+      "title": "పునరాలోచించు (punarālōciñcu) — to reconsider; to rethink",
+      "headword": "పునరాలోచించు",
+      "romanization": "punarālōciñcu",
+      "gloss": "to reconsider; to rethink",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:229a9996138905e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to sort out, then the Telugu for to finalise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పునరాలోచించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పునరాలోచించు — punarālōciñcu — \"to reconsider; to rethink\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను తన నిర్ణయాన్ని పునరాలోచించాడు. atanu tana nirṇayānni punarālōciñcāḍu. He reconsidered his decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పునరాలోచించాను, punarālōciñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "పునర్-, again, + ఆలోచించు, to think over."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పునరాలోచించు (punarālōciñcu) is built from Sanskrit punar, \"back, again\" (CDIAL 8273), and ālocana, \"considering, reflection\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "punarālōciñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *punarālōciñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "punarālōciñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *punarālōciñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu tana nirṇayānni punarālōciñcāḍu. — He reconsidered his decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu tana nirṇayānni punarālōciñcāḍu.* — He reconsidered his decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to sort out, then the Telugu for to finalise, then say punarālōciñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to sort out, then the Telugu for to finalise, then say *punarālōciñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పునరాలోచించు (punarālōciñcu) mean? (\"To reconsider; to rethink\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

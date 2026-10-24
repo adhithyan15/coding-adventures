@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C536-riyaj-karne",
+    "language": "marathi",
+    "chapter": 536,
+    "sequence": 30680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:049c4c65b5590c18"
+  },
+  "findings": []
+}

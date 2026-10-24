@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Pressure and Pushback",
+  "label": "ch:ml-pressure-and-pushback",
+  "canDo": "I can say to interfere, to insist, to put on record, to threaten and to hesitate.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C451-matikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can say to interfere, to insist, to put on record, to threaten and to hesitate.",
+    "assesses": [
+      "ML-LEX-C451-SAMMARDDAM451-03",
+      "ML-LEX-C451-SAMMARDDAM451-04",
+      "ML-LEX-C451-SAMMARDDAM451-05"
+    ]
+  }
+}

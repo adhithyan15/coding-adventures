@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C186-hovega",
+    "language": "punjabi",
+    "chapter": 186,
+    "sequence": 9920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11aba33369e27463"
+  },
+  "findings": []
+}

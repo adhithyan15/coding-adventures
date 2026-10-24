@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C391-star",
+    "language": "marathi",
+    "chapter": 391,
+    "sequence": 22550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae7a429c6f9f0286"
+  },
+  "findings": []
+}

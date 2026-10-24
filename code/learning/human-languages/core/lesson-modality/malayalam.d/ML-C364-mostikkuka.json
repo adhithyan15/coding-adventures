@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C364-mostikkuka",
+    "language": "malayalam",
+    "chapter": 364,
+    "sequence": 17790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efbc2081c006324a"
+  },
+  "findings": []
+}

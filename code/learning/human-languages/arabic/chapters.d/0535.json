@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Companions and quarrels",
+  "label": "ch:ar-companions-and-quarrels",
+  "canDo": "I can talk about a companion, an enemy and betrayal, and say that people fell out or that someone left a place.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-R535-review-528-535",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can talk about a companion, an enemy and betrayal, and say that people fell out or that someone left a place.",
+    "assesses": [
+      "AR-LEX-C535-RIFAQ535-03",
+      "AR-LEX-C535-RIFAQ535-04",
+      "AR-LEX-C535-RIFAQ535-05"
+    ]
+  }
+}

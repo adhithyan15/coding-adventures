@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C541-kasarattu",
+    "language": "kannada",
+    "chapter": 541,
+    "sequence": 27620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ab1dfdd77e4e095"
+  },
+  "findings": []
+}

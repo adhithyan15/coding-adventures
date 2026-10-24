@@ -1,0 +1,11 @@
+{
+  "id": "HI-C386-khalna",
+  "pathSegment": "HI-PATH-386-SAHARA386",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-386-SAHARA386",
+      "order": 1
+    }
+  ]
+}

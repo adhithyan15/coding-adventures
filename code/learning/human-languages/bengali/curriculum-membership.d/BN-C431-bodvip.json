@@ -1,0 +1,11 @@
+{
+  "id": "BN-C431-bodvip",
+  "pathSegment": "BN-PATH-431-UPOSAGOR431",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-431-UPOSAGOR431",
+      "order": 2
+    }
+  ]
+}

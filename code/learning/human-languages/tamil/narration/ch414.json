@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 414,
+  "title": "At the Border",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:584564840b5c6276",
+  "lessons": [
+    {
+      "id": "TA-C414-vica",
+      "sequence": 23810,
+      "title": "விசா (vicā) — a visa",
+      "headword": "விசா",
+      "romanization": "vicā",
+      "gloss": "a visa",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8db30fb1296cdafb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for customs, then the Tamil for immigration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விசா",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விசா — vicā — \"a visa\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்த நாட்டுக்குப் போக விசா வேண்டும். anta nāṭṭukkup pōka vicā vēṇṭum. You need a visa to go to that country."
+            },
+            {
+              "kind": "speech",
+              "text": "விசா (vicā) வாங்கு is to get a visa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விசா (vicā) is a loan from English visa."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anta nāṭṭukkup pōka vicā vēṇṭum. — You need a visa to go to that country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anta nāṭṭukkup pōka vicā vēṇṭum.* — You need a visa to go to that country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for customs, then the Tamil for immigration, then say vicā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for customs, then the Tamil for immigration, then say *vicā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விசா (vicā) mean? (\"A visa\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C414-ellai",
+      "sequence": 23820,
+      "title": "எல்லை (ellai) — a border; a limit",
+      "headword": "எல்லை",
+      "romanization": "ellai",
+      "gloss": "a border; a limit",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2d258fd31831235",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for immigration, then the Tamil for a visa."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எல்லை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எல்லை — ellai — \"a border; a limit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எல்லையில் நீண்ட வரிசை இருந்தது. ellaiyil nīṇṭa varicai iruntatu. There was a long queue at the border."
+            },
+            {
+              "kind": "speech",
+              "text": "எல்லைக் கோடு is a boundary line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எல்லை (ellai) is native Dravidian (DEDR 846), \"a limit, a border, a boundary\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellaiyil nīṇṭa varicai iruntatu. — There was a long queue at the border.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellaiyil nīṇṭa varicai iruntatu.* — There was a long queue at the border.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for immigration, then the Tamil for a visa, then say ellai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for immigration, then the Tamil for a visa, then say *ellai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எல்லை (ellai) mean? (\"A border; a limit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C414-cavati",
+      "sequence": 23830,
+      "title": "சாவடி (cāvaṭi) — a checkpoint booth; a booth",
+      "headword": "சாவடி",
+      "romanization": "cāvaṭi",
+      "gloss": "a checkpoint booth; a booth",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c8ad5dead0e89c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a visa, then the Tamil for a border."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சாவடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாவடி — cāvaṭi — \"a checkpoint booth; a booth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சுங்கச் சாவடியில் வண்டிகள் நின்றன. cuṅkac cāvaṭiyil vaṇṭikaḷ niṉṟaṉa. The vehicles stopped at the toll booth."
+            },
+            {
+              "kind": "speech",
+              "text": "சுங்கச் சாவடி (cāvaṭi) is a toll booth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாவடி (cāvaṭi), \"a booth, a rest house\", is an old Tamil word whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāvaṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāvaṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāvaṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāvaṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuṅkac cāvaṭiyil vaṇṭikaḷ niṉṟaṉa. — The vehicles stopped at the toll booth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuṅkac cāvaṭiyil vaṇṭikaḷ niṉṟaṉa.* — The vehicles stopped at the toll booth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a visa, then the Tamil for a border, then say cāvaṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a visa, then the Tamil for a border, then say *cāvaṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சாவடி (cāvaṭi) mean? (\"A checkpoint booth; a booth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C414-nulaivayil",
+      "sequence": 23840,
+      "title": "நுழைவாயில் (nuḻaivāyil) — an entrance; a gateway",
+      "headword": "நுழைவாயில்",
+      "romanization": "nuḻaivāyil",
+      "gloss": "an entrance; a gateway",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19c9f2a3dcb6bb2e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a border, then the Tamil for a checkpoint booth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நுழைவாயில்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நுழைவாயில் — nuḻaivāyil — \"an entrance; a gateway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நுழைவாயிலில் காவலர்கள் நின்றார்கள். nuḻaivāyilil kāvalarkaḷ niṉṟārkaḷ. Guards stood at the entrance."
+            },
+            {
+              "kind": "speech",
+              "text": "நுழை, to enter, + வாயில், a doorway."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நுழைவாயில் (nuḻaivāyil) is built from நுழை, \"to enter\" (DEDR 3714), and வாயில், \"a doorway, a gate\" (DEDR 5354)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuḻaivāyil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuḻaivāyil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuḻaivāyil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuḻaivāyil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuḻaivāyilil kāvalarkaḷ niṉṟārkaḷ. — Guards stood at the entrance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuḻaivāyilil kāvalarkaḷ niṉṟārkaḷ.* — Guards stood at the entrance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a border, then the Tamil for a checkpoint booth, then say nuḻaivāyil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a border, then the Tamil for a checkpoint booth, then say *nuḻaivāyil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நுழைவாயில் (nuḻaivāyil) mean? (\"An entrance; a gateway\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C414-parimutal-cey",
+      "sequence": 23850,
+      "title": "பறிமுதல் செய் (paṟimutal cey) — to confiscate; to seize",
+      "headword": "பறிமுதல் செய்",
+      "romanization": "paṟimutal cey",
+      "gloss": "to confiscate; to seize",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d13eed3b352555d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a checkpoint booth, then the Tamil for an entrance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பறிமுதல் செய்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பறிமுதல் செய் — paṟimutal cey — \"to confiscate; to seize\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அதிகாரிகள் அவனுடைய பையைப் பறிமுதல் செய்தார்கள். atikārikaḷ avaṉuṭaiya paiyaip paṟimutal ceytārkaḷ. The officials confiscated his bag."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பறிமுதல் செய்தேன், paṟimutal ceytēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is seized takes -ஐ: பையைப் பறிமுதல் செய் (paṟimutal cey)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பறிமுதல் செய் (paṟimutal cey) joins the noun பறிமுதல், \"confiscation\", whose origin is not settled, to செய், \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṟimutal cey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṟimutal cey*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṟimutal cey, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṟimutal cey*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atikārikaḷ avaṉuṭaiya paiyaip paṟimutal ceytārkaḷ. — The officials confiscated his bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atikārikaḷ avaṉuṭaiya paiyaip paṟimutal ceytārkaḷ.* — The officials confiscated his bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a checkpoint booth, then the Tamil for an entrance, then say paṟimutal cey again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a checkpoint booth, then the Tamil for an entrance, then say *paṟimutal cey* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பறிமுதல் செய் (paṟimutal cey) mean? (\"To confiscate; to seize\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

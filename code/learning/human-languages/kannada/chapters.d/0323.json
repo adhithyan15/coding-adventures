@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "A Crime in the Town",
+  "label": "ch:ka-a-crime-in-the-town",
+  "canDo": "I can say a crime, to arrest, a police station, an investigation and to suspect.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C323-sankisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can say a crime, to arrest, a police station, an investigation and to suspect.",
+    "assesses": [
+      "KA-LEX-C323-APARADHA323-03",
+      "KA-LEX-C323-APARADHA323-04",
+      "KA-LEX-C323-APARADHA323-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:f8ce33ddb27d62ed",
+  "lessonIds": [
+    "TE-C380-kritam",
+    "TE-C380-antakumundu",
+    "TE-C380-appatinunci",
+    "TE-C380-mrtadeham",
+    "TE-C380-ventadu"
+  ],
+  "tex": "telugu/book/chapters/ch380-ever-since.tex"
+}

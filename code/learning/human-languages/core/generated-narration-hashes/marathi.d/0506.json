@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:2b2a29215fa32ee2",
+  "lessonIds": [
+    "MR-C506-lipik",
+    "MR-C506-sipai",
+    "MR-C506-sikka",
+    "MR-C506-kagadpatra",
+    "MR-C506-channi-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch506.txt",
+  "json": "marathi/narration/ch506.json",
+  "textHash": "fnv1a64:b458341caa1c885a",
+  "jsonHash": "fnv1a64:8460919d1f83bc1c",
+  "findings": []
+}

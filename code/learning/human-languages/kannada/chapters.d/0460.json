@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Finding a Room",
+  "label": "ch:ka-finding-a-room",
+  "canDo": "I can say lodging, a lodge, a chamber, a receptionist and a counter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C460-kauntar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can say lodging, a lodge, a chamber, a receptionist and a counter.",
+    "assesses": [
+      "KA-LEX-C460-VASATI460-03",
+      "KA-LEX-C460-VASATI460-04",
+      "KA-LEX-C460-VASATI460-05"
+    ]
+  }
+}

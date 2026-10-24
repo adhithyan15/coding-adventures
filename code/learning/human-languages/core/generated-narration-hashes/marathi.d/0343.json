@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:45e85882a1e01dd3",
+  "lessonIds": [
+    "MR-C343-mudda",
+    "MR-C343-tarka",
+    "MR-C343-yuktivad",
+    "MR-C343-mandne",
+    "MR-C343-purava"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch343.txt",
+  "json": "marathi/narration/ch343.json",
+  "textHash": "fnv1a64:c107f3e8643e185c",
+  "jsonHash": "fnv1a64:d164b62157e7490b",
+  "findings": []
+}

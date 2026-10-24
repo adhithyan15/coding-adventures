@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C550-ekopippikkuka",
+    "language": "malayalam",
+    "chapter": 550,
+    "sequence": 27710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05704c93097ea4ab"
+  },
+  "findings": []
+}

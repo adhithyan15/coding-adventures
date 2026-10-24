@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C457-qasima",
+    "language": "arabic",
+    "chapter": 457,
+    "sequence": 25550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:196cfe4a4f74c573"
+  },
+  "findings": []
+}

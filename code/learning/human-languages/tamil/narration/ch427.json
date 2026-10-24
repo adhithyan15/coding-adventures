@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 427,
+  "title": "Climate and Heat",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1dcbb94ba5e5ea8a",
+  "lessons": [
+    {
+      "id": "TA-C427-kalanilai",
+      "sequence": 24480,
+      "title": "காலநிலை (kālanilai) — climate",
+      "headword": "காலநிலை",
+      "romanization": "kālanilai",
+      "gloss": "climate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3a78240e438be7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to fill up, then the Tamil for to gasp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: காலநிலை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காலநிலை — kālanilai — \"climate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த ஊரின் காலநிலை எனக்குப் பிடிக்கும். inta ūriṉ kālanilai eṉakkup piṭikkum. I like the climate of this town."
+            },
+            {
+              "kind": "speech",
+              "text": "காலம், a season, + நிலை, a state."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காலநிலை (kālanilai) is built from காலம், \"time, a season\", borrowed from Sanskrit kāla (CDIAL 3084), and நிலை, \"a state, a standing\" (DEDR 3675)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālanilai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālanilai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālanilai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālanilai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta ūriṉ kālanilai eṉakkup piṭikkum. — I like the climate of this town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta ūriṉ kālanilai eṉakkup piṭikkum.* — I like the climate of this town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to fill up, then the Tamil for to gasp, then say kālanilai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to fill up, then the Tamil for to gasp, then say *kālanilai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does காலநிலை (kālanilai) mean? (\"Climate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C427-veppam",
+      "sequence": 24490,
+      "title": "வெப்பம் (veppam) — warmth; heat",
+      "headword": "வெப்பம்",
+      "romanization": "veppam",
+      "gloss": "warmth; heat",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6621669769a96e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to gasp, then the Tamil for climate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வெப்பம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெப்பம் — veppam — \"warmth; heat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கோடையில் வெப்பம் அதிகமாக இருக்கும். kōṭaiyil veppam atikamāka irukkum. In summer the heat is high."
+            },
+            {
+              "kind": "speech",
+              "text": "A -அம் noun: வெப்பத்தால், because of the heat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெப்பம் (veppam) is native Dravidian (DEDR 5517), \"heat, warmth\", from the root வே, \"to burn, to be hot\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veppam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veppam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veppam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veppam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōṭaiyil veppam atikamāka irukkum. — In summer the heat is high.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōṭaiyil veppam atikamāka irukkum.* — In summer the heat is high.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to gasp, then the Tamil for climate, then say veppam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to gasp, then the Tamil for climate, then say *veppam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வெப்பம் (veppam) mean? (\"Warmth; heat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C427-veppanilai",
+      "sequence": 24500,
+      "title": "வெப்பநிலை (veppanilai) — temperature",
+      "headword": "வெப்பநிலை",
+      "romanization": "veppanilai",
+      "gloss": "temperature",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d46524cba62c8d6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for climate, then the Tamil for warmth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வெப்பநிலை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெப்பநிலை — veppanilai — \"temperature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மதியம் வெப்பநிலை மிக அதிகமாக இருந்தது. matiyam veppanilai mika atikamāka iruntatu. At noon the temperature was very high."
+            },
+            {
+              "kind": "speech",
+              "text": "வெப்பம் (veppam), heat, + நிலை, a state: the ம் drops."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெப்பநிலை (veppanilai) is built from வெப்பம் (veppam), \"heat\" (DEDR 5517), and நிலை, \"a state\" (DEDR 3675)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veppanilai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veppanilai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veppanilai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veppanilai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matiyam veppanilai mika atikamāka iruntatu. — At noon the temperature was very high.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matiyam veppanilai mika atikamāka iruntatu.* — At noon the temperature was very high.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for climate, then the Tamil for warmth, then say veppanilai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for climate, then the Tamil for warmth, then say *veppanilai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வெப்பநிலை (veppanilai) mean? (\"Temperature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C427-koluttu",
+      "sequence": 24510,
+      "title": "கொளுத்து (koḷuttu) — to scorch; to set alight",
+      "headword": "கொளுத்து",
+      "romanization": "koḷuttu",
+      "gloss": "to scorch; to set alight",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb2b88e2f16a9083",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for warmth, then the Tamil for temperature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கொளுத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொளுத்து — koḷuttu — \"to scorch; to set alight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மதியம் வெயில் கொளுத்தியது. matiyam veyil koḷuttiyatu. At noon the sun was scorching."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கொளுத்தினேன், koḷuttiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "With an object, to light: விளக்கைக் கொளுத்து (koḷuttu), to light a lamp."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொளுத்து (koḷuttu) is native Dravidian (DEDR 2158), \"to kindle, to set on fire\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḷuttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḷuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḷuttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḷuttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matiyam veyil koḷuttiyatu. — At noon the sun was scorching.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matiyam veyil koḷuttiyatu.* — At noon the sun was scorching.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for warmth, then the Tamil for temperature, then say koḷuttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for warmth, then the Tamil for temperature, then say *koḷuttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கொளுத்து (koḷuttu) mean? (\"To scorch; to set alight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C427-pulunku",
+      "sequence": 24520,
+      "title": "புழுங்கு (puḻuṅku) — to be sultry; to be stuffy",
+      "headword": "புழுங்கு",
+      "romanization": "puḻuṅku",
+      "gloss": "to be sultry; to be stuffy",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f5a737b45ac436a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for temperature, then the Tamil for to scorch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புழுங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புழுங்கு — puḻuṅku — \"to be sultry; to be stuffy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழைக்கு முன்பு மிகவும் புழுங்கியது. maḻaikku muṉpu mikavum puḻuṅkiyatu. Before the rain it was very sultry."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): புழுங்கியது, puḻuṅkiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of food, to be steamed; புழுங்கல் அரிசி is parboiled rice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புழுங்கு (puḻuṅku) is native Dravidian (DEDR 4315), \"to be steamed, parboiled; to be sultry\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puḻuṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puḻuṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puḻuṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puḻuṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻaikku muṉpu mikavum puḻuṅkiyatu. — Before the rain it was very sultry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻaikku muṉpu mikavum puḻuṅkiyatu.* — Before the rain it was very sultry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for temperature, then the Tamil for to scorch, then say puḻuṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for temperature, then the Tamil for to scorch, then say *puḻuṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புழுங்கு (puḻuṅku) mean? (\"To be sultry; to be stuffy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 408,
+  "title": "Bends and Slopes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a96bb35a4ac4c5a4",
+  "lessons": [
+    {
+      "id": "TA-C408-valaivu",
+      "sequence": 23510,
+      "title": "வளைவு (vaḷaivu) — a curve; a bend",
+      "headword": "வளைவு",
+      "romanization": "vaḷaivu",
+      "gloss": "a curve; a bend",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f517ede03c3fa16f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a route, then the Tamil for to pull over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வளைவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வளைவு — vaḷaivu — \"a curve; a bend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த மலைச் சாலையில் நிறைய வளைவுகள் இருக்கின்றன. inta malaic cālaiyil niṟaiya vaḷaivukaḷ irukkiṉṟaṉa. There are many bends on this hill road."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: வளைவுகள், vaḷaivukaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "From வளை, to bend, + the noun ending -வு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வளைவு (vaḷaivu) is built from வளை, \"to bend, to become crooked\" (DEDR 5314), with the noun ending -vu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷaivu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷaivu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷaivu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷaivu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta malaic cālaiyil niṟaiya vaḷaivukaḷ irukkiṉṟaṉa. — There are many bends on this hill road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta malaic cālaiyil niṟaiya vaḷaivukaḷ irukkiṉṟaṉa.* — There are many bends on this hill road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a route, then the Tamil for to pull over, then say vaḷaivu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a route, then the Tamil for to pull over, then say *vaḷaivu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வளைவு (vaḷaivu) mean? (\"A curve; a bend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C408-carivu",
+      "sequence": 23520,
+      "title": "சரிவு (carivu) — a slope; a decline",
+      "headword": "சரிவு",
+      "romanization": "carivu",
+      "gloss": "a slope; a decline",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dce3c0644d573502",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to pull over, then the Tamil for a curve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சரிவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சரிவு — carivu — \"a slope; a decline\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மலைச் சரிவில் ஆடுகள் மேய்ந்துகொண்டிருந்தன. malaic carivil āṭukaḷ mēyntukoṇṭiruntaṉa. Goats were grazing on the hillside."
+            },
+            {
+              "kind": "speech",
+              "text": "From சரி, to slide down, + -வு; விலைச் சரிவு (carivu) is a fall in prices."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சரிவு (carivu) is built from சரி, \"to slip away, to slide down\" (DEDR 2360), with the noun ending -vu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carivu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carivu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carivu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carivu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malaic carivil āṭukaḷ mēyntukoṇṭiruntaṉa. — Goats were grazing on the hillside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malaic carivil āṭukaḷ mēyntukoṇṭiruntaṉa.* — Goats were grazing on the hillside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to pull over, then the Tamil for a curve, then say carivu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to pull over, then the Tamil for a curve, then say *carivu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சரிவு (carivu) mean? (\"A slope; a decline\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C408-erram",
+      "sequence": 23530,
+      "title": "ஏற்றம் (ēṟṟam) — an ascent; a rise",
+      "headword": "ஏற்றம்",
+      "romanization": "ēṟṟam",
+      "gloss": "an ascent; a rise",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:627e68aa1c8341d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a curve, then the Tamil for a slope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஏற்றம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏற்றம் — ēṟṟam — \"an ascent; a rise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த ஏற்றத்தில் மிதிவண்டி ஓட்டுவது கடினம். inta ēṟṟattil mitivaṇṭi ōṭṭuvatu kaṭiṉam. Riding a bicycle up this climb is hard."
+            },
+            {
+              "kind": "speech",
+              "text": "Its opposite is இறக்கம், a descent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏற்றம் (ēṟṟam) is built from ஏறு, \"to climb, to rise\" (DEDR 916), with the noun ending -am and the doubled stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṟṟam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṟṟam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṟṟam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṟṟam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta ēṟṟattil mitivaṇṭi ōṭṭuvatu kaṭiṉam. — Riding a bicycle up this climb is hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta ēṟṟattil mitivaṇṭi ōṭṭuvatu kaṭiṉam.* — Riding a bicycle up this climb is hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a curve, then the Tamil for a slope, then say ēṟṟam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a curve, then the Tamil for a slope, then say *ēṟṟam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஏற்றம் (ēṟṟam) mean? (\"An ascent; a rise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C408-kavil",
+      "sequence": 23540,
+      "title": "கவிழ் (kaviḻ) — to overturn; to capsize",
+      "headword": "கவிழ்",
+      "romanization": "kaviḻ",
+      "gloss": "to overturn; to capsize",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44e9f56ecb06da2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a slope, then the Tamil for an ascent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கவிழ்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கவிழ் — kaviḻ — \"to overturn; to capsize\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வளைவில் ஒரு லாரி கவிழ்ந்தது. vaḷaivil oru lāri kaviḻntatu. A lorry overturned on the bend."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): கவிழ்ந்தது, kaviḻntatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a boat, to capsize: படகு கவிழ்ந்தது."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கவிழ் (kaviḻ) is native Dravidian (DEDR 1335), \"to be turned bottom upwards, to capsize\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaviḻ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaviḻ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaviḻ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaviḻ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷaivil oru lāri kaviḻntatu. — A lorry overturned on the bend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷaivil oru lāri kaviḻntatu.* — A lorry overturned on the bend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a slope, then the Tamil for an ascent, then say kaviḻ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a slope, then the Tamil for an ascent, then say *kaviḻ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கவிழ் (kaviḻ) mean? (\"To overturn; to capsize\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C408-culal",
+      "sequence": 23550,
+      "title": "சுழல் (cuḻal) — to spin; to whirl",
+      "headword": "சுழல்",
+      "romanization": "cuḻal",
+      "gloss": "to spin; to whirl",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8cfa00d97edf7ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an ascent, then the Tamil for to overturn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சுழல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுழல் — cuḻal — \"to spin; to whirl\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சேற்றில் சக்கரம் வேகமாகச் சுழன்றது. cēṟṟil cakkaram vēkamākac cuḻaṉṟatu. The wheel spun fast in the mud."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): சுழன்றது, cuḻaṉṟatu."
+            },
+            {
+              "kind": "speech",
+              "text": "ல் meets the past -ந்த- as ன்ற: சுழன்றது, it spun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுழல் (cuḻal) is native Dravidian (DEDR 2698), \"to whirl, to spin, to turn on an axis\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuḻal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuḻal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuḻal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuḻal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēṟṟil cakkaram vēkamākac cuḻaṉṟatu. — The wheel spun fast in the mud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēṟṟil cakkaram vēkamākac cuḻaṉṟatu.* — The wheel spun fast in the mud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an ascent, then the Tamil for to overturn, then say cuḻal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an ascent, then the Tamil for to overturn, then say *cuḻal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சுழல் (cuḻal) mean? (\"To spin; to whirl\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

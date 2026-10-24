@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:f8c8b9215c0b8fba",
+  "lessonIds": [
+    "BN-C314-shotru",
+    "BN-C314-soinyo",
+    "BN-C314-akromon-kora",
+    "BN-C314-hamla",
+    "BN-C314-dokhol-kora"
+  ],
+  "tex": "bengali/book/chapters/ch314-war-comes.tex"
+}

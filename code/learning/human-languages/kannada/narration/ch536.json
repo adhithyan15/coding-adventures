@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 536,
+  "title": "On Stage",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c673544112d20a4e",
+  "lessons": [
+    {
+      "id": "KA-C536-nataka",
+      "sequence": 27360,
+      "title": "ನಾಟಕ (nāṭaka) — a stage play; a drama",
+      "headword": "ನಾಟಕ",
+      "romanization": "nāṭaka",
+      "gloss": "a stage play; a drama",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a6cc67a0771e080",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a violin, then the Kannada for to beat a drum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಾಟಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಟಕ — nāṭaka — \"a stage play; a drama\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಶಾಲೆಯ ನಾಟಕದಲ್ಲಿ ನಾನು ರಾಜನ ಪಾತ್ರ ಮಾಡಿದೆ. śāleya nāṭakadalli nānu rājana pātra māḍide. I played the king's part in the school play."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾಟಕ (nāṭaka) ಆಡು, to stage a play."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಟಕ (nāṭaka) is borrowed from Sanskrit nāṭaka, \"a dancer, an actor\", and later a drama (CDIAL 7045), built on naṭa, \"an actor\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāleya nāṭakadalli nānu rājana pātra māḍide. — I played the king's part in the school play.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāleya nāṭakadalli nānu rājana pātra māḍide.* — I played the king's part in the school play.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a violin, then the Kannada for to beat a drum, then say nāṭaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a violin, then the Kannada for to beat a drum, then say *nāṭaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಾಟಕ (nāṭaka) mean? (\"A stage play; a drama\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C536-rangabhumi",
+      "sequence": 27370,
+      "title": "ರಂಗಭೂಮಿ (raṅgabhūmi) — theatre; the stage",
+      "headword": "ರಂಗಭೂಮಿ",
+      "romanization": "raṅgabhūmi",
+      "gloss": "theatre; the stage",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1dffd3ac665be02a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to beat a drum, then the Kannada for a stage play."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ರಂಗಭೂಮಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಂಗಭೂಮಿ — raṅgabhūmi — \"theatre; the stage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಮಾವ ರಂಗಭೂಮಿಯ ಹಳೆಯ ನಟ. nanna māva raṅgabhūmiya haḷeya naṭa. My uncle is a veteran stage actor."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಂಗ, stage + ಭೂಮಿ, ground."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಂಗಭೂಮಿ (raṅgabhūmi) is a learned compound built from Sanskrit raṅga, \"a place of public amusement, a stage\" (CDIAL 10561), and bhūmi, \"earth, ground\" (CDIAL 9557)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṅgabhūmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṅgabhūmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṅgabhūmi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṅgabhūmi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna māva raṅgabhūmiya haḷeya naṭa. — My uncle is a veteran stage actor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna māva raṅgabhūmiya haḷeya naṭa.* — My uncle is a veteran stage actor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to beat a drum, then the Kannada for a stage play, then say raṅgabhūmi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to beat a drum, then the Kannada for a stage play, then say *raṅgabhūmi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ರಂಗಭೂಮಿ (raṅgabhūmi) mean? (\"Theatre; the stage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C536-mukhavada",
+      "sequence": 27380,
+      "title": "ಮುಖವಾಡ (mukhavāḍa) — a mask",
+      "headword": "ಮುಖವಾಡ",
+      "romanization": "mukhavāḍa",
+      "gloss": "a mask",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f21746a2685a8ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a stage play, then the Kannada for theatre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮುಖವಾಡ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಖವಾಡ — mukhavāḍa — \"a mask\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾಟಕದಲ್ಲಿ ನಟರು ಮುಖವಾಡ ಹಾಕಿದ್ದರು. nāṭakadalli naṭaru mukhavāḍa hākiddaru. The actors wore masks in the play."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a false face: ಅವನ ಮುಖವಾಡ (mukhavāḍa) ಕಳಚಿತು, his mask slipped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಖವಾಡ (mukhavāḍa) is built on Sanskrit mukha, \"mouth, face\" (CDIAL 10158); the origin of the ending -vāḍa is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhavāḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhavāḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhavāḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhavāḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭakadalli naṭaru mukhavāḍa hākiddaru. — The actors wore masks in the play.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭakadalli naṭaru mukhavāḍa hākiddaru.* — The actors wore masks in the play.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a stage play, then the Kannada for theatre, then say mukhavāḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a stage play, then the Kannada for theatre, then say *mukhavāḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮುಖವಾಡ (mukhavāḍa) mean? (\"A mask\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C536-pradarsisu",
+      "sequence": 27390,
+      "title": "ಪ್ರದರ್ಶಿಸು (pradarśisu) — to perform; to put on show",
+      "headword": "ಪ್ರದರ್ಶಿಸು",
+      "romanization": "pradarśisu",
+      "gloss": "to perform; to put on show",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e94022db8f67bb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for theatre, then the Kannada for a mask."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರದರ್ಶಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರದರ್ಶಿಸು — pradarśisu — \"to perform; to put on show\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಕ್ಕಳು ವೇದಿಕೆಯ ಮೇಲೆ ಒಂದು ಸಣ್ಣ ನಾಟಕ ಪ್ರದರ್ಶಿಸಿದರು. makkaḷu vēdikeya mēle ondu saṇṇa nāṭaka pradarśisidaru. The children performed a short play on the stage."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪ್ರದರ್ಶಿಸಿದೆ, pradarśiside."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to exhibit: ಚಿತ್ರಗಳನ್ನು ಪ್ರದರ್ಶಿಸು (pradarśisu). ಪ್ರದರ್ಶನ is a show."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರದರ್ಶಿಸು (pradarśisu) is built on Sanskrit pradarśana, \"a showing, look, appearance\" (Monier-Williams), with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradarśisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradarśisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradarśisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradarśisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkaḷu vēdikeya mēle ondu saṇṇa nāṭaka pradarśisidaru. — The children performed a short play on the stage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkaḷu vēdikeya mēle ondu saṇṇa nāṭaka pradarśisidaru.* — The children performed a short play on the stage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for theatre, then the Kannada for a mask, then say pradarśisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for theatre, then the Kannada for a mask, then say *pradarśisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರದರ್ಶಿಸು (pradarśisu) mean? (\"To perform; to put on show\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C536-abhinayisu",
+      "sequence": 27400,
+      "title": "ಅಭಿನಯಿಸು (abhinayisu) — to act",
+      "headword": "ಅಭಿನಯಿಸು",
+      "romanization": "abhinayisu",
+      "gloss": "to act",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8692d4955cc9d083",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a mask, then the Kannada for to perform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಭಿನಯಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಭಿನಯಿಸು — abhinayisu — \"to act\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಸಿನಿಮಾದಲ್ಲಿ ನನ್ನ ಸ್ನೇಹಿತ ಅಭಿನಯಿಸಿದನು. ā sinimādalli nanna snēhita abhinayisidanu. My friend acted in that film."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಅಭಿನಯಿಸಿದೆ, abhinayiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಭಿನಯ is acting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಭಿನಯಿಸು (abhinayisu) is built on Sanskrit abhinaya, from abhi-nī, \"to bring near, to act out\" (Monier-Williams), with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhinayisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhinayisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhinayisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhinayisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā sinimādalli nanna snēhita abhinayisidanu. — My friend acted in that film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā sinimādalli nanna snēhita abhinayisidanu.* — My friend acted in that film.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a mask, then the Kannada for to perform, then say abhinayisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a mask, then the Kannada for to perform, then say *abhinayisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಭಿನಯಿಸು (abhinayisu) mean? (\"To act\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

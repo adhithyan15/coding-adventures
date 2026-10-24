@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C515-menporul",
+    "language": "tamil",
+    "chapter": 515,
+    "sequence": 29570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9e9c99356cd3a54"
+  },
+  "findings": []
+}

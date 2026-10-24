@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:61db040ed69c6ded",
+  "lessonIds": [
+    "AR-C318-hadara",
+    "AR-C318-athar",
+    "AR-C318-atlal",
+    "AR-C318-mabad",
+    "AR-C318-haram"
+  ],
+  "tex": "arabic/book/chapters/ch318-ancient-civilizations.tex"
+}

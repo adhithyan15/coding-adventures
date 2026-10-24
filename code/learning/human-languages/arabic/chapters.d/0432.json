@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Fuel and engines",
+  "label": "ch:ar-fuel-and-engines",
+  "canDo": "I can say fuel, petrol, an engine, brakes and to supply.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C432-zawwada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can say fuel, petrol, an engine, brakes and to supply.",
+    "assesses": [
+      "AR-LEX-C432-WAQUD432-03",
+      "AR-LEX-C432-WAQUD432-04",
+      "AR-LEX-C432-WAQUD432-05"
+    ]
+  }
+}

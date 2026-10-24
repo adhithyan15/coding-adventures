@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Feeling low",
+  "label": "ch:ar-feeling-low",
+  "canDo": "I can talk about gloom, nostalgia and frustration, and say that someone feels frustrated or bored of something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C494-malla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about gloom, nostalgia and frustration, and say that someone feels frustrated or bored of something.",
+    "assesses": [
+      "AR-LEX-C494-KAABA494-03",
+      "AR-LEX-C494-KAABA494-04",
+      "AR-LEX-C494-KAABA494-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:3c51cc2e1a56301a",
+  "lessonIds": [
+    "TA-C444-cintu",
+    "TA-C444-citaru",
+    "TA-C444-teri",
+    "TA-C444-karai-stain",
+    "TA-C444-oluku"
+  ],
+  "tex": "tamil/book/chapters/ch444-spills-and-stains.tex"
+}

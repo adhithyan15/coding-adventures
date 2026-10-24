@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:ec17b1bd0afecd0a",
+  "lessonIds": [
+    "TA-C481-totai",
+    "TA-C481-kutikal",
+    "TA-C481-nontu",
+    "TA-C481-itaru",
+    "TA-C481-tatumaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch481.txt",
+  "json": "tamil/narration/ch481.json",
+  "textHash": "fnv1a64:e80c53816cc10c0c",
+  "jsonHash": "fnv1a64:fe6e83154be1bc09",
+  "findings": []
+}

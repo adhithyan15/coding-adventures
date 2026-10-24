@@ -1,0 +1,11 @@
+{
+  "id": "MR-C398-partava",
+  "pathSegment": "MR-PATH-398-TIKITGHAR398",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-398-TIKITGHAR398",
+      "order": 2
+    }
+  ]
+}

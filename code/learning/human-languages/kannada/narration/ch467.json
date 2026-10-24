@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 467,
+  "title": "At the Market",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:89afb12ce9fab02f",
+  "lessons": [
+    {
+      "id": "KA-C467-marukatte",
+      "sequence": 23740,
+      "title": "ಮಾರುಕಟ್ಟೆ (mārukaṭṭe) — a marketplace; a market",
+      "headword": "ಮಾರುಕಟ್ಟೆ",
+      "romanization": "mārukaṭṭe",
+      "gloss": "a marketplace; a market",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff689e852fe5820d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a streetlight, then the Kannada for a drain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಾರುಕಟ್ಟೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾರುಕಟ್ಟೆ — mārukaṭṭe — \"a marketplace; a market\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಭಾನುವಾರ ಮಾರುಕಟ್ಟೆಯಲ್ಲಿ ತುಂಬಾ ಜನ ಇರುತ್ತಾರೆ. bhānuvāra mārukaṭṭeyalli tumbā jana iruttāre. On Sundays there are a lot of people in the market."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂತೆ is a weekly fair; ಮಾರುಕಟ್ಟೆ (mārukaṭṭe) is a standing market."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾರುಕಟ್ಟೆ (mārukaṭṭe) is a native Kannada compound of māṟu, \"to sell, to barter\" (DEDR 4834), and ಕಟ್ಟೆ, \"a raised platform\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārukaṭṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārukaṭṭe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārukaṭṭe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārukaṭṭe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhānuvāra mārukaṭṭeyalli tumbā jana iruttāre. — On Sundays there are a lot of people in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhānuvāra mārukaṭṭeyalli tumbā jana iruttāre.* — On Sundays there are a lot of people in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a streetlight, then the Kannada for a drain, then say mārukaṭṭe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a streetlight, then the Kannada for a drain, then say *mārukaṭṭe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಾರುಕಟ್ಟೆ (mārukaṭṭe) mean? (\"A marketplace; a market\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C467-pete",
+      "sequence": 23750,
+      "title": "ಪೇಟೆ (pēṭe) — a bazaar; a market street",
+      "headword": "ಪೇಟೆ",
+      "romanization": "pēṭe",
+      "gloss": "a bazaar; a market street",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9a56f73324f0dcc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a drain, then the Kannada for a marketplace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪೇಟೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೇಟೆ — pēṭe — \"a bazaar; a market street\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಳೆಯ ಪೇಟೆಯಲ್ಲಿ ಬಟ್ಟೆ ಅಗ್ಗವಾಗಿ ಸಿಗುತ್ತದೆ. haḷeya pēṭeyalli baṭṭe aggavāgi siguttade. Cloth is cheap in the old bazaar."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the market quarter of a town: ಪೇಟೆಗೆ ಹೋಗು, to go into town."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೇಟೆ (pēṭe) is a Kannada word for a market street whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēṭe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēṭe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēṭe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḷeya pēṭeyalli baṭṭe aggavāgi siguttade. — Cloth is cheap in the old bazaar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḷeya pēṭeyalli baṭṭe aggavāgi siguttade.* — Cloth is cheap in the old bazaar.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a drain, then the Kannada for a marketplace, then say pēṭe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a drain, then the Kannada for a marketplace, then say *pēṭe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪೇಟೆ (pēṭe) mean? (\"A bazaar; a market street\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C467-malige",
+      "sequence": 23760,
+      "title": "ಮಳಿಗೆ (maḷige) — a store; a shop unit",
+      "headword": "ಮಳಿಗೆ",
+      "romanization": "maḷige",
+      "gloss": "a store; a shop unit",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9d68af2a8d6a672",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a marketplace, then the Kannada for a bazaar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಳಿಗೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಳಿಗೆ — maḷige — \"a store; a shop unit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಬೀದಿಯಲ್ಲಿ ಬಟ್ಟೆಯ ಮಳಿಗೆಗಳು ಇವೆ. ī bīdiyalli baṭṭeya maḷigegaḷu ive. There are clothes stores on this street."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಮಳಿಗೆಗಳು, maḷigegaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A large shop or a showroom; ಅಂಗಡಿ is any shop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಳಿಗೆ (maḷige) is native Dravidian: DEDR 4757 lists Kannada maḷige, \"a warehouse, a shop\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷige",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷige*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷige, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷige*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī bīdiyalli baṭṭeya maḷigegaḷu ive. — There are clothes stores on this street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī bīdiyalli baṭṭeya maḷigegaḷu ive.* — There are clothes stores on this street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a marketplace, then the Kannada for a bazaar, then say maḷige again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a marketplace, then the Kannada for a bazaar, then say *maḷige* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಳಿಗೆ (maḷige) mean? (\"A store; a shop unit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C467-marata",
+      "sequence": 23770,
+      "title": "ಮಾರಾಟ (mārāṭa) — a sale; selling",
+      "headword": "ಮಾರಾಟ",
+      "romanization": "mārāṭa",
+      "gloss": "a sale; selling",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f5eb393fef779b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a bazaar, then the Kannada for a store."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಾರಾಟ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾರಾಟ — mārāṭa — \"a sale; selling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಬ್ಬದ ಮುಂಚೆ ಸೀರೆಗಳ ಮಾರಾಟ ಹೆಚ್ಚಾಗುತ್ತದೆ. habbada muñce sīregaḷa mārāṭa heccāguttade. Before a festival the sale of saris goes up."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಾರಾಟಕ್ಕೆ ಇದೆ, it is for sale; ಮಾರಾಟಗಾರ, a seller."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾರಾಟ (mārāṭa) is native Dravidian, a noun built on māṟu, \"to sell, to barter\" (DEDR 4834)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārāṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārāṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārāṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārāṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "habbada muñce sīregaḷa mārāṭa heccāguttade. — Before a festival the sale of saris goes up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *habbada muñce sīregaḷa mārāṭa heccāguttade.* — Before a festival the sale of saris goes up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a bazaar, then the Kannada for a store, then say mārāṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a bazaar, then the Kannada for a store, then say *mārāṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಾರಾಟ (mārāṭa) mean? (\"A sale; selling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C467-konduko",
+      "sequence": 23780,
+      "title": "ಕೊಂಡುಕೊ (koṇḍuko) — to buy for oneself; to purchase",
+      "headword": "ಕೊಂಡುಕೊ",
+      "romanization": "koṇḍuko",
+      "gloss": "to buy for oneself; to purchase",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a65130fe7a53515b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a store, then the Kannada for a sale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೊಂಡುಕೊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೊಂಡುಕೊ — koṇḍuko — \"to buy for oneself; to purchase\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಮಾರುಕಟ್ಟೆಯಲ್ಲಿ ಹೊಸ ಚಪ್ಪಲಿ ಕೊಂಡುಕೊಂಡೆ. nānu mārukaṭṭeyalli hosa cappali koṇḍukoṇḍe. I bought new sandals at the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಕೊಂಡುಕೊಂಡೆ, koṇḍukoṇḍe."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೊಂಡು is the past stem of ಕೊಳ್ಳು, to take or buy; ಕೊ adds for oneself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೊಂಡುಕೊ (koṇḍuko) is native Dravidian: koṇḍu, the past stem of koḷ, koḷḷu, \"to take, to obtain, to buy\" (DEDR 2151), with the reflexive -ko."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṇḍuko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṇḍuko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṇḍuko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṇḍuko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu mārukaṭṭeyalli hosa cappali koṇḍukoṇḍe. — I bought new sandals at the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu mārukaṭṭeyalli hosa cappali koṇḍukoṇḍe.* — I bought new sandals at the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a store, then the Kannada for a sale, then say koṇḍuko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a store, then the Kannada for a sale, then say *koṇḍuko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೊಂಡುಕೊ (koṇḍuko) mean? (\"To buy for oneself; to purchase\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

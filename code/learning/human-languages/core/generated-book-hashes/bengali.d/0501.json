@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:d65bf88f58f2ad82",
+  "lessonIds": [
+    "BN-C501-bisheshogyo",
+    "BN-C501-upodeshta",
+    "BN-C501-onubadok",
+    "BN-C501-sthopoti",
+    "BN-C501-nirnoy-kora"
+  ],
+  "tex": "bengali/book/chapters/ch501-experts.tex"
+}

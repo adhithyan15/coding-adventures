@@ -112,6 +112,49 @@ The existing IR already has useful downstream capacity for the next group:
 
 These should be implemented before inventing new IR families.
 
+The native ER subset accepts quoted entity names and quoted aliases, including
+spaces and Unicode text, through its dedicated source grammar. Quoted
+relationship roles and attribute comments are unquoted into structural semantic
+IR, measured by structural layout, and lowered as backend-neutral shaped text
+before native rendering. Single-line accessibility titles and single-line or
+braced multiline descriptions survive structural semantic IR and layout, then
+lower to backend-neutral PaintScene metadata. Backtick-escaped attribute types
+and names preserve punctuation after unquoting, then flow through entity
+compartments, structural layout, and backend-neutral text paint. Attribute types
+with comma-separated parameters, such as spatial reference identifiers, remain
+single semantic field types through the same layout and paint pipeline. Repeated
+declarations of one entity append split attribute blocks into one ordered field
+compartment before structural layout and paint. Statement keywords remain valid
+attribute names inside an entity block, matching Mermaid's block-scoped lexer,
+and reach the same structural and paint pipeline. Bracketed attribute names with
+parenthesized suffixes preserve their complete source spelling through semantic
+IR, layout, and paint. ER headers, statements, directions, and word-form
+relationships and attribute key markers match case-insensitively from family
+detection through paint, while authored entity and attribute text retains its
+original case. Numeric `1` cardinalities are disambiguated from numeric entity
+identifiers, including compact relationship operators. Quoted entity names follow
+the pinned non-empty character constraints without narrowing quoted relationship
+roles or attribute comments. Generic, array, nullable, and length-limited
+attribute types preserve ordered key lists and comments through paint. Aliased
+declarations update entities introduced by earlier relationships, preserve
+authored IDs, and combine with shorthand classes through semantic IR, layout,
+and paint. The `u` parent cardinality is disambiguated from an entity literally
+named `u`, with both forms preserved through semantic IR, layout, and paint. ER
+entities accept empty blocks and single-line compact attribute blocks without
+requiring whitespace around braces, preserving any fields through semantic IR,
+layout, and paint. HTML-style break variants in quoted relationship roles become
+semantic newlines and lower as multiline backend-neutral text. ER remains
+prototype-safe for entity and class identifiers such as `__proto__`,
+`constructor`, and `prototype` through semantic IR, style resolution, layout,
+and paint. Explicit empty quoted relationship roles remain distinguishable in
+semantic IR and layout while lowering without empty label geometry. ER remains
+compatible with integer and decimal entity identifiers as standalone entities,
+attribute owners, and relationship endpoints through semantic IR, layout, and
+paint. Recursive ER relationships preserve a single semantic entity and route
+as an exterior loop with canvas-aware backend-neutral geometry. ER remains
+partial while the rest of the pinned upstream syntax and visual corpus is
+incomplete.
+
 ## Required New Semantic Families
 
 The remaining languages cluster into reusable domains:

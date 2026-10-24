@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:a8225ddc84468830",
+  "lessonIds": [
+    "HI-C512-kapas",
+    "HI-C512-carkha",
+    "HI-C512-kaatna",
+    "HI-C512-kargha",
+    "HI-C512-gath"
+  ],
+  "tex": "hindi/book/chapters/ch512-thread-and-loom.tex"
+}

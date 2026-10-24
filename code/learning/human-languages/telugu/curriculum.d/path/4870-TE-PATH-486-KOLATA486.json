@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-486-KOLATA486",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-486-KOLATA486"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:3846115ad02fac49",
+  "lessonIds": [
+    "MR-C412-disa",
+    "MR-C412-hokayantra",
+    "MR-C412-khun",
+    "MR-C412-bharkatne",
+    "MR-C412-ghutmalne"
+  ],
+  "tex": "marathi/book/chapters/ch412-finding-the-way.tex"
+}

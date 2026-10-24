@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 425,
+  "title": "On board",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6e49c64d43bca291",
+  "lessons": [
+    {
+      "id": "AR-C425-mudif",
+      "sequence": 23900,
+      "title": "مضيف (muḍīf) — a flight attendant; a host",
+      "headword": "مضيف",
+      "romanization": "muḍīf",
+      "gloss": "a flight attendant; a host",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06cc1d35891f4e37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a seat belt, then the Arabic for a crew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مضيف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مضيف — muḍīf — \"a flight attendant; a host\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أحضر المضيف كوب ماء لأمي. aḥḍara al-muḍīf kūb māʾ li-ummī. The flight attendant brought my mother a cup of water."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman is muḍīfa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مضيف (muḍīf) is built on the native Arabic root ḍ-y-f, \"to be a guest\" (Lane). It is the Form IV participle, \"one who takes in guests\": a host, and on a plane a flight attendant."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muḍīf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muḍīf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muḍīf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muḍīf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḥḍara al-muḍīf kūb māʾ li-ummī. — The flight attendant brought my mother a cup of water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḥḍara al-muḍīf kūb māʾ li-ummī.* — The flight attendant brought my mother a cup of water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a seat belt, then the Arabic for a crew, then say muḍīf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a seat belt, then the Arabic for a crew, then say *muḍīf* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مضيف (muḍīf) mean? (\"A flight attendant; a host\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C425-rakib",
+      "sequence": 23910,
+      "title": "راكب (rākib) — a passenger; a rider",
+      "headword": "راكب",
+      "romanization": "rākib",
+      "gloss": "a passenger; a rider",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d32aa16a18b80af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a crew, then the Arabic for a flight attendant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: راكب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "راكب — rākib — \"a passenger; a rider\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نام راكب بجانبي أثناء الرحلة. nāma rākib bi-jānibī athnāʾa ar-riḥla. A passenger beside me slept during the flight."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ركاب, rukkāb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "راكب (rākib) is built on the native Arabic root r-k-b, \"to ride\" (Lane). It is the active participle of rakiba, \"to ride\": one who rides."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rākib",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rākib*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rākib, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rākib*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāma rākib bi-jānibī athnāʾa ar-riḥla. — A passenger beside me slept during the flight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāma rākib bi-jānibī athnāʾa ar-riḥla.* — A passenger beside me slept during the flight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a crew, then the Arabic for a flight attendant, then say rākib again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a crew, then the Arabic for a flight attendant, then say *rākib* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does راكب (rākib) mean? (\"A passenger; a rider\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C425-wijha",
+      "sequence": 23920,
+      "title": "وجهة (wijha) — a destination; a direction",
+      "headword": "وجهة",
+      "romanization": "wijha",
+      "gloss": "a destination; a direction",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b89eca37e0a5179",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a flight attendant, then the Arabic for a passenger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وجهة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وجهة — wijha — \"a destination; a direction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وجهتنا مدينة على البحر. wijhatunā madīna ʿalā al-baḥr. Our destination is a city by the sea."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وجهة (wijha) is built on the native Arabic root w-j-h, \"the face; to face\" (Lane). A wijha is the place one turns one's face towards."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wijha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wijha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wijha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wijha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wijhatunā madīna ʿalā al-baḥr. — Our destination is a city by the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wijhatunā madīna ʿalā al-baḥr.* — Our destination is a city by the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a flight attendant, then the Arabic for a passenger, then say wijha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a flight attendant, then the Arabic for a passenger, then say *wijha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وجهة (wijha) mean? (\"A destination; a direction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C425-shadda",
+      "sequence": 23930,
+      "title": "شد (shadda) — to tighten; to fasten",
+      "headword": "شد",
+      "romanization": "shadda",
+      "gloss": "to tighten; to fasten",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b9e54e9c5964606",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a passenger, then the Arabic for a destination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شد — shadda — \"to tighten; to fasten\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شد الراكب حزامه قبل الهبوط. shadda ar-rākib ḥizāmahu qabla al-hubūṭ. The passenger fastened his belt before landing."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يشد, yashudd."
+            },
+            {
+              "kind": "speech",
+              "text": "A doubled verb: shadadtu, \"I tightened\", unfolds the two d's."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شد (shadda) is built on the native Arabic root sh-d-d, \"to be firm; to bind tightly\" (Lane). It is the plain verb of a doubled root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shadda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shadda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shadda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shadda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shadda ar-rākib ḥizāmahu qabla al-hubūṭ. — The passenger fastened his belt before landing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shadda ar-rākib ḥizāmahu qabla al-hubūṭ.* — The passenger fastened his belt before landing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a passenger, then the Arabic for a destination, then say shadda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a passenger, then the Arabic for a destination, then say *shadda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شد (shadda) mean? (\"To tighten; to fasten\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C425-wusul",
+      "sequence": 23940,
+      "title": "وصول (wuṣūl) — arrival",
+      "headword": "وصول",
+      "romanization": "wuṣūl",
+      "gloss": "arrival",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed5ca4d7d92f74cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a destination, then the Arabic for to tighten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وصول",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وصول — wuṣūl — \"arrival\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اتصلت بأمي بعد الوصول. ittaṣaltu bi-ummī baʿda al-wuṣūl. I phoned my mother after arrival."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وصول (wuṣūl) is built on the native Arabic root w-ṣ-l, \"to arrive, to reach\" (Lane). It is the verbal noun of waṣala, \"to arrive\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wuṣūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wuṣūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wuṣūl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wuṣūl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ittaṣaltu bi-ummī baʿda al-wuṣūl. — I phoned my mother after arrival.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ittaṣaltu bi-ummī baʿda al-wuṣūl.* — I phoned my mother after arrival.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a destination, then the Arabic for to tighten, then say wuṣūl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a destination, then the Arabic for to tighten, then say *wuṣūl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وصول (wuṣūl) mean? (\"Arrival\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Protest and Reform",
+  "label": "ch:te-protest-and-reform",
+  "canDo": "I can talk about protests, movements, demands and reforms.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C407-samskarana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can talk about protests, movements, demands and reforms.",
+    "assesses": [
+      "TE-LEX-C407-NIRASANA407-03",
+      "TE-LEX-C407-NIRASANA407-04",
+      "TE-LEX-C407-NIRASANA407-05"
+    ]
+  }
+}

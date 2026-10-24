@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:fc608a7f45584831",
+  "lessonIds": [
+    "HI-C290-sikayat",
+    "HI-C290-riport",
+    "HI-C290-likhvana",
+    "HI-C290-daroga",
+    "HI-C290-havalat"
+  ],
+  "tex": "hindi/book/chapters/ch290-at-the-police-station.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:f6c07e379f6bd9ca",
+  "lessonIds": [
+    "TA-C323-iruticcatanku",
+    "TA-C323-urvalam",
+    "TA-C323-malarvalaiyam",
+    "TA-C323-putai",
+    "TA-C323-kallarai"
+  ],
+  "tex": "tamil/book/chapters/ch323-a-funeral.tex"
+}

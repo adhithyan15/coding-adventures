@@ -1,0 +1,11 @@
+{
+  "id": "KA-C430-nibandhane",
+  "pathSegment": "KA-PATH-430-SANDARBHA430",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-430-SANDARBHA430",
+      "order": 3
+    }
+  ]
+}

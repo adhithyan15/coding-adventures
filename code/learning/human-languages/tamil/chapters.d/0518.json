@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Code and Robots",
+  "label": "ch:ta-code-and-robots",
+  "canDo": "I can talk about programs, codes and robots.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C518-ceyarkai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about programs, codes and robots.",
+    "assesses": [
+      "TA-LEX-C518-NIRAL518-03",
+      "TA-LEX-C518-NIRAL518-04",
+      "TA-LEX-C518-NIRAL518-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C433-bogi",
+    "language": "kannada",
+    "chapter": 433,
+    "sequence": 22020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1565cf1222d9e8c"
+  },
+  "findings": []
+}

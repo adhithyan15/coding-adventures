@@ -1,0 +1,11 @@
+{
+  "id": "KA-C380-amisa",
+  "pathSegment": "KA-PATH-380-MANAVOLISU380",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-380-MANAVOLISU380",
+      "order": 3
+    }
+  ]
+}

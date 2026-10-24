@@ -1,0 +1,11 @@
+{
+  "id": "MR-C444-osandne",
+  "pathSegment": "MR-PATH-444-DABKE444",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-444-DABKE444",
+      "order": 4
+    }
+  ]
+}

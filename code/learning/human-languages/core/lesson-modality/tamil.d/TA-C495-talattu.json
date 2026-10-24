@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C495-talattu",
+    "language": "tamil",
+    "chapter": 495,
+    "sequence": 28280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66e8f25b4b9062d5"
+  },
+  "findings": []
+}

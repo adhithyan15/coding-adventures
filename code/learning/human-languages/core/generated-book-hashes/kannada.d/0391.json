@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:141eeb37cd6aadf8",
+  "lessonIds": [
+    "KA-C391-samanate",
+    "KA-C391-taratamya-madu",
+    "KA-C391-sosisu",
+    "KA-C391-sabalikarana",
+    "KA-C391-baddhate"
+  ],
+  "tex": "kannada/book/chapters/ch391-fairness-for-all.tex"
+}

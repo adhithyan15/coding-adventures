@@ -1,0 +1,11 @@
+{
+  "id": "MR-C520-tumbne",
+  "pathSegment": "MR-PATH-520-NAL520",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-520-NAL520",
+      "order": 4
+    }
+  ]
+}

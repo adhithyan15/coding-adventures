@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C443-kiru",
+    "language": "tamil",
+    "chapter": 443,
+    "sequence": 25340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e77b8f53f87c0f7a"
+  },
+  "findings": []
+}

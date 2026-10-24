@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:f40723f91c72a55f",
+  "lessonIds": [
+    "AR-C546-shawt",
+    "AR-C546-mushajji",
+    "AR-C546-taadala",
+    "AR-C546-marrara",
+    "AR-C546-tanafasa"
+  ],
+  "tex": "arabic/book/chapters/ch546-match-day.tex"
+}

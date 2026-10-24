@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:f73d73f4d27c6e99",
+  "lessonIds": [
+    "TA-C327-munnor",
+    "TA-C327-vamcam",
+    "TA-C327-kutiyeru",
+    "TA-C327-netunkalam",
+    "TA-C327-purvikam"
+  ],
+  "tex": "tamil/book/chapters/ch327-ancestors.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:cc42598ed71cdb2e",
+  "lessonIds": [
+    "TE-C521-balahinata",
+    "TE-C521-nirasincu",
+    "TE-C521-cikkipovu",
+    "TE-C521-lavekku",
+    "TE-C521-posakaharam"
+  ],
+  "tex": "telugu/book/chapters/ch521-losing-strength.tex"
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 448,
+  "title": "Facing a Crisis",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c032a5ca2ee2ca4c",
+  "lessons": [
+    {
+      "id": "ML-C448-pratisandhi",
+      "sequence": 22200,
+      "title": "പ്രതിസന്ധി (pratisandhi) — a crisis",
+      "headword": "പ്രതിസന്ധി",
+      "romanization": "pratisandhi",
+      "gloss": "a crisis",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a14fb1ccdaee9ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to aim at, then the Malayalam for efficiency."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രതിസന്ധി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതിസന്ധി — pratisandhi — \"a crisis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കമ്പനി ഇപ്പോൾ വലിയ പ്രതിസന്ധിയിലാണ്. kampani ippōḷ valiya pratisandhiyilāṇŭ. The company is now in a big crisis."
+            },
+            {
+              "kind": "speech",
+              "text": "In a crisis: പ്രതിസന്ധിയിൽ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതിസന്ധി (pratisandhi) is built from Sanskrit prati-, \"against\", and saṁdhi, \"a junction, a joint\" (Monier-Williams). Monier-Williams gives pratisaṁdhi as \"reunion\"; the sense \"a crisis\" is the modern one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratisandhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratisandhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratisandhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratisandhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampani ippōḷ valiya pratisandhiyilāṇŭ. — The company is now in a big crisis.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampani ippōḷ valiya pratisandhiyilāṇŭ.* — The company is now in a big crisis.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to aim at, then the Malayalam for efficiency, then say pratisandhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to aim at, then the Malayalam for efficiency, then say *pratisandhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രതിസന്ധി (pratisandhi) mean? (\"A crisis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C448-velluvili",
+      "sequence": 22210,
+      "title": "വെല്ലുവിളി (velluviḷi) — a challenge",
+      "headword": "വെല്ലുവിളി",
+      "romanization": "velluviḷi",
+      "gloss": "a challenge",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4f913b188d30ac5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for efficiency, then the Malayalam for a crisis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വെല്ലുവിളി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വെല്ലുവിളി — velluviḷi — \"a challenge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുതിയ ജോലി ഒരു വലിയ വെല്ലുവിളിയാണ്. putiya jōli oru valiya velluviḷiyāṇŭ. The new job is a big challenge."
+            },
+            {
+              "kind": "speech",
+              "text": "To challenge is വെല്ലുവിളിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വെല്ലുവിളി (velluviḷi) is a native Malayalam compound: വെല്ലുക, \"to overcome, to surpass\" (DEDR 5493), and വിളി, \"a call\" (DEDR 5433): a call to see who wins."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velluviḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velluviḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velluviḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velluviḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya jōli oru valiya velluviḷiyāṇŭ. — The new job is a big challenge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya jōli oru valiya velluviḷiyāṇŭ.* — The new job is a big challenge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for efficiency, then the Malayalam for a crisis, then say velluviḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for efficiency, then the Malayalam for a crisis, then say *velluviḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വെല്ലുവിളി (velluviḷi) mean? (\"A challenge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C448-tatassam",
+      "sequence": 22220,
+      "title": "തടസ്സം (taṭassaṁ) — an obstacle",
+      "headword": "തടസ്സം",
+      "romanization": "taṭassaṁ",
+      "gloss": "an obstacle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8af69bb5c1d836e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a crisis, then the Malayalam for a challenge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തടസ്സം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തടസ്സം — taṭassaṁ — \"an obstacle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴ കളിക്ക് തടസ്സമായി. maḻa kaḷikkŭ taṭassamāyi. The rain became an obstacle to the game."
+            },
+            {
+              "kind": "speech",
+              "text": "To become an obstacle to: -ക്ക് തടസ്സമാകുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തടസ്സം (taṭassaṁ) is usually traced to native Dravidian തട, \"resistance, what impedes or stops\" (DEDR 3031); the ending -സ്സം is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭassaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭassaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭassaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭassaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻa kaḷikkŭ taṭassamāyi. — The rain became an obstacle to the game.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻa kaḷikkŭ taṭassamāyi.* — The rain became an obstacle to the game.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a crisis, then the Malayalam for a challenge, then say taṭassaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a crisis, then the Malayalam for a challenge, then say *taṭassaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തടസ്സം (taṭassaṁ) mean? (\"An obstacle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C448-visakalanam-ceyyuka",
+      "sequence": 22230,
+      "title": "വിശകലനം ചെയ്യുക (viśakalanaṁ ceyyuka) — to analyse",
+      "headword": "വിശകലനം ചെയ്യുക",
+      "romanization": "viśakalanaṁ ceyyuka",
+      "gloss": "to analyse",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f03b35523515db03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a challenge, then the Malayalam for an obstacle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിശകലനം ചെയ്യുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിശകലനം ചെയ്യുക — viśakalanaṁ ceyyuka — \"to analyse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവർ പ്രതിസന്ധിയുടെ കാരണങ്ങൾ വിശകലനം ചെയ്തു. avar pratisandhiyuṭe kāraṇaṅṅaḷ viśakalanaṁ ceytu. They analysed the causes of the crisis."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വിശകലനം ചെയ്തു, viśakalanaṁ ceytu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun വിശകലനം is an analysis."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിശകലനം ചെയ്യുക (viśakalanaṁ ceyyuka) is a phrase verb built on വിശകലനം, \"an analysis\", a learned noun formed on the Sanskrit participle viśakalita, \"separated, divided; sifted\" (Monier-Williams), with ചെയ്യുക, \"to do\": to take a thing apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśakalanaṁ ceyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśakalanaṁ ceyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśakalanaṁ ceyyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśakalanaṁ ceyyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar pratisandhiyuṭe kāraṇaṅṅaḷ viśakalanaṁ ceytu. — They analysed the causes of the crisis.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar pratisandhiyuṭe kāraṇaṅṅaḷ viśakalanaṁ ceytu.* — They analysed the causes of the crisis.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a challenge, then the Malayalam for an obstacle, then say viśakalanaṁ ceyyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a challenge, then the Malayalam for an obstacle, then say *viśakalanaṁ ceyyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിശകലനം ചെയ്യുക (viśakalanaṁ ceyyuka) mean? (\"To analyse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C448-riti",
+      "sequence": 22240,
+      "title": "രീതി (rīti) — a method; a manner",
+      "headword": "രീതി",
+      "romanization": "rīti",
+      "gloss": "a method; a manner",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f5ad228158681a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an obstacle, then the Malayalam for to analyse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: രീതി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രീതി — rīti — \"a method; a manner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഓരോരുത്തർക്കും പഠിക്കാൻ ഓരോ രീതിയുണ്ട്. ōrōruttarkkuṁ paṭhikkān ōrō rītiyuṇṭŭ. Everyone has their own way of learning."
+            },
+            {
+              "kind": "speech",
+              "text": "In that way: ആ രീതിയിൽ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രീതി (rīti) is borrowed from Sanskrit rīti, \"a going, a course; a stream\" (CDIAL 10751; Monier-Williams). A method is the path a thing follows."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rīti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rīti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rīti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rīti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōrōruttarkkuṁ paṭhikkān ōrō rītiyuṇṭŭ. — Everyone has their own way of learning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōrōruttarkkuṁ paṭhikkān ōrō rītiyuṇṭŭ.* — Everyone has their own way of learning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an obstacle, then the Malayalam for to analyse, then say rīti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an obstacle, then the Malayalam for to analyse, then say *rīti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does രീതി (rīti) mean? (\"A method; a manner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

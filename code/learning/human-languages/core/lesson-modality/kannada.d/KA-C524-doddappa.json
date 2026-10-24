@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C524-doddappa",
+    "language": "kannada",
+    "chapter": 524,
+    "sequence": 26750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:020018c9498deb74"
+  },
+  "findings": []
+}

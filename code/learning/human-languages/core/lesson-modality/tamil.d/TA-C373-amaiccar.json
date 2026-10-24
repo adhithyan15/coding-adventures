@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C373-amaiccar",
+    "language": "tamil",
+    "chapter": 373,
+    "sequence": 21440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9235c489ebcd7fb0"
+  },
+  "findings": []
+}

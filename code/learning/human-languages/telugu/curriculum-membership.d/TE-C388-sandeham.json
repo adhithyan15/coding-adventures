@@ -1,0 +1,11 @@
+{
+  "id": "TE-C388-sandeham",
+  "pathSegment": "TE-PATH-388-SANDEHAM388",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-388-SANDEHAM388",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:4b4249cf70481c9c",
+  "lessonIds": [
+    "KA-C390-kanunu",
+    "KA-C390-kayde",
+    "KA-C390-pariskarisu",
+    "KA-C390-adhikrta",
+    "KA-C390-hastaksepa",
+    "KA-R390-review-384-390"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch390.txt",
+  "json": "kannada/narration/ch390.json",
+  "textHash": "fnv1a64:7edd607f58fe6f28",
+  "jsonHash": "fnv1a64:e38419e03031d509",
+  "findings": []
+}

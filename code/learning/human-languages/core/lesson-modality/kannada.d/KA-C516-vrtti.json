@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C516-vrtti",
+    "language": "kannada",
+    "chapter": 516,
+    "sequence": 26330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed03bbd4d309c48f"
+  },
+  "findings": []
+}

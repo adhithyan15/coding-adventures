@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:c34d0ad6f052127d",
+  "lessonIds": [
+    "KA-C487-candamaruta",
+    "KA-C487-suntaragali",
+    "KA-C487-abbarisu",
+    "KA-C487-bhukusita",
+    "KA-C487-sunami"
+  ],
+  "tex": "kannada/book/chapters/ch487-storms-and-disasters.tex"
+}

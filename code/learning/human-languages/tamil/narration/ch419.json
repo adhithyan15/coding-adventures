@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 419,
+  "title": "A Comfortable Room",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a2a8d8ccde1d1e9d",
+  "lessons": [
+    {
+      "id": "TA-C419-kulirutti",
+      "sequence": 24070,
+      "title": "குளிரூட்டி (kuḷirūṭṭi) — an air conditioner",
+      "headword": "குளிரூட்டி",
+      "romanization": "kuḷirūṭṭi",
+      "gloss": "an air conditioner",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3767c1c8bb3df198",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for bedding, then the Tamil for to spread out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குளிரூட்டி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குளிரூட்டி — kuḷirūṭṭi — \"an air conditioner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அறையில் குளிரூட்டி இருந்ததால் நன்றாகத் தூங்கினோம். aṟaiyil kuḷirūṭṭi iruntatāl naṉṟākat tūṅkiṉōm. Because there was an air conditioner in the room, we slept well."
+            },
+            {
+              "kind": "speech",
+              "text": "குளிர், cold, + ஊட்டி, a feeder: a thing that feeds cold."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குளிரூட்டி (kuḷirūṭṭi) is a modern coinage built from குளிர், \"cold\" (DEDR 1834), and ஊட்டி, \"a feeder\", from ஊட்டு, \"to feed\" (DEDR 600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷirūṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷirūṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷirūṭṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷirūṭṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟaiyil kuḷirūṭṭi iruntatāl naṉṟākat tūṅkiṉōm. — Because there was an air conditioner in the room, we slept well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟaiyil kuḷirūṭṭi iruntatāl naṉṟākat tūṅkiṉōm.* — Because there was an air conditioner in the room, we slept well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for bedding, then the Tamil for to spread out, then say kuḷirūṭṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for bedding, then the Tamil for to spread out, then say *kuḷirūṭṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குளிரூட்டி (kuḷirūṭṭi) mean? (\"An air conditioner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C419-vennir",
+      "sequence": 24080,
+      "title": "வெந்நீர் (vennīr) — hot water",
+      "headword": "வெந்நீர்",
+      "romanization": "vennīr",
+      "gloss": "hot water",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c52392b775794e7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to spread out, then the Tamil for an air conditioner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வெந்நீர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெந்நீர் — vennīr — \"hot water\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குளிப்பதற்கு வெந்நீர் இல்லை. kuḷippataṟku vennīr illai. There is no hot water for bathing."
+            },
+            {
+              "kind": "speech",
+              "text": "வெம், hot, + நீர், water: the ம் becomes ந் before ந."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெந்நீர் (vennīr) is native Dravidian: DEDR 5517 lists it, \"hot water\", from the root வே, \"to burn, to be hot\", + நீர், \"water\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vennīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vennīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vennīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vennīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷippataṟku vennīr illai. — There is no hot water for bathing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷippataṟku vennīr illai.* — There is no hot water for bathing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to spread out, then the Tamil for an air conditioner, then say vennīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to spread out, then the Tamil for an air conditioner, then say *vennīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வெந்நீர் (vennīr) mean? (\"Hot water\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C419-porttu",
+      "sequence": 24090,
+      "title": "போர்த்து (pōrttu) — to wrap up; to cover with a cloth",
+      "headword": "போர்த்து",
+      "romanization": "pōrttu",
+      "gloss": "to wrap up; to cover with a cloth",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9d8e9474e4bbc0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an air conditioner, then the Tamil for hot water."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: போர்த்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போர்த்து — pōrttu — \"to wrap up; to cover with a cloth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குளிரில் நான் குழந்தையைப் போர்வையால் போர்த்தினேன். kuḷiril nāṉ kuḻantaiyaip pōrvaiyāl pōrttiṉēṉ. In the cold I wrapped the child in a blanket."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): போர்த்தினேன், pōrttiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "போர்வை, a blanket, comes from the same root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போர்த்து (pōrttu) is native Dravidian (DEDR 4590), from போர், \"to wrap, to cover\", the root of போர்வை, \"a blanket\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷiril nāṉ kuḻantaiyaip pōrvaiyāl pōrttiṉēṉ. — In the cold I wrapped the child in a blanket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷiril nāṉ kuḻantaiyaip pōrvaiyāl pōrttiṉēṉ.* — In the cold I wrapped the child in a blanket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an air conditioner, then the Tamil for hot water, then say pōrttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an air conditioner, then the Tamil for hot water, then say *pōrttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does போர்த்து (pōrttu) mean? (\"To wrap up; to cover with a cloth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C419-ilaipparu",
+      "sequence": 24100,
+      "title": "இளைப்பாறு (iḷaippāṟu) — to relax; to rest",
+      "headword": "இளைப்பாறு",
+      "romanization": "iḷaippāṟu",
+      "gloss": "to relax; to rest",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d88366139ca966c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for hot water, then the Tamil for to wrap up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இளைப்பாறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இளைப்பாறு — iḷaippāṟu — \"to relax; to rest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நீண்ட பயணத்துக்குப் பிறகு நாங்கள் விடுதியில் இளைப்பாறினோம். nīṇṭa payaṇattukkup piṟaku nāṅkaḷ viṭutiyil iḷaippāṟiṉōm. After the long journey we rested at the lodge."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): இளைப்பாறினேன், iḷaippāṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "இளை, to grow tired, + ஆறு, to cool down: to recover from tiredness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இளைப்பாறு (iḷaippāṟu) is built from இளை, \"to grow weary\" (DEDR 512), and ஆறு, \"to cool, to be eased\" (DEDR 404)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḷaippāṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḷaippāṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḷaippāṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḷaippāṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīṇṭa payaṇattukkup piṟaku nāṅkaḷ viṭutiyil iḷaippāṟiṉōm. — After the long journey we rested at the lodge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīṇṭa payaṇattukkup piṟaku nāṅkaḷ viṭutiyil iḷaippāṟiṉōm.* — After the long journey we rested at the lodge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for hot water, then the Tamil for to wrap up, then say iḷaippāṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for hot water, then the Tamil for to wrap up, then say *iḷaippāṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இளைப்பாறு (iḷaippāṟu) mean? (\"To relax; to rest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C419-viruntompal",
+      "sequence": 24110,
+      "title": "விருந்தோம்பல் (viruntōmpal) — hospitality",
+      "headword": "விருந்தோம்பல்",
+      "romanization": "viruntōmpal",
+      "gloss": "hospitality",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d78af68eeffa7f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to wrap up, then the Tamil for to relax."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விருந்தோம்பல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விருந்தோம்பல் — viruntōmpal — \"hospitality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தக் கிராம மக்களின் விருந்தோம்பல் எங்களுக்குப் பிடித்தது. antak kirāma makkaḷiṉ viruntōmpal eṅkaḷukkup piṭittatu. We liked the hospitality of those village people."
+            },
+            {
+              "kind": "speech",
+              "text": "விருந்து, a guest or a feast, + ஓம்பல், looking after."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விருந்தோம்பல் (viruntōmpal) is built from விருந்து, \"a guest, a feast\" (DEDR 5415), and ஓம்பல், \"cherishing\", from ஓம்பு (DEDR 1056)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viruntōmpal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viruntōmpal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viruntōmpal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viruntōmpal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antak kirāma makkaḷiṉ viruntōmpal eṅkaḷukkup piṭittatu. — We liked the hospitality of those village people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antak kirāma makkaḷiṉ viruntōmpal eṅkaḷukkup piṭittatu.* — We liked the hospitality of those village people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to wrap up, then the Tamil for to relax, then say viruntōmpal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to wrap up, then the Tamil for to relax, then say *viruntōmpal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விருந்தோம்பல் (viruntōmpal) mean? (\"Hospitality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

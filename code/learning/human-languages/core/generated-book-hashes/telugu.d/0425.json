@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:fc6e75330c4917b4",
+  "lessonIds": [
+    "TE-C425-nirnayam",
+    "TE-C425-tirmanam",
+    "TE-C425-telcu",
+    "TE-C425-khararu-ceyu",
+    "TE-C425-punaralocincu"
+  ],
+  "tex": "telugu/book/chapters/ch425-making-a-decision.tex"
+}

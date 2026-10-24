@@ -1,0 +1,11 @@
+{
+  "id": "HI-C493-jakarna",
+  "pathSegment": "HI-PATH-493-DAMA493",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-493-DAMA493",
+      "order": 4
+    }
+  ]
+}

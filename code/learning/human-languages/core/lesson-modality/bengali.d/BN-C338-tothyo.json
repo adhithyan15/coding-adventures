@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C338-tothyo",
+    "language": "bengali",
+    "chapter": 338,
+    "sequence": 21420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd71d278d8820df8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C476-mikhlab",
+  "pathSegment": "AR-PATH-476-AQRAB476",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-476-AQRAB476",
+      "order": 3
+    }
+  ]
+}

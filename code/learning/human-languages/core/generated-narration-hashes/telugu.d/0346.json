@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:60c1bf72f96ce569",
+  "lessonIds": [
+    "TE-C346-niscitartham",
+    "TE-C346-vivaham",
+    "TE-C346-subhalekha",
+    "TE-C346-tali",
+    "TE-C346-ahvanincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch346.txt",
+  "json": "telugu/narration/ch346.json",
+  "textHash": "fnv1a64:aa9f1cb71f9d5444",
+  "jsonHash": "fnv1a64:0b6fecdc79f64223",
+  "findings": []
+}

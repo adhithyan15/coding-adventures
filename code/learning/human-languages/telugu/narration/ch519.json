@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 519,
+  "title": "Treatment",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:aa71f2acbcd0256f",
+  "lessons": [
+    {
+      "id": "TE-C519-cikitsa",
+      "sequence": 26280,
+      "title": "చికిత్స (cikitsa) — treatment; therapy",
+      "headword": "చికిత్స",
+      "romanization": "cikitsa",
+      "gloss": "treatment; therapy",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61feb8b7bdd1e45e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to limp, then the Telugu for bleeding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చికిత్స",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చికిత్స — cikitsa — \"treatment; therapy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మంచి చికిత్స వల్ల ఆమె త్వరగా కోలుకుంది. mañci cikitsa valla āme tvaragā kōlukundi. Thanks to good treatment she recovered quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "చికిత్స (cikitsa) చేయు, to treat; చికిత్స (cikitsa) పొందు, to receive treatment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చికిత్స (cikitsa) is borrowed from Sanskrit cikitsā, \"medical attendance, the practice of medicine\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikitsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikitsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikitsa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikitsa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañci cikitsa valla āme tvaragā kōlukundi. — Thanks to good treatment she recovered quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañci cikitsa valla āme tvaragā kōlukundi.* — Thanks to good treatment she recovered quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to limp, then the Telugu for bleeding, then say cikitsa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to limp, then the Telugu for bleeding, then say *cikitsa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చికిత్స (cikitsa) mean? (\"Treatment; therapy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C519-sastracikitsa",
+      "sequence": 26290,
+      "title": "శస్త్రచికిత్స (śastracikitsa) — surgery; an operation",
+      "headword": "శస్త్రచికిత్స",
+      "romanization": "śastracikitsa",
+      "gloss": "surgery; an operation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:487939facf7215e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for bleeding, then the Telugu for treatment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శస్త్రచికిత్స",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శస్త్రచికిత్స — śastracikitsa — \"surgery; an operation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తాతయ్యకు మోకాలికి శస్త్రచికిత్స జరిగింది. tātayyaku mōkāliki śastracikitsa jarigindi. Grandpa had surgery on his knee."
+            },
+            {
+              "kind": "speech",
+              "text": "శస్త్రం, blade, + చికిత్స (cikitsa): the formal word for ఆపరేషను."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శస్త్రచికిత్స (śastracikitsa) is a learned compound built from Sanskrit śastra, \"an instrument for cutting\" (CDIAL 12367), and cikitsā, \"medical treatment\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śastracikitsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śastracikitsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śastracikitsa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śastracikitsa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tātayyaku mōkāliki śastracikitsa jarigindi. — Grandpa had surgery on his knee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tātayyaku mōkāliki śastracikitsa jarigindi.* — Grandpa had surgery on his knee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for bleeding, then the Telugu for treatment, then say śastracikitsa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for bleeding, then the Telugu for treatment, then say *śastracikitsa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శస్త్రచికిత్స (śastracikitsa) mean? (\"Surgery; an operation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C519-mattumandu",
+      "sequence": 26300,
+      "title": "మత్తుమందు (mattumandu) — an anaesthetic",
+      "headword": "మత్తుమందు",
+      "romanization": "mattumandu",
+      "gloss": "an anaesthetic",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:139d4086134cd4db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for treatment, then the Telugu for surgery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మత్తుమందు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మత్తుమందు — mattumandu — \"an anaesthetic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆపరేషనుకు ముందు డాక్టరు మత్తుమందు ఇచ్చారు. āparēṣanuku mundu ḍākṭaru mattumandu iccāru. Before the operation the doctor gave an anaesthetic."
+            },
+            {
+              "kind": "speech",
+              "text": "మత్తు, numbness or a stupor, + మందు, medicine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మత్తుమందు (mattumandu) joins మత్తు, \"a stupor\", from Sanskrit matta, \"intoxicated\" (CDIAL 9750), to native mandu, \"medicine\" (DEDR 4719)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mattumandu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mattumandu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mattumandu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mattumandu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āparēṣanuku mundu ḍākṭaru mattumandu iccāru. — Before the operation the doctor gave an anaesthetic.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āparēṣanuku mundu ḍākṭaru mattumandu iccāru.* — Before the operation the doctor gave an anaesthetic.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for treatment, then the Telugu for surgery, then say mattumandu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for treatment, then the Telugu for surgery, then say *mattumandu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మత్తుమందు (mattumandu) mean? (\"An anaesthetic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C519-patti",
+      "sequence": 26310,
+      "title": "పట్టీ (paṭṭī) — a bandage; a strip",
+      "headword": "పట్టీ",
+      "romanization": "paṭṭī",
+      "gloss": "a bandage; a strip",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92020f4bb7d83bc7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for surgery, then the Telugu for an anaesthetic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పట్టీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టీ — paṭṭī — \"a bandage; a strip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నర్సు గాయానికి పట్టీ కట్టింది. narsu gāyāniki paṭṭī kaṭṭindi. The nurse bandaged the wound."
+            },
+            {
+              "kind": "speech",
+              "text": "పట్టీ (paṭṭī) కట్టు, to bandage. Also a strip of cloth or a band."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టీ (paṭṭī) is usually traced to Sanskrit paṭṭa, \"cloth; a bandage, a fillet\" (CDIAL 7700)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narsu gāyāniki paṭṭī kaṭṭindi. — The nurse bandaged the wound.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narsu gāyāniki paṭṭī kaṭṭindi.* — The nurse bandaged the wound.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for surgery, then the Telugu for an anaesthetic, then say paṭṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for surgery, then the Telugu for an anaesthetic, then say *paṭṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పట్టీ (paṭṭī) mean? (\"A bandage; a strip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C519-paramarsincu",
+      "sequence": 26320,
+      "title": "పరామర్శించు (parāmarśiñcu) — to visit the sick; to inquire after",
+      "headword": "పరామర్శించు",
+      "romanization": "parāmarśiñcu",
+      "gloss": "to visit the sick; to inquire after",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f5ad30d6c104b48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an anaesthetic, then the Telugu for a bandage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పరామర్శించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరామర్శించు — parāmarśiñcu — \"to visit the sick; to inquire after\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆసుపత్రిలో ఉన్న స్నేహితుడిని మేము పరామర్శించాము. āsupatrilō unna snēhituḍini mēmu parāmarśiñcāmu. We visited our friend in hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పరామర్శించాను, parāmarśiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also calling on a family in mourning to share their grief."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరామర్శించు (parāmarśiñcu) is built on Sanskrit parāmarśa (Monier-Williams), first \"a seizing, a touching\", with the Telugu verb ending -ఇంచు; in Telugu it means going to see someone who is ill or grieving."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parāmarśiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parāmarśiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parāmarśiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parāmarśiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsupatrilō unna snēhituḍini mēmu parāmarśiñcāmu. — We visited our friend in hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsupatrilō unna snēhituḍini mēmu parāmarśiñcāmu.* — We visited our friend in hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an anaesthetic, then the Telugu for a bandage, then say parāmarśiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an anaesthetic, then the Telugu for a bandage, then say *parāmarśiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పరామర్శించు (parāmarśiñcu) mean? (\"To visit the sick; to inquire after\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

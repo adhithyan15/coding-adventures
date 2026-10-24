@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:3c424243b0c569a6",
+  "lessonIds": [
+    "TE-C523-karmikudu",
+    "TE-C523-nipunudu",
+    "TE-C523-salahadaru",
+    "TE-C523-sahayakudu",
+    "TE-C523-guttedaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch523.txt",
+  "json": "telugu/narration/ch523.json",
+  "textHash": "fnv1a64:333fbc50a59ab6a9",
+  "jsonHash": "fnv1a64:adaa8cd4f1ab44cd",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-R292-would-and-depends",
+  "pathSegment": "AR-PATH-292-WOULD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-292-WOULD",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C383-tarkam",
+    "language": "telugu",
+    "chapter": 383,
+    "sequence": 19080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82809b7c6a2580d1"
+  },
+  "findings": []
+}

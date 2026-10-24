@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:3325b3c84cdd22b4",
+  "lessonIds": [
+    "TA-C417-malumi",
+    "TA-C417-nankuram",
+    "TA-C417-teppam",
+    "TA-C417-tattali",
+    "TA-C417-karai"
+  ],
+  "tex": "tamil/book/chapters/ch417-sailors-and-anchors.tex"
+}

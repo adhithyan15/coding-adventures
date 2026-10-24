@@ -1,0 +1,19 @@
+{
+  "chapter": 541,
+  "title": "Fitness",
+  "label": "ch:ka-fitness",
+  "canDo": "I can say a workout, endurance, mountaineering, archery and to cheer on.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C541-huridumbisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can say a workout, endurance, mountaineering, archery and to cheer on.",
+    "assesses": [
+      "KA-LEX-C541-VYAYAMA541-03",
+      "KA-LEX-C541-VYAYAMA541-04",
+      "KA-LEX-C541-VYAYAMA541-05"
+    ]
+  }
+}

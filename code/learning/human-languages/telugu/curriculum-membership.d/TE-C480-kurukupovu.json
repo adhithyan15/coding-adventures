@@ -1,0 +1,11 @@
+{
+  "id": "TE-C480-kurukupovu",
+  "pathSegment": "TE-PATH-480-MUNCETTU480",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-480-MUNCETTU480",
+      "order": 3
+    }
+  ]
+}

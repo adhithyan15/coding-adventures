@@ -1,0 +1,11 @@
+{
+  "id": "ML-C550-kutiyalocikkuka",
+  "pathSegment": "ML-PATH-550-NETTAM550",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-550-NETTAM550",
+      "order": 3
+    }
+  ]
+}

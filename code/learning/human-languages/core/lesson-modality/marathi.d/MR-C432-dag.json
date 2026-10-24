@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C432-dag",
+    "language": "marathi",
+    "chapter": 432,
+    "sequence": 24860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06d136e2c95488fc"
+  },
+  "findings": []
+}

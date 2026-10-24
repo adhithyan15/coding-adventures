@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Funding and development",
+  "label": "ch:ar-funding-and-development",
+  "canDo": "I can say that someone funded or allocated money, and talk about industry, agriculture and development.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C384-tanmiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can say that someone funded or allocated money, and talk about industry, agriculture and development.",
+    "assesses": [
+      "AR-LEX-C384-TANMIYA384-03",
+      "AR-LEX-C384-TANMIYA384-04",
+      "AR-LEX-C384-TANMIYA384-05"
+    ]
+  }
+}
